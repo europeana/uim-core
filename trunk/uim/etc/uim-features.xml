@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="uim-features">
+    <feature name="uim-core" version="1.0.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-common/1.0.1-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-api/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-basic/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-fileimp/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-storage-memory/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-dummy/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-workflow-dummy/1.0.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name="uim-core-gui" version="1.0.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-webconsole-extension/1.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-gui-gwt/1.0.0-SNAPSHOT/war</bundle>
+    </feature>
+    <feature name="uim-core" version="1.1.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-common/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-api/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-basic/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-fileimp/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-storage-memory/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-dummy/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-workflow-dummy/1.1.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name="uim-core-gui" version="1.1.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-webconsole-extension/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-gui-gwt/1.1.0-SNAPSHOT/war</bundle>
+    </feature>
+    <feature name="uim-store-mongo" version="1.1.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/1.1.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name="uim-core" version="1.2.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-common/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-api/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-basic/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-fileimp/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-storage-memory/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-dummy/1.2.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-workflow-dummy/1.2.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name="uim-core-gui" version="1.2.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-webconsole-extension/1.1.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-gui-gwt/1.2.0-SNAPSHOT/war</bundle>
+    </feature>
+    <feature name="uim-store-mongo" version="1.2.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/1.2.0-SNAPSHOT</bundle>
+    </feature>
+</features>

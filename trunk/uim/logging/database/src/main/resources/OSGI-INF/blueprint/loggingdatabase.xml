@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+		   xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
+
+	<service interface="eu.europeana.uim.api.LoggingEngine" ranking="9">
+		<bean class="eu.europeana.uim.logging.database.DatabaseLoggingEngine" />
+	</service>
+	
+</blueprint>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- regular spring configuration file defining the beans for this bundle. 
+		The configuration of OSGi definitions is kept in a separate configuration 
+		file so that this file can easily be used for integration testing outside 
+		of an OSGi environment -->
+
+	<bean id="sugarWsClient" class="eu.europeana.uim.sugarcrmclient.ws.SugarWsClient">
+		<property name="wsTemplate" ref="webServiceTemplate"/>
+	</bean>
+
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+         <property name="defaultUri" value="http://localhost:8080/WebService" />
+    </bean>
+
+
+
+	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="classesToBeBound">
+			<list>
+				<value>org.xmlsoap.schemas.soap.encoding.*</value>
+				<value>com.sugarcrm.sugarcrm.*</value>
+			</list>
+		</property>
+		<!--  
+		<property name="schema" value="classpath:org/springframework/oxm/schema.xsd" />
+		-->
+	</bean>
+
+
+
+
+</beans>

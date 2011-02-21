@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- regular spring configuration file defining the beans for this bundle. 
+		The configuration of OSGi definitions is kept in a separate configuration 
+		file so that this file can easily be used for integration testing outside 
+		of an OSGi environment -->
+
+	<bean id="sugarWsClient" class="eu.europeana.uim.sugarcrmclient.ws.SugarWsClient">
+		<property name="webServiceTemplate" ref="webServiceTemplate"/>
+	</bean>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+         <property name="defaultUri" value="http://localhost:8080/sugarcrm/soap.php?wsdl" />
+         <property name="marshaller" ref="jaxb1Marshaller" />
+         <property name="unmarshaller" ref="jaxb1Marshaller" />
+    </bean>
+    
+    <bean id="jaxb1Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+
+       
+
+         <property name="contextPath" value="org.xmlsoap.schemas.soap.encoding:com.sugarcrm.sugarcrm"/>
+         <!--  
+           <property name="classesToBeBound">
+            <list>
+                <value>com.sugarcrm.sugarcrm.LoginRequest</value>
+                <value>com.sugarcrm.sugarcrm.UserAuth</value>
+                <value>com.sugarcrm.sugarcrm.LoginResponse</value>                   
+            </list>
+        </property>
+         -->
+    </bean>
+    
+
+</beans>

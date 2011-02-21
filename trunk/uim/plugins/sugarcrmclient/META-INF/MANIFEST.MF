@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Export-Package: eu.europeana.uim.sugarcrmclient.ws;uses:="org.springfr
+ amework.ws.client.core,javax.xml.transform,org.springframework.xml.tr
+ ansform,javax.xml.transform.stream"
+Private-Package: eu.europeana.uim.sugarcrmclient.internal
+Built-By: geomark
+Tool: Bnd-0.0.238
+Bundle-Name: Unified Ingestion Manager: Suger CRM Plugin
+Created-By: Apache Maven Bundle Plugin
+Bundle-Version: 1.2.0.SNAPSHOT
+Build-Jdk: 1.6.0_16
+Bnd-LastModified: 1298065304604
+Bundle-ManifestVersion: 2
+Import-Package: eu.europeana.uim.sugarcrmclient.ws,javax.xml.transform
+ ,javax.xml.transform.stream,org.springframework.ws.client.core,org.sp
+ ringframework.xml.transform;version="1.5"
+Bundle-SymbolicName: eu.europeana.europeana-uim-plugin-sugarcrmclient
+
