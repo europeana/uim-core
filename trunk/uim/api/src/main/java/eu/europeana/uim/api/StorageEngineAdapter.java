@@ -33,9 +33,14 @@ public abstract class StorageEngineAdapter implements StorageEngine {
 	public void shutdown() {
 	}
 
-	@Override
-	public void checkpoint() {
-	}
+    @Override
+    public void checkpoint() {
+    }
+
+
+    @Override
+    public void command(String command) {
+    }
 
 
 	@Override

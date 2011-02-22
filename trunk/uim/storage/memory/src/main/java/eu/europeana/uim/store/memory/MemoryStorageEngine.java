@@ -76,6 +76,10 @@ public class MemoryStorageEngine implements StorageEngine {
 	public void checkpoint() {
 	}
 
+    @Override
+    public void command(String command) {
+    }
+
 
 	@Override
 	public void shutdown() {

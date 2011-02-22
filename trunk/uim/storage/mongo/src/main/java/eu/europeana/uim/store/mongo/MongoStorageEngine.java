@@ -116,6 +116,12 @@ public class MongoStorageEngine implements StorageEngine {
 	@Override
 	public void checkpoint() {
 	}
+	
+    @Override
+    public void command(String command) {
+    }
+
+
 
     public void shutdown() {
         status = EngineStatus.STOPPED;
