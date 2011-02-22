@@ -113,17 +113,19 @@ public abstract class AbstractWorkflowStart implements WorkflowStart {
         			return 0;
         		}
         	} else {
-                MetaDataRecord[] mdrs = executor.getStorageEngine().getMetaDataRecords(poll);
-                for (MetaDataRecord mdr : mdrs) {
-                    UIMTask task = new UIMTask(mdr, executor.getStorageEngine(), executor);
-                    
-					executor.getSuccess(this.getIdentifier()).add((T) task);
+                try {
+                    MetaDataRecord[] mdrs = executor.getStorageEngine().getMetaDataRecords(poll);
+                    for (MetaDataRecord mdr : mdrs) {
+                        UIMTask task = new UIMTask(mdr, executor.getStorageEngine(), executor);
+                        
+                    	executor.getSuccess(this.getIdentifier()).add((T) task);
+                    }
+                    return mdrs.length;
+                } catch (Throwable e) {
+                    log.log(Level.SEVERE, "Failed to create uim task.", e);
                 }
-                return mdrs.length;
             }
 
-        } catch (StorageEngineException e) {
-            log.log(Level.SEVERE, e.getMessage(), e);
         } catch (InterruptedException e) {
         	// dont care.
 		}

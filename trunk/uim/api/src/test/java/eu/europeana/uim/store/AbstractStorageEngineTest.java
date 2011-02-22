@@ -122,7 +122,7 @@ public abstract class AbstractStorageEngineTest {
 		provider0.getRelatedOut().add(provider1);
 		engine.updateProvider(provider0);
 		
-		engine.checkpoint();
+		////engine.checkpoint();
 		
 		Provider provider2 = engine.getProvider(provider1.getId());
 		assertEquals(1, provider2.getRelatedIn().size());
@@ -163,7 +163,7 @@ public abstract class AbstractStorageEngineTest {
 		collection2.setMnemonic("a0003");
 		collection2.setName("BNF's collection 001");
 		engine.updateCollection(collection2);
-		engine.checkpoint();
+		////engine.checkpoint();
 
 		Collection collection3 = engine.getCollection(collection0.getId());
 		assertEquals(collection3.getMnemonic(), collection0.getMnemonic());
@@ -230,7 +230,7 @@ public abstract class AbstractStorageEngineTest {
 		collection2.setMnemonic("a0003");
 		collection2.setName("TEL's collection 003");
 		engine.updateCollection(collection2);
-		engine.checkpoint();
+		////engine.checkpoint();
 
 		List<Collection> collections = engine.getCollections(provider0);
 		assertEquals(3, collections.size());
@@ -296,7 +296,7 @@ public abstract class AbstractStorageEngineTest {
 		
 		Request request2 = engine.createRequest(collection1, new Date(2000));
 		engine.updateRequest(request2);
-		engine.checkpoint();
+		////engine.checkpoint();
 		
 		Request request3 = engine.getRequest(request0.getId());
 		assertNotNull(request3.getCollection());
@@ -346,7 +346,7 @@ public abstract class AbstractStorageEngineTest {
 		
 		Request request1 = engine.createRequest(collection0, new Date(1000));
 		engine.updateRequest(request1);
-		engine.checkpoint();
+		//engine.checkpoint();
 		
 		Request request2 = engine.getRequest(request0.getId());
 		assertNotNull(request2.getCollection());

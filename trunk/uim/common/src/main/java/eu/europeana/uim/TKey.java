@@ -175,23 +175,38 @@ public final class TKey<NS, T extends Serializable> implements Serializable, Com
 				if (nn.length != 2) {
 					throw new IllegalArgumentException("Cannot split namespace and key for <" + split[0] + ">");
 				} else {
-					Class<?> clazz = Class.forName(nn[0]);
-					String name = nn[1];
-					return resolve(clazz, name);
+				    // iterate available keys
+				    for (TKey<?, ? extends Serializable> key : registry.keySet()) {
+				        if (key.getNamespace().getName().equals(nn[0])){
+				            if (key.getName().equals(nn[1])) {
+				                return key;
+				            }
+				        }
+				    }
+				    return null;
 				}
 			} else if (split.length == 2){
 				String[] nn = split[0].split("/");
 				if (nn.length != 2) {
 					throw new IllegalArgumentException("Cannot split namespace and key for <" + split[0] + ">");
 				} else {
-					Class<?> clazz = Class.forName(nn[0]);
-					String name = nn[1];
-					TKey<?,Serializable> key = resolve(clazz, name);
-					if (key == null) {
-						Class<? extends Serializable> type = (Class<? extends Serializable>) Class.forName(split[1]);
-						key = (TKey<?, Serializable>) TKey.register(clazz, name, type);
-					}
-					return key;
+                    // iterate available keys
+				    Class<?> namespace = null;
+                    for (TKey<?, ? extends Serializable> key : registry.keySet()) {
+                        if (key.getNamespace().getName().equals(nn[0])){
+                            namespace = key.getNamespace();
+                            if (key.getName().equals(nn[1])) {
+                                return key;
+                            }
+                        }
+                    }
+				    
+				    if (namespace == null) {
+				        namespace = Class.forName(nn[0]);
+				    }
+				    
+				    Class<? extends Serializable> type = (Class<? extends Serializable>) Class.forName(split[1]);
+					return TKey.register(namespace, nn[1], type);
 				}
 			} else {
 				throw new IllegalArgumentException("Given string is not valid: <" + string + ">");

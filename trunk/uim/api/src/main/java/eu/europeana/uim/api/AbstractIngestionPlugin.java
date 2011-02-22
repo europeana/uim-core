@@ -75,51 +75,6 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 		return "Abstract Ingestion Plugin";
 	}
 
-
-	public abstract void processRecord(MetaDataRecord mdr);
-
-	
-	@Override
-	public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
-		String identifier = mdr.getIdentifier();
-		if (log.isLoggable(level)) {
-			log.log(level, qualifier + ":" + identifier);
-		}
-
-        processRecord(mdr, context, this);
-	}
-
-    /**
-     * This method is the entry point for implementations of this class and should execute the processing of one record in the given context.
-     * In order to implement it, use an anonymous inner class as follows:<br>
-     *     <pre>
-     *     {@code
-     *             @Override
-     *             public IngestionPluginCall processRecord(ExecutionContext context, MetaDataRecord record, IngestionPlugin plugin) {
-     *               return new IngestionPluginCall(context, record, plugin) {
-     *                 @Override
-     *                 public void processRecord(MetaDataRecord record) {
-     *                   log(LoggingEngine.Level.INFO, "Processing record " + record);
-     *                 }
-     *               };
-     *             }
-     *     }
-     *     </pre>
-     *
-     * @param context the {@link ExecutionContext} for this plugin invocation
-     * @param record the {@link MetaDataRecord} for this plugin invocation
-     * @param plugin the {@link IngestionPlugin} for this plugin invocation
-     * @return
-     */
-    public IngestionPluginCall processRecord(MetaDataRecord record, ExecutionContext context, IngestionPlugin plugin) {
-    	return new IngestionPluginCall(record, context, plugin) {
-    		@Override
-			public void processRecord(MetaDataRecord record) {
-    			processRecord(record);
-    		}
-    	};
-    }
-
     
     
     /**

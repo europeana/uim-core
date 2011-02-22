@@ -133,11 +133,11 @@ public class UIMWorkflowProcessor implements Runnable {
 						}						
 
 					} catch (Throwable exc){
-						log.log(Level.SEVERE, "Exception in workflow execution", exc);
+						log.log(Level.WARNING, "Exception in workflow execution", exc);
 
-						execution.setActive(false);
-						execution.setThrowable(exc);
-						iterator.remove();
+//						execution.setActive(false);
+//						execution.setThrowable(exc);
+//						iterator.remove();
 					}
 				}
 
