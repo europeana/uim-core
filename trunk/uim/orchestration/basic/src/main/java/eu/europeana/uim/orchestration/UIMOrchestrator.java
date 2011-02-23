@@ -30,9 +30,9 @@ public class UIMOrchestrator implements Orchestrator {
 	private final Registry registry;
 	private final UIMWorkflowProcessor processor;
 
-	public UIMOrchestrator(Registry registry) {
+	public UIMOrchestrator(Registry registry, UIMWorkflowProcessor processor) {
 		this.registry = registry;
-        this.processor = new UIMWorkflowProcessor(registry.getStorage());
+        this.processor = processor;
 
 		processor.startup();
 	}

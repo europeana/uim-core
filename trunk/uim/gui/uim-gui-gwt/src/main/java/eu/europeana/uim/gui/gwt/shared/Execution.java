@@ -1,10 +1,8 @@
 package eu.europeana.uim.gui.gwt.shared;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import eu.europeana.uim.common.MemoryProgressMonitor;
-
 import java.util.Date;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
@@ -14,8 +12,6 @@ public class Execution implements IsSerializable, Comparable<Execution> {
     private Long id;
     private String name;
     private String workflow;
-    
-    private Progress progress;
     
     private int scheduled;
     private int completed;
@@ -88,15 +84,6 @@ public class Execution implements IsSerializable, Comparable<Execution> {
         this.name = name;
     }
 
-
-    public Progress getProgress() {
-		return progress;
-	}
-
-	public void setProgress(Progress progress) {
-		this.progress = progress;
-	}
-
 	public int getScheduled() {
 		return scheduled;
 	}
@@ -127,6 +114,10 @@ public class Execution implements IsSerializable, Comparable<Execution> {
 
 	public boolean isDone() {
         return done;
+    }
+
+    public int getProgress() {
+        return this.getCompleted() + this.getFailure();
     }
 
 

@@ -49,5 +49,10 @@ public interface WorkflowStart extends WorkflowStep{
 	 * have been created yet
 	 */
 	//<T> int getRemaining(ActiveExecution<T> execution);
+
+    /**
+     * Get the number of initially scheduled records
+     */
+    public int getScheduledSize();
     
 }

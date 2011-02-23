@@ -202,9 +202,13 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 	public void incrementScheduled(int work) {
 		scheduled += work;
 	}
-	
-	
-	@Override
+
+    @Override
+    public void setScheduled(int scheduled) {
+        this.scheduled = scheduled;
+    }
+
+    @Override
 	public int getCompletedSize() {
 		return completed;
 	}

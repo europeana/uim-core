@@ -1,10 +1,10 @@
 package eu.europeana.uim.gui.gwt.server;
 
+import java.util.logging.Logger;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.gui.gwt.shared.Execution;
-
-import java.util.logging.Logger;
 
 /**
  * GWT implementation of a ProgressMonitor. Since we display things on the client and the monitor is on the server,
@@ -37,10 +37,6 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
         this.name = task;
         this.work = work;
         this.worked = 0;
-        
-        
-        execution.getProgress().setTask(task);
-        execution.getProgress().setWork(work);
     }
 
     
@@ -52,12 +48,15 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
         } else {
             this.worked = worked + work;
         }
-        execution.getProgress().setWorked(worked);
+        // update the completed status of the execution
+        // here we make no difference between success and failure
+        // we just log everything as "completed"
+        execution.setCompleted(worked);
     }
 
     @Override
     public void done() {
-        execution.getProgress().setDone(true);
+        execution.setDone(true);
         execution.setActive(false);
     }
 
@@ -67,6 +66,9 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
 
     @Override
     public void setCancelled(boolean cancelled) {
+        if(cancelled) {
+            execution.setActive(false);
+        }
         this.cancelled = cancelled;
     }
 
@@ -79,7 +81,4 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
         return execution.isDone();
     }
 
-    public void setExecution(Execution execution) {
-        this.execution = execution;
-    }
 }

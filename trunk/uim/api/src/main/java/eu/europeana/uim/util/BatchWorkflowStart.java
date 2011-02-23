@@ -24,11 +24,18 @@ import eu.europeana.uim.workflow.WorkflowStart;
  */
 public class BatchWorkflowStart extends AbstractWorkflowStart implements WorkflowStart {
 
-	/** default batch size 
+	/**
+     * default batch size
 	 */
 	private int batchSize = 250;
+
+    /**
+     * the total number of ids to process
+     */
+    private int scheduledSize = 0;
 	
-	/** having a local list of batches is "overhead" - it duplicates
+	/**
+     * having a local list of batches is "overhead" - it duplicates
 	 * the parent class bath variable. Here it is only used to show
 	 * the combination of loader runnable and task runnable.
 	 */
@@ -80,6 +87,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
 			} else {
 				throw new IllegalStateException("Unsupported dataset <" + visitor.getDataSet() + ">");
 			}
+
+            scheduledSize = ids.length;
 
 			if (ids.length > batchSize) {
 				int batches = (int)Math.ceil(1.0 * ids.length / batchSize);
@@ -140,5 +149,9 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
 
     @Override
     public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
+    }
+
+    public int getScheduledSize() {
+        return this.scheduledSize;
     }
 }

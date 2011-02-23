@@ -1,5 +1,12 @@
 package eu.europeana.uim.gui.gwt.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -18,13 +25,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 import eu.europeana.uim.gui.gwt.shared.Execution;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The overview panel with current and past executions
@@ -135,7 +135,7 @@ public class OverviewPanel extends ScrollPanel {
 
                     @Override
                     public void onSuccess(Execution execution) {
-                        bar.setProgress(execution.getProgress().getWorked());
+                        bar.setProgress(execution.getProgress());
                         bar.redraw();
                         if (execution.isDone()) {
                             cancel();

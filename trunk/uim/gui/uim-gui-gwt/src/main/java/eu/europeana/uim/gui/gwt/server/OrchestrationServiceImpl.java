@@ -11,7 +11,6 @@ import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.gwt.client.OrchestrationService;
 import eu.europeana.uim.gui.gwt.shared.Collection;
 import eu.europeana.uim.gui.gwt.shared.Execution;
-import eu.europeana.uim.gui.gwt.shared.Progress;
 import eu.europeana.uim.gui.gwt.shared.Provider;
 import eu.europeana.uim.gui.gwt.shared.StepStatus;
 import eu.europeana.uim.gui.gwt.shared.Workflow;
@@ -134,7 +133,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 			}
 			eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
 			Execution execution = new Execution();
-			
+
 			GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 			ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c, monitor);
 			populateWrappedExecution(execution, ae, w, c);
@@ -175,11 +174,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 		execution.setFailure(ae.getFailureSize());
 		execution.setScheduled(ae.getScheduledSize());
 		execution.setDone(ae.isFinished());
-
-        // TODO: build the progress object from the ActiveExecution
-        execution.setProgress(new Progress());
-		
-		//execution.setTotal(ae.getScheduledSize());
 		execution.setStartTime(ae.getStartTime());
 		wrappedExecutions.put(ae.getId(), execution);
 	}
@@ -214,7 +208,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 			wrapped.setEndTime(e.getEndTime());
 			wrapped.setDataSet(e.getDataSet().getIdentifier());
 			wrapped.setName(e.getWorkflowName() + "/" + e.getDataSet().getIdentifier());
-            wrapped.setProgress(new Progress());
 			wrappedExecutions.put(execution, wrapped);
 		} else {
 			// update what may have changed

@@ -45,8 +45,9 @@ public class UIMOrchestratorTest {
 			
 			registry.addStorage(engine);
 			registry.setConfiguredStorageEngine(MemoryStorageEngine.class.getSimpleName());
-			
-			orchestrator = new UIMOrchestrator(registry);
+
+            UIMWorkflowProcessor processor = new UIMWorkflowProcessor(registry);
+			orchestrator = new UIMOrchestrator(registry, processor);
 		}
 	}
 

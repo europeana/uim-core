@@ -90,7 +90,8 @@ class MongoLoggingEngineTest extends Spec with BeforeAndAfterAll with BeforeAndA
     saved(1).get("duration") should equal (5l);
   }
 
-/*  it("should calculate average durations per plugin") {
+/*
+    it("should calculate average durations per plugin") {
     engine.logDuration(plugin("dummy"), 10l, 2);
     engine.logDuration(plugin("dummy"), 25l, 3);
     engine.getAverageDuration(plugin("dummy")) should equal (7l)

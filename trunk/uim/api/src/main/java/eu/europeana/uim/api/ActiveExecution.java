@@ -76,6 +76,9 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	void putValue(WorkflowStep step, String key, Object value);
 	Object getValue(WorkflowStep step, String key);
 
+
+    void setScheduled(int scheduled);
+
 	/**
 	 * @param work
 	 */
