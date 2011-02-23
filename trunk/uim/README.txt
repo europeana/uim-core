@@ -17,7 +17,7 @@ Path                              Name                                          
 /                                 Unified Ingestion Manager                                The root maven project
 /common                           Unified Ingestion Manager: Common                        Shared classes and resources (e.g. for testing)
 /api                              Unified Ingestion Manager: API                           The UIM API bundle, used by plugins
-/plugins/basic                    Unified Ingestion Manager: API Basic Implementation      The basic/default implementation of the API
+/orchestration/basic              Unified Ingestion Manager: API Basic Implementation      The basic/default implementation of the API
 
 /gui/uim-webconsole-extension     Unified Ingestion Manager: Webconsole extension          UIM GUI extension for the Karaf Webconsole
 /gui/uim-gui-gwt                  Unified Ingestion Manager: GWT User Interface            UIM GWT frontend
@@ -78,7 +78,7 @@ Path                              Name                                          
      - features:install uim-core-gui
      
 8) Configure UIM Mongo Backend Features
-     - features:install uim-core-mongo
+     - features:install uim-store-mongo
  
 
    (alternative: install bundles by hand. Note that you need to install them in the right order for this to work
