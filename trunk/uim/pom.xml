@@ -41,7 +41,7 @@
         <module>workflows/dummy</module>
 
         <!--  the uim integration test module -->
-        <module>plugins/integration</module>
+<!--        <module>plugins/integration</module>-->
 
         <!-- GWT-based GUI -->
 		<!--        <module>gui/uim-gui-gwt</module>-->
