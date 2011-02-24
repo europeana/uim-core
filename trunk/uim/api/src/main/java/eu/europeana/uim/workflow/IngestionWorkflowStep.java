@@ -1,8 +1,10 @@
 package eu.europeana.uim.workflow;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.StorageEngineException;
 
 public class IngestionWorkflowStep extends AbstractWorkflowStep {
 
@@ -32,5 +34,17 @@ public class IngestionWorkflowStep extends AbstractWorkflowStep {
 	public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
 		plugin.processRecord(mdr, context);
 	}
+
+
+    @Override
+    public <T> void initialize(ActiveExecution<T> visitor)  throws StorageEngineException {
+        plugin.initialize(visitor);
+    }
+
+
+    @Override
+    public <T> void finalize(ActiveExecution<T> visitor)  throws StorageEngineException {
+        plugin.finalize(visitor);
+    }
 
 }

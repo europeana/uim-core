@@ -43,12 +43,19 @@ public class WorkflowStepComposite implements WorkflowStep {
 		return savepoint;
 	}
 
-	@Override
-	public <T> void initialize(ActiveExecution<T>  visitor)  throws StorageEngineException {
+    @Override
+    public <T> void initialize(ActiveExecution<T>  visitor)  throws StorageEngineException {
         for(WorkflowStep s : steps) {
-        	s.initialize(visitor);
+            s.initialize(visitor);
         }
-	}
+    }
+
+    @Override
+    public <T> void finalize(ActiveExecution<T>  visitor)  throws StorageEngineException {
+        for(WorkflowStep s : steps) {
+            s.finalize(visitor);
+        }
+    }
 
 	
 	@Override

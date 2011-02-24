@@ -75,7 +75,16 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 		return "Abstract Ingestion Plugin";
 	}
 
-    
+
+    @Override
+    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    }
+
+
+    @Override
+    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    }
+
     
     /**
      * Helper class for easing common operations such as logging when implementing an @{IngestionPlugin}

@@ -5,8 +5,10 @@ import java.util.logging.Logger;
 import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.StorageEngineException;
 
 public class DummyPlugin implements IngestionPlugin {
 
@@ -72,4 +74,14 @@ public class DummyPlugin implements IngestionPlugin {
 	public int getMaximumThreadCount() {
 		return 5;
 	}
+	
+
+    @Override
+    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    }
+
+    @Override
+    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    }
+
 }

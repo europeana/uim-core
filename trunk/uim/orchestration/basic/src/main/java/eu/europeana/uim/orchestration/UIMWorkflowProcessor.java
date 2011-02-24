@@ -71,7 +71,7 @@ public class UIMWorkflowProcessor implements Runnable {
 											execution.setActive(false);
 											execution.setEndTime(new Date());
 
-											execution.getStorageEngine().updateExecution(execution);
+											execution.getStorageEngine().updateExecution(execution.getExecution());
 											iterator.remove();
 										}
 									}

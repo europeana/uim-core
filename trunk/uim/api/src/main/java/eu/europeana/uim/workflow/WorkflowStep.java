@@ -28,6 +28,7 @@ public interface WorkflowStep {
     boolean isSavepoint();
     
     <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException;
+    <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException;
 
     void processRecord(MetaDataRecord mdr, ExecutionContext context);
 

@@ -43,9 +43,14 @@ public abstract class AbstractWorkflowStep implements WorkflowStep {
 		return executor;
 	}
 
-	@Override
-	public <T> void initialize(ActiveExecution<T> visitor)  throws StorageEngineException {
-	}
+    @Override
+    public <T> void initialize(ActiveExecution<T> visitor)  throws StorageEngineException {
+    }
+
+
+    @Override
+    public <T> void finalize(ActiveExecution<T> visitor)  throws StorageEngineException {
+    }
 
 
 

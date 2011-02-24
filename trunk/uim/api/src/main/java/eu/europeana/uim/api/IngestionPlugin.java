@@ -18,6 +18,10 @@ public interface IngestionPlugin {
     int getPreferredThreadCount();
     int getMaximumThreadCount();
 
+    
+    <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException;
+    <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException;
+
     /**
      * Process a single meta data record within a given execution context
      *

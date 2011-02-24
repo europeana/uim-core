@@ -67,7 +67,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     @Override
     public Execution getExecution() {
-        return this;
+        return execution;
     }
 
     @Override
