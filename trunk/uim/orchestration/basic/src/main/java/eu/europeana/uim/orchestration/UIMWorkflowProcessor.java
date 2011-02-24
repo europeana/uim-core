@@ -29,14 +29,14 @@ public class UIMWorkflowProcessor implements Runnable {
 	private TaskExecutorThreadFactory factory = new TaskExecutorThreadFactory("processor");
 	private TaskExecutorThread dispatcherThread;
 
-    private final StorageEngine storageEngine;
+    private final Registry registry;
 
 	private boolean running = false;
 
 	private List<ActiveExecution<Task>> executions = new ArrayList<ActiveExecution<Task>>();
 
 	public UIMWorkflowProcessor(Registry registry) {
-        this.storageEngine = registry.getStorage();
+	    this.registry = registry;
 	}
 
 
@@ -72,7 +72,7 @@ public class UIMWorkflowProcessor implements Runnable {
 											execution.setActive(false);
 											execution.setEndTime(new Date());
 
-                                            storageEngine.updateExecution(execution);
+											execution.getStorageEngine().updateExecution(execution);
 											iterator.remove();
 										}
 									}
