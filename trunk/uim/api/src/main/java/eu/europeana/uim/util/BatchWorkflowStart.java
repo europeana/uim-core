@@ -152,6 +152,6 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     }
 
     public int getScheduledSize() {
-        return this.scheduledSize;
+        return 0;
     }
 }

@@ -83,7 +83,7 @@ public class UIMWorkflowProcessor implements Runnable {
 									}
 								}
 							} else {
-								//execution.incrementScheduled(tasks);
+								execution.incrementScheduled(tasks);
 							}
 						} 
 
