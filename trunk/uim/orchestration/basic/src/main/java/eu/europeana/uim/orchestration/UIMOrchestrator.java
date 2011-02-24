@@ -3,6 +3,7 @@ package eu.europeana.uim.orchestration;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
@@ -80,10 +81,10 @@ public class UIMOrchestrator implements Orchestrator {
 
 				return activeExecution;
 			} catch (Throwable t) {
-				log.severe("Could not update execution details: " + t.getMessage());
+				log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
 			}
 		} catch (StorageEngineException e1) {
-			log.severe("Could not update execution details: " + e1.getMessage());
+			log.log(Level.SEVERE, "Could not update execution details: " + e1.getMessage(), e1);
 			e1.printStackTrace();
 		}
 		return null;

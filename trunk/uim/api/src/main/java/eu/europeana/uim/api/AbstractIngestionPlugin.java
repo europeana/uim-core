@@ -66,7 +66,7 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 
 	@Override
 	public String getIdentifier() {
-		return AbstractIngestionPlugin.class.getSimpleName() + (qualifier != null ? ":" + qualifier : "");
+		return getClass().getSimpleName() + (qualifier != null ? ":" + qualifier : "");
 	}
 
 
