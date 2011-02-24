@@ -19,7 +19,7 @@ public class DummyWorkflow extends AbstractWorkflow implements Workflow {
     public DummyWorkflow(Registry registry) {
     	super(DummyWorkflow.class.getName(),"This awesome workflow demonstrates the capabilities of the UIM");
     	
-    	setStart(new BatchWorkflowStart());
+    	setStart(new BatchWorkflowStart()); 
     	
         // that's a very exciting worklow
         IngestionPlugin plugin1 = registry.getPlugin("DummyPlugin");
