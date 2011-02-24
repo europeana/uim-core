@@ -44,6 +44,14 @@
         </reference-listener>
     </reference-list>
 
+
+    <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingPlugin">
+    </bean>
+
+    <service id="loggingPluginService" ref="loggingPlugin" interface="eu.europeana.uim.api.IngestionPlugin" />
+
+
+
     <shell:command-bundle>
         <shell:command name="uim/info">
             <shell:action class="eu.europeana.uim.command.UIMInfo">

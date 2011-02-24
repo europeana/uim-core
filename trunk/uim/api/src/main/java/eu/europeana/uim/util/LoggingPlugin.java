@@ -1,4 +1,4 @@
-package eu.europeana.uim.workflows;
+package eu.europeana.uim.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
