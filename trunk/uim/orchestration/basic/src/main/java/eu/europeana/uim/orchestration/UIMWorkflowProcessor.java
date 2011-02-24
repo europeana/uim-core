@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.orchestration.processing.TaskExecutorThread;
@@ -83,7 +82,9 @@ public class UIMWorkflowProcessor implements Runnable {
 									}
 								}
 							} else {
-								execution.incrementScheduled(tasks);
+                                if(start.getScheduledSize() == -1) {
+                                    execution.incrementScheduled(tasks);
+                                }
 							}
 						} 
 
@@ -170,7 +171,9 @@ public class UIMWorkflowProcessor implements Runnable {
 		}
 
         // initialize the scheduled number of records for this execution
-        execution.setScheduled(start.getScheduledSize());
+        if(start.getScheduledSize() != -1) {
+            execution.setScheduled(start.getScheduledSize());
+        }
 
 		// start/execute the first loader task so that we do preload data
 		start.getThreadPoolExecutor().execute(start.createLoader(execution));

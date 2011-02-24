@@ -12,7 +12,7 @@ import eu.europeana.uim.api.ActiveExecution;
  *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public interface WorkflowStart extends WorkflowStep{
+public interface WorkflowStart extends WorkflowStep {
 
 	/** Create a runnable which is executed within a thread pool. The
 	 * runnable is then scheduled and executed in another thread
@@ -51,7 +51,8 @@ public interface WorkflowStart extends WorkflowStep{
 	//<T> int getRemaining(ActiveExecution<T> execution);
 
     /**
-     * Get the number of initially scheduled records
+     * Get the number of initially scheduled records, if it is already known.
+     * If not, returns -1.
      */
     public int getScheduledSize();
     

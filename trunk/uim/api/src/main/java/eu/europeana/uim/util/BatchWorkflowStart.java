@@ -151,7 +151,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
     }
 
+    @Override
     public int getScheduledSize() {
-        return 0;
+        return -1;
     }
 }
