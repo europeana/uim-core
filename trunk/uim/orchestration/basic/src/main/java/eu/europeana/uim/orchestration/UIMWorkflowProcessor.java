@@ -86,7 +86,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     }
                                 }
                             } else {
-                                if (start.getScheduledSize() == -1) {
+                                if (start.getScheduledSize() > -1) {
                                     execution.incrementScheduled(tasks);
                                 }
                             }
