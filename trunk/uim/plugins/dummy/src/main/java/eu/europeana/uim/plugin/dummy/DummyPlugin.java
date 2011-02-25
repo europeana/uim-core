@@ -1,5 +1,7 @@
 package eu.europeana.uim.plugin.dummy;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.MDRFieldRegistry;
@@ -21,11 +23,6 @@ public class DummyPlugin implements IngestionPlugin {
 	public DummyPlugin() {
 	}
 	
-
-	public String getIdentifier() {
-		return DummyPlugin.class.getSimpleName();
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -36,24 +33,18 @@ public class DummyPlugin implements IngestionPlugin {
 
 
 	@Override
-	public TKey<MDRFieldRegistry, ?>[] getInputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public TKey<MDRFieldRegistry, ?>[] getOutputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	@Override
-	public TKey<MDRFieldRegistry, ?>[] getTransientParameters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
     @Override
     public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
@@ -77,11 +68,16 @@ public class DummyPlugin implements IngestionPlugin {
 	
 
     @Override
-    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void initialize(ExecutionContext context) throws StorageEngineException {
     }
 
     @Override
-    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void finalize(ExecutionContext context) throws StorageEngineException {
+    }
+
+    @Override
+    public List<String> getParameters() {
+        return Collections.EMPTY_LIST;
     }
 
 }

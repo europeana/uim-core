@@ -11,12 +11,12 @@ public class IngestionWorkflowStep extends AbstractWorkflowStep {
 	private final IngestionPlugin plugin;
 	
 	public IngestionWorkflowStep(IngestionPlugin plugin) {
-		super(plugin.getIdentifier());
+		super(plugin.getClass().getSimpleName());
 		this.plugin = plugin;
 	}
 	
 	public IngestionWorkflowStep(IngestionPlugin plugin, boolean savepoint) {
-		super(plugin.getIdentifier(), savepoint);
+		super(plugin.getClass().getSimpleName(), savepoint);
 		this.plugin = plugin;
 	}
 	

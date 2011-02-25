@@ -19,18 +19,12 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 
 	private static final Logger log = Logger.getLogger(AbstractIngestionPlugin.class.getName());
 
-	private String qualifier;
 	private Level level = Level.FINEST;
 
 	public AbstractIngestionPlugin() {
 	}
 
-	public AbstractIngestionPlugin(String qualifier) {
-		this.qualifier = qualifier;
-	}
-
-	public AbstractIngestionPlugin(String qualifier, Level level) {
-		this.qualifier = qualifier;
+	public AbstractIngestionPlugin(Level level) {
 		this.level = level;
 	}
 
@@ -47,42 +41,24 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getInputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
 		return new TKey[0];
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getOutputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
 		return new TKey[0];
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getTransientParameters() {
-		return new TKey[0];
-	}
-
-
-	@Override
-	public String getIdentifier() {
-		return getClass().getSimpleName() + (qualifier != null ? ":" + qualifier : "");
-	}
-
-
-	@Override
-	public String getDescription() {
-		return "Abstract Ingestion Plugin";
 	}
 
 
     @Override
-    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void initialize(ExecutionContext context) throws StorageEngineException {
     }
 
 
     @Override
-    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void finalize(ExecutionContext context) throws StorageEngineException {
     }
 
     

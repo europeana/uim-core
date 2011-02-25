@@ -1,10 +1,11 @@
 package eu.europeana.uim.api;
 
+import java.util.Properties;
+
 import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.WorkflowStep;
 
 /**
  * Context of a running execution
@@ -27,7 +28,11 @@ public interface ExecutionContext {
     /** logging engine **/
     LoggingEngine<?> getLoggingEngine();
 
+    /** the execution specific properties */
+    public Properties getProperties();
+    
 	void putValue(IngestionPlugin plugin, String key, Object value);
+	boolean hasValue(IngestionPlugin plugin, String key);
 	Object getValue(IngestionPlugin plugin, String key);
 
 

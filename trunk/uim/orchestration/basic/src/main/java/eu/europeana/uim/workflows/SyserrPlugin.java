@@ -1,11 +1,12 @@
 package eu.europeana.uim.workflows;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
-import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngineException;
@@ -51,27 +52,16 @@ public class SyserrPlugin implements IngestionPlugin {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getInputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
 		return new TKey[0];
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getOutputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
 		return new TKey[0];
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getTransientParameters() {
-		return new TKey[0];
-	}
-
-
-	@Override
-	public String getIdentifier() {
-		return SyserrPlugin.class.getSimpleName() + (name != null ? ":" + name : "");
-	}
 
 	
 	@Override
@@ -86,11 +76,11 @@ public class SyserrPlugin implements IngestionPlugin {
 			try {
 				int sleep = random.nextInt(100);
 				Thread.sleep(sleep);
-				System.err.println(getIdentifier() + ": " + identifier + "(s=" + sleep + ")");
+				System.err.println(getClass().getSimpleName() + ": " + identifier + "(s=" + sleep + ")");
 			} catch (InterruptedException e) {
 			}
 		} else {
-			System.err.println(getIdentifier() + ": " + identifier);
+			System.err.println(getClass().getSimpleName() + ": " + identifier);
 		}
 		
 		if (processed++ % errorrate == 0) {
@@ -100,11 +90,16 @@ public class SyserrPlugin implements IngestionPlugin {
 
 
     @Override
-    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void initialize(ExecutionContext context) throws StorageEngineException {
     }
 
     @Override
-    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void finalize(ExecutionContext context) throws StorageEngineException {
+    }
+
+    @Override
+    public List<String> getParameters() {
+        return Collections.EMPTY_LIST;
     }
 	
 }

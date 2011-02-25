@@ -1,5 +1,9 @@
 package eu.europeana.uim.util;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,23 +16,17 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Execution;
 
+/** Simple logging plugin which logs  
+ * 
+ * 
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @date Feb 25, 2011
+ */
 public class LoggingPlugin implements IngestionPlugin {
 
 	private static final Logger log = Logger.getLogger(LoggingPlugin.class.getName());
 
-	private Level level = Level.FINE;
-	private int stepsize = 5;
-
 	public LoggingPlugin() {
-	}
-
-	public LoggingPlugin(int stepsize) {
-		this.stepsize = stepsize;
-	}
-
-	public LoggingPlugin(Level level, int stepsize) {
-		this.level = level;
-		this.stepsize = stepsize;
 	}
 
 	@Override
@@ -44,37 +42,36 @@ public class LoggingPlugin implements IngestionPlugin {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getInputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
 		return new TKey[0];
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getOutputParameters() {
+	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
 		return new TKey[0];
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getTransientParameters() {
-		return new TKey[0];
-	}
-
-
-	@Override
-	public String getIdentifier() {
-		return LoggingPlugin.class.getSimpleName();
-	}
-
 
 	@Override
 	public String getDescription() {
-		return "Logges the identifiers of MDRs according the specififed level:" + level.toString();
+		return "Logges the identifiers of MDRs according the specififed level in the execution (default INFO)";
 	}
 
+	
 	@Override
 	public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
 		int current = 1;
+		
+		int stepsize = 5;
+		if (context.hasValue(this, "logging.stepsize")){
+		    stepsize = (Integer)context.getValue(this, "logging.stepsize");
+		}
+		
+		Level level = Level.FINE;
+		if (context.hasValue(this, "logging.level")) {
+		    level = (Level)context.getValue(this, "logging.level");
+		}
+		
 
 		Integer value = (Integer) context.getValue(this, "count");
 		if (value != null) {
@@ -91,10 +88,21 @@ public class LoggingPlugin implements IngestionPlugin {
 	}
 
     @Override
-    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void initialize(ExecutionContext context) throws StorageEngineException {
+        Properties properties = context.getProperties();
+        String property = properties.getProperty("logging.stepsize","5");
+        context.putValue(this, "logging.size", Integer.parseInt(property));
+     
+        property = properties.getProperty("logging.level","FINE");
+        context.putValue(this, "logging.level", Level.parse(property));
     }
 
     @Override
-    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public <T> void finalize(ExecutionContext context) throws StorageEngineException {
+    }
+
+    @Override
+    public List<String> getParameters() {
+        return Arrays.asList("logging.stepsize","logging.level");
     }
 }

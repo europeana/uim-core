@@ -90,9 +90,9 @@ public class UIMRegistry implements Registry {
     @Override
     public void addPlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Added plugin:" + plugin.getIdentifier());
-            if (!plugins.containsKey(plugin.getIdentifier()))
-                plugins.put(plugin.getIdentifier(), plugin);
+            log.info("Added plugin:" + plugin.getClass().getSimpleName());
+            if (!plugins.containsKey(plugin.getClass().getSimpleName()))
+                plugins.put(plugin.getClass().getSimpleName(), plugin);
         }
     }
 
@@ -104,8 +104,8 @@ public class UIMRegistry implements Registry {
     @Override
     public void removePlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Removed plugin:" + plugin.getIdentifier());
-            plugins.remove(plugin.getIdentifier());
+            log.info("Removed plugin:" + plugin.getClass().getSimpleName());
+            plugins.remove(plugin.getClass().getSimpleName());
         }
     }
 
@@ -269,7 +269,7 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getIdentifier()).append(": [").append(plugin.getDescription()).append("]");
+                builder.append(plugin.getClass().getSimpleName()).append(": [").append(plugin.getDescription()).append("]");
             }
         }
 

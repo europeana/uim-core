@@ -307,17 +307,25 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
 	@Override
 	public void putValue(IngestionPlugin plugin, String key, Object value) {
-		if (!values.containsKey(plugin.getIdentifier())) {
-			values.put(plugin.getIdentifier(), new HashMap<String, Object>());
+		if (!values.containsKey(plugin.getClass().getSimpleName())) {
+			values.put(plugin.getClass().getSimpleName(), new HashMap<String, Object>());
 		}
-		values.get(plugin.getIdentifier()).put(key, value);
+		values.get(plugin.getClass().getSimpleName()).put(key, value);
 	}
 
 	@Override
 	public Object getValue(IngestionPlugin plugin, String key) {
-		if (!values.containsKey(plugin.getIdentifier())) return null;
-		return values.get(plugin.getIdentifier()).get(key);
+		if (!values.containsKey(plugin.getClass().getSimpleName())) return null;
+		return values.get(plugin.getClass().getSimpleName()).get(key);
 	}
+
+    @Override
+    public boolean hasValue(IngestionPlugin plugin, String key) {
+        if (values.containsKey(plugin.getClass().getSimpleName())) {
+            return values.get(plugin.getClass().getSimpleName()).containsKey(key);
+        }
+        return false;
+    }
 
 
 

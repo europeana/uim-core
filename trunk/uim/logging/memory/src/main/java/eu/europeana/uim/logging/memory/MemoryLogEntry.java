@@ -37,7 +37,7 @@ public class MemoryLogEntry<T> implements LogEntry<T> {
 
     @Override
     public String getPluginIdentifier() {
-        return plugin.getIdentifier();
+        return plugin.getClass().getSimpleName();
     }
 
     @Override
