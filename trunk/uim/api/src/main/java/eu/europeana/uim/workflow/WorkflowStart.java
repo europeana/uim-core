@@ -51,9 +51,9 @@ public interface WorkflowStart extends WorkflowStep {
 	//<T> int getRemaining(ActiveExecution<T> execution);
 
     /**
-     * Get the number of initially scheduled records, if it is already known.
+     * Get the number of total records, if it is known.
      * If not, returns -1.
      */
-    public int getScheduledSize();
+    public int getTotalSize();
     
 }

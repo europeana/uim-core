@@ -157,7 +157,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     }
 
     @Override
-    public int getScheduledSize() {
+    public int getTotalSize() {
         return -1;
     }
 }
