@@ -57,12 +57,12 @@ public class UIMOrchestratorTest {
 		assertEquals(0, orchestrator.getActiveExecutions().size());
 
 		
-		Request request = createTestData(engine, 20);
+		Request request = createTestData(engine, 1);
 		
 		// creating the data calles 20 times the update method.
-		verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
+		verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-		Workflow w = new SysoutWorkflow(3, 7, true, false);
+		Workflow w = new SysoutWorkflow(7, true, false);
         ProgressMonitor monitor = new MemoryProgressMonitor();
 
 		
@@ -70,11 +70,11 @@ public class UIMOrchestratorTest {
 		execution0.waitUntilFinished();
 
 		// each delivered metadata record is saved
-		verify(engine, times(40)).updateMetaDataRecord(any(MetaDataRecord.class));
+		verify(engine, times(2)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-		assertEquals(20, execution0.getCompletedSize());
+		assertEquals(1, execution0.getCompletedSize());
 		assertEquals(0, execution0.getFailureSize());
-		assertEquals(20, execution0.getScheduledSize());
+		assertEquals(1, execution0.getScheduledSize());
 	}
 	
 	
@@ -97,8 +97,8 @@ public class UIMOrchestratorTest {
 		// each failed metadata record is saved once 21 + original count of 21
 		verify(engine, times(42)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-		assertEquals(0, execution0.getCompletedSize());
-		assertEquals(21, execution0.getFailureSize());
+		assertEquals(14, execution0.getCompletedSize());
+		assertEquals(7, execution0.getFailureSize());
 		assertEquals(21, execution0.getScheduledSize());
 	}
 	
@@ -112,7 +112,7 @@ public class UIMOrchestratorTest {
 		verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
 
-		Workflow w = new MixedWorkflow(7, true, true);
+		Workflow w = new MixedWorkflow(7, true);
         ProgressMonitor monitor = new MemoryProgressMonitor();
 
 		
@@ -124,8 +124,8 @@ public class UIMOrchestratorTest {
 
 
 		
-		assertEquals(15, execution0.getCompletedSize());
-		assertEquals(15, execution0.getFailureSize());
+		assertEquals(20, execution0.getCompletedSize());
+		assertEquals(10, execution0.getFailureSize());
 		assertEquals(30, execution0.getScheduledSize());
 	}
 	
@@ -140,16 +140,16 @@ public class UIMOrchestratorTest {
 		// creating the data calles 20 times the update method.
 		verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-		Workflow w = new SysoutWorkflow(3, 7, true, true);
+		Workflow w = new SysoutWorkflow(7, true, true);
         ProgressMonitor monitor = new MemoryProgressMonitor();
 
 		
 		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request, monitor);
 		execution0.waitUntilFinished();
 
-		// each delivered metadata record is saved once per plugin plus additionally
-		// once in the end 3 * 20 + 20 = 80 plus the initial 20 
-		verify(engine, times(100)).updateMetaDataRecord(any(MetaDataRecord.class));
+		// each delivered metadata record is saved once per plugin (only one plugin in the 
+		// workflow) 20 plus the initial 20 
+		verify(engine, times(40)).updateMetaDataRecord(any(MetaDataRecord.class));
 
 		assertEquals(20, execution0.getCompletedSize());
 		assertEquals(0, execution0.getFailureSize());

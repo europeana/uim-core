@@ -3,6 +3,7 @@ package eu.europeana.uim.orchestration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
@@ -10,16 +11,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.orchestration.processing.TaskExecutorThread;
 import eu.europeana.uim.orchestration.processing.TaskExecutorThreadFactory;
-import eu.europeana.uim.util.BatchWorkflowStart;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskStatus;
 import eu.europeana.uim.workflow.WorkflowStart;
-import eu.europeana.uim.workflow.WorkflowStep;
 
 public class UIMWorkflowProcessor implements Runnable {
 
@@ -69,9 +69,9 @@ public class UIMWorkflowProcessor implements Runnable {
                                             execution.setActive(false);
                                             execution.setEndTime(new Date());
 
-                                            start.finalize(execution);
-                                            for (WorkflowStep step : execution.getWorkflow().getSteps()) {
-                                                step.finalize(execution);
+                                            start.completed(execution);
+                                            for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
+                                                step.completed(execution);
                                             }
 
                                             execution.getStorageEngine().updateExecution(
@@ -82,22 +82,23 @@ public class UIMWorkflowProcessor implements Runnable {
                                 } else {
                                     Runnable loader = start.createLoader(execution);
                                     if (loader != null) {
-                                        start.getThreadPoolExecutor().execute(loader);
+                                        TaskExecutorRegistry.getInstance().getExecutor(start.getClass()).execute(loader);
                                     }
                                 }
                             } else {
-                                if (start.getTotalSize() == -1) {
+                                if (start.getTotalSize(execution) == -1) {
                                     execution.incrementScheduled(tasks);
                                 }
                             }
                         }
 
-                        Queue<Task> success = execution.getSuccess(execution.getWorkflow().getStart().getIdentifier());
+                        Queue<Task> success = execution.getSuccess(execution.getWorkflow().getStart().getClass().getSimpleName());
 
-                        List<WorkflowStep> steps = execution.getWorkflow().getSteps();
-                        for (WorkflowStep step : steps) {
-                            Queue<Task> thisSuccess = execution.getSuccess(step.getIdentifier());
-                            Queue<Task> thisFailure = execution.getFailure(step.getIdentifier());
+                        List<IngestionPlugin> steps = execution.getWorkflow().getSteps();
+                        for (IngestionPlugin step : steps) {
+                            boolean savepoint = execution.getWorkflow().isSavepoint(step);
+                            Queue<Task> thisSuccess = execution.getSuccess(step.getClass().getSimpleName());
+                            Queue<Task> thisFailure = execution.getFailure(step.getClass().getSimpleName());
 
                             // get successful tasks from previouse step
                             // and schedule them into the step executor.
@@ -107,11 +108,13 @@ public class UIMWorkflowProcessor implements Runnable {
                             }
                             while (task != null) {
                                 task.setStep(step);
+                                //TODO: should we make the last step always implicitly a savepoint
+                                task.setSavepoint(savepoint);
                                 task.setOnSuccess(thisSuccess);
                                 task.setOnFailure(thisFailure);
 
                                 task.setStatus(TaskStatus.QUEUED);
-                                step.getThreadPoolExecutor().execute(task);
+                                TaskExecutorRegistry.getInstance().getExecutor(step.getClass()).execute(task);
 
                                 synchronized (success) {
                                     task = success.poll();
@@ -128,7 +131,6 @@ public class UIMWorkflowProcessor implements Runnable {
                             task = success.poll();
                         }
                         while (task != null) {
-                            task.save();
                             execution.done(1);
                             execution.getMonitor().worked(1);
 
@@ -139,10 +141,6 @@ public class UIMWorkflowProcessor implements Runnable {
 
                     } catch (Throwable exc) {
                         log.log(Level.WARNING, "Exception in workflow execution", exc);
-
-// execution.setActive(false);
-// execution.setThrowable(exc);
-// iterator.remove();
                     }
                 }
 
@@ -162,25 +160,32 @@ public class UIMWorkflowProcessor implements Runnable {
                                             execution.getWorkflow().getClass().getName());
 
         WorkflowStart start = execution.getWorkflow().getStart();
-        if (start == null) {
-            execution.getWorkflow().setStart(new BatchWorkflowStart());
-        }
+        start.initialize(execution, execution.getStorageEngine());
 
-        start.initialize(execution);
-        TaskExecutorRegistry.getInstance().initialize(start, start.getMaximumThreadCount());
+        TaskExecutorRegistry.getInstance().initialize(start.getClass(), start.getMaximumThreadCount());
 
-        for (WorkflowStep step : execution.getWorkflow().getSteps()) {
+        HashSet<String> unique = new HashSet<String>();
+        for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
+            if (unique.contains(step.getClass().getSimpleName())) {
+                throw new IllegalArgumentException("Workflow contains duplicate plugin:" + step.getClass().getSimpleName());
+            } else {
+                unique.add(step.getClass().getSimpleName());
+            }
+
             step.initialize(execution);
-            TaskExecutorRegistry.getInstance().initialize(step, step.getMaximumThreadCount());
+            TaskExecutorRegistry.getInstance().initialize(step.getClass(), step.getMaximumThreadCount());
         }
 
         // initialize the scheduled number of records for this execution
-        if (start.getTotalSize() != -1) {
-            execution.setScheduled(start.getTotalSize());
+        if (start.getTotalSize(execution) != -1) {
+            execution.setScheduled(start.getTotalSize(execution));
         }
 
         // start/execute the first loader task so that we do preload data
-        start.getThreadPoolExecutor().execute(start.createLoader(execution));
+        Runnable loader = start.createLoader(execution);
+        if (loader != null) {
+            TaskExecutorRegistry.getInstance().getExecutor(start.getClass()).execute(loader);
+        }
 
         executions.add(execution);
     }

@@ -80,7 +80,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
 			if (t == null) {
 				try {
 					task.setStatus(TaskStatus.DONE);
-					if (task.getStep().isSavepoint()) {
+					if (task.isSavepoint()) {
 						task.save();
 					}
 					synchronized(task.getOnSuccess()) {

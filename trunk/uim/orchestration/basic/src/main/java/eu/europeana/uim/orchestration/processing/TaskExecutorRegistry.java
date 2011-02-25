@@ -8,8 +8,6 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.workflow.WorkflowStep;
-
 public class TaskExecutorRegistry {
 
 	public final static Logger log = Logger.getLogger(TaskExecutorRegistry.class.getName());
@@ -27,21 +25,18 @@ public class TaskExecutorRegistry {
 	}
 
 
-	public void initialize(WorkflowStep step, int maxsize){
-		if (!executor.containsKey(step.getIdentifier())){
-			TaskExecutor exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), step.getIdentifier());
+	public void initialize(Class clazz, int maxsize){
+		if (!executor.containsKey(clazz.getSimpleName())){
+			TaskExecutor exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), clazz.getSimpleName());
 			exec.setRejectedExecutionHandler(new ReattachExecutionHandler());
 			
-			step.setThreadPoolExecutor(exec);
-			executor.put(step.getIdentifier(), exec);
-		} else {
-			step.setThreadPoolExecutor(executor.get(step.getIdentifier()));
+			executor.put(clazz.getSimpleName(), exec);
 		}
 	}
 	
 
-	public TaskExecutor getExecutor(WorkflowStep step){
-		return executor.get(step.getIdentifier());
+	public TaskExecutor getExecutor(Class clazz){
+		return executor.get(clazz.getSimpleName());
 	}
 	
 	
