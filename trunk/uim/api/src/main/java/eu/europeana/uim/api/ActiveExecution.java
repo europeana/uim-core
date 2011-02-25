@@ -59,7 +59,7 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	int getFailureSize();
 
 	/** gives the number of tasks/records which have been scheduled to be processed
-	 * in the first place. So scheduled = remaining + progress + finished + failure.
+	 * in the first place. So scheduled = progress + finished + failure.
 	 * 
 	 * @return
 	 */
