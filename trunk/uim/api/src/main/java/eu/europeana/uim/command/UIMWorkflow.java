@@ -9,11 +9,11 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.osgi.service.command.CommandSession;
 
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
-import eu.europeana.uim.workflow.WorkflowStep;
 
 
 @Command(name = "uim", scope = "workflow")
@@ -71,10 +71,10 @@ public class UIMWorkflow implements Action {
             }
             builder.append(workflow.getName());
             WorkflowStart start = workflow.getStart();
-            builder.append("\n\t\t  " + start.getIdentifier());
-            List<WorkflowStep> steps = workflow.getSteps();
-            for (WorkflowStep step : steps) {
-				builder.append("n\t\t  " + step.getIdentifier());
+            builder.append("\n\t\t  " + start.getClass().getSimpleName());
+            List<IngestionPlugin> steps = workflow.getSteps();
+            for (IngestionPlugin step : steps) {
+				builder.append("n\t\t  " + step.getClass().getSimpleName());
 			}
         }
 	}

@@ -3,6 +3,8 @@ package eu.europeana.uim.workflow;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.europeana.uim.api.IngestionPlugin;
+
 public abstract class AbstractWorkflow implements Workflow {
 
     private String name;
@@ -10,7 +12,7 @@ public abstract class AbstractWorkflow implements Workflow {
     
     private WorkflowStart start;
     
-    private List<WorkflowStep> steps = new LinkedList<WorkflowStep>();
+    private List<IngestionPlugin> steps = new LinkedList<IngestionPlugin>();
 
     public AbstractWorkflow(String name, String description) {
     	this.name = name;
@@ -35,7 +37,7 @@ public abstract class AbstractWorkflow implements Workflow {
     }
 
     @Override
-    public List<WorkflowStep> getSteps() {
+    public List<IngestionPlugin> getSteps() {
         return this.steps;
     }
 
@@ -61,7 +63,7 @@ public abstract class AbstractWorkflow implements Workflow {
 
 
 	
-	protected void addStep(WorkflowStep step) {
+	protected void addStep(IngestionPlugin step) {
 		steps.add(step);
 	}
 

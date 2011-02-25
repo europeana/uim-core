@@ -5,7 +5,6 @@ import java.util.Properties;
 import java.util.Queue;
 
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.workflow.WorkflowStep;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
@@ -67,15 +66,12 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	
 	
 	List<WorkflowStepStatus> getStepStatus();
-	WorkflowStepStatus getStepStatus(WorkflowStep step);
+	WorkflowStepStatus getStepStatus(IngestionPlugin step);
 
 	public Properties getProperties();
 
 	void waitUntilFinished();
 	
-	void putValue(WorkflowStep step, String key, Object value);
-	Object getValue(WorkflowStep step, String key);
-
 
     void setScheduled(int scheduled);
 

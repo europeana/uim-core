@@ -4,6 +4,8 @@ import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,15 +55,26 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 
 
     @Override
-    public <T> void initialize(ExecutionContext context) throws StorageEngineException {
+    public void initialize(ExecutionContext context) throws StorageEngineException {
     }
 
 
     @Override
-    public <T> void finalize(ExecutionContext context) throws StorageEngineException {
+    public void completed(ExecutionContext context) throws StorageEngineException {
     }
 
     
+    @Override
+    public String getDescription() {
+        return "Undescribed plugin.";
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> getParameters() {
+        return Collections.EMPTY_LIST;
+    }
+
     /**
      * Helper class for easing common operations such as logging when implementing an @{IngestionPlugin}
      */

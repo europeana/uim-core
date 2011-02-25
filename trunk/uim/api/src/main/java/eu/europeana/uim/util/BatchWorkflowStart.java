@@ -1,11 +1,13 @@
 package eu.europeana.uim.util;
 
-import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
+import java.io.Serializable;
+import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.TKey;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
+import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
@@ -13,8 +15,6 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStart;
-
-
 
 /**
  * 
@@ -24,40 +24,18 @@ import eu.europeana.uim.workflow.WorkflowStart;
  */
 public class BatchWorkflowStart extends AbstractWorkflowStart implements WorkflowStart {
 
+    private static TKey<BatchWorkflowStart, Data> DATA_KEY = TKey.register(BatchWorkflowStart.class, "data", Data.class);
+
     /**
      * default batch size
      */
-    private int batchSize = 250;
-
-    /**
-     * the total number of ids to process
-     */
-    private int scheduledSize = 0;
-
-    /**
-     * having a local list of batches is "overhead" - it duplicates
-     * the parent class bath variable. Here it is only used to show
-     * the combination of loader runnable and task runnable.
-     */
-    private LinkedList<long[]> idchunks = new LinkedList<long[]>();
-
+    public static int BATCH_SIZE = 250;
 
     /**
      * Creates a new instance of this class.
      */
     public BatchWorkflowStart() {
-        super(BatchWorkflowStart.class.getName());
     }
-
-    /**
-     * Creates a new instance of this class.
-     * @param batchSize the size of each batch which is put into the workflow at once.
-     */
-    public BatchWorkflowStart(int batchSize) {
-        super(BatchWorkflowStart.class.getName());
-        this.batchSize = batchSize;
-    }
-
 
     @Override
     public int getPreferredThreadCount() {
@@ -69,95 +47,82 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
         return 2;
     }
 
-
     @Override
-    public <T> void initialize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public void initialize(ExecutionContext context, StorageEngine storage)
+            throws StorageEngineException {
+        super.initialize(context, storage);
+
         try {
             long[] ids;
 
-            DataSet dataSet = visitor.getDataSet();
+            DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
-                ids = visitor.getStorageEngine().getByProvider((Provider)dataSet, false);
+                ids = storage.getByProvider((Provider)dataSet, false);
             } else if (dataSet instanceof Collection) {
-                ids = visitor.getStorageEngine().getByCollection((Collection)dataSet);
+                ids = storage.getByCollection((Collection)dataSet);
             } else if (dataSet instanceof Request) {
-                ids = visitor.getStorageEngine().getByRequest((Request)dataSet);
+                ids = storage.getByRequest((Request)dataSet);
             } else if (dataSet instanceof MetaDataRecord) {
-                ids = new long[]{((MetaDataRecord)dataSet).getId()};
+                ids = new long[] { ((MetaDataRecord)dataSet).getId() };
             } else {
-                throw new IllegalStateException("Unsupported dataset <" + visitor.getDataSet() + ">");
+                throw new IllegalStateException("Unsupported dataset <" + context.getDataSet() +
+                                                ">");
             }
-
-            scheduledSize = ids.length;
-
-            if (ids.length > batchSize) {
-                int batches = (int)Math.ceil(1.0 * ids.length / batchSize);
+            
+            Data data = new Data();
+            data.total = ids.length;
+            context.putValue(DATA_KEY, data);
+            if (ids.length > BATCH_SIZE) {
+                int batches = (int)Math.ceil(1.0 * ids.length / BATCH_SIZE);
                 for (int i = 0; i < batches; i++) {
-                    int end = Math.min(ids.length, (i + 1) * batchSize);
-                    int start = i * batchSize;
+                    int end = Math.min(ids.length, (i + 1) * BATCH_SIZE);
+                    int start = i * BATCH_SIZE;
 
                     long[] batch = new long[end - start];
-                    System.arraycopy(ids, start, batch, 0, end-start);
+                    System.arraycopy(ids, start, batch, 0, end - start);
 
-                    synchronized(this.idchunks) {
-                        this.idchunks.add(batch);
+                    BlockingQueue<long[]> queue = getBatches(context);
+                    synchronized (queue) {
+                        queue.add(batch);
                     }
                 }
 
             } else {
-                // adding this to the local queue and 
+                // adding this to the local queue and
                 // enqueue the batch with a runnable per
                 // batch "implements" the way how this api
-                // is meant 
-                synchronized(this.idchunks) {
-                    this.idchunks.add(ids);
+                // is meant
+                BlockingQueue<long[]> queue = getBatches(context);
+                synchronized (queue) {
+                    queue.add(ids);
                 }
             }
         } finally {
-            setInitialized(true);
         }
     }
 
-
     @Override
-    public <T> void finalize(ActiveExecution<T> visitor) throws StorageEngineException {
+    public void completed(ExecutionContext context) throws StorageEngineException {
     }
-
-
 
     @Override
     public <T> Runnable createLoader(ActiveExecution<T> execution) {
-        if (idchunks.isEmpty()) {
-            setFinished(true);
-            return null;
-        }
-
-        return new Runnable(){
-            @Override
-            public void run() {
-                synchronized(idchunks){
-                    if (!idchunks.isEmpty()) {
-                        try {
-                            @SuppressWarnings("unused")
-                            boolean offer = offer(idchunks.poll(), 500,  TimeUnit.MILLISECONDS);
-                        } catch (InterruptedException e) {
-                            // don't really care.
-                        }
-                    } else {
-                        setFinished(true);
-                    }
-                }
-            }
-        };
-    }
-
-
-    @Override
-    public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
+        // all done
+        return null;
     }
 
     @Override
-    public int getTotalSize() {
-        return -1;
+    public int getTotalSize(ExecutionContext context) {
+        return context.getValue(DATA_KEY).total;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.";
+    }
+
+    
+    private final static class Data implements Serializable {
+        public int total = 0;
     }
 }

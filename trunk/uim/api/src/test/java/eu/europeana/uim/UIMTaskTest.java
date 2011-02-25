@@ -7,13 +7,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Test;
 
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineAdapter;
-import eu.europeana.uim.workflow.AbstractWorkflowStep;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskStatus;
 
@@ -60,21 +61,11 @@ public class UIMTaskTest {
 
 		assertEquals(TaskStatus.NEW, task.getStatus());
 
-		task.setStep(new AbstractWorkflowStep("test") {
-			@Override
-			public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
-				throw new UnsupportedOperationException("Sorry, not implemented.");
-			}
-
-			@Override
-			public int getPreferredThreadCount() {
-				return 0;
-			}
-
-			@Override
-			public int getMaximumThreadCount() {
-				return 0;
-			}
+		task.setStep(new AbstractIngestionPlugin() {
+            @Override
+            public void processRecord(MetaDataRecord mdr, ExecutionContext context) {
+                throw new UnsupportedOperationException("Sorry, not implemented.");
+            }
 		});
 
 		try {

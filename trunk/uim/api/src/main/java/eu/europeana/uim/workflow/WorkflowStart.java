@@ -1,59 +1,63 @@
 package eu.europeana.uim.workflow;
 
 import eu.europeana.uim.api.ActiveExecution;
-
-
-
+import eu.europeana.uim.api.ExecutionContext;
+import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageEngineException;
 
 /**
- * Start in a UIM workflow. We use this in order to implement the command 
- * pattern for workflow execution. The start step is an emphasized step which has 
- * additional functionality.
- *
+ * Start in a UIM workflow. We use this in order to implement the command pattern for workflow
+ * execution. The start step is an emphasized step which has additional functionality.
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public interface WorkflowStart extends WorkflowStep {
-
-	/** Create a runnable which is executed within a thread pool. The
-	 * runnable is then scheduled and executed in another thread
-	 * 
-	 * @param <T>
-	 * @param execution
-	 * @return runnable which runs in a thread pool executor and loads data
-	 */
-	<T> Runnable createLoader(ActiveExecution<T>  execution);
-	
-    /** Create the tasks  (@see {@link Task}) which are then processed through
-     * the workflow and passed on from step to step.
-     * 
-     * @param <T>
-     * @param execution
-     * @return number of tasks created.
-     */
-    <T> int createWorkflowTasks(ActiveExecution<T>  execution);
-
-	/** Check wheater there is more work to do or not. Finished means,
-	 * that no new tasks can be created.
-	 * 
-	 * @param <T>
-	 * @param execution
-	 * @return true iff no more tasks can be created.
-	 */
-	<T> boolean isFinished(ActiveExecution<T> execution);
-
-	/** Get the number of remaining records for this execution
-	 * @param execution 
-	 * @param <T> 
-	 * 
-	 * @return an estimate on the number of records for which no tasks 
-	 * have been created yet
-	 */
-	//<T> int getRemaining(ActiveExecution<T> execution);
+public interface WorkflowStart extends IngestionPlugin {
 
     /**
-     * Get the number of total records, if it is known.
-     * If not, returns -1.
+     * Create a runnable which is executed within a thread pool. The runnable is then scheduled and
+     * executed in another thread
+     * 
+     * @param <T> 
+     * @param execution
+     * @return runnable which runs in a thread pool executor and loads data
      */
-    public int getTotalSize();
+    <T> Runnable createLoader(ActiveExecution<T> execution);
+
+    /**
+     * Create the tasks (@see {@link Task}) which are then processed through the workflow and passed
+     * on from step to step.
+     * @param execution 
+     * @param <T> 
+     * @return number of tasks created.
+     */
+    <T> int createWorkflowTasks(ActiveExecution<T> execution);
+
+    /**
+     * Check wheater there is more work to do or not. Finished means, that no new tasks can be
+     * created.
+     * 
+     * @param context
+     * @return true iff no more tasks can be created.
+     */
+    boolean isFinished(ExecutionContext context);
+
     
+    /** Workflow start specific initialization with sotrage engine so that mdr's can be read from
+     * the engine.
+     * 
+     * @param context
+     * @param storage
+     * @throws StorageEngineException
+     */
+    void initialize(ExecutionContext context, StorageEngine storage) throws StorageEngineException;
+
+    /**
+     * Get the number of total records, if it is known upfront. If not, returns -1.
+     * 
+     * @param context
+     * @return the total number of records to process.
+     */
+    public int getTotalSize(ExecutionContext context);
+
 }

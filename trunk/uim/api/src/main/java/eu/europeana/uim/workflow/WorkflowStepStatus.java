@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.IngestionPlugin;
 
 /**
  * The runtime status of a workflow execution
@@ -12,10 +13,7 @@ import eu.europeana.uim.MetaDataRecord;
  */
 public interface WorkflowStepStatus extends Serializable {
 
-    WorkflowStep getStep();
-
-    /** parent step, for now this can only be a ProcessingContainer **/
-    WorkflowStep getParent();
+    IngestionPlugin getStep();
 
     int successes();
     int failures();

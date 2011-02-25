@@ -2,6 +2,8 @@ package eu.europeana.uim.workflow;
 
 import java.util.List;
 
+import eu.europeana.uim.api.IngestionPlugin;
+
 
 /**
  * UIM UIMWorkflow definition
@@ -18,6 +20,8 @@ public interface Workflow {
 
     public void setStart(WorkflowStart start);
 
-    public List<WorkflowStep> getSteps();
+    public List<IngestionPlugin> getSteps();
+    
+    public boolean isSavepoint(IngestionPlugin plugin);
 
 }

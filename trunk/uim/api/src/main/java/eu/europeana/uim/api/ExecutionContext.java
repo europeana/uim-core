@@ -1,7 +1,9 @@
 package eu.europeana.uim.api;
 
+import java.io.Serializable;
 import java.util.Properties;
 
+import eu.europeana.uim.TKey;
 import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
@@ -31,9 +33,8 @@ public interface ExecutionContext {
     /** the execution specific properties */
     public Properties getProperties();
     
-	void putValue(IngestionPlugin plugin, String key, Object value);
-	boolean hasValue(IngestionPlugin plugin, String key);
-	Object getValue(IngestionPlugin plugin, String key);
+    <NS,T extends Serializable> void putValue(TKey<NS, T> key, T value);
+	<NS,T extends Serializable> T getValue(TKey<NS, T> key);
 
 
 }
