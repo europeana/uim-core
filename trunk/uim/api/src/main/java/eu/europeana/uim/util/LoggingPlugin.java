@@ -83,6 +83,8 @@ public class LoggingPlugin implements IngestionPlugin {
      
         property = properties.getProperty("logging.level","FINE");
         data.level = Level.parse(property);
+        
+        context.putValue(DATA_KEY, data);
     }
 
     

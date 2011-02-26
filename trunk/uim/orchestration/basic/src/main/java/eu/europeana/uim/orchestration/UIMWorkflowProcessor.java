@@ -91,7 +91,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 Queue<Task> success = execution.getSuccess(start.getClass().getSimpleName());
                                 success.addAll(Arrays.asList(tasks));
                                 
-                                if (start.getTotalSize(execution) == -1) {
+                                if (start.getTotalSize(execution) <= 0) {
                                     execution.incrementScheduled(tasks.length);
                                 }
                             }
