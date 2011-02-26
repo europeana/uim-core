@@ -1,6 +1,5 @@
 package eu.europeana.uim.workflow;
 
-import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngine;
@@ -17,30 +16,34 @@ public interface WorkflowStart extends IngestionPlugin {
     /**
      * Create a runnable which is executed within a thread pool. The runnable is then scheduled and
      * executed in another thread
+     *
+     * @param context 
+     * @param storage 
      * 
-     * @param <T> 
-     * @param execution
      * @return runnable which runs in a thread pool executor and loads data
      */
-    <T> Runnable createLoader(ActiveExecution<T> execution);
+     Runnable createLoader(ExecutionContext context, StorageEngine storage);
 
     /**
      * Create the tasks (@see {@link Task}) which are then processed through the workflow and passed
      * on from step to step.
-     * @param execution 
-     * @param <T> 
+     * @param context 
+     * @param storage 
+     * 
      * @return number of tasks created.
      */
-    <T> int createWorkflowTasks(ActiveExecution<T> execution);
+     Task[] createWorkflowTasks(ExecutionContext context, StorageEngine storage);
 
     /**
      * Check wheater there is more work to do or not. Finished means, that no new tasks can be
      * created.
      * 
-     * @param context
+     * @param context 
+     * @param storage 
+     * 
      * @return true iff no more tasks can be created.
      */
-    boolean isFinished(ExecutionContext context);
+    boolean isFinished(ExecutionContext context, StorageEngine storage);
 
     
     /** Workflow start specific initialization with sotrage engine so that mdr's can be read from

@@ -5,7 +5,6 @@ import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
-import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -105,11 +104,6 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     public void completed(ExecutionContext context) throws StorageEngineException {
     }
 
-    @Override
-    public <T> Runnable createLoader(ActiveExecution<T> execution) {
-        // all done
-        return null;
-    }
 
     @Override
     public int getTotalSize(ExecutionContext context) {

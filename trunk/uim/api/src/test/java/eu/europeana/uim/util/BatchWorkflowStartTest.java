@@ -54,7 +54,7 @@ public class BatchWorkflowStartTest {
 		
 		start.initialize(execution, engine);
 		try {
-			start.createLoader(execution).run();
+			start.createLoader(execution, engine).run();
 			fail("Runnable is null when no data left.");
 		} catch (Throwable t) {
 		}		

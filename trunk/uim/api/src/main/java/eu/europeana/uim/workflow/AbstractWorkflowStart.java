@@ -12,7 +12,6 @@ import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
 import eu.europeana.uim.UIMTask;
-import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -51,7 +50,7 @@ public abstract class AbstractWorkflowStart implements WorkflowStart {
 
 	
 	@Override
-	public boolean isFinished(ExecutionContext context) {
+	public boolean isFinished(ExecutionContext context, StorageEngine storage) {
 	    BlockingQueue<long[]> batches = context.getValue(BATCHES);
 	    // not finished because not initialized yet
 	    if (batches == null) return false;
@@ -64,23 +63,24 @@ public abstract class AbstractWorkflowStart implements WorkflowStart {
 	
     @SuppressWarnings("unchecked")
 	@Override
-	public <T> int createWorkflowTasks(ActiveExecution<T> execution) {
+	public Task[] createWorkflowTasks(ExecutionContext context, StorageEngine storage) {
         try {
-        	long[] poll = getBatches(execution).poll(500, TimeUnit.MILLISECONDS);
+        	long[] poll = getBatches(context).poll(500, TimeUnit.MILLISECONDS);
         	if (poll == null) {
         		// nothing on the queue.
-        		if (isFinished(execution)){
-        			return 0;
+        		if (isFinished(context, storage)){
+        			return new Task[0];
         		}
         	} else {
                 try {
-                    MetaDataRecord[] mdrs = execution.getStorageEngine().getMetaDataRecords(poll);
-                    for (MetaDataRecord mdr : mdrs) {
-                        UIMTask task = new UIMTask(mdr, execution.getStorageEngine(), execution);
-                        
-                        execution.getSuccess(getClass().getSimpleName()).add((T) task);
+                    MetaDataRecord[] mdrs = storage.getMetaDataRecords(poll);
+
+                    Task[] tasks = new Task[mdrs.length];
+                    for (int i = 0; i < mdrs.length; i++) {
+                        MetaDataRecord mdr = mdrs[i];
+                        tasks[i] = new UIMTask(mdr, storage, context);
                     }
-                    return mdrs.length;
+                    return tasks;
                 } catch (Throwable e) {
                     log.log(Level.SEVERE, "Failed to create uim task.", e);
                 }
@@ -89,10 +89,15 @@ public abstract class AbstractWorkflowStart implements WorkflowStart {
         } catch (InterruptedException e) {
         	// dont care.
 		}
-        return 0;
+        return new Task[0];
     }
 	
     
+    @Override
+    public Runnable createLoader(ExecutionContext context, StorageEngine storage) {
+        // all done
+        return null;
+    }
 
 
     @Override

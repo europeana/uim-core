@@ -213,7 +213,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     @Override
     public boolean isFinished() {
-        boolean finished = getWorkflow().getStart().isFinished(this);
+        boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
         return finished && processed;
     }

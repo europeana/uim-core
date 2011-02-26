@@ -1,6 +1,7 @@
 package eu.europeana.uim.orchestration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -58,10 +59,11 @@ public class UIMWorkflowProcessor implements Runnable {
                         // we ask the workflow start if we have more to do
                         if (execution.getProgressSize() == 0) {
                             WorkflowStart start = execution.getWorkflow().getStart();
-                            int tasks = start.createWorkflowTasks(execution);
+                            Task[] tasks = start.createWorkflowTasks(execution, execution.getStorageEngine());
 
-                            if (tasks == 0) {
-                                if (start.isFinished(execution)) {
+                            if (tasks.length == 0) {
+                                if (start.isFinished(execution, execution.getStorageEngine())) {
+                                    Thread.sleep(100);
                                     if (execution.isFinished()) {
                                         Thread.sleep(100);
 
@@ -80,14 +82,17 @@ public class UIMWorkflowProcessor implements Runnable {
                                         }
                                     }
                                 } else {
-                                    Runnable loader = start.createLoader(execution);
+                                    Runnable loader = start.createLoader(execution, execution.getStorageEngine());
                                     if (loader != null) {
                                         TaskExecutorRegistry.getInstance().getExecutor(start.getClass()).execute(loader);
                                     }
                                 }
                             } else {
+                                Queue<Task> success = execution.getSuccess(start.getClass().getSimpleName());
+                                success.addAll(Arrays.asList(tasks));
+                                
                                 if (start.getTotalSize(execution) == -1) {
-                                    execution.incrementScheduled(tasks);
+                                    execution.incrementScheduled(tasks.length);
                                 }
                             }
                         }
@@ -182,7 +187,7 @@ public class UIMWorkflowProcessor implements Runnable {
         }
 
         // start/execute the first loader task so that we do preload data
-        Runnable loader = start.createLoader(execution);
+        Runnable loader = start.createLoader(execution, execution.getStorageEngine());
         if (loader != null) {
             TaskExecutorRegistry.getInstance().getExecutor(start.getClass()).execute(loader);
         }
