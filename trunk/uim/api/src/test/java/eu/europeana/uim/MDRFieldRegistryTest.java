@@ -3,6 +3,7 @@ package eu.europeana.uim;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -13,6 +14,11 @@ import org.junit.Test;
  */
 public class MDRFieldRegistryTest {
 
+    @BeforeClass
+    public static void setup() {
+        TKey.clear();
+    }
+    
 	@Test
 	public void testUntouched() {
 		assertEquals(0, TKey.size());
