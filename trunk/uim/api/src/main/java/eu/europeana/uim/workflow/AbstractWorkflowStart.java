@@ -39,7 +39,7 @@ public abstract class AbstractWorkflowStart implements WorkflowStart {
 
     
     @Override
-    public void initialize(ExecutionContext context)  throws StorageEngineException {
+    public void initialize(ExecutionContext context) {
     }
 
     

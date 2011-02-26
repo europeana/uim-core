@@ -90,10 +90,7 @@ public class UIMWorkflowProcessor implements Runnable {
                             } else {
                                 Queue<Task> success = execution.getSuccess(start.getClass().getSimpleName());
                                 success.addAll(Arrays.asList(tasks));
-                                
-                                if (start.getTotalSize(execution) <= 0) {
-                                    execution.incrementScheduled(tasks.length);
-                                }
+                                execution.incrementScheduled(tasks.length);
                             }
                         }
 
@@ -179,11 +176,6 @@ public class UIMWorkflowProcessor implements Runnable {
 
             step.initialize(execution);
             TaskExecutorRegistry.getInstance().initialize(step.getClass(), step.getMaximumThreadCount());
-        }
-
-        // initialize the scheduled number of records for this execution
-        if (start.getTotalSize(execution) != -1) {
-            execution.setScheduled(start.getTotalSize(execution));
         }
 
         // start/execute the first loader task so that we do preload data

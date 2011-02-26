@@ -88,18 +88,16 @@ public interface IngestionPlugin {
      * this execution.
      * 
      * @param context
-     * @throws StorageEngineException
      */
-    void initialize(ExecutionContext context) throws StorageEngineException;
+    void initialize(ExecutionContext context);
 
     /**
      * finalization method (tear down) for an execution. At the end of each execution this method is
      * called to allow the plugin to clean up memory or external resources.
      * 
      * @param context
-     * @throws StorageEngineException
      */
-    void completed(ExecutionContext context) throws StorageEngineException;
+    void completed(ExecutionContext context);
 
     /**
      * Process a single meta data record within a given execution context

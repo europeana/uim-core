@@ -12,7 +12,7 @@ public class TaskExecutorRegistry {
 
 	public final static Logger log = Logger.getLogger(TaskExecutorRegistry.class.getName());
 
-	private HashMap<String, TaskExecutor> executor = new LinkedHashMap<String, TaskExecutor>();
+	private HashMap<String, TaskExecutor> executors = new LinkedHashMap<String, TaskExecutor>();
 
 
 	private static TaskExecutorRegistry instance;
@@ -26,25 +26,35 @@ public class TaskExecutorRegistry {
 
 
 	public void initialize(Class clazz, int maxsize){
-		if (!executor.containsKey(clazz.getSimpleName())){
-			TaskExecutor exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), clazz.getSimpleName());
+	    TaskExecutor exec = executors.get(clazz.getSimpleName());
+		if (exec == null || exec.isShutdown()){
+			exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), clazz.getSimpleName());
 			exec.setRejectedExecutionHandler(new ReattachExecutionHandler());
 			
-			executor.put(clazz.getSimpleName(), exec);
+			executors.put(clazz.getSimpleName(), exec);
 		}
 	}
 	
 
 	public TaskExecutor getExecutor(Class clazz){
-		return executor.get(clazz.getSimpleName());
+		return executors.get(clazz.getSimpleName());
 	}
 	
 	
 	public Collection<TaskExecutor> getAllExecutor(){
-		return executor.values();
+		return executors.values();
 	}
 
-	
+    /**
+     * 
+     */
+    public void shutdown() {
+        for(TaskExecutor executor : executors.values()) {
+            executor.shutdownNow();
+        }
+        executors.clear();
+    }
+
 	
 
 	private final class ReattachExecutionHandler implements RejectedExecutionHandler {
@@ -83,5 +93,7 @@ public class TaskExecutorRegistry {
 			}
 		}
 	}
+
+
 
 }

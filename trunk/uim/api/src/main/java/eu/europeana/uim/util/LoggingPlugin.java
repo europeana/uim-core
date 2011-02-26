@@ -73,7 +73,7 @@ public class LoggingPlugin implements IngestionPlugin {
 	}
 
     @Override
-    public void initialize(ExecutionContext context) throws StorageEngineException {
+    public void initialize(ExecutionContext context) {
         Data data = new Data();
         
         Properties properties = context.getProperties();
@@ -89,7 +89,7 @@ public class LoggingPlugin implements IngestionPlugin {
 
     
     @Override
-    public void completed(ExecutionContext context) throws StorageEngineException {
+    public void completed(ExecutionContext context) {
     }
 
     

@@ -67,7 +67,7 @@ public class SysoutPlugin implements IngestionPlugin {
 	}
 
     @Override
-    public void initialize(ExecutionContext context) throws StorageEngineException {
+    public void initialize(ExecutionContext context) {
         Data data = new Data();
         context.putValue(DATA_KEY, data);
         
@@ -76,7 +76,7 @@ public class SysoutPlugin implements IngestionPlugin {
     }
 
     @Override
-    public void completed(ExecutionContext context) throws StorageEngineException {
+    public void completed(ExecutionContext context) {
     }
 
     @Override

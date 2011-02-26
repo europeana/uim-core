@@ -125,9 +125,7 @@ public class UIMOrchestrator implements Orchestrator {
 	@Override
 	public void shutdown() {
 		processor.shutdown();
-		for(TaskExecutor executor : TaskExecutorRegistry.getInstance().getAllExecutor()) {
-			executor.shutdownNow();
-		}
+		TaskExecutorRegistry.getInstance().shutdown();
 	}
 
 }

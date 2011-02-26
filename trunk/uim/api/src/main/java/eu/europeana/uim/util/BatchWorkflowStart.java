@@ -101,7 +101,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     }
 
     @Override
-    public void completed(ExecutionContext context) throws StorageEngineException {
+    public void completed(ExecutionContext context) {
     }
 
 

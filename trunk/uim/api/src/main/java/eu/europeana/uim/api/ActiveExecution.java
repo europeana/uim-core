@@ -65,6 +65,13 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	int getScheduledSize();
 	
 	
+	/** gives the number of records which this execution will need to deal with. If
+	 * not possible to estimate Integer.MAX_VALUE is given.
+	 * 
+	 * @return
+	 */
+	int getTotalSize();
+	
 	List<WorkflowStepStatus> getStepStatus();
 	WorkflowStepStatus getStepStatus(IngestionPlugin step);
 
@@ -72,8 +79,6 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 
 	void waitUntilFinished();
 	
-
-    void setScheduled(int scheduled);
 
 	/**
 	 * @param work

@@ -55,12 +55,12 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 
 
     @Override
-    public void initialize(ExecutionContext context) throws StorageEngineException {
+    public void initialize(ExecutionContext context) {
     }
 
 
     @Override
-    public void completed(ExecutionContext context) throws StorageEngineException {
+    public void completed(ExecutionContext context) {
     }
 
     
