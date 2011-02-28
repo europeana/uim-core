@@ -123,7 +123,9 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
                             for (int i = 0; i < mdrs.length; i++) {
                                 MetaDataRecord mdr = mdrs[i];
                                 Task task = new UIMTask(mdr, storage, context);
-                                getQueue().offer(task);
+                                synchronized(getQueue()) {
+                                    getQueue().offer(task);
+                                }
                             }
                         }
                     } catch (Throwable t) {
