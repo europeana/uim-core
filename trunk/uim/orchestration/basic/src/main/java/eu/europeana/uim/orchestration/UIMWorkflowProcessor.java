@@ -64,8 +64,10 @@ public class UIMWorkflowProcessor implements Runnable {
 
                     try {
                         // we ask the workflow start if we have more to do
+                        WorkflowStart start = execution.getWorkflow().getStart();
+                        Queue<Task> startTasks = execution.getSuccess(start.getClass().getSimpleName());
+
                         if (execution.getProgressSize() == 0) {
-                            WorkflowStart start = execution.getWorkflow().getStart();
 
                             if (!start.isFinished(execution, execution.getStorageEngine())) {
                                 ArrayList<TaskCreator> list = execution.getValue(SCHEDULED);
@@ -75,18 +77,17 @@ public class UIMWorkflowProcessor implements Runnable {
                                 while (creators.hasNext()) {
                                     TaskCreator next = creators.next();
                                     if (next.isDone()) {
-                                        iterator.remove();
+                                        creators.remove();
                                     } else {
                                         inprogress++;
                                     }
                                 }
 
-                                if (inprogress < 5) {
+                                if (list.size() < 5) {
                                     TaskCreator createLoader = start.createLoader(execution,
                                             execution.getStorageEngine());
                                     if (createLoader != null) {
-                                        Queue<Task> success = execution.getSuccess(start.getClass().getSimpleName());
-                                        createLoader.setQueue(success);
+                                        createLoader.setQueue(startTasks);
                                         list.add(createLoader);
 
                                         TaskExecutorRegistry.getInstance().getExecutor(
@@ -110,25 +111,25 @@ public class UIMWorkflowProcessor implements Runnable {
                             }
                         }
 
-                        Queue<Task> success = execution.getSuccess(execution.getWorkflow().getStart().getClass().getSimpleName());
                         boolean firststep = true;
+
+                        Queue<Task> current = startTasks;
 
                         List<IngestionPlugin> steps = execution.getWorkflow().getSteps();
                         for (IngestionPlugin step : steps) {
+
                             boolean savepoint = execution.getWorkflow().isSavepoint(step);
                             Queue<Task> thisSuccess = execution.getSuccess(step.getClass().getSimpleName());
                             Queue<Task> thisFailure = execution.getFailure(step.getClass().getSimpleName());
 
+                            // System.out.println("Step size:" + thisSuccess.size());
                             // get successful tasks from previouse step
                             // and schedule them into the step executor.
                             Task task = null;
-                            synchronized (success) {
-                                if (!success.isEmpty()) {
-                                    task = success.poll();
-                                } else {
-                                    task = null;
-                                }
+                            synchronized (current) {
+                                task = current.poll();
                             }
+
                             while (task != null) {
 
                                 task.setStep(step);
@@ -138,37 +139,35 @@ public class UIMWorkflowProcessor implements Runnable {
                                 task.setOnFailure(thisFailure);
 
                                 task.setStatus(TaskStatus.QUEUED);
+                                
                                 TaskExecutorRegistry.getInstance().getExecutor(step.getClass()).execute(
                                         task);
+
                                 if (firststep) {
                                     execution.incrementScheduled(1);
                                 }
 
-                                synchronized (success) {
-                                    if (!success.isEmpty()) {
-                                        task = success.poll();
-                                    } else {
-                                        task = null;
-                                    }
+                                synchronized (current) {
+                                    task = current.poll();
                                 }
                             }
 
                             // make the current success list the "next" input list
-                            success = thisSuccess;
+                            current = thisSuccess;
                             firststep = false;
                         }
 
                         // save and clean final
                         Task task;
-                        synchronized (success) {
-                            task = success.poll();
+                        synchronized (current) {
+                            task = current.poll();
                         }
                         while (task != null) {
                             execution.done(1);
                             execution.getMonitor().worked(1);
 
-                            synchronized (success) {
-                                task = success.poll();
+                            synchronized (current) {
+                                task = current.poll();
                             }
                         }
 

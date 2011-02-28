@@ -12,7 +12,7 @@ public class TaskExecutorRegistry {
 
 	public final static Logger log = Logger.getLogger(TaskExecutorRegistry.class.getName());
 
-	private HashMap<String, TaskExecutor> executors = new LinkedHashMap<String, TaskExecutor>();
+	private HashMap<Class, TaskExecutor> executors = new LinkedHashMap<Class, TaskExecutor>();
 
 
 	private static TaskExecutorRegistry instance;
@@ -26,18 +26,18 @@ public class TaskExecutorRegistry {
 
 
 	public void initialize(Class clazz, int maxsize){
-	    TaskExecutor exec = executors.get(clazz.getSimpleName());
+	    TaskExecutor exec = executors.get(clazz);
 		if (exec == null || exec.isShutdown()){
 			exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), clazz.getSimpleName());
 			exec.setRejectedExecutionHandler(new ReattachExecutionHandler());
 			
-			executors.put(clazz.getSimpleName(), exec);
+			executors.put(clazz, exec);
 		}
 	}
 	
 
 	public TaskExecutor getExecutor(Class clazz){
-		return executors.get(clazz.getSimpleName());
+		return executors.get(clazz);
 	}
 	
 	
