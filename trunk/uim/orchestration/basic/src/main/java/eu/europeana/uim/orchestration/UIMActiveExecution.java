@@ -259,12 +259,19 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     @Override
     public void waitUntilFinished() {
-        while (!isFinished()) {
+        int count = 0;
+        do {
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
             }
-        }
+            
+            if (isFinished()) {
+                count++;
+            } else {
+                count = 0;
+            }
+        } while (count < 3);
 
         System.out.println("Finished:" + getCompletedSize());
         System.out.println("Failed:" + getFailureSize());

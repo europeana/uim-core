@@ -4,10 +4,12 @@ package eu.europeana.uim.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,6 +21,7 @@ import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.util.BatchWorkflowStart.Data;
 import eu.europeana.uim.workflow.AbstractWorkflowStart;
 
 /**
@@ -42,23 +45,15 @@ public class BatchWorkflowStartTest {
 		when(execution.getStorageEngine()).thenReturn(engine);
 		when(engine.getByCollection((Collection)any())).thenReturn(new long[]{1,2,3,4,5,6,7,8,9,10,11});
 
+		Data data = new BatchWorkflowStart.Data();
+		when(execution.getValue((TKey<?, Data>)any())).thenReturn(data);
+		
+		
 		BatchWorkflowStart.BATCH_SIZE = 3;
 
-		final BlockingQueue<long[]> batches = new LinkedBlockingQueue<long[]>();
-		BatchWorkflowStart start = new BatchWorkflowStart(){
-		    @Override
-		    public BlockingQueue<long[]> getBatches(ExecutionContext context){
-		        return batches;
-		    }
-		};
+		BatchWorkflowStart start = new BatchWorkflowStart();
 		
 		start.initialize(execution, engine);
-		try {
-			start.createLoader(execution, engine).run();
-			fail("Runnable is null when no data left.");
-		} catch (Throwable t) {
-		}		
-
-		assertEquals(4, batches.size());
+		assertEquals(4, data.batches.size());
 	}
 }

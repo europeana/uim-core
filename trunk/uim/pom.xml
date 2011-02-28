@@ -25,9 +25,6 @@
         <!--  the standard orchestration implementation module -->
         <module>orchestration/basic</module>
 
-        <!--  the uim standard file import module -->
-        <module>plugins/fileimp</module>
-
         <!--  the uim standard in memory storage implementation -->
         <module>storage/memory</module>
 
@@ -36,6 +33,9 @@
 
         <!-- a dummy plugin for testing -->
         <module>plugins/dummy</module>
+
+        <!--  the uim standard file import module -->
+        <module>plugins/fileimp</module>
 
         <!-- a dummy workflow for testing -->
         <module>workflows/dummy</module>

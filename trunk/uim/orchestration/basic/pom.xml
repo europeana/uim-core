@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-plugin-basic</artifactId>
-	<name>Unified Ingestion Manager: API Orchestrator Basic Implementation</name>
+	<name>Unified Ingestion Manager: API Standard Orchestrator</name>
 	<packaging>bundle</packaging>
 
 	<build>

@@ -28,6 +28,8 @@ public class MemoryMetaDataRecord implements MetaDataRecord {
 	private Request request;
 	private String identifier;
 
+    private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
+	
 	public MemoryMetaDataRecord() {
 
 	}
@@ -180,5 +182,18 @@ public class MemoryMetaDataRecord implements MetaDataRecord {
 		}
 		return Collections.EMPTY_LIST;
 	}
+
+	
+    @Override
+    public <NS, T extends Serializable> void putTransient(TKey<NS, T> key, T value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public <NS, T extends Serializable> T getTransient(TKey<NS, T> key) {
+        Object object = values.get(key);
+        if (object != null) { return (T)object; }
+        return null;
+    }
 
 }

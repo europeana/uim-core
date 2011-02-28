@@ -1,5 +1,7 @@
 package eu.europeana.uim.workflow;
 
+import java.util.concurrent.BlockingQueue;
+
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngine;
@@ -22,8 +24,8 @@ public interface WorkflowStart extends IngestionPlugin {
      * 
      * @return runnable which runs in a thread pool executor and loads data
      */
-     Runnable createLoader(ExecutionContext context, StorageEngine storage);
-
+    TaskCreator createLoader(ExecutionContext context, StorageEngine storage);
+     
     /**
      * Create the tasks (@see {@link Task}) which are then processed through the workflow and passed
      * on from step to step.
@@ -32,8 +34,9 @@ public interface WorkflowStart extends IngestionPlugin {
      * 
      * @return number of tasks created.
      */
-     Task[] createWorkflowTasks(ExecutionContext context, StorageEngine storage);
+     //Task[] createWorkflowTasks(ExecutionContext context, StorageEngine storage);
 
+     
     /**
      * Check wheater there is more work to do or not. Finished means, that no new tasks can be
      * created.
@@ -54,6 +57,7 @@ public interface WorkflowStart extends IngestionPlugin {
      * @throws StorageEngineException
      */
     void initialize(ExecutionContext context, StorageEngine storage) throws StorageEngineException;
+
 
     /**
      * Get the number of total records, if it is known upfront. If not, returns -1.

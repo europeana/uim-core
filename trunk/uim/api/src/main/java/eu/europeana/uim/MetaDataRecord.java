@@ -102,4 +102,8 @@ public interface MetaDataRecord extends DataSet {
      */
     <N, T extends Serializable> List<T> getQField(TKey<N, T> key, String qualifier);
 
+    
+    <NS,T extends Serializable> void putTransient(TKey<NS, T> key, T value);
+    <NS,T extends Serializable> T getTransient(TKey<NS, T> key);
+
 }
