@@ -127,7 +127,9 @@ public class UIMWorkflowProcessor implements Runnable {
                             // and schedule them into the step executor.
                             Task task = null;
                             synchronized (current) {
-                                task = current.poll();
+                                //if (!current.isEmpty()) {
+                                    task = current.poll();
+                                //}
                             }
 
                             while (task != null) {
@@ -139,7 +141,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 task.setOnFailure(thisFailure);
 
                                 task.setStatus(TaskStatus.QUEUED);
-                                
+
                                 TaskExecutorRegistry.getInstance().getExecutor(step.getClass()).execute(
                                         task);
 
@@ -148,7 +150,9 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
 
                                 synchronized (current) {
-                                    task = current.poll();
+                                    //if (!current.isEmpty()) {
+                                        task = current.poll();
+                                    //}
                                 }
                             }
 
@@ -158,16 +162,20 @@ public class UIMWorkflowProcessor implements Runnable {
                         }
 
                         // save and clean final
-                        Task task;
+                        Task task = null;
                         synchronized (current) {
-                            task = current.poll();
+                            //if (!current.isEmpty()) {
+                                task = current.poll();
+                            //}
                         }
                         while (task != null) {
                             execution.done(1);
                             execution.getMonitor().worked(1);
 
                             synchronized (current) {
-                                task = current.poll();
+                                //if (!current.isEmpty()) {
+                                    task = current.poll();
+                                //}
                             }
                         }
 
