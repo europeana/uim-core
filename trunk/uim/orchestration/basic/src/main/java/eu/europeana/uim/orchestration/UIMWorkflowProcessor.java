@@ -52,9 +52,9 @@ public class UIMWorkflowProcessor implements Runnable {
             int total = 0;
 
             try {
-                Iterator<ActiveExecution<Task>> iterator = executions.iterator();
-                while (iterator.hasNext()) {
-                    ActiveExecution<Task> execution = iterator.next();
+                Iterator<ActiveExecution<Task>> executionIterator = executions.iterator();
+                while (executionIterator.hasNext()) {
+                    ActiveExecution<Task> execution = executionIterator.next();
                     total += execution.getProgressSize();
 
                     // well we skip this execution if it is paused,
@@ -70,32 +70,33 @@ public class UIMWorkflowProcessor implements Runnable {
                         if (execution.getProgressSize() == 0) {
 
                             if (!start.isFinished(execution, execution.getStorageEngine())) {
-                                ArrayList<TaskCreator> list = execution.getValue(SCHEDULED);
+                                ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
 
                                 int inprogress = 0;
-                                Iterator<TaskCreator> creators = list.iterator();
-                                while (creators.hasNext()) {
-                                    TaskCreator next = creators.next();
+                                Iterator<TaskCreator> creatorsIterator = creators.iterator();
+                                while (creatorsIterator.hasNext()) {
+                                    TaskCreator next = creatorsIterator.next();
                                     if (next.isDone()) {
-                                        creators.remove();
+                                        creatorsIterator.remove();
                                     } else {
                                         inprogress++;
                                     }
                                 }
 
-                                if (list.size() < 5) {
+                                if (creators.size() < 5) {
                                     TaskCreator createLoader = start.createLoader(execution,
                                             execution.getStorageEngine());
                                     if (createLoader != null) {
                                         createLoader.setQueue(startTasks);
-                                        list.add(createLoader);
+                                        creators.add(createLoader);
 
                                         TaskExecutorRegistry.getInstance().getExecutor(
                                                 start.getClass()).execute(createLoader);
                                     }
                                 }
                             } else {
-                                if (execution.isFinished()) {
+                                ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
+                                if (creators.isEmpty() && execution.isFinished()) {
                                     execution.setActive(false);
                                     execution.setEndTime(new Date());
 
@@ -106,7 +107,9 @@ public class UIMWorkflowProcessor implements Runnable {
 
                                     execution.getStorageEngine().updateExecution(
                                             execution.getExecution());
-                                    iterator.remove();
+                                    
+                                    log.warning("Remove Execution:" + execution.toString());
+                                    executionIterator.remove();
                                 }
                             }
                         }
