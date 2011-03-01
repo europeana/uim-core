@@ -8,16 +8,21 @@ import java.util.Random;
 import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.StorageEngineException;
 
-public class SysoutPlugin implements IngestionPlugin {
+public class SysoutPlugin extends AbstractIngestionPlugin {
 
     private static TKey<SysoutPlugin, Data> DATA_KEY = TKey.register(SysoutPlugin.class, "data", Data.class);
 
 	public SysoutPlugin() {
 	}
+
+    
+    @Override
+    public String getName() {
+        return SysoutPlugin.class.getSimpleName();
+    }
 
 	@Override
 	public int getPreferredThreadCount() {
@@ -27,19 +32,6 @@ public class SysoutPlugin implements IngestionPlugin {
 	@Override
 	public int getMaximumThreadCount() {
 		return 10;
-	}
-
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
-		return new TKey[0];
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
-		return new TKey[0];
 	}
 
 

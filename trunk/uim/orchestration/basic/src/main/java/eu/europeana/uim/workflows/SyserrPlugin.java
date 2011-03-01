@@ -8,17 +8,23 @@ import java.util.Random;
 import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngineException;
 
-public class SyserrPlugin implements IngestionPlugin {
+public class SyserrPlugin extends AbstractIngestionPlugin {
 
     private static TKey<SyserrPlugin, Data> DATA_KEY = TKey.register(SyserrPlugin.class, "data", Data.class);
 
     public SyserrPlugin() {
     }
 
+    
+    @Override
+    public String getName() {
+        return SyserrPlugin.class.getSimpleName();
+    }
 
     @Override
     public int getPreferredThreadCount() {
@@ -29,21 +35,6 @@ public class SyserrPlugin implements IngestionPlugin {
     public int getMaximumThreadCount() {
         return 10;
     }
-
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public TKey<MDRFieldRegistry, ?>[] getInputFields() {
-        return new TKey[0];
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
-        return new TKey[0];
-    }
-
-
 
     @Override
     public String getDescription() {
@@ -84,9 +75,6 @@ public class SyserrPlugin implements IngestionPlugin {
         data.errorrate = Integer.parseInt(property);
     }
 
-    @Override
-    public void completed(ExecutionContext context) {
-    }
 
     @Override
     public List<String> getParameters() {

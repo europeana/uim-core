@@ -7,12 +7,10 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.StorageEngineException;
 
 /** Simple logging plugin which logs  
  * 
@@ -20,7 +18,7 @@ import eu.europeana.uim.api.StorageEngineException;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 25, 2011
  */
-public class LoggingPlugin implements IngestionPlugin {
+public class LoggingPlugin extends AbstractIngestionPlugin {
 
 	private static final Logger log = Logger.getLogger(LoggingPlugin.class.getName());
 	
@@ -32,6 +30,13 @@ public class LoggingPlugin implements IngestionPlugin {
 	public LoggingPlugin() {
 	}
 
+	
+
+    @Override
+    public String getName() {
+        return LoggingPlugin.class.getSimpleName();
+    }
+
 	@Override
 	public int getPreferredThreadCount() {
 		return 5;
@@ -40,19 +45,6 @@ public class LoggingPlugin implements IngestionPlugin {
 	@Override
 	public int getMaximumThreadCount() {
 		return 10;
-	}
-
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getInputFields() {
-		return new TKey[0];
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public TKey<MDRFieldRegistry, ?>[] getOutputFields() {
-		return new TKey[0];
 	}
 
 	@Override
@@ -85,11 +77,6 @@ public class LoggingPlugin implements IngestionPlugin {
         data.level = Level.parse(property);
         
         context.putValue(DATA_KEY, data);
-    }
-
-    
-    @Override
-    public void completed(ExecutionContext context) {
     }
 
     

@@ -26,6 +26,7 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
 	public AbstractIngestionPlugin(Level level) {
 		this.level = level;
 	}
+	
 
 	@Override
 	public int getPreferredThreadCount() {

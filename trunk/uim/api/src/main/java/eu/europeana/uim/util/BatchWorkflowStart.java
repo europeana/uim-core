@@ -46,6 +46,11 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     }
 
     @Override
+    public String getName() {
+        return BatchWorkflowStart.class.getSimpleName();
+    }
+    
+    @Override
     public int getPreferredThreadCount() {
         return 2;
     }

@@ -210,11 +210,11 @@ public class UIMWorkflowProcessor implements Runnable {
 
         HashSet<String> unique = new HashSet<String>();
         for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-            if (unique.contains(step.getClass().getSimpleName())) {
+            if (unique.contains(step.getName())) {
                 throw new IllegalArgumentException("Workflow contains duplicate plugin:" +
                                                    step.getClass().getSimpleName());
             } else {
-                unique.add(step.getClass().getSimpleName());
+                unique.add(step.getName());
             }
 
             step.initialize(execution);

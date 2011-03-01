@@ -24,4 +24,10 @@ public class DummyPlugin extends AbstractIngestionPlugin {
     }
 
 
+    @Override
+    public String getName() {
+        return DummyPlugin.class.getSimpleName();
+    }
+
+
 }

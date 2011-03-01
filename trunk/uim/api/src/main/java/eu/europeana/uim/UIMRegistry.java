@@ -86,13 +86,13 @@ public class UIMRegistry implements Registry {
         return null;
     }
 
-
+    
     @Override
     public void addPlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Added plugin:" + plugin.getClass().getSimpleName());
-            if (!plugins.containsKey(plugin.getClass().getSimpleName()))
-                plugins.put(plugin.getClass().getSimpleName(), plugin);
+            log.info("Added plugin:" + plugin.getName());
+            if (!plugins.containsKey(plugin.getName()))
+                plugins.put(plugin.getName(), plugin);
         }
     }
 

@@ -24,6 +24,7 @@ import eu.europeana.uim.api.StorageEngineException;
  */
 public abstract class AbstractWorkflowStart implements WorkflowStart {
     private final static Logger log = Logger.getLogger(AbstractWorkflowStart.class.getName());
+    
 
     @Override
     public int getPreferredThreadCount() {

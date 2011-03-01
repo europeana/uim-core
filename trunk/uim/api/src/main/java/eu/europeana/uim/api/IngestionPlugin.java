@@ -36,6 +36,15 @@ import eu.europeana.uim.TKey;
 public interface IngestionPlugin {
 
     /**
+     * get the class name of the plugin which is used to register the plugin with
+     * the registry. 
+     * 
+     * @return the name for this plugin (should be Plugin.class.getSimpleName()). 
+     */
+    public String getName();
+    
+
+    /**
      * getter for the list of fields this plugin wants to operate on.
      * 
      * @return a list of fields this plugin requires
