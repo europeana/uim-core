@@ -175,7 +175,7 @@ public class UIMExecution implements Action {
             }
 
             out.println();
-            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getName());
+            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getName() + " with properties:" + properties.toString());
 
             ProgressMonitor pm = new LoggingProgressMonitor(Level.INFO);
 
