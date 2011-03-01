@@ -165,7 +165,7 @@ public class UIMExecution implements Action {
         } else  {
             Properties properties = new Properties();
             if (argument2 != null) {
-                String[] split = argument2.split(";");
+                String[] split = argument2.split("&");
                 for (String keyval : split) {
                     String[] split2 = keyval.split("=");
                     if (split2.length > 1) {
@@ -175,7 +175,7 @@ public class UIMExecution implements Action {
             }
 
             out.println();
-            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getName() + " with properties:" + properties.toString());
+            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getMnemonic() + "' with properties:" + properties.toString());
 
             ProgressMonitor pm = new LoggingProgressMonitor(Level.INFO);
 
