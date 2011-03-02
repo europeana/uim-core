@@ -276,6 +276,19 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
             }
         } while (count < 3);
 
+        do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+        } while (getExecution().isActive());
+        
+        // give it the time to store if necessary. 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+        }
+
         System.out.println("Finished:" + getCompletedSize());
         System.out.println("Failed:" + getFailureSize());
     }
