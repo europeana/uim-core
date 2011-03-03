@@ -96,9 +96,17 @@ public class UIMWorkflowProcessor implements Runnable {
                             } else {
                                 if (inprogress == 0 && execution.isFinished()) {
 
-                                    start.completed(execution);
+                                    try {
+                                        start.completed(execution);
+                                    } catch (Throwable t){
+                                        log.log(Level.SEVERE, "Failed to complete:" + start, t);
+                                    }
                                     for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-                                        step.completed(execution);
+                                        try {
+                                            step.completed(execution);
+                                        } catch (Throwable t){
+                                            log.log(Level.SEVERE, "Failed to complete:" + step, t);
+                                        }
                                     }
 
                                     synchronized (execution) {
