@@ -52,112 +52,138 @@ public class UIMWorkflowProcessor implements Runnable {
             int total = 0;
 
             try {
-                Iterator<ActiveExecution<Task>> executionIterator = executions.iterator();
-                while (executionIterator.hasNext()) {
-                    ActiveExecution<Task> execution = executionIterator.next();
-                    total += execution.getProgressSize();
+                synchronized (executions) {
+                    Iterator<ActiveExecution<Task>> executionIterator = executions.iterator();
+                    while (executionIterator.hasNext()) {
+                        ActiveExecution<Task> execution = executionIterator.next();
+                        total += execution.getProgressSize();
 
-                    // well we skip this execution if it is paused,
-                    // FIXME: if only paused executions are around then
-                    // we do somehow busy waiting - total count is > 0
-                    if (execution.isPaused()) continue;
+                        // well we skip this execution if it is paused,
+                        // FIXME: if only paused executions are around then
+                        // we do somehow busy waiting - total count is > 0
+                        if (execution.isPaused()) continue;
 
-                    try {
-                        // we ask the workflow start if we have more to do
-                        WorkflowStart start = execution.getWorkflow().getStart();
-                        Queue<Task> startTasks = execution.getSuccess(start.getClass().getSimpleName());
+                        try {
+                            // we ask the workflow start if we have more to do
+                            WorkflowStart start = execution.getWorkflow().getStart();
+                            Queue<Task> startTasks = execution.getSuccess(start.getClass().getSimpleName());
 
-                        if (execution.getProgressSize() == 0) {
-                            // how many creators do we have
-                            ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
-                            int inprogress = 0;
-                            Iterator<TaskCreator> creatorsIterator = creators.iterator();
-                            while (creatorsIterator.hasNext()) {
-                                TaskCreator next = creatorsIterator.next();
-                                if (next.isDone()) {
-                                    creatorsIterator.remove();
-                                } else {
-                                    inprogress++;
-                                }
-                            }
-
-                            if (!start.isFinished(execution, execution.getStorageEngine())) {
-                                if (inprogress < 5) {
-                                    TaskCreator createLoader = start.createLoader(execution,
-                                            execution.getStorageEngine());
-                                    if (createLoader != null) {
-                                        createLoader.setQueue(startTasks);
-                                        creators.add(createLoader);
-
-                                        TaskExecutorRegistry.getInstance().getExecutor(
-                                                start.getClass()).execute(createLoader);
+                            if (execution.getProgressSize() == 0) {
+                                // how many creators do we have
+                                ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
+                                int inprogress = 0;
+                                Iterator<TaskCreator> creatorsIterator = creators.iterator();
+                                while (creatorsIterator.hasNext()) {
+                                    TaskCreator next = creatorsIterator.next();
+                                    if (next.isDone()) {
+                                        creatorsIterator.remove();
+                                    } else {
+                                        inprogress++;
                                     }
                                 }
-                            } else {
-                                if (inprogress == 0 && execution.isFinished()) {
 
-                                    try {
-                                        start.completed(execution);
-                                    } catch (Throwable t){
-                                        log.log(Level.SEVERE, "Failed to complete:" + start, t);
-                                    }
-                                    for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-                                        try {
-                                            step.completed(execution);
-                                        } catch (Throwable t){
-                                            log.log(Level.SEVERE, "Failed to complete:" + step, t);
+                                if (!start.isFinished(execution, execution.getStorageEngine())) {
+                                    if (inprogress < 5) {
+                                        TaskCreator createLoader = start.createLoader(execution,
+                                                execution.getStorageEngine());
+                                        if (createLoader != null) {
+                                            createLoader.setQueue(startTasks);
+                                            creators.add(createLoader);
+
+                                            TaskExecutorRegistry.getInstance().getExecutor(
+                                                    start.getClass()).execute(createLoader);
                                         }
                                     }
+                                } else {
+                                    if (inprogress == 0 && execution.isFinished()) {
 
-                                    synchronized (execution) {
-                                        execution.setActive(false);
-                                        execution.setEndTime(new Date());
-                                        execution.getStorageEngine().updateExecution(
-                                                execution.getExecution());
+                                        try {
+                                            start.completed(execution);
+                                        } catch (Throwable t) {
+                                            log.log(Level.SEVERE, "Failed to complete:" + start, t);
+                                        }
+                                        for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
+                                            try {
+                                                step.completed(execution);
+                                            } catch (Throwable t) {
+                                                log.log(Level.SEVERE, "Failed to complete:" + step,
+                                                        t);
+                                            }
+                                        }
+
+                                        synchronized (execution) {
+                                            execution.setActive(false);
+                                            execution.setEndTime(new Date());
+                                            execution.getStorageEngine().updateExecution(
+                                                    execution.getExecution());
+                                        }
+                                        log.warning("Remove Execution:" + execution.toString());
+                                        executionIterator.remove();
                                     }
-                                    log.warning("Remove Execution:" + execution.toString());
-                                    executionIterator.remove();
                                 }
                             }
-                        }
 
-                        boolean firststep = true;
+                            boolean firststep = true;
 
-                        Queue<Task> current = startTasks;
+                            Queue<Task> current = startTasks;
 
-                        List<IngestionPlugin> steps = execution.getWorkflow().getSteps();
-                        for (IngestionPlugin step : steps) {
+                            List<IngestionPlugin> steps = execution.getWorkflow().getSteps();
+                            for (IngestionPlugin step : steps) {
 
-                            boolean savepoint = execution.getWorkflow().isSavepoint(step);
-                            Queue<Task> thisSuccess = execution.getSuccess(step.getClass().getSimpleName());
-                            Queue<Task> thisFailure = execution.getFailure(step.getClass().getSimpleName());
+                                boolean savepoint = execution.getWorkflow().isSavepoint(step);
+                                Queue<Task> thisSuccess = execution.getSuccess(step.getClass().getSimpleName());
+                                Queue<Task> thisFailure = execution.getFailure(step.getClass().getSimpleName());
 
-                            // System.out.println("Step size:" + thisSuccess.size());
-                            // get successful tasks from previouse step
-                            // and schedule them into the step executor.
+                                // System.out.println("Step size:" + thisSuccess.size());
+                                // get successful tasks from previouse step
+                                // and schedule them into the step executor.
+                                Task task = null;
+                                synchronized (current) {
+                                    // if (!current.isEmpty()) {
+                                    task = current.poll();
+                                    // }
+                                }
+
+                                while (task != null) {
+
+                                    task.setStep(step);
+                                    // TODO: should we make the last step always implicitly a
+// savepoint
+                                    task.setSavepoint(savepoint);
+                                    task.setOnSuccess(thisSuccess);
+                                    task.setOnFailure(thisFailure);
+
+                                    task.setStatus(TaskStatus.QUEUED);
+
+                                    TaskExecutorRegistry.getInstance().getExecutor(step.getClass()).execute(
+                                            task);
+
+                                    if (firststep) {
+                                        execution.incrementScheduled(1);
+                                    }
+
+                                    synchronized (current) {
+                                        // if (!current.isEmpty()) {
+                                        task = current.poll();
+                                        // }
+                                    }
+                                }
+
+                                // make the current success list the "next" input list
+                                current = thisSuccess;
+                                firststep = false;
+                            }
+
+                            // save and clean final
                             Task task = null;
                             synchronized (current) {
                                 // if (!current.isEmpty()) {
                                 task = current.poll();
                                 // }
                             }
-
                             while (task != null) {
-
-                                task.setStep(step);
-                                // TODO: should we make the last step always implicitly a savepoint
-                                task.setSavepoint(savepoint);
-                                task.setOnSuccess(thisSuccess);
-                                task.setOnFailure(thisFailure);
-
-                                task.setStatus(TaskStatus.QUEUED);
-
-                                TaskExecutorRegistry.getInstance().getExecutor(step.getClass()).execute(
-                                        task);
-
-                                if (firststep) {
-                                    execution.incrementScheduled(1);
-                                }
+                                execution.done(1);
+                                execution.getMonitor().worked(1);
 
                                 synchronized (current) {
                                     // if (!current.isEmpty()) {
@@ -166,40 +192,19 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
                             }
 
-                            // make the current success list the "next" input list
-                            current = thisSuccess;
-                            firststep = false;
+                        } catch (Throwable exc) {
+                            log.log(Level.WARNING, "Exception in workflow execution", exc);
                         }
-
-                        // save and clean final
-                        Task task = null;
-                        synchronized (current) {
-                            // if (!current.isEmpty()) {
-                            task = current.poll();
-                            // }
-                        }
-                        while (task != null) {
-                            execution.done(1);
-                            execution.getMonitor().worked(1);
-
-                            synchronized (current) {
-                                // if (!current.isEmpty()) {
-                                task = current.poll();
-                                // }
-                            }
-                        }
-
-                    } catch (Throwable exc) {
-                        log.log(Level.WARNING, "Exception in workflow execution", exc);
                     }
-                }
 
-                if (total == 0) {
-                    Thread.sleep(25);
-                }
+                    if (total == 0) {
+                        Thread.sleep(25);
+                    }
+                } // end synchronized execution
             } catch (Throwable exc) {
                 log.log(Level.SEVERE, "Exception in workflow executor", exc);
             }
+
         }
     }
 
@@ -230,7 +235,9 @@ public class UIMWorkflowProcessor implements Runnable {
         }
 
         execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
-        executions.add(execution);
+        synchronized (executions) {
+            executions.add(execution);
+        }
     }
 
     public synchronized List<ActiveExecution<Task>> getExecutions() {
