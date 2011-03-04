@@ -5,7 +5,7 @@ package eu.europeana.uim.common;
  * 
  * @author andreas.juffinger@kb.nl
  */
-public class MemoryProgressMonitor implements ProgressMonitor {
+public class MemoryProgressMonitor implements RevisingProgressMonitor {
 
 	private String task ="Not defined";
 	private String subtask ="Not defined";
@@ -80,4 +80,38 @@ public class MemoryProgressMonitor implements ProgressMonitor {
 	public int getWorked() {
 		return worked;
 	}
+
+
+    @Override
+    public void setWork(int work) {
+        this.work = work;
+    }
+
+
+    @Override
+    public void setWorked(int worked) {
+        this.worked = worked;
+    }
+
+
+    @Override
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+
+    @Override
+    public void setSubtask(String subtask) {
+        this.subtask = subtask;
+    }
+
+
+    @Override
+    public void attached() {
+    }
+
+
+    @Override
+    public void detached() {
+    }
 }

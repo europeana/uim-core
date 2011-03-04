@@ -17,7 +17,7 @@ import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.common.ProgressMonitor;
+import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
@@ -38,7 +38,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     private final Execution                   execution;
     private final Workflow                    workflow;
     private final Properties                  properties;
-    private final ProgressMonitor             monitor;
+    private final RevisableProgressMonitor             monitor;
 
     private boolean                           paused;
     private Throwable                         throwable;
@@ -49,7 +49,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     public UIMActiveExecution(Execution execution, Workflow workflow, StorageEngine storageEngine,
                               LoggingEngine loggingEngine, Properties properties,
-                              ProgressMonitor monitor) {
+                              RevisableProgressMonitor monitor) {
         this.execution = execution;
         this.workflow = workflow;
         this.storageEngine = storageEngine;
@@ -132,7 +132,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     }
 
     @Override
-    public ProgressMonitor getMonitor() {
+    public RevisableProgressMonitor getMonitor() {
         return monitor;
     }
 

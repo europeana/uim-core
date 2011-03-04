@@ -1,7 +1,16 @@
 package eu.europeana.uim.orchestration;
 
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
@@ -10,8 +19,6 @@ import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.MemoryProgressMonitor;
-import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
@@ -21,14 +28,6 @@ import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflows.MixedWorkflow;
 import eu.europeana.uim.workflows.SyserrWorkflow;
 import eu.europeana.uim.workflows.SysoutWorkflow;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class UIMOrchestratorTest {
 
@@ -63,10 +62,9 @@ public class UIMOrchestratorTest {
 		verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
 
 		Workflow w = new SysoutWorkflow(7, true, false);
-        ProgressMonitor monitor = new MemoryProgressMonitor();
 
 		
-		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request, monitor);
+		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request);
 		execution0.waitUntilFinished();
 
 		// each delivered metadata record is saved
@@ -88,10 +86,9 @@ public class UIMOrchestratorTest {
 
 
 		Workflow w = new SyserrWorkflow(7, true);
-        ProgressMonitor monitor = new MemoryProgressMonitor();
 
 		
-		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request, monitor);
+		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request);
 		execution0.waitUntilFinished();
 		
 		// each failed metadata record is saved once 21 + original count of 21
@@ -113,10 +110,8 @@ public class UIMOrchestratorTest {
 
 
 		Workflow w = new MixedWorkflow(7, true);
-        ProgressMonitor monitor = new MemoryProgressMonitor();
-
 		
-		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request, monitor);
+		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request);
 		execution0.waitUntilFinished();
 		
 		// each failed metadata record is saved once 30 + original count of 30
@@ -141,10 +136,8 @@ public class UIMOrchestratorTest {
 		verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
 
 		Workflow w = new SysoutWorkflow(7, true, true);
-        ProgressMonitor monitor = new MemoryProgressMonitor();
-
 		
-		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request, monitor);
+		ActiveExecution<Task> execution0 = orchestrator.executeWorkflow(w, request);
 		execution0.waitUntilFinished();
 
 		// each delivered metadata record is saved once per plugin (only one plugin in the 

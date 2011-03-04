@@ -20,7 +20,6 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.LoggingProgressMonitor;
-import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
@@ -176,10 +175,10 @@ public class UIMExecution implements Action {
 
             out.println();
             out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getMnemonic() + "' with properties:" + properties.toString());
+            
 
-            ProgressMonitor pm = new LoggingProgressMonitor(Level.INFO);
-
-            ActiveExecution<?> execution = orchestrator.executeWorkflow(workflow, collection, pm, properties);
+            ActiveExecution<?> execution = orchestrator.executeWorkflow(workflow, collection, properties);
+            execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
 
             try {
                 Thread.sleep(2000);

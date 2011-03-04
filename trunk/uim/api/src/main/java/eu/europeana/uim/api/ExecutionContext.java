@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Properties;
 
 import eu.europeana.uim.TKey;
-import eu.europeana.uim.common.ProgressMonitor;
+import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Workflow;
@@ -25,7 +25,7 @@ public interface ExecutionContext {
     DataSet getDataSet();
 
     /** progress monitor **/
-    ProgressMonitor getMonitor();
+    RevisableProgressMonitor getMonitor();
 
     /** logging engine **/
     LoggingEngine<?> getLoggingEngine();

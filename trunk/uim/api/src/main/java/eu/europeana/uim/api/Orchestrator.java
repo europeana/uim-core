@@ -2,7 +2,6 @@ package eu.europeana.uim.api;
 
 import java.util.Properties;
 
-import eu.europeana.uim.common.ProgressMonitor;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -15,9 +14,9 @@ public interface Orchestrator {
 
     public String getIdentifier();
 
-    ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, ProgressMonitor monitor);
+    ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset);
 
-    ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, ProgressMonitor monitor, Properties properties);
+    ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, Properties properties);
 
     <T> ActiveExecution<T> getActiveExecution(long id);
 

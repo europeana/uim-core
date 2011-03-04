@@ -113,7 +113,9 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
 			}
 		}
         
-        ActiveExecution<?> execution = o.executeWorkflow(w, c, monitor);
+        ActiveExecution<?> execution = o.executeWorkflow(w, c);
+        execution.getMonitor().addListener(monitor);
+        
         execution.waitUntilFinished();
 
         assertEquals("Wrong count of processed MDRs", 999, monitor.getWorked());

@@ -3,7 +3,8 @@ package eu.europeana.uim.gui.gwt.server;
 import java.util.logging.Logger;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import eu.europeana.uim.common.ProgressMonitor;
+
+import eu.europeana.uim.common.RevisingProgressMonitor;
 import eu.europeana.uim.gui.gwt.shared.Execution;
 
 /**
@@ -13,7 +14,7 @@ import eu.europeana.uim.gui.gwt.shared.Execution;
  *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
+public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializable {
 
     private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
 
@@ -24,6 +25,9 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
 
     private boolean cancelled;
     private Execution execution;
+
+    private String task;
+    private String subtask;
 
     public GWTProgressMonitor() {
     }
@@ -79,6 +83,54 @@ public class GWTProgressMonitor implements ProgressMonitor, IsSerializable {
 
     public boolean isDone() {
         return execution.isDone();
+    }
+
+    @Override
+    public int getWork() {
+        return work;
+    }
+
+    @Override
+    public void setWork(int work) {
+        this.work = work;
+    }
+
+    @Override
+    public int getWorked() {
+        return worked;
+    }
+
+    @Override
+    public void setWorked(int worked) {
+        this.worked = worked;
+    }
+
+    @Override
+    public String getTask() {
+        return task;
+    }
+
+    @Override
+    public void setTask(String task) {
+        this.task = task;
+    }
+
+    @Override
+    public String getSubtask() {
+        return subtask;
+    }
+
+    @Override
+    public void setSubtask(String subtask) {
+        this.subtask = subtask;
+    }
+
+    @Override
+    public void attached() {
+    }
+
+    @Override
+    public void detached() {
     }
 
 }

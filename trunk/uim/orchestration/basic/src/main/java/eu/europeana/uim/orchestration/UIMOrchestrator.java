@@ -11,6 +11,7 @@ import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.ProgressMonitor;
+import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.DataSet;
@@ -53,8 +54,8 @@ public class UIMOrchestrator implements Orchestrator {
 	 * @return a new ActiveExecution for this execution request
 	 */
 	@Override
-	public ActiveExecution<Task> executeWorkflow(Workflow w, DataSet dataset, ProgressMonitor monitor) {
-		return executeWorkflow(w, dataset, monitor, new Properties());
+	public ActiveExecution<Task> executeWorkflow(Workflow w, DataSet dataset) {
+		return executeWorkflow(w, dataset, new Properties());
 	}
 
 	/**
@@ -66,7 +67,8 @@ public class UIMOrchestrator implements Orchestrator {
 	 * @return a new ActiveExecution for this execution request
 	 */
 	@Override
-	public ActiveExecution<Task> executeWorkflow(Workflow w, DataSet dataset, ProgressMonitor monitor, Properties properties) {
+	public ActiveExecution<Task> executeWorkflow(Workflow w, DataSet dataset, Properties properties) {
+	    RevisableProgressMonitor monitor = new RevisableProgressMonitor();
 		monitor.beginTask(w.getName(), 1);
 
 		try {

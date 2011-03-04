@@ -135,7 +135,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 			Execution execution = new Execution();
 
 			GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-			ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c, monitor);
+			
+			ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c);
+			ae.getMonitor().addListener(monitor);
 			populateWrappedExecution(execution, ae, w, c);
 
 			return execution;
@@ -156,7 +158,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 			eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
 			Execution execution = new Execution();
 			GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-			ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, p, monitor);
+			ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, p);
+			ae.getMonitor().addListener(monitor);
+			
 			populateWrappedExecution(execution, ae, w, p);
 			return execution;
 		} catch (StorageEngineException e) {
