@@ -12,6 +12,8 @@ public class ConsoleProgressMonitor implements RevisingProgressMonitor {
 	private int worked = 0;
 
     private int work;
+    
+    private long start;
 
     private String task;
 
@@ -108,4 +110,14 @@ public class ConsoleProgressMonitor implements RevisingProgressMonitor {
     }
 
 
+    @Override
+    public long getStart() {
+        return start;
+    }
+
+
+    @Override
+    public void setStart(long millis) {
+        this.start = millis;
+    }
 }

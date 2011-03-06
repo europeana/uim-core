@@ -22,6 +22,8 @@ public class RevisableProgressMonitor implements ProgressMonitor {
 
     @Override
     public void beginTask(String task, int work) {
+        delegate.setStart(System.currentTimeMillis());
+        
         delegate.beginTask(task, work);
         for (ProgressMonitor monitor : monitors) {
             monitor.beginTask(task, work);
@@ -87,7 +89,14 @@ public class RevisableProgressMonitor implements ProgressMonitor {
     }
     
     
+    
+    
+    public long getStart() {
+        return delegate.getStart();
+    }
+
     public void addListener(RevisingProgressMonitor monitor) {
+        monitor.setStart(getStart());
         monitor.setTask(getTask());
         monitor.setWork(getWork());
         

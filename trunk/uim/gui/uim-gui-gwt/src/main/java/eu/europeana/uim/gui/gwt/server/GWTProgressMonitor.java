@@ -22,6 +22,8 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     private String name;
     private int work;
     private int worked;
+    
+    private long start;
 
     private boolean cancelled;
     private Execution execution;
@@ -123,6 +125,18 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     @Override
     public void setSubtask(String subtask) {
         this.subtask = subtask;
+    }
+    
+    
+
+    @Override
+    public long getStart() {
+        return start;
+    }
+
+    @Override
+    public void setStart(long millis) {
+        this.start = millis;
     }
 
     @Override

@@ -11,6 +11,19 @@ import eu.europeana.uim.common.ProgressMonitor;
  */
 public interface RevisingProgressMonitor extends ProgressMonitor {
 
+    /** access the start time
+     * 
+     * @return
+     */
+    public long getStart();
+    
+    /** set the start in long java time of the overall
+     * progress
+     * 
+     * @param millis
+     */
+    public void setStart(long millis);
+    
     /**
      * 
      * @return the number of total work steps

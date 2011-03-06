@@ -12,6 +12,8 @@ public class MemoryProgressMonitor implements RevisingProgressMonitor {
 	
 	private int work =0;
 	private int worked =0;
+
+	private long start;
 	
 	private boolean cancelled = false;
 	
@@ -103,6 +105,17 @@ public class MemoryProgressMonitor implements RevisingProgressMonitor {
     @Override
     public void setSubtask(String subtask) {
         this.subtask = subtask;
+    }
+    
+
+    @Override
+    public long getStart() {
+        return start;
+    }
+
+    @Override
+    public void setStart(long start) {
+        this.start = start;
     }
 
 
