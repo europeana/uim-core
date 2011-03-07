@@ -88,7 +88,7 @@ public class UIMStore implements Action {
 		case createCollection: createCollection(storage, out); break;
 		case updateCollection: updateCollection(storage, out); break;
 		case listCollection: listCollection(storage, out); break;
-		case checkpoint: listCollection(storage, out); break;
+		case checkpoint: checkpoint(storage, out); break;
 		case loadSampleData: new SampleProperties().loadSampleData(storage); break;
 		}
 		return null;
