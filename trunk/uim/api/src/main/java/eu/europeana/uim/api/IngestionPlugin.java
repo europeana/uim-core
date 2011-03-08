@@ -28,54 +28,60 @@ import eu.europeana.uim.TKey;
  * into the execution context.</li>
  * </ul>
  * 
- * 
- * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @author Markus Muhr (markus.muhr@kb.nl)
  * @date Feb 25, 2011
  */
 public interface IngestionPlugin {
-
     /**
-     * get the class name of the plugin which is used to register the plugin with
-     * the registry. 
+     * Get the class name of the plugin which is used to register the plugin with the registry.
      * 
-     * @return the name for this plugin (should be Plugin.class.getSimpleName()). 
+     * @return the name for this plugin (should be Plugin.class.getSimpleName()).
      */
-    public String getName();
-    
+    String getName();
 
     /**
-     * getter for the list of fields this plugin wants to operate on.
-     * 
-     * @return a list of fields this plugin requires
-     */
-    public TKey<?, ?>[] getInputFields();
-
-    /**
-     * getter for the list of output fields. Note that the metadata record might not allow
-     * "manipulation" of fields in the future.
-     * 
-     * @return a list of fields this plugin creates
-     */
-    public TKey<?, ?>[] getOutputFields();
-
-    /**
-     * list of configuration parameters this plugin can take from the execution context to be
-     * configured for a specific execution. NOTE: any execution related configuration/information
-     * needs to be stored into the context and retrieved from the context in the processRecord
-     * method.
-     * 
-     * @return list of configuration parameters.
-     */
-    public List<String> getParameters();
-
-    /**
-     * get the description of the plugin which is provided to the operators when starting analysing
+     * Get the description of the plugin which is provided to the operators when starting analyzing
      * workflows.
      * 
      * @return the description
      */
-    public String getDescription();
+    String getDescription();
+
+    /**
+     * Get the list of fields this plugin wants to operate on. This is used for information
+     * purposes, so that it can be validated if the records hold these data.
+     * 
+     * @return a list of fields this plugin requires
+     */
+    TKey<?, ?>[] getInputFields();
+
+    /**
+     * Get the list of fields this plugin would like to operate on or can get additional information
+     * for the working process. This is used for information purposes, so that it can be validated
+     * if the records hold these data.
+     * 
+     * @return a list of fields this plugin requires
+     */
+    TKey<?, ?>[] getOptionalFields();
+
+    /**
+     * Get the list of output fields. NOTE: the meta data record might not allow "manipulation" of
+     * fields in the future.
+     * 
+     * @return a list of fields this plugin creates
+     */
+    TKey<?, ?>[] getOutputFields();
+
+    /**
+     * List of configuration parameters this plugin can take from the execution context to be
+     * configured for a specific execution. NOTE: any execution related configuration/information
+     * needs to be stored into the context and retrieved from the context during the processRecord
+     * method.
+     * 
+     * @return list of configuration parameters.
+     */
+    List<String> getParameters();
 
     /**
      * A plugin is always executed within a thread pool, this parameter defines the preferred size
@@ -93,32 +99,57 @@ public interface IngestionPlugin {
     int getMaximumThreadCount();
 
     /**
-     * initialization method for an execution context. The context holds the properties specific for
+     * Initialization method for an execution context. The context holds the properties specific for
      * this execution.
      * 
      * @param context
+     *            holds execution depending, information the {@link ExecutionContext} for this
+     *            processing call. This context can change for each call, so references to it have
+     *            to be handled carefully.
+     * @throws IngestionPluginFailedException
+     *             is thrown if the intiliazation fails and so the plugin is not ready to take
+     *             records for this {@link ExecutionContext}
      */
-    void initialize(ExecutionContext context);
+    void initialize(ExecutionContext context) throws IngestionPluginFailedException;
 
     /**
-     * finalization method (tear down) for an execution. At the end of each execution this method is
+     * Finalization method (tear down) for an execution. At the end of each execution this method is
      * called to allow the plugin to clean up memory or external resources.
      * 
      * @param context
+     *            holds execution depending, information the {@link ExecutionContext} for this
+     *            processing call. This context can change for each call, so references to it have
+     *            to be handled carefully.
+     * @throws IngestionPluginFailedException
+     *             is thrown if the tear down encountered a severe failure during deleting external
+     *             resources, so that executing it in a new {@link ExecutionContext} will most
+     *             likely fail
      */
-    void completed(ExecutionContext context);
+    void completed(ExecutionContext context) throws IngestionPluginFailedException;
 
     /**
-     * Process a single meta data record within a given execution context
+     * Process a single meta data record within a given execution context. It returns true, if
+     * processing went well and false, if something failed. NOTE, false in this context means only
+     * that the plugin could not do its work, but neither is the {@link MetaDataRecord} corrupted
+     * nor is the plugin itself damaged, so that the record can further processed and this plugin
+     * can take other records as well. Furthermore, additional information can be logged (
+     * {@link LoggingEngine}).
      * 
      * @param mdr
      *            the {@link MetaDataRecord} to process
      * @param context
-     *            the {@link ExecutionContext} for this processing call. This context can change for
-     *            each call, so references to it have to be handled carefully.
+     *            holds execution depending, information the {@link ExecutionContext} for this
+     *            processing call. This context can change for each call, so references to it have
+     *            to be handled carefully.
+     * @return true, if the plugin could do its work and false if something failed during processing
      * @throws IngestionPluginFailedException
+     *             is thrown if the plugin encounters a severe problem and it is therefore
+     *             impossible to process any more records for this {@link ExecutionContext}
+     * @throws CorruptedMetadataRecordException
+     *             the plugin encountered a severe problem for a specific {@link MetaDataRecord} so
+     *             that further processing of this specific {@link MetaDataRecord} does not make
+     *             sense any longer
      */
-    public void processRecord(MetaDataRecord mdr, ExecutionContext context)
-            throws IngestionPluginFailedException;
-
+    boolean processRecord(MetaDataRecord mdr, ExecutionContext context)
+            throws IngestionPluginFailedException, CorruptedMetadataRecordException;
 }

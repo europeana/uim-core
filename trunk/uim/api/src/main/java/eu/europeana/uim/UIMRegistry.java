@@ -14,30 +14,29 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 
-/** The central service registry for UIM. The service container registers
- * all services with this registry (as configured in the blueprint xml files) so
- * that one can get an overview of registered services for storage, logging as well as
- * workflows.
+/**
+ * The central service registry for UIM. The service container registers all services with this
+ * registry (as configured in the blueprint xml files) so that one can get an overview of registered
+ * services for storage, logging as well as workflows.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
+    private static Logger                 log           = Logger.getLogger(UIMRegistry.class.getName());
 
-    private static Logger log = Logger.getLogger(UIMRegistry.class.getName());
+    private String                        configuredStorageEngine;
+    private StorageEngine                 activeStorage = null;
+    private Map<String, StorageEngine>    storages      = new HashMap<String, StorageEngine>();
 
-    private String configuredStorageEngine;
-    private StorageEngine activeStorage = null;
-    private Map<String, StorageEngine> storages = new HashMap<String, StorageEngine>();
+    private String                        configuredLoggingEngine;
+    private LoggingEngine<?>              activeLogging = null;
+    private Map<String, LoggingEngine<?>> loggers       = new HashMap<String, LoggingEngine<?>>();
 
-    private String configuredLoggingEngine;
-    private LoggingEngine<?> activeLogging = null;
-    private Map<String, LoggingEngine<?>> loggers = new HashMap<String, LoggingEngine<?>>();
+    private Map<String, IngestionPlugin>  plugins       = new HashMap<String, IngestionPlugin>();
+    private List<Workflow>                workflows     = new ArrayList<Workflow>();
 
-    private Map<String, IngestionPlugin> plugins = new HashMap<String, IngestionPlugin>();
-    private List<Workflow> workflows = new ArrayList<Workflow>();
-
-    private Orchestrator orchestrator = null;
+    private Orchestrator                  orchestrator  = null;
 
     /**
      * Creates a new instance of this class.
@@ -45,31 +44,28 @@ public class UIMRegistry implements Registry {
     public UIMRegistry() {
     }
 
-    
     @Override
-	public void setConfiguredStorageEngine(String configuredStorageEngine) {
-    	// this may happen before the storage services are loaded
-    	// we set the active storage "lazy"
-    	this.configuredStorageEngine = configuredStorageEngine;
-    	if (this.activeStorage != null) {
-    		this.activeStorage = null;
-        	this.activeStorage = getStorage(configuredStorageEngine);
-    	}
+    public void setConfiguredStorageEngine(String configuredStorageEngine) {
+        // this may happen before the storage services are loaded
+        // we set the active storage "lazy"
+        this.configuredStorageEngine = configuredStorageEngine;
+        if (this.activeStorage != null) {
+            this.activeStorage = null;
+            this.activeStorage = getStorage(configuredStorageEngine);
+        }
     }
 
-
     @Override
-	public void setConfiguredLoggingEngine(String configuredLoggingEngine) {
-    	// this may happen before the storage services are loaded
-    	// we set the active logging "lazy"
+    public void setConfiguredLoggingEngine(String configuredLoggingEngine) {
+        // this may happen before the storage services are loaded
+        // we set the active logging "lazy"
 
-    	this.configuredLoggingEngine = configuredLoggingEngine;
-    	if (this.activeLogging != null) {
+        this.configuredLoggingEngine = configuredLoggingEngine;
+        if (this.activeLogging != null) {
             this.activeLogging = null;
             this.activeLogging = getLoggingEngine(configuredLoggingEngine);
         }
     }
-
 
     @Override
     public List<Workflow> getWorkflows() {
@@ -79,20 +75,16 @@ public class UIMRegistry implements Registry {
     @Override
     public Workflow getWorkflow(String identifier) {
         for (Workflow w : workflows) {
-            if (w.getName().equals(identifier)) {
-                return w;
-            }
+            if (w.getName().equals(identifier)) { return w; }
         }
         return null;
     }
 
-    
     @Override
     public void addPlugin(IngestionPlugin plugin) {
         if (plugin != null) {
             log.info("Added plugin:" + plugin.getName());
-            if (!plugins.containsKey(plugin.getName()))
-                plugins.put(plugin.getName(), plugin);
+            if (!plugins.containsKey(plugin.getName())) plugins.put(plugin.getName(), plugin);
         }
     }
 
@@ -108,7 +100,6 @@ public class UIMRegistry implements Registry {
             plugins.remove(plugin.getClass().getSimpleName());
         }
     }
-
 
     @Override
     public void addStorage(StorageEngine storage) {
@@ -127,16 +118,15 @@ public class UIMRegistry implements Registry {
         }
     }
 
-
     @Override
     public void removeStorage(StorageEngine storage) {
         if (storage != null) {
             log.info("Removed storage:" + storage.getIdentifier());
             storage.shutdown();
-            
+
             StorageEngine remove = this.storages.remove(storage.getIdentifier());
             if (activeStorage == remove) {
-            	activeStorage = null;
+                activeStorage = null;
             }
         }
     }
@@ -146,13 +136,11 @@ public class UIMRegistry implements Registry {
         return storages.values();
     }
 
-
     @Override
     public void addWorkflow(Workflow workflow) {
         if (workflow != null) {
             log.info("Added workflow: " + workflow.getName());
-            if (!workflows.contains(workflow))
-                workflows.add(workflow);
+            if (!workflows.contains(workflow)) workflows.add(workflow);
         }
     }
 
@@ -164,25 +152,24 @@ public class UIMRegistry implements Registry {
         }
     }
 
-
     @Override
     public StorageEngine getStorage() {
         if (storages == null || storages.isEmpty()) return null;
-        
-        if (activeStorage == null) {
-        	if (getStorage(configuredStorageEngine) != null) {
-        		activeStorage = getStorage(configuredStorageEngine);
-        	} else {
-            	// default to first engine
-        		activeStorage = storages.values().iterator().next();
 
-        	}
+        if (activeStorage == null) {
+            if (getStorage(configuredStorageEngine) != null) {
+                activeStorage = getStorage(configuredStorageEngine);
+            } else {
+                // default to first engine
+                activeStorage = storages.values().iterator().next();
+
+            }
         }
         return activeStorage;
     }
-    
-    StorageEngine getActiveStorage(){
-    	return activeStorage;
+
+    StorageEngine getActiveStorage() {
+        return activeStorage;
     }
 
     @Override
@@ -210,14 +197,14 @@ public class UIMRegistry implements Registry {
 
     @Override
     public void removeLoggingEngine(LoggingEngine<?> logging) {
-    	if (logging != null){
-    		
-    		LoggingEngine<?> remove = loggers.remove(logging.getIdentifier());
+        if (logging != null) {
+
+            LoggingEngine<?> remove = loggers.remove(logging.getIdentifier());
             if (activeLogging == remove) {
-            	activeLogging = null;
+                activeLogging = null;
             }
 
-    	}
+        }
     }
 
     @Override
@@ -227,28 +214,24 @@ public class UIMRegistry implements Registry {
         return res;
     }
 
-    
-    
     @Override
     public LoggingEngine<?> getLoggingEngine() {
         if (loggers == null || loggers.isEmpty()) return null;
-        
+
         if (activeLogging == null) {
             if (getLoggingEngine(configuredLoggingEngine) != null) {
                 activeLogging = getLoggingEngine(configuredLoggingEngine);
             } else {
-            	// default to first engine
+                // default to first engine
                 activeLogging = loggers.values().iterator().next();
             }
         }
         return activeLogging;
     }
 
-    
-    LoggingEngine<?> getActiveLoggingEngine(){
-    	return activeLogging;
+    LoggingEngine<?> getActiveLoggingEngine() {
+        return activeLogging;
     }
-
 
     @Override
     public LoggingEngine<?> getLoggingEngine(String identifier) {
@@ -257,7 +240,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         StringBuilder builder = new StringBuilder();
 
         builder.append("\nRegistered plugins:");
@@ -269,7 +252,8 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getClass().getSimpleName()).append(": [").append(plugin.getDescription()).append("]");
+                builder.append(plugin.getClass().getSimpleName()).append(": [").append(
+                        plugin.getDescription()).append("]");
             }
         }
 
@@ -282,7 +266,8 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tWorkflow:");
                 }
-                builder.append(worfklow.getName()).append(": [").append(worfklow.getDescription()).append("]");
+                builder.append(worfklow.getName()).append(": [").append(worfklow.getDescription()).append(
+                        "]");
             }
         }
 
@@ -300,7 +285,7 @@ public class UIMRegistry implements Registry {
                 } else {
                     builder.append("  ");
                 }
-                
+
                 builder.append(storage.getIdentifier());
                 builder.append(" [").append(storage.getStatus()).append("] ");
                 builder.append(storage.getConfiguration().toString());
@@ -327,9 +312,9 @@ public class UIMRegistry implements Registry {
 
         builder.append("\nRegistered orchestrator:");
         builder.append("\n--------------------------------------");
-        builder.append(orchestrator != null ? "\n\t" + orchestrator.getIdentifier() : "\n\tNo orchestrator defined.");
+        builder.append(orchestrator != null ? "\n\t" + orchestrator.getIdentifier()
+                : "\n\tNo orchestrator defined.");
 
         return builder.toString();
     }
-
 }

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import eu.europeana.uim.TKey;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.orchestration.processing.TaskExecutor;
@@ -78,7 +79,7 @@ public class UIMWorkflowProcessor implements Runnable {
                             IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(new IngestionPlugin[0]);
                             for (int i = steps.length - 1; i >= 0; i--) {
                                 IngestionPlugin thisStep = steps[i];
-                                IngestionPlugin prevStep = i > 0 ? steps[i - 1] : start;
+                                Object prevStep = i > 0 ? steps[i - 1] : start;
                                 
                                 Queue<Task> prevSuccess = execution.getSuccess(prevStep.getClass().getSimpleName());
                                 Queue<Task> prevFailure = execution.getFailure(prevStep.getClass().getSimpleName());
@@ -87,6 +88,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 Queue<Task> thisFailure = execution.getFailure(thisStep.getClass().getSimpleName());
                                 
                                 boolean savepoint = execution.getWorkflow().isSavepoint(thisStep);
+                                boolean mandatory = execution.getWorkflow().isMandatory(thisStep);
                                 
                                 // if we are the "last" step we need to handle 
                                 // the last success queue here.
@@ -117,11 +119,15 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
 
                                 while (task != null) {
-
-                                    task.setStep(thisStep);
+                                    if (task.getThrowable() != null && task.getThrowable().getClass().equals(IngestionPluginFailedException.class)) {
+                                        complete(execution, start);
+                                        task.getThrowable().printStackTrace();
+                                    }
+                                    task.setStep(thisStep, mandatory);
                                     task.setSavepoint(savepoint);
                                     task.setOnSuccess(thisSuccess);
                                     task.setOnFailure(thisFailure);
+                                    // mandatory
                                     task.setStatus(TaskStatus.QUEUED);
 
                                     executor.execute(task);
@@ -185,35 +191,38 @@ public class UIMWorkflowProcessor implements Runnable {
             }
         } else {
             if (inprogress == 0 && execution.isFinished()) {
-
-                try {
-                    start.completed(execution);
-                } catch (Throwable t) {
-                    log.log(Level.SEVERE, "Failed to complete:" + start, t);
-                }
-                for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-                    try {
-                        step.completed(execution);
-                    } catch (Throwable t) {
-                        log.log(Level.SEVERE, "Failed to complete:" + step, t);
-                    }
-                }
-
-                synchronized (execution) {
-                    execution.setActive(false);
-                    execution.setEndTime(new Date());
-                    execution.getStorageEngine().updateExecution(execution.getExecution());
-                }
-                log.warning("Remove Execution:" + execution.toString());
-                synchronized (executions) {
-                    executions.remove(execution);
-                }
-
+                complete(execution, start);
                 return false;
             }
         }
 
         return true;
+    }
+
+    private void complete(ActiveExecution<Task> execution, WorkflowStart start)
+            throws StorageEngineException {
+        try {
+            start.completed(execution);
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Failed to complete:" + start, t);
+        }
+        for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
+            try {
+                step.completed(execution);
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "Failed to complete:" + step, t);
+            }
+        }
+
+        synchronized (execution) {
+            execution.setActive(false);
+            execution.setEndTime(new Date());
+            execution.getStorageEngine().updateExecution(execution.getExecution());
+        }
+        log.warning("Remove Execution:" + execution.toString());
+        synchronized (executions) {
+            executions.remove(execution);
+        }
     }
 
     public synchronized void schedule(ActiveExecution<Task> execution)

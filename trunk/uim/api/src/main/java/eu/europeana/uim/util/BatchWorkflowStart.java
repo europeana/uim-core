@@ -1,15 +1,14 @@
 package eu.europeana.uim.util;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Queue;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
-import eu.europeana.uim.UIMTask;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -17,22 +16,24 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
-import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
 import eu.europeana.uim.workflow.WorkflowStart;
+import eu.europeana.uim.workflow.WorkflowStartFailedException;
 
 /**
- * 
+ * Loads batches from the storage and pulls them into as tasks.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 14, 2011
  */
-public class BatchWorkflowStart extends AbstractWorkflowStart implements WorkflowStart {
-
+public class BatchWorkflowStart implements WorkflowStart {
+    /**
+     * Key to retrieve own data from context.
+     */
     private static TKey<BatchWorkflowStart, Data> DATA_KEY   = TKey.register(
-            BatchWorkflowStart.class,
-            "data", Data.class);
+                                                                     BatchWorkflowStart.class,
+                                                                     "data", Data.class);
 
     /**
      * default batch size
@@ -43,13 +44,19 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
      * Creates a new instance of this class.
      */
     public BatchWorkflowStart() {
+        // nothing to do
     }
 
     @Override
     public String getName() {
         return BatchWorkflowStart.class.getSimpleName();
     }
-    
+
+    @Override
+    public String getDescription() {
+        return "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.";
+    }
+
     @Override
     public int getPreferredThreadCount() {
         return 2;
@@ -60,24 +67,45 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
         return 2;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> getParameters() {
+        return Collections.EMPTY_LIST;
+    }
+
     @Override
     public void initialize(ExecutionContext context, StorageEngine storage)
-    throws StorageEngineException {
+            throws WorkflowStartFailedException {
         try {
             long[] ids;
 
             DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
-                ids = storage.getByProvider((Provider)dataSet, false);
+                try {
+                    ids = storage.getByProvider((Provider)dataSet, false);
+                } catch (StorageEngineException e) {
+                    throw new WorkflowStartFailedException("Provider '" + dataSet.getIdentifier() +
+                                                           "' could not be retrieved!", e);
+                }
             } else if (dataSet instanceof Collection) {
-                ids = storage.getByCollection((Collection)dataSet);
+                try {
+                    ids = storage.getByCollection((Collection)dataSet);
+                } catch (StorageEngineException e) {
+                    throw new RuntimeException("Collection '" + dataSet.getIdentifier() +
+                                               "' could not be retrieved!", e);
+                }
             } else if (dataSet instanceof Request) {
-                ids = storage.getByRequest((Request)dataSet);
+                try {
+                    ids = storage.getByRequest((Request)dataSet);
+                } catch (StorageEngineException e) {
+                    throw new RuntimeException("Request '" + dataSet.getIdentifier() +
+                                               "' could not be retrieved!", e);
+                }
             } else if (dataSet instanceof MetaDataRecord) {
                 ids = new long[] { ((MetaDataRecord)dataSet).getId() };
             } else {
-                throw new IllegalStateException("Unsupported dataset <" + context.getDataSet() +
-                ">");
+                throw new WorkflowStartFailedException("Unsupported dataset <" +
+                                                       context.getDataSet() + ">");
             }
 
             Data data = new Data();
@@ -111,36 +139,33 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
     }
 
     @Override
-    public void completed(ExecutionContext context) {
-    }
-
-    @Override
     public TaskCreator createLoader(final ExecutionContext context, final StorageEngine storage) {
-        if (!isFinished(context, storage)) {
-            return new TaskCreator() {
-                public void run() {
-                    setDone(false);
-                    try {
-                        long[] poll = context.getValue(DATA_KEY).batches.poll(500, TimeUnit.MILLISECONDS);
-                        if (poll != null) {
-                            MetaDataRecord[] mdrs = storage.getMetaDataRecords(poll);
+        if (!isFinished(context, storage)) { return new TaskCreator() {
+            @Override
+            public void run() {
+                setDone(false);
+                try {
+                    long[] poll = context.getValue(DATA_KEY).batches.poll(500,
+                            TimeUnit.MILLISECONDS);
+                    if (poll != null) {
+                        MetaDataRecord[] mdrs = storage.getMetaDataRecords(poll);
 
-                            for (int i = 0; i < mdrs.length; i++) {
-                                MetaDataRecord mdr = mdrs[i];
-                                Task task = new UIMTask(mdr, storage, context);
-                                synchronized(getQueue()) {
-                                    getQueue().offer(task);
-                                }
+                        for (int i = 0; i < mdrs.length; i++) {
+                            MetaDataRecord mdr = mdrs[i];
+                            Task task = new Task(mdr, storage, context);
+                            synchronized (getQueue()) {
+                                getQueue().offer(task);
                             }
                         }
-                    } catch (Throwable t) {
-                        throw new RuntimeException("Failed to retrieve MDRs from storage. " + context.getExecution().toString(), t);
-                    } finally {
-                        setDone(true);
                     }
+                } catch (Throwable t) {
+                    throw new RuntimeException("Failed to retrieve MDRs from storage. " +
+                                               context.getExecution().toString(), t);
+                } finally {
+                    setDone(true);
                 }
-            };
-        }
+            }
+        }; }
         return null;
     }
 
@@ -154,11 +179,6 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
         return context.getValue(DATA_KEY).batches.isEmpty();
     }
 
-    @Override
-    public String getDescription() {
-        return "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.";
-    }
-
     /**
      * container for runtime information.
      * 
@@ -166,9 +186,12 @@ public class BatchWorkflowStart extends AbstractWorkflowStart implements Workflo
      * @date Feb 28, 2011
      */
     final static class Data implements Serializable {
-        public int total = 0;
+        public int                   total   = 0;
         public BlockingQueue<long[]> batches = new LinkedBlockingQueue<long[]>();
     }
 
-
+    @Override
+    public void completed(ExecutionContext context) throws WorkflowStartFailedException {
+        context.getValue(DATA_KEY).batches.clear();
+    }
 }

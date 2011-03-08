@@ -19,8 +19,7 @@ import eu.europeana.uim.store.Request;
  *
  * @param <N>
  */
-public class MemoryMetaDataRecord implements MetaDataRecord {
-
+public class MemoryMetaDataRecord implements MetaDataRecord { 
 	private HashMap<TKey<?,?>, Object> fields = new HashMap<TKey<?,?>, Object>();
 	private HashMap<TKey<?,?>, Map<String, Object>> qFields = new HashMap<TKey<?,?>, Map<String, Object>>();
 

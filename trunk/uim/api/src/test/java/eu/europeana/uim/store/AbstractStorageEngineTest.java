@@ -460,18 +460,16 @@ public abstract class AbstractStorageEngineTest {
 			MetaDataRecord record1 = engine.createMetaDataRecord(request0, "abcd");
 			record1.addField(MDRFieldRegistry.title, "title 01");
 			engine.updateMetaDataRecord(record1);
-
-			fail("Duplicate record with same identifier for provider is not allowed.");
 		} catch (Exception e) {
+		    fail("Duplicate record with same identifier for provider should be allowed.");
 		}
 
 		try {
 			MetaDataRecord record2 = engine.createMetaDataRecord(request1, "abcd");
 			record2.addField(MDRFieldRegistry.title, "title 01");
 			engine.updateMetaDataRecord(record2);
-
-			fail("Duplicate record with same identifier for provider is not allowed even in different collections.");
 		} catch (Exception e) {
+		    fail("Duplicate record with same identifier for provider should be allowed even in different collections.");
 		}
 
 		Provider provider1 = engine.createProvider();

@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 public class MemoryStorageEngine implements StorageEngine {
-
 	public static final String IDENTIFIER = MemoryStorageEngine.class.getSimpleName();
 	public static final Logger log = Logger.getLogger(MemoryStorageEngine.class.getName());
 
@@ -40,7 +39,7 @@ public class MemoryStorageEngine implements StorageEngine {
 	private TLongObjectHashMap<Request> requests = new TLongObjectHashMap<Request>();
 	private TLongObjectHashMap<Execution> executions = new TLongObjectHashMap<Execution>();
 
-	private Set<String> mdrIdentifier = new HashSet<String>();
+	private Map<String, Long> mdrIdentifier = new HashMap<String, Long>();
 
 	private TLongLongHashMap metarequest = new TLongLongHashMap();
 	private TLongLongHashMap metacollection = new TLongLongHashMap();
@@ -117,11 +116,6 @@ public class MemoryStorageEngine implements StorageEngine {
 		}
 		return result.toArray(new MetaDataRecord[result.size()]);
 	}
-
-
-
-
-
 
 	@Override
 	public Provider createProvider() {
@@ -281,32 +275,35 @@ public class MemoryStorageEngine implements StorageEngine {
 
 
 	@Override
-	public MetaDataRecord createMetaDataRecord(Request request) {
-		MemoryMetaDataRecord mdr = new MemoryMetaDataRecord(mdrId.getAndIncrement());
-		mdr.setRequest(request);
-		return mdr;
+	public MetaDataRecord createMetaDataRecord(Request request) throws StorageEngineException {
+	    return createMetaDataRecord(request, null);
 	}
 
 	@Override
 	public MetaDataRecord createMetaDataRecord(Request request, String identifier) throws StorageEngineException {
-		MetaDataRecord mdr = createMetaDataRecord(request);
-		((MemoryMetaDataRecord)mdr).setIdentifier(identifier);
-		return mdr;
+	    MemoryMetaDataRecord mdr = new MemoryMetaDataRecord(mdrId.getAndIncrement());  
+	    Long id = mdrIdentifier.get(identifier);
+	    if (id != null) {
+	        mdr = new MemoryMetaDataRecord(id);  
+	    } else {
+	        mdr = new MemoryMetaDataRecord(mdrId.getAndIncrement());  
+	    }
+	    mdr.setRequest(request);
+	    mdr.setIdentifier(identifier);
+	    return mdr;
 	}
 
 	@Override
 	public void updateMetaDataRecord(MetaDataRecord record) {
-		String unique = "MDR/" +  record.getRequest().getCollection().getProvider().getMnemonic() + "/"+ record.getIdentifier();
-
 		synchronized(metadatas) {
 			if (!metadatas.containsKey(record.getId())) {
-				if (mdrIdentifier.contains(unique)) {
-					throw new IllegalStateException("Duplicate unique key for record: <" + unique + ">");
+				if (mdrIdentifier.containsKey(record.getIdentifier())) {
+					throw new IllegalStateException("Duplicate unique key for record: <" + record.getIdentifier() + ">");
 				}
 			}
 
 			metadatas.put(record.getId(), record);
-			mdrIdentifier.add(unique);
+			mdrIdentifier.put(record.getIdentifier(), record.getId());
 		}
 		addMetaDataRecord(record);
 	}
@@ -464,7 +461,9 @@ public class MemoryStorageEngine implements StorageEngine {
 	public int getTotalForAllIds() {
 		return metadatas.size();
 	}
-
-
-
+	
+    @Override
+    public long[] getByMetaDataRecordIdentifer(String... identifier) {
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
 }

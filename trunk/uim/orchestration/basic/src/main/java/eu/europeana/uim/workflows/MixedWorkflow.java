@@ -7,10 +7,22 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.util.BatchWorkflowStart;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
+/**
+ * Workflow to write to system out and system error.
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 4, 2011
+ */
 public class MixedWorkflow extends AbstractWorkflow {
-
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param batchSize
+     * @param randsleep
+     */
     public MixedWorkflow(int batchSize, boolean randsleep) {
-        super(MixedWorkflow.class.getSimpleName(), "Simple workflow which uses several SysoutPlugins to report to the console about processing");
+        super(MixedWorkflow.class.getSimpleName(),
+                "Simple workflow which uses several SysoutPlugins to report to the console about processing");
         setStart(new BatchWorkflowStart());
 
         List<IngestionPlugin> plugins = new ArrayList<IngestionPlugin>();
@@ -24,11 +36,12 @@ public class MixedWorkflow extends AbstractWorkflow {
 
     @Override
     public boolean isSavepoint(IngestionPlugin plugin) {
-        if (plugin instanceof SyserrPlugin) {
-            return true;
-        }
+        if (plugin instanceof SyserrPlugin) { return true; }
         return false;
     }
 
-
+    @Override
+    public boolean isMandatory(IngestionPlugin plugin) {
+        return false;
+    }
 }

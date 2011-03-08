@@ -4,24 +4,42 @@ import java.util.List;
 
 import eu.europeana.uim.api.IngestionPlugin;
 
-
 /**
  * UIM UIMWorkflow definition
- *
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 public interface Workflow {
+    /**
+     * @return name of the workflow, should be reasonable meaningful
+     */
+    String getName();
 
-    public String getName();
+    /**
+     * @return description of this specific workflow (what does it, what should be the outcome,
+     *         etc.)
+     */
+    String getDescription();
 
-    public String getDescription();
+    /**
+     * @return defined start point of work flow
+     */
+    WorkflowStart getStart();
 
-    public WorkflowStart getStart();
+    /**
+     * @return plugins as steps in this workflow
+     */
+    List<IngestionPlugin> getSteps();
 
-    public void setStart(WorkflowStart start);
+    /**
+     * @param plugin
+     * @return Is this a save point plugin?
+     */
+    boolean isSavepoint(IngestionPlugin plugin);
 
-    public List<IngestionPlugin> getSteps();
-    
-    public boolean isSavepoint(IngestionPlugin plugin);
-
+    /**
+     * @param plugin
+     * @return Is this a mandatory plugin, so unsuccesful processing is a failure?
+     */
+    boolean isMandatory(IngestionPlugin plugin);
 }
