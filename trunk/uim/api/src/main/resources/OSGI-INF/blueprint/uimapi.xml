@@ -45,7 +45,7 @@
     </reference-list>
 
 
-    <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingPlugin">
+    <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingIngestionPlugin">
     </bean>
 
     <service id="loggingPluginService" ref="loggingPlugin" interface="eu.europeana.uim.api.IngestionPlugin" />
