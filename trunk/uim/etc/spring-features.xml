@@ -29,11 +29,21 @@
         <bundle>mvn:org.springframework/org.springframework.web.servlet/3.0.5.RELEASE</bundle>
         <bundle>mvn:org.springframework/org.springframework.expression/3.0.5.RELEASE</bundle>
         <bundle>mvn:org.springframework/org.springframework.context.support/3.0.5.RELEASE</bundle>       
-        <bundle>mvn:org.springframework.ws/org.springframework.ws/1.5.9.A</bundle>
         <bundle>mvn:javax.xml.soap/com.springsource.javax.xml.soap/1.3.0</bundle>  
         <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.codec/1.4.0</bundle> 
         <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.httpclient/3.1.0</bundle> 
         <bundle>mvn:org.springframework.ws/org.springframework.ws.support/2.0.0.RELEASE</bundle> 
+        <bundle>mvn:org.springframework.ws/org.springframework.xml/1.5.9.A</bundle>
+        <bundle>mvn:org.springframework.ws/org.springframework.ws/1.5.9.A</bundle>
+        <bundle>mvn:org.springframework/org.springframework.jms/3.0.5.RELEASE</bundle>
+        <bundle>mvn:org.igniterealtime/com.springsource.org.jivesoftware.smack/3.1.0</bundle>
+        <bundle>mvn:javax.mail/com.springsource.javax.mail/1.4.1</bundle>
+        <bundle>mvn:javax.jms/com.springsource.javax.jms/1.1.0</bundle>
+        <bundle>mvn:javax.xml.rpc/com.springsource.javax.xml.rpc/1.1.0</bundle>
+        <bundle>mvn:javax.ejb/com.springsource.javax.ejb/3.0.0</bundle>
+        <bundle>mvn:javax.mail/com.springsource.javax.mail/1.4.1</bundle>
+        <bundle>mvn:org.springframework.ws/org.springframework.ws/1.5.9.A</bundle>
+        
     </feature>
 
  
