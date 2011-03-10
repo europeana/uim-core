@@ -5,6 +5,7 @@
 		<groupId>eu.europeana</groupId>
 		<artifactId>europeana-uim</artifactId>
 		<version>1.2.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>europeana-uim-plugin-basic</artifactId>
