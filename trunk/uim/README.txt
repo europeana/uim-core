@@ -37,6 +37,11 @@ Path                              Name                                          
 ===============
 
 1) Get Apache Felix Karaf at http://karaf.apache.org/
+        In top pom make sure karaf.version matches the version you are using!
+            Versions:
+                2.2.0   uim build fails
+                2.1.4   Ok
+                2.1.3   Ok
 
 2) Build UIM with maven
 
@@ -112,8 +117,8 @@ Path                              Name                                          
    - should complain about missing arguments
    
 5) Import ESE file:
-   - in Karaf shell: 'uim:file -c 1 file://<project-path>/common/src/test/resources/readingeurope.xml'
-                     'uim:file -c 2 file://<project-path>/common/src/test/resources/readingeurope.xml'
+   - in Karaf shell: 'uim:file -c 1 <project-path>/common/src/test/resources/readingeurope.xml'
+                     'uim:file -c 2 <project-path>/common/src/test/resources/readingeurope.xml'
 
 #4 GWT DEVELOPMENT MODE
 =======================
