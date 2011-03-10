@@ -66,13 +66,10 @@ public interface StorageEngine {
 
 	MetaDataRecord[] getMetaDataRecords(long...ids) throws StorageEngineException;
 	
-
 	long[] getByRequest(Request request) throws StorageEngineException;
 	long[] getByCollection(Collection collection) throws StorageEngineException;
 	long[] getByProvider(Provider provider, boolean recursive) throws StorageEngineException;
 	long[] getAllIds() throws StorageEngineException;
-	
-	long[] getByMetaDataRecordIdentifer(String... identifier);
 
     int getTotalByRequest(Request request) throws StorageEngineException;
     int getTotalByCollection(Collection collection) throws StorageEngineException;

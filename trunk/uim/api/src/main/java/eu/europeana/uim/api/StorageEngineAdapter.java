@@ -218,9 +218,4 @@ public abstract class StorageEngineAdapter implements StorageEngine {
     public int getTotalForAllIds() {
         return 0;
     }
-    
-    @Override
-    public long[] getByMetaDataRecordIdentifer(String... identifier) {
-        return new long[0];
-    }
 }

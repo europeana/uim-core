@@ -461,9 +461,4 @@ public class MemoryStorageEngine implements StorageEngine {
 	public int getTotalForAllIds() {
 		return metadatas.size();
 	}
-	
-    @Override
-    public long[] getByMetaDataRecordIdentifer(String... identifier) {
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
 }
