@@ -73,6 +73,20 @@ public interface IngestionPlugin {
      */
     TKey<?, ?>[] getOutputFields();
 
+    
+    /** Initialize the plugin when it is loaded in the OSGI container and attached to the 
+     * uim registry.
+     * 
+     */
+    void initialize();
+
+    
+    /** Shutdown teh plugin when it is removed from the uim registry (due to OSGI shutdown or
+     * reinstallation etc. 
+     */
+    void shutdown();
+
+    
     /**
      * List of configuration parameters this plugin can take from the execution context to be
      * configured for a specific execution. NOTE: any execution related configuration/information

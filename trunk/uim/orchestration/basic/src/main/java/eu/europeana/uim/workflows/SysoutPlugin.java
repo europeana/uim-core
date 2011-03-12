@@ -110,4 +110,14 @@ public class SysoutPlugin implements IngestionPlugin {
         @SuppressWarnings("unused")
         public int     processed = 0;
     }
+
+    @Override
+    public void initialize() {
+        // nothing to do
+    }
+
+    @Override
+    public void shutdown() {
+        // nothing to do
+    }
 }

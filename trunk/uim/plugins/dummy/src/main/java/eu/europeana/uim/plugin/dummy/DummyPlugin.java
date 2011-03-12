@@ -89,4 +89,14 @@ public class DummyPlugin implements IngestionPlugin {
     public void completed(ExecutionContext context) throws IngestionPluginFailedException {
         // nothing to do
     }
+
+    @Override
+    public void initialize() {
+        // nothing to do
+    }
+
+    @Override
+    public void shutdown() {
+        // nothing to do
+    }
 }

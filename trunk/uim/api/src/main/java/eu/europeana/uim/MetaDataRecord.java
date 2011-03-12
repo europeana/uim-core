@@ -20,14 +20,6 @@ public interface MetaDataRecord extends DataSet {
     Request getRequest();
 
     /**
-     * a unique record identifier
-     * 
-     * @return the database wide unique identifier of this record.
-     */
-    @Override
-    String getIdentifier();
-
-    /**
      * setter for the first value in the list of values for the specified key.
      * 
      * @param <N>

@@ -109,9 +109,21 @@ public class LoggingIngestionPlugin implements IngestionPlugin {
         // nothing to do
     }
 
+    @Override
+    public void initialize() {
+        // nothing to do
+    }
+    
+    @Override
+    public void shutdown() {
+        // nothing to do
+    }
+
+    
     private final static class Data implements Serializable {
         public int   current  = 0;
         public int   stepsize = 5;
         public Level level    = Level.FINE;
     }
+
 }
