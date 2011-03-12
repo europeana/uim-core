@@ -1,5 +1,13 @@
 package eu.europeana.uim.store.mongo;
 
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.DefaultCreator;
@@ -18,14 +26,6 @@ import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import org.apache.commons.lang.ArrayUtils;
-
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -53,6 +53,9 @@ public class MongoStorageEngine implements StorageEngine {
     private AtomicLong mdrIdCounter = null;
 
     private String dbName;
+
+    // guys, if you change your minds again, here is a switch.
+    private static final boolean ALLOW_DUPLICATE_MDR_IDENTIFIERS = true;
 
     public MongoStorageEngine(String dbName) {
         this.dbName = dbName;
@@ -291,22 +294,25 @@ public class MongoStorageEngine implements StorageEngine {
     @Override
     public void updateMetaDataRecord(MetaDataRecord record) throws StorageEngineException {
 
-        String unique = "MDR/" + record.getRequest().getCollection().getProvider().getMnemonic() + "/" + record.getIdentifier();
+        if(!ALLOW_DUPLICATE_MDR_IDENTIFIERS) {
+            String unique = "MDR/" + record.getRequest().getCollection().getProvider().getMnemonic() + "/" + record.getIdentifier();
 
-        // no sql, just pain
-        // this absolutely doesn't scale, someone else will have to optimize this piece of crap - I'm not proud of it but at least it works.
-        BasicDBObject uniqueQuery = new BasicDBObject("identifier", record.getIdentifier());
-        List<DBObject> one = records.find(uniqueQuery, BasicDBObjectBuilder.start("request", 1).add(AbstractMongoEntity.LID, 1).get()).toArray();
-        List<MongoRequest> ftw = ds.find(MongoRequest.class).asList();
-        for (DBObject o : one) {
-            for (MongoRequest f : ftw) {
-                if (o.get("request").equals(f.getId()) && !o.get(AbstractMongoEntity.LID).equals(record.getId())) {
-                    if (f.getCollection().getProvider().getMnemonic().equals(record.getRequest().getCollection().getProvider().getMnemonic())) {
-                        throw new IllegalStateException("Duplicate unique key for record: <" + unique + ">");
+            // no sql, just pain
+            // this absolutely doesn't scale, someone else will have to optimize this piece of crap - I'm not proud of it but at least it works.
+            BasicDBObject uniqueQuery = new BasicDBObject("identifier", record.getIdentifier());
+            List<DBObject> one = records.find(uniqueQuery, BasicDBObjectBuilder.start("request", 1).add(AbstractMongoEntity.LID, 1).get()).toArray();
+            List<MongoRequest> ftw = ds.find(MongoRequest.class).asList();
+            for (DBObject o : one) {
+                for (MongoRequest f : ftw) {
+                    if (o.get("request").equals(f.getId()) && !o.get(AbstractMongoEntity.LID).equals(record.getId())) {
+                        if (f.getCollection().getProvider().getMnemonic().equals(record.getRequest().getCollection().getProvider().getMnemonic())) {
+                            throw new IllegalStateException("Duplicate unique key for record: <" + unique + ">");
+                        }
                     }
                 }
             }
         }
+
 
         BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, record.getId());
         records.update(query, ((MongoMetadataRecord) record).getObject());
