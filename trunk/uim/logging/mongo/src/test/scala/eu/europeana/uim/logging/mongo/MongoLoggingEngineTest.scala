@@ -90,7 +90,7 @@ class MongoLoggingEngineTest extends Spec with BeforeAndAfterAll with BeforeAndA
     saved(1).get("duration") should equal (5l);
   }
 
-/*
+/* FIXME - see implementation
     it("should calculate average durations per plugin") {
     engine.logDuration(plugin("dummy"), 10l, 2);
     engine.logDuration(plugin("dummy"), 25l, 3);
@@ -128,7 +128,7 @@ class MongoLoggingEngineTest extends Spec with BeforeAndAfterAll with BeforeAndA
 
   def plugin(id: String):IngestionPlugin = {
     val p = mock[IngestionPlugin]
-    when(p.getIdentifier).thenReturn(id)
+    when(p.getName).thenReturn(id)
     p
   }
 

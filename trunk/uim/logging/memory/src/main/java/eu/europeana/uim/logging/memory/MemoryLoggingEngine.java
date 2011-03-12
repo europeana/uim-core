@@ -76,7 +76,7 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void logDuration(IngestionPlugin plugin, Long duration, long... mdrs) {
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdrs) {
         List<Long> d = getDurations(plugin);
         // don't show this to hardcore statisticians
         for (int i = 0; i < mdrs.length; i++) {

@@ -51,7 +51,7 @@ public abstract class LoggingEngineAdapter<T> implements LoggingEngine<T> {
 	}
 
 	@Override
-	public void logDuration(IngestionPlugin plugin, Long duration, long... mdr) {
+	public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr) {
 		// 
 	}
 

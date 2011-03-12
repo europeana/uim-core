@@ -1,5 +1,10 @@
 package eu.europeana.uim.logging.mongo;
 
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,11 +16,6 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
-
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Generic implementation of a mongo-based LoggingEngine. It does not implement the structured logging, this has to be performed by subclasses.
@@ -81,7 +81,7 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         entry.put("level", level.toString());
         entry.put("executionId", execution.getId());
         entry.put("mdrId", mdr.getId());
-        entry.put("pluginIdentifier", plugin.getIdentifier());
+        entry.put("pluginIdentifier", plugin.getName());
         entry.put("date", new Date());
         entry.put("message", message);
         logEntries.insert(entry);
@@ -101,7 +101,7 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         entry.put("level", level.toString());
         entry.put("executionId", execution.getId());
         entry.put("mdrId", mdr.getId());
-        entry.put("pluginIdentifier", plugin.getIdentifier());
+        entry.put("pluginIdentifier", plugin.getName());
         entry.put("date", new Date());
 
         if(payload == null) {
@@ -133,33 +133,33 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         for (int i = 0; i < count; i++) {
             DBObject d = new BasicDBObject();
             d.put("date", new Date());
-            d.put("pluginIdentifier", plugin.getIdentifier());
+            d.put("pluginIdentifier", plugin.getName());
             d.put("duration", duration / count);
             durationEntries.insert(d);
         }
     }
 
-    public Long getAverageDuration(IngestionPlugin plugin) {
-        DBObject condition = new BasicDBObject("pluginIdentifier", plugin.getIdentifier());
-        DBObject initial = new BasicDBObject();
-        initial.put("count", 0);
-        initial.put("totalDuration", 0);
-        // FIXME http://stackoverflow.com/questions/4820334/how-to-compute-the-average-with-mongodb-and-numberlong
-        String reduce = "function(duration, out) { out.count++; out.totalDuration+=duration.floatApprox; }";
-        String finalize = "function(out) { out.avg = out.totalDuration.floatApprox / out.count; }";
-        DBObject avg = durationEntries.group(new BasicDBObject("pluginIdentifier", true), condition, initial, reduce, finalize);
-        System.out.println(avg);
-        return null;
-    }
-
-    public void logDuration(IngestionPlugin plugin, Long duration, long... mdrs) {
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdrs) {
         for (Long mdr : mdrs) {
             DBObject d = new BasicDBObject();
             d.put("date", new Date());
-            d.put("pluginIdentifier", plugin.getIdentifier());
+            d.put("pluginIdentifier", plugin.getName());
             d.put("duration", duration / mdrs.length);
             d.put("mdrId", mdr);
             durationEntries.insert(d);
         }
+    }
+
+    public Long getAverageDuration(IngestionPlugin plugin) {
+        DBObject condition = new BasicDBObject("pluginIdentifier", plugin.getName());
+        DBObject initial = new BasicDBObject();
+        initial.put("count", 0);
+        initial.put("totalDuration", 0);
+        // FIXME http://stackoverflow.com/questions/4820334/how-to-compute-the-average-with-mongodb-and-numberlong
+        String reduce = "function(duration, out) { if(out.duration !== null) { out.count++; out.totalDuration+=duration.floatApprox; } }";
+        String finalize = "function(out) { out.avg = out.totalDuration.floatApprox / out.count.floatApprox; }";
+        DBObject avg = durationEntries.group(new BasicDBObject("pluginIdentifier", true), condition, initial, reduce, finalize);
+        System.out.println(avg);
+        return null;
     }
 }

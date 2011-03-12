@@ -1,9 +1,9 @@
 package eu.europeana.uim.api;
 
+import java.util.List;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Execution;
-
-import java.util.List;
 
 /**
  * Service for the reporting of the processing, to be used by the orchestrator and eventually plugins
@@ -83,7 +83,7 @@ public interface LoggingEngine<T> {
      * @param duration duration in ms
      * @param mdr      the identifier of the MDR(s)
      */
-    void logDuration(IngestionPlugin plugin, Long duration, long... mdr);
+    void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr);
 
 
 }
