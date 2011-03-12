@@ -480,11 +480,5 @@ public class MongoStorageEngine implements StorageEngine {
         return ds.find(MongoExecution.class, AbstractMongoEntity.LID, id).get();
     }
 
-    @Override
-    public long[] getByMetaDataRecordIdentifer(String... identifier) {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-
 
 }
