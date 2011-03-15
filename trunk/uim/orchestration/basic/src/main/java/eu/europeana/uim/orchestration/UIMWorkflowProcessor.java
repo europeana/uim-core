@@ -76,21 +76,22 @@ public class UIMWorkflowProcessor implements Runnable {
                         if (execution.getProgressSize() == 0) {
                             processNoneInProgress(execution, start);
                         } else {
-                            IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(new IngestionPlugin[0]);
+                            IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(
+                                    new IngestionPlugin[0]);
                             for (int i = steps.length - 1; i >= 0; i--) {
                                 IngestionPlugin thisStep = steps[i];
                                 Object prevStep = i > 0 ? steps[i - 1] : start;
-                                
+
                                 Queue<Task> prevSuccess = execution.getSuccess(prevStep.getClass().getSimpleName());
                                 Queue<Task> prevFailure = execution.getFailure(prevStep.getClass().getSimpleName());
-                                
+
                                 Queue<Task> thisSuccess = execution.getSuccess(thisStep.getClass().getSimpleName());
                                 Queue<Task> thisFailure = execution.getFailure(thisStep.getClass().getSimpleName());
-                                
+
                                 boolean savepoint = execution.getWorkflow().isSavepoint(thisStep);
                                 boolean mandatory = execution.getWorkflow().isMandatory(thisStep);
-                                
-                                // if we are the "last" step we need to handle 
+
+                                // if we are the "last" step we need to handle
                                 // the last success queue here.
                                 if (i == steps.length - 1) {
                                     // save and clean final
@@ -107,19 +108,22 @@ public class UIMWorkflowProcessor implements Runnable {
                                         }
                                     }
                                 }
-                                
+
                                 // get successful tasks from previous step
-                                // and schedule them into the step executor 
+                                // and schedule them into the step executor
                                 // of this step
-                                TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(thisStep.getClass());
-                                
+                                TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(
+                                        thisStep.getClass());
+
                                 Task task = null;
                                 synchronized (prevSuccess) {
                                     task = prevSuccess.poll();
                                 }
 
                                 while (task != null) {
-                                    if (task.getThrowable() != null && task.getThrowable().getClass().equals(IngestionPluginFailedException.class)) {
+                                    if (task.getThrowable() != null &&
+                                        task.getThrowable().getClass().equals(
+                                                IngestionPluginFailedException.class)) {
                                         complete(execution, start);
                                         task.getThrowable().printStackTrace();
                                     }
@@ -133,7 +137,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     executor.execute(task);
 
                                     // if this is the first step,
-                                    // then we have just now scheduled a 
+                                    // then we have just now scheduled a
                                     // newly created task from the start plugin.
                                     if (i == 0) {
                                         execution.incrementScheduled(1);
@@ -142,21 +146,23 @@ public class UIMWorkflowProcessor implements Runnable {
                                     synchronized (prevSuccess) {
                                         task = prevSuccess.poll();
                                     }
-                                }                                
+                                }
                             }
                         }
                     } catch (Throwable exc) {
                         log.log(Level.WARNING, "Exception in workflow execution", exc);
-                    }
-
-                    if (total == 0) {
-                        Thread.sleep(25);
                     }
                 } // end synchronized execution
             } catch (Throwable exc) {
                 log.log(Level.SEVERE, "Exception in workflow executor", exc);
             }
 
+            if (executions.isEmpty()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                }
+            }
         }
     }
 
