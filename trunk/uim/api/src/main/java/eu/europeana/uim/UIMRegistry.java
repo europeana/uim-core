@@ -256,7 +256,7 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getClass().getSimpleName()).append(": [").append(
+                builder.append(plugin.getName()).append(": [").append(
                         plugin.getDescription()).append("]");
             }
         }
