@@ -34,8 +34,8 @@ public class TaskExecutor extends ThreadPoolExecutor {
     private LinkedList<Task> activeTask = new LinkedList<Task>();
 
     /**
-     * Constructor creates an worker thrad pool of the specified size. The given scheduler is used
-     * as tasksource.
+     * Constructor creates an worker thread pool of the specified size. The given scheduler is used
+     * as task source.
      * 
      * @param corePoolSize
      * @param maxPoolSize
