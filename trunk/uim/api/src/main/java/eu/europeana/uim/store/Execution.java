@@ -13,6 +13,9 @@ public interface Execution extends UimEntity {
     Date getEndTime();
     void setEndTime(Date end);
 
+    Date getCancelTime();
+    void setCancelTime(Date end);
+
     DataSet getDataSet();
     void setDataSet(DataSet entity);
 

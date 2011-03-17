@@ -12,7 +12,18 @@ import java.util.Queue;
  */
 public abstract class TaskCreator implements Runnable {
     private boolean     done = false;
+    private boolean     start = false;
     private Queue<Task> queue;
+
+    
+    
+    public boolean isStart() {
+        return start;
+    }
+
+    public void setStart(boolean start) {
+        this.start = start;
+    }
 
     /**
      * @param done

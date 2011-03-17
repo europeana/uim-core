@@ -124,7 +124,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     if (task.getThrowable() != null &&
                                         task.getThrowable().getClass().equals(
                                                 IngestionPluginFailedException.class)) {
-                                        complete(execution, start);
+                                        complete(execution, start, false);
                                         task.getThrowable().printStackTrace();
                                     }
                                     task.setStep(thisStep, mandatory);
@@ -172,6 +172,8 @@ public class UIMWorkflowProcessor implements Runnable {
 
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
+        
+        // number of scheduled but not done creation tasks.
         int inprogress = 0;
         Iterator<TaskCreator> creatorsIterator = creators.iterator();
         while (creatorsIterator.hasNext()) {
@@ -183,8 +185,20 @@ public class UIMWorkflowProcessor implements Runnable {
             }
         }
 
-        if (!start.isFinished(execution, execution.getStorageEngine())) {
-            if (inprogress < 5) {
+        if (execution.getMonitor().isCancelled()) {
+            // cancelled and nothing in progress
+            if (inprogress == 0 && execution.isFinished()) {
+                complete(execution, start, false);
+                return false;
+            }
+        } else if (start.isFinished(execution, execution.getStorageEngine())) {
+            // everything done no new
+            if (inprogress == 0 && execution.isFinished()) {
+                complete(execution, start, false);
+                return false;
+            }
+        } else {
+            if (inprogress < 3) {
                 TaskCreator createLoader = start.createLoader(execution,
                         execution.getStorageEngine());
                 if (createLoader != null) {
@@ -195,17 +209,12 @@ public class UIMWorkflowProcessor implements Runnable {
                             createLoader);
                 }
             }
-        } else {
-            if (inprogress == 0 && execution.isFinished()) {
-                complete(execution, start);
-                return false;
-            }
         }
 
         return true;
     }
 
-    private void complete(ActiveExecution<Task> execution, WorkflowStart start)
+    private void complete(ActiveExecution<Task> execution, WorkflowStart start, boolean cancel)
             throws StorageEngineException {
         try {
             start.completed(execution);
@@ -223,6 +232,9 @@ public class UIMWorkflowProcessor implements Runnable {
         synchronized (execution) {
             execution.setActive(false);
             execution.setEndTime(new Date());
+            if (cancel) {
+                execution.setCancelTime(new Date());
+            }
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
         log.warning("Remove Execution:" + execution.toString());

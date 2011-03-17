@@ -17,6 +17,7 @@ public class MongoExecution extends AbstractMongoEntity implements Execution {
     private boolean isActive;
     private Date startTime;
     private Date endTime;
+    private Date cancelTime;
     private String workflowIdentifier;
 
     @Reference
@@ -51,6 +52,16 @@ public class MongoExecution extends AbstractMongoEntity implements Execution {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+    
+    
+
+    public Date getCancelTime() {
+        return cancelTime;
+    }
+
+    public void setCancelTime(Date cancelTime) {
+        this.cancelTime = cancelTime;
     }
 
     public DataSet getDataSet() {

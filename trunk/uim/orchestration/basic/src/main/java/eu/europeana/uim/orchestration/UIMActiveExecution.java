@@ -115,6 +115,16 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         execution.setEndTime(end);
     }
 
+    
+    
+    public Date getCancelTime() {
+        return execution.getCancelTime();
+    }
+
+    public void setCancelTime(Date end) {
+        execution.setCancelTime(end);
+    }
+
     public DataSet getDataSet() {
         return execution.getDataSet();
     }
@@ -214,12 +224,15 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     @Override
     public boolean isFinished() {
+        boolean cancelled = getMonitor().isCancelled();
+
         boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());
+        
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
         boolean empty = getProgressSize() == 0;
         
         //System.out.println(String.format("s=%d, p=%d, f=%d, c=%d", getScheduledSize(), getProgressSize(), getFailureSize(), getCompletedSize()));
-        return finished && processed && empty;
+        return (finished || cancelled) && processed && empty;
     }
 
     @Override

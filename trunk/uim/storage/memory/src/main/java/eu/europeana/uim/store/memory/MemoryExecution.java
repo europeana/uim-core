@@ -10,7 +10,9 @@ public class MemoryExecution implements Execution {
 	private long id;
 
     private boolean active = false;
-    private Date startTime, endTime;
+    private Date startTime;
+    private Date endTime;
+    private Date cancelTime;
     private DataSet dataSet;
     private String workflowIdentifier;
 
@@ -38,6 +40,16 @@ public class MemoryExecution implements Execution {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    
+    
+    public Date getCancelTime() {
+        return cancelTime;
+    }
+
+    public void setCancelTime(Date cancelTime) {
+        this.cancelTime = cancelTime;
     }
 
     public DataSet getDataSet() {

@@ -143,7 +143,7 @@ public class BatchWorkflowStart implements WorkflowStart {
         if (!isFinished(context, storage)) { return new TaskCreator() {
             @Override
             public void run() {
-                setDone(false);
+                setStart(true);
                 try {
                     long[] poll = context.getValue(DATA_KEY).batches.poll(500,
                             TimeUnit.MILLISECONDS);
