@@ -35,13 +35,13 @@ public class MixedWorkflow extends AbstractWorkflow {
     }
 
     @Override
-    public boolean isSavepoint(IngestionPlugin plugin) {
-        if (plugin instanceof SyserrPlugin) { return true; }
+    public boolean isSavepoint(String pluginName) {
+        if (pluginName.equals(new SyserrPlugin().getName())) { return true; }
         return false;
     }
 
     @Override
-    public boolean isMandatory(IngestionPlugin plugin) {
+    public boolean isMandatory(String pluginName) {
         return false;
     }
 }

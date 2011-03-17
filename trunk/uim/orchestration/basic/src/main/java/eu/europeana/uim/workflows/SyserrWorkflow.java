@@ -1,6 +1,5 @@
 package eu.europeana.uim.workflows;
 
-import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.util.BatchWorkflowStart;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
@@ -25,12 +24,12 @@ public class SyserrWorkflow extends AbstractWorkflow {
     }
 
     @Override
-    public boolean isSavepoint(IngestionPlugin plugin) {
+    public boolean isSavepoint(String pluginName) {
         return true;
     }
 
     @Override
-    public boolean isMandatory(IngestionPlugin plugin) {
+    public boolean isMandatory(String pluginName) {
         return false;
     }
 }

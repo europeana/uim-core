@@ -32,14 +32,14 @@ public interface Workflow {
     List<IngestionPlugin> getSteps();
 
     /**
-     * @param plugin
+     * @param pluginName
      * @return Is this a save point plugin?
      */
-    boolean isSavepoint(IngestionPlugin plugin);
+    boolean isSavepoint(String pluginName);
 
     /**
-     * @param plugin
+     * @param pluginName
      * @return Is this a mandatory plugin, so unsuccesful processing is a failure?
      */
-    boolean isMandatory(IngestionPlugin plugin);
+    boolean isMandatory(String pluginName);
 }

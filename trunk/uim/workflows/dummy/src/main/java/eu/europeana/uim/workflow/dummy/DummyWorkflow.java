@@ -31,12 +31,12 @@ public class DummyWorkflow extends AbstractWorkflow implements Workflow {
     }
 
     @Override
-    public boolean isSavepoint(IngestionPlugin plugin) {
+    public boolean isSavepoint(String pluginName) {
         return false;
     }
 
     @Override
-    public boolean isMandatory(IngestionPlugin plugin) {
+    public boolean isMandatory(String pluginName) {
         return false;
     }
 }

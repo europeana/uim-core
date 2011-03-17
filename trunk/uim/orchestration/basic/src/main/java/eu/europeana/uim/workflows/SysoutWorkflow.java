@@ -38,13 +38,13 @@ public class SysoutWorkflow extends AbstractWorkflow {
     }
 
     @Override
-    public boolean isSavepoint(IngestionPlugin plugin) {
-        if (plugin instanceof SysoutPlugin) { return true; }
+    public boolean isSavepoint(String pluginName) {
+        if (pluginName.equals(new SysoutPlugin().getName())) { return true; }
         return false;
     }
 
     @Override
-    public boolean isMandatory(IngestionPlugin plugin) {
+    public boolean isMandatory(String pluginName) {
         return false;
     }
 }

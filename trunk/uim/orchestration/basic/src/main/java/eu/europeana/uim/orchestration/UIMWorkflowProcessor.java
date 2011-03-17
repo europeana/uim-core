@@ -88,8 +88,8 @@ public class UIMWorkflowProcessor implements Runnable {
                                 Queue<Task> thisSuccess = execution.getSuccess(thisStep.getClass().getSimpleName());
                                 Queue<Task> thisFailure = execution.getFailure(thisStep.getClass().getSimpleName());
 
-                                boolean savepoint = execution.getWorkflow().isSavepoint(thisStep);
-                                boolean mandatory = execution.getWorkflow().isMandatory(thisStep);
+                                boolean savepoint = execution.getWorkflow().isSavepoint(thisStep.getName());
+                                boolean mandatory = execution.getWorkflow().isMandatory(thisStep.getName());
 
                                 // if we are the "last" step we need to handle
                                 // the last success queue here.
