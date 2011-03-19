@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ public class BatchWorkflowStartTest {
 
         when(execution.getDataSet()).thenReturn(collection);
         when(execution.getStorageEngine()).thenReturn(engine);
+        when(execution.getProperties()).thenReturn(new Properties());
         when(engine.getByCollection((Collection)any())).thenReturn(
                 new long[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
 

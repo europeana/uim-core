@@ -1,6 +1,7 @@
 package eu.europeana.uim.workflow;
 
 import java.util.Queue;
+import java.util.Set;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ExecutionContext;
@@ -23,6 +24,8 @@ public class Task implements Runnable {
 
     private Queue<Task>            success   = null;
     private Queue<Task>            failure   = null;
+    
+    private Set<Task>              assigned   = null;
 
     private boolean                savepoint = false;
     private boolean                mandatory = false;
@@ -200,5 +203,16 @@ public class Task implements Runnable {
      */
     public ExecutionContext getExecutionContext() {
         return context;
+    }
+
+    /**
+     * @return
+     */
+    public Set<Task> getAssigned() {
+        return assigned;
+    }
+    
+    public void setAssigned(Set<Task> assigned) {
+        this.assigned = assigned;
     }
 }

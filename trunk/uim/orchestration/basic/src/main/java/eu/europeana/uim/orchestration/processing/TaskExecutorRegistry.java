@@ -6,13 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class TaskExecutorRegistry {
 
 	public final static Logger log = Logger.getLogger(TaskExecutorRegistry.class.getName());
 
-	private HashMap<Class, TaskExecutor> executors = new LinkedHashMap<Class, TaskExecutor>();
+	private HashMap<String, TaskExecutor> executors = new LinkedHashMap<String, TaskExecutor>();
 
 
 	private static TaskExecutorRegistry instance;
@@ -25,19 +26,19 @@ public class TaskExecutorRegistry {
 	}
 
 
-	public void initialize(Class clazz, int maxsize){
-	    TaskExecutor exec = executors.get(clazz);
+	public void initialize(String name, int coresize, int maxsize){
+	    TaskExecutor exec = executors.get(name);
 		if (exec == null || exec.isShutdown()){
-			exec = new TaskExecutor(1, maxsize, new LinkedBlockingQueue<Runnable>(), clazz.getSimpleName());
+			exec = new TaskExecutor(coresize, maxsize, new LinkedBlockingQueue<Runnable>(), name);
 			exec.setRejectedExecutionHandler(new ReattachExecutionHandler());
 			
-			executors.put(clazz, exec);
+			executors.put(name, exec);
 		}
 	}
 	
 
-	public TaskExecutor getExecutor(Class clazz){
-		return executors.get(clazz);
+	public TaskExecutor getExecutor(String name){
+		return executors.get(name);
 	}
 	
 	

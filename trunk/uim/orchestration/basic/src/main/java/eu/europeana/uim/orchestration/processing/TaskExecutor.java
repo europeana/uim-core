@@ -44,7 +44,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
      */
     public TaskExecutor(int corePoolSize, int maxPoolSize, BlockingQueue<Runnable> queue,
                         String name) {
-        super(corePoolSize, maxPoolSize, 1, TimeUnit.SECONDS, queue, new TaskExecutorThreadFactory(
+        super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue, new TaskExecutorThreadFactory(
                 name, name));
 
         prestartCoreThread();
@@ -114,10 +114,6 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 }
             }
 
-            synchronized (activeTask) {
-                activeTask.remove(task);
-            }
-
             if (success) {
                 try {
                     task.setStatus(TaskStatus.DONE);
@@ -126,12 +122,22 @@ public class TaskExecutor extends ThreadPoolExecutor {
                     }
                     synchronized (task.getOnSuccess()) {
                         task.getOnSuccess().add(task);
+
+                        // within same synch block!!
+                        synchronized (task.getAssigned()) {
+                            task.getAssigned().remove(task);
+                        }
                     }
+
                 } catch (StorageEngineException e1) {
                     task.setThrowable(t);
                     task.setStatus(TaskStatus.FAILED);
                     synchronized (task.getOnFailure()) {
                         task.getOnFailure().add(task);
+                        // within same synch block!!
+                        synchronized (task.getAssigned()) {
+                            task.getAssigned().remove(task);
+                        }
                     }
                     try {
                         task.save();
@@ -146,6 +152,10 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 task.setStatus(TaskStatus.FAILED);
                 synchronized (task.getOnFailure()) {
                     task.getOnFailure().add(task);
+                    // within same synch block!!
+                    synchronized (task.getAssigned()) {
+                        task.getAssigned().remove(task);
+                    }
                 }
 
                 try {
@@ -156,7 +166,11 @@ public class TaskExecutor extends ThreadPoolExecutor {
                             e2);
                 }
             }
+
             task.tearDown();
+            synchronized (activeTask) {
+                activeTask.remove(task);
+            }
         }
     }
 

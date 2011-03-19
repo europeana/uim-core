@@ -1,11 +1,14 @@
 package eu.europeana.uim.util;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang.ArrayUtils;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
@@ -28,6 +31,13 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * @date Feb 14, 2011
  */
 public class BatchWorkflowStart implements WorkflowStart {
+    
+    /** String BATCH_SUBSET */
+    public static final String BATCH_SUBSET = "batch.subset";
+
+    /** String BATCH_SHUFFLE */
+    public static final String BATCH_SHUFFLE = "batch.shuffle";
+
     /**
      * Key to retrieve own data from context.
      */
@@ -108,6 +118,15 @@ public class BatchWorkflowStart implements WorkflowStart {
                                                        context.getDataSet() + ">");
             }
 
+            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
+            if (shuffle) {
+                Collections.shuffle(Arrays.asList(ids));
+            }
+            if (context.getProperties().getProperty(BATCH_SUBSET) != null) {
+                int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET));
+                ids = ArrayUtils.subarray(ids, 0, Math.min(subset, ids.length -1));
+            }
+
             Data data = new Data();
             data.total = ids.length;
             context.putValue(DATA_KEY, data);
@@ -134,6 +153,7 @@ public class BatchWorkflowStart implements WorkflowStart {
                     context.getValue(DATA_KEY).batches.add(ids);
                 }
             }
+            data.initialized = true;
         } finally {
         }
     }
@@ -143,7 +163,7 @@ public class BatchWorkflowStart implements WorkflowStart {
         if (!isFinished(context, storage)) { return new TaskCreator() {
             @Override
             public void run() {
-                setStart(true);
+//                setStart(true);
                 try {
                     long[] poll = context.getValue(DATA_KEY).batches.poll(500,
                             TimeUnit.MILLISECONDS);
@@ -176,7 +196,8 @@ public class BatchWorkflowStart implements WorkflowStart {
 
     @Override
     public boolean isFinished(ExecutionContext context, StorageEngine storage) {
-        return context.getValue(DATA_KEY).batches.isEmpty();
+        Data value = context.getValue(DATA_KEY);
+        return value.initialized && value.batches.isEmpty();
     }
 
     /**
@@ -187,6 +208,7 @@ public class BatchWorkflowStart implements WorkflowStart {
      */
     final static class Data implements Serializable {
         public int                   total   = 0;
+        public boolean               initialized = false;
         public BlockingQueue<long[]> batches = new LinkedBlockingQueue<long[]>();
     }
 

@@ -83,7 +83,7 @@ public class UIMRegistry implements Registry {
     @Override
     public void addPlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Added plugin:" + plugin.getName());
+            log.info("Added plugin: " + plugin.getName());
             if (!plugins.containsKey(plugin.getName())) {
                 plugin.initialize();
                 plugins.put(plugin.getName(), plugin);
@@ -99,7 +99,7 @@ public class UIMRegistry implements Registry {
     @Override
     public void removePlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Removed plugin:" + plugin.getName());
+            log.info("Removed plugin: " + plugin.getName());
             plugins.remove(plugin.getName());
             plugin.shutdown();
         }
@@ -108,7 +108,7 @@ public class UIMRegistry implements Registry {
     @Override
     public void addStorage(StorageEngine storage) {
         if (storage != null) {
-            log.info("Added storage:" + storage.getIdentifier());
+            log.info("Added storage: " + storage.getIdentifier());
             if (!storages.containsKey(storage.getIdentifier())) {
                 storage.initialize();
                 this.storages.put(storage.getIdentifier(), storage);
@@ -125,7 +125,7 @@ public class UIMRegistry implements Registry {
     @Override
     public void removeStorage(StorageEngine storage) {
         if (storage != null) {
-            log.info("Removed storage:" + storage.getIdentifier());
+            log.info("Removed storage: " + storage.getIdentifier());
             storage.shutdown();
 
             StorageEngine remove = this.storages.remove(storage.getIdentifier());

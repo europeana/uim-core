@@ -3,8 +3,10 @@ package eu.europeana.uim.api;
 import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.Set;
 
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
@@ -28,8 +30,9 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	Throwable getThrowable();
 
 
-	Queue<T> getSuccess(String identifier);
-	Queue<T> getFailure(String identifier);
+	Queue<T> getSuccess(String name);
+	Queue<T> getFailure(String name);
+	Set<Task> getAssigned(String name);
 
 	void done(int count);
 	

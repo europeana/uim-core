@@ -4,12 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
@@ -26,9 +30,11 @@ import eu.europeana.uim.workflow.WorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 public class UIMActiveExecution implements ActiveExecution<Task> {
+    private static Logger                     log       = Logger.getLogger(UIMActiveExecution.class.getName());
 
     private HashMap<String, LinkedList<Task>> success   = new LinkedHashMap<String, LinkedList<Task>>();
     private HashMap<String, LinkedList<Task>> failure   = new LinkedHashMap<String, LinkedList<Task>>();
+    private HashMap<String, HashSet<Task>>    assigned  = new LinkedHashMap<String, HashSet<Task>>();
 
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
@@ -38,7 +44,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     private final Execution                   execution;
     private final Workflow                    workflow;
     private final Properties                  properties;
-    private final RevisableProgressMonitor             monitor;
+    private final RevisableProgressMonitor    monitor;
 
     private boolean                           paused;
     private Throwable                         throwable;
@@ -58,12 +64,14 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         this.monitor = monitor;
 
         WorkflowStart start = workflow.getStart();
-        success.put(start.getClass().getSimpleName(), new LinkedList<Task>());
-        failure.put(start.getClass().getSimpleName(), new LinkedList<Task>());
+        success.put(start.getName(), new LinkedList<Task>());
+        failure.put(start.getName(), new LinkedList<Task>());
+        assigned.put(start.getName(), new HashSet<Task>());
 
         for (IngestionPlugin step : workflow.getSteps()) {
-            success.put(step.getClass().getSimpleName(), new LinkedList<Task>());
-            failure.put(step.getClass().getSimpleName(), new LinkedList<Task>());
+            success.put(step.getName(), new LinkedList<Task>());
+            failure.put(step.getName(), new LinkedList<Task>());
+            assigned.put(step.getName(), new HashSet<Task>());
         }
     }
 
@@ -115,8 +123,6 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         execution.setEndTime(end);
     }
 
-    
-    
     public Date getCancelTime() {
         return execution.getCancelTime();
     }
@@ -177,6 +183,11 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     }
 
     @Override
+    public Set<Task> getAssigned(String identifier) {
+        return assigned.get(identifier);
+    }
+
+    @Override
     public void done(int count) {
         completed += count;
     }
@@ -184,9 +195,22 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     @Override
     public int getProgressSize() {
         int size = 0;
-        for (LinkedList<Task> tasks : success.values()) {
-            size += tasks.size();
+        WorkflowStart start = getWorkflow().getStart();
+        size += getProgressSize(start.getName());
+
+        for (IngestionPlugin step : getWorkflow().getSteps()) {
+            size += getProgressSize(step.getName());
         }
+        return size;
+    }
+
+    private int getProgressSize(String name) {
+        int size = 0;
+        LinkedList<Task> list = success.get(name);
+        size += list.size();
+
+        HashSet<Task> set = assigned.get(name);
+        size += set.size();
 
         return size;
     }
@@ -209,6 +233,32 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     @Override
     public void incrementScheduled(int work) {
         scheduled += work;
+        if (scheduled % 2500 == 0) {
+            if (log.isLoggable(Level.INFO)) {
+                int totalProgress = 0;
+                StringBuilder builder = new StringBuilder();
+
+                WorkflowStart start = getWorkflow().getStart();
+                int startSize = getProgressSize(start.getName());
+                totalProgress += startSize;
+                builder.append(start.getName());
+                builder.append("=");
+                builder.append(startSize);
+                builder.append(", ");
+
+                for (IngestionPlugin step : getWorkflow().getSteps()) {
+                    int stepSize = getProgressSize(step.getName());
+                    totalProgress += stepSize;
+                    builder.append(step.getName());
+                    builder.append("=");
+                    builder.append(stepSize);
+                    builder.append(", ");
+                }
+
+                log.info(scheduled + " scheduled, " + totalProgress + " in progress:" +
+                         builder.toString());
+            }
+        }
     }
 
     @Override
@@ -221,17 +271,17 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         return getWorkflow().getStart().getTotalSize(this);
     }
 
-
     @Override
     public boolean isFinished() {
         boolean cancelled = getMonitor().isCancelled();
 
         boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());
-        
+
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
         boolean empty = getProgressSize() == 0;
-        
-        //System.out.println(String.format("s=%d, p=%d, f=%d, c=%d", getScheduledSize(), getProgressSize(), getFailureSize(), getCompletedSize()));
+
+        // System.out.println(String.format("s=%d, p=%d, f=%d, c=%d", getScheduledSize(),
+// getProgressSize(), getFailureSize(), getCompletedSize()));
         return (finished || cancelled) && processed && empty;
     }
 
@@ -245,8 +295,8 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     }
 
     public WorkflowStepStatus getStepStatus(IngestionPlugin step) {
-        Queue<Task> success = getSuccess(step.getClass().getSimpleName());
-        Queue<Task> failure = getFailure(step.getClass().getSimpleName());
+        Queue<Task> success = getSuccess(step.getName());
+        Queue<Task> failure = getFailure(step.getName());
 
         int successSize = 0;
         synchronized (success) {
@@ -267,7 +317,6 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         return status;
     }
 
-
     @Override
     public Workflow getWorkflow() {
         return workflow;
@@ -281,7 +330,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
             }
-            
+
             if (isFinished()) {
                 count++;
             } else {
@@ -295,8 +344,8 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
             } catch (InterruptedException e) {
             }
         } while (getExecution().isActive());
-        
-        // give it the time to store if necessary. 
+
+        // give it the time to store if necessary.
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -306,7 +355,6 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         System.out.println("Failed:" + getFailureSize());
     }
 
-    
     @Override
     public <NS, T extends Serializable> void putValue(TKey<NS, T> key, T value) {
         values.put(key, value);

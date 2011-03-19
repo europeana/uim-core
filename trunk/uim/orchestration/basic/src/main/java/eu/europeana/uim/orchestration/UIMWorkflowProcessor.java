@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,22 +28,26 @@ import eu.europeana.uim.workflow.WorkflowStart;
 
 public class UIMWorkflowProcessor implements Runnable {
 
-    private static Logger                                             log        = Logger.getLogger(UIMWorkflowProcessor.class.getName());
+    private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
-    private TaskExecutorThreadFactory                                 factory    = new TaskExecutorThreadFactory(
-                                                                                         "processor");
+    private TaskExecutorThreadFactory                                 factory          = new TaskExecutorThreadFactory(
+                                                                                               "processor");
     private TaskExecutorThread                                        dispatcherThread;
 
     private final Registry                                            registry;
 
-    private boolean                                                   running    = false;
+    private boolean                                                   running          = false;
 
-    private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED  = TKey.register(
-                                                                                         UIMWorkflowProcessor.class,
-                                                                                         "creators",
-                                                                                         (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
+    private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED        = TKey.register(
+                                                                                               UIMWorkflowProcessor.class,
+                                                                                               "creators",
+                                                                                               (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
 
-    private List<ActiveExecution<Task>>                               executions = new ArrayList<ActiveExecution<Task>>();
+    private List<ActiveExecution<Task>>                               executions       = new ArrayList<ActiveExecution<Task>>();
+
+    private int                                                       maxTotalProgress = 5000;
+
+    private int                                                       maxInProgress    = 1000;
 
     public UIMWorkflowProcessor(Registry registry) {
         this.registry = registry;
@@ -51,45 +56,67 @@ public class UIMWorkflowProcessor implements Runnable {
     public void run() {
         running = true;
         while (running) {
-            int total = 0;
+            int totalProgress = 0;
+
+            List<ActiveExecution<Task>> active = new ArrayList<ActiveExecution<Task>>();
+            synchronized (executions) {
+                active.addAll(executions);
+            }
+            for (ActiveExecution<Task> execution : active) {
+                totalProgress += execution.getProgressSize();
+            }
 
             try {
-                List<ActiveExecution<Task>> active = new ArrayList<ActiveExecution<Task>>();
-                synchronized (executions) {
-                    active.addAll(executions);
-                }
 
                 Iterator<ActiveExecution<Task>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
                     ActiveExecution<Task> execution = activeIterator.next();
-                    total += execution.getProgressSize();
-
-                    // well we skip this execution if it is paused,
-                    // FIXME: if only paused executions are around then
-                    // we do somehow busy waiting - total count is > 0
                     if (execution.isPaused()) continue;
 
                     try {
                         // we ask the workflow start if we have more to do
                         WorkflowStart start = execution.getWorkflow().getStart();
 
-                        if (execution.getProgressSize() == 0) {
-                            processNoneInProgress(execution, start);
+                        int execProgress = execution.getProgressSize();
+                        boolean newtasks = false;
+                        if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
+                            newtasks = ensureTasksInProgress(execution, start, execProgress,
+                                    totalProgress);
+                        }
+
+                        if (execProgress == 0 && !newtasks) {
+                            ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
+                            if (creators.isEmpty()) {
+                                if (execution.getMonitor().isCancelled()) {
+                                    // cancelled and nothing in progress
+                                    if (execution.isFinished()) {
+                                        complete(execution, start, false);
+                                    }
+                                } else if (start.isFinished(execution, execution.getStorageEngine())) {
+                                    // everything done no new
+                                    if (execution.isFinished()) {
+                                        complete(execution, start, false);
+                                    }
+                                }
+                            }
                         } else {
                             IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(
                                     new IngestionPlugin[0]);
                             for (int i = steps.length - 1; i >= 0; i--) {
                                 IngestionPlugin thisStep = steps[i];
-                                Object prevStep = i > 0 ? steps[i - 1] : start;
 
-                                Queue<Task> prevSuccess = execution.getSuccess(prevStep.getClass().getSimpleName());
-                                Queue<Task> prevFailure = execution.getFailure(prevStep.getClass().getSimpleName());
+                                Queue<Task> prevSuccess = i > 0
+                                        ? execution.getSuccess(steps[i - 1].getName())
+                                        : execution.getSuccess(start.getName());
 
-                                Queue<Task> thisSuccess = execution.getSuccess(thisStep.getClass().getSimpleName());
-                                Queue<Task> thisFailure = execution.getFailure(thisStep.getClass().getSimpleName());
+                                Queue<Task> thisSuccess = execution.getSuccess(thisStep.getName());
+                                Queue<Task> thisFailure = execution.getFailure(thisStep.getName());
+                                Set<Task> thisAssigned = execution.getAssigned(thisStep.getName());
 
-                                boolean savepoint = execution.getWorkflow().isSavepoint(thisStep.getName());
-                                boolean mandatory = execution.getWorkflow().isMandatory(thisStep.getName());
+                                boolean savepoint = execution.getWorkflow().isSavepoint(
+                                        thisStep.getName());
+                                boolean mandatory = execution.getWorkflow().isMandatory(
+                                        thisStep.getName());
 
                                 // if we are the "last" step we need to handle
                                 // the last success queue here.
@@ -113,7 +140,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 // and schedule them into the step executor
                                 // of this step
                                 TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(
-                                        thisStep.getClass());
+                                        thisStep.getName());
 
                                 Task task = null;
                                 synchronized (prevSuccess) {
@@ -131,9 +158,13 @@ public class UIMWorkflowProcessor implements Runnable {
                                     task.setSavepoint(savepoint);
                                     task.setOnSuccess(thisSuccess);
                                     task.setOnFailure(thisFailure);
+                                    task.setAssigned(thisAssigned);
                                     // mandatory
                                     task.setStatus(TaskStatus.QUEUED);
 
+                                    synchronized (thisAssigned) {
+                                        thisAssigned.add(task);
+                                    }
                                     executor.execute(task);
 
                                     // if this is the first step,
@@ -166,52 +197,42 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    private boolean processNoneInProgress(ActiveExecution<Task> execution, WorkflowStart start)
-            throws StorageEngineException {
-        Queue<Task> startTasks = execution.getSuccess(start.getClass().getSimpleName());
-
+    private boolean ensureTasksInProgress(ActiveExecution<Task> execution, WorkflowStart start,
+            int execProgress, int totalProgress) throws StorageEngineException {
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
-        
+
         // number of scheduled but not done creation tasks.
-        int inprogress = 0;
+        int activeCreators = 0;
         Iterator<TaskCreator> creatorsIterator = creators.iterator();
         while (creatorsIterator.hasNext()) {
             TaskCreator next = creatorsIterator.next();
             if (next.isDone()) {
                 creatorsIterator.remove();
             } else {
-                inprogress++;
+                activeCreators++;
             }
         }
 
-        if (execution.getMonitor().isCancelled()) {
-            // cancelled and nothing in progress
-            if (inprogress == 0 && execution.isFinished()) {
-                complete(execution, start, false);
-                return false;
-            }
-        } else if (start.isFinished(execution, execution.getStorageEngine())) {
-            // everything done no new
-            if (inprogress == 0 && execution.isFinished()) {
-                complete(execution, start, false);
-                return false;
-            }
-        } else {
-            if (inprogress < 3) {
+        if (!execution.getMonitor().isCancelled() &&
+            !start.isFinished(execution, execution.getStorageEngine())) {
+            if (activeCreators < 3) {
+                log.fine("Less than 3 outstanding batches: <" + execution.getId() +
+                         ">  execution/total progress:" + execProgress + "/" + totalProgress);
                 TaskCreator createLoader = start.createLoader(execution,
                         execution.getStorageEngine());
                 if (createLoader != null) {
-                    createLoader.setQueue(startTasks);
+                    createLoader.setQueue(execution.getSuccess(start.getName()));
                     creators.add(createLoader);
 
-                    TaskExecutorRegistry.getInstance().getExecutor(start.getClass()).execute(
+                    TaskExecutorRegistry.getInstance().getExecutor(start.getName()).execute(
                             createLoader);
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
     private void complete(ActiveExecution<Task> execution, WorkflowStart start, boolean cancel)
@@ -252,8 +273,8 @@ public class UIMWorkflowProcessor implements Runnable {
         WorkflowStart start = execution.getWorkflow().getStart();
         start.initialize(execution, execution.getStorageEngine());
 
-        TaskExecutorRegistry.getInstance().initialize(start.getClass(),
-                start.getMaximumThreadCount());
+        TaskExecutorRegistry.getInstance().initialize(start.getName(),
+                start.getPreferredThreadCount(), start.getMaximumThreadCount());
 
         HashSet<String> unique = new HashSet<String>();
         for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
@@ -265,8 +286,8 @@ public class UIMWorkflowProcessor implements Runnable {
             }
 
             step.initialize(execution);
-            TaskExecutorRegistry.getInstance().initialize(step.getClass(),
-                    step.getMaximumThreadCount());
+            TaskExecutorRegistry.getInstance().initialize(step.getName(),
+                    step.getPreferredThreadCount(), step.getMaximumThreadCount());
         }
 
         execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
@@ -302,5 +323,32 @@ public class UIMWorkflowProcessor implements Runnable {
         running = true;
         dispatcherThread = (TaskExecutorThread)factory.newThread(this);
         dispatcherThread.start();
+    }
+
+    public int getMaxTotalProgress() {
+        return maxTotalProgress;
+    }
+
+    public void setMaxTotalProgress(int maxTotalProgress) {
+        this.maxTotalProgress = maxTotalProgress;
+    }
+
+    /**
+     * Sets the maxInProgress to the given value.
+     * 
+     * @param maxInProgress
+     *            the maxInProgress to set
+     */
+    public void setMaxInProgress(int maxInProgress) {
+        this.maxInProgress = maxInProgress;
+    }
+
+    /**
+     * Returns the maxInProgress.
+     * 
+     * @return the maxInProgress
+     */
+    public int getMaxInProgress() {
+        return maxInProgress;
     }
 }
