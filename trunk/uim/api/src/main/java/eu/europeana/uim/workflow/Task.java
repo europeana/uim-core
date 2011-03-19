@@ -212,6 +212,9 @@ public class Task implements Runnable {
         return assigned;
     }
     
+    /**
+     * @param assigned
+     */
     public void setAssigned(Set<Task> assigned) {
         this.assigned = assigned;
     }

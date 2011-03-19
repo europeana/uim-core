@@ -7,8 +7,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.junit.Test;
 
 import eu.europeana.uim.TKey;
@@ -49,5 +53,6 @@ public class BatchWorkflowStartTest {
 
         start.initialize(execution, engine);
         assertEquals(4, data.batches.size());
+
     }
 }

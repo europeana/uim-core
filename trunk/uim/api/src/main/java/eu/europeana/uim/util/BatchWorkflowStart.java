@@ -69,12 +69,12 @@ public class BatchWorkflowStart implements WorkflowStart {
 
     @Override
     public int getPreferredThreadCount() {
-        return 2;
+        return 5;
     }
 
     @Override
     public int getMaximumThreadCount() {
-        return 2;
+        return 10;
     }
 
     @SuppressWarnings("unchecked")
@@ -120,7 +120,9 @@ public class BatchWorkflowStart implements WorkflowStart {
 
             boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
             if (shuffle) {
-                Collections.shuffle(Arrays.asList(ids));
+                List<Long> list = Arrays.asList(ArrayUtils.toObject(ids));
+                Collections.shuffle(list);
+                ids = ArrayUtils.toPrimitive(list.toArray(new Long[list.size()]));
             }
             if (context.getProperties().getProperty(BATCH_SUBSET) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET));

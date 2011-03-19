@@ -188,8 +188,8 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     }
 
     @Override
-    public void done(int count) {
-        completed += count;
+    public void incrementCompleted(int work) {
+        completed += work;
     }
 
     @Override
@@ -207,11 +207,12 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     private int getProgressSize(String name) {
         int size = 0;
         LinkedList<Task> list = success.get(name);
-        size += list.size();
+        synchronized (list) {
+            size += list.size();
 
-        HashSet<Task> set = assigned.get(name);
-        size += set.size();
-
+            HashSet<Task> set = assigned.get(name);
+            size += set.size();
+        }
         return size;
     }
 

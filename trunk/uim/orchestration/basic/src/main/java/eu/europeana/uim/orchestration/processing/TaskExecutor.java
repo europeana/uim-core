@@ -31,7 +31,6 @@ public class TaskExecutor extends ThreadPoolExecutor {
     private ReentrantLock    pauseLock  = new ReentrantLock();
     private Condition        unpaused   = pauseLock.newCondition();
 
-    private LinkedList<Task> activeTask = new LinkedList<Task>();
 
     /**
      * Constructor creates an worker thread pool of the specified size. The given scheduler is used
@@ -68,10 +67,6 @@ public class TaskExecutor extends ThreadPoolExecutor {
             Task task = (Task)r;
             task.setUp();
             task.setStatus(TaskStatus.PROCESSING);
-
-            synchronized (activeTask) {
-                activeTask.addLast(task);
-            }
         }
     }
 
@@ -168,9 +163,6 @@ public class TaskExecutor extends ThreadPoolExecutor {
             }
 
             task.tearDown();
-            synchronized (activeTask) {
-                activeTask.remove(task);
-            }
         }
     }
 
@@ -197,25 +189,5 @@ public class TaskExecutor extends ThreadPoolExecutor {
         } finally {
             pauseLock.unlock();
         }
-    }
-
-    /**
-     * @return task dumb (what are active tasks)
-     */
-    public List<Task> getTaskDump() {
-        List<Task> result = new LinkedList<Task>();
-        synchronized (activeTask) {
-            for (Task task : activeTask) {
-                result.add(task);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * @return number of active tasks
-     */
-    public int getAssigned() {
-        return activeTask.size();
     }
 }

@@ -90,12 +90,15 @@ public class UIMWorkflowProcessor implements Runnable {
                                 if (execution.getMonitor().isCancelled()) {
                                     // cancelled and nothing in progress
                                     if (execution.isFinished()) {
-                                        complete(execution, start, false);
+                                        complete(execution, start, true);
                                     }
                                 } else if (start.isFinished(execution, execution.getStorageEngine())) {
                                     // everything done no new
                                     if (execution.isFinished()) {
-                                        complete(execution, start, false);
+                                        Thread.sleep(100);
+                                        if (execution.isFinished()) {
+                                            complete(execution, start, false);
+                                        }
                                     }
                                 }
                             }
@@ -121,19 +124,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 // if we are the "last" step we need to handle
                                 // the last success queue here.
                                 if (i == steps.length - 1) {
-                                    // save and clean final
-                                    Task task = null;
-                                    synchronized (thisSuccess) {
-                                        task = thisSuccess.poll();
-                                    }
-                                    while (task != null) {
-                                        execution.done(1);
-                                        execution.getMonitor().worked(1);
-
-                                        synchronized (thisSuccess) {
-                                            task = thisSuccess.poll();
-                                        }
-                                    }
+                                    finishTasksLastSuccess(execution, thisSuccess);
                                 }
 
                                 // get successful tasks from previous step
@@ -197,6 +188,22 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
+    private void finishTasksLastSuccess(ActiveExecution<Task> execution, Queue<Task> thisSuccess) {
+        // save and clean final
+        Task task = null;
+        synchronized (thisSuccess) {
+            task = thisSuccess.poll();
+        }
+        while (task != null) {
+            execution.incrementCompleted(1);
+            execution.getMonitor().worked(1);
+
+            synchronized (thisSuccess) {
+                task = thisSuccess.poll();
+            }
+        }
+    }
+
     private boolean ensureTasksInProgress(ActiveExecution<Task> execution, WorkflowStart start,
             int execProgress, int totalProgress) throws StorageEngineException {
         // how many creators do we have
@@ -237,6 +244,9 @@ public class UIMWorkflowProcessor implements Runnable {
 
     private void complete(ActiveExecution<Task> execution, WorkflowStart start, boolean cancel)
             throws StorageEngineException {
+        
+        int size = execution.getProgressSize();
+        
         try {
             start.completed(execution);
         } catch (Throwable t) {

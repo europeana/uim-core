@@ -34,7 +34,7 @@ public interface ActiveExecution<T> extends Execution, ExecutionContext {
 	Queue<T> getFailure(String name);
 	Set<Task> getAssigned(String name);
 
-	void done(int count);
+	void incrementCompleted(int count);
 	
 	
 	/** gives an estimate of tasks/records which are currently in the pipeline.

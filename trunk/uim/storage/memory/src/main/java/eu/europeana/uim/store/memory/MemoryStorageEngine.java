@@ -304,8 +304,9 @@ public class MemoryStorageEngine implements StorageEngine {
 
 			metadatas.put(record.getId(), record);
 			mdrIdentifier.put(record.getIdentifier(), record.getId());
+
+			addMetaDataRecord(record);
 		}
-		addMetaDataRecord(record);
 	}
 
 	private void addMetaDataRecord(MetaDataRecord record) {
