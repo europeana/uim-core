@@ -20,7 +20,11 @@ import com.mongodb.Mongo;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.store.*;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.DataSet;
+import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.Request;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
@@ -45,7 +49,6 @@ public class MongoStorageEngine implements StorageEngine {
     private AtomicLong providerIdCounter = null;
     private AtomicLong collectionIdCounter = null;
     private AtomicLong requestIdCounter = null;
-    private AtomicLong uriIdCounter = null;
     private AtomicLong executionIdCounter = null;
     private AtomicLong mdrIdCounter = null;
 
@@ -98,15 +101,13 @@ public class MongoStorageEngine implements StorageEngine {
                     map(MongodbCollection.class).
                     map(MongoExecution.class).
                     map(MongoProvider.class).
-                    map(MongoRequest.class).
-                    map(MongoUri.class);
+                    map(MongoRequest.class);
             ds = morphia.createDatastore(mongo, dbName);
             status = EngineStatus.RUNNING;
 
             // initialize counters
             providerIdCounter = new AtomicLong(ds.find(MongoProvider.class).countAll());
             requestIdCounter = new AtomicLong(ds.find(MongoRequest.class).countAll());
-            uriIdCounter = new AtomicLong(ds.find(MongoUri.class).countAll());
             collectionIdCounter = new AtomicLong(ds.find(MongodbCollection.class).countAll());
             executionIdCounter = new AtomicLong(ds.find(MongoExecution.class).countAll());
             mdrIdCounter = new AtomicLong(records.count());
@@ -275,25 +276,6 @@ public class MongoStorageEngine implements StorageEngine {
     public Request getRequest(long id) throws StorageEngineException {
         return ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, id).get();
     }
-
-
-    @Override
-    public Uri createUri(String url, Uri.ItemType itemType) {
-        Uri u = new MongoUri(uriIdCounter.getAndIncrement(), url, itemType);
-        ds.save(u);
-        return u;
-    }
-
-    @Override
-    public void updateUri(Uri uri) {
-        ds.merge(uri);
-    }
-
-    @Override
-    public Uri getUri(long id) throws StorageEngineException {
-        return ds.find(MongoUri.class).filter(AbstractMongoEntity.LID, id).get();
-    }
-
 
 
 

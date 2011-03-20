@@ -6,7 +6,6 @@ import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
-import eu.europeana.uim.store.Uri;
 
 import java.util.Date;
 import java.util.List;
@@ -56,10 +55,6 @@ public interface StorageEngine {
 	void updateRequest(Request request) throws StorageEngineException;
 	Request getRequest(long id) throws StorageEngineException;
 	List<Request> getRequests(Collection collection) throws StorageEngineException;
-
-    Uri createUri(String url, Uri.ItemType itemType) throws StorageEngineException;
-    void updateUri(Uri uri) throws StorageEngineException;
-    Uri getUri(long id) throws StorageEngineException;
 
 	MetaDataRecord createMetaDataRecord(Request request) throws StorageEngineException;
     MetaDataRecord createMetaDataRecord(Request request, String identifier) throws StorageEngineException;
