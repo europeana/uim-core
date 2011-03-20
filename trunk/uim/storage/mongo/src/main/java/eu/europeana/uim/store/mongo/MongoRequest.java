@@ -19,6 +19,8 @@ public class MongoRequest extends AbstractMongoEntity implements Request {
 
     private Date date = new Date();
 
+    private boolean linksExtracted = false; // Flag indicating if links has been extracted from this record
+
     public MongoRequest() {
     }
 
