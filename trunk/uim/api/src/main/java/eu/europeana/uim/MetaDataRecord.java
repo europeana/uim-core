@@ -50,6 +50,7 @@ public interface MetaDataRecord extends DataSet {
      * @param value
      */
     <N, T extends Serializable> void setFirstQField(TKey<N, T> key, String qualifier, T value);
+//    <N, T extends Serializable, E extends Enum<E>> void setFirstQField(TKey<N, T> key, T value, E... qualifier);
 
     /**
      * getter for the first qualified field value for this key and qualifier.
