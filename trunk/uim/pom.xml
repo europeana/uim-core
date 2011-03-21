@@ -81,6 +81,16 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>2.2</version>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.1</version> 
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+            </plugin>
+            
             <!-- generate dependencies versions -->
             <!-- this is required for the integration tests to work without explicitely specifying versions -->
             <!-- see http://wiki.ops4j.org/display/paxexam/Pax+Exam+-+Tutorial+1 -->
