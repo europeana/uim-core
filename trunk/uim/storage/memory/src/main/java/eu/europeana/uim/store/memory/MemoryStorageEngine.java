@@ -8,7 +8,6 @@ import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
-import eu.europeana.uim.store.Uri;
 import gnu.trove.TLongArrayList;
 import gnu.trove.TLongLongHashMap;
 import gnu.trove.TLongLongIterator;
@@ -38,7 +37,6 @@ public class MemoryStorageEngine implements StorageEngine {
 	private TObjectLongHashMap<String> collectionMnemonics = new TObjectLongHashMap<String>();
 
 	private TLongObjectHashMap<Request> requests = new TLongObjectHashMap<Request>();
-    private TLongObjectHashMap<Uri> uris = new TLongObjectHashMap<Uri>();
 	private TLongObjectHashMap<Execution> executions = new TLongObjectHashMap<Execution>();
 
 	private Map<String, Long> mdrIdentifier = new HashMap<String, Long>();
@@ -51,7 +49,6 @@ public class MemoryStorageEngine implements StorageEngine {
 	private AtomicLong providerId= new AtomicLong();
 	private AtomicLong collectionId= new AtomicLong();
 	private AtomicLong requestId= new AtomicLong();
-    private AtomicLong uriId= new AtomicLong();
 	private AtomicLong executionId= new AtomicLong();
 
 	private AtomicLong mdrId= new AtomicLong();
@@ -465,63 +462,4 @@ public class MemoryStorageEngine implements StorageEngine {
     public int getTotalForAllIds() {
         return metadatas.size();
     }
-
-
-    @Override
-    public Uri getUri(long id) throws StorageEngineException {
-        return uris.get(id);
-    }
-
-    @Override
-    public Uri createUri(String url, Uri.ItemType itemType, Request r, MetaDataRecord mdr) {
-        return new MemoryUri( uriId.getAndIncrement(), url, itemType, r, mdr);
-    }
-
-    public void updateUri(Uri uri) {
-    TLongObjectIterator<Uri> iterator = uris.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            Uri candidate = iterator.value();
-            if (uri.getUrl().equals(candidate.getUrl())) {
-                if (uri.getTimeCreated().equals(candidate.getTimeCreated())){
-                    String unique = "Uri/" + uri.getUrl() + "/" + uri.getTimeCreated();
-                    throw new IllegalStateException("Duplicate unique key for uri: <" + unique + ">");
-                }
-            }
-        }
-
-        uris.put(uri.getId(), uri);
-    }
-
-    @Override
-    public int getTotalByUri(Uri uri) {
-        int result = 0;
-        TLongLongIterator iterator = metarequest.iterator();
-        while(iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value() == uri.getId()) {
-                result++;
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public long[] getByUri(Uri uri) {
-        TLongArrayList result = new TLongArrayList();
-        TLongLongIterator iterator = metarequest.iterator();
-        while(iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value() == uri.getId()) {
-                result.add(iterator.key());
-            }
-        }
-
-        long[] ids = result.toNativeArray();
-        Arrays.sort(ids);
-        return ids;
-    }
-
-
 }
-
