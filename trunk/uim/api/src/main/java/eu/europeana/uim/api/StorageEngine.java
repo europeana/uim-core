@@ -6,6 +6,7 @@ import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.Uri;
 
 import java.util.Date;
 import java.util.List;
@@ -76,5 +77,12 @@ public interface StorageEngine {
     int getTotalByCollection(Collection collection) throws StorageEngineException;
     int getTotalByProvider(Provider provider, boolean recursive) throws StorageEngineException;
     int getTotalForAllIds() throws StorageEngineException;
+
+    Uri createUri(String url, Uri.ItemType itemType, Request r, MetaDataRecord mdr) throws StorageEngineException;
+    void updateUri(Uri uri) throws StorageEngineException;
+    Uri getUri(long id) throws StorageEngineException;
+    long[] getByUri(Uri uri) throws StorageEngineException;
+    int getTotalByUri(Uri uri) throws StorageEngineException;
+
 
 }

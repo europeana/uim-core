@@ -11,6 +11,7 @@ import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.Uri;
 
 /**
  * noop storage engine adapter
@@ -218,4 +219,31 @@ public abstract class StorageEngineAdapter implements StorageEngine {
     public int getTotalForAllIds() {
         return 0;
     }
+
+    @Override
+    public Uri createUri(String url, Uri.ItemType itemType, Request r, MetaDataRecord mdr) {  // TODO uim  SEAT
+        return null;
+    }
+
+    @Override
+    public void updateUri(Uri uri) throws StorageEngineException { // TODO uim SEAT
+
+    }
+
+    @Override
+    public Uri getUri(long id) throws StorageEngineException { //TODO uim
+        return null;
+    }
+
+    @Override
+    public long[] getByUri(Uri uri) { //TODO uim SEAT
+        return new long[0];
+    }
+
+    @Override
+    public int getTotalByUri(Uri uri) { //TODO uim  SEAT
+        return 0;
+    }
+
+
 }
