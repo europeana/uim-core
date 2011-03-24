@@ -62,7 +62,12 @@
         
     </feature>
 
- 
+     <feature name="spring-quartz" version="1.6.2">
+         <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.collections/3.2.1</bundle>
+         <bundle>mvn:org.springframework/org.springframework.transaction/3.0.5.RELEASE</bundle>
+         <bundle>mvn:com.opensymphony.quartz/com.springsource.org.quartz/1.6.2</bundle>
+     </feature>
+     
 
     
 </features>
