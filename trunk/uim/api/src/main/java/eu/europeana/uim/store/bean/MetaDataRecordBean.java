@@ -138,6 +138,15 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (value == null) {
             throw new IllegalArgumentException("Argument 'value' should not be null!");
         }
+        if (qualifiers == null) {
+            throw new IllegalArgumentException("Argument 'qualifiers' should not be null (Use addField for unqualified qualifiers)!");
+        }
+        for (Enum<?> qualifier : qualifiers) {
+            if (qualifier == null) {
+                throw new IllegalArgumentException("Argument 'qualifiers' should not have null entries!");
+            }
+        }
+
         List<QualifiedValue<?>> values = fields.get(key);
         if (values == null) {
             values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
