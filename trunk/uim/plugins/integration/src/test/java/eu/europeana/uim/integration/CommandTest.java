@@ -41,7 +41,7 @@ public class CommandTest extends AbstractUIMIntegrationTest {
 						systemProperty("karaf.name").value("junit"),
 						systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("INFO")),
 
-						PaxRunnerOptions.vmOption( "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
+//						PaxRunnerOptions.vmOption( "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
 						
 				scanFeatures(
                         maven().groupId("org.apache.karaf").artifactId("apache-karaf").type("xml").classifier("features").versionAsInProject(),
