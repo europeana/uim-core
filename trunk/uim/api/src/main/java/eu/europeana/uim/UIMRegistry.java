@@ -20,7 +20,7 @@ import eu.europeana.uim.workflow.Workflow;
  * services for storage, logging as well as workflows.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
     private static Logger                 log           = Logger.getLogger(UIMRegistry.class.getName());

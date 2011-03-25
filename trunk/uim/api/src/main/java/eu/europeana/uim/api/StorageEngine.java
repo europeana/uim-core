@@ -18,14 +18,14 @@ import eu.europeana.uim.store.Request;
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 public interface StorageEngine<I> {
     /**
      * Status of the engine (starting, etc.)
      * 
      * @author Markus Muhr (markus.muhr@kb.nl)
-     * @date Mar 21, 2011
+     * @since Mar 21, 2011
      */
     enum EngineStatus {
         REGISTERED, BOOTING, RUNNING, STOPPED, FAILURE

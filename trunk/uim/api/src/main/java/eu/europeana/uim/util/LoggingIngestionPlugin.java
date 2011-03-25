@@ -18,7 +18,7 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
  * Simple logging plugin which logs which {@link MetaDataRecord} is just be processed.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 25, 2011
+ * @since Feb 25, 2011
  */
 public class LoggingIngestionPlugin implements IngestionPlugin {
     private static final Logger                       log      = Logger.getLogger(LoggingIngestionPlugin.class.getName());

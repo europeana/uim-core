@@ -24,7 +24,7 @@ import eu.europeana.uim.workflow.TaskStatus;
  * Tests task management (setup and workflow).
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class UIMTaskTest {
     /**

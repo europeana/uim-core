@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * Registration for task executors to keep track of them implemented as singleton.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class TaskExecutorRegistry {
     private final static Logger           log       = Logger.getLogger(TaskExecutorRegistry.class.getName());

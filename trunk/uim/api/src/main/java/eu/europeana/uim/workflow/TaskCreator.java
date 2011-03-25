@@ -8,7 +8,7 @@ import java.util.Queue;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Feb 28, 2011
+ * @since Feb 28, 2011
  */
 public abstract class TaskCreator implements Runnable {
     private boolean     done = false;

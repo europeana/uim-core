@@ -9,7 +9,7 @@ import org.junit.Test;
  * Tests implictly the {@link TKey} and the fields on {@link MDRFieldRegistry}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class MDRFieldRegistryTest {
     /**

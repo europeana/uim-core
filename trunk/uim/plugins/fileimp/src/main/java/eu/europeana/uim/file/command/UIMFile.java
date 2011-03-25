@@ -27,7 +27,7 @@ import eu.europeana.uim.store.Request;
  * Reads from file content to the given storage.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @Command(name = "uim", scope = "file")
 public class UIMFile implements Function, Action {

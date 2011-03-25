@@ -11,7 +11,7 @@ import eu.europeana.uim.workflow.Workflow;
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 public interface Orchestrator {
     /**

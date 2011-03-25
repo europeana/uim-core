@@ -12,7 +12,7 @@ import java.util.Map;
  *            the namespace (type) in which the field is defined
  * 
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
- * @date Dez 16, 2010
+ * @since Dez 16, 2010
  */
 public final class TKey<NS, T> implements Comparable<TKey<NS, T>> {
     private static final long                  serialVersionUID = 1L;

@@ -13,7 +13,7 @@ import java.util.List;
  * Inofos during execution.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @Command(name = "uim", scope = "info")
 public class UIMInfo implements Function, Action {

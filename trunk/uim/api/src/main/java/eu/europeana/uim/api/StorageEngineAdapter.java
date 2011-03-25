@@ -16,7 +16,7 @@ import eu.europeana.uim.store.Request;
  * noop storage engine adapter for testing purposes
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     @Override

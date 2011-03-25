@@ -21,7 +21,7 @@ import eu.europeana.uim.workflow.TaskStatus;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Nov 29, 2010
+ * @since Nov 29, 2010
  */
 public class TaskExecutor extends ThreadPoolExecutor {
     private boolean       isPaused;

@@ -5,7 +5,7 @@ package eu.europeana.uim.workflow;
  * 
  * @author Manuel Bernhardt<bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public enum TaskStatus {
     /**

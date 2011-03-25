@@ -11,7 +11,7 @@ import eu.europeana.uim.store.Execution;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @param <T>
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public abstract class LoggingEngineAdapter<T> implements LoggingEngine<T> {
     @Override

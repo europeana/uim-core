@@ -16,7 +16,7 @@ import eu.europeana.uim.store.Execution;
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class MemoryLogEntry<T> implements LogEntry<T> {
     private LoggingEngine.Level level;

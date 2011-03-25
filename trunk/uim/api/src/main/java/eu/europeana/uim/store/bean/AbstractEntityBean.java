@@ -9,7 +9,7 @@ import eu.europeana.uim.store.UimEntity;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public abstract class AbstractEntityBean<I> implements UimEntity<I> {
     /**

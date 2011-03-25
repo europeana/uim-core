@@ -10,7 +10,7 @@ import eu.europeana.uim.store.AbstractStorageEngineTest;
  * Storage tests using memory implementation of it.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @RunWith(JUnit4.class)
 public class MemoryStorageEngineTest extends AbstractStorageEngineTest<Long> {

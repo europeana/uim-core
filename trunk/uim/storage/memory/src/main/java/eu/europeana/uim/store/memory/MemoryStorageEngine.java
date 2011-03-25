@@ -36,7 +36,7 @@ import gnu.trove.TObjectLongHashMap;
  * An in-memory implementation of the {@link StorageEngine} using Longs as IDs.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class MemoryStorageEngine implements StorageEngine<Long> {
     private static final String                      IDENTIFIER          = MemoryStorageEngine.class.getSimpleName();

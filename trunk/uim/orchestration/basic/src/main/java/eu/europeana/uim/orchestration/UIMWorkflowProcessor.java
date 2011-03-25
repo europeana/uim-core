@@ -30,7 +30,7 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * Processes a UIM workflow as a runnable.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class UIMWorkflowProcessor implements Runnable {
     private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());

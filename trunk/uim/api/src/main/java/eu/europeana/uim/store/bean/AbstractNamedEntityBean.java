@@ -7,7 +7,7 @@ package eu.europeana.uim.store.bean;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public abstract class AbstractNamedEntityBean<I> extends AbstractEntityBean<I> {
     private String mnemonic;

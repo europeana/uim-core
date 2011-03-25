@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadFactory;
  * Factory pattern to provide newly created threads for task execution.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class TaskExecutorThreadFactory implements ThreadFactory {
     private static long              id               = 0;

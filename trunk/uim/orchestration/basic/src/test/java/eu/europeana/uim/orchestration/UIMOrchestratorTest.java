@@ -31,7 +31,7 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
  * Tests UIM orchestration.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
 public class UIMOrchestratorTest {

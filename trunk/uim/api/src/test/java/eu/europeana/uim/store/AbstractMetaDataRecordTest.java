@@ -20,7 +20,7 @@ import eu.europeana.uim.api.StorageEngineException;
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public abstract class AbstractMetaDataRecordTest<I> {
     StorageEngine<I> engine = getStorageEngine();

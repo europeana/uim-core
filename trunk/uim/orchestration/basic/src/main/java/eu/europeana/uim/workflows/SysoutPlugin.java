@@ -16,7 +16,7 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
  * Simple plugin to write to system out.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public class SysoutPlugin implements IngestionPlugin {
     private static TKey<SysoutPlugin, Data> DATA_KEY = TKey.register(SysoutPlugin.class, "data",

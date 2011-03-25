@@ -15,7 +15,7 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
  * Dummy plugin only for logging.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public class DummyPlugin implements IngestionPlugin {
     private static Logger log     = Logger.getLogger(DummyPlugin.class.getName());

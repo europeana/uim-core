@@ -16,7 +16,7 @@ import eu.europeana.uim.store.Provider;
  * getting it as resource.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class SampleProperties {

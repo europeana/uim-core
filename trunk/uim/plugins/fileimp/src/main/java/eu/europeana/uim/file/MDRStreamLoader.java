@@ -15,7 +15,7 @@ import eu.europeana.uim.store.Request;
  * Loads from stream {@link MetaDataRecord}s.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class MDRStreamLoader {
     /**

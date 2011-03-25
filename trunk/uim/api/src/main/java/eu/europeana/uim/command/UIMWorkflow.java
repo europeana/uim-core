@@ -18,7 +18,7 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * Workflow for the UIM process.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @Command(name = "uim", scope = "workflow")
 public class UIMWorkflow implements Action {

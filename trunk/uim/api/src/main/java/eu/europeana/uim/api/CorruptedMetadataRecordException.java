@@ -10,7 +10,7 @@ import eu.europeana.uim.MetaDataRecord;
  * not be processed by any other plugin.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public class CorruptedMetadataRecordException extends RuntimeException {
     /**

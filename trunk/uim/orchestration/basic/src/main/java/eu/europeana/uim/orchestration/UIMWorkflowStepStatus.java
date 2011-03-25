@@ -11,7 +11,7 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class UIMWorkflowStepStatus implements WorkflowStepStatus {
     private IngestionPlugin                   step;

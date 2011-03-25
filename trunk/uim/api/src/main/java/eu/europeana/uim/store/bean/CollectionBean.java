@@ -10,7 +10,7 @@ import eu.europeana.uim.store.Provider;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I> {
     private Provider<I> provider;

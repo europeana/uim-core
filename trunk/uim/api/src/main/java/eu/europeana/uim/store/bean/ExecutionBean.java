@@ -12,7 +12,7 @@ import eu.europeana.uim.store.Execution;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I> {
     private boolean    active = false;

@@ -11,7 +11,7 @@ import org.junit.Test;
  * Tests dummy implementation of {@link StorageEngine}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class StorageEngineAdapterTest {
     /**

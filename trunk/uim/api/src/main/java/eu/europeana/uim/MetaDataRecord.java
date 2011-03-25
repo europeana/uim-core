@@ -14,7 +14,7 @@ import eu.europeana.uim.store.Request;
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 public interface MetaDataRecord<I> extends DataSet<I> {
     /**
@@ -149,7 +149,7 @@ public interface MetaDataRecord<I> extends DataSet<I> {
      *            generic type of value
      * 
      * @author Markus Muhr (markus.muhr@kb.nl)
-     * @date Mar 21, 2011
+     * @since Mar 21, 2011
      */
     public class QualifiedValue<T> {
         /**

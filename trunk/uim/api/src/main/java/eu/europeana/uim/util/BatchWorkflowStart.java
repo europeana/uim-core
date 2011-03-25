@@ -28,7 +28,7 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * Loads batches from the storage and pulls them into as tasks.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 14, 2011
+ * @since Feb 14, 2011
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BatchWorkflowStart implements WorkflowStart {
@@ -209,7 +209,7 @@ public class BatchWorkflowStart implements WorkflowStart {
      * container for runtime information.
      * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
-     * @date Feb 28, 2011
+     * @since Feb 28, 2011
      */
     final static class Data implements Serializable {
         public int                     total       = 0;

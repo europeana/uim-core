@@ -9,7 +9,7 @@ package eu.europeana.uim.api;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Feb 25, 2011
+ * @since Feb 25, 2011
  */
 public class IngestionPluginFailedException extends RuntimeException {
     /**

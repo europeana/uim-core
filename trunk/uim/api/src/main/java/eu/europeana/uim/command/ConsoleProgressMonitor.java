@@ -8,7 +8,7 @@ import eu.europeana.uim.common.RevisingProgressMonitor;
  * Prints out progress to the console.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class ConsoleProgressMonitor implements RevisingProgressMonitor {
     private final PrintStream out;

@@ -5,7 +5,7 @@ package eu.europeana.uim.api;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public class StorageEngineException extends Exception {
     /**

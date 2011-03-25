@@ -7,7 +7,7 @@ import eu.europeana.uim.common.ProgressMonitor;
  * 
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public interface RevisingProgressMonitor extends ProgressMonitor {
 

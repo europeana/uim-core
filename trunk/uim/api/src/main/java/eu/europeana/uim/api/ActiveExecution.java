@@ -16,7 +16,7 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * 
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
 

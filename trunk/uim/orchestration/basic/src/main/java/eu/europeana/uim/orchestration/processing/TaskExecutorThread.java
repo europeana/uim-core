@@ -6,7 +6,7 @@ import java.util.Hashtable;
  * This represents a thread for a task executor.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class TaskExecutorThread extends Thread {
     /**

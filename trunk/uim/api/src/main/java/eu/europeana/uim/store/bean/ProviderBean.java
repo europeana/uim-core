@@ -12,7 +12,7 @@ import eu.europeana.uim.store.Provider;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provider<I> {
     private Set<Provider<I>> relatedOut = new HashSet<Provider<I>>();

@@ -15,7 +15,7 @@ import eu.europeana.uim.store.Request;
  *            unique ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> {
     private Collection<I> collection;

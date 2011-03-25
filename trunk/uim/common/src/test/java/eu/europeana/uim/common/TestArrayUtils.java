@@ -11,7 +11,7 @@ import org.junit.Test;
  * 
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Mar 20, 2011
+ * @since Mar 20, 2011
  */
 public class TestArrayUtils {
 

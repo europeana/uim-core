@@ -7,7 +7,7 @@ package eu.europeana.uim.store;
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 21, 2011
+ * @since Mar 21, 2011
  */
 public interface UimEntity<I> {
     /**

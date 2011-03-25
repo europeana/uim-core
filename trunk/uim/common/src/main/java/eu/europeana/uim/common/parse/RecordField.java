@@ -4,7 +4,7 @@ package eu.europeana.uim.common.parse;
  * 
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class RecordField {
 

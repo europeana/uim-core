@@ -8,7 +8,7 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * Workflow to write to system out.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 4, 2011
+ * @since Mar 4, 2011
  */
 public class SysoutWorkflow extends AbstractWorkflow {
     /**

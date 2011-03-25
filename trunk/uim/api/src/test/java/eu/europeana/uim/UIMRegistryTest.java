@@ -15,7 +15,7 @@ import eu.europeana.uim.api.StorageEngineAdapter;
  * Tests registration of storage and logging engine.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class UIMRegistryTest {
     private UIMRegistry registry = new UIMRegistry();

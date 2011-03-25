@@ -24,7 +24,7 @@ import eu.europeana.uim.util.SampleProperties;
  * Store for the UIM process.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Command(name = "uim", scope = "store")

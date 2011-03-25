@@ -36,7 +36,7 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private static Logger                     log       = Logger.getLogger(UIMActiveExecution.class.getName());

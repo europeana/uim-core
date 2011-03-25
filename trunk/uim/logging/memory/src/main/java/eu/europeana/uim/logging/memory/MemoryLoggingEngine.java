@@ -22,7 +22,7 @@ import eu.europeana.uim.store.Execution;
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @date Mar 22, 2011
+ * @since Mar 22, 2011
  */
 public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     private Map<Execution<?>, List<LogEntry<String>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<String>>>();

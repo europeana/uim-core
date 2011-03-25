@@ -18,7 +18,7 @@ import eu.europeana.uim.store.Request;
  * api.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @date Feb 16, 2011
+ * @since Feb 16, 2011
  */
 public class MetaDataRecordHandler implements RecordHandler {
     private static final Logger log    = Logger.getLogger(MetaDataRecordHandler.class.getName());
