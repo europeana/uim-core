@@ -66,7 +66,7 @@ public interface WorkflowStart {
      * @throws WorkflowStartFailedException
      *             is thrown if the creation of the task loader failed
      */
-    TaskCreator createLoader(ExecutionContext context, StorageEngine storage)
+    TaskCreator createLoader(ExecutionContext context, StorageEngine<?> storage)
             throws WorkflowStartFailedException;
 
     /**
@@ -81,7 +81,7 @@ public interface WorkflowStart {
      *            reference to storage
      * @return true iff no more tasks can be created.
      */
-    boolean isFinished(ExecutionContext context, StorageEngine storage);
+    boolean isFinished(ExecutionContext context, StorageEngine<?> storage);
 
     /**
      * Workflow start specific initialization with storage engine so that mdr's can be read from the
@@ -97,7 +97,7 @@ public interface WorkflowStart {
      *             is thrown if the intiliazation fails and so the workflow is not ready to create a
      *             task loader
      */
-    void initialize(ExecutionContext context, StorageEngine storage)
+    void initialize(ExecutionContext context, StorageEngine<?> storage)
             throws WorkflowStartFailedException;
 
     /**

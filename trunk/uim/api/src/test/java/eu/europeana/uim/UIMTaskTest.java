@@ -32,7 +32,7 @@ public class UIMTaskTest {
      */
     @Test
     public void testTaskSetup() {
-        StorageEngine engine = new StorageEngineAdapter() {
+        StorageEngine<?> engine = new StorageEngineAdapter() {
         };
 
         Task task = new Task(null, engine, null);
@@ -65,7 +65,7 @@ public class UIMTaskTest {
 
         task.setStep(new IngestionPlugin() {
             @Override
-            public boolean processRecord(MetaDataRecord mdr, ExecutionContext context) {
+            public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context) {
                 throw new UnsupportedOperationException("Sorry, not implemented.");
             }
 

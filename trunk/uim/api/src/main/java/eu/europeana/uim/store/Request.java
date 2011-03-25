@@ -1,28 +1,43 @@
 package eu.europeana.uim.store;
 
 import java.util.Date;
+
 /*
-    collection  // ref to Collection obj
-    created_time    // time stamp creation
+ collection  // ref to Collection obj
+ created_time    // time stamp creation
 
-    status      // enum     REQS_INIT     just created, under construction
-                //          REQS_IMPORTED all related mdrs are referenced & created
-                //          REQS_ABORTED  processing of this request aborted due to error
-                //          REQS_PENDING_SIGNOFF   waiting for aproval
-                //          REQS_ACCEPTED          aproved for production  only one req/collection can be in this state
-                //          REQS_PRODUCTION        sent to production      only one req/collection can be in this state
-    aproved_user    // User that aproved this request
-    aproved_time    // time stamp aproval
+ status      // enum     REQS_INIT     just created, under construction
+ //          REQS_IMPORTED all related mdrs are referenced & created
+ //          REQS_ABORTED  processing of this request aborted due to error
+ //          REQS_PENDING_SIGNOFF   waiting for aproval
+ //          REQS_ACCEPTED          aproved for production  only one req/collection can be in this state
+ //          REQS_PRODUCTION        sent to production      only one req/collection can be in this state
+ aproved_user    // User that aproved this request
+ aproved_time    // time stamp aproval
 
-    submitted_time  // time stamp, sent to production
+ submitted_time  // time stamp, sent to production
 
 
-    err_msg         // If in REQS_ABORTED state, explanation of what whent wrong
+ err_msg         // If in REQS_ABORTED state, explanation of what whent wrong
 
  */
-public interface Request  extends DataSet {
+/**
+ * A request to provide metadata records from a particular collection at a particular date.
+ * 
+ * @param <I>
+ *            generic ID
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 21, 2011
+ */
+public interface Request<I> extends DataSet<I> {
+    /**
+     * @return for which collection this request has been started
+     */
+    Collection<I> getCollection();
 
-	public Collection getCollection();
-	public Date getDate();
-	
+    /**
+     * @return a specific date when this request has been initiated
+     */
+    Date getDate();
 }

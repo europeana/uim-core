@@ -9,16 +9,22 @@ import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
 
 /**
+ * Implementation of an in-memory log entry.
+ * 
+ * @param <T>
+ *            generic message
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
  */
 public class MemoryLogEntry<T> implements LogEntry<T> {
-
     private LoggingEngine.Level level;
-    private Date date;
-    private Execution execution;
-    private IngestionPlugin plugin;
-    private MetaDataRecord mdr;
-    private T message;
+    private Date                date;
+    private Execution<?>        execution;
+    private IngestionPlugin     plugin;
+    private MetaDataRecord<?>   mdr;
+    private T                   message;
 
     @Override
     public LoggingEngine.Level getLevel() {
@@ -31,7 +37,7 @@ public class MemoryLogEntry<T> implements LogEntry<T> {
     }
 
     @Override
-    public Long getExecutionId() {
+    public Object getExecutionId() {
         return execution.getId();
     }
 
@@ -41,7 +47,7 @@ public class MemoryLogEntry<T> implements LogEntry<T> {
     }
 
     @Override
-    public Long getMetaDataRecordId() {
+    public Object getMetaDataRecordId() {
         return mdr.getId();
     }
 
@@ -50,7 +56,18 @@ public class MemoryLogEntry<T> implements LogEntry<T> {
         return message;
     }
 
-    public MemoryLogEntry(LoggingEngine.Level level, Date date, Execution execution, IngestionPlugin plugin, MetaDataRecord mdr, T message) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param level
+     * @param date
+     * @param execution
+     * @param plugin
+     * @param mdr
+     * @param message
+     */
+    public MemoryLogEntry(LoggingEngine.Level level, Date date, Execution<?> execution,
+                          IngestionPlugin plugin, MetaDataRecord<?> mdr, T message) {
         this.level = level;
         this.date = date;
         this.execution = execution;

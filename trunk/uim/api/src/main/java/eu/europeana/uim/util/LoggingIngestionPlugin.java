@@ -21,10 +21,11 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
  * @date Feb 25, 2011
  */
 public class LoggingIngestionPlugin implements IngestionPlugin {
-    private static final Logger              log      = Logger.getLogger(LoggingIngestionPlugin.class.getName());
+    private static final Logger                       log      = Logger.getLogger(LoggingIngestionPlugin.class.getName());
 
-    private static TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(LoggingIngestionPlugin.class, "data",
-                                                              Data.class);
+    private static TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(
+                                                                       LoggingIngestionPlugin.class,
+                                                                       "data", Data.class);
 
     /**
      * Creates a new instance of this class.
@@ -74,7 +75,7 @@ public class LoggingIngestionPlugin implements IngestionPlugin {
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord mdr, ExecutionContext context)
+    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA_KEY);
 
@@ -83,7 +84,7 @@ public class LoggingIngestionPlugin implements IngestionPlugin {
 
         if (value.current++ % value.stepsize == 0) {
             if (log.isLoggable(value.level)) {
-                log.log(value.level, "Record:" + mdr.getIdentifier());
+                log.log(value.level, "Record:" + mdr.getId());
             }
         }
         return true;
@@ -113,17 +114,15 @@ public class LoggingIngestionPlugin implements IngestionPlugin {
     public void initialize() {
         // nothing to do
     }
-    
+
     @Override
     public void shutdown() {
         // nothing to do
     }
 
-    
     private final static class Data implements Serializable {
         public int   current  = 0;
         public int   stepsize = 5;
         public Level level    = Level.FINE;
     }
-
 }

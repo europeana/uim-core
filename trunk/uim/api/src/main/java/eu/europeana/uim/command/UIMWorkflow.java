@@ -2,7 +2,6 @@ package eu.europeana.uim.command;
 
 import java.io.PrintStream;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
@@ -15,29 +14,34 @@ import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 
-
+/**
+ * Workflow for the UIM process.
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
+ */
 @Command(name = "uim", scope = "workflow")
 public class UIMWorkflow implements Action {
+    private enum Operation {
+        listWorkflows
+    }
 
-	private static final Logger log = Logger.getLogger(UIMWorkflow.class.getName());
-	
-	private enum Operation {
-		listWorkflows
-	}
+    private Registry  registry;
 
-	private Registry registry;
+    @Option(name = "-o", aliases = { "--operation" }, required = false)
+    private Operation operation;
 
-	@Option(name="-o", aliases={"--operation"}, required=false)
-	private Operation operation;
-
-
-	public UIMWorkflow(Registry registry) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param registry
+     */
+    public UIMWorkflow(Registry registry) {
         this.registry = registry;
-	}
+    }
 
-
-	@Override
-	public Object execute(CommandSession session) throws Exception {
+    @Override
+    public Object execute(CommandSession session) throws Exception {
         PrintStream out = session.getConsole();
 
         if (operation == null) {
@@ -46,25 +50,23 @@ public class UIMWorkflow implements Action {
             return null;
         }
 
-        
-        StorageEngine storage = registry.getStorage();
-        switch(operation) {
-        case listWorkflows: listWorkflows(storage, out); break;
-		}
-		return null;
-	}
+        StorageEngine<?> storage = registry.getStorage();
+        switch (operation) {
+        case listWorkflows:
+            listWorkflows(storage, out);
+            break;
+        }
+        return null;
+    }
 
+    /**
+     * @param storage
+     * @param out
+     */
+    private void listWorkflows(StorageEngine<?> storage, PrintStream out) {
+        List<Workflow> workflows = getRegistry().getWorkflows();
 
-
-
-	/**
-	 * @param storage
-	 * @param out
-	 */
-	private void listWorkflows(StorageEngine storage, PrintStream out) {
-		List<Workflow> workflows = getRegistry().getWorkflows();
-		
-		StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         for (Workflow workflow : workflows) {
             if (builder.length() > 0) {
                 builder.append("\n\tWorkflow:");
@@ -74,17 +76,15 @@ public class UIMWorkflow implements Action {
             builder.append("\n\t\t  " + start.getClass().getSimpleName());
             List<IngestionPlugin> steps = workflow.getSteps();
             for (IngestionPlugin step : steps) {
-				builder.append("n\t\t  " + step.getClass().getSimpleName());
-			}
+                builder.append("n\t\t  " + step.getClass().getSimpleName());
+            }
         }
-	}
+    }
 
-
-	/**
-	 * @return the registry
-	 */
-	public Registry getRegistry() {
-		return registry;
-	}
-
+    /**
+     * @return the registry
+     */
+    public Registry getRegistry() {
+        return registry;
+    }
 }

@@ -1,5 +1,9 @@
 package eu.europeana.uim.api;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
@@ -7,73 +11,296 @@ import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+/**
+ * Base class for storage engine typed with a ID class.
+ * 
+ * @param <I>
+ *            generic ID
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 21, 2011
+ */
+public interface StorageEngine<I> {
+    /**
+     * Status of the engine (starting, etc.)
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @date Mar 21, 2011
+     */
+    enum EngineStatus {
+        REGISTERED, BOOTING, RUNNING, STOPPED, FAILURE
+    }
 
+    /**
+     * @return identifier of the storage engine
+     */
+    String getIdentifier();
 
-public interface StorageEngine {
+    /**
+     * @param config
+     */
+    public void setConfiguration(Map<String, String> config);
 
-	public enum EngineStatus {
-		REGISTERED,
-		BOOTING,
-		RUNNING,
-		STOPPED,
-		FAILURE
-	}
-	
-	
-	public String getIdentifier();
-	
-	public void setConfiguration(Map<String, String> config);
-	public Map<String, String> getConfiguration();
-	
-	public void initialize();
-	public void shutdown();
-	
-    public void checkpoint();
-    public void command(String command);
-	
-	public EngineStatus getStatus();
-	public long size();
-	
+    /**
+     * @return configuration
+     */
+    public Map<String, String> getConfiguration();
 
-	Provider createProvider() throws StorageEngineException;
-	void updateProvider(Provider provider) throws StorageEngineException;
-	Provider getProvider(long id) throws StorageEngineException;
-	Provider findProvider(String mnemonic) throws StorageEngineException;
-	List<Provider> getAllProviders() throws StorageEngineException;
+    /**
+     * Initializes engine by for example opening database connection.
+     */
+    void initialize();
 
-	Collection createCollection(Provider provider) throws StorageEngineException;
-	void updateCollection(Collection collection) throws StorageEngineException;
-	Collection getCollection(long id) throws StorageEngineException;
-	Collection findCollection(String mnemonic) throws StorageEngineException;
-	List<Collection> getCollections(Provider provider) throws StorageEngineException;
-    List<Collection> getAllCollections() throws StorageEngineException;
+    /**
+     * Shutdown the engine and its connected components like connection to database.
+     */
+    void shutdown();
 
-	Request createRequest(Collection collection, Date date) throws StorageEngineException;
-	void updateRequest(Request request) throws StorageEngineException;
-	Request getRequest(long id) throws StorageEngineException;
-	List<Request> getRequests(Collection collection) throws StorageEngineException;
+    /**
+     * Mark a checkpoint.
+     */
+    void checkpoint();
 
-	MetaDataRecord createMetaDataRecord(Request request) throws StorageEngineException;
-    MetaDataRecord createMetaDataRecord(Request request, String identifier) throws StorageEngineException;
-	void updateMetaDataRecord(MetaDataRecord record) throws StorageEngineException;
-	
-	Execution createExecution(DataSet dataSet, String workflow) throws StorageEngineException;
-	void updateExecution(Execution execution) throws StorageEngineException;
-	Execution getExecution(long id) throws StorageEngineException;
-	List<Execution> getAllExecutions() throws StorageEngineException;
+    /**
+     * @param command
+     *            arbitrary command interpreted by the engine implementation
+     */
+    void command(String command);
 
-	MetaDataRecord[] getMetaDataRecords(long...ids) throws StorageEngineException;
-	
-	long[] getByRequest(Request request) throws StorageEngineException;
-	long[] getByCollection(Collection collection) throws StorageEngineException;
-	long[] getByProvider(Provider provider, boolean recursive) throws StorageEngineException;
-	long[] getAllIds() throws StorageEngineException;
+    /**
+     * @return status of the engine (starting, ...)
+     */
+    EngineStatus getStatus();
 
-    int getTotalByRequest(Request request) throws StorageEngineException;
-    int getTotalByCollection(Collection collection) throws StorageEngineException;
-    int getTotalByProvider(Provider provider, boolean recursive) throws StorageEngineException;
+    /**
+     * @return number of hold entries
+     */
+    long size();
+
+    /**
+     * @return newly created provider
+     * @throws StorageEngineException
+     */
+    Provider<I> createProvider() throws StorageEngineException;
+
+    /**
+     * Stores the given provider and its updated values.
+     * 
+     * @param provider
+     * @throws StorageEngineException
+     */
+    void updateProvider(Provider<I> provider) throws StorageEngineException;
+
+    /**
+     * @param id
+     *            unique ID, unique over collection, provider, ...
+     * @return provider under the given ID
+     * @throws StorageEngineException
+     */
+    Provider<I> getProvider(I id) throws StorageEngineException;
+
+    /**
+     * @param mnemonic
+     * @return find a specific provider with the given mnemonic, might not always been supported by
+     *         the backend
+     * @throws StorageEngineException
+     */
+    Provider<I> findProvider(String mnemonic) throws StorageEngineException;
+
+    /**
+     * @return all known providers
+     * @throws StorageEngineException
+     */
+    List<Provider<I>> getAllProviders() throws StorageEngineException;
+
+    /**
+     * * @param provider parenting provider
+     * 
+     * @return newly created collection for the given provider
+     * @throws StorageEngineException
+     */
+    Collection<I> createCollection(Provider<I> provider) throws StorageEngineException;
+
+    /**
+     * Stores the given collection and its updated values.
+     * 
+     * @param collection
+     * @throws StorageEngineException
+     */
+    void updateCollection(Collection<I> collection) throws StorageEngineException;
+
+    /**
+     * @param id
+     *            unique ID, unique over collection, provider, ...
+     * @return collection under the given ID
+     * @throws StorageEngineException
+     */
+    Collection<I> getCollection(I id) throws StorageEngineException;
+
+    /**
+     * @param mnemonic
+     * @return find a specific collection with the given mnemonic, might not always been supported
+     *         by the backend
+     * @throws StorageEngineException
+     */
+    Collection<I> findCollection(String mnemonic) throws StorageEngineException;
+
+    /**
+     * @param provider
+     * @return all collections for the given provider or all known if provider is null
+     * @throws StorageEngineException
+     */
+    List<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException;
+
+    /**
+     * @param provider
+     * @return all collections
+     * @throws StorageEngineException
+     */
+    List<Collection<I>> getAllCollections() throws StorageEngineException;
+
+    /**
+     * @param collection
+     *            holding this request
+     * @param date
+     *            when is this request initiatedß
+     * @return newly created request for the given collection and date
+     * @throws StorageEngineException
+     */
+    Request<I> createRequest(Collection<I> collection, Date date) throws StorageEngineException;
+
+    /**
+     * Stores the given request and its updated values.
+     * 
+     * @param request
+     * @throws StorageEngineException
+     */
+    void updateRequest(Request<I> request) throws StorageEngineException;
+
+    /**
+     * @param id
+     *            unique ID, unique over collection, provider, ...
+     * @return request under the given ID
+     * @throws StorageEngineException
+     */
+    Request<I> getRequest(I id) throws StorageEngineException;
+
+    /**
+     * @param collection
+     * @return all requests for the provided collection
+     * @throws StorageEngineException
+     */
+    List<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
+
+    /**
+     * @param request
+     * @param externalIdentifier
+     * @return creates a new record for the given external identifier (might differ from internal
+     *         one)
+     * @throws StorageEngineException
+     */
+    MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier)
+            throws StorageEngineException;
+
+    /**
+     * Stores the given record and its updated values.
+     * 
+     * @param record
+     * @throws StorageEngineException
+     */
+    void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
+
+    /**
+     * @param dataSet
+     * @param workflow
+     * @return newly created execution for the given data set and workflow
+     * @throws StorageEngineException
+     */
+    Execution<I> createExecution(DataSet<I> dataSet, String workflow) throws StorageEngineException;
+
+    /**
+     * Stores the given execution and its updated values.
+     * 
+     * @param execution
+     * @throws StorageEngineException
+     */
+    void updateExecution(Execution<I> execution) throws StorageEngineException;
+
+    /**
+     * @param id
+     *            unique ID, unique over collection, provider, ...
+     * @return execution under the given ID
+     * @throws StorageEngineException
+     */
+    Execution<I> getExecution(I id) throws StorageEngineException;
+
+    /**
+     * @return all known executions
+     * @throws StorageEngineException
+     */
+    List<Execution<I>> getAllExecutions() throws StorageEngineException;
+
+    /**
+     * @param id
+     *            unique ID, unique over collection, provider, ...
+     * @return metadata record for the provided ID
+     * @throws StorageEngineException
+     */
+    MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
+
+    /**
+     * @param request
+     * @return IDs for records for this request
+     * @throws StorageEngineException
+     */
+    I[] getByRequest(Request<I> request) throws StorageEngineException;
+
+    /**
+     * @param collection
+     * @return IDs for records for this collection
+     * @throws StorageEngineException
+     */
+    I[] getByCollection(Collection<I> collection) throws StorageEngineException;
+
+    /**
+     * @param provider
+     * @param recursive
+     * @return IDs for records for this provider
+     * @throws StorageEngineException
+     */
+    I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+
+    /**
+     * @return IDs for all known records
+     * @throws StorageEngineException
+     */
+    I[] getAllIds() throws StorageEngineException;
+
+    /**
+     * @param request
+     * @return number of records for this request
+     * @throws StorageEngineException
+     */
+    int getTotalByRequest(Request<I> request) throws StorageEngineException;
+
+    /**
+     * @param collection
+     * @return number of records for this collection
+     * @throws StorageEngineException
+     */
+    int getTotalByCollection(Collection<I> collection) throws StorageEngineException;
+
+    /**
+     * @param provider
+     * @param recursive
+     * @return number of records for this provider
+     * @throws StorageEngineException
+     */
+    int getTotalByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+
+    /**
+     * @return number of records in this storage
+     * @throws StorageEngineException
+     */
     int getTotalForAllIds() throws StorageEngineException;
 }

@@ -1,7 +1,6 @@
 package eu.europeana.uim.api;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 
@@ -11,81 +10,133 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
  * An Execution in a running state. It keeps track of the overall progress.
+ * 
+ * @param <I>
+ *            generic ID
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * 
+ * @date Mar 21, 2011
  */
-public interface ActiveExecution<T> extends Execution, ExecutionContext {
+public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
 
-	StorageEngine getStorageEngine();
+    /**
+     * @return storage engine for this execution
+     */
+    StorageEngine<I> getStorageEngine();
 
+    /**
+     * @param paused
+     *            Should the execution be paused?
+     */
     public void setPaused(boolean paused);
+
+    /**
+     * @return Is the execution be paused?
+     */
     boolean isPaused();
 
-    /** test the execution if all tasks are done eather completly finished
-     * or failed. so if true: scheduled == finished + failed
+    /**
+     * test the execution if all tasks are done either completely finished or failed. so if true:
+     * scheduled == finished + failed
      * 
-     * @return
+     * @return Is the execution finished?
      */
     boolean isFinished();
 
-	void setThrowable(Throwable throwable);
-	Throwable getThrowable();
+    /**
+     * @param throwable
+     *            holding heavy errors
+     */
+    void setThrowable(Throwable throwable);
 
+    /**
+     * @return throwable with errors
+     */
+    Throwable getThrowable();
 
-	Queue<T> getSuccess(String name);
-	Queue<T> getFailure(String name);
-	Set<Task> getAssigned(String name);
+    /**
+     * @param name
+     * @return success queue for the given plugin
+     */
+    Queue<Task> getSuccess(String name);
 
-	void incrementCompleted(int count);
-	
-	
-	/** gives an estimate of tasks/records which are currently in the pipeline.
-	 * Note that failed tasks are not counted. The system can not guarantee the 
-	 * number of records, due to the problem that some of the tasks might change 
-	 * their status during the time of counting.
-	 * 
-	 * @return
-	 */
-	int getProgressSize();
-	
-	/** gives the number of tasks/records which are completly finished successful
-	 * by all steps.
-	 * 
-	 * @return
-	 */
-	int getCompletedSize();
+    /**
+     * @param name
+     * @return failures queue for the given plugin
+     */
+    Queue<Task> getFailure(String name);
 
-	/** gives the number of tasks/records which have failed on the way through
-	 * the workflow no matter where.
-	 * 
-	 * @return
-	 */
-	int getFailureSize();
+    /**
+     * @param name
+     * @return set of tasks assigned to this execution
+     */
+    Set<Task> getAssigned(String name);
 
-	/** gives the number of tasks/records which have been scheduled to be processed
-	 * in the first place. So scheduled = progress + finished + failure.
-	 * 
-	 * @return
-	 */
-	int getScheduledSize();
-	
-	
-	/** gives the number of records which this execution will need to deal with. If
-	 * not possible to estimate Integer.MAX_VALUE is given.
-	 * 
-	 * @return
-	 */
-	int getTotalSize();
-	
-	List<WorkflowStepStatus> getStepStatus();
-	WorkflowStepStatus getStepStatus(IngestionPlugin step);
+    /**
+     * @param count
+     */
+    void incrementCompleted(int count);
 
-	public Properties getProperties();
+    /**
+     * gives an estimate of tasks/records which are currently in the pipeline. Note that failed
+     * tasks are not counted. The system can not guarantee the number of records, due to the problem
+     * that some of the tasks might change their status during the time of counting.
+     * 
+     * @return progress size
+     */
+    int getProgressSize();
 
-	void waitUntilFinished();
-	
+    /**
+     * gives the number of tasks/records which are completly finished successful by all steps.
+     * 
+     * @return amount of completed tasks
+     */
+    int getCompletedSize();
 
-	/**
-	 * @param work
-	 */
-	void incrementScheduled(int work);
-	
+    /**
+     * gives the number of tasks/records which have failed on the way through the workflow no matter
+     * where.
+     * 
+     * @return amount of failures
+     */
+    int getFailureSize();
+
+    /**
+     * gives the number of tasks/records which have been scheduled to be processed in the first
+     * place. So scheduled = progress + finished + failure.
+     * 
+     * @return amount of scheduled ones
+     */
+    int getScheduledSize();
+
+    /**
+     * gives the number of records which this execution will need to deal with. If not possible to
+     * estimate Integer.MAX_VALUE is given.
+     * 
+     * @return amount of tasks
+     */
+    int getTotalSize();
+
+    /**
+     * @return status for all steps in the workflow
+     */
+    List<WorkflowStepStatus> getStepStatus();
+
+    /**
+     * @param step
+     * @return status for the given plugin
+     */
+    WorkflowStepStatus getStepStatus(IngestionPlugin step);
+
+    /**
+     * Block until this execution is finished.
+     */
+    void waitUntilFinished();
+
+    /**
+     * @param work
+     *            increment next work
+     */
+    void incrementScheduled(int work);
 }

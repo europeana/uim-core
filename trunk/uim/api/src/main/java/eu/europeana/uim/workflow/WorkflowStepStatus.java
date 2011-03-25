@@ -32,5 +32,5 @@ public interface WorkflowStepStatus extends Serializable {
     /**
      * @return throwable for failed records, empty if no failures occurred
      */
-    Map<MetaDataRecord, Throwable> getFailureDetail();
+    Map<MetaDataRecord<?>, Throwable> getFailureDetail();
 }

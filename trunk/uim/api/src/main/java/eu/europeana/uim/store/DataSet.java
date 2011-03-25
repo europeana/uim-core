@@ -1,7 +1,14 @@
 package eu.europeana.uim.store;
 
-public interface DataSet extends UimEntity {
+/**
+ * Empty interface to provide holder of all kinds of data representing a data set.
+ * 
+ * @param <I>
+ *            generic ID
+ *            
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 21, 2011
+ */
+public interface DataSet<I> extends UimEntity<I> {
 
-	public String getIdentifier();
-	
 }

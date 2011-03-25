@@ -7,52 +7,50 @@ import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Execution;
 
 /**
- * 
+ * Dummy implementation of logging engine.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @param <T> 
+ * @param <T>
  * @date Feb 16, 2011
  */
 public abstract class LoggingEngineAdapter<T> implements LoggingEngine<T> {
+    @Override
+    public String getIdentifier() {
+        return LoggingEngineAdapter.class.getSimpleName();
+    }
 
     @Override
-	public String getIdentifier() {
-		return LoggingEngineAdapter.class.getSimpleName();
-	}
+    public void log(Level level, String message, Execution<?> execution, MetaDataRecord<?> mdr,
+            IngestionPlugin plugin) {
+    }
 
-	@Override
-	public void log(Level level, String message, Execution execution,
-			MetaDataRecord mdr, IngestionPlugin plugin) {
-	}
+    @Override
+    public List<LogEntry<String>> getExecutionLog(Execution<?> execution) {
+        return null;
+    }
 
-	@Override
-	public List<LogEntry<String>> getExecutionLog(Execution execution) {
-		 return null;
-	}
+    @Override
+    public void logStructured(LoggingEngine.Level level, T payload, Execution<?> execution,
+            MetaDataRecord<?> mdr, IngestionPlugin plugin) {
+    }
 
-	@Override
-	public void logStructured(Level level, Object payload, Execution execution,
-			MetaDataRecord mdr, IngestionPlugin plugin) {
-	}
+    @Override
+    public List<LogEntry<T>> getStructuredExecutionLog(Execution<?> execution) {
+        return null;
+    }
 
-	@Override
-	public List<LogEntry<T>> getStructuredExecutionLog(Execution execution) {
-		 return null;
-	}
+    @Override
+    public void logDuration(IngestionPlugin plugin, Long duration, int count) {
+        //
+    }
 
-	@Override
-	public void logDuration(IngestionPlugin plugin, Long duration, int count) {
-		// 
-	}
+    @Override
+    public Long getAverageDuration(IngestionPlugin plugin) {
+        return null;
+    }
 
-	@Override
-	public Long getAverageDuration(IngestionPlugin plugin) {
-		 return null;
-	}
-
-	@Override
-	public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr) {
-		// 
-	}
-
+    @Override
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr) {
+        //
+    }
 }

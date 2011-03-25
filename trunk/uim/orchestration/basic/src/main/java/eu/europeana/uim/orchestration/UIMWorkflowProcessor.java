@@ -26,51 +26,64 @@ import eu.europeana.uim.workflow.TaskCreator;
 import eu.europeana.uim.workflow.TaskStatus;
 import eu.europeana.uim.workflow.WorkflowStart;
 
+/**
+ * Processes a UIM workflow as a runnable.
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
+ */
 public class UIMWorkflowProcessor implements Runnable {
-
     private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
     private TaskExecutorThreadFactory                                 factory          = new TaskExecutorThreadFactory(
                                                                                                "processor");
     private TaskExecutorThread                                        dispatcherThread;
 
+    @SuppressWarnings("unused")
     private final Registry                                            registry;
 
     private boolean                                                   running          = false;
 
+    @SuppressWarnings("unchecked")
     private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED        = TKey.register(
                                                                                                UIMWorkflowProcessor.class,
                                                                                                "creators",
                                                                                                (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
 
-    private List<ActiveExecution<Task>>                               executions       = new ArrayList<ActiveExecution<Task>>();
+    private List<ActiveExecution<?>>                                  executions       = new ArrayList<ActiveExecution<?>>();
 
     private int                                                       maxTotalProgress = 5000;
 
     private int                                                       maxInProgress    = 1000;
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param registry
+     */
     public UIMWorkflowProcessor(Registry registry) {
         this.registry = registry;
     }
 
+    @Override
     public void run() {
         running = true;
         while (running) {
             int totalProgress = 0;
 
-            List<ActiveExecution<Task>> active = new ArrayList<ActiveExecution<Task>>();
+            List<ActiveExecution<?>> active = new ArrayList<ActiveExecution<?>>();
             synchronized (executions) {
                 active.addAll(executions);
             }
-            for (ActiveExecution<Task> execution : active) {
+            for (ActiveExecution<?> execution : active) {
                 totalProgress += execution.getProgressSize();
             }
 
             try {
 
-                Iterator<ActiveExecution<Task>> activeIterator = active.iterator();
+                Iterator<ActiveExecution<?>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
-                    ActiveExecution<Task> execution = activeIterator.next();
+                    ActiveExecution<?> execution = activeIterator.next();
                     if (execution.isPaused()) continue;
 
                     try {
@@ -188,7 +201,7 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    private void finishTasksLastSuccess(ActiveExecution<Task> execution, Queue<Task> thisSuccess) {
+    private void finishTasksLastSuccess(ActiveExecution<?> execution, Queue<Task> thisSuccess) {
         // save and clean final
         Task task = null;
         synchronized (thisSuccess) {
@@ -204,7 +217,7 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    private boolean ensureTasksInProgress(ActiveExecution<Task> execution, WorkflowStart start,
+    private boolean ensureTasksInProgress(ActiveExecution<?> execution, WorkflowStart start,
             int execProgress, int totalProgress) throws StorageEngineException {
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
@@ -242,11 +255,9 @@ public class UIMWorkflowProcessor implements Runnable {
         return false;
     }
 
-    private void complete(ActiveExecution<Task> execution, WorkflowStart start, boolean cancel)
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void complete(ActiveExecution execution, WorkflowStart start, boolean cancel)
             throws StorageEngineException {
-        
-        int size = execution.getProgressSize();
-        
         try {
             start.completed(execution);
         } catch (Throwable t) {
@@ -274,6 +285,12 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
+    /**
+     * Schedules the given execution.
+     * 
+     * @param execution
+     * @throws StorageEngineException
+     */
     public synchronized void schedule(ActiveExecution<Task> execution)
             throws StorageEngineException {
         if (execution.getWorkflow().getSteps().isEmpty())
@@ -306,39 +323,64 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    public synchronized List<ActiveExecution<Task>> getExecutions() {
+    /**
+     * @return scheduled executions
+     */
+    public synchronized List<ActiveExecution<?>> getExecutions() {
         return Collections.unmodifiableList(executions);
     }
 
+    /**
+     * Initializes the processor, right now only switch running flag.
+     */
     public void initialize() {
         running = false;
     }
 
+    /**
+     * Starts up the thread for dispatching.
+     */
     public void startup() {
         dispatcherThread = (TaskExecutorThread)factory.newThread(this);
         dispatcherThread.start();
     }
 
+    /**
+     * Shuts down the dispatching and stops running.
+     */
     public void shutdown() {
         running = false;
         dispatcherThread = null;
     }
 
+    /**
+     * Halt temporarily the execution.
+     */
     public void pause() {
         running = false;
         dispatcherThread = null;
     }
 
+    /**
+     * Continue running.
+     */
     public void resume() {
         running = true;
         dispatcherThread = (TaskExecutorThread)factory.newThread(this);
         dispatcherThread.start();
     }
 
+    /**
+     * @return number of processes in progress
+     */
     public int getMaxTotalProgress() {
         return maxTotalProgress;
     }
 
+    /**
+     * @param maxTotalProgress
+     *            number of processes in progress
+     */
     public void setMaxTotalProgress(int maxTotalProgress) {
         this.maxTotalProgress = maxTotalProgress;
     }

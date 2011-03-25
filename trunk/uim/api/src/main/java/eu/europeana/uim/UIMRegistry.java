@@ -26,8 +26,8 @@ public class UIMRegistry implements Registry {
     private static Logger                 log           = Logger.getLogger(UIMRegistry.class.getName());
 
     private String                        configuredStorageEngine;
-    private StorageEngine                 activeStorage = null;
-    private Map<String, StorageEngine>    storages      = new HashMap<String, StorageEngine>();
+    private StorageEngine<?>              activeStorage = null;
+    private Map<String, StorageEngine<?>> storages      = new HashMap<String, StorageEngine<?>>();
 
     private String                        configuredLoggingEngine;
     private LoggingEngine<?>              activeLogging = null;
@@ -42,6 +42,7 @@ public class UIMRegistry implements Registry {
      * Creates a new instance of this class.
      */
     public UIMRegistry() {
+        // nothing todo
     }
 
     @Override
@@ -106,7 +107,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addStorage(StorageEngine storage) {
+    public void addStorage(StorageEngine<?> storage) {
         if (storage != null) {
             log.info("Added storage: " + storage.getIdentifier());
             if (!storages.containsKey(storage.getIdentifier())) {
@@ -123,12 +124,12 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeStorage(StorageEngine storage) {
+    public void removeStorage(StorageEngine<?> storage) {
         if (storage != null) {
             log.info("Removed storage: " + storage.getIdentifier());
             storage.shutdown();
 
-            StorageEngine remove = this.storages.remove(storage.getIdentifier());
+            StorageEngine<?> remove = this.storages.remove(storage.getIdentifier());
             if (activeStorage == remove) {
                 activeStorage = null;
             }
@@ -136,7 +137,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public Collection<StorageEngine> getStorages() {
+    public Collection<StorageEngine<?>> getStorages() {
         return storages.values();
     }
 
@@ -157,7 +158,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public StorageEngine getStorage() {
+    public StorageEngine<?> getStorage() {
         if (storages == null || storages.isEmpty()) return null;
 
         if (activeStorage == null) {
@@ -172,12 +173,12 @@ public class UIMRegistry implements Registry {
         return activeStorage;
     }
 
-    StorageEngine getActiveStorage() {
+    StorageEngine<?> getActiveStorage() {
         return activeStorage;
     }
 
     @Override
-    public StorageEngine getStorage(String identifier) {
+    public StorageEngine<?> getStorage(String identifier) {
         if (identifier == null || storages == null || storages.isEmpty()) return null;
         return storages.get(identifier);
     }
@@ -256,8 +257,8 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getName()).append(": [").append(
-                        plugin.getDescription()).append("]");
+                builder.append(plugin.getName()).append(": [").append(plugin.getDescription()).append(
+                        "]");
             }
         }
 
@@ -280,7 +281,7 @@ public class UIMRegistry implements Registry {
         if (storages.isEmpty()) {
             builder.append("\n\tNo storage.");
         } else {
-            for (StorageEngine storage : storages.values()) {
+            for (StorageEngine<?> storage : storages.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\t");
                 }

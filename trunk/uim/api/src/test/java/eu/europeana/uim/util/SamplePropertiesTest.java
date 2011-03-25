@@ -13,31 +13,37 @@ import org.junit.Test;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Provider;
 
 /**
- * 
+ * Tests {@link SampleProperties} using mocks of {@link DataSet}s and {@link StorageEngine}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 16, 2011
  */
 public class SamplePropertiesTest {
+    /**
+     * Tests loading of samples.
+     * 
+     * 
+     * @throws StorageEngineException
+     * @throws IOException
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Test
+    public void testLoadSamples() throws StorageEngineException, IOException {
+        StorageEngine engine = mock(StorageEngine.class);
+        Provider provider = mock(Provider.class);
+        Collection collection = mock(Collection.class);
 
-	
-	@Test
-	public void testLoadSamples() throws StorageEngineException, IOException {
-		StorageEngine engine = mock(StorageEngine.class);
-		Provider provider = mock(Provider.class);
-		Collection collection = mock(Collection.class);
-		
-		when(engine.createProvider()).thenReturn(provider);
-		when(engine.findProvider(anyString())).thenReturn(provider);
-		
-		when(engine.createCollection((Provider)any())).thenReturn(collection);
-		when(engine.findCollection(anyString())).thenReturn(collection);
+        when(engine.createProvider()).thenReturn(provider);
+        when(engine.findProvider(anyString())).thenReturn(provider);
 
-		SampleProperties sample = new SampleProperties();
-		sample.loadSampleData(engine);
-		
-	}
+        when(engine.createCollection((Provider)any())).thenReturn(collection);
+        when(engine.findCollection(anyString())).thenReturn(collection);
+
+        SampleProperties sample = new SampleProperties();
+        sample.loadSampleData(engine);
+    }
 }

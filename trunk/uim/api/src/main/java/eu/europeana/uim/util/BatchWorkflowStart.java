@@ -30,25 +30,26 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 14, 2011
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BatchWorkflowStart implements WorkflowStart {
-    
+
     /** String BATCH_SUBSET */
-    public static final String BATCH_SUBSET = "batch.subset";
+    public static final String                    BATCH_SUBSET  = "batch.subset";
 
     /** String BATCH_SHUFFLE */
-    public static final String BATCH_SHUFFLE = "batch.shuffle";
+    public static final String                    BATCH_SHUFFLE = "batch.shuffle";
 
     /**
      * Key to retrieve own data from context.
      */
-    private static TKey<BatchWorkflowStart, Data> DATA_KEY   = TKey.register(
-                                                                     BatchWorkflowStart.class,
-                                                                     "data", Data.class);
+    private static TKey<BatchWorkflowStart, Data> DATA_KEY      = TKey.register(
+                                                                        BatchWorkflowStart.class,
+                                                                        "data", Data.class);
 
     /**
      * default batch size
      */
-    public static int                             BATCH_SIZE = 250;
+    public static int                             BATCH_SIZE    = 250;
 
     /**
      * Creates a new instance of this class.
@@ -77,56 +78,56 @@ public class BatchWorkflowStart implements WorkflowStart {
         return 10;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> getParameters() {
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public void initialize(ExecutionContext context, StorageEngine storage)
+    public void initialize(ExecutionContext context, StorageEngine<?> storage)
             throws WorkflowStartFailedException {
         try {
-            long[] ids;
+            Object[] ids;
 
             DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
                 try {
                     ids = storage.getByProvider((Provider)dataSet, false);
                 } catch (StorageEngineException e) {
-                    throw new WorkflowStartFailedException("Provider '" + dataSet.getIdentifier() +
+                    throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
                                                            "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof Collection) {
                 try {
                     ids = storage.getByCollection((Collection)dataSet);
                 } catch (StorageEngineException e) {
-                    throw new RuntimeException("Collection '" + dataSet.getIdentifier() +
+                    throw new RuntimeException("Collection '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof Request) {
                 try {
                     ids = storage.getByRequest((Request)dataSet);
                 } catch (StorageEngineException e) {
-                    throw new RuntimeException("Request '" + dataSet.getIdentifier() +
+                    throw new RuntimeException("Request '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof MetaDataRecord) {
-                ids = new long[] { ((MetaDataRecord)dataSet).getId() };
+                ids = new Object[] { ((MetaDataRecord)dataSet).getId() };
             } else {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
             }
 
-            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
+            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_SHUFFLE, "false"));
             if (shuffle) {
-                List<Long> list = Arrays.asList(ArrayUtils.toObject(ids));
+                List<Object> list = Arrays.asList(ids);
                 Collections.shuffle(list);
-                ids = ArrayUtils.toPrimitive(list.toArray(new Long[list.size()]));
+                ids = list.toArray(new Object[list.size()]);
             }
             if (context.getProperties().getProperty(BATCH_SUBSET) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET));
-                ids = ArrayUtils.subarray(ids, 0, Math.min(subset, ids.length -1));
+                ids = ArrayUtils.subarray(ids, 0, Math.min(subset, ids.length - 1));
             }
 
             Data data = new Data();
@@ -138,7 +139,7 @@ public class BatchWorkflowStart implements WorkflowStart {
                     int end = Math.min(ids.length, (i + 1) * BATCH_SIZE);
                     int start = i * BATCH_SIZE;
 
-                    long[] batch = new long[end - start];
+                    Object[] batch = new Object[end - start];
                     System.arraycopy(ids, start, batch, 0, end - start);
 
                     synchronized (context.getValue(DATA_KEY).batches) {
@@ -165,12 +166,14 @@ public class BatchWorkflowStart implements WorkflowStart {
         if (!isFinished(context, storage)) { return new TaskCreator() {
             @Override
             public void run() {
-//                setStart(true);
                 try {
-                    long[] poll = context.getValue(DATA_KEY).batches.poll(500,
+                    Object[] poll = context.getValue(DATA_KEY).batches.poll(500,
                             TimeUnit.MILLISECONDS);
                     if (poll != null) {
-                        MetaDataRecord[] mdrs = storage.getMetaDataRecords(poll);
+                        MetaDataRecord[] mdrs = new MetaDataRecord[poll.length];
+                        for (int i = 0; i < poll.length; i++) {
+                            mdrs[i] = storage.getMetaDataRecord(poll[i]);
+                        }
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord mdr = mdrs[i];
@@ -197,7 +200,7 @@ public class BatchWorkflowStart implements WorkflowStart {
     }
 
     @Override
-    public boolean isFinished(ExecutionContext context, StorageEngine storage) {
+    public boolean isFinished(ExecutionContext context, StorageEngine<?> storage) {
         Data value = context.getValue(DATA_KEY);
         return value.initialized && value.batches.isEmpty();
     }
@@ -209,9 +212,9 @@ public class BatchWorkflowStart implements WorkflowStart {
      * @date Feb 28, 2011
      */
     final static class Data implements Serializable {
-        public int                   total   = 0;
-        public boolean               initialized = false;
-        public BlockingQueue<long[]> batches = new LinkedBlockingQueue<long[]>();
+        public int                     total       = 0;
+        public boolean                 initialized = false;
+        public BlockingQueue<Object[]> batches     = new LinkedBlockingQueue<Object[]>();
     }
 
     @Override

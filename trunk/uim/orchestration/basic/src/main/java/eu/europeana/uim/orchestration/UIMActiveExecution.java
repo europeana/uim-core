@@ -29,7 +29,16 @@ import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
-public class UIMActiveExecution implements ActiveExecution<Task> {
+/**
+ * Active execution implementation specific for UIM workflow.
+ * 
+ * @param <I>
+ *            generic ID
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
+ */
+public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private static Logger                     log       = Logger.getLogger(UIMActiveExecution.class.getName());
 
     private HashMap<String, LinkedList<Task>> success   = new LinkedHashMap<String, LinkedList<Task>>();
@@ -38,10 +47,10 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
-    private final StorageEngine               storageEngine;
+    private final StorageEngine<I>            storageEngine;
     private final LoggingEngine<?>            loggingEngine;
 
-    private final Execution                   execution;
+    private final Execution<I>                execution;
     private final Workflow                    workflow;
     private final Properties                  properties;
     private final RevisableProgressMonitor    monitor;
@@ -53,9 +62,19 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
 
     private int                               completed = 0;
 
-    public UIMActiveExecution(Execution execution, Workflow workflow, StorageEngine storageEngine,
-                              LoggingEngine loggingEngine, Properties properties,
-                              RevisableProgressMonitor monitor) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param execution
+     * @param workflow
+     * @param storageEngine
+     * @param loggingEngine
+     * @param properties
+     * @param monitor
+     */
+    public UIMActiveExecution(Execution<I> execution, Workflow workflow,
+                              StorageEngine<I> storageEngine, LoggingEngine<?> loggingEngine,
+                              Properties properties, RevisableProgressMonitor monitor) {
         this.execution = execution;
         this.workflow = workflow;
         this.storageEngine = storageEngine;
@@ -76,12 +95,12 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
     }
 
     @Override
-    public Execution getExecution() {
+    public Execution<I> getExecution() {
         return execution;
     }
 
     @Override
-    public StorageEngine getStorageEngine() {
+    public StorageEngine<I> getStorageEngine() {
         return storageEngine;
     }
 
@@ -95,54 +114,67 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         return properties;
     }
 
-    public long getId() {
+    @Override
+    public I getId() {
         return execution.getId();
     }
 
+    @Override
     public boolean isActive() {
         return execution.isActive();
     }
 
+    @Override
     public void setActive(boolean active) {
         execution.setActive(active);
     }
 
+    @Override
     public Date getStartTime() {
         return execution.getStartTime();
     }
 
+    @Override
     public void setStartTime(Date start) {
         execution.setStartTime(start);
     }
 
+    @Override
     public Date getEndTime() {
         return execution.getEndTime();
     }
 
+    @Override
     public void setEndTime(Date end) {
         execution.setEndTime(end);
     }
 
+    @Override
     public Date getCancelTime() {
         return execution.getCancelTime();
     }
 
+    @Override
     public void setCancelTime(Date end) {
         execution.setCancelTime(end);
     }
 
-    public DataSet getDataSet() {
+    @Override
+    public DataSet<I> getDataSet() {
         return execution.getDataSet();
     }
 
-    public void setDataSet(DataSet entity) {
+    @Override
+    public void setDataSet(DataSet<I> entity) {
         execution.setDataSet(entity);
     }
 
+    @Override
     public String getWorkflowName() {
         return execution.getWorkflowName();
     }
 
+    @Override
     public void setWorkflowName(String name) {
         execution.setWorkflowName(name);
     }
@@ -295,6 +327,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         return status;
     }
 
+    @Override
     public WorkflowStepStatus getStepStatus(IngestionPlugin step) {
         Queue<Task> success = getSuccess(step.getName());
         Queue<Task> failure = getFailure(step.getName());
@@ -305,7 +338,7 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         }
 
         int failureSize = 0;
-        Map<MetaDataRecord, Throwable> exceptions = new HashMap<MetaDataRecord, Throwable>();
+        Map<MetaDataRecord<?>, Throwable> exceptions = new HashMap<MetaDataRecord<?>, Throwable>();
         synchronized (failure) {
             failureSize = failure.size();
             for (Task task : failure) {
@@ -361,11 +394,11 @@ public class UIMActiveExecution implements ActiveExecution<Task> {
         values.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <NS, T extends Serializable> T getValue(TKey<NS, T> key) {
         Object object = values.get(key);
         if (object != null) { return (T)object; }
         return null;
     }
-
 }

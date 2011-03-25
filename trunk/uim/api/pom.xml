@@ -32,6 +32,7 @@
 							eu.europeana.uim.api,
 							eu.europeana.uim.command,
 							eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
 							eu.europeana.uim.workflow,
 							eu.europeana.uim.util
 						</Export-Package>

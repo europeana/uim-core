@@ -65,9 +65,9 @@ public class SyserrPlugin implements IngestionPlugin {
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord mdr, ExecutionContext context)
+    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
-        String identifier = mdr.getIdentifier();
+        Object identifier = mdr.getId();
         Data data = context.getValue(DATA_KEY);
 
         if (data.randsleep) {

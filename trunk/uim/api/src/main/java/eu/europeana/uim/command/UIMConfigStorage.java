@@ -20,70 +20,81 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 
 /**
- * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * Configuration of the backend storage for the UIM pipeline.
+ * 
+ * @author Manuel Bernhardt (bernhardt.manuel@gmail.com)
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
  */
-
 @Command(name = "config", scope = "storage")
 public class UIMConfigStorage implements Action {
-	private static final Logger log = Logger.getLogger(UIMConfigStorage.class.getName());
-	
+    private static final Logger log = Logger.getLogger(UIMConfigStorage.class.getName());
+
     @Argument
-    String storage;
+    String                      storage;
 
-    private Registry registry;
+    private Registry            registry;
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param registry
+     */
     public UIMConfigStorage(Registry registry) {
         this.registry = registry;
     }
 
     @Override
     public Object execute(CommandSession session) throws Exception {
-
         if (storage == null) {
             session.getConsole().println("Available storage engines: ");
             session.getConsole().println();
             // list available storage engines
-            for(StorageEngine s : registry.getStorages()) {
-                if(s == registry.getStorage()) {
+            for (StorageEngine<?> s : registry.getStorages()) {
+                if (s == registry.getStorage()) {
                     session.getConsole().println("* " + s.getIdentifier());
                 } else {
                     session.getConsole().println("  " + s.getIdentifier());
                 }
             }
         } else {
-            StorageEngine selected = null;
-            for(StorageEngine s : registry.getStorages()) {
-                if(s.getIdentifier().equals(storage)) {
+            StorageEngine<?> selected = null;
+            for (StorageEngine<?> s : registry.getStorages()) {
+                if (s.getIdentifier().equals(storage)) {
                     selected = s;
                     break;
                 }
             }
-            if(selected != null) {
+            if (selected != null) {
                 registry.setConfiguredStorageEngine(selected.getIdentifier());
-                session.getConsole().println("Activated storage engine '" + selected.getIdentifier() + "'");
-                
-        		Bundle bundle = FrameworkUtil.getBundle(UIMConfigStorage.class);
-        		
-        		ServiceReference caRef = bundle.getBundleContext().getServiceReference(ConfigurationAdmin.class.getName());
-        		ConfigurationAdmin configAdmin = (ConfigurationAdmin)  bundle.getBundleContext().getService(caRef);
+                session.getConsole().println(
+                        "Activated storage engine '" + selected.getIdentifier() + "'");
 
-        		try {
-        			Configuration config = configAdmin.getConfiguration("eu.europeana.uim");
+                Bundle bundle = FrameworkUtil.getBundle(UIMConfigStorage.class);
 
-        			@SuppressWarnings("unchecked")
-					Dictionary<String, String> dictionary = config.getProperties();
-        			if (dictionary == null) {
-        				dictionary = new Hashtable<String, String>();
-        			}
-        			dictionary.put("defaultStorageEngine", selected.getIdentifier());
-        			config.update(dictionary);
-        			
-        		} catch (IOException e) {
-        			log.log(Level.SEVERE, "Failed to store config change with config service.", e);
-        		}
-                
+                ServiceReference caRef = bundle.getBundleContext().getServiceReference(
+                        ConfigurationAdmin.class.getName());
+                ConfigurationAdmin configAdmin = (ConfigurationAdmin)bundle.getBundleContext().getService(
+                        caRef);
+
+                try {
+                    Configuration config = configAdmin.getConfiguration("eu.europeana.uim");
+
+                    @SuppressWarnings("unchecked")
+                    Dictionary<String, String> dictionary = config.getProperties();
+                    if (dictionary == null) {
+                        dictionary = new Hashtable<String, String>();
+                    }
+                    dictionary.put("defaultStorageEngine", selected.getIdentifier());
+                    config.update(dictionary);
+
+                } catch (IOException e) {
+                    log.log(Level.SEVERE, "Failed to store config change with config service.", e);
+                }
+
             } else {
-                session.getConsole().println("Could not find storage engine with identifier '" + storage + "'");
+                session.getConsole().println(
+                        "Could not find storage engine with identifier '" + storage + "'");
             }
         }
         return null;

@@ -13,15 +13,24 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 
 /**
- * noop storage engine adapter
+ * noop storage engine adapter for testing purposes
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Feb 16, 2011
  */
-public abstract class StorageEngineAdapter implements StorageEngine {
+public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     @Override
     public String getIdentifier() {
         return StorageEngineAdapter.class.getSimpleName();
+    }
+
+    @Override
+    public void setConfiguration(Map<String, String> config) {
+    }
+
+    @Override
+    public Map<String, String> getConfiguration() {
+        return null;
     }
 
     @Override
@@ -41,15 +50,6 @@ public abstract class StorageEngineAdapter implements StorageEngine {
     }
 
     @Override
-    public void setConfiguration(Map<String, String> config) {
-    }
-
-    @Override
-    public Map<String, String> getConfiguration() {
-        return null;
-    }
-
-    @Override
     public EngineStatus getStatus() {
         return null;
     }
@@ -60,157 +60,151 @@ public abstract class StorageEngineAdapter implements StorageEngine {
     }
 
     @Override
-    public Provider createProvider() {
+    public Provider<Long> createProvider() {
         return null;
     }
 
     @Override
-    public void updateProvider(Provider provider) throws StorageEngineException {
+    public void updateProvider(Provider<Long> provider) throws StorageEngineException {
     }
 
     @Override
-    public Provider getProvider(long id) {
+    public Provider<Long> getProvider(Long id) {
         return null;
     }
 
     @Override
-    public Provider findProvider(String mnemonic) {
-
-        return null;
-    }
-
-    @Override
-    public List<Provider> getAllProviders() {
-        return new ArrayList<Provider>();
-    }
-
-    @Override
-    public Collection createCollection(Provider provider) {
+    public Provider<Long> findProvider(String mnemonic) {
 
         return null;
     }
 
     @Override
-    public void updateCollection(Collection collection) throws StorageEngineException {
-
+    public List<Provider<Long>> getAllProviders() {
+        return new ArrayList<Provider<Long>>();
     }
 
     @Override
-    public Collection getCollection(long id) {
-        return null;
-    }
-
-    @Override
-    public List<Collection> getAllCollections() {
-        return new ArrayList<Collection>();
-    }
-
-    @Override
-    public Collection findCollection(String mnemonic) {
+    public Collection<Long> createCollection(Provider<Long> provider) {
 
         return null;
     }
 
     @Override
-    public List<Collection> getCollections(Provider provider) {
-        return new ArrayList<Collection>();
+    public void updateCollection(Collection<Long> collection) throws StorageEngineException {
+
     }
 
     @Override
-    public Request createRequest(Collection collection, Date date) {
+    public Collection<Long> getCollection(Long id) {
         return null;
     }
 
     @Override
-    public void updateRequest(Request request) throws StorageEngineException {
-
+    public List<Collection<Long>> getAllCollections() {
+        return new ArrayList<Collection<Long>>();
     }
 
     @Override
-    public Request getRequest(long id) throws StorageEngineException {
-        return null;
-    }
-
-    @Override
-    public List<Request> getRequests(Collection collection) {
-        return new ArrayList<Request>();
-    }
-
-    @Override
-    public MetaDataRecord createMetaDataRecord(Request request) {
+    public Collection<Long> findCollection(String mnemonic) {
 
         return null;
     }
 
     @Override
-    public MetaDataRecord createMetaDataRecord(Request request, String identifier)
+    public List<Collection<Long>> getCollections(Provider<Long> provider) {
+        return new ArrayList<Collection<Long>>();
+    }
+
+    @Override
+    public Request<Long> createRequest(Collection<Long> collection, Date date) {
+        return null;
+    }
+
+    @Override
+    public void updateRequest(Request<Long> request) throws StorageEngineException {
+
+    }
+
+    @Override
+    public Request<Long> getRequest(Long id) throws StorageEngineException {
+        return null;
+    }
+
+    @Override
+    public List<Request<Long>> getRequests(Collection<Long> collection) {
+        return new ArrayList<Request<Long>>();
+    }
+
+    @Override
+    public MetaDataRecord<Long> createMetaDataRecord(Request<Long> request, String identifier)
             throws StorageEngineException {
         return null;
     }
 
     @Override
-    public void updateMetaDataRecord(MetaDataRecord record) throws StorageEngineException {
+    public void updateMetaDataRecord(MetaDataRecord<Long> record) throws StorageEngineException {
 
     }
 
     @Override
-    public Execution createExecution(DataSet entity, String workflow) {
+    public Execution<Long> createExecution(DataSet<Long> entity, String workflow) {
         return null;
     }
 
     @Override
-    public void updateExecution(Execution execution) throws StorageEngineException {
+    public void updateExecution(Execution<Long> execution) throws StorageEngineException {
 
     }
 
     @Override
-    public Execution getExecution(long id) throws StorageEngineException {
+    public Execution<Long> getExecution(Long id) throws StorageEngineException {
         return null;
     }
 
     @Override
-    public List<Execution> getAllExecutions() {
-        return new ArrayList<Execution>();
+    public List<Execution<Long>> getAllExecutions() {
+        return new ArrayList<Execution<Long>>();
     }
 
     @Override
-    public MetaDataRecord[] getMetaDataRecords(long... ids) {
+    public MetaDataRecord<Long> getMetaDataRecord(Long id) {
         return null;
     }
 
     @Override
-    public long[] getByRequest(Request request) {
-        return new long[0];
+    public Long[] getByRequest(Request<Long> request) {
+        return new Long[0];
     }
 
     @Override
-    public long[] getByCollection(Collection collection) {
-        return new long[0];
+    public Long[] getByCollection(Collection<Long> collection) {
+        return new Long[0];
     }
 
     @Override
-    public long[] getByProvider(Provider provider, boolean recursive) {
+    public Long[] getByProvider(Provider<Long> provider, boolean recursive) {
 
-        return new long[0];
+        return new Long[0];
     }
 
     @Override
-    public long[] getAllIds() {
-        return new long[0];
+    public Long[] getAllIds() {
+        return new Long[0];
     }
 
     @Override
-    public int getTotalByRequest(Request request) {
+    public int getTotalByRequest(Request<Long> request) {
         return 0;
     }
 
     @Override
-    public int getTotalByCollection(Collection collection) {
+    public int getTotalByCollection(Collection<Long> collection) {
         return 0;
     }
 
     @Override
-    public int getTotalByProvider(Provider provider, boolean recursive) {
+    public int getTotalByProvider(Provider<Long> provider, boolean recursive) {
         return 0;
     }
 

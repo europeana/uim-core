@@ -7,16 +7,27 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
+ * Status of a specific workflow step on the UIM pipeline.
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
  */
 public class UIMWorkflowStepStatus implements WorkflowStepStatus {
+    private IngestionPlugin                   step;
+    private int                               successes, failures;
+    private Map<MetaDataRecord<?>, Throwable> failureDetail;
 
-	private IngestionPlugin step;
-	private int successes, failures;
-	private Map<MetaDataRecord, Throwable> failureDetail;
-
-
-	public UIMWorkflowStepStatus(IngestionPlugin step, int successes, int failures, Map<MetaDataRecord, Throwable> failureDetail) {
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param step
+     * @param successes
+     * @param failures
+     * @param failureDetail
+     */
+    public UIMWorkflowStepStatus(IngestionPlugin step, int successes, int failures,
+                                 Map<MetaDataRecord<?>, Throwable> failureDetail) {
         this.step = step;
         this.successes = successes;
         this.failures = failures;
@@ -39,8 +50,7 @@ public class UIMWorkflowStepStatus implements WorkflowStepStatus {
     }
 
     @Override
-    public Map<MetaDataRecord, Throwable> getFailureDetail() {
+    public Map<MetaDataRecord<?>, Throwable> getFailureDetail() {
         return failureDetail;
     }
-
 }

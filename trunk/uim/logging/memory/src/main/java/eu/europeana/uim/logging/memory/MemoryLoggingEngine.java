@@ -13,23 +13,27 @@ import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
 
 /**
- * Simplistic implementation of the logging service.
- * In this implementation we do not care to keep track of the MDRs responsible for a duration. This feature would be useful in order to see exactly what MDR is causing what delay.
- *
+ * Simplistic implementation of the logging service. In this implementation we do not care to keep
+ * track of the MDRs responsible for a duration. This feature would be useful in order to see
+ * exactly what MDR is causing what delay.
+ * 
+ * @param <T>
+ *            generic message
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
  */
 public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
+    private Map<Execution<?>, List<LogEntry<String>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<String>>>();
+    private Map<Execution<?>, List<LogEntry<T>>>      structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<T>>>();
+    private Map<IngestionPlugin, List<Long>>          durations               = new HashMap<IngestionPlugin, List<Long>>();
 
-    private Map<Execution, List<LogEntry<String>>> executionLogs = new HashMap<Execution, List<LogEntry<String>>>();
-
-    private Map<Execution, List<LogEntry<T>>> structuredExecutionLogs = new HashMap<Execution, List<LogEntry<T>>>();
-
-    private Map<IngestionPlugin, List<Long>> durations = new HashMap<IngestionPlugin, List<Long>>();
-
-    
-    
+    /**
+     * Creates a new instance of this class.
+     */
     public MemoryLoggingEngine() {
-	}
+    }
 
     @Override
     public String getIdentifier() {
@@ -37,7 +41,8 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void log(Level level, String message, Execution execution, MetaDataRecord mdr, IngestionPlugin plugin) {
+    public void log(Level level, String message, Execution<?> execution, MetaDataRecord<?> mdr,
+            IngestionPlugin plugin) {
         List<LogEntry<String>> logs = executionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<String>>();
@@ -47,7 +52,8 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void logStructured(Level level, T payload, Execution execution, MetaDataRecord mdr, IngestionPlugin plugin) {
+    public void logStructured(Level level, T payload, Execution<?> execution,
+            MetaDataRecord<?> mdr, IngestionPlugin plugin) {
         List<LogEntry<T>> logs = structuredExecutionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<T>>();
@@ -57,12 +63,12 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public List<LogEntry<String>> getExecutionLog(Execution execution) {
+    public List<LogEntry<String>> getExecutionLog(Execution<?> execution) {
         return executionLogs.get(execution);
     }
 
     @Override
-    public List<LogEntry<T>> getStructuredExecutionLog(Execution execution) {
+    public List<LogEntry<T>> getStructuredExecutionLog(Execution<?> execution) {
         return structuredExecutionLogs.get(execution);
     }
 
@@ -97,7 +103,7 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     public Long getAverageDuration(IngestionPlugin plugin) {
         long sum = 0l;
         List<Long> d = getDurations(plugin);
-        for(Long l : d) {
+        for (Long l : d) {
             sum += l;
         }
         return sum / d.size();

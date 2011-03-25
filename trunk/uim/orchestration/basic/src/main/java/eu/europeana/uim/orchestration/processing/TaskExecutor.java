@@ -1,7 +1,5 @@
 package eu.europeana.uim.orchestration.processing;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -26,11 +24,10 @@ import eu.europeana.uim.workflow.TaskStatus;
  * @date Nov 29, 2010
  */
 public class TaskExecutor extends ThreadPoolExecutor {
-    private boolean          isPaused;
+    private boolean       isPaused;
 
-    private ReentrantLock    pauseLock  = new ReentrantLock();
-    private Condition        unpaused   = pauseLock.newCondition();
-
+    private ReentrantLock pauseLock = new ReentrantLock();
+    private Condition     unpaused  = pauseLock.newCondition();
 
     /**
      * Constructor creates an worker thread pool of the specified size. The given scheduler is used
@@ -43,8 +40,8 @@ public class TaskExecutor extends ThreadPoolExecutor {
      */
     public TaskExecutor(int corePoolSize, int maxPoolSize, BlockingQueue<Runnable> queue,
                         String name) {
-        super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue, new TaskExecutorThreadFactory(
-                name, name));
+        super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue,
+                new TaskExecutorThreadFactory(name, name));
 
         prestartCoreThread();
     }
@@ -157,8 +154,8 @@ public class TaskExecutor extends ThreadPoolExecutor {
                     task.save();
                 } catch (Throwable e2) {
                     throw new RuntimeException(
-                            "Failed to store failed record. Reason for failure:" + (t != null ? t.getMessage() : ""),
-                            e2);
+                            "Failed to store failed record. Reason for failure:" +
+                                    (t != null ? t.getMessage() : ""), e2);
                 }
             }
 

@@ -164,6 +164,6 @@ public interface IngestionPlugin {
      *             that further processing of this specific {@link MetaDataRecord} does not make
      *             sense any longer
      */
-    boolean processRecord(MetaDataRecord mdr, ExecutionContext context)
+    boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException;
 }

@@ -1,5 +1,6 @@
 package eu.europeana.uim;
 
+@SuppressWarnings("all")
 public class MDRFieldRegistry {
 
 	public static final TKey<MDRFieldRegistry, String> title = TKey.register(MDRFieldRegistry.class, "title", String.class);

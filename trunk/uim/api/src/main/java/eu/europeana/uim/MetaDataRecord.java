@@ -1,111 +1,191 @@
 package eu.europeana.uim;
 
+import java.util.List;
+import java.util.Set;
+
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Request;
 
-import java.io.Serializable;
-import java.util.List;
-
 /**
- * Abstract MetaDataRecord. StorageEngine implementations provide their own implementation of it. A
- * meta data record represents the fines unit of a record in the Europeana and The European Library
- * sense.
+ * This interface defines a highly dynamic model of records consisting of metadata. A meta data
+ * record represents the fines unit of a record in the Europeana and The European Library sense.
  * 
- * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @param <I>
+ *            generic ID
+ * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 21, 2011
  */
-public interface MetaDataRecord extends DataSet {
+public interface MetaDataRecord<I> extends DataSet<I> {
     /**
-     * @return the request in which this record is valid.
+     * @return the request in which this record is valid
      */
-    Request getRequest();
+    Request<I> getRequest();
 
     /**
-     * setter for the first value in the list of values for the specified key.
+     * Retrieves the first value of the list of values represented under that key qualified or
+     * unqualified. In other words the first unqualified field is always the same value no matter if
+     * it used with a qualifier or not.
      * 
      * @param <N>
+     *            the namespace (type) in which the field is defined
      * @param <T>
+     *            the runtime type of the values for this field
      * @param key
-     * @param value
-     */
-    <N, T extends Serializable> void setFirstField(TKey<N, T> key, T value);
-
-    /**
-     * getter for the first value of the list of values represented by that key qualified or
-     * unqualified.
-     * 
-     * @param <N>
-     * @param <T>
-     * @param key
+     *            typed key which holds namespace, name and type information
      * @return the first value or null
      */
-    <N, T extends Serializable> T getFirstField(TKey<N, T> key);
+    <N, T> T getFirstField(TKey<N, T> key);
 
     /**
-     * setter for the first qualified field value for this key.
+     * Retrieves the first field value for this key and qualifiers.
      * 
      * @param <N>
+     *            the namespace (type) in which the field is defined
      * @param <T>
+     *            the runtime type of the values for this field
      * @param key
-     * @param qualifier
-     * @param value
+     *            typed key which holds namespace, name and type information
+     * @param qualifiers
+     *            information typed by enumerations to provide further filtered data
+     * @return first field qualified with the given qualifiers or null (no field or no one matching
+     *         all provided qualifiers)
      */
-    <N, T extends Serializable> void setFirstQField(TKey<N, T> key, String qualifier, T value);
-//    <N, T extends Serializable, E extends Enum<E>> void setFirstQField(TKey<N, T> key, T value, E... qualifier);
+    <N, T> T getFirstQField(TKey<N, T> key, Set<Enum<?>> qualifiers);
 
     /**
-     * getter for the first qualified field value for this key and qualifier.
+     * Retrieves all field values of this key (qualified and unqualified fields).
      * 
      * @param <N>
+     *            the namespace (type) in which the field is defined
      * @param <T>
+     *            the runtime type of the values for this field
      * @param key
-     * @param qualifier
-     * @return the first
+     *            typed key which holds namespace, name and type information
+     * @return values as list of qualified values (value + known qualifiers)
      */
-    <N, T extends Serializable> T getFirstQField(TKey<N, T> key, String qualifier);
-
+    <N, T> List<QualifiedValue<T>> getField(TKey<N, T> key);
+    
     /**
-     * method to add an unqualified field value.
+     * Retrieves as list the field values matching the given qualifiers and key.
      * 
      * @param <N>
+     *            the namespace (type) in which the field is defined
      * @param <T>
+     *            the runtime type of the values for this field
      * @param key
-     * @param value
-     */
-    <N, T extends Serializable> void addField(TKey<N, T> key, T value);
-
-    /**
-     * getter for all field values of this key (including qualified fields)
-     * 
-     * @param <N>
-     * @param <T>
-     * @param key
-     * @return the list of values, combination from all qualified and unqualified values
-     */
-    <N, T extends Serializable> List<T> getField(TKey<N, T> key);
-
-    /**
-     * method to add a new qualified field
-     * 
-     * @param <N>
-     * @param <T>
-     * @param key
-     * @param qualifier
-     * @param value
-     */
-    <N, T extends Serializable> void addQField(TKey<N, T> key, String qualifier, T value);
-
-    /**
-     * getter for the qualified field
-     * 
-     * @param <N>
-     * @param <T>
-     * @param key
-     * @param qualifier
+     *            typed key which holds namespace, name and type information
+     * @param qualifiers
+     *            information typed by enumerations to provide additional data
      * @return the list of values qualified with the given qualifier
      */
-    <N, T extends Serializable> List<T> getQField(TKey<N, T> key, String qualifier);
+    <N, T> List<T> getQField(TKey<N, T> key, Set<Enum<?>> qualifiers);
+    
+    /**
+     * Retrieves all field values of this key without qualifier information.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <T>
+     *            the runtime type of the values for this field
+     * @param key
+     *            typed key which holds namespace, name and type information
+     * @return values as list of values
+     */
+    <N, T> List<T> getPlainField(TKey<N, T> key);
 
-    <NS, T extends Serializable> void putTransient(TKey<NS, T> key, T value);
+    /**
+     * Adds the value to the internal list of values under the specified key. Note, it can be
+     * expected to get the same ordering back when calling getFields.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <T>
+     *            the runtime type of the values for this field
+     * @param key
+     *            typed key which holds namespace, name and type information
+     * @param value
+     *            object typed using the type specified in the key
+     * @param qualifiers
+     *            optional information typed by enumerations to provide additional data (null or
+     *            empty set means unqualified)
+     */
+    <N, T> void addField(TKey<N, T> key, T value);
 
-    <NS, T extends Serializable> T getTransient(TKey<NS, T> key);
+    /**
+     * Adds value to the list of values under the specified key and qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <T>
+     *            the runtime type of the values for this field
+     * @param key
+     *            typed key which holds namespace, name and type information
+     * @param value
+     *            object typed using the type specified in the key
+     * @param qualifiers
+     *            information typed by enumerations to provide additional data
+     */
+    <N, T> void addQField(TKey<N, T> key, T value, Set<Enum<?>> qualifiers);
+
+    /**
+     * Deletes all values known under the given typed key and returns this list of values.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <T>
+     *            the runtime type of the values for this field
+     * @param key
+     *            typed key which holds namespace, name and type information
+     * @return values that have just been removed as list of qualified values
+     */
+    <N, T> List<QualifiedValue<T>> deleteField(TKey<N, T> key);
+
+    /**
+     * Small class holding information of values with qualification (might be null, if there are
+     * none).
+     * 
+     * @param <T>
+     *            generic type of value
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @date Mar 21, 2011
+     */
+    public class QualifiedValue<T> {
+        /**
+         * generic value
+         */
+        private final T            value;
+        /**
+         * how the given value has been qualified
+         */
+        private final Set<Enum<?>> qualifiers;
+
+        /**
+         * Creates a new instance of this class.
+         * 
+         * @param value
+         *            generic value
+         * @param qualifiers
+         *            how the given value has been qualified
+         */
+        public QualifiedValue(T value, Set<Enum<?>> qualifiers) {
+            this.value = value;
+            this.qualifiers = qualifiers;
+        }
+
+        /**
+         * @return generic value
+         */
+        public T getValue() {
+            return value;
+        }
+
+        /**
+         * @return how the given value has been qualified
+         */
+        public Set<Enum<?>> getQualifiers() {
+            return qualifiers;
+        }
+    }
 }

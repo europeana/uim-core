@@ -30,7 +30,7 @@ public class DummyPlugin implements IngestionPlugin {
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord mdr, ExecutionContext context)
+    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
             throws CorruptedMetadataRecordException, IngestionPluginFailedException {
         counter++;
         if (counter % 50 == 0) {

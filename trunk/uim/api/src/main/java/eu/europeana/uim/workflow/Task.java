@@ -24,14 +24,16 @@ public class Task implements Runnable {
 
     private Queue<Task>            success   = null;
     private Queue<Task>            failure   = null;
-    
-    private Set<Task>              assigned   = null;
+
+    private Set<Task>              assigned  = null;
 
     private boolean                savepoint = false;
     private boolean                mandatory = false;
     private IngestionPlugin        step;
 
+    @SuppressWarnings("rawtypes")
     private final MetaDataRecord   record;
+    @SuppressWarnings("rawtypes")
     private final StorageEngine    engine;
     private final ExecutionContext context;
     private boolean                successfulProcessing;
@@ -39,11 +41,13 @@ public class Task implements Runnable {
     /**
      * Creates a new instance of this class.
      * 
+     * @param <I>
+     * 
      * @param record
      * @param engine
      * @param context
      */
-    public Task(MetaDataRecord record, StorageEngine engine, ExecutionContext context) {
+    public <I> Task(MetaDataRecord<I> record, StorageEngine<I> engine, ExecutionContext context) {
         super();
         this.record = record;
         this.engine = engine;
@@ -104,6 +108,7 @@ public class Task implements Runnable {
      * 
      * @throws StorageEngineException
      */
+    @SuppressWarnings("unchecked")
     public void save() throws StorageEngineException {
         engine.updateMetaDataRecord(record);
     }
@@ -194,7 +199,7 @@ public class Task implements Runnable {
     /**
      * @return record that is processed
      */
-    public MetaDataRecord getMetaDataRecord() {
+    public MetaDataRecord<?> getMetaDataRecord() {
         return record;
     }
 
@@ -206,14 +211,15 @@ public class Task implements Runnable {
     }
 
     /**
-     * @return
+     * @return set of assigned tasks
      */
     public Set<Task> getAssigned() {
         return assigned;
     }
-    
+
     /**
      * @param assigned
+     *            set of assigned tasks
      */
     public void setAssigned(Set<Task> assigned) {
         this.assigned = assigned;

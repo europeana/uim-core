@@ -23,21 +23,26 @@ import eu.europeana.uim.store.Request;
 public class MetaDataRecordHandler implements RecordHandler {
     private static final Logger log    = Logger.getLogger(MetaDataRecordHandler.class.getName());
 
+    @SuppressWarnings("rawtypes")
     private final StorageEngine storage;
+    @SuppressWarnings("rawtypes")
     private final Request       request;
 
     private final String        recordElement;
     private int                 count;
-    private Set<String>         unique = new HashSet<String>();
+    private Set<Object>         unique = new HashSet<Object>();
 
     /**
      * Creates a new instance of this class.
+     * 
+     * @param <I>
      * 
      * @param storage
      * @param request
      * @param recordElement
      */
-    public MetaDataRecordHandler(StorageEngine storage, Request request, String recordElement) {
+    public <I> MetaDataRecordHandler(StorageEngine<I> storage, Request<I> request,
+                                     String recordElement) {
         super();
         this.storage = storage;
         this.request = request;
@@ -49,6 +54,7 @@ public class MetaDataRecordHandler implements RecordHandler {
         return recordElement;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void record(RecordMap record) {
         try {
@@ -65,34 +71,29 @@ public class MetaDataRecordHandler implements RecordHandler {
                 }
             }
 
-            MetaDataRecord mdr = null;
-            if (identifier != null) {
-                mdr = storage.createMetaDataRecord(request, identifier);
-            } else {
-                mdr = storage.createMetaDataRecord(request);
-            }
+            MetaDataRecord<?> mdr = storage.createMetaDataRecord(request, identifier);
 
             for (Entry<RecordField, List<String>> entry : record.entrySet()) {
                 if ("title".equals(entry.getKey().getLocal())) {
-                    if (entry.getKey().getLanguage() != null) {
-                        for (String value : entry.getValue()) {
-                            mdr.addQField(MDRFieldRegistry.title, entry.getKey().getLanguage(),
-                                    value);
-                        }
-                    } else {
-                        for (String value : entry.getValue()) {
-                            mdr.setFirstField(MDRFieldRegistry.title, value);
-                        }
+// if (entry.getKey().getLanguage() != null) {
+// for (String value : entry.getValue()) {
+// mdr.addField(MDRFieldRegistry.title, entry.getKey().getLanguage(),
+// value);
+// }
+// } else {
+                    for (String value : entry.getValue()) {
+                        mdr.addField(MDRFieldRegistry.title, value);
                     }
+// }
                 }
                 count++;
             }
 
-            if (unique.contains(mdr.getIdentifier())) {
-                log.warning("Duplicate identifier:" + mdr.getIdentifier());
+            if (unique.contains(mdr.getId())) {
+                log.warning("Duplicate identifier:" + mdr.getId());
             } else {
                 storage.updateMetaDataRecord(mdr);
-                unique.add(mdr.getIdentifier());
+                unique.add(mdr.getId());
             }
         } catch (StorageEngineException e) {
             // CAUTIOUS, EXCEPTION IS WRITTEN TO STACK TRACE

@@ -27,38 +27,44 @@ import eu.europeana.uim.store.UimEntity;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
- * uim:orchestrator
- * list
- * start <workflow> (collection | provider) <dataSet>
- * pause <requestId>
- * cancel <requestId>
- * status <requestId>
- *
+ * uim:orchestrator list start <workflow> (collection | provider) <dataSet> pause <requestId> cancel
+ * <requestId> status <requestId>
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @date Mar 22, 2011
  */
 @Command(name = "uim", scope = "exec")
 public class UIMExecution implements Action {
 
-    enum Operation {list, start, pause, cancel, status, help}
+    enum Operation {
+        list, start, pause, cancel, status, help
+    }
 
-    private final Registry registry;
+    private final Registry          registry;
 
-    private final Orchestrator orchestrator;
+    private final Orchestrator      orchestrator;
 
     private static final DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
-    @Option(name = "-o", aliases = {"--operation"}, required = false)
-    private Operation operation;
+    @Option(name = "-o", aliases = { "--operation" }, required = false)
+    private Operation               operation;
 
     @Argument(index = 0)
-    private String argument0;
+    private String                  argument0;
 
     @Argument(index = 1)
-    private String argument1;
+    private String                  argument1;
 
     @Argument(index = 2)
-    private String argument2;
+    private String                  argument2;
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param registry
+     * @param orchestrator
+     */
     public UIMExecution(Registry registry, Orchestrator orchestrator) {
         this.registry = registry;
         this.orchestrator = orchestrator;
@@ -93,47 +99,49 @@ public class UIMExecution implements Action {
             break;
         case status:
             out.println("Master, this is not implemented yet.");
+            break;
         default:
             out.println("Master, I am truly sorry but this doesn't work.");
+            break;
         }
 
         return null;
     }
 
     private void pause(PrintStream out) {
-        ActiveExecution execution = getOrListExecution(out, "pause");
-        if(execution != null) {
+        ActiveExecution<?> execution = getOrListExecution(out, "pause");
+        if (execution != null) {
             execution.setPaused(true);
-            //            orchestrator.pause();
+            // orchestrator.pause();
         } else {
             out.println("Could not find execution to pause with ID " + argument0);
         }
     }
 
     private void cancel(PrintStream out) {
-        ActiveExecution execution = getOrListExecution(out, "cancel");
-        if(execution != null) {
+        ActiveExecution<?> execution = getOrListExecution(out, "cancel");
+        if (execution != null) {
             execution.getMonitor().setCancelled(true);
-            
-            
+
         } else {
             out.println("Could not find execution to cancel with ID " + argument0);
         }
 
     }
 
-    private ActiveExecution getOrListExecution(PrintStream out, String command) {
-        if(argument0 == null) {
+    private ActiveExecution<?> getOrListExecution(PrintStream out, String command) {
+        if (argument0 == null) {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
-            for(ActiveExecution e: orchestrator.getActiveExecutions()) {
-                out.println(String.format("Execution %d: Workflow %s, data set %s", e.getId(), e.getWorkflow().getName(), e.getDataSet()));
+            for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+                out.println(String.format("Execution %d: Workflow %s, data set %s", e.getId(),
+                        e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
         }
-        ActiveExecution execution = null;
-        for(ActiveExecution e : orchestrator.getActiveExecutions()) {
-            if(e.getId() == Long.parseLong(argument0)) {
+        ActiveExecution<?> execution = null;
+        for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+            if (e.getId().equals(Long.parseLong(argument0))) {
                 execution = e;
                 break;
             }
@@ -141,9 +149,8 @@ public class UIMExecution implements Action {
         return execution;
     }
 
-
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void start(PrintStream out) throws StorageEngineException {
-
 
         if (argument0 == null || argument1 == null) {
             out.println("No can do. The correct syntax is: start <workflow> <collection>");
@@ -161,7 +168,7 @@ public class UIMExecution implements Action {
         } else if (collection == null) {
             printCollections(out, storage, storage.getAllCollections());
 
-        } else  {
+        } else {
             Properties properties = new Properties();
             if (argument2 != null) {
                 String[] split = argument2.split("&");
@@ -174,10 +181,11 @@ public class UIMExecution implements Action {
             }
 
             out.println();
-            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" + collection.getMnemonic() + "' with properties:" + properties.toString());
-            
+            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
+                        collection.getMnemonic() + "' with properties:" + properties.toString());
 
-            ActiveExecution<?> execution = orchestrator.executeWorkflow(workflow, collection, properties);
+            ActiveExecution<?> execution = orchestrator.executeWorkflow(workflow, collection,
+                    properties);
             execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
 
             try {
@@ -188,18 +196,21 @@ public class UIMExecution implements Action {
         }
     }
 
-    private void printProviders(PrintStream out, StorageEngine storage, List<Provider> providers) {
+    @SuppressWarnings("unused")
+    private void printProviders(PrintStream out, StorageEngine<?> storage,
+            List<Provider<?>> providers) {
         out.println("No provider specified. Possible choices are:");
         for (int i = 0; i < providers.size(); i++) {
-            Provider p = providers.get(i);
+            Provider<?> p = providers.get(i);
             out.println(i + ") " + p.getName());
         }
     }
 
-    private void printCollections(PrintStream out, StorageEngine storage, List<Collection> collections) {
+    private void printCollections(PrintStream out, StorageEngine<?> storage,
+            List<Collection<?>> collections) {
         out.println("No collection specified. Possible choices are:");
         for (int i = 0; i < collections.size(); i++) {
-            Collection collection = collections.get(i);
+            Collection<?> collection = collections.get(i);
             out.println(i + ") " + collection.getMnemonic() + ", " + collection.getName());
         }
     }
@@ -217,27 +228,25 @@ public class UIMExecution implements Action {
         if (orchestrator.getActiveExecutions().isEmpty()) {
             out.println("No active executions.");
         } else {
-            for (ActiveExecution e : orchestrator.getActiveExecutions()) {
-                out.println(String.format("Execution %d: Workflow %s, data set %s, started=" + df.format(e.getStartTime()) , e.getId(), e.getWorkflow().getName(), e.getDataSet()));
+            for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+                out.println(String.format(
+                        "Execution %d: Workflow %s, data set %s, started=" +
+                                df.format(e.getStartTime()), e.getId(), e.getWorkflow().getName(),
+                        e.getDataSet()));
             }
         }
     }
 
-    private String getDataSetName(UimEntity dataSet) {
-        if (dataSet instanceof Collection) {
-            return ((Collection) dataSet).getName();
-        }
-        if (dataSet instanceof Provider) {
-            return ((Provider) dataSet).getName();
-        }
-        if (dataSet instanceof MetaDataRecord) {
-            return "MetaDataRecord " + dataSet.getId();
-        }
+    @SuppressWarnings("unused")
+    private String getDataSetName(UimEntity<?> dataSet) {
+        if (dataSet instanceof Collection) { return ((Collection<?>)dataSet).getName(); }
+        if (dataSet instanceof Provider) { return ((Provider<?>)dataSet).getName(); }
+        if (dataSet instanceof MetaDataRecord) { return "MetaDataRecord " + dataSet.getId(); }
         if (dataSet instanceof Request) {
-            Request request = ((Request) dataSet);
-            return "Request on collection '" + request.getCollection().getName() + "' at " + df.format(request.getDate());
+            Request<?> request = ((Request<?>)dataSet);
+            return "Request on collection '" + request.getCollection().getName() + "' at " +
+                   df.format(request.getDate());
         }
-
         return "There is no spoon.";
     }
 }
