@@ -247,6 +247,14 @@ public interface StorageEngine<I> {
      * @throws StorageEngineException
      */
     MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
+    
+    /**
+     * @param ids
+     *            unique IDs, unique over collection, provider, ...
+     * @return metadata records for the provided IDs
+     * @throws StorageEngineException
+     */
+    List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException;
 
     /**
      * @param request

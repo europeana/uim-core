@@ -171,6 +171,11 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     public MetaDataRecord<Long> getMetaDataRecord(Long id) {
         return null;
     }
+    
+    @Override
+    public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> id) {
+        return null;
+    }
 
     @Override
     public Long[] getByRequest(Request<Long> request) {

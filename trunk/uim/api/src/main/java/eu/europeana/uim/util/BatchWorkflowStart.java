@@ -170,10 +170,13 @@ public class BatchWorkflowStart implements WorkflowStart {
                     Object[] poll = context.getValue(DATA_KEY).batches.poll(500,
                             TimeUnit.MILLISECONDS);
                     if (poll != null) {
-                        MetaDataRecord[] mdrs = new MetaDataRecord[poll.length];
-                        for (int i = 0; i < poll.length; i++) {
-                            mdrs[i] = storage.getMetaDataRecord(poll[i]);
-                        }
+                        List<MetaDataRecord> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
+                        MetaDataRecord[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
+                            
+//                        MetaDataRecord[] mdrs = new MetaDataRecord[poll.length];
+//                        for (int i = 0; i < poll.length; i++) {
+//                            mdrs[i] = storage.getMetaDataRecord(poll[i]);
+//                        }
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord mdr = mdrs[i];

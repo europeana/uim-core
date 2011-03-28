@@ -119,6 +119,15 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public MetaDataRecord<Long> getMetaDataRecord(Long id) {
         return metadatas.get(id);
     }
+    
+    @Override
+    public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> ids) {
+        List<MetaDataRecord<Long>> records = new ArrayList<MetaDataRecord<Long>>();
+        for (Long id : ids) {
+            records.add(metadatas.get(id));
+        }
+        return records;
+    }
 
     @Override
     public Provider<Long> createProvider() {
