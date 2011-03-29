@@ -8,7 +8,6 @@
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
         <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>europeana-uim-gui-gwt</artifactId>
@@ -122,47 +121,6 @@
                 </configuration>
             </plugin>
 
-
-            <!--
-                the state of this mechanism seems to be rather broken.
-                we depend on Gogo >= 0.6 for the karaf shell extension and on the aries blueprint implementation
-                those fare well under felix 3.something but the profiles are off track
-
-                it looks like creating an own profile following:
-                  http://paxrunner.ops4j.org/space/Advanced+profiles+topics
-
-                is in order. this was already done here:
-                  http://blog.knowhowlab.org/2010/06/pax-runnerexam-felix-300-gogo-support.html
-
-                however that didn't work right away, as we also do need the updated aries versions
-
-                it might be worth asking the pax devs what's going on / what's the best approach
-
-            <plugin>
-                <groupId>org.ops4j</groupId>
-                <artifactId>maven-pax-plugin</artifactId>
-                <version>1.4</version>
-                <configuration>
-                    <runner>1.5.0</runner>
-                    <framework>felix</framework>
-                    <provision>
-                        <param>- -log=INFO</param>
-                        <param>- -shell=karaf.shell</param>
-                        <param>- -profiles=gogo,compendium,core,web,war,aries.blueprint</param>
-                    </provision>
-                    <deployPoms>
-                        ${project.basedir}/../../common/pom.xml,
-                        ${project.basedir}/../../api/pom.xml,
-                        ${project.basedir}/../../plugins/basic/pom.xml,
-                        ${project.basedir}/../../plugins/dummy/pom.xml,
-                        ${project.basedir}/../../storage/memory/pom.xml,
-                        ${project.basedir}/../../workflows/dummy/pom.xml
-                    </deployPoms>
-                </configuration>
-
-            </plugin>
-        -->
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -179,9 +137,7 @@
                     </classpathContainers>
                 </configuration>
             </plugin>
-
         </plugins>
-
     </build>
 
     <dependencies>
@@ -189,26 +145,25 @@
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
             <version>${gwtVersion}</version>
-            <scope>compile</scope>
         </dependency>
+        
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>com.google</groupId>
             <artifactId>gwt-incubator</artifactId>
             <version>20101117-r1766</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -216,54 +171,12 @@
             <artifactId>org.osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Pax Web provides an (extended) implementation of the OSGI HttpService and it comes by default with Karaf -->
-        <!--
-        <dependency>
-            <groupId>org.ops4j.pax.web</groupId>
-            <artifactId>pax-web-api</artifactId>
-            <- Be dead sure this is the same freaking version as the one coming with Karaf or you will
-                 hear yourself curse a lot ->
-            <version>0.7.3</version>
-            <scope>provided</scope>
-        </dependency>-->
-
+        
     </dependencies>
-
-
-    <repositories>
-        <repository>
-            <id>europeanalabs.eu</id>
-            <name>europeanalabs.eu-releases</name>
-            <url>http://europeanalabs.eu/artifactory/assets</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <!--
-        <repository>
-            <id>pax-runner-profiles</id>
-            <url>http://scm.ops4j.org/repos/ops4j/projects/pax/runner-repository/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        -->
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>ops4j.releases</id>
-            <url>http://repository.ops4j.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>
