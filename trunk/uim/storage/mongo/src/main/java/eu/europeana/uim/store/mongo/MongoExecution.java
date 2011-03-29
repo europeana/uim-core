@@ -12,7 +12,7 @@ import eu.europeana.uim.store.Execution;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongoExecution extends AbstractMongoEntity implements Execution {
+public class MongoExecution<Long> extends AbstractMongoEntity<Long> implements Execution<Long> {
 
     private boolean isActive;
     private Date startTime;
@@ -26,7 +26,7 @@ public class MongoExecution extends AbstractMongoEntity implements Execution {
     public MongoExecution() {
     }
 
-    public MongoExecution(long id) {
+    public MongoExecution(Long id) {
         super(id);
     }
 

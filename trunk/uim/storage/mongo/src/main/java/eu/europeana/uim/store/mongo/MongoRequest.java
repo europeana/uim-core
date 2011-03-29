@@ -1,17 +1,17 @@
 package eu.europeana.uim.store.mongo;
 
+import java.util.Date;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
 
-import java.util.Date;
-
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongoRequest extends AbstractMongoEntity implements Request {
+public class MongoRequest<Long> extends AbstractMongoEntity<Long> implements Request<Long> {
 
 
     @Reference
@@ -22,12 +22,12 @@ public class MongoRequest extends AbstractMongoEntity implements Request {
     public MongoRequest() {
     }
 
-    public MongoRequest(long id, MongodbCollection c) {
+    public MongoRequest(Long id, MongodbCollection c) {
         super(id);
         this.collection = c;
     }
 
-    public MongoRequest(long id, MongodbCollection c, Date d) {
+    public MongoRequest(Long id, MongodbCollection c, Date d) {
         super(id);
         this.collection = c;
         this.date = d;

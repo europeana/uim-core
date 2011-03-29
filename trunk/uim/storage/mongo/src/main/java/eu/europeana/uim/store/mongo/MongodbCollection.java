@@ -11,7 +11,7 @@ import eu.europeana.uim.store.Provider;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongodbCollection extends AbstractMongoEntity implements Collection {
+public class MongodbCollection<Long> extends AbstractMongoEntity<Long> implements Collection<Long> {
 
     private String language;
 
@@ -25,7 +25,7 @@ public class MongodbCollection extends AbstractMongoEntity implements Collection
     public MongodbCollection() {
     }
 
-    public MongodbCollection(long id, Provider p) {
+    public MongodbCollection(Long id, Provider p) {
         super(id);
         this.provider = (MongoProvider) p;
     }

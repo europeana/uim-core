@@ -2,14 +2,14 @@ package eu.europeana.uim.store.mongo;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import eu.europeana.uim.store.UimEntity;
+import eu.europeana.uim.store.DataSet;
 import org.bson.types.ObjectId;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class AbstractMongoEntity implements UimEntity {
+public class AbstractMongoEntity<Long> implements DataSet<Long> {
 
     public static final String LID = "lid";
 
@@ -17,12 +17,12 @@ public class AbstractMongoEntity implements UimEntity {
     private ObjectId id;
 
     // long id for now
-    private long lid;
+    private Long lid;
 
     private String mnemonic;
     private String name;
 
-    public long getId() {
+    public Long getId() {
         return lid;
     }
 
@@ -50,7 +50,7 @@ public class AbstractMongoEntity implements UimEntity {
 
     }
 
-    public AbstractMongoEntity(long id) {
+    public AbstractMongoEntity(Long id) {
         this.lid = id;
     }
 
@@ -61,7 +61,8 @@ public class AbstractMongoEntity implements UimEntity {
 
         AbstractMongoEntity that = (AbstractMongoEntity) o;
 
-        if (lid != that.lid) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (lid != null ? !lid.equals(that.lid) : that.lid != null) return false;
         if (mnemonic != null ? !mnemonic.equals(that.mnemonic) : that.mnemonic != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
@@ -70,7 +71,8 @@ public class AbstractMongoEntity implements UimEntity {
 
     @Override
     public int hashCode() {
-        int result = (int) (lid ^ (lid >>> 32));
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (lid != null ? lid.hashCode() : 0);
         result = 31 * result + (mnemonic != null ? mnemonic.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;

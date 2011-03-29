@@ -1,32 +1,32 @@
 package eu.europeana.uim.store.mongo;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import eu.europeana.uim.store.Provider;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongoProvider extends AbstractMongoEntity implements Provider {
+public class MongoProvider extends AbstractMongoEntity<Long> implements Provider<Long> {
 
     private boolean aggregator;
     private String oaiBaseUrl;
     private String oaiMetadataPrefix;
 
     @Reference
-    private List<Provider> relatedOut = new ArrayList<Provider>();
+    private Set<Provider<Long>> relatedOut = new HashSet<Provider<Long>>();
     @Reference
-    private List<Provider> relatedIn = new ArrayList<Provider>();
+    private Set<Provider<Long>> relatedIn = new HashSet<Provider<Long>>();
 
 
     public MongoProvider() {
     }
 
-    public MongoProvider(long id) {
+    public MongoProvider(Long id) {
         super(id);
     }
 
@@ -36,11 +36,11 @@ public class MongoProvider extends AbstractMongoEntity implements Provider {
 	
 
 
-    public List<Provider> getRelatedOut() {
+    public Set<Provider<Long>> getRelatedOut() {
         return relatedOut;
     }
 
-    public List<Provider> getRelatedIn() {
+    public Set<Provider<Long>> getRelatedIn() {
         return relatedIn;
     }
 
