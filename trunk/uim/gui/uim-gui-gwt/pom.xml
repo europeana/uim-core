@@ -16,7 +16,7 @@
     <name>Unified Ingestion Manager: GWT User Interface</name>
 
     <properties>
-        <gwtVersion>2.1.0</gwtVersion>
+        <gwtVersion>2.2.0</gwtVersion>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 
@@ -30,7 +30,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.1.0-1</version>
+                <version>2.2.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -172,13 +172,13 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
-            <version>2.1.0</version>
+            <version>${gwtVersion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>2.1.0</version>
+            <version>${gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

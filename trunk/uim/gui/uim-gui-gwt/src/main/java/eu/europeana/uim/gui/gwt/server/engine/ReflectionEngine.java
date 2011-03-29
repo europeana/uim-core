@@ -49,7 +49,9 @@ public class ReflectionEngine extends Engine {
 			registry = (Registry) registryClazz.newInstance();
 			
 			Class<?> orchestratorClazz = Class.forName("eu.europeana.uim.orchestration.UIMOrchestrator");
-			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class).newInstance(registry);
+			Class<?> workflowClazz = Class.forName("eu.europeana.uim.orchestration.UIMWorkflowProcessor");
+			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, workflowClazz.getClass()).newInstance(registry, workflowClazz.getConstructor(Registry.class).newInstance(registry));
+//			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, UIMWorkflowProcessor.class).newInstance(registry, new UIMWorkflowProcessor(registry));
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
