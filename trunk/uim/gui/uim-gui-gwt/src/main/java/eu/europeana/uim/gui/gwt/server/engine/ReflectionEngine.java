@@ -5,6 +5,7 @@ import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.orchestration.UIMWorkflowProcessor;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -50,8 +51,8 @@ public class ReflectionEngine extends Engine {
 			
 			Class<?> orchestratorClazz = Class.forName("eu.europeana.uim.orchestration.UIMOrchestrator");
 			Class<?> workflowClazz = Class.forName("eu.europeana.uim.orchestration.UIMWorkflowProcessor");
-			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, workflowClazz.getClass()).newInstance(registry, workflowClazz.getConstructor(Registry.class).newInstance(registry));
-//			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, UIMWorkflowProcessor.class).newInstance(registry, new UIMWorkflowProcessor(registry));
+			Object workflowObject = workflowClazz.getConstructor(Registry.class).newInstance(registry);
+			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, workflowObject.getClass()).newInstance(registry, workflowObject);
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
