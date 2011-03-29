@@ -5,6 +5,7 @@ import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.orchestration.UIMWorkflowProcessor;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -36,12 +37,11 @@ public class ReflectionEngine extends Engine {
 	};
 	
 	private static String[] plugins = new String[]{
-		"eu.europeana.uim.workflow.SysoutPlugin"
+		"eu.europeana.uim.workflows.SysoutPlugin"
 	};
 	
 	private static String[] workflows = new String[]{
-		"eu.europeana.uim.workflow.SysoutWorkflow",
-		"org.theeuropeanlibrary.uim.oaipmh.OaiPmhWorkflow",
+		"eu.europeana.uim.workflows.SysoutWorkflow"
 	};
 	
 	public ReflectionEngine() {
@@ -50,7 +50,7 @@ public class ReflectionEngine extends Engine {
 			registry = (Registry) registryClazz.newInstance();
 			
 			Class<?> orchestratorClazz = Class.forName("eu.europeana.uim.orchestration.UIMOrchestrator");
-			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class).newInstance(registry);
+			ochestrator = (Orchestrator) orchestratorClazz.getConstructor(Registry.class, UIMWorkflowProcessor.class).newInstance(registry, new UIMWorkflowProcessor(registry));
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
