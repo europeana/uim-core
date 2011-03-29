@@ -3,9 +3,11 @@ package eu.europeana.uim.store.mongo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.code.morphia.annotations.Transient;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import eu.europeana.uim.MetaDataRecord;
@@ -13,17 +15,19 @@ import eu.europeana.uim.TKey;
 import eu.europeana.uim.store.Request;
 
 /**
+ * Mongo implementation of the {@link MetaDataRecord}. We make use of Mongo's document-storage nature and store MDRs as basic documents (i.e. basic mongo db objects).
+ * In order to conform to the {@link MetaDataRecord} interface, we wrap a {@link DBObject} which is the object persisted by MongoDB.
+ *
+ * We store unqualified fields with the prefix FIELD, qualified fields have as prefix the name() of the qualifying Enum.
+ *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class MongoMetadataRecord implements MetaDataRecord {
+public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
 
     public static final String FIELD = "_field_";
     private DBObject object = new BasicDBObject();
     private Request request;
     private String identifier;
-
-    @Transient
-    private HashMap<TKey<?, ?>, Object> values = new HashMap<TKey<?, ?>, Object>();
 
     public MongoMetadataRecord(DBObject object, Request request, String identifier, long lid) {
         this.object = object;
@@ -35,7 +39,7 @@ public class MongoMetadataRecord implements MetaDataRecord {
     }
 
 
-    public long getId() {
+    public Long getId() {
         return (Long) object.get(AbstractMongoEntity.LID);
     }
 
@@ -52,7 +56,6 @@ public class MongoMetadataRecord implements MetaDataRecord {
     }
 
 
-    @Override
     public String getIdentifier() {
         return identifier;
     }
@@ -66,8 +69,10 @@ public class MongoMetadataRecord implements MetaDataRecord {
         unqualifiedFields.put(FIELD + "0", value);
     }
 
-    public <N, T extends Serializable> T getFirstField(TKey<N, T> nttKey) {
-        return getField(nttKey).get(0);
+
+    @Override
+    public <N, T> T getFirstField(TKey<N, T> nttKey) {
+        return getField(nttKey).get(0).getValue();
     }
 
     public <N, T extends Serializable> void setFirstQField(TKey<N, T> nttKey, String qualifier, T value) {
@@ -84,99 +89,102 @@ public class MongoMetadataRecord implements MetaDataRecord {
         values.put(FIELD + "0", value);
     }
 
-    public <N, T extends Serializable> void addField(TKey<N, T> nArrayListTKey, T value) {
-        BasicDBObject unqualifiedFields = (BasicDBObject) object.get(fieldName(nArrayListTKey.getFullName()));
+    public <N, T> void addField(TKey<N, T> key, T value) {
+        BasicDBObject unqualifiedFields = (BasicDBObject) object.get(fieldName(key.getFullName()));
         if (unqualifiedFields == null) {
             unqualifiedFields = new BasicDBObject();
-            object.put(fieldName(nArrayListTKey.getFullName()), unqualifiedFields);
+            object.put(fieldName(key.getFullName()), unqualifiedFields);
         }
         unqualifiedFields.put(FIELD + new Integer(unqualifiedFields.size()).toString(), value);
     }
 
     @Override
-    public <N, T extends Serializable> void addQField(TKey<N, T> nArrayListTKey, String qualifier, T value) {
-        BasicDBObject qFields = (BasicDBObject) object.get(fieldName(nArrayListTKey.getFullName()));
+    public <N, T> void addQField(TKey<N, T> key, T value, Set<Enum<?>> qualifiers) {
+        BasicDBObject qFields = (BasicDBObject) object.get(fieldName(key.getFullName()));
         if (qFields == null) {
             qFields = new BasicDBObject();
-            object.put(fieldName(nArrayListTKey.getFullName()), qFields);
+            object.put(fieldName(key.getFullName()), qFields);
+        }
 
+        // TODO adapt this to also store the type of the Enum<?> values so that we can re-hydrate them when retrieving them from the storage.
+
+        for (Enum<?> q : qualifiers) {
+            qFields.put(q.name(), value);
         }
-        BasicDBObject values = (BasicDBObject) qFields.get(qualifier);
-        if (values == null) {
-            values = new BasicDBObject();
-            qFields.put(qualifier, values);
-        }
-        values.put(FIELD + new Integer(values.size()).toString(), value);
+
     }
 
-    public <N, T extends Serializable> List<T> getField(TKey<N, T> nttKey) {
-        List<T> res = new ArrayList<T>();
+
+    public <N, T> List<QualifiedValue<T>> getField(TKey<N, T> nttKey) {
+        Map<String, QualifiedValue<T>> qFields = new HashMap<String, QualifiedValue<T>>();
+        List<QualifiedValue<T>> res = new ArrayList<QualifiedValue<T>>();
 
         BasicDBObject values = (BasicDBObject) object.get(fieldName(nttKey.getFullName()));
         for (String s : values.keySet()) {
             // unqualified fields
             if (s.startsWith(FIELD)) {
-                res.add((T) values.get(s));
+                QualifiedValue<T> val = new QualifiedValue<T>((T) values.get(s), new HashSet<Enum<?>>());
+                res.add(val);
             } else {
+
                 // qualified fields
-                BasicDBObject qValues = (BasicDBObject) values.get(s);
-                for (String q : qValues.keySet()) {
-                    if (q.startsWith(FIELD)) {
-                        res.add((T) qValues.get(q));
-                    } else {
-                        throw new RuntimeException("Corrupted MDR");
-                    }
+                T value = (T) values.get(s);
+                QualifiedValue<T> v = qFields.get(s);
+                if (v == null) {
+                    Set<Enum<?>> qualifiers = new HashSet<Enum<?>>();
+                    v = new QualifiedValue<T>(value, qualifiers);
+                    qFields.put(s, v);
                 }
+
+                // add the qualifiers
+
+                // TODO Enum<?> deserialization
+                // we need to store the type of the Enum (class) so we can re-create it via reflection
+//                v.getQualifiers().add( dehydrated qualifier )
+
+
             }
         }
         return res;
     }
 
-    public <N, T extends Serializable> List<T> getQField(TKey<N, T> nttKey, String qualifier) {
+    @Override
+    public <N, T> List<T> getQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
         List<T> res = new ArrayList<T>();
-        BasicDBObject data = (BasicDBObject) object.get(fieldName(nttKey.getFullName()));
+        BasicDBObject data = (BasicDBObject) object.get(fieldName(key.getFullName()));
         if (data == null) {
             data = new BasicDBObject();
-            object.put(fieldName(nttKey.getFullName()), data);
+            object.put(fieldName(key.getFullName()), data);
         }
-        BasicDBObject qualifiedValues = (BasicDBObject) data.get(qualifier);
-        if (qualifiedValues == null) {
-            qualifiedValues = new BasicDBObject();
-            data.put(qualifier, qualifiedValues);
-        }
-        for (String s : qualifiedValues.keySet()) {
-            if (s.startsWith(FIELD)) {
-                res.add((T) qualifiedValues.get(s));
-            }
+
+        for(Enum<?> qualifier : qualifiers) {
+            T value = (T) object.get(qualifier.name());
+            res.add(value);
         }
         return res;
     }
 
-    public <N, T extends Serializable> T getFirstQField(TKey<N, T> nttKey, String qualifier) {
-        List<T> list = getQField(nttKey, qualifier);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
+    @Override
+    public <N, T> T getFirstQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
+        return getQField(key, qualifiers).get(0);
+    }
+
+    @Override
+    public <N, T> List<T> getPlainField(TKey<N, T> key) {
+        // TODO
         return null;
     }
+
+    @Override
+    public <N, T> List<QualifiedValue<T>> deleteField(TKey<N, T> key) {
+        // TODO
+        return null;
+    }
+
 
 
     private String fieldName(String name) {
         return name.replaceAll(".", "_");
-    }
-
-    @Override
-    public <NS, T extends Serializable> void putTransient(TKey<NS, T> key, T value) {
-        values.put(key, value);
-    }
-
-    @Override
-    public <NS, T extends Serializable> T getTransient(TKey<NS, T> key) {
-        Object object = values.get(key);
-        if (object != null) {
-            return (T) object;
-        }
-        return null;
     }
 
 }
