@@ -26,7 +26,6 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
-import eu.europeana.uim.store.Execution;
 
 /**
  * The overview panel with current and past executions
@@ -195,7 +194,7 @@ public class OverviewPanel extends ScrollPanel {
         dataProvider.setList(pastExecutions);
         dataProvider.addDataDisplay(pastExecutionsCellTable);
 
-        final SingleSelectionModel<Execution> selectionModel = new SingleSelectionModel<Execution>();
+        final SingleSelectionModel<ExecutionDTO> selectionModel = new SingleSelectionModel<ExecutionDTO>();
         pastExecutionsCellTable.setSelectionModel(selectionModel);
 
         CellTableUtils.addColumn(pastExecutionsCellTable, new TextCell(), "Workflow", new CellTableUtils.GetValue<String, ExecutionDTO>() {
@@ -209,13 +208,13 @@ public class OverviewPanel extends ScrollPanel {
             }
         });
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
-        CellTableUtils.addColumn(pastExecutionsCellTable, new DateCell(dtf), "Start time", new CellTableUtils.GetValue<Date, Execution>() {
-            public Date getValue(Execution execution) {
+        CellTableUtils.addColumn(pastExecutionsCellTable, new DateCell(dtf), "Start time", new CellTableUtils.GetValue<Date, ExecutionDTO>() {
+            public Date getValue(ExecutionDTO execution) {
                 return execution.getStartTime();
             }
         });
-        CellTableUtils.addColumn(pastExecutionsCellTable, new DateCell(dtf), "End time", new CellTableUtils.GetValue<Date, Execution>() {
-            public Date getValue(Execution execution) {
+        CellTableUtils.addColumn(pastExecutionsCellTable, new DateCell(dtf), "End time", new CellTableUtils.GetValue<Date, ExecutionDTO>() {
+            public Date getValue(ExecutionDTO execution) {
                 return execution.getEndTime();
             }
         });
