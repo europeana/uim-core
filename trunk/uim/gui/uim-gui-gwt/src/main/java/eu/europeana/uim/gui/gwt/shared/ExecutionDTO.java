@@ -7,11 +7,13 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class Execution implements IsSerializable, Comparable<Execution> {
+public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
 
     private Long id;
     private String name;
     private String workflow;
+    
+    private ProgressDTO progress;
     
     private int scheduled;
     private int completed;
@@ -23,7 +25,11 @@ public class Execution implements IsSerializable, Comparable<Execution> {
 	private String dataset;
 	private boolean done;
 
-    public Execution() {
+    public ExecutionDTO() {
+    }
+
+    public ExecutionDTO(long id) {
+    	this.id = id;
     }
 
     public String getWorkflow() {
@@ -84,6 +90,15 @@ public class Execution implements IsSerializable, Comparable<Execution> {
         this.name = name;
     }
 
+
+    public ProgressDTO getProgress() {
+		return progress;
+	}
+
+	public void setProgress(ProgressDTO progress) {
+		this.progress = progress;
+	}
+
 	public int getScheduled() {
 		return scheduled;
 	}
@@ -116,13 +131,9 @@ public class Execution implements IsSerializable, Comparable<Execution> {
         return done;
     }
 
-    public int getProgress() {
-        return this.getCompleted() + this.getFailure();
-    }
-
 
     @Override
-    public int compareTo(Execution execution) {
+    public int compareTo(ExecutionDTO execution) {
         return execution.getStartTime().compareTo(this.getStartTime());
     }
 }

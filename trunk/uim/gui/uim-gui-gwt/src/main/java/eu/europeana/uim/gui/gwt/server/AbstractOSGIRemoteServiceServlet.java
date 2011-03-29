@@ -2,6 +2,8 @@ package eu.europeana.uim.gui.gwt.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import eu.europeana.uim.gui.gwt.server.engine.Engine;
+
 /**
  * RemoteServiceServlet that is integrated with the UIM OSGI platform.
  *
@@ -11,10 +13,10 @@ public class AbstractOSGIRemoteServiceServlet extends RemoteServiceServlet {
 
     private static final String DEVMODE = "devmode";
 
-    private final UIMEngine engine;
+    private final Engine engine;
 
     public AbstractOSGIRemoteServiceServlet() {
-        this.engine = UIMDependenciesActivator.getUIMEngine();
+        this.engine = Engine.getInstance();
     }
 
     @Override
@@ -32,7 +34,7 @@ public class AbstractOSGIRemoteServiceServlet extends RemoteServiceServlet {
         super.checkPermutationStrongName();
     }
 
-    protected UIMEngine getEngine() {
+    protected Engine getEngine() {
         if(engine == null) {
             throw new RuntimeException("No engine found. Make sure the OSGi platform is running and all UIM modules are started");
         }

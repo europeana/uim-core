@@ -10,11 +10,14 @@ import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.gwt.client.OrchestrationService;
-import eu.europeana.uim.gui.gwt.shared.Collection;
-import eu.europeana.uim.gui.gwt.shared.Execution;
-import eu.europeana.uim.gui.gwt.shared.Provider;
-import eu.europeana.uim.gui.gwt.shared.StepStatus;
-import eu.europeana.uim.gui.gwt.shared.Workflow;
+import eu.europeana.uim.gui.gwt.shared.CollectionDTO;
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
+import eu.europeana.uim.gui.gwt.shared.ProviderDTO;
+import eu.europeana.uim.gui.gwt.shared.StepStatusDTO;
+import eu.europeana.uim.gui.gwt.shared.WorkflowDTO;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.UimEntity;
 
 /**
@@ -29,50 +32,50 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         super();
     }
 
-    private Map<Long, Provider>  wrappedProviders  = new HashMap<Long, Provider>();
+    private Map<Long, ProviderDTO>  wrappedProviderDTOs  = new HashMap<Long, ProviderDTO>();
 
-    private Map<Long, Execution> wrappedExecutions = new HashMap<Long, Execution>();
+    private Map<Long, ExecutionDTO> wrappedExecutionDTOs = new HashMap<Long, ExecutionDTO>();
 
     @Override
-    public List<Workflow> getWorkflows() {
-        List<Workflow> res = new ArrayList<Workflow>();
+    public List<WorkflowDTO> getWorkflows() {
+        List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
         List<eu.europeana.uim.workflow.Workflow> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
             for (eu.europeana.uim.workflow.Workflow w : workflows) {
-                res.add(new Workflow(w.getName(), w.getDescription()));
+                res.add(new WorkflowDTO(w.getName(), w.getDescription()));
             }
         }
         return res;
     }
 
     @Override
-    public List<Provider> getProviders() {
-        List<Provider> res = new ArrayList<Provider>();
+    public List<ProviderDTO> getProviders() {
+        List<ProviderDTO> res = new ArrayList<ProviderDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            List<eu.europeana.uim.store.Provider<Long>> providers = storage.getAllProviders();
+            List<Provider<Long>> providers = storage.getAllProviders();
             if (providers != null) {
-                for (eu.europeana.uim.store.Provider<Long> p : providers) {
-                    Provider provider = getWrappedProvider(p.getId());
+                for (Provider<Long> p : providers) {
+                    ProviderDTO provider = getWrappedProviderDTO(p.getId());
                     res.add(provider);
                 }
             }
         } catch (StorageEngineException e) {
-            res.add(new Provider(0l, "Failed to load provider. Notify system administrator."));
+            res.add(new ProviderDTO(0l, "Failed to load provider. Notify system administrator."));
             throw new RuntimeException(e);
         }
         return res;
     }
 
     @Override
-    public List<Collection> getCollections(Long provider) {
-        List<Collection> res = new ArrayList<Collection>();
+    public List<CollectionDTO> getCollections(Long provider) {
+        List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            eu.europeana.uim.store.Provider<Long> p = storage.getProvider(provider);
-            List<eu.europeana.uim.store.Collection<Long>> cols = storage.getCollections(p);
-            for (eu.europeana.uim.store.Collection<Long> col : cols) {
-                res.add(new Collection(col.getId(), col.getName(), getWrappedProvider(provider),
+            Provider<Long> p = storage.getProvider(provider);
+            List<Collection<Long>> cols = storage.getCollections(p);
+            for (Collection<Long> col : cols) {
+                res.add(new CollectionDTO(col.getId(), col.getName(), getWrappedProviderDTO(provider),
                         storage.getTotalByCollection(col)));
             }
         } catch (StorageEngineException e) {
@@ -83,14 +86,14 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public List<Collection> getAllCollections() {
-        List<Collection> res = new ArrayList<Collection>();
+    public List<CollectionDTO> getAllCollections() {
+        List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            List<eu.europeana.uim.store.Collection<Long>> cols = storage.getAllCollections();
-            for (eu.europeana.uim.store.Collection<Long> col : cols) {
-                res.add(new Collection(col.getId(), col.getName(),
-                        getWrappedProvider(col.getProvider().getId()),
+            List<Collection<Long>> cols = storage.getAllCollections();
+            for (Collection<Long> col : cols) {
+                res.add(new CollectionDTO(col.getId(), col.getName(),
+                        getWrappedProviderDTO(col.getProvider().getId()),
                         storage.getTotalByCollection(col)));
             }
         } catch (StorageEngineException e) {
@@ -101,13 +104,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public List<Execution> getActiveExecutions() {
-        List<Execution> r = new ArrayList<Execution>();
+    public List<ExecutionDTO> getActiveExecutions() {
+        List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            for (eu.europeana.uim.store.Execution<Long> execution : storage.getAllExecutions()) {
+            for (Execution<Long> execution : storage.getAllExecutions()) {
                 if (execution.isActive()) {
-                    r.add(getWrappedExecution(execution.getId(), execution));
+                    r.add(getWrappedExecutionDTO(execution.getId(), execution));
                 }
             }
         } catch (StorageEngineException e) {
@@ -118,13 +121,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public List<Execution> getPastExecutions() {
-        List<Execution> r = new ArrayList<Execution>();
+    public List<ExecutionDTO> getPastExecutions() {
+        List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            for (eu.europeana.uim.store.Execution<Long> execution : storage.getAllExecutions()) {
+            for (Execution<Long> execution : storage.getAllExecutions()) {
                 if (!execution.isActive()) {
-                    r.add(getWrappedExecution(execution.getId(), execution));
+                    r.add(getWrappedExecutionDTO(execution.getId(), execution));
                 }
             }
         } catch (StorageEngineException e) {
@@ -135,20 +138,20 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public Execution startCollection(String workflow, Long collection) {
+    public ExecutionDTO startCollection(String workflow, Long collection) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            eu.europeana.uim.store.Collection<Long> c = storage.getCollection(collection);
+            Collection<Long> c = storage.getCollection(collection);
             if (c == null) { throw new RuntimeException("Error: cannot find collection " +
                                                         collection); }
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
-            Execution execution = new Execution();
+            ExecutionDTO execution = new ExecutionDTO();
 
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
             ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c);
             ae.getMonitor().addListener(monitor);
-            populateWrappedExecution(execution, ae, w, c);
+            populateWrappedExecutionDTO(execution, ae, w, c);
 
             return execution;
         } catch (StorageEngineException e) {
@@ -159,18 +162,18 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public Execution startProvider(String workflow, Long provider) {
+    public ExecutionDTO startProvider(String workflow, Long provider) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            eu.europeana.uim.store.Provider<Long> p = storage.getProvider(provider);
+            Provider<Long> p = storage.getProvider(provider);
             if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
-            Execution execution = new Execution();
+            ExecutionDTO execution = new ExecutionDTO();
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
             ActiveExecution<Long> ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
             ae.getMonitor().addListener(monitor);
 
-            populateWrappedExecution(execution, ae, w, p);
+            populateWrappedExecutionDTO(execution, ae, w, p);
             return execution;
         } catch (StorageEngineException e) {
             // TODO Auto-generated catch block
@@ -179,7 +182,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return null;
     }
 
-    private void populateWrappedExecution(Execution execution, ActiveExecution<Long> ae,
+    private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
             eu.europeana.uim.workflow.Workflow w, UimEntity dataset) {
         execution.setId(ae.getId());
         execution.setName(w.getName() + "/" + dataset.toString());
@@ -189,22 +192,22 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         execution.setScheduled(ae.getScheduledSize());
         execution.setDone(ae.isFinished());
         execution.setStartTime(ae.getStartTime());
-        wrappedExecutions.put(ae.getId(), execution);
+        wrappedExecutionDTOs.put(ae.getId(), execution);
     }
 
     @Override
-    public Execution getExecution(Long id) {
-        return wrappedExecutions.get(id);
+    public ExecutionDTO getExecution(Long id) {
+        return wrappedExecutionDTOs.get(id);
     }
 
-    private Provider getWrappedProvider(Long provider) {
+    private ProviderDTO getWrappedProviderDTO(Long provider) {
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-        Provider wrapped = wrappedProviders.get(provider);
+        ProviderDTO wrapped = wrappedProviderDTOs.get(provider);
         if (wrapped == null) {
             try {
-                eu.europeana.uim.store.Provider<Long> p = storage.getProvider(provider);
-                wrapped = new Provider(p.getId(), p.getName());
-                wrappedProviders.put(provider, wrapped);
+                Provider<Long> p = storage.getProvider(provider);
+                wrapped = new ProviderDTO(p.getId(), p.getName());
+                wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -213,17 +216,17 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return wrapped;
     }
 
-    private Execution getWrappedExecution(Long execution, eu.europeana.uim.store.Execution e) {
-        Execution wrapped = wrappedExecutions.get(execution);
+    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution e) {
+        ExecutionDTO wrapped = wrappedExecutionDTOs.get(execution);
         if (wrapped == null) {
-            wrapped = new Execution();
+            wrapped = new ExecutionDTO();
             wrapped.setId(execution);
             wrapped.setActive(e.isActive());
             wrapped.setStartTime(e.getStartTime());
             wrapped.setEndTime(e.getEndTime());
             wrapped.setDataSet(e.getDataSet().getId().toString());
             wrapped.setName(e.getWorkflowName() + "/" + e.getDataSet().getId().toString());
-            wrappedExecutions.put(execution, wrapped);
+            wrappedExecutionDTOs.put(execution, wrapped);
         } else {
             // update what may have changed
             wrapped.setActive(e.isActive());
@@ -258,13 +261,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public List<StepStatus> getStatus(String workflow) {
-        List<StepStatus> res = new ArrayList<StepStatus>();
+    public List<StepStatusDTO> getStatus(String workflow) {
+        List<StepStatusDTO> res = new ArrayList<StepStatusDTO>();
         /*
-         * FIXME re-implement this List<WorkflowStepStatus> runtimeStatus =
+         * FIXME re-implement this List<WorkflowStepStatusDTO> runtimeStatus =
          * getEngine().getOrchestrator().getRuntimeStatus(getWorkflow(workflow)); for
-         * (WorkflowStepStatus wss : runtimeStatus) { StepStatus ss = new
-         * StepStatus(wss.getStep().getIdentifier(), (wss.getParent() != null ?
+         * (WorkflowStepStatusDTO wss : runtimeStatus) { StepStatusDTO ss = new
+         * StepStatusDTO(wss.getStep().getIdentifier(), (wss.getParent() != null ?
          * wss.getParent().getIdentifier() : null), wss.queueSize(), wss.successes(),
          * wss.failures()); res.add(ss); }
          */

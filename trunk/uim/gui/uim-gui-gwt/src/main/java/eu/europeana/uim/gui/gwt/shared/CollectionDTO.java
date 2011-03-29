@@ -3,20 +3,20 @@ package eu.europeana.uim.gui.gwt.shared;
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class Collection extends DataSource {
+public class CollectionDTO extends DataSourceDTO {
 
     private String name;
-    private Provider provider;
+    private ProviderDTO provider;
     private Integer total;
 
-    public Collection(Long id, String name, Provider provider, Integer total) {
+    public CollectionDTO(Long id, String name, ProviderDTO provider, Integer total) {
         super(id);
         this.name = name;
         this.provider = provider;
         this.total = total;
     }
 
-    public Collection() {
+    public CollectionDTO() {
         super();
     }
 
@@ -24,7 +24,7 @@ public class Collection extends DataSource {
         return name;
     }
 
-    public Provider getProvider() {
+    public ProviderDTO getProvider() {
         return provider;
     }
 
@@ -32,7 +32,7 @@ public class Collection extends DataSource {
         this.name = name;
     }
 
-    public void setProvider(Provider provider) {
+    public void setProvider(ProviderDTO provider) {
         this.provider = provider;
     }
 

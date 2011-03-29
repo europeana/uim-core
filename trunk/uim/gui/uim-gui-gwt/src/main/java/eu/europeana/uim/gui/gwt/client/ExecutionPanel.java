@@ -12,10 +12,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 
-import eu.europeana.uim.gui.gwt.shared.Collection;
-import eu.europeana.uim.gui.gwt.shared.Execution;
-import eu.europeana.uim.gui.gwt.shared.Provider;
-import eu.europeana.uim.gui.gwt.shared.Workflow;
+import eu.europeana.uim.gui.gwt.shared.CollectionDTO;
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
+import eu.europeana.uim.gui.gwt.shared.ProviderDTO;
+import eu.europeana.uim.gui.gwt.shared.WorkflowDTO;
 
 /**
  * The panel making it possible to run new executions
@@ -98,7 +98,7 @@ public class ExecutionPanel extends FlowPanel {
     private void executeCollection(String workflowId, String selectedDataSource, final Application application) {
         // start on collection
         Long collectionId = Long.parseLong(selectedDataSource);
-        orchestrationService.startCollection(workflowId, collectionId, new AsyncCallback<Execution>() {
+        orchestrationService.startCollection(workflowId, collectionId, new AsyncCallback<ExecutionDTO>() {
             @Override
             public void onFailure(Throwable throwable) {
                 // TODO panic
@@ -106,7 +106,7 @@ public class ExecutionPanel extends FlowPanel {
             }
 
             @Override
-            public void onSuccess(Execution execution) {
+            public void onSuccess(ExecutionDTO execution) {
                 application.getOverview().addExecution(execution);
             }
         });
@@ -115,7 +115,7 @@ public class ExecutionPanel extends FlowPanel {
     private void executeProvider(String workflowId, ListBox providerList, final Application application) {
         // start on provider
         Long providerId = Long.parseLong(providerList.getValue(providerList.getSelectedIndex()));
-        orchestrationService.startProvider(workflowId, providerId, new AsyncCallback<Execution>() {
+        orchestrationService.startProvider(workflowId, providerId, new AsyncCallback<ExecutionDTO>() {
             @Override
             public void onFailure(Throwable throwable) {
                 // TODO panic
@@ -123,14 +123,14 @@ public class ExecutionPanel extends FlowPanel {
             }
 
             @Override
-            public void onSuccess(Execution execution) {
+            public void onSuccess(ExecutionDTO execution) {
                 application.getOverview().addExecution(execution);
             }
         });
     }
 
     private void loadCollections(Long providerId, final ListBox collectionList) {
-        orchestrationService.getCollections(providerId, new AsyncCallback<List<Collection>>() {
+        orchestrationService.getCollections(providerId, new AsyncCallback<List<CollectionDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
@@ -138,13 +138,13 @@ public class ExecutionPanel extends FlowPanel {
             }
 
             @Override
-            public void onSuccess(List<Collection> collections) {
+            public void onSuccess(List<CollectionDTO> collections) {
                 collectionList.clear();
                 if (collections.size() > 0) {
                     // "all" option
                     collectionList.addItem("All collections", ALL_COLLECTIONS);
                 }
-                for (Collection collection : collections) {
+                for (CollectionDTO collection : collections) {
                     collectionList.addItem(collection.getName(), collection.getId().toString());
                 }
             }
@@ -153,7 +153,7 @@ public class ExecutionPanel extends FlowPanel {
 
     private void loadProviders(final ListBox providerList) {
         // load providers
-        orchestrationService.getProviders(new AsyncCallback<List<Provider>>() {
+        orchestrationService.getProviders(new AsyncCallback<List<ProviderDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
@@ -161,9 +161,9 @@ public class ExecutionPanel extends FlowPanel {
             }
 
             @Override
-            public void onSuccess(List<Provider> providers) {
+            public void onSuccess(List<ProviderDTO> providers) {
                 providerList.clear();
-                for (Provider p : providers) {
+                for (ProviderDTO p : providers) {
                     providerList.addItem(p.getName(), p.getId().toString());
                 }
             }
@@ -171,7 +171,7 @@ public class ExecutionPanel extends FlowPanel {
     }
 
     private void loadWorkflows(final ListBox workflowList) {
-        orchestrationService.getWorkflows(new AsyncCallback<List<Workflow>>() {
+        orchestrationService.getWorkflows(new AsyncCallback<List<WorkflowDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
@@ -179,8 +179,8 @@ public class ExecutionPanel extends FlowPanel {
             }
 
             @Override
-            public void onSuccess(List<Workflow> workflows) {
-                for (Workflow w : workflows) {
+            public void onSuccess(List<WorkflowDTO> workflows) {
+                for (WorkflowDTO w : workflows) {
                     workflowList.addItem(w.getName(), w.getName());
                 }
             }

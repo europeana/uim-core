@@ -1,5 +1,8 @@
 package eu.europeana.uim.gui.gwt.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.cell.client.NumberCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -10,10 +13,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
-import eu.europeana.uim.gui.gwt.shared.Collection;
 
-import java.util.ArrayList;
-import java.util.List;
+import eu.europeana.uim.gui.gwt.shared.CollectionDTO;
 
 /**
  * The panel displaying all collections
@@ -26,9 +27,9 @@ public class CollectionsPanel extends ScrollPanel {
 
     private Application application;
 
-    private final CellTable<Collection> collectionsCellTable = new CellTable<Collection>();
+    private final CellTable<CollectionDTO> collectionsCellTable = new CellTable<CollectionDTO>();
 
-    private List<Collection> collections = new ArrayList<Collection>();
+    private List<CollectionDTO> collections = new ArrayList<CollectionDTO>();
     private Timer collectionsRefreshTimer = new Timer() {
         @Override
         public void run() {
@@ -64,47 +65,47 @@ public class CollectionsPanel extends ScrollPanel {
     }
 
     private void buildCollectionsCellTable() {
-        final ListDataProvider<Collection> dataProvider = new ListDataProvider<Collection>();
+        final ListDataProvider<CollectionDTO> dataProvider = new ListDataProvider<CollectionDTO>();
         dataProvider.setList(collections);
         dataProvider.addDataDisplay(collectionsCellTable);
 
 
-        final SingleSelectionModel<Collection> selectionModel = new SingleSelectionModel<Collection>();
+        final SingleSelectionModel<CollectionDTO> selectionModel = new SingleSelectionModel<CollectionDTO>();
         collectionsCellTable.setSelectionModel(selectionModel);
 
-        CellTableUtils.addColumn(collectionsCellTable, new TextCell(), "Collection", new CellTableUtils.GetValue<String, Collection>() {
-            public String getValue(Collection collection) {
+        CellTableUtils.addColumn(collectionsCellTable, new TextCell(), "Collection", new CellTableUtils.GetValue<String, CollectionDTO>() {
+            public String getValue(CollectionDTO collection) {
                 return collection.getName();
             }
         });
-        CellTableUtils.addColumn(collectionsCellTable, new TextCell(), "Provider", new CellTableUtils.GetValue<String, Collection>() {
-            public String getValue(Collection collection) {
+        CellTableUtils.addColumn(collectionsCellTable, new TextCell(), "Provider", new CellTableUtils.GetValue<String, CollectionDTO>() {
+            public String getValue(CollectionDTO collection) {
                 return collection.getProvider().getName();
             }
         });
-        CellTableUtils.addColumn(collectionsCellTable, new NumberCell(), "Total records", new CellTableUtils.GetValue<Number, Collection>() {
-            public Integer getValue(Collection collection) {
+        CellTableUtils.addColumn(collectionsCellTable, new NumberCell(), "Total records", new CellTableUtils.GetValue<Number, CollectionDTO>() {
+            public Integer getValue(CollectionDTO collection) {
                 return collection.getTotal();
             }
         });
 
     }
 
-    private void updateCollections(List<Collection> collections) {
+    private void updateCollections(List<CollectionDTO> collections) {
         this.collections.clear();
         this.collections.addAll(collections);
         CellTableUtils.updateCellTableData(collectionsCellTable, collections);
     }
 
     private void updateCollections() {
-        orchestrationService.getAllCollections(new AsyncCallback<List<Collection>>() {
+        orchestrationService.getAllCollections(new AsyncCallback<List<CollectionDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<Collection> collections) {
+            public void onSuccess(List<CollectionDTO> collections) {
                 updateCollections(collections);
             }
         });

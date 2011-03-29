@@ -5,11 +5,11 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import eu.europeana.uim.gui.gwt.shared.Collection;
-import eu.europeana.uim.gui.gwt.shared.Execution;
-import eu.europeana.uim.gui.gwt.shared.Provider;
-import eu.europeana.uim.gui.gwt.shared.StepStatus;
-import eu.europeana.uim.gui.gwt.shared.Workflow;
+import eu.europeana.uim.gui.gwt.shared.CollectionDTO;
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
+import eu.europeana.uim.gui.gwt.shared.ProviderDTO;
+import eu.europeana.uim.gui.gwt.shared.StepStatusDTO;
+import eu.europeana.uim.gui.gwt.shared.WorkflowDTO;
 
 /**
  * Service to get the available workflows and so on
@@ -19,27 +19,27 @@ import eu.europeana.uim.gui.gwt.shared.Workflow;
 @RemoteServiceRelativePath("orchestrator")
 public interface OrchestrationService extends RemoteService {
 
-    List<Workflow> getWorkflows();
+    List<WorkflowDTO> getWorkflows();
 
-    List<Provider> getProviders();
+    List<ProviderDTO> getProviders();
 
-    List<Collection> getCollections(Long provider);
+    List<CollectionDTO> getCollections(Long provider);
 
-    List<Collection> getAllCollections();
+    List<CollectionDTO> getAllCollections();
 
-    Execution startCollection(String workflow, Long collection);
+    ExecutionDTO startCollection(String workflow, Long collection);
 
-    Execution startProvider(String workflow, Long provider);
+    ExecutionDTO startProvider(String workflow, Long provider);
 
-    Execution getExecution(Long id);
+    ExecutionDTO getExecution(Long id);
 
-    List<Execution> getActiveExecutions();
+    List<ExecutionDTO> getActiveExecutions();
 
-    List<Execution> getPastExecutions();
+    List<ExecutionDTO> getPastExecutions();
 
     Integer getCollectionTotal(Long collection);
 
-    List<StepStatus> getStatus(String workflow);
+    List<StepStatusDTO> getStatus(String workflow);
 
 
 

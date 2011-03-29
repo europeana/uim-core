@@ -24,7 +24,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.widgetideas.client.ProgressBar;
-import eu.europeana.uim.gui.gwt.shared.Execution;
+
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
+import eu.europeana.uim.store.Execution;
 
 /**
  * The overview panel with current and past executions
@@ -40,8 +42,8 @@ public class OverviewPanel extends ScrollPanel {
     private ExecutionDetailPanel currentExecutionsDetailPanel = null;
     private Map<Long, HorizontalPanel> progressBars = new HashMap<Long, HorizontalPanel>();
 
-    private final List<Execution> pastExecutions = new ArrayList<Execution>();
-    private final CellTable<Execution> pastExecutionsCellTable = new CellTable<Execution>();
+    private final List<ExecutionDTO> pastExecutions = new ArrayList<ExecutionDTO>();
+    private final CellTable<ExecutionDTO> pastExecutionsCellTable = new CellTable<ExecutionDTO>();
 
     public OverviewPanel(OrchestrationServiceAsync orchestrationServiceAsync, final Application application) {
         this.orchestrationService = orchestrationServiceAsync;
@@ -88,22 +90,22 @@ public class OverviewPanel extends ScrollPanel {
 
     private void loadActiveExecutions() {
         // load active executions
-        orchestrationService.getActiveExecutions(new AsyncCallback<List<Execution>>() {
+        orchestrationService.getActiveExecutions(new AsyncCallback<List<ExecutionDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<Execution> executions) {
-                for (Execution e : executions) {
+            public void onSuccess(List<ExecutionDTO> executions) {
+                for (ExecutionDTO e : executions) {
                     addExecution(e);
                 }
             }
         });
     }
 
-    public void addExecution(final Execution execution) {
+    public void addExecution(final ExecutionDTO execution) {
         final ProgressBar bar = new ProgressBar(0, execution.getScheduled());
         bar.setTitle(execution.getName());
         bar.setTextVisible(true);
@@ -126,7 +128,7 @@ public class OverviewPanel extends ScrollPanel {
         Timer t = new Timer() {
             @Override
             public void run() {
-                orchestrationService.getExecution(execution.getId(), new AsyncCallback<Execution>() {
+                orchestrationService.getExecution(execution.getId(), new AsyncCallback<ExecutionDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         // TODO panic
@@ -134,8 +136,8 @@ public class OverviewPanel extends ScrollPanel {
                     }
 
                     @Override
-                    public void onSuccess(Execution execution) {
-                        bar.setProgress(execution.getProgress());
+                    public void onSuccess(ExecutionDTO execution) {
+                        //bar.setProgress(execution.getProgress());
                         bar.redraw();
                         if (execution.isDone()) {
                             cancel();
@@ -149,11 +151,11 @@ public class OverviewPanel extends ScrollPanel {
         t.scheduleRepeating(1000);
     }
 
-    private void displayExecutionDetail(Execution execution) {
+    private void displayExecutionDetail(ExecutionDTO execution) {
         currentExecutionsDetailPanel.display(execution);
     }
 
-    private void executionDone(Execution e) {
+    private void executionDone(ExecutionDTO e) {
         HorizontalPanel widget = progressBars.get(e.getId());
         currentExecutionsPanel.remove(widget);
         if (currentExecutionsDetailPanel.getCurrentExecution().getId().equals(e.getId())) {
@@ -166,14 +168,14 @@ public class OverviewPanel extends ScrollPanel {
 
     private void updatePastExecutions() {
         // load past executions
-        orchestrationService.getPastExecutions(new AsyncCallback<List<Execution>>() {
+        orchestrationService.getPastExecutions(new AsyncCallback<List<ExecutionDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<Execution> executions) {
+            public void onSuccess(List<ExecutionDTO> executions) {
                 pastExecutions.clear();
                 int i = 0;
                 Collections.sort(executions);
@@ -187,22 +189,22 @@ public class OverviewPanel extends ScrollPanel {
     }
 
 
-    public static void buildPastExecutionsCellTable(CellTable pastExecutionsCellTable, List<Execution> pastExecutions) {
+    public static void buildPastExecutionsCellTable(CellTable pastExecutionsCellTable, List<ExecutionDTO> pastExecutions) {
         // cell table
-        final ListDataProvider<Execution> dataProvider = new ListDataProvider<Execution>();
+        final ListDataProvider<ExecutionDTO> dataProvider = new ListDataProvider<ExecutionDTO>();
         dataProvider.setList(pastExecutions);
         dataProvider.addDataDisplay(pastExecutionsCellTable);
 
         final SingleSelectionModel<Execution> selectionModel = new SingleSelectionModel<Execution>();
         pastExecutionsCellTable.setSelectionModel(selectionModel);
 
-        CellTableUtils.addColumn(pastExecutionsCellTable, new TextCell(), "Workflow", new CellTableUtils.GetValue<String, Execution>() {
-            public String getValue(Execution execution) {
+        CellTableUtils.addColumn(pastExecutionsCellTable, new TextCell(), "Workflow", new CellTableUtils.GetValue<String, ExecutionDTO>() {
+            public String getValue(ExecutionDTO execution) {
                 return execution.getWorkflow();
             }
         });
-        CellTableUtils.addColumn(pastExecutionsCellTable, new TextCell(), "Dataset", new CellTableUtils.GetValue<String, Execution>() {
-            public String getValue(Execution execution) {
+        CellTableUtils.addColumn(pastExecutionsCellTable, new TextCell(), "Dataset", new CellTableUtils.GetValue<String, ExecutionDTO>() {
+            public String getValue(ExecutionDTO execution) {
                 return execution.getDataSet();
             }
         });

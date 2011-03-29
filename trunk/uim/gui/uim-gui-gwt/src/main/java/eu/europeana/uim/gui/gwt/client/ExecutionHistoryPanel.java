@@ -1,13 +1,14 @@
 package eu.europeana.uim.gui.gwt.client;
 
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ScrollPanel;
-import eu.europeana.uim.gui.gwt.shared.Execution;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ScrollPanel;
+
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
@@ -16,9 +17,9 @@ public class ExecutionHistoryPanel extends ScrollPanel {
 
     private OrchestrationServiceAsync orchestrationServiceAsync;
 
-    private final List<Execution> pastExecutions = new ArrayList<Execution>();
+    private final List<ExecutionDTO> pastExecutions = new ArrayList<ExecutionDTO>();
 
-    private final CellTable<Execution> pastExecutionsCellTable = new CellTable<Execution>();
+    private final CellTable<ExecutionDTO> pastExecutionsCellTable = new CellTable<ExecutionDTO>();
 
     public ExecutionHistoryPanel(OrchestrationServiceAsync orchestrationServiceAsync) {
         this.orchestrationServiceAsync = orchestrationServiceAsync;
@@ -30,14 +31,14 @@ public class ExecutionHistoryPanel extends ScrollPanel {
     }
 
     public void updatePastExecutions() {
-        orchestrationServiceAsync.getPastExecutions(new AsyncCallback<List<Execution>>() {
+        orchestrationServiceAsync.getPastExecutions(new AsyncCallback<List<ExecutionDTO>>() {
             @Override
             public void onFailure(Throwable caught) {
                 caught.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<Execution> result) {
+            public void onSuccess(List<ExecutionDTO> result) {
                 pastExecutions.clear();
                 pastExecutions.addAll(result);
                 Collections.sort(result);

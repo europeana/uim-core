@@ -5,17 +5,17 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class Workflow implements IsSerializable {
+public class WorkflowDTO implements IsSerializable {
 
     private String name;
     private String description;
 
-    public Workflow(String name, String description) {
+    public WorkflowDTO(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public Workflow() {
+    public WorkflowDTO() {
         super();
     }
 

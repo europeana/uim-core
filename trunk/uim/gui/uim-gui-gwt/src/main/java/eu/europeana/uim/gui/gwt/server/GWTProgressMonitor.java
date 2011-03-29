@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import eu.europeana.uim.common.RevisingProgressMonitor;
-import eu.europeana.uim.gui.gwt.shared.Execution;
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
 
 /**
  * GWT implementation of a ProgressMonitor. Since we display things on the client and the monitor is on the server,
@@ -26,7 +26,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     private long start;
 
     private boolean cancelled;
-    private Execution execution;
+    private ExecutionDTO execution;
 
     private String task;
     private String subtask;
@@ -34,7 +34,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     public GWTProgressMonitor() {
     }
 
-    public GWTProgressMonitor(Execution execution) {
+    public GWTProgressMonitor(ExecutionDTO execution) {
         this.execution = execution;
     }
 

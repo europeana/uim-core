@@ -5,15 +5,15 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class DataSource implements IsSerializable {
+public class DataSourceDTO implements IsSerializable {
 
     private Long id;
 	private String identifier;
 
-    public DataSource() {
+    public DataSourceDTO() {
     }
 
-    public DataSource(Long id) {
+    public DataSourceDTO(Long id) {
         this.id = id;
     }
 

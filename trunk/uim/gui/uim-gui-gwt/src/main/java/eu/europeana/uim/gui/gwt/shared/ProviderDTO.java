@@ -3,7 +3,7 @@ package eu.europeana.uim.gui.gwt.shared;
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class Provider extends DataSource {
+public class ProviderDTO extends DataSourceDTO {
 
     private String name;
 
@@ -15,11 +15,11 @@ public class Provider extends DataSource {
         this.name = name;
     }
 
-    public Provider() {
+    public ProviderDTO() {
         super();
     }
 
-    public Provider(Long id, String name) {
+    public ProviderDTO(Long id, String name) {
         super(id);
         this.name = name;
     }

@@ -1,5 +1,9 @@
 package eu.europeana.uim.gui.gwt.client;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -11,12 +15,9 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import eu.europeana.uim.gui.gwt.shared.Execution;
-import eu.europeana.uim.gui.gwt.shared.StepStatus;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import eu.europeana.uim.gui.gwt.shared.ExecutionDTO;
+import eu.europeana.uim.gui.gwt.shared.StepStatusDTO;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
@@ -27,17 +28,17 @@ public class ExecutionDetailPanel extends VerticalPanel {
 
     private SimplePanel statusPanel = new SimplePanel();
 
-    private Execution currentExecution = null;
+    private ExecutionDTO currentExecution = null;
 
     public ExecutionDetailPanel(OrchestrationServiceAsync orchestrationServiceAsync) {
         this.orchestrationServiceAsync = orchestrationServiceAsync;
     }
 
-    public Execution getCurrentExecution() {
+    public ExecutionDTO getCurrentExecution() {
         return currentExecution;
     }
 
-    public void display(final Execution execution) {
+    public void display(final ExecutionDTO execution) {
 
         clear();
 
@@ -69,21 +70,21 @@ public class ExecutionDetailPanel extends VerticalPanel {
         updateStatus(execution);
     }
 
-    private void updateStatus(Execution execution) {
-        orchestrationServiceAsync.getStatus(execution.getWorkflow(), new AsyncCallback<List<StepStatus>>() {
+    private void updateStatus(ExecutionDTO execution) {
+        orchestrationServiceAsync.getStatus(execution.getWorkflow(), new AsyncCallback<List<StepStatusDTO>>() {
             @Override
             public void onFailure(Throwable caught) {
                 caught.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<StepStatus> result) {
+            public void onSuccess(List<StepStatusDTO> result) {
                 displayStatus(result);
             }
         });
     }
 
-    private void displayStatus(final List<StepStatus> statuses) {
+    private void displayStatus(final List<StepStatusDTO> statuses) {
         statusPanel.clear();
 
         Grid s = new Grid(statuses.size() + 1, 5);
@@ -101,7 +102,7 @@ public class ExecutionDetailPanel extends VerticalPanel {
             s.setText(i + 1, 1, statuses.get(i).getStep());
             s.setText(i + 1, 2, Integer.toString(statuses.get(i).successes()));
             s.setText(i + 1, 3, Integer.toString(statuses.get(i).failures()));
-            s.setText(i + 1, 4, Integer.toString(statuses.get(i).queueSize()));
+            //s.setText(i + 1, 4, Integer.toString(statuses.get(i).queueSize()));
         }
 
         statusPanel.add(s);
@@ -119,7 +120,7 @@ public class ExecutionDetailPanel extends VerticalPanel {
         return i;
     }
 
-    private Grid buildDetail(Execution execution) {
+    private Grid buildDetail(ExecutionDTO execution) {
         this.currentExecution = execution;
         Grid g = new Grid(4, 2);
         String[] labels = new String[]{"Id", "Name", "Start time", "Total records"};
