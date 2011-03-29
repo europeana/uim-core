@@ -226,8 +226,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public List<Collection> getCollections(Provider provider) {
-        List<Collection> res = new ArrayList<Collection>();
+    public List<Collection<Long>> getCollections(Provider<Long> provider) {
+        List<Collection<Long>> res = new ArrayList<Collection<Long>>();
         for (Collection c : ds.find(MongodbCollection.class).filter("provider", provider).asList()) {
             res.add(c);
         }
@@ -263,8 +263,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public List<Request> getRequests(Collection collection) {
-        List<Request> res = new ArrayList<Request>();
+    public List<Request<Long>> getRequests(Collection<Long> collection) {
+        List<Request<Long>> res = new ArrayList<Request<Long>>();
         for (Request r : ds.find(MongoRequest.class).filter("collection", collection).asList()) {
             res.add(r);
         }
@@ -391,10 +391,10 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
     private Long[] getFromCollection(MongodbCollection<Long> mongodbCollection) {
-        List<MongoRequest<Long>> reqs = (List<MongoRequest<Long>>) ds.find(MongoRequest.class).filter("collection", mongodbCollection).asList();
+        List<MongoRequest> reqs = ds.find(MongoRequest.class).filter("collection", mongodbCollection).asList();
         Long[] reqIds = new Long[reqs.size()];
         for (int i = 0; i < reqs.size(); i++) {
-            reqIds[i] = reqs.get(i).getId();
+            reqIds[i] = (Long)reqs.get(i).getId();
         }
         return reqIds;
     }
