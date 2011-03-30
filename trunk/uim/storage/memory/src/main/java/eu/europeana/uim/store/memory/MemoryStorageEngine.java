@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.ArrayUtils;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
@@ -90,6 +91,10 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
 
     @Override
     public void command(String command) {
+    }
+
+    @Override
+    public void completed(ExecutionContext context) {
     }
 
     @Override

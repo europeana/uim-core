@@ -48,6 +48,10 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     @Override
     public void command(String command) {
     }
+    
+    @Override
+    public void completed(ExecutionContext context){
+    }
 
     @Override
     public EngineStatus getStatus() {

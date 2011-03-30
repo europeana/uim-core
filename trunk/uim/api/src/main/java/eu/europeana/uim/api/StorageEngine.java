@@ -68,6 +68,18 @@ public interface StorageEngine<I> {
     void command(String command);
 
     /**
+     * Finalization method (tear down) for an execution. At the end of each execution this method is
+     * called to allow the storage engine to clean up memory or external resources.
+     * 
+     * @param context
+     *            holds execution depending, information the {@link ExecutionContext} for this
+     *            processing call. This context can change for each call, so references to it have
+     *            to be handled carefully.
+     */
+    void completed(ExecutionContext context);
+    
+    
+    /**
      * @return status of the engine (starting, ...)
      */
     EngineStatus getStatus();

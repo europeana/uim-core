@@ -17,6 +17,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
@@ -123,7 +124,9 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     public void command(String command) {
     }
 
-
+    @Override
+    public void completed(ExecutionContext context) {
+    }
 
     public void shutdown() {
         status = EngineStatus.STOPPED;
