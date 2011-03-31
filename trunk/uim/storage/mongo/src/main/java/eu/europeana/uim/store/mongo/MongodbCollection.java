@@ -1,5 +1,7 @@
 package eu.europeana.uim.store.mongo;
 
+import java.util.Date;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import eu.europeana.uim.store.Collection;
@@ -18,6 +20,10 @@ public class MongodbCollection<Long> extends AbstractMongoEntity<Long> implement
     private String oaiBaseUrl;
     private String oaiMetadataPrefix;
     private String oaiSet;
+
+    private Date        lastModified;
+    private Date        lastSynchronized;
+
 
     @Reference
     private MongoProvider provider = null;
@@ -78,6 +84,28 @@ public class MongodbCollection<Long> extends AbstractMongoEntity<Long> implement
     public void setOaiMetadataPrefix(String oaiMetadataPrefix) {
         this.oaiMetadataPrefix = oaiMetadataPrefix;
     }
+    
+    @Override
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    @Override
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Override
+    public Date getLastSynchronized() {
+        return lastSynchronized;
+    }
+
+    @Override
+    public void setLastSynchronized(Date lastSynchronized) {
+        this.lastSynchronized = lastSynchronized;
+    }
+
+    
 
     @Override
     public boolean equals(Object o) {

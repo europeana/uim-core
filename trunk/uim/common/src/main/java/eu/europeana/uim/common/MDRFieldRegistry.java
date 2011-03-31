@@ -1,10 +1,10 @@
-package eu.europeana.uim;
+package eu.europeana.uim.common;
+
+import eu.europeana.uim.TKey;
 
 @SuppressWarnings("all")
 public class MDRFieldRegistry {
 
-	public static final TKey<MDRFieldRegistry, String> title = TKey.register(MDRFieldRegistry.class, "title", String.class);
-	
 	public static final TKey<MDRFieldRegistry, String> rawformat = TKey.register(MDRFieldRegistry.class, "rawformat", String.class);
 	public static final TKey<MDRFieldRegistry, String> rawrecord = TKey.register(MDRFieldRegistry.class, "rawrecord", String.class);
 

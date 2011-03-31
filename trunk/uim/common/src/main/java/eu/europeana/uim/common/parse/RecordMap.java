@@ -3,6 +3,7 @@ package eu.europeana.uim.common.parse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
-public class RecordMap extends HashMap<RecordField, List<String>> {
+public class RecordMap extends LinkedHashMap<RecordField, List<String>> {
 
 	private HashMap<RecordField, List<String>> localToPrefixed = new HashMap<RecordField, List<String>>();
 	

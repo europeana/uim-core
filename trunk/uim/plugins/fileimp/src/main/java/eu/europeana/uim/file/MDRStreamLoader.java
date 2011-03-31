@@ -3,7 +3,6 @@ package eu.europeana.uim.file;
 import java.io.InputStream;
 
 import eu.europeana.uim.MetaDataRecord;
-import eu.europeana.uim.MetaDataRecordHandler;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.ProgressMonitor;

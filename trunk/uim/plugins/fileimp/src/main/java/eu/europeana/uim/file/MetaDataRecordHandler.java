@@ -1,4 +1,4 @@
-package eu.europeana.uim;
+package eu.europeana.uim.file;
 
 import java.util.HashSet;
 import java.util.List;
@@ -6,8 +6,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.common.parse.RecordField;
 import eu.europeana.uim.common.parse.RecordHandler;
 import eu.europeana.uim.common.parse.RecordMap;
@@ -73,21 +75,17 @@ public class MetaDataRecordHandler implements RecordHandler {
 
             MetaDataRecord<?> mdr = storage.createMetaDataRecord(request, identifier);
 
+            StringBuilder xml = new StringBuilder();
             for (Entry<RecordField, List<String>> entry : record.entrySet()) {
-                if ("title".equals(entry.getKey().getLocal())) {
-// if (entry.getKey().getLanguage() != null) {
-// for (String value : entry.getValue()) {
-// mdr.addField(MDRFieldRegistry.title, entry.getKey().getLanguage(),
-// value);
-// }
-// } else {
-                    for (String value : entry.getValue()) {
-                        mdr.addField(MDRFieldRegistry.title, value);
+                for (String value : entry.getValue()) {
+                    if (xml.length() > 0) {
+                        xml.append("\n");
                     }
-// }
+                    xml.append(entry.getKey().toXml(false, value));
                 }
                 count++;
             }
+            mdr.addField(MDRFieldRegistry.rawrecord, xml.toString());
 
             if (unique.contains(mdr.getId())) {
                 log.warning("Duplicate identifier:" + mdr.getId());

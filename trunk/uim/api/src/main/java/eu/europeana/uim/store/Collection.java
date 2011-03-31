@@ -1,5 +1,7 @@
 package eu.europeana.uim.store;
 
+import java.util.Date;
+
 /*
  provider    // ref to Provider obj
  name_code   // ingestion internal shorthand for Aggregator
@@ -87,4 +89,35 @@ public interface Collection<I> extends DataSet<I> {
      *            a prefix for the metadata retrieved from this oai
      */
     void setOaiMetadataPrefix(String prefix);
+    
+    
+    /** 
+     * 
+     * @return date of last modification of any record in this collection 
+     */
+    Date getLastModified();
+    
+    
+    /**
+     * @param date
+     *          date of last modification of any record in this collection
+     */
+    void setLastModified(Date date);
+    
+    
+    
+    /** 
+     * 
+     * @return date of last (live) system update of the collection 
+     */
+    Date getLastSynchronized();
+    
+    
+    /**
+     * @param date
+     *          date of last synchronization of all record in this collection
+     */
+    void setLastSynchronized(Date date);
+    
+    
 }

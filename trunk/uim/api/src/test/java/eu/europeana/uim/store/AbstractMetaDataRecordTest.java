@@ -8,10 +8,10 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import eu.europeana.uim.MDRFieldRegistry;
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.MDRFieldRegistry;
 
 /**
  * Base, abstract class to test {@link MetaDataRecord} implementations.

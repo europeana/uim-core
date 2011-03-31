@@ -1,5 +1,7 @@
 package eu.europeana.uim.store.bean;
 
+import java.util.Date;
+
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -20,6 +22,9 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     private String      oaiBaseUrl;
     private String      oaiMetadataPrefix;
     private String      oaiSet;
+
+    private Date        lastModified;
+    private Date        lastSynchronized;
 
     /**
      * Creates a new instance of this class.
@@ -98,16 +103,38 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     }
 
     @Override
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    @Override
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Override
+    public Date getLastSynchronized() {
+        return lastSynchronized;
+    }
+
+    @Override
+    public void setLastSynchronized(Date lastSynchronized) {
+        this.lastSynchronized = lastSynchronized;
+    }
+
+    @Override
     public String toString() {
         String string = super.toString();
-        string += " [";
-        string += getOaiBaseUrl() != null ? getOaiBaseUrl()
-                : (getProvider().getOaiBaseUrl() != null ? getProvider().getOaiBaseUrl()
-                        : "undefined");
-
-        string += "?metadataPrefix=";
-        string += getOaiMetadataPrefix() != null ? getOaiMetadataPrefix()
-                : getProvider().getOaiMetadataPrefix();
-        return string + "]";
+        String oai = getOaiBaseUrl() != null ? getOaiBaseUrl()
+                : (getProvider().getOaiBaseUrl() != null ? getProvider().getOaiBaseUrl() : null);
+        if (oai != null) {
+            string += " [";
+            string += oai;
+            string += "?metadataPrefix=";
+            string += getOaiMetadataPrefix() != null ? getOaiMetadataPrefix()
+                    : getProvider().getOaiMetadataPrefix();
+            string += "]";
+        }
+        return string;
     }
 }

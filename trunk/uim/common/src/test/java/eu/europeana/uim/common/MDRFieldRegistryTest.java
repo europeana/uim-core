@@ -1,9 +1,11 @@
 /* MDRFieldRegistryTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim;
+package eu.europeana.uim.common;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import eu.europeana.uim.TKey;
 
 /**
  * Tests implictly the {@link TKey} and the fields on {@link MDRFieldRegistry}.
@@ -33,8 +35,8 @@ public class MDRFieldRegistryTest {
      */
     @Test
     public void testFieldRegistry() {
-        TKey<MDRFieldRegistry, String> title = MDRFieldRegistry.title;
-        Assert.assertNotNull(title);
-        Assert.assertEquals(3, TKey.size());
+        TKey<MDRFieldRegistry, String> record = MDRFieldRegistry.rawrecord;
+        Assert.assertNotNull(record);
+        Assert.assertEquals(2, TKey.size());
     }
 }
