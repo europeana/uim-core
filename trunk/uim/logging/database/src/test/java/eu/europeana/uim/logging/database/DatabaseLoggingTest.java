@@ -86,7 +86,7 @@ public class DatabaseLoggingTest {
         objectHome.insert(entry);
         oid = entry.getOid();
 
-        TStringDatabaseLogEntry sentry = stringHome.findByOid(oid);
+        TObjectDatabaseLogEntry sentry = objectHome.findByOid(oid);
         Assert.assertNotNull(sentry);
         Assert.assertEquals(entry.getExecutionId(), sentry.getExecutionId());
         Assert.assertEquals(entry.getDate(), sentry.getDate());
@@ -112,10 +112,10 @@ public class DatabaseLoggingTest {
      * Tests functionality of logging engine implementation based on JPA.
      */
     @Test
-    public void testDatabaseLoggin() {
+    public void testDatabaseLogging() {
         Date date = new Date();
 
-        DatabaseLoggingEngine<String> engine = new DatabaseLoggingEngine<String>();
+        DatabaseLoggingEngine<String> engine = new DatabaseLoggingEngine<String>(stringHome, objectHome, durationHome);
 
         engine.log(Level.WARNING, "Test", new ExecutionBean<Long>(1l),
                 new MetaDataRecordBean<Long>(2l, new RequestBean<Long>(4l, null, date)),
@@ -126,7 +126,7 @@ public class DatabaseLoggingTest {
         Assert.assertEquals(1, executionLog.size());
         LogEntry<Long, String> logEntry = executionLog.get(0);
         Assert.assertEquals(new Long(1l), logEntry.getExecutionId());
-        Assert.assertEquals(date, logEntry.getDate());
+        Assert.assertFalse(date.before(logEntry.getDate()));
         Assert.assertEquals("Test", logEntry.getMessage());
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
         Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());
@@ -140,7 +140,7 @@ public class DatabaseLoggingTest {
         Assert.assertEquals(1, executionLog.size());
         logEntry = executionLog.get(0);
         Assert.assertEquals(new Long(1l), logEntry.getExecutionId());
-        Assert.assertEquals(date, logEntry.getDate());
+        Assert.assertFalse(date.before(logEntry.getDate()));
         Assert.assertEquals("Test", logEntry.getMessage());
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
         Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());

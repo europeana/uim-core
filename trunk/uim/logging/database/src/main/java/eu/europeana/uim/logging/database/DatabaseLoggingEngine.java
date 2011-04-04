@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
@@ -21,10 +24,29 @@ import eu.europeana.uim.store.Execution;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 31, 2011
  */
+@Controller
 public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEngine<Long, T> {
+    @Autowired
     private TStringDatabaseLogEntryHome stringHome;
+    @Autowired
     private TObjectDatabaseLogEntryHome objectHome;
+    @Autowired
     private TDurationDatabaseEntryHome  durationHome;
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param stringHome
+     * @param objectHome
+     * @param durationHome
+     */
+    public DatabaseLoggingEngine(TStringDatabaseLogEntryHome stringHome,
+                                 TObjectDatabaseLogEntryHome objectHome,
+                                 TDurationDatabaseEntryHome durationHome) {
+        this.stringHome = stringHome;
+        this.objectHome = objectHome;
+        this.durationHome = durationHome;
+    }
 
     @Override
     public String getIdentifier() {
@@ -57,16 +79,14 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setMessage(payload);
 
         objectHome.update(entry);
-    } 
+    }
 
     @Override
     public List<LogEntry<Long, String>> getExecutionLog(Execution<Long> execution) {
         List<TStringDatabaseLogEntry> entries = stringHome.findByExecution(execution.getId());
         List<LogEntry<Long, String>> results = new ArrayList<LogEntry<Long, String>>();
         for (TDatabaseLogEntry<?> entry : entries) {
-            if (entry.getMessage() instanceof String) {
-                results.add((TStringDatabaseLogEntry)entry);
-            }
+            results.add((TStringDatabaseLogEntry)entry);
         }
         return results;
     }
@@ -77,9 +97,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         List<TObjectDatabaseLogEntry> entries = objectHome.findByExecution(execution.getId());
         List<LogEntry<Long, T>> results = new ArrayList<LogEntry<Long, T>>();
         for (TDatabaseLogEntry<?> entry : entries) {
-            if (!(entry.getMessage() instanceof String)) {
-                results.add((LogEntry<Long, T>)entry);
-            }
+            results.add((LogEntry<Long, T>)entry);
         }
         return results;
     }
