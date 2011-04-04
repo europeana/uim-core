@@ -1,132 +1,143 @@
 package eu.europeana.uim.logging.database;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import eu.europeana.uim.api.LogEntry;
+import eu.europeana.uim.api.LoggingEngine.Level;
+
 /**
- * An user entity with an unique username and arbitrary password.
+ * Implementation of {@link LogEntry} using JPA to persist the logging information to a data base.
  * 
- * @author ajuffing
+ * @param <T>
+ *            generic message
+ * 
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since Mar 31, 2011
  */
 @Entity
-@Table(name = "uim_logentry")
-@javax.persistence.SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
-public class DatabaseLogEntry implements Serializable {
-
-    /** */
-    private static final long serialVersionUID = 1L;
-
+@Table(name = "uim_abstractlogentry")
+@Inheritance(strategy=InheritanceType.JOINED)
+@SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
+@DiscriminatorColumn(name="EMP_TYPE", discriminatorType=DiscriminatorType.INTEGER)
+public abstract class DatabaseLogEntry<T> implements LogEntry<Long, T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
     private Long              oid;
 
     @Column
-    private String            level;
+    private Level             level;
 
     @Column
-    private Date              time;
+    private Date              date;
 
     @Column
-    private String            workflow;
+    private Long            executionId;
 
     @Column
-    private String            plugin;
+    private String            pluginIdentifier;
 
     @Column
-    private Object            dataset;
+    private Long            metaDataRecordId;
 
-    @Column
-    private String            record;
+//    @Column(length = 4000)
+//    private T                 message;
 
-    @Column
-    private Date              starttime;
-
-    @Column
-    private Date              endtime;
-
-    @Column(length = 4000)
-    private String            description;
-
+    /**
+     * @return unique identifier used as primary key on database (is automatically set when
+     *         persisted)
+     */
     public Long getOid() {
         return oid;
     }
 
-    public String getLevel() {
+    @Override
+    public Level getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    /**
+     * @param level
+     *            level of logging
+     */
+    public void setLevel(Level level) {
         this.level = level;
     }
 
-    public Date getTime() {
-        return time;
+    @Override
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    /**
+     * @param date
+     *            date of creation
+     */
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getWorkflow() {
-        return workflow;
+    @Override
+    public Long getExecutionId() {
+        return executionId;
     }
 
-    public void setWorkflow(String workflow) {
-        this.workflow = workflow;
+    /**
+     * @param executionId
+     *            for which execution
+     */
+    public void setExecutionId(Long executionId) {
+        this.executionId = executionId;
     }
 
-    public String getPlugin() {
-        return plugin;
+    @Override
+    public String getPluginIdentifier() {
+        return pluginIdentifier;
     }
 
-    public void setPlugin(String plugin) {
-        this.plugin = plugin;
+    /**
+     * @param pluginIdentifier
+     *            name of plugin
+     */
+    public void setPluginIdentifier(String pluginIdentifier) {
+        this.pluginIdentifier = pluginIdentifier;
     }
 
-    public Object getDataset() {
-        return dataset;
+    @Override
+    public Long getMetaDataRecordId() {
+        return metaDataRecordId;
     }
 
-    public void setDataset(Object dataset) {
-        this.dataset = dataset;
+    /**
+     * @param metaDataRecordId
+     *            metadata record ID
+     */
+    public void setMetaDataRecordId(Long metaDataRecordId) {
+        this.metaDataRecordId = metaDataRecordId;
     }
 
-    public Date getStarttime() {
-        return starttime;
-    }
-
-    public void setStarttime(Date starttime) {
-        this.starttime = starttime;
-    }
-
-    public Date getEndtime() {
-        return endtime;
-    }
-
-    public void setEndtime(Date endtime) {
-        this.endtime = endtime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRecord() {
-        return record;
-    }
-
-    public void setRecord(String record) {
-        this.record = record;
-    }
+//    @Override
+//    public T getMessage() {
+//        return message;
+//    }
+//
+//    /**
+//     * @param message
+//     *            generic message
+//     */
+//    public void setMessage(T message) {
+//        this.message = message;
+//    }
 }

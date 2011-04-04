@@ -40,7 +40,7 @@ public interface ExecutionContext {
     /**
      * @return logging engine
      */
-    LoggingEngine<?> getLoggingEngine();
+    LoggingEngine<?, ?> getLoggingEngine();
 
     /**
      * @return the execution specific properties

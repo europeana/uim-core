@@ -9,33 +9,37 @@ import eu.europeana.uim.store.Execution;
 /**
  * Dummy implementation of logging engine.
  * 
- * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @param <I>
+ *            generic identifier
  * @param <T>
+ *            generic message
+ * 
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
-public abstract class LoggingEngineAdapter<T> implements LoggingEngine<T> {
+public abstract class LoggingEngineAdapter<I, T> implements LoggingEngine<I, T> {
     @Override
     public String getIdentifier() {
         return LoggingEngineAdapter.class.getSimpleName();
     }
 
     @Override
-    public void log(Level level, String message, Execution<?> execution, MetaDataRecord<?> mdr,
+    public void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
             IngestionPlugin plugin) {
     }
 
     @Override
-    public List<LogEntry<String>> getExecutionLog(Execution<?> execution) {
+    public List<LogEntry<I, String>> getExecutionLog(Execution<I> execution) {
         return null;
     }
 
     @Override
-    public void logStructured(LoggingEngine.Level level, T payload, Execution<?> execution,
-            MetaDataRecord<?> mdr, IngestionPlugin plugin) {
+    public void logStructured(LoggingEngine.Level level, T payload, Execution<I> execution,
+            MetaDataRecord<I> mdr, IngestionPlugin plugin) {
     }
 
     @Override
-    public List<LogEntry<T>> getStructuredExecutionLog(Execution<?> execution) {
+    public List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution) {
         return null;
     }
 
@@ -50,7 +54,7 @@ public abstract class LoggingEngineAdapter<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr) {
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, I... mdr) {
         //
     }
 }

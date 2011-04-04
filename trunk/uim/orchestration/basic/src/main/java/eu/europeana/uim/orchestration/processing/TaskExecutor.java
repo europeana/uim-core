@@ -6,10 +6,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngine.Level;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskStatus;
 
@@ -67,6 +69,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
@@ -75,15 +78,16 @@ public class TaskExecutor extends ThreadPoolExecutor {
             Task task = (Task)r;
 
             boolean success = true;
-            LoggingEngine<?> loggingEngine = task.getExecutionContext().getLoggingEngine();
+            LoggingEngine<?, ?> loggingEngine = task.getExecutionContext().getLoggingEngine();
+            Execution execution = task.getExecutionContext().getExecution();
+            MetaDataRecord metaDataRecord = task.getMetaDataRecord();
             if (t != null) {
                 success = false;
                 if (loggingEngine != null &&
                     t.getClass().equals(CorruptedMetadataRecordException.class)) {
                     loggingEngine.log(Level.WARNING,
                             "Major error in the workflow the metadata record is broken!",
-                            task.getExecutionContext().getExecution(), task.getMetaDataRecord(),
-                            task.getStep());
+                            execution, metaDataRecord, task.getStep());
                 }
             } else if (!task.isSuccessfulProcessing()) {
                 if (task.isMandatory()) {
@@ -92,16 +96,14 @@ public class TaskExecutor extends ThreadPoolExecutor {
                         loggingEngine.log(
                                 Level.WARNING,
                                 "Task could not perform its work and since it is mandatory for the workflow, the workflow cannot continue!",
-                                task.getExecutionContext().getExecution(),
-                                task.getMetaDataRecord(), task.getStep());
+                                execution, metaDataRecord, task.getStep());
                     }
                 } else {
                     if (loggingEngine != null) {
                         loggingEngine.log(
                                 Level.WARNING,
                                 "Task could not perform its work, but the processing of the meta data record can continue!",
-                                task.getExecutionContext().getExecution(),
-                                task.getMetaDataRecord(), task.getStep());
+                                execution, metaDataRecord, task.getStep());
                     }
                 }
             }

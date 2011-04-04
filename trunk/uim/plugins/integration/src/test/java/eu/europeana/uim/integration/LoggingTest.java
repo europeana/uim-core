@@ -79,7 +79,7 @@ public class LoggingTest extends AbstractUIMIntegrationTest {
     public void testLogging() throws Exception {
     	Registry registry = getOsgiService(Registry.class);
 
-    	LoggingEngine<?> logging = null;
+    	LoggingEngine<?, ?> logging = null;
     	while (logging == null) {
     		logging = registry.getLoggingEngine();
     		Thread.sleep(500);

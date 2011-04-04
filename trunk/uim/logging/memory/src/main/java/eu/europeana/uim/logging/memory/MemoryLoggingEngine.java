@@ -17,6 +17,8 @@ import eu.europeana.uim.store.Execution;
  * track of the MDRs responsible for a duration. This feature would be useful in order to see
  * exactly what MDR is causing what delay.
  * 
+ * @param <I>
+ *            generic identifier
  * @param <T>
  *            generic message
  * 
@@ -24,16 +26,10 @@ import eu.europeana.uim.store.Execution;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
-    private Map<Execution<?>, List<LogEntry<String>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<String>>>();
-    private Map<Execution<?>, List<LogEntry<T>>>      structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<T>>>();
-    private Map<IngestionPlugin, List<Long>>          durations               = new HashMap<IngestionPlugin, List<Long>>();
-
-    /**
-     * Creates a new instance of this class.
-     */
-    public MemoryLoggingEngine() {
-    }
+public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
+    private Map<Execution<?>, List<LogEntry<I, String>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<I, String>>>();
+    private Map<Execution<?>, List<LogEntry<I, T>>>      structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<I, T>>>();
+    private Map<IngestionPlugin, List<Long>>             durations               = new HashMap<IngestionPlugin, List<Long>>();
 
     @Override
     public String getIdentifier() {
@@ -41,34 +37,34 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void log(Level level, String message, Execution<?> execution, MetaDataRecord<?> mdr,
+    public void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
             IngestionPlugin plugin) {
-        List<LogEntry<String>> logs = executionLogs.get(execution);
+        List<LogEntry<I, String>> logs = executionLogs.get(execution);
         if (logs == null) {
-            logs = new ArrayList<LogEntry<String>>();
+            logs = new ArrayList<LogEntry<I, String>>();
             executionLogs.put(execution, logs);
         }
-        logs.add(new MemoryLogEntry<String>(level, new Date(), execution, plugin, mdr, message));
+        logs.add(new MemoryLogEntry<I, String>(level, new Date(), execution, plugin, mdr, message));
     }
 
     @Override
-    public void logStructured(Level level, T payload, Execution<?> execution,
-            MetaDataRecord<?> mdr, IngestionPlugin plugin) {
-        List<LogEntry<T>> logs = structuredExecutionLogs.get(execution);
+    public void logStructured(Level level, T payload, Execution<I> execution,
+            MetaDataRecord<I> mdr, IngestionPlugin plugin) {
+        List<LogEntry<I, T>> logs = structuredExecutionLogs.get(execution);
         if (logs == null) {
-            logs = new ArrayList<LogEntry<T>>();
+            logs = new ArrayList<LogEntry<I, T>>();
             structuredExecutionLogs.put(execution, logs);
         }
-        logs.add(new MemoryLogEntry<T>(level, new Date(), execution, plugin, mdr, payload));
+        logs.add(new MemoryLogEntry<I, T>(level, new Date(), execution, plugin, mdr, payload));
     }
 
     @Override
-    public List<LogEntry<String>> getExecutionLog(Execution<?> execution) {
+    public List<LogEntry<I, String>> getExecutionLog(Execution<I> execution) {
         return executionLogs.get(execution);
     }
 
     @Override
-    public List<LogEntry<T>> getStructuredExecutionLog(Execution<?> execution) {
+    public List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution) {
         return structuredExecutionLogs.get(execution);
     }
 
@@ -82,7 +78,7 @@ public class MemoryLoggingEngine<T> implements LoggingEngine<T> {
     }
 
     @Override
-    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdrs) {
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, I... mdrs) {
         List<Long> d = getDurations(plugin);
         // don't show this to hardcore statisticians
         for (int i = 0; i < mdrs.length; i++) {

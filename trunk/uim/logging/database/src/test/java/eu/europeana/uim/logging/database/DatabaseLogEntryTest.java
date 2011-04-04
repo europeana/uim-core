@@ -14,49 +14,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import eu.europeana.uim.api.LoggingEngine.Level;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/test-context.xml",
-        "/test-beans.xml"
-})
+@ContextConfiguration(locations = { "/test-context.xml", "/test-beans.xml" })
 public class DatabaseLogEntryTest {
+    @Autowired
+    DatabaseLogEntryHome     entryHome;
 
-	@Autowired
-	DatabaseLogEntryHome entryHome;
+    private static Semaphore lock = new Semaphore(1);
 
-	private static Semaphore lock = new Semaphore(1);
-	
-	@Before
-	public void start() throws InterruptedException{
-		lock.acquire();
-	}
+    @Before
+    public void start() throws InterruptedException {
+        lock.acquire();
+    }
 
-	
-	@After
-	public void clean(){
-		entryHome.truncate();
-		
-		lock.release();
-	}
+    @After
+    public void clean() {
+        entryHome.truncate();
 
-	
-	@Test
-	public void testEntryLifeCycle() {
-		DatabaseLogEntry entry = new DatabaseLogEntry();
-		entry.setLevel("level");
-		
-		assertEquals("Plain setter/getter testing", entry.getLevel(), "level");
-		
-		entryHome.insert(entry);
-		
-		assertNotNull(entry.getOid());
-		
-		DatabaseLogEntry entry2 = entryHome.findByOid(entry.getOid());
-		assertNotSame("Persistence instance", entry, entry2);
-		
-		assertEquals(entry.getLevel(), entry2.getLevel());
-	}
-	
-	
-	
+        lock.release();
+    }
+
+    @Test
+    public void testEntryLifeCycle() {
+        StringDatabaseLogEntry entry = new StringDatabaseLogEntry();
+        entry.setLevel(Level.WARNING);
+
+        assertEquals("Plain setter/getter testing", entry.getLevel(), Level.WARNING);
+
+        entryHome.insert(entry);
+
+        assertNotNull(entry.getOid());
+
+        DatabaseLogEntry entry2 = entryHome.findByOid(entry.getOid());
+        assertNotSame("Persistence instance", entry, entry2);
+
+        assertEquals(entry.getLevel(), entry2.getLevel());
+    }
 }

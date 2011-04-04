@@ -9,6 +9,8 @@ import eu.europeana.uim.store.Execution;
  * Service for the reporting of the processing, to be used by the orchestrator and eventually
  * plugins
  * 
+ * @param <I>
+ *            generic identifier
  * @param <T>
  *            message type
  * 
@@ -16,7 +18,7 @@ import eu.europeana.uim.store.Execution;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface LoggingEngine<T> {
+public interface LoggingEngine<I, T> {
     /**
      * Type of logging information.
      * 
@@ -48,7 +50,7 @@ public interface LoggingEngine<T> {
      * @param plugin
      *            the plugin reporting the log
      */
-    void log(Level level, String message, Execution<?> execution, MetaDataRecord<?> mdr,
+    void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
             IngestionPlugin plugin);
 
     /**
@@ -58,7 +60,7 @@ public interface LoggingEngine<T> {
      *            the execution
      * @return a list of LogEntry-s
      */
-    List<LogEntry<String>> getExecutionLog(Execution<?> execution);
+    List<LogEntry<I, String>> getExecutionLog(Execution<I> execution);
 
     /**
      * Logs a structured message, to be used for advanced log analysis
@@ -74,7 +76,7 @@ public interface LoggingEngine<T> {
      * @param plugin
      *            the plugin reporting the log
      */
-    void logStructured(Level level, T payload, Execution<?> execution, MetaDataRecord<?> mdr,
+    void logStructured(Level level, T payload, Execution<I> execution, MetaDataRecord<I> mdr,
             IngestionPlugin plugin);
 
     /**
@@ -84,7 +86,7 @@ public interface LoggingEngine<T> {
      *            the execution
      * @return a list of LogEntry-s
      */
-    List<LogEntry<T>> getStructuredExecutionLog(Execution<?> execution);
+    List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution);
 
     /**
      * Logs a processing duration for a given count of items
@@ -117,5 +119,5 @@ public interface LoggingEngine<T> {
      * @param mdr
      *            the identifier of the MDR(s)
      */
-    void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdr);
+    void logDurationDetailed(IngestionPlugin plugin, Long duration, I... mdr);
 }

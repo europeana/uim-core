@@ -5,13 +5,15 @@ import java.util.Date;
 /**
  * Interface for a specific log entry.
  * 
+ * @param <I>
+ *            generic identifier
  * @param <T>
  *            message type
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface LogEntry<T> {
+public interface LogEntry<I, T> {
     /**
      * @return level of logging
      */
@@ -25,7 +27,7 @@ public interface LogEntry<T> {
     /**
      * @return for which execution
      */
-    Object getExecutionId();
+    I getExecutionId();
 
     /**
      * @return name of plugin
@@ -35,7 +37,7 @@ public interface LogEntry<T> {
     /**
      * @return metadata record ID
      */
-    Object getMetaDataRecordId();
+    I getMetaDataRecordId();
 
     /**
      * @return generic message

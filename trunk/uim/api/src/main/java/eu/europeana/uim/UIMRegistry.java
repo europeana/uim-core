@@ -30,8 +30,8 @@ public class UIMRegistry implements Registry {
     private Map<String, StorageEngine<?>> storages      = new HashMap<String, StorageEngine<?>>();
 
     private String                        configuredLoggingEngine;
-    private LoggingEngine<?>              activeLogging = null;
-    private Map<String, LoggingEngine<?>> loggers       = new HashMap<String, LoggingEngine<?>>();
+    private LoggingEngine<?, ?>              activeLogging = null;
+    private Map<String, LoggingEngine<?, ?>> loggers       = new HashMap<String, LoggingEngine<?, ?>>();
 
     private Map<String, IngestionPlugin>  plugins       = new HashMap<String, IngestionPlugin>();
     private List<Workflow>                workflows     = new ArrayList<Workflow>();
@@ -184,7 +184,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addLoggingEngine(LoggingEngine<?> logging) {
+    public void addLoggingEngine(LoggingEngine<?, ?> logging) {
         if (logging != null) {
             log.info("Added logging engine:" + logging.getIdentifier());
             if (!loggers.containsKey(logging.getIdentifier())) {
@@ -201,10 +201,10 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeLoggingEngine(LoggingEngine<?> logging) {
+    public void removeLoggingEngine(LoggingEngine<?, ?> logging) {
         if (logging != null) {
 
-            LoggingEngine<?> remove = loggers.remove(logging.getIdentifier());
+            LoggingEngine<?, ?> remove = loggers.remove(logging.getIdentifier());
             if (activeLogging == remove) {
                 activeLogging = null;
             }
@@ -213,14 +213,14 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public List<LoggingEngine<?>> getLoggingEngines() {
-        List<LoggingEngine<?>> res = new ArrayList<LoggingEngine<?>>();
+    public List<LoggingEngine<?, ?>> getLoggingEngines() {
+        List<LoggingEngine<?, ?>> res = new ArrayList<LoggingEngine<?, ?>>();
         res.addAll(loggers.values());
         return res;
     }
 
     @Override
-    public LoggingEngine<?> getLoggingEngine() {
+    public LoggingEngine<?, ?> getLoggingEngine() {
         if (loggers == null || loggers.isEmpty()) return null;
 
         if (activeLogging == null) {
@@ -234,12 +234,12 @@ public class UIMRegistry implements Registry {
         return activeLogging;
     }
 
-    LoggingEngine<?> getActiveLoggingEngine() {
+    LoggingEngine<?, ?> getActiveLoggingEngine() {
         return activeLogging;
     }
 
     @Override
-    public LoggingEngine<?> getLoggingEngine(String identifier) {
+    public LoggingEngine<?, ?> getLoggingEngine(String identifier) {
         if (identifier == null || loggers == null || loggers.isEmpty()) return null;
         return loggers.get(identifier);
     }
@@ -302,7 +302,7 @@ public class UIMRegistry implements Registry {
         if (loggers.isEmpty()) {
             builder.append("\n\tNo logging.");
         } else {
-            for (LoggingEngine<?> loggingEngine : loggers.values()) {
+            for (LoggingEngine<?, ?> loggingEngine : loggers.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\t");
                 }

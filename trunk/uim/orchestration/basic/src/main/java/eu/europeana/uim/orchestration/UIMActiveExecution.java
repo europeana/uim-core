@@ -48,7 +48,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<?>            loggingEngine;
+    private final LoggingEngine<I, ?>            loggingEngine;
 
     private final Execution<I>                execution;
     private final Workflow                    workflow;
@@ -73,7 +73,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * @param monitor
      */
     public UIMActiveExecution(Execution<I> execution, Workflow workflow,
-                              StorageEngine<I> storageEngine, LoggingEngine<?> loggingEngine,
+                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine,
                               Properties properties, RevisableProgressMonitor monitor) {
         this.execution = execution;
         this.workflow = workflow;
@@ -105,7 +105,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public LoggingEngine<?> getLoggingEngine() {
+    public LoggingEngine<I, ?> getLoggingEngine() {
         return loggingEngine;
     }
 
