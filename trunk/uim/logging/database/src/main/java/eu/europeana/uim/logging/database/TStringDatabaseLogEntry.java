@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "uim_stringlogentry")
-@DiscriminatorValue("1")
+@DiscriminatorValue("string")
 public class TStringDatabaseLogEntry extends TDatabaseLogEntry<String> {
     @Column
     private String message;

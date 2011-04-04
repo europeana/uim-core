@@ -61,7 +61,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
 
     @Override
     public List<LogEntry<Long, String>> getExecutionLog(Execution<Long> execution) {
-        List<TDatabaseLogEntry<?>> entries = stringHome.retrieveEntriesForExecution(execution);
+        List<TStringDatabaseLogEntry> entries = stringHome.findByExecution(execution.getId());
         List<LogEntry<Long, String>> results = new ArrayList<LogEntry<Long, String>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             if (entry.getMessage() instanceof String) {
@@ -74,7 +74,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @SuppressWarnings("unchecked")
     @Override
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution<Long> execution) {
-        List<TDatabaseLogEntry<?>> entries = objectHome.retrieveEntriesForExecution(execution);
+        List<TObjectDatabaseLogEntry> entries = objectHome.findByExecution(execution.getId());
         List<LogEntry<Long, T>> results = new ArrayList<LogEntry<Long, T>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             if (!(entry.getMessage() instanceof String)) {
@@ -111,7 +111,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @Override
     public Long getAverageDuration(IngestionPlugin plugin) {
         long average = 0;
-        List<TDurationDatabaseEntry> entries = durationHome.retrieveDurationEntries(plugin);
+        List<TDurationDatabaseEntry> entries = durationHome.findByPlugin(plugin.getName());
         for (TDurationDatabaseEntry entry : entries) {
             average += entry.getDuration();
         }

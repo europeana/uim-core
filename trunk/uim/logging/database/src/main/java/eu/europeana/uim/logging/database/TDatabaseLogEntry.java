@@ -31,7 +31,7 @@ import eu.europeana.uim.api.LoggingEngine.Level;
 @Table(name = "uim_abstractlogentry")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
-@DiscriminatorColumn(name = "EMP_TYPE", discriminatorType = DiscriminatorType.INTEGER)
+@DiscriminatorColumn(name = "MSG_TYPE", discriminatorType = DiscriminatorType.STRING)
 public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")

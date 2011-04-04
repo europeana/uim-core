@@ -1,10 +1,15 @@
 /* ObjectDatabaseLogEntry.java - created on Apr 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.logging.database;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Implementation of log entries for messages of generic objects.
@@ -14,13 +19,19 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "uim_objectlogentry")
-@DiscriminatorValue("2")
-public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Object> {
-    @Column
-    private Object message;
+@DiscriminatorValue("object")
+public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Serializable> {
+    @Lob
+    private byte[]       msg;
+
+    @Transient
+    private Serializable message;
 
     @Override
-    public Object getMessage() {
+    public Serializable getMessage() {
+        if (message == null && msg != null) {
+            message = (Serializable)SerializationUtils.deserialize(msg);
+        }
         return message;
     }
 
@@ -28,7 +39,8 @@ public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Object> {
      * @param message
      *            generic message
      */
-    public void setMessage(Object message) {
+    public void setMessage(Serializable message) {
+        msg = SerializationUtils.serialize(message);
         this.message = message;
     }
 }

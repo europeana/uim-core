@@ -1,14 +1,10 @@
 package eu.europeana.uim.logging.database;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -21,9 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "uim_durationlogentry")
-@Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_DURATIONLOGENTRY", sequenceName = "seq_uim_durationlogentry")
-@DiscriminatorColumn(name = "EMP_TYPE", discriminatorType = DiscriminatorType.INTEGER)
 public class TDurationDatabaseEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_DURATIONLOGENTRY")
@@ -36,8 +30,7 @@ public class TDurationDatabaseEntry {
     private Long   duration;
 
     /**
-     * @return unique Name used as primary key on database (is automatically set when
-     *         persisted)
+     * @return unique Name used as primary key on database (is automatically set when persisted)
      */
     public Long getOid() {
         return oid;

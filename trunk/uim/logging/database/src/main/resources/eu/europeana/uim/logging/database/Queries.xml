@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC
 	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.theeuropeanlibrary.domain.questionaire">
+<hibernate-mapping package="eu.europeana.uim.logging.database">
 
     <query name="eu.europeana.uim.logging.database.TStringDatabaseLogEntry.findByExecution">
         SELECT s
@@ -18,9 +18,9 @@
         <query-param name="executionId" type="java.lang.Long" />
     </query>
 
-    <query name="eu.europeana.uim.logging.database.TDurationLogEntry.findByPlugin">
+    <query name="eu.europeana.uim.logging.database.TDurationDatabaseEntry.findByPlugin">
         SELECT d
-        FROM TDurationLogEntry d
+        FROM TDurationDatabaseEntry d
         WHERE d.pluginName = :pluginName
         <query-param name="pluginName" type="java.lang.String" />
     </query>
