@@ -32,7 +32,7 @@ public interface LogEntry<I, T> {
     /**
      * @return name of plugin
      */
-    String getPluginIdentifier();
+    String getPluginName();
 
     /**
      * @return metadata record ID

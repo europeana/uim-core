@@ -57,7 +57,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setMessage(payload);
 
         objectHome.update(entry);
-    }
+    } 
 
     @Override
     public List<LogEntry<Long, String>> getExecutionLog(Execution<Long> execution) {
