@@ -1,4 +1,4 @@
-/* StringDatabaseLogEntry.java - created on Apr 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
+/* ObjectDatabaseLogEntry.java - created on Apr 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.logging.database;
 
 import javax.persistence.Column;
@@ -7,20 +7,20 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Implementation of log entries for messages of simple Strings.
+ * Implementation of log entries for messages of generic objects.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 4, 2011
  */
 @Entity
-@Table(name = "uim_stringlogentry")
-@DiscriminatorValue("1")
-public class StringDatabaseLogEntry extends DatabaseLogEntry<String> {
+@Table(name = "uim_objectlogentry")
+@DiscriminatorValue("2")
+public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Object> {
     @Column
-    private String message;
+    private Object message;
 
     @Override
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
@@ -28,7 +28,7 @@ public class StringDatabaseLogEntry extends DatabaseLogEntry<String> {
      * @param message
      *            generic message
      */
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
     }
 }

@@ -29,31 +29,28 @@ import eu.europeana.uim.api.LoggingEngine.Level;
  */
 @Entity
 @Table(name = "uim_abstractlogentry")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
-@DiscriminatorColumn(name="EMP_TYPE", discriminatorType=DiscriminatorType.INTEGER)
-public abstract class DatabaseLogEntry<T> implements LogEntry<Long, T> {
+@DiscriminatorColumn(name = "EMP_TYPE", discriminatorType = DiscriminatorType.INTEGER)
+public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
-    private Long              oid;
+    private Long   oid;
 
     @Column
-    private Level             level;
+    private Level  level;
 
     @Column
-    private Date              date;
+    private Date   date;
 
     @Column
-    private Long            executionId;
+    private Long   executionId;
 
     @Column
-    private String            pluginIdentifier;
+    private String pluginName;
 
     @Column
-    private Long            metaDataRecordId;
-
-//    @Column(length = 4000)
-//    private T                 message;
+    private Long   metaDataRecordId;
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -103,16 +100,16 @@ public abstract class DatabaseLogEntry<T> implements LogEntry<Long, T> {
     }
 
     @Override
-    public String getPluginIdentifier() {
-        return pluginIdentifier;
+    public String getPluginName() {
+        return pluginName;
     }
 
     /**
-     * @param pluginIdentifier
+     * @param pluginName
      *            name of plugin
      */
-    public void setPluginIdentifier(String pluginIdentifier) {
-        this.pluginIdentifier = pluginIdentifier;
+    public void setPluginName(String pluginName) {
+        this.pluginName = pluginName;
     }
 
     @Override
@@ -127,17 +124,4 @@ public abstract class DatabaseLogEntry<T> implements LogEntry<Long, T> {
     public void setMetaDataRecordId(Long metaDataRecordId) {
         this.metaDataRecordId = metaDataRecordId;
     }
-
-//    @Override
-//    public T getMessage() {
-//        return message;
-//    }
-//
-//    /**
-//     * @param message
-//     *            generic message
-//     */
-//    public void setMessage(T message) {
-//        this.message = message;
-//    }
 }

@@ -22,7 +22,12 @@
         <property name="cache.provider_configuration_file_resource_path">ehcache.xml</property>
         <property name="hibernate.cache.use_second_level_cache">true</property>
         <property name="hibernate.cache.use_query_cache">true</property>
+        
+        <mapping resource="eu/europeana/uim/logging/database/Queries.xml" /> 
 
-        <mapping class="eu.europeana.uim.logging.database.DatabaseLogEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.TDatabaseLogEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.TObjectDatabaseLogEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.TStringDatabaseLogEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.TDurationDatabaseEntry"/>
     </session-factory>
 </hibernate-configuration>

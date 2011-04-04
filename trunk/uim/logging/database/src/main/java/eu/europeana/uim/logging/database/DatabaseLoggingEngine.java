@@ -22,7 +22,9 @@ import eu.europeana.uim.store.Execution;
  * @since Mar 31, 2011
  */
 public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEngine<Long, T> {
-    private DatabaseLogEntryHome home;
+    private TStringDatabaseLogEntryHome stringHome;
+    private TObjectDatabaseLogEntryHome objectHome;
+    private TDurationDatabaseEntryHome  durationHome;
 
     @Override
     public String getIdentifier() {
@@ -32,38 +34,38 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @Override
     public void log(Level level, String message, Execution<Long> execution,
             MetaDataRecord<Long> mdr, IngestionPlugin plugin) {
-        StringDatabaseLogEntry entry = new StringDatabaseLogEntry();
+        TStringDatabaseLogEntry entry = new TStringDatabaseLogEntry();
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginIdentifier(plugin.getName());
+        entry.setPluginName(plugin.getName());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(message);
 
-        home.update(entry);
+        stringHome.update(entry);
     }
 
     @Override
     public void logStructured(Level level, T payload, Execution<Long> execution,
             MetaDataRecord<Long> mdr, IngestionPlugin plugin) {
-        ObjectDatabaseLogEntry entry = new ObjectDatabaseLogEntry();
+        TObjectDatabaseLogEntry entry = new TObjectDatabaseLogEntry();
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginIdentifier(plugin.getName());
+        entry.setPluginName(plugin.getName());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(payload);
 
-        home.update(entry);
+        objectHome.update(entry);
     }
 
     @Override
     public List<LogEntry<Long, String>> getExecutionLog(Execution<Long> execution) {
-        List<DatabaseLogEntry<?>> entries = home.retrieveEntriesForExecution(execution);
+        List<TDatabaseLogEntry<?>> entries = stringHome.retrieveEntriesForExecution(execution);
         List<LogEntry<Long, String>> results = new ArrayList<LogEntry<Long, String>>();
-        for (DatabaseLogEntry<?> entry : entries) {
+        for (TDatabaseLogEntry<?> entry : entries) {
             if (entry.getMessage() instanceof String) {
-                results.add((StringDatabaseLogEntry)entry);
+                results.add((TStringDatabaseLogEntry)entry);
             }
         }
         return results;
@@ -72,9 +74,9 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @SuppressWarnings("unchecked")
     @Override
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution<Long> execution) {
-        List<DatabaseLogEntry<?>> entries = home.retrieveEntriesForExecution(execution);
+        List<TDatabaseLogEntry<?>> entries = objectHome.retrieveEntriesForExecution(execution);
         List<LogEntry<Long, T>> results = new ArrayList<LogEntry<Long, T>>();
-        for (DatabaseLogEntry<?> entry : entries) {
+        for (TDatabaseLogEntry<?> entry : entries) {
             if (!(entry.getMessage() instanceof String)) {
                 results.add((LogEntry<Long, T>)entry);
             }
@@ -84,33 +86,33 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
 
     @Override
     public void logDuration(IngestionPlugin plugin, Long duration, int count) {
-        DurationLogEntry[] entries = new DurationLogEntry[count];
+        TDurationDatabaseEntry[] entries = new TDurationDatabaseEntry[count];
         for (int i = 0; i < count; i++) {
-            DurationLogEntry entry = new DurationLogEntry();
+            TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / count);
             entry.setPluginName(plugin.getName());
             entries[i] = entry;
         }
-        home.insert(entries);
+        durationHome.insert(entries);
     }
 
     @Override
     public void logDurationDetailed(IngestionPlugin plugin, Long duration, Long... mdr) {
-        DurationLogEntry[] entries = new DurationLogEntry[mdr.length];
+        TDurationDatabaseEntry[] entries = new TDurationDatabaseEntry[mdr.length];
         for (int i = 0; i < mdr.length; i++) {
-            DurationLogEntry entry = new DurationLogEntry();
+            TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / mdr.length);
             entry.setPluginName(plugin.getName());
             entries[i] = entry;
         }
-        home.insert(entries);
+        durationHome.insert(entries);
     }
 
     @Override
     public Long getAverageDuration(IngestionPlugin plugin) {
         long average = 0;
-        List<DurationLogEntry> entries = home.retrieveDurationEntries(plugin);
-        for (DurationLogEntry entry : entries) {
+        List<TDurationDatabaseEntry> entries = durationHome.retrieveDurationEntries(plugin);
+        for (TDurationDatabaseEntry entry : entries) {
             average += entry.getDuration();
         }
         average /= entries.size();

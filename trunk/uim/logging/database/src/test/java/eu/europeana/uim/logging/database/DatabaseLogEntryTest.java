@@ -38,7 +38,7 @@ public class DatabaseLogEntryTest {
 
     @Test
     public void testEntryLifeCycle() {
-        StringDatabaseLogEntry entry = new StringDatabaseLogEntry();
+        TStringDatabaseLogEntry entry = new TStringDatabaseLogEntry();
         entry.setLevel(Level.WARNING);
 
         assertEquals("Plain setter/getter testing", entry.getLevel(), Level.WARNING);
@@ -47,7 +47,7 @@ public class DatabaseLogEntryTest {
 
         assertNotNull(entry.getOid());
 
-        DatabaseLogEntry entry2 = entryHome.findByOid(entry.getOid());
+        TDatabaseLogEntry entry2 = entryHome.findByOid(entry.getOid());
         assertNotSame("Persistence instance", entry, entry2);
 
         assertEquals(entry.getLevel(), entry2.getLevel());

@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_DURATIONLOGENTRY", sequenceName = "seq_uim_durationlogentry")
 @DiscriminatorColumn(name = "EMP_TYPE", discriminatorType = DiscriminatorType.INTEGER)
-public class DurationLogEntry {
+public class TDurationDatabaseEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_DURATIONLOGENTRY")
     private Long   oid;
