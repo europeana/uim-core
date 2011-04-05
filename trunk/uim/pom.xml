@@ -30,6 +30,10 @@
 
         <!-- simplistic in-memory logging -->
         <module>logging/memory</module>
+        
+        <!-- jpa based database logging -->
+        <module>logging/database-model</module>
+        <module>logging/database</module>
 
         <!-- a dummy plugin for testing -->
         <module>plugins/dummy</module>

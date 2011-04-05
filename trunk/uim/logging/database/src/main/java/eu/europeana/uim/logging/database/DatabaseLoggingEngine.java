@@ -33,20 +33,20 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @Autowired
     private TDurationDatabaseEntryHome  durationHome;
 
-    /**
-     * Creates a new instance of this class.
-     * 
-     * @param stringHome
-     * @param objectHome
-     * @param durationHome
-     */
-    public DatabaseLoggingEngine(TStringDatabaseLogEntryHome stringHome,
-                                 TObjectDatabaseLogEntryHome objectHome,
-                                 TDurationDatabaseEntryHome durationHome) {
-        this.stringHome = stringHome;
-        this.objectHome = objectHome;
-        this.durationHome = durationHome;
-    }
+//    /**
+//     * Creates a new instance of this class.
+//     * 
+//     * @param stringHome
+//     * @param objectHome
+//     * @param durationHome
+//     */
+//    public DatabaseLoggingEngine(TStringDatabaseLogEntryHome stringHome,
+//                                 TObjectDatabaseLogEntryHome objectHome,
+//                                 TDurationDatabaseEntryHome durationHome) {
+//        this.stringHome = stringHome;
+//        this.objectHome = objectHome;
+//        this.durationHome = durationHome;
+//    }
 
     @Override
     public String getIdentifier() {

@@ -8,32 +8,97 @@
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>europeana-uim-logging-database</artifactId>
-    <name>Unified Ingestion Manager: API Database Only Storage</name>
-    <packaging>bundle</packaging>
+    <artifactId>europeana-uim-logging-database-model</artifactId>
+    <name>Unified Ingestion Manager: Database Model</name>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.0.1</version>
-                <extensions>true</extensions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.theeuropeanlibrary</groupId>
+                                    <artifactId>tel-database-ftl</artifactId>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${basedir}/target/template</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>hibernate3-maven-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>hbm2dao</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <instructions>
-                        <Import-Package>
-                            !eu.europeana.uim.logging.database.*,
-                            *
-                        </Import-Package>
-                        <Export-Package>
-                            eu.europeana.uim.logging.database.*,
-                        </Export-Package>
-                        <Embed-Dependency>
-                            *;scope=compile|runtime;inline=false;
-                        </Embed-Dependency>
-                        <Embed-Transitive>true</Embed-Transitive>
-                    </instructions>
+                    <components>
+                        <component>
+                            <name>hbm2dao</name>
+                            <implementation>annotationconfiguration</implementation>
+                            <outputDirectory>
+                                target/source/java
+							</outputDirectory>
+                        </component>
+                        <component>
+                            <name>hbm2ddl</name>
+                            <implementation>annotationconfiguration</implementation>
+                            <outputDirectory>
+                                target/source/sql
+                            </outputDirectory>
+                        </component>
+                    </components>
+                    <componentProperties>
+                        <template>daohome.ftl</template>
+                        <templatepath>${basedir}/target/template</templatepath>
+                        <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
+                        <ejb3>false</ejb3>
+                        <jdk5>true</jdk5>
+
+                        <drop>true</drop>
+                        <format>true</format>
+                        <export>false</export>
+                        <outputfilename>schema.sql</outputfilename>
+                    </componentProperties>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/target/source/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
@@ -54,83 +119,51 @@
                 </includes>
             </testResource>
         </testResources>
-        <extensions>
-            <extension>
-                <groupId>postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>8.4-701.jdbc3</version>
-            </extension>
-        </extensions>
     </build>
 
     <dependencies>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.theeuropeanlibrary</groupId>
+            <artifactId>tel-database-ftl</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-logging-database-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-logging-database-model</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>${spring.core.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.core.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.core.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>3.3.2.GA</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>3.4.0.GA</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-annotations</artifactId>
             <version>3.4.0.GA</version>
-            <scope>provided</scope>
         </dependency>
 
 
