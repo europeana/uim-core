@@ -21,25 +21,28 @@ import eu.europeana.uim.store.Execution;
  * @since Mar 22, 2011
  */
 public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
-    private LoggingEngine.Level level;
-    private Date                date;
-    private Execution<I>        execution;
-    private IngestionPlugin     plugin;
-    private MetaDataRecord<I>   mdr;
-    private T                   message;
+    private final LoggingEngine.Level level;
+    private final Date                date;
+    private final Execution<I>        execution;
+    private final IngestionPlugin     plugin;
+    private final MetaDataRecord<I>   mdr;
+    private final T                   message;
+    private final String              scope;
 
     /**
      * Creates a new instance of this class.
      * 
+     * @param plugin
+     * @param execution
+     * @param mdr
+     * @param scope
      * @param level
      * @param date
-     * @param execution
-     * @param plugin
-     * @param mdr
      * @param message
      */
-    public MemoryLogEntry(LoggingEngine.Level level, Date date, Execution<I> execution,
-                          IngestionPlugin plugin, MetaDataRecord<I> mdr, T message) {
+    public MemoryLogEntry(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
+                          String scope, LoggingEngine.Level level, Date date, T message) {
+        this.scope = scope;
         this.level = level;
         this.date = date;
         this.execution = execution;
@@ -47,7 +50,7 @@ public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
         this.mdr = mdr;
         this.message = message;
     }
-    
+
     @Override
     public LoggingEngine.Level getLevel() {
         return level;
@@ -76,5 +79,10 @@ public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
     @Override
     public T getMessage() {
         return message;
+    }
+
+    @Override
+    public String getScope() {
+        return scope;
     }
 }

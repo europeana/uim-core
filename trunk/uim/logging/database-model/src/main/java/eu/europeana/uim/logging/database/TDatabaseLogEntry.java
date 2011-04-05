@@ -38,19 +38,22 @@ public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     private Long   oid;
 
     @Column
-    private Level  level;
-
-    @Column
-    private Date   date;
+    private String pluginName;
 
     @Column
     private Long   executionId;
 
     @Column
-    private String pluginName;
+    private Long   metaDataRecordId;
 
     @Column
-    private Long   metaDataRecordId;
+    private String scope;
+
+    @Column
+    private Level  level;
+
+    @Column
+    private Date   date;
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -123,5 +126,18 @@ public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
      */
     public void setMetaDataRecordId(Long metaDataRecordId) {
         this.metaDataRecordId = metaDataRecordId;
+    }
+
+    @Override
+    public String getScope() {
+        return scope;
+    }
+
+    /**
+     * @param scope
+     *            scope of logging message (further dividing of plugins for example)
+     */
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }

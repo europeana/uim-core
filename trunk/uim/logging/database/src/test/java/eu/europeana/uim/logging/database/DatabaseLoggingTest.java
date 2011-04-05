@@ -29,16 +29,16 @@ import eu.europeana.uim.util.LoggingIngestionPlugin;
         "/test-logging-beans.xml" })
 public class DatabaseLoggingTest {
     @Autowired
-    private TStringDatabaseLogEntryHome   stringHome;
+    private TStringDatabaseLogEntryHome     stringHome;
 
     @Autowired
-    private TObjectDatabaseLogEntryHome   objectHome;
+    private TObjectDatabaseLogEntryHome     objectHome;
 
     @Autowired
-    private TDurationDatabaseEntryHome    durationHome;
+    private TDurationDatabaseEntryHome      durationHome;
 
     @Autowired
-    private DatabaseLoggingEngine<String> loggingEngine;
+    private DatabaseLoggingEngine<String[]> loggingEngine;
 
     /**
      * Truncates all tables.
@@ -57,31 +57,31 @@ public class DatabaseLoggingTest {
     public void testDatabaseLogging() {
         Date date = new Date();
 
-        loggingEngine.log(Level.WARNING, "Test", new ExecutionBean<Long>(1l),
-                new MetaDataRecordBean<Long>(2l, new RequestBean<Long>(4l, null, date)),
-                new LoggingIngestionPlugin());
-        List<LogEntry<Long, String>> executionLog = loggingEngine.getExecutionLog(new ExecutionBean<Long>(
+        loggingEngine.log(new LoggingIngestionPlugin(), new ExecutionBean<Long>(1l),
+                new MetaDataRecordBean<Long>(2l, new RequestBean<Long>(4l, null, date)), "Testing",
+                Level.WARNING, "Test");
+        List<LogEntry<Long, String[]>> executionLog = loggingEngine.getExecutionLog(new ExecutionBean<Long>(
                 1l));
         Assert.assertNotNull(executionLog);
         Assert.assertEquals(1, executionLog.size());
-        LogEntry<Long, String> logEntry = executionLog.get(0);
+        LogEntry<Long, String[]> logEntry = executionLog.get(0);
         Assert.assertEquals(new Long(1l), logEntry.getExecutionId());
         Assert.assertFalse(date.before(logEntry.getDate()));
-        Assert.assertEquals("Test", logEntry.getMessage());
+        Assert.assertEquals("Test", logEntry.getMessage()[0]);
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
         Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());
         Assert.assertEquals(Level.WARNING, logEntry.getLevel());
 
-        loggingEngine.logStructured(Level.WARNING, "Test", new ExecutionBean<Long>(1l),
-                new MetaDataRecordBean<Long>(2l, new RequestBean<Long>(4l, null, date)),
-                new LoggingIngestionPlugin());
+        loggingEngine.logStructured(new LoggingIngestionPlugin(), new ExecutionBean<Long>(1l),
+                new MetaDataRecordBean<Long>(2l, new RequestBean<Long>(4l, null, date)), "Testing",
+                Level.WARNING, new String[] { "Test" });
         executionLog = loggingEngine.getStructuredExecutionLog(new ExecutionBean<Long>(1l));
         Assert.assertNotNull(executionLog);
         Assert.assertEquals(1, executionLog.size());
         logEntry = executionLog.get(0);
         Assert.assertEquals(new Long(1l), logEntry.getExecutionId());
         Assert.assertFalse(date.before(logEntry.getDate()));
-        Assert.assertEquals("Test", logEntry.getMessage());
+        Assert.assertEquals("Test", logEntry.getMessage()[0]);
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
         Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());
         Assert.assertEquals(Level.WARNING, logEntry.getLevel());

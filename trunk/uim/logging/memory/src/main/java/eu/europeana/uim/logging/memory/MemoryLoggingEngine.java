@@ -27,9 +27,9 @@ import eu.europeana.uim.store.Execution;
  * @since Mar 22, 2011
  */
 public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
-    private Map<Execution<?>, List<LogEntry<I, String>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<I, String>>>();
-    private Map<Execution<?>, List<LogEntry<I, T>>>      structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<I, T>>>();
-    private Map<IngestionPlugin, List<Long>>             durations               = new HashMap<IngestionPlugin, List<Long>>();
+    private Map<Execution<?>, List<LogEntry<I, String[]>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<I, String[]>>>();
+    private Map<Execution<?>, List<LogEntry<I, T>>>        structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<I, T>>>();
+    private Map<IngestionPlugin, List<Long>>               durations               = new HashMap<IngestionPlugin, List<Long>>();
 
     @Override
     public String getIdentifier() {
@@ -37,29 +37,30 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     }
 
     @Override
-    public void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
-            IngestionPlugin plugin) {
-        List<LogEntry<I, String>> logs = executionLogs.get(execution);
+    public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
+            String scope, Level level, String... message) {
+        List<LogEntry<I, String[]>> logs = executionLogs.get(execution);
         if (logs == null) {
-            logs = new ArrayList<LogEntry<I, String>>();
+            logs = new ArrayList<LogEntry<I, String[]>>();
             executionLogs.put(execution, logs);
         }
-        logs.add(new MemoryLogEntry<I, String>(level, new Date(), execution, plugin, mdr, message));
+        logs.add(new MemoryLogEntry<I, String[]>(plugin, execution, mdr, scope, level, new Date(),
+                message));
     }
 
     @Override
-    public void logStructured(Level level, T payload, Execution<I> execution,
-            MetaDataRecord<I> mdr, IngestionPlugin plugin) {
+    public void logStructured(IngestionPlugin plugin, Execution<I> execution,
+            MetaDataRecord<I> mdr, String scope, Level level, T payload) {
         List<LogEntry<I, T>> logs = structuredExecutionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, T>>();
             structuredExecutionLogs.put(execution, logs);
         }
-        logs.add(new MemoryLogEntry<I, T>(level, new Date(), execution, plugin, mdr, payload));
+        logs.add(new MemoryLogEntry<I, T>(plugin, execution, mdr, scope, level, new Date(), payload));
     }
 
     @Override
-    public List<LogEntry<I, String>> getExecutionLog(Execution<I> execution) {
+    public List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution) {
         return executionLogs.get(execution);
     }
 

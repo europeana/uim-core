@@ -2,6 +2,8 @@ package eu.europeana.uim.api;
 
 import java.util.Date;
 
+import eu.europeana.uim.api.LoggingEngine.Level;
+
 /**
  * Interface for a specific log entry.
  * 
@@ -15,14 +17,9 @@ import java.util.Date;
  */
 public interface LogEntry<I, T> {
     /**
-     * @return level of logging
+     * @return name of plugin
      */
-    LoggingEngine.Level getLevel();
-
-    /**
-     * @return date of creation
-     */
-    Date getDate();
+    String getPluginName();
 
     /**
      * @return for which execution
@@ -30,14 +27,24 @@ public interface LogEntry<I, T> {
     I getExecutionId();
 
     /**
-     * @return name of plugin
-     */
-    String getPluginName();
-
-    /**
      * @return metadata record ID
      */
     I getMetaDataRecordId();
+
+    /**
+     * @return scope of logging message (further dividing of plugins for example)
+     */
+    String getScope();
+
+    /**
+     * @return level of logging
+     */
+    Level getLevel();
+
+    /**
+     * @return date of creation
+     */
+    Date getDate();
 
     /**
      * @return generic message

@@ -33,29 +33,14 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @Autowired
     private TDurationDatabaseEntryHome  durationHome;
 
-//    /**
-//     * Creates a new instance of this class.
-//     * 
-//     * @param stringHome
-//     * @param objectHome
-//     * @param durationHome
-//     */
-//    public DatabaseLoggingEngine(TStringDatabaseLogEntryHome stringHome,
-//                                 TObjectDatabaseLogEntryHome objectHome,
-//                                 TDurationDatabaseEntryHome durationHome) {
-//        this.stringHome = stringHome;
-//        this.objectHome = objectHome;
-//        this.durationHome = durationHome;
-//    }
-
     @Override
     public String getIdentifier() {
         return DatabaseLoggingEngine.class.getSimpleName();
     }
 
     @Override
-    public void log(Level level, String message, Execution<Long> execution,
-            MetaDataRecord<Long> mdr, IngestionPlugin plugin) {
+    public void log(IngestionPlugin plugin, Execution<Long> execution, MetaDataRecord<Long> mdr,
+            String scope, Level level, String... message) {
         TStringDatabaseLogEntry entry = new TStringDatabaseLogEntry();
         entry.setLevel(level);
         entry.setDate(new Date());
@@ -68,9 +53,9 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     }
 
     @Override
-    public void logStructured(Level level, T payload, Execution<Long> execution,
-            MetaDataRecord<Long> mdr, IngestionPlugin plugin) {
-        TObjectDatabaseLogEntry entry = new TObjectDatabaseLogEntry();
+    public void logStructured(IngestionPlugin plugin, Execution<Long> execution,
+            MetaDataRecord<Long> mdr, String scope, Level level, T payload) {
+        TObjectDatabaseLogEntry<T> entry = new TObjectDatabaseLogEntry<T>();
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
@@ -82,16 +67,16 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     }
 
     @Override
-    public List<LogEntry<Long, String>> getExecutionLog(Execution<Long> execution) {
+    public List<LogEntry<Long, String[]>> getExecutionLog(Execution<Long> execution) {
         List<TStringDatabaseLogEntry> entries = stringHome.findByExecution(execution.getId());
-        List<LogEntry<Long, String>> results = new ArrayList<LogEntry<Long, String>>();
+        List<LogEntry<Long, String[]>> results = new ArrayList<LogEntry<Long, String[]>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             results.add((TStringDatabaseLogEntry)entry);
         }
         return results;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution<Long> execution) {
         List<TObjectDatabaseLogEntry> entries = objectHome.findByExecution(execution.getId());

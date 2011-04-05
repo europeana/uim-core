@@ -39,19 +39,21 @@ public interface LoggingEngine<I, T> {
     /**
      * Logs a message
      * 
-     * @param level
-     *            the level of the message
-     * @param message
-     *            the message string
+     * @param plugin
+     *            the plugin reporting the log
      * @param execution
      *            the execution during which this log was issues
      * @param mdr
      *            the record for which this log was issued
-     * @param plugin
-     *            the plugin reporting the log
+     * @param scope
+     *            scope of logging message (further dividing of plugins for example)
+     * @param level
+     *            the level of the message
+     * @param message
+     *            message strings
      */
-    void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
-            IngestionPlugin plugin);
+    void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr, String scope,
+            Level level, String... message);
 
     /**
      * Retrieves simple log entries for one execution
@@ -60,24 +62,26 @@ public interface LoggingEngine<I, T> {
      *            the execution
      * @return a list of LogEntry-s
      */
-    List<LogEntry<I, String>> getExecutionLog(Execution<I> execution);
+    List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution);
 
     /**
      * Logs a structured message, to be used for advanced log analysis
      * 
-     * @param level
-     *            the level of the message
-     * @param payload
-     *            a structured message object
+     * @param plugin
+     *            the plugin reporting the log
      * @param execution
      *            the execution during which this log was issues
      * @param mdr
      *            the record for which this log was issued
-     * @param plugin
-     *            the plugin reporting the log
+     * @param scope
+     *            scope of logging message (further dividing of plugins for example)
+     * @param level
+     *            the level of the message
+     * @param payload
+     *            a structured message object
      */
-    void logStructured(Level level, T payload, Execution<I> execution, MetaDataRecord<I> mdr,
-            IngestionPlugin plugin);
+    void logStructured(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
+            String scope, Level level, T payload);
 
     /**
      * Retrieves structured log entries for one execution
@@ -101,15 +105,6 @@ public interface LoggingEngine<I, T> {
     void logDuration(IngestionPlugin plugin, Long duration, int count);
 
     /**
-     * Gets the average duration of the execution of plugin over a MDR
-     * 
-     * @param plugin
-     *            the plugin
-     * @return the average duration in milliseconds
-     */
-    Long getAverageDuration(IngestionPlugin plugin);
-
-    /**
      * Logs a processing duration and attaches information regarding the processed MDRs
      * 
      * @param plugin
@@ -120,4 +115,13 @@ public interface LoggingEngine<I, T> {
      *            the identifier of the MDR(s)
      */
     void logDurationDetailed(IngestionPlugin plugin, Long duration, I... mdr);
+
+    /**
+     * Gets the average duration of the execution of plugin over a MDR
+     * 
+     * @param plugin
+     *            the plugin
+     * @return the average duration in milliseconds
+     */
+    Long getAverageDuration(IngestionPlugin plugin);
 }

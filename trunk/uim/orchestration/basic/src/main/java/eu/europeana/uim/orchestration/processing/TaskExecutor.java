@@ -85,25 +85,27 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 success = false;
                 if (loggingEngine != null &&
                     t.getClass().equals(CorruptedMetadataRecordException.class)) {
-                    loggingEngine.log(Level.WARNING,
-                            "Major error in the workflow the metadata record is broken!",
-                            execution, metaDataRecord, task.getStep());
+                    loggingEngine.log(task.getStep(), execution, metaDataRecord, "Taskexecution",
+                            Level.WARNING,
+                            "Major error in the workflow the metadata record is broken!");
                 }
             } else if (!task.isSuccessfulProcessing()) {
                 if (task.isMandatory()) {
                     success = false;
                     if (loggingEngine != null) {
                         loggingEngine.log(
+                                task.getStep(),
+                                execution,
+                                metaDataRecord,
+                                "Taskexecution",
                                 Level.WARNING,
-                                "Task could not perform its work and since it is mandatory for the workflow, the workflow cannot continue!",
-                                execution, metaDataRecord, task.getStep());
+                                "Task could not perform its work and since it is mandatory for the workflow, the workflow cannot continue!");
                     }
                 } else {
                     if (loggingEngine != null) {
-                        loggingEngine.log(
-                                Level.WARNING,
-                                "Task could not perform its work, but the processing of the meta data record can continue!",
-                                execution, metaDataRecord, task.getStep());
+                        loggingEngine.log(task.getStep(), execution, metaDataRecord,
+                                "Taskexecution", Level.WARNING,
+                                "Task could not perform its work, but the processing of the meta data record can continue!");
                     }
                 }
             }

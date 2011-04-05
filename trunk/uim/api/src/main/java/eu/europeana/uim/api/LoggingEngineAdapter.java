@@ -24,18 +24,18 @@ public abstract class LoggingEngineAdapter<I, T> implements LoggingEngine<I, T> 
     }
 
     @Override
-    public void log(Level level, String message, Execution<I> execution, MetaDataRecord<I> mdr,
-            IngestionPlugin plugin) {
+    public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
+            String scope, Level level, String... message) {
     }
 
     @Override
-    public List<LogEntry<I, String>> getExecutionLog(Execution<I> execution) {
+    public List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution) {
         return null;
     }
 
     @Override
-    public void logStructured(LoggingEngine.Level level, T payload, Execution<I> execution,
-            MetaDataRecord<I> mdr, IngestionPlugin plugin) {
+    public void logStructured(IngestionPlugin plugin, Execution<I> execution,
+            MetaDataRecord<I> mdr, String scope, Level level, T payload) {
     }
 
     @Override

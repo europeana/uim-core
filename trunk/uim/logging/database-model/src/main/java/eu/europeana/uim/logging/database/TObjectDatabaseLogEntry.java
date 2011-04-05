@@ -14,23 +14,26 @@ import org.apache.commons.lang.SerializationUtils;
 /**
  * Implementation of log entries for messages of generic objects.
  * 
+ * @param <T>
+ *            generic message
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 4, 2011
  */
 @Entity
 @Table(name = "uim_objectlogentry")
 @DiscriminatorValue("object")
-public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Serializable> {
+public class TObjectDatabaseLogEntry<T extends Serializable> extends TDatabaseLogEntry<T> {
     @Lob
-    private byte[]       msg;
+    private byte[] msg;
 
     @Transient
-    private Serializable message;
+    private T      message;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Serializable getMessage() {
+    public T getMessage() {
         if (message == null && msg != null) {
-            message = (Serializable)SerializationUtils.deserialize(msg);
+            message = (T)SerializationUtils.deserialize(msg);
         }
         return message;
     }
@@ -39,7 +42,7 @@ public class TObjectDatabaseLogEntry extends TDatabaseLogEntry<Serializable> {
      * @param message
      *            generic message
      */
-    public void setMessage(Serializable message) {
+    public void setMessage(T message) {
         msg = SerializationUtils.serialize(message);
         this.message = message;
     }
