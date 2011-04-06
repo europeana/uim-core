@@ -67,14 +67,18 @@ public class UIMWorkflowProcessor implements Runnable {
 
     @Override
     public void run() {
+        List<ActiveExecution<?>> active = new ArrayList<ActiveExecution<?>>();
+
         running = true;
         while (running) {
+            boolean isbusy = false;
             int totalProgress = 0;
 
-            List<ActiveExecution<?>> active = new ArrayList<ActiveExecution<?>>();
+            active.clear();
             synchronized (executions) {
                 active.addAll(executions);
             }
+            
             for (ActiveExecution<?> execution : active) {
                 totalProgress += execution.getProgressSize();
             }
@@ -116,8 +120,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
                             }
                         } else {
-                            IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(
-                                    new IngestionPlugin[0]);
+                            IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(new IngestionPlugin[0]);
                             for (int i = steps.length - 1; i >= 0; i--) {
                                 IngestionPlugin thisStep = steps[i];
 
@@ -152,6 +155,8 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
 
                                 while (task != null) {
+                                    isbusy |= true; // well there is something todo
+                                    
                                     if (task.getThrowable() != null &&
                                         task.getThrowable().getClass().equals(
                                                 IngestionPluginFailedException.class)) {
@@ -190,6 +195,13 @@ public class UIMWorkflowProcessor implements Runnable {
                 } // end synchronized execution
             } catch (Throwable exc) {
                 log.log(Level.SEVERE, "Exception in workflow executor", exc);
+            }
+            
+            if (!isbusy) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                }
             }
 
             if (executions.isEmpty()) {
