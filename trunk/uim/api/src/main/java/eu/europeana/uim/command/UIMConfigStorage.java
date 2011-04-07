@@ -9,12 +9,12 @@ import java.util.logging.Logger;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.service.command.CommandSession;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.service.command.CommandSession;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;

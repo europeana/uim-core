@@ -23,9 +23,9 @@
 						<Import-Package>eu.europeana.uim.common.*,
 							org.apache.commons.lang.*,
                             org.apache.felix.gogo.commands,
+                            org.apache.felix.service.command,
                             org.osgi.framework,
                             org.osgi.service.blueprint,
-                            org.osgi.service.command,
                             org.osgi.service.cm
                         </Import-Package>
 						<Export-Package>eu.europeana.uim,

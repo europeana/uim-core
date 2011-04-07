@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.osgi.service.command.CommandSession;
+import org.apache.felix.service.command.CommandSession;
 
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.Registry;

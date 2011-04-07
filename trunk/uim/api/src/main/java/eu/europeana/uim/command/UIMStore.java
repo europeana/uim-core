@@ -11,7 +11,7 @@ import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-import org.osgi.service.command.CommandSession;
+import org.apache.felix.service.command.CommandSession;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
@@ -233,7 +233,7 @@ public class UIMStore implements Action {
             storage.checkpoint();
         } catch (Throwable e) {
             out.println("Failed to update collection. Failed to update using method <" + method +
-                        "(" + argument2 + ")");
+                        "(\"" + argument2 + "\")");
         }
     }
 
