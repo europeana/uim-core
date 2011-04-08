@@ -38,7 +38,7 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMExecution implements Action {
 
     enum Operation {
-        list, start, pause, cancel, status, help
+        list, start, pause, resume, cancel, status, help
     }
 
     private final Registry          registry;
@@ -94,6 +94,9 @@ public class UIMExecution implements Action {
         case pause:
             pause(out);
             break;
+        case resume:
+            resume(out);
+            break;
         case cancel:
             cancel(out);
             break;
@@ -112,6 +115,16 @@ public class UIMExecution implements Action {
         ActiveExecution<?> execution = getOrListExecution(out, "pause");
         if (execution != null) {
             execution.setPaused(true);
+            // orchestrator.pause();
+        } else {
+            out.println("Could not find execution to pause with ID " + argument0);
+        }
+    }
+
+    private void resume(PrintStream out) {
+        ActiveExecution<?> execution = getOrListExecution(out, "resume");
+        if (execution != null) {
+            execution.setPaused(false);
             // orchestrator.pause();
         } else {
             out.println("Could not find execution to pause with ID " + argument0);
@@ -231,7 +244,7 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getStartTime()), e.getId(), e.getWorkflow().getName(),
+                                df.format(e.getStartTime()) + ", paused=" + e.isPaused(), e.getId(), e.getWorkflow().getName(),
                         e.getDataSet()));
             }
         }
