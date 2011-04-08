@@ -48,7 +48,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<I, ?>            loggingEngine;
+    private final LoggingEngine<I, ?>         loggingEngine;
 
     private final Execution<I>                execution;
     private final Workflow                    workflow;
