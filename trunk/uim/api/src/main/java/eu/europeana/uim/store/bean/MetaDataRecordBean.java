@@ -8,6 +8,7 @@ import java.util.Set;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
 
 /**
@@ -53,9 +54,20 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         this.request = request;
     }
 
+    
+    
     @Override
     public Request<I> getRequest() {
         return request;
+    }
+    
+    
+    @Override
+    public Collection<I> getCollection() {
+        if (request != null) {
+            return request.getCollection();
+        }
+        return null;
     }
 
     /**

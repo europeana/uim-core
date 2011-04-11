@@ -3,6 +3,7 @@ package eu.europeana.uim;
 import java.util.List;
 import java.util.Set;
 
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Request;
 
@@ -17,6 +18,11 @@ import eu.europeana.uim.store.Request;
  * @since Mar 21, 2011
  */
 public interface MetaDataRecord<I> extends DataSet<I> {
+    /**
+     * @return the request in which this record is valid
+     */
+    Collection<I> getCollection();
+
     /**
      * @return the request in which this record is valid
      */

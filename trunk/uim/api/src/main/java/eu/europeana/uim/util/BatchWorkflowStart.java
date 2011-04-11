@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -32,6 +33,8 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class BatchWorkflowStart implements WorkflowStart {
+    private static final Logger                       log      = Logger.getLogger(BatchWorkflowStart.class.getName());
+
 
     /** String BATCH_SUBSET */
     public static final String                    BATCH_SUBSET  = "batch.subset";
@@ -87,6 +90,7 @@ public class BatchWorkflowStart implements WorkflowStart {
     public void initialize(ExecutionContext context, StorageEngine<?> storage)
             throws WorkflowStartFailedException {
         try {
+            long start = System.currentTimeMillis();
             Object[] ids;
 
             DataSet dataSet = context.getDataSet();
@@ -130,6 +134,8 @@ public class BatchWorkflowStart implements WorkflowStart {
                 ids = ArrayUtils.subarray(ids, 0, Math.min(subset, ids.length - 1));
             }
 
+            log.info(String.format("Loaded %d records in %.3f sec", ids.length, (System.currentTimeMillis() - start ) / 1000.0));
+            
             Data data = new Data();
             data.total = ids.length;
             context.putValue(DATA_KEY, data);
@@ -137,10 +143,10 @@ public class BatchWorkflowStart implements WorkflowStart {
                 int batches = (int)Math.ceil(1.0 * ids.length / BATCH_SIZE);
                 for (int i = 0; i < batches; i++) {
                     int end = Math.min(ids.length, (i + 1) * BATCH_SIZE);
-                    int start = i * BATCH_SIZE;
+                    int sta = i * BATCH_SIZE;
 
-                    Object[] batch = new Object[end - start];
-                    System.arraycopy(ids, start, batch, 0, end - start);
+                    Object[] batch = new Object[end - sta];
+                    System.arraycopy(ids, sta, batch, 0, end - sta);
 
                     synchronized (context.getValue(DATA_KEY).batches) {
                         context.getValue(DATA_KEY).batches.add(batch);
@@ -156,6 +162,9 @@ public class BatchWorkflowStart implements WorkflowStart {
                     context.getValue(DATA_KEY).batches.add(ids);
                 }
             }
+            
+            log.info(String.format("Created %d batches in %.3f sec", data.batches.size(), (System.currentTimeMillis() - start ) / 1000.0));
+            
             data.initialized = true;
         } finally {
         }
@@ -173,11 +182,6 @@ public class BatchWorkflowStart implements WorkflowStart {
                         List<MetaDataRecord> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
                         MetaDataRecord[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
                             
-//                        MetaDataRecord[] mdrs = new MetaDataRecord[poll.length];
-//                        for (int i = 0; i < poll.length; i++) {
-//                            mdrs[i] = storage.getMetaDataRecord(poll[i]);
-//                        }
-
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord mdr = mdrs[i];
                             Task task = new Task(mdr, storage, context);

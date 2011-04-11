@@ -10,8 +10,10 @@ import java.util.Set;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.TKey;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
 
 /**
@@ -55,6 +57,9 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         return request;
     }
 
+    public Collection getCollection() {
+        return request.getCollection();
+    }
 
     public String getIdentifier() {
         return identifier;
