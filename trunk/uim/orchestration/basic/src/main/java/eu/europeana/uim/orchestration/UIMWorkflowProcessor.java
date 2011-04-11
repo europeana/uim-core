@@ -21,6 +21,7 @@ import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.orchestration.processing.TaskExecutorThread;
 import eu.europeana.uim.orchestration.processing.TaskExecutorThreadFactory;
+import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
 import eu.europeana.uim.workflow.TaskStatus;
@@ -93,7 +94,7 @@ public class UIMWorkflowProcessor implements Runnable {
                         // we ask the workflow start if we have more to do
                         WorkflowStart start = execution.getWorkflow().getStart();
 
-                        if (!execution.isPaused()) {
+                        if (execution.isInitialized() && !execution.isPaused()) {
                             boolean newtasks = false;
                             int execProgress = execution.getProgressSize();
                             if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
@@ -108,7 +109,8 @@ public class UIMWorkflowProcessor implements Runnable {
                                         if (execution.isFinished()) {
                                             complete(execution, start, true);
                                         }
-                                    } else if (start.isFinished(execution, execution.getStorageEngine())) {
+                                    } else if (start.isFinished(execution,
+                                            execution.getStorageEngine())) {
                                         // everything done no new
                                         if (execution.isFinished()) {
                                             Thread.sleep(100);
@@ -187,10 +189,10 @@ public class UIMWorkflowProcessor implements Runnable {
                                             task = prevSuccess.poll();
                                         }
                                     }
-                                }                            
+                                }
                             }
                         } else {
-                            // this is paused ... are we now cancelled - if yes stop
+                            // this is paused or not initialized ... are we now cancelled - if yes stop
                             if (execution.getMonitor().isCancelled()) {
                                 complete(execution, start, true);
                             }
@@ -313,43 +315,74 @@ public class UIMWorkflowProcessor implements Runnable {
      * @param execution
      * @throws StorageEngineException
      */
-    public synchronized void schedule(ActiveExecution<Task> execution)
-            throws StorageEngineException {
+    public void schedule(final ActiveExecution<Task> execution) throws StorageEngineException {
         if (execution.getWorkflow().getSteps().isEmpty())
             throw new IllegalStateException("Empty workflow not allowed: " +
                                             execution.getWorkflow().getClass().getName());
 
-        WorkflowStart start = execution.getWorkflow().getStart();
-        start.initialize(execution, execution.getStorageEngine());
+        // init in separate thread, so that we are not blocking here.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    synchronized (executions) {
+                        executions.add(execution);
+                    }
 
-        TaskExecutorRegistry.getInstance().initialize(start.getName(),
-                start.getPreferredThreadCount(), start.getMaximumThreadCount());
+                    WorkflowStart start = execution.getWorkflow().getStart();
+                    start.initialize(execution, execution.getStorageEngine());
 
-        HashSet<String> unique = new HashSet<String>();
-        for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-            if (unique.contains(step.getName())) {
-                throw new IllegalArgumentException("Workflow contains duplicate plugin:" +
-                                                   step.getClass().getSimpleName());
-            } else {
-                unique.add(step.getName());
+                    TaskExecutorRegistry.getInstance().initialize(start.getName(),
+                            start.getPreferredThreadCount(), start.getMaximumThreadCount());
+
+                    HashSet<String> unique = new HashSet<String>();
+                    for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
+                        if (unique.contains(step.getName())) {
+                            throw new IllegalArgumentException(
+                                    "Workflow contains duplicate plugin:" +
+                                            step.getClass().getSimpleName());
+                        } else {
+                            unique.add(step.getName());
+                        }
+
+                        step.initialize(execution);
+                        TaskExecutorRegistry.getInstance().initialize(step.getName(),
+                                step.getPreferredThreadCount(), step.getMaximumThreadCount());
+                    }
+
+                    execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
+                    execution.setInitialized(true);
+                    
+                } catch (Throwable t) {
+                    log.log(Level.SEVERE, "Failed to startup execution.", t);
+                    try {
+                        
+                        execution.setThrowable(t);
+                        execution.setActive(false);
+                        execution.setEndTime(new Date());
+                        execution.getStorageEngine().updateExecution(
+                                (Execution<Task>)execution.getExecution());
+                    } catch (StorageEngineException e) {
+                        log.log(Level.SEVERE, "Failed to persist failed execution.", e);
+                    } finally {
+                        synchronized (executions) {
+                            executions.remove(execution);
+                        }
+                    }
+                }
             }
-
-            step.initialize(execution);
-            TaskExecutorRegistry.getInstance().initialize(step.getName(),
-                    step.getPreferredThreadCount(), step.getMaximumThreadCount());
-        }
-
-        execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
-        synchronized (executions) {
-            executions.add(execution);
-        }
+        }, "Initializer" + execution.getId() + ": " + execution.getWorkflowName()).start();
     }
 
     /**
      * @return scheduled executions
      */
     public synchronized List<ActiveExecution<?>> getExecutions() {
-        return Collections.unmodifiableList(executions);
+        ArrayList<ActiveExecution<?>> result = new ArrayList<ActiveExecution<?>>();
+        synchronized (executions) {
+            result.addAll(executions);
+        }
+        return Collections.unmodifiableList(result);
     }
 
     /**

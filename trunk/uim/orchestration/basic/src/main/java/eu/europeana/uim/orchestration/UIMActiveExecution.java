@@ -48,7 +48,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<I, ?>         loggingEngine;
+    private final LoggingEngine<I, ?>            loggingEngine;
 
     private final Execution<I>                execution;
     private final Workflow                    workflow;
@@ -56,6 +56,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private final RevisableProgressMonitor    monitor;
 
     private boolean                           paused;
+    private boolean                             initialized;
     private Throwable                         throwable;
 
     private int                               scheduled = 0;
@@ -195,6 +196,16 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    @Override
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
     }
@@ -306,6 +317,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public boolean isFinished() {
+        if (!isInitialized()) return false;
+        
         boolean cancelled = getMonitor().isCancelled();
 
         boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());

@@ -3,6 +3,7 @@ package eu.europeana.uim.api;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Collection;
@@ -276,11 +277,25 @@ public interface StorageEngine<I> {
     I[] getByRequest(Request<I> request) throws StorageEngineException;
 
     /**
+     * @param request
+     * @return IDs for records for this request
+     * @throws StorageEngineException
+     */
+    BlockingQueue<I[]> getBatchesByRequest(Request<I> request) throws StorageEngineException;
+
+    /**
      * @param collection
      * @return IDs for records for this collection
      * @throws StorageEngineException
      */
     I[] getByCollection(Collection<I> collection) throws StorageEngineException;
+
+    /**
+     * @param collection
+     * @return IDs for records for this collection
+     * @throws StorageEngineException
+     */
+    BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection) throws StorageEngineException;
 
     /**
      * @param provider
@@ -289,6 +304,15 @@ public interface StorageEngine<I> {
      * @throws StorageEngineException
      */
     I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+
+
+    /**
+     * @param provider
+     * @param recursive
+     * @return IDs for records for this provider
+     * @throws StorageEngineException
+     */
+    BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
 
     /**
      * @return IDs for all known records

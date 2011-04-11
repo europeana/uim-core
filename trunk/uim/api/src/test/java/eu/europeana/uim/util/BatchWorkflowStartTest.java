@@ -6,14 +6,18 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.junit.Test;
 
 import eu.europeana.uim.TKey;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageEngineAdapter;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.ArrayUtils;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.util.BatchWorkflowStart.Data;
@@ -33,20 +37,20 @@ public class BatchWorkflowStartTest {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testInitialization() throws StorageEngineException {
-        StorageEngine engine = mock(StorageEngine.class);
+        StorageEngine engine = mock(StorageEngineAdapter.class);
         Collection collection = mock(Collection.class);
         ActiveExecution execution = mock(ActiveExecution.class);
+
+        List<Long[]> batches = ArrayUtils.batches(new Long[] { 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L }, 3);
 
         when(execution.getDataSet()).thenReturn(collection);
         when(execution.getStorageEngine()).thenReturn(engine);
         when(execution.getProperties()).thenReturn(new Properties());
-        when(engine.getByCollection((Collection)any())).thenReturn(
-                new Object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
+        when(engine.getBatchesByCollection((Collection)any())).thenReturn(
+                new LinkedBlockingDeque<Long[]>(batches));
 
         Data data = new BatchWorkflowStart.Data();
         when(execution.getValue((TKey<?, Data>)any())).thenReturn(data);
-
-        BatchWorkflowStart.BATCH_SIZE = 3;
 
         BatchWorkflowStart start = new BatchWorkflowStart();
 

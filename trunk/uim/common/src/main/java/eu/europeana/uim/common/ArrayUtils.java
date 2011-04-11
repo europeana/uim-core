@@ -42,4 +42,34 @@ public class ArrayUtils {
         return result;
     }
 
+    public static List<Long[]> batches(Long[] data, int batchsize) {
+        ArrayList<Long[]> result = new ArrayList<Long[]>();
+
+        int batches = (int)Math.ceil(1.0 * data.length / batchsize);
+        for (int i = 0; i < batches; i++) {
+            int end = Math.min(data.length, (i + 1) * batchsize);
+            int start = i * batchsize;
+
+            Long[] batch = new Long[end - start];
+            System.arraycopy(data, start, batch, 0, end - start);
+            result.add(batch);
+        }
+        return result;
+    }
+
+    public static List<Integer[]> batches(Integer[] data, int batchsize) {
+        ArrayList<Integer[]> result = new ArrayList<Integer[]>();
+
+        int batches = (int)Math.ceil(1.0 * data.length / batchsize);
+        for (int i = 0; i < batches; i++) {
+            int end = Math.min(data.length, (i + 1) * batchsize);
+            int start = i * batchsize;
+
+            Integer[] batch = new Integer[end - start];
+            System.arraycopy(data, start, batch, 0, end - start);
+            result.add(batch);
+        }
+        return result;
+    }
+
 }

@@ -36,6 +36,18 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      */
     boolean isPaused();
 
+
+    /**
+     * @param initialized
+     *            is the execution already initialized
+     */
+    public void setInitialized(boolean initialized);
+
+    /**
+     * @return Is the execution initialized
+     */
+    boolean isInitialized();
+
     /**
      * test the execution if all tasks are done either completely finished or failed. so if true:
      * scheduled == finished + failed

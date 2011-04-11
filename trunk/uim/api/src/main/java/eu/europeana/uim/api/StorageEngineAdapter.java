@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.common.ArrayUtils;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
@@ -189,6 +192,27 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     @Override
     public Long[] getByCollection(Collection<Long> collection) {
         return new Long[0];
+    }
+    
+    @Override
+    public BlockingQueue<Long[]> getBatchesByRequest(Request<Long> request)
+            throws StorageEngineException {
+        List<Long[]> batches = ArrayUtils.batches(getByRequest(request), 250);
+        return new LinkedBlockingQueue<Long[]>(batches);
+    }
+
+    @Override
+    public BlockingQueue<Long[]> getBatchesByCollection(Collection<Long> collection)
+            throws StorageEngineException {
+        List<Long[]> batches = ArrayUtils.batches(getByCollection(collection), 250);
+        return new LinkedBlockingQueue<Long[]>(batches);
+    }
+
+    @Override
+    public BlockingQueue<Long[]> getBatchesByProvider(Provider<Long> provider, boolean recursive)
+            throws StorageEngineException {
+        List<Long[]> batches = ArrayUtils.batches(getByProvider(provider, recursive), 250);
+        return new LinkedBlockingQueue<Long[]>(batches);
     }
 
     @Override
