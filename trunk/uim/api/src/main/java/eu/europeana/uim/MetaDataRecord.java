@@ -3,6 +3,7 @@ package eu.europeana.uim;
 import java.util.List;
 import java.util.Set;
 
+import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Request;

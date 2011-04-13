@@ -1,4 +1,4 @@
-package eu.europeana.uim;
+package eu.europeana.uim.common;
 
 import java.util.HashMap;
 import java.util.Map;

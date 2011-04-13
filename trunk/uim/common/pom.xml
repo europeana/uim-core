@@ -46,7 +46,9 @@
 							org.xml.sax.ext, 
 							org.xml.sax.helpers,</Import-Package>
 						<DynamicImport-Package>*</DynamicImport-Package>
-						<Export-Package>eu.europeana.uim.common,
+						<Export-Package>
+						    eu.europeana.uim,
+						    eu.europeana.uim.common,
 							eu.europeana.uim.common.parse,
 							org.apache.commons.lang;version="2.4",
 							org.apache.commons.lang.*;version="2.4",

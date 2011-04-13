@@ -32,7 +32,7 @@ public class SampleProperties {
      */
     public void loadSampleData(StorageEngine<?> storage) throws StorageEngineException, IOException {
         InputStream stream = SampleProperties.class.getResourceAsStream("/sampledata.properties");
-        loadPropertiesData(storage, stream);
+        loadConfigData(storage, stream);
     }
 
     /**
@@ -45,7 +45,7 @@ public class SampleProperties {
      * @throws StorageEngineException
      * @throws IOException
      */
-    public void loadPropertiesData(StorageEngine<?> storage, InputStream stream)
+    public void loadConfigData(StorageEngine<?> storage, InputStream stream)
             throws StorageEngineException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
@@ -87,7 +87,7 @@ public class SampleProperties {
                     }
                 } else if (split[0].startsWith("collection")) {
                     String[] arguments = split[1].split("\\|");
-                    createCollection(storage, arguments[2], arguments[0], arguments[1]);
+                    createCollection(storage, arguments[3], arguments[0], arguments[1], arguments[2]);
                 } else if (split[0].startsWith("oai.collurl")) {
                     String[] arguments = split[1].split("\\|");
                     Collection collection = storage.findCollection(arguments[0]);
@@ -125,7 +125,7 @@ public class SampleProperties {
     }
 
     private Collection<?> createCollection(StorageEngine<?> storage, String parent,
-            String mnemonic, String name) throws StorageEngineException {
+            String mnemonic, String name, String language) throws StorageEngineException {
         Provider provider = storage.findProvider(parent);
         if (provider == null) {
             log.warning("Failed to create collection. Provider \"" + parent + "\" not found.");
@@ -135,6 +135,7 @@ public class SampleProperties {
         Collection collection = storage.createCollection(provider);
         collection.setMnemonic(mnemonic);
         collection.setName(name);
+        collection.setLanguage(language);
         storage.updateCollection(collection);
         return collection;
     }

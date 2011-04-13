@@ -3,8 +3,8 @@ package eu.europeana.uim.api;
 import java.io.Serializable;
 import java.util.Properties;
 
-import eu.europeana.uim.TKey;
 import eu.europeana.uim.common.RevisableProgressMonitor;
+import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Workflow;

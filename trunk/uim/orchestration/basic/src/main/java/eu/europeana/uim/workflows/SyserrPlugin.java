@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Random;
 
 import eu.europeana.uim.MetaDataRecord;
-import eu.europeana.uim.TKey;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
+import eu.europeana.uim.common.TKey;
 
 /**
  * Simple plugin to write to system error.

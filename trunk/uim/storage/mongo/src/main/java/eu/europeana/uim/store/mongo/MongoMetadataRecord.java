@@ -12,7 +12,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import eu.europeana.uim.MetaDataRecord;
-import eu.europeana.uim.TKey;
+import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
 

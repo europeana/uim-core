@@ -9,7 +9,7 @@ import java.io.Serializable;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.TKey;
+import eu.europeana.uim.common.TKey;
 
 /**
  * 

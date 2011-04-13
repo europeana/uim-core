@@ -20,7 +20,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>eu.europeana.uim.common.*,
+						<Import-Package>
+						    eu.europeana.uim.*,
+						    eu.europeana.uim.common.*,
 							org.apache.commons.lang.*,
                             org.apache.felix.gogo.commands,
                             org.apache.felix.service.command,

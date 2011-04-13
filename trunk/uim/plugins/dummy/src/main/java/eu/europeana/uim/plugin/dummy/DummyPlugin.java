@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.MetaDataRecord;
-import eu.europeana.uim.TKey;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
+import eu.europeana.uim.common.TKey;
 
 /**
  * Dummy plugin only for logging.

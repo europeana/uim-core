@@ -125,14 +125,16 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     @Override
     public String toString() {
         String string = super.toString();
+        
+        string += "@" + getLanguage();
         String oai = getOaiBaseUrl() != null ? getOaiBaseUrl()
                 : (getProvider().getOaiBaseUrl() != null ? getProvider().getOaiBaseUrl() : null);
         if (oai != null) {
             string += " [";
-            string += oai;
-            string += "?metadataPrefix=";
-            string += getOaiMetadataPrefix() != null ? getOaiMetadataPrefix()
-                    : getProvider().getOaiMetadataPrefix();
+            string += oai + "?";
+            string += getOaiSet() != null ? "set=" + getOaiSet() : "";
+            string += getOaiMetadataPrefix() != null ? "&metadataPrefix=" + getOaiMetadataPrefix()
+                    : "&metadataPrefix=" + getProvider().getOaiMetadataPrefix();
             string += "]";
         }
         return string;

@@ -1,5 +1,7 @@
 package eu.europeana.uim.command;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -30,7 +32,28 @@ import eu.europeana.uim.util.SampleProperties;
 @Command(name = "uim", scope = "store")
 public class UIMStore implements Action {
     private enum Operation {
-        createProvider, updateProvider, listProvider, createCollection, updateCollection, listCollection, checkpoint, loadSampleData
+        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
+                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
+                                                                                                                                                                                                                                "lists the providers"), createCollection(
+                                                                                                                                                                                                                                                                         "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"), updateCollection(
+                                                                                                                                                                                                                                                                                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"), listCollection(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           "lists the collections"), checkpoint(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "creates a checkpoint (a data synchronization)"), 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                loadConfigData(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "loads a set of provider/collections"),
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                loadSampleData(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "loads a set of sample provider/collections");
+
+        private String desc;
+
+        private Operation(String desc) {
+            this.desc = desc;
+        }
+
+        public String getDescription() {
+            return desc;
+        }
+
     }
 
     private Registry  registry;
@@ -65,14 +88,9 @@ public class UIMStore implements Action {
 
         if (operation == null) {
             out.println("Please specify an operation with the '-o' option. Possible values are:");
-            out.println("  createProvider\t\t\t\t\t\t<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag");
-            out.println("  updateProvider\t\t\t\t\t\t<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix");
-            out.println("  listProvider\t\t\t\t\t\tlists the providers");
-            out.println("  createCollection\t\t\t\t\t\t-p provider <mnemonic> <name> the provider as well as the mnemonic and name values");
-            out.println("  updateCollection\t\t\t\t\t\t<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language");
-            out.println("  listCollection\t\t\t\t\t\tlists the collections");
-            out.println("  checkpoint\t\t\t\t\t\tsynchronizes the storage with its backend.");
-            out.println("  loadSampleData\t\t\t\t\t\tloads a set of sample provider/collections");
+            for (Operation o : Operation.values()) {
+                out.println(o.toString() + "\t" + o.getDescription());
+            }
             return null;
         }
 
@@ -98,6 +116,9 @@ public class UIMStore implements Action {
             break;
         case checkpoint:
             checkpoint(storage, out);
+            break;
+        case loadConfigData:
+            new SampleProperties().loadConfigData(storage, new FileInputStream(new File(argument0)));
             break;
         case loadSampleData:
             new SampleProperties().loadSampleData(storage);

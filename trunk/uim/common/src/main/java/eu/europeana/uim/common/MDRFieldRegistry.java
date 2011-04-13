@@ -1,6 +1,5 @@
 package eu.europeana.uim.common;
 
-import eu.europeana.uim.TKey;
 
 @SuppressWarnings("all")
 public class MDRFieldRegistry {
