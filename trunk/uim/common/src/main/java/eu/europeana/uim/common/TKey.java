@@ -207,6 +207,9 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>> {
                         namespace = Class.forName(nn[0]);
                     }
 
+                    if (split[1].endsWith(".class")) {
+                        split[1] = split[1].substring(0, split[1].length() - 6);
+                    }
                     Class<?> type = Class.forName(split[1]);
                     return TKey.register(namespace, nn[1], type);
                 }
