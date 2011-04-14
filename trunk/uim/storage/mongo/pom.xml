@@ -134,47 +134,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-
     </build>
-
-
-    <repositories>
-        <repository>
-            <id>scala-tools.org</id>
-            <name>Scala-tools Maven2 Repository</name>
-            <url>http://scala-tools.org/repo-releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>morphia.googlecode.com</id>
-            <name>Morphia Repo at Google Code</name>
-            <url>http://morphia.googlecode.com/svn/mavenrepo/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>europeanalabs.eu</id>
-            <name>europeanalabs.eu-releases</name>
-            <url>http://europeanalabs.eu/artifactory/assets</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>scala-tools.org</id>
-            <name>Scala-tools Maven2 Repository</name>
-            <url>http://scala-tools.org/repo-releases</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>

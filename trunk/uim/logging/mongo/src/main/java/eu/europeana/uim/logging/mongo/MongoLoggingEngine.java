@@ -11,6 +11,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
@@ -22,7 +23,7 @@ import eu.europeana.uim.store.Execution;
  *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
-public class MongoLoggingEngine<T> implements LoggingEngine<T> {
+public class MongoLoggingEngine<T> implements LoggingEngine<Long, T> {
 
     public static final String DEFAULT_UIM_DB_NAME = "UIM";
     public static final String LOG_ENTRIES = "LogEntries";
@@ -76,7 +77,8 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         return MongoLoggingEngine.class.getSimpleName();
     }
 
-    public void log(Level level, String message, Execution execution, MetaDataRecord mdr, IngestionPlugin plugin) {
+    @Override
+    public void log(IngestionPlugin plugin, Execution execution, MetaDataRecord mdr, String scope, Level level, String... message) {
         DBObject entry = new BasicDBObject();
         entry.put("level", level.toString());
         entry.put("executionId", execution.getId());
@@ -87,16 +89,17 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         logEntries.insert(entry);
     }
 
-    public List<LogEntry<String>> getExecutionLog(Execution execution) {
-        List<LogEntry<String>> res = new ArrayList<LogEntry<String>>();
+    public List<LogEntry<Long, String[]>> getExecutionLog(Execution execution) {
+        List<LogEntry<Long, String[]>> res = new ArrayList<LogEntry<Long, String[]>>();
         DBCursor entries = logEntries.find(new BasicDBObject("executionId", execution.getId()));
         for (DBObject entry : entries) {
-            res.add(new MongoLogEntry<String>((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), (String) entry.get("message"), (String) entry.get("pluginIdentifier")));
+            res.add(new MongoLogEntry((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), new String[]{(String) entry.get("message")}, (String) entry.get("pluginIdentifier")));
         }
         return res;
     }
 
-    public void logStructured(Level level, T payload, Execution execution, MetaDataRecord mdr, IngestionPlugin plugin) {
+    @Override
+    public void logStructured(IngestionPlugin plugin, Execution execution, MetaDataRecord mdr, String scope, Level level, T payload) {
         DBObject entry = new BasicDBObject();
         entry.put("level", level.toString());
         entry.put("executionId", execution.getId());
@@ -112,23 +115,26 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         try {
             serialized = serializer.serialize(payload);
         } catch(Throwable t) {
-            log(Level.WARNING, "Could not log structured entry for payload '" + t.toString() + "'", execution, mdr, plugin);
+            //log(Level.WARNING, "Could not log structured entry for payload '" + t.toString() + "'", execution, mdr, plugin);
         }
 
         entry.put("message", serialized);
         logEntries.insert(entry);
     }
 
-    public List<LogEntry<T>> getStructuredExecutionLog(Execution execution) {
-        List<LogEntry<T>> res = new ArrayList<LogEntry<T>>();
+    @Override
+    public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution execution) {
+        List<LogEntry<Long, T>> res = new ArrayList<LogEntry<Long, T>>();
         DBCursor entries = logEntries.find(new BasicDBObject("executionId", execution.getId()));
         for (DBObject entry : entries) {
             T hydrated = serializer.parse((DBObject)entry.get("message"));
-            res.add(new MongoLogEntry<T>((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), hydrated, (String) entry.get("pluginIdentifier")));
+            //FIXME
+//            res.add(new MongoLogEntry((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), hydrated, (String) entry.get("pluginIdentifier")));
         }
         return res;
     }
 
+    @Override
     public void logDuration(IngestionPlugin plugin, Long duration, int count) {
         for (int i = 0; i < count; i++) {
             DBObject d = new BasicDBObject();
@@ -139,7 +145,8 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         }
     }
 
-    public void logDurationDetailed(IngestionPlugin plugin, Long duration, long... mdrs) {
+    @Override
+    public void logDurationDetailed(IngestionPlugin plugin, Long duration, Long... mdrs) {
         for (Long mdr : mdrs) {
             DBObject d = new BasicDBObject();
             d.put("date", new Date());
@@ -150,6 +157,7 @@ public class MongoLoggingEngine<T> implements LoggingEngine<T> {
         }
     }
 
+    @Override
     public Long getAverageDuration(IngestionPlugin plugin) {
         DBObject condition = new BasicDBObject("pluginIdentifier", plugin.getName());
         DBObject initial = new BasicDBObject();
