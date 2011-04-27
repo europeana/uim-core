@@ -42,7 +42,7 @@
                 <configuration>
                     <runTarget>Application.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <i18nMessagesBundle>org.theeuropeanlibrary.uim.gui.gwt.client.Messages</i18nMessagesBundle>
+<!--                     <i18nMessagesBundle>org.theeuropeanlibrary.uim.gui.gwt.client.Messages</i18nMessagesBundle> -->
 
                     <!-- Additional configuration to be able to run the development mode against the webapp deployed on the 
                         OSGI platform -->
