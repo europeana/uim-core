@@ -4,14 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.common.BlockingInitializer;
+import eu.europeana.uim.logging.database.model.TDatabaseLogEntry;
+import eu.europeana.uim.logging.database.model.TDurationDatabaseEntry;
+import eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry;
+import eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry;
 import eu.europeana.uim.store.Execution;
 
 /**
@@ -24,14 +30,41 @@ import eu.europeana.uim.store.Execution;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 31, 2011
  */
-@Controller
 public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEngine<Long, T> {
-    @Autowired
-    private TStringDatabaseLogEntryHome stringHome;
-    @Autowired
-    private TObjectDatabaseLogEntryHome objectHome;
-    @Autowired
-    private TDurationDatabaseEntryHome  durationHome;
+    private static final Logger  log                 = Logger.getLogger(DatabaseLoggingEngine.class.getName());
+
+    private DatabaseLoggingStorage storage;
+
+    /**
+     * Creates a new instance of this class. The default constructor is used to initialize the
+     * spring context and alike for the storage engine.
+     */
+    public DatabaseLoggingEngine() {
+        BlockingInitializer initializer = new BlockingInitializer() {
+            @Override
+            public void initialize() {
+                try {
+                    status = STATUS_BOOTING;
+                    
+                    ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
+                    context.setValidating(false);
+                    context.setConfigLocations(
+                            new String[]{"/META-INF/db-context.xml", "/META-INF/db-beans.xml"});
+                    context.refresh();
+
+                    storage = (DatabaseLoggingStorage)context.getAutowireCapableBeanFactory().autowire(
+                            DatabaseLoggingStorage.class, AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
+                    
+                    status = STATUS_INITIALIZED;
+                } catch (Throwable t) {
+                    log.log(java.util.logging.Level.SEVERE, "Failed to initialize database logging.", t);
+                    status = STATUS_FAILED;
+                }
+            }
+        };
+        initializer.initialize(DatabaseLoggingEngine.class.getClassLoader());
+
+    }
 
     @Override
     public String getIdentifier() {
@@ -49,7 +82,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(message);
 
-        stringHome.update(entry);
+        storage.getStringHome().update(entry);
     }
 
     @Override
@@ -63,12 +96,13 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(payload);
 
-        objectHome.update(entry);
+        storage.getObjectHome().update(entry);
     }
 
     @Override
     public List<LogEntry<Long, String[]>> getExecutionLog(Execution<Long> execution) {
-        List<TStringDatabaseLogEntry> entries = stringHome.findByExecution(execution.getId());
+        List<TStringDatabaseLogEntry> entries = storage.getStringHome().findByExecution(
+                execution.getId());
         List<LogEntry<Long, String[]>> results = new ArrayList<LogEntry<Long, String[]>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             results.add((TStringDatabaseLogEntry)entry);
@@ -79,7 +113,8 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution<Long> execution) {
-        List<TObjectDatabaseLogEntry> entries = objectHome.findByExecution(execution.getId());
+        List<TObjectDatabaseLogEntry> entries = storage.getObjectHome().findByExecution(
+                execution.getId());
         List<LogEntry<Long, T>> results = new ArrayList<LogEntry<Long, T>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             results.add((LogEntry<Long, T>)entry);
@@ -96,7 +131,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
             entry.setPluginName(plugin.getName());
             entries[i] = entry;
         }
-        durationHome.insert(entries);
+        storage.getDurationHome().insert(entries);
     }
 
     @Override
@@ -108,13 +143,14 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
             entry.setPluginName(plugin.getName());
             entries[i] = entry;
         }
-        durationHome.insert(entries);
+        storage.getDurationHome().insert(entries);
     }
 
     @Override
     public Long getAverageDuration(IngestionPlugin plugin) {
         long average = 0;
-        List<TDurationDatabaseEntry> entries = durationHome.findByPlugin(plugin.getName());
+        List<TDurationDatabaseEntry> entries = storage.getDurationHome().findByPlugin(
+                plugin.getName());
         for (TDurationDatabaseEntry entry : entries) {
             average += entry.getDuration();
         }

@@ -1,4 +1,4 @@
-package eu.europeana.uim.logging.database;
+package eu.europeana.uim.logging.database.model;
 
 import java.util.Date;
 

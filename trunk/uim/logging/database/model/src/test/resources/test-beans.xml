@@ -11,8 +11,8 @@
     <context:annotation-config />
     <tx:annotation-driven proxy-target-class="true" />
 
-    <bean id="databaseLogEntryHome" class="eu.europeana.uim.logging.database.TDatabaseLogEntryHome" />
-    <bean id="stringDatabaseLogEntryHome" class="eu.europeana.uim.logging.database.TStringDatabaseLogEntryHome" />
-    <bean id="objectDatabaseLogEntryHome" class="eu.europeana.uim.logging.database.TObjectDatabaseLogEntryHome" />
-    <bean id="durationDatabaseEntryHome" class="eu.europeana.uim.logging.database.TDurationDatabaseEntryHome" />
+    <bean id="databaseLogEntryHome" class="eu.europeana.uim.logging.database.model.TDatabaseLogEntryHome" />
+    <bean id="stringDatabaseLogEntryHome" class="eu.europeana.uim.logging.database.model.TStringDatabaseLogEntryHome" />
+    <bean id="objectDatabaseLogEntryHome" class="eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntryHome" />
+    <bean id="durationDatabaseEntryHome" class="eu.europeana.uim.logging.database.model.TDurationDatabaseEntryHome" />
 </beans>

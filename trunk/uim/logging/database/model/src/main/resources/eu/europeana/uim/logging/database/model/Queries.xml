@@ -4,21 +4,21 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="eu.europeana.uim.logging.database">
 
-    <query name="eu.europeana.uim.logging.database.TStringDatabaseLogEntry.findByExecution">
+    <query name="eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry.findByExecution">
         SELECT s
         FROM TStringDatabaseLogEntry s
         WHERE s.executionId = :executionId
         <query-param name="executionId" type="java.lang.Long" />
     </query>
 
-    <query name="eu.europeana.uim.logging.database.TObjectDatabaseLogEntry.findByExecution">
+    <query name="eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry.findByExecution">
         SELECT o
         FROM TObjectDatabaseLogEntry o
         WHERE o.executionId = :executionId
         <query-param name="executionId" type="java.lang.Long" />
     </query>
 
-    <query name="eu.europeana.uim.logging.database.TDurationDatabaseEntry.findByPlugin">
+    <query name="eu.europeana.uim.logging.database.model.TDurationDatabaseEntry.findByPlugin">
         SELECT d
         FROM TDurationDatabaseEntry d
         WHERE d.pluginName = :pluginName

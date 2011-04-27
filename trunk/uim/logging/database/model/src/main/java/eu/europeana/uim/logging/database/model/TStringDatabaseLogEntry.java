@@ -1,5 +1,5 @@
 /* StringDatabaseLogEntry.java - created on Apr 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.logging.database;
+package eu.europeana.uim.logging.database.model;
 
 import java.util.ArrayList;
 import java.util.List;
