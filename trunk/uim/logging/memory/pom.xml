@@ -5,11 +5,10 @@
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
         <version>1.2.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>europeana-uim-logging-memory</artifactId>
-    <name>Unified Ingestion Manager: API Memory Only Logging</name>
+    <name>Unified Ingestion Manager: API MemoryOnly Logging</name>
     <packaging>bundle</packaging>
 
     <build>
