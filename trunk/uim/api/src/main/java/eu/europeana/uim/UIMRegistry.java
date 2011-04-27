@@ -1,5 +1,7 @@
 package eu.europeana.uim;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -83,6 +85,9 @@ public class UIMRegistry implements Registry {
 
     @Override
     public void addPlugin(IngestionPlugin plugin) {
+        
+
+        checkPluginForNonStaticMemberVariables(plugin);
         if (plugin != null) {
             log.info("Added plugin: " + plugin.getName());
             if (!plugins.containsKey(plugin.getName())) {
@@ -90,6 +95,24 @@ public class UIMRegistry implements Registry {
                 plugins.put(plugin.getName(), plugin);
             }
         }
+    }
+
+    /**
+     * Checks if the plugin contains non-static member variables
+     * @param plugin
+     */
+    private void checkPluginForNonStaticMemberVariables(IngestionPlugin plugin) {
+       
+        log.info("Checking for non-static member-fields: "+plugin.getName());
+       StringBuffer nonStaticMembers=new StringBuffer();
+       
+       //getFields() only accesses public fields - use getDeclaredFields() instead
+       for (Field currentField: plugin.getClass().getDeclaredFields()) {
+           if (Modifier.isStatic(currentField.getModifiers())) continue;
+           nonStaticMembers.append(currentField.getName()+" ");
+       }
+       if (nonStaticMembers.length()>0)
+         throw new IllegalArgumentException(plugin.getName()+" has non-static member(s): "+nonStaticMembers.toString());
     }
 
     @Override

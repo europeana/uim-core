@@ -56,4 +56,24 @@ public class UIMRegistryTest {
 
         assertEquals(1, registry.getLoggingEngines().size());
     }
+    
+    /**
+     * Test if registration fails registration
+     */
+    @Test(expected=IllegalArgumentException.class)
+   
+    public void testPluginMemberFieldCheckToFail() {
+        registry.addPlugin(new IllegalIngestionPlugin());
+        
+    }
+    
+    /**
+     * Test if registration fails registration
+     */
+    @Test
+    public void testPluginMemberFieldCheckToSucceed() {
+        registry.addPlugin(new LegalIngestionPlugin());
+        
+    }
+    
 }
