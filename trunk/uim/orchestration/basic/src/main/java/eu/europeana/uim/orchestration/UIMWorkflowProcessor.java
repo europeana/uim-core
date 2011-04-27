@@ -300,12 +300,17 @@ public class UIMWorkflowProcessor implements Runnable {
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
 
-        execution.getStorageEngine().checkpoint();
-        execution.getStorageEngine().completed(execution);
+        try {
+            execution.getStorageEngine().checkpoint();
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Failed to complete:" + start, t);
+        } finally {
+            execution.getStorageEngine().completed(execution);
 
-        log.warning("Remove Execution:" + execution.toString());
-        synchronized (executions) {
-            executions.remove(execution);
+            log.warning("Remove Execution:" + execution.toString());
+            synchronized (executions) {
+                executions.remove(execution);
+            }
         }
     }
 
