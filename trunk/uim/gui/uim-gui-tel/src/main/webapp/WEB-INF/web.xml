@@ -15,6 +15,6 @@
 
     <!-- Default page to serve -->
     <welcome-file-list>
-        <welcome-file>Application.html</welcome-file>
+        <welcome-file>IngestionCockpit.html</welcome-file>
     </welcome-file-list>
 </web-app>

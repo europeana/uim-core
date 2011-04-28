@@ -35,12 +35,12 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <goal>i18n</goal>
+<!--                             <goal>i18n</goal> -->
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <runTarget>Application.html</runTarget>
+                    <runTarget>IngestionCockpit.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
 <!--                     <i18nMessagesBundle>org.theeuropeanlibrary.uim.gui.gwt.client.Messages</i18nMessagesBundle> -->
 
@@ -48,7 +48,7 @@
                         OSGI platform -->
                     <port>8181</port>
                     <noServer>true</noServer>
-                    <runTarget>gui/Application.html</runTarget>
+                    <runTarget>gui/IngestionCockpit.html</runTarget>
                     <!-- custom argument to tell the AbstractOSGIRemoteServiceServlet that it can trust this environment -->
                     <!-- note the whitespace, I suppose this is due to the maven-gwt-plugin already providing some additional 
                         VM arguments -->
