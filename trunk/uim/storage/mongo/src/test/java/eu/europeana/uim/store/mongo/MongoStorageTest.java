@@ -13,6 +13,11 @@ import com.mongodb.MongoException;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.store.AbstractStorageEngineTest;
 
+/**
+ * Configuration class for MongoDB StorageEngineTests
+ * 
+ * @author Georgios Markakis
+ */
 @RunWith(JUnit4.class)
 public class MongoStorageTest extends AbstractStorageEngineTest<Long> {
 
@@ -20,25 +25,32 @@ public class MongoStorageTest extends AbstractStorageEngineTest<Long> {
 
     private Mongo m = null;	
 	
+	/**
+	 * Run before each test
+	 */
 	@Before
     public void setupTest(){
 		
 		try {
 			m = new Mongo();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MongoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
     
+	/**
+	 * Run after each test
+	 */
 	@After
     public void cleanup(){
-		//m.dropDatabase("UIMTEST");
+		m.dropDatabase("UIMTEST");
 	}
 	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
+	 */
 	@Override
 	protected StorageEngine<Long> getStorageEngine() {
 		   if (mongoEngine == null) {
@@ -50,18 +62,13 @@ public class MongoStorageTest extends AbstractStorageEngineTest<Long> {
 			        mongoEngine = engine;
 			      }
 			      catch(Exception e) {
-
 			          e.printStackTrace();
-			          
-			          
-			          //fail("Could not initialize mongodb storage engine");
-
 			      }
 			    }
 			    else {
 			      return mongoEngine;
 			    }
-		   return null;
+		   return mongoEngine;
 	}
 	
 	
