@@ -11,7 +11,7 @@ import eu.europeana.uim.store.Request;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongoRequest<Long> extends AbstractMongoEntity<Long> implements Request<Long> {
+public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Request<Long> {
 
 
     @Reference

@@ -13,7 +13,7 @@ import eu.europeana.uim.store.Provider;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongodbCollection<Long> extends AbstractMongoEntity<Long> implements Collection<Long> {
+public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements Collection<Long> {
 
     private String language;
 

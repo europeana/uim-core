@@ -9,7 +9,7 @@ import org.bson.types.ObjectId;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class AbstractMongoEntity<Long> implements DataSet<Long> {
+public class AbstractMongoEntity<T> implements DataSet<Long> {
 
     public static final String LID = "lid";
 
