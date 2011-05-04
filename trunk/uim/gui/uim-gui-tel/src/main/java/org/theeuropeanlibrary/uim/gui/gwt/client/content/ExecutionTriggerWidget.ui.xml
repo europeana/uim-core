@@ -18,7 +18,7 @@
     }
     
     .browser {
-      height: 200px;
+      height: 400px;
       border: 1px solid #ccc;
     }
   </ui:style>
@@ -30,7 +30,7 @@
 <!--           valign='top'> -->
           <c:CellBrowser
             addStyleNames='{style.browser}'
-            defaultColumnWidth='400'
+            defaultColumnWidth='300'
             ui:field='cellBrowser' />
 <!--         </td> -->
 <!--         <td -->

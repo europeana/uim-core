@@ -27,14 +27,14 @@
             align='center'
             class='{style.header}'>
             <ui:msg
-              key='contactInfoFormTitle'>Execution Form</ui:msg>
+              key='executionFormTitle'>Execution Form</ui:msg>
           </td>
         </tr>
         <tr>
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormFirstName'>Name</ui:msg>
+              key='executionFormName'>Name</ui:msg>
           </td>
           <td>
             <g:TextBox
@@ -45,7 +45,7 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormLastName'>Workflow</ui:msg>
+              key='executionFormWorkflow'>Workflow</ui:msg>
           </td>
           <td>
             <g:TextBox
@@ -56,7 +56,7 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormCategory'>:</ui:msg>
+              key='executionFormCategory'>:</ui:msg>
           </td>
           <td>
             <g:ListBox
@@ -67,7 +67,7 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormBirthday'>Dataset:</ui:msg>
+              key='executionFormDataset'>Dataset:</ui:msg>
           </td>
           <td>
             <g:TextBox
@@ -78,7 +78,7 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormAddress'>Resources:</ui:msg>
+              key='executionFormResources'>Resources:</ui:msg>
           </td>
           <td>
             <g:TextArea
@@ -92,13 +92,13 @@
             <g:Button
               ui:field='commitButton'>
               <ui:msg
-                key='contactInfoFormUpdateButton'>Commit</ui:msg>
+                key='executionFormCommitButton'>Commit</ui:msg>
             </g:Button>
               &nbsp;
             <g:Button
               ui:field='cancelButton'>
               <ui:msg
-                key='contactInfoFormCreateButton'>Cancel</ui:msg>
+                key='executionFormCancelButton'>Cancel</ui:msg>
             </g:Button>
           </td>
         </tr>
