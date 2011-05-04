@@ -163,7 +163,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         }
 
         for(Enum<?> qualifier : qualifiers) {
-            T value = (T) object.get(qualifier.name());
+            T value = (T) data.get(qualifier.name());
             res.add(value);
         }
         return res;
