@@ -17,34 +17,35 @@
       padding-left: 20px;
     }
     
-    .tree {
-      width: 500px;
+    .browser {
+      height: 200px;
       border: 1px solid #ccc;
     }
   </ui:style>
 
   <g:HTMLPanel>
-    <table>
-      <tr>
-        <td
-          valign='top'
-          align='center'>
-          <c:CellTree
-            addStyleNames='{style.tree}'
-            ui:field='cellTree' />
-        </td>
-        <td
-          class='{style.executionFormCell}'
-          valign='top'
-          align='center'>
+<!--     <table cellspacing='0' cellpadding='0' style='width:100%;'> -->
+<!--       <tr> -->
+<!--         <td -->
+<!--           valign='top'> -->
+          <c:CellBrowser
+            addStyleNames='{style.browser}'
+            defaultColumnWidth='300'
+            ui:field='cellBrowser' />
+<!--         </td> -->
+<!--         <td -->
+<!--           class='{style.executionFormCell}' -->
+<!--           valign='top' -->
+<!--           align='center'> -->
           <s:ExecutionForm
+             addStyleNames='{style.executionFormCell}'
             ui:field='executionForm' />
-          <br />
-          <g:Button
-            ui:field='startButton'>
-          </g:Button>
-        </td>
-      </tr>
-    </table>
+<!--           <br /> -->
+<!--           <g:Button -->
+<!--             ui:field='startButton'> -->
+<!--           </g:Button> -->
+<!--         </td> -->
+<!--       </tr> -->
+<!--     </table> -->
   </g:HTMLPanel>
 </ui:UiBinder>

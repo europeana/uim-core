@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.CurrentExecutionWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionDetailWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionHistoryWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionTriggerWidget;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.prefetch.RunAsyncCode;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.view.client.ListDataProvider;
@@ -25,6 +26,8 @@ import com.google.gwt.view.client.TreeViewModel;
  * @since Apr 27, 2011
  */
 public class SidebarTreeViewModel implements TreeViewModel {
+    private final OrchestrationServiceAsync orchestrationService = (OrchestrationServiceAsync) GWT.create(OrchestrationService.class);
+
     /**
      * The cell used to render categories.
      */
@@ -152,12 +155,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
             Category category = new Category("Monitoring");
             catList.add(category);
             category.addExample(
-                    new CurrentExecutionWidget(
-                            "Current Executions",
-                            "This view shows the current running executions together with their progress and a termination button!"),
-                    RunAsyncCode.runAsyncCode(CurrentExecutionWidget.class));
-            category.addExample(new ExecutionHistoryWidget("Execution History",
-                    "This view shows all finished executions!"),
+                    new ExecutionDetailWidget(orchestrationService),
+                    RunAsyncCode.runAsyncCode(ExecutionDetailWidget.class));
+            category.addExample(new ExecutionHistoryWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(ExecutionHistoryWidget.class));
         }
 
@@ -165,9 +165,7 @@ public class SidebarTreeViewModel implements TreeViewModel {
             Category category = new Category("Execution");
             catList.add(category);
             category.addExample(
-                    new ExecutionTriggerWidget(
-                            "Start Execution",
-                            "This view allows to select provider, collection and workflow and optional the resources to start a new execution!"),
+                    new ExecutionTriggerWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(ExecutionTriggerWidget.class));
         }
 

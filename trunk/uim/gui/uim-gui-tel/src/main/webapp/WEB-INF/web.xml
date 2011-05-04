@@ -4,14 +4,14 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-<!--     <servlet> -->
-<!--         <servlet-name>eu.europeana.uim.gui.gwt.Application OrchestrationService</servlet-name> -->
-<!--         <servlet-class>eu.europeana.uim.gui.gwt.server.OrchestrationServiceImpl</servlet-class> -->
-<!--     </servlet> -->
-<!--     <servlet-mapping> -->
-<!--         <servlet-name>eu.europeana.uim.gui.gwt.Application OrchestrationService</servlet-name> -->
-<!--         <url-pattern>/Application/orchestrator</url-pattern> -->
-<!--     </servlet-mapping> -->
+    <servlet>
+        <servlet-name>org.theeuropeanlibrary.uim.gui.gwt.IngestionCockpitOrchestrationService</servlet-name>
+        <servlet-class>org.theeuropeanlibrary.uim.gui.gwt.server.OrchestrationServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>org.theeuropeanlibrary.uim.gui.gwt.IngestionCockpitOrchestrationService</servlet-name>
+        <url-pattern>/IngestionCockpit/orchestrator</url-pattern>
+    </servlet-mapping>
 
     <!-- Default page to serve -->
     <welcome-file-list>

@@ -2,13 +2,18 @@
 <ui:UiBinder
   xmlns:ui="urn:ui:com.google.gwt.uibinder"
   xmlns:g="urn:import:com.google.gwt.user.client.ui"
-  xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+  xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+  xmlns:s="urn:import:org.theeuropeanlibrary.uim.gui.gwt.client.content">
 
   <ui:style>
     .cellTable {
       border-bottom: 1px solid #ccc;
       text-align: left;
       margin-bottom: 4px;
+    }
+    
+    .executionSatusCell {
+      padding-left: 20px;
     }
   </ui:style>
 
@@ -21,6 +26,17 @@
             addStyleNames='{style.cellTable}'
             pageSize='15'
             ui:field='cellTable' />
+        </td>
+        <td
+          class='{style.executionSatusCell}'
+          valign='top'
+          align='center'>
+          <s:ExecutionStatus
+            ui:field='executionStatus' />
+          <br />
+          <g:Button
+            ui:field='startButton'>
+          </g:Button>
         </td>
       </tr>
       <tr>

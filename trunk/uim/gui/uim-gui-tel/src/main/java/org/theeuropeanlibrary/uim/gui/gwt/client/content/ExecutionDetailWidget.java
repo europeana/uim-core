@@ -9,12 +9,15 @@ import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -22,12 +25,14 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.widgetideas.client.ProgressBar;
 
 /**
  * Table view showing current exectuions.
@@ -35,21 +40,27 @@ import com.google.gwt.view.client.SelectionModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionHistoryWidget extends IngestionCockpitWidget {
+public class ExecutionDetailWidget extends IngestionCockpitWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ExecutionHistoryWidget> {
+    interface Binder extends UiBinder<Widget, ExecutionDetailWidget> {
     }
 
-    private final OrchestrationServiceAsync orchestrationServiceAsync;
-    private final List<ExecutionDTO>        pastExecutions = new ArrayList<ExecutionDTO>();
+    private final OrchestrationServiceAsync orchestrationService;
+    private final List<ExecutionDTO>        activeExecutions = new ArrayList<ExecutionDTO>();
 
     /**
      * The main CellTable.
      */
     @UiField(provided = true)
     CellTable<ExecutionDTO>                 cellTable;
+
+    /**
+     * The contact form used to update contacts.
+     */
+    @UiField
+    ExecutionStatus                         executionStatus;
 
     /**
      * The pager used to change the range of data.
@@ -60,11 +71,13 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
     /**
      * Creates a new instance of this class.
      * 
-     * @param orchestrationServiceAsync
+     * @param orchestrationService
      */
-    public ExecutionHistoryWidget(OrchestrationServiceAsync orchestrationServiceAsync) {
-        super("Finished Executions", "This view shows all finished executions!");
-        this.orchestrationServiceAsync = orchestrationServiceAsync;
+    public ExecutionDetailWidget(OrchestrationServiceAsync orchestrationService) {
+        super(
+                "Active Executions",
+                "This view shows the current running executions together with their progress and a termination button!");
+        this.orchestrationService = orchestrationService;
     }
 
     /**
@@ -81,12 +94,12 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         cellTable.setWidth("100%", true);
 
         final ListDataProvider<ExecutionDTO> dataProvider = new ListDataProvider<ExecutionDTO>();
-        dataProvider.setList(pastExecutions);
+        dataProvider.setList(activeExecutions);
         dataProvider.addDataDisplay(cellTable);
 
         // Attach a column sort handler to the ListDataProvider to sort the list.
         ListHandler<ExecutionDTO> sortHandler = new ListHandler<ExecutionDTO>(
-                dataProvider.getList());
+                new ListDataProvider<ExecutionDTO>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
         // Create a Pager to control the table.
@@ -114,28 +127,29 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
     }
 
     /**
-     * Retrieve current past executions.
+     * Retrieve current executions.
      */
-    public void updatePastExecutions() {
-        orchestrationServiceAsync.getPastExecutions(new AsyncCallback<List<ExecutionDTO>>() {
+    public void updateActiveExecutions() {
+        // load active executions
+        orchestrationService.getActiveExecutions(new AsyncCallback<List<ExecutionDTO>>() {
             @Override
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
             }
 
             @Override
-            public void onSuccess(List<ExecutionDTO> result) {
-                pastExecutions.clear();
-                pastExecutions.addAll(result);
-                cellTable.setRowData(0, pastExecutions);
-                cellTable.setRowCount(pastExecutions.size());
+            public void onSuccess(List<ExecutionDTO> executions) {
+                activeExecutions.clear();
+                activeExecutions.addAll(executions);
+                cellTable.setRowData(0, activeExecutions);
+                cellTable.setRowCount(activeExecutions.size());
             }
         });
     }
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ExecutionHistoryWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(ExecutionDetailWidget.class, new RunAsyncCallback() {
 
             @Override
             public void onFailure(Throwable caught) {
@@ -209,23 +223,44 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         cellTable.addColumn(startTimeColumn, "Start Time");
         cellTable.setColumnWidth(startTimeColumn, 20, Unit.PCT);
 
-        // End Time
-        Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
+        // Progress Bar
+        Column<ExecutionDTO, ProgressBar> progressColumn = new Column<ExecutionDTO, ProgressBar>(
+                new ProgressBarCell()) {
             @Override
-            public Date getValue(ExecutionDTO object) {
-                return object.getEndTime();
+            public ProgressBar getValue(ExecutionDTO execution) {
+                final ProgressBar bar = new ProgressBar(0, execution.getScheduled());
+                bar.setTitle(execution.getName());
+                bar.setTextVisible(true);
+                return bar;
             }
         };
-        endTimeColumn.setSortable(true);
-        sortHandler.setComparator(endTimeColumn, new Comparator<ExecutionDTO>() {
+        progressColumn.setSortable(true);
+        sortHandler.setComparator(progressColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
                 return o1.getEndTime().compareTo(o2.getEndTime());
             }
         });
-        cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 20, Unit.PCT);
+        cellTable.addColumn(progressColumn, "Progress");
+        cellTable.setColumnWidth(progressColumn, 20, Unit.PCT);
 
-        updatePastExecutions();
+        updateActiveExecutions();
+
+        Timer t = new Timer() {
+            @Override
+            public void run() {
+                updateActiveExecutions();
+            }
+        };
+        t.scheduleRepeating(5000);
     }
+
+    private static class ProgressBarCell extends AbstractCell<ProgressBar> {
+        @Override
+        public void render(Context context, ProgressBar value, SafeHtmlBuilder sb) {
+            value.redraw();
+            sb.append(SafeHtmlUtils.fromString(value.getElement().getInnerHTML()));
+        }
+    }
+
 }
