@@ -1,8 +1,6 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -11,7 +9,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.DateBox;
 
 /**
  * A form used for editing contacts.
@@ -26,19 +23,20 @@ public class ExecutionForm extends Composite {
     }
 
     @UiField
-    TextArea addressBox;
+    TextBox  nameBox;
     @UiField
-    DateBox  birthdayBox;
+    TextBox  workflowBox;
     @UiField
     ListBox  categoryBox;
     @UiField
-    Button   createButton;
+    TextBox  datasetBox;
     @UiField
-    TextBox  firstNameBox;
+    TextArea resourcesBox;
+
     @UiField
-    TextBox  lastNameBox;
+    Button   commitButton;
     @UiField
-    Button   updateButton;
+    Button   cancelButton;
 
 // private ContactInfo contactInfo;
 
@@ -47,8 +45,8 @@ public class ExecutionForm extends Composite {
      */
     public ExecutionForm() {
         initWidget(uiBinder.createAndBindUi(this));
-        DateTimeFormat dateFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_LONG);
-        birthdayBox.setFormat(new DateBox.DefaultFormat(dateFormat));
+//        DateTimeFormat dateFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_LONG);
+//        birthdayBox.setFormat(new DateBox.DefaultFormat(dateFormat));
 
 // // Add the categories to the category box.
 // final Category[] categories = ContactDatabase.get().queryCategories();

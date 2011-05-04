@@ -30,7 +30,7 @@
 <!--           valign='top'> -->
           <c:CellBrowser
             addStyleNames='{style.browser}'
-            defaultColumnWidth='300'
+            defaultColumnWidth='400'
             ui:field='cellBrowser' />
 <!--         </td> -->
 <!--         <td -->

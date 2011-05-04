@@ -27,36 +27,47 @@
             align='center'
             class='{style.header}'>
             <ui:msg
-              key='contactInfoFormTitle'>Contact Info</ui:msg>
+              key='contactInfoFormTitle'>Execution Details</ui:msg>
           </td>
         </tr>
         <tr>
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormFirstName'>First Name:</ui:msg>
+              key='contactInfoFormFirstName'>Name</ui:msg>
           </td>
           <td>
             <g:TextBox
-              ui:field='firstNameBox' />
+              ui:field='nameBox' />
           </td>
         </tr>
         <tr>
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormLastName'>Last Name:</ui:msg>
+              key='contactInfoFormLastName'>Workflow</ui:msg>
           </td>
           <td>
             <g:TextBox
-              ui:field='lastNameBox' />
+              ui:field='workflowBox' />
           </td>
         </tr>
         <tr>
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormCategory'>Category:</ui:msg>
+              key='contactInfoFormBirthday'>Dataset:</ui:msg>
+          </td>
+          <td>
+            <g:TextBox
+              ui:field='datasetBox' />
+          </td>
+        </tr>
+        <tr>
+          <td
+            class='{style.label}'>
+            <ui:msg
+              key='contactInfoFormCategory'>Progress:</ui:msg>
           </td>
           <td>
             <g:ListBox
@@ -67,22 +78,11 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='contactInfoFormBirthday'>Birthday:</ui:msg>
-          </td>
-          <td>
-            <d:DateBox
-              ui:field='birthdayBox' />
-          </td>
-        </tr>
-        <tr>
-          <td
-            class='{style.label}'>
-            <ui:msg
-              key='contactInfoFormAddress'>Address:</ui:msg>
+              key='contactInfoFormAddress'>Resources:</ui:msg>
           </td>
           <td>
             <g:TextArea
-              ui:field='addressBox' />
+              ui:field='resourcesBox' />
           </td>
         </tr>
         <tr>
@@ -90,15 +90,15 @@
             colspan='2'
             align='center'>
             <g:Button
-              ui:field='updateButton'>
+              ui:field='pauseButton'>
               <ui:msg
-                key='contactInfoFormUpdateButton'>Update Contact</ui:msg>
+                key='contactInfoFormUpdateButton'>Pause</ui:msg>
             </g:Button>
               &nbsp;
             <g:Button
-              ui:field='createButton'>
+              ui:field='cancelButton'>
               <ui:msg
-                key='contactInfoFormCreateButton'>Create Contact</ui:msg>
+                key='contactInfoFormCreateButton'>Cancel</ui:msg>
             </g:Button>
           </td>
         </tr>
