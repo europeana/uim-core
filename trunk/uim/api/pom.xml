@@ -36,8 +36,10 @@
 							eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
 							eu.europeana.uim.workflow,
-							eu.europeana.uim.util
+							eu.europeana.uim.util,
+                            org.apache.commons.configuration.*;version=""1.6"
 						</Export-Package>
+                        <Embed-Dependency>commons-configuration</Embed-Dependency>     
 					</instructions>
 				</configuration>
 			</plugin>
