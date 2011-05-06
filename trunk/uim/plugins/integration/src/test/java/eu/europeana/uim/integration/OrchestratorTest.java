@@ -53,18 +53,9 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
                 // systemProperty("integrationDir").value(System.getProperty("integrationDir")),
 
                 // PaxRunnerOptions.vmOption(
-// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
-
-                scanFeatures(
-                        maven().groupId("org.apache.karaf").artifactId("apache-karaf").type("xml").classifier(
-                                "features").versionAsInProject(), "spring"),
-
-                // our modules. Karaf / Pax Exam don't fare well together in regards to feature
-// descriptors
-                // so until they do have these, we need to specify the OSGIfied maven bundles by
-// hand here
-                // this should be in sync with the feature descriptor at /etc/uim-features.xml
-
+                // "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
+                                
+                                
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),

@@ -3,9 +3,8 @@ package eu.europeana.uim.api;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Map;
 
-import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * Interface for resource storage engine type to an identifier
@@ -20,22 +19,22 @@ public interface ResourceEngine<I> {
     public void addGlobalResource(String key,String value);
     public void updateGlobalResource(String key,String value);
     public void cleanGlobalResource(String key);
-    public AbstractConfiguration getGlobalResources();
+    public Configuration getGlobalResources();
     
     public void addProviderResource(I id,String key,String value);
     public void updateProviderResource(I id,String key,String value);
     public void truncateProviderResource(I id,String key);
-    public AbstractConfiguration getProviderSpecificResources(I providerId);
+    public Configuration getProviderSpecificResources(I providerId);
     
     public void addCollectionResource(I id,String key,String value);
     public void updateCollectionResource(I id,String key,String value);
     public void truncateCollectionResource(I id,String key);
-    public AbstractConfiguration getCollectionSpecificResources(I collectionId);
+    public Configuration getCollectionSpecificResources(I collectionId);
     
     public void addExecutionResource(I id,String key,String value);
     public void updateExecutionResource(I id,String key,String value);
     public void truncateExecutionResource(I id,String key); 
-    public AbstractConfiguration getExecutionSpecificResources(I executionId);
+    public Configuration getExecutionSpecificResources(I executionId);
     
     /**
      * Returns a combined configuration in which the properties are overwritten in the following order:
@@ -50,7 +49,7 @@ public interface ResourceEngine<I> {
      * @param providerId
      * @return
      */
-    public AbstractConfiguration getExecutionEffectiveResources(I executionId,I collectionId,I providerId);
+    public Configuration getExecutionEffectiveResources(I executionId,I collectionId,I providerId);
     
     /**
      * @return

@@ -43,9 +43,9 @@ public class CommandTest extends AbstractUIMIntegrationTest {
 
 //						PaxRunnerOptions.vmOption( "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
 						
-				scanFeatures(
-                        maven().groupId("org.apache.karaf").artifactId("apache-karaf").type("xml").classifier("features").versionAsInProject(),
-                        "spring"),
+//				scanFeatures(
+//                        maven().groupId("org.apache.karaf").artifactId("apache-karaf").type("xml").classifier("features").versionAsInProject(),
+//                        "spring"),
 
                 // our modules. Karaf / Pax Exam don't fare well together in regards to feature descriptors
                 // so until they do have these, we need to specify the OSGIfied maven bundles by hand here

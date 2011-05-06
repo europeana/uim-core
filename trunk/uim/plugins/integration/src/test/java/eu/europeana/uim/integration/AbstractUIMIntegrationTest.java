@@ -1,11 +1,11 @@
 package eu.europeana.uim.integration;
 
-import org.apache.karaf.testing.AbstractIntegrationTest;
-import org.osgi.service.command.CommandProcessor;
-import org.osgi.service.command.CommandSession;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
+import org.apache.felix.service.command.CommandProcessor;
+import org.apache.felix.service.command.CommandSession;
+import org.apache.karaf.testing.AbstractIntegrationTest;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>

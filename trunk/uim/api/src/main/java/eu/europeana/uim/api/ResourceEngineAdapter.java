@@ -3,12 +3,9 @@ package eu.europeana.uim.api;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Map;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.input.NullInputStream;
 
 /**
@@ -41,7 +38,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public AbstractConfiguration getGlobalResources() {
+    public Configuration getGlobalResources() {
         return new BaseConfiguration();
     }
 
@@ -61,7 +58,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public AbstractConfiguration getProviderSpecificResources(I providerId) {
+    public Configuration getProviderSpecificResources(I providerId) {
         return new BaseConfiguration();
     }
 
@@ -81,7 +78,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public AbstractConfiguration getCollectionSpecificResources(I collectionId) {
+    public Configuration getCollectionSpecificResources(I collectionId) {
         return new BaseConfiguration();
     }
 
@@ -101,7 +98,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public AbstractConfiguration getExecutionSpecificResources(I executionId) {
+    public Configuration getExecutionSpecificResources(I executionId) {
         return new BaseConfiguration();
     }
 
@@ -117,7 +114,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public AbstractConfiguration getExecutionEffectiveResources(I executionId, I collectionId,
+    public Configuration getExecutionEffectiveResources(I executionId, I collectionId,
             I providerId) {
        return new BaseConfiguration();
     }

@@ -29,6 +29,7 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * Loads batches from the storage and pulls them into as tasks.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @param <I> The identifier type
  * @since Feb 14, 2011
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })

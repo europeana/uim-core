@@ -26,6 +26,12 @@
 	<dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -35,10 +41,5 @@
 			<artifactId>org.apache.karaf.shell.console</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-
 	</dependencies>
-
-
-    
 </project>
