@@ -2,7 +2,6 @@
 package eu.europeana.uim.api;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 import eu.europeana.uim.store.Collection;
@@ -22,16 +21,16 @@ public interface ResourceEngine<I> {
 //    public Set<String> getAvailableResourceKeys();
     
     public void setGlobalResources(LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getGlobalResources(LinkedHashSet<String> keys);
+    public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys);
 
     public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id);
+    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id, List<String> keys);
     
     public void setCollectionResources(Collection<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id);
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id, List<String> keys);
     
     public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id);
+    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id, List<String> keys);
 //
 //    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
 //    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);
