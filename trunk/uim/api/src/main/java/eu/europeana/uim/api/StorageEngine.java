@@ -21,7 +21,7 @@ import eu.europeana.uim.store.Request;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface StorageEngine<I> {
+public interface StorageEngine<I>  {
     /**
      * Status of the engine (starting, etc.)
      * 

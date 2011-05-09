@@ -28,20 +28,13 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
    
     }
 
-    @Override
-    public LinkedHashMap<String, List<String>> getGlobalResources(LinkedHashSet<String> keys) {
-      return new LinkedHashMap<String,List<String>>();
-    }
+
 
     @Override
     public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources) {
         
     }
 
-    @Override
-    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id) {
-        return new LinkedHashMap<String,List<String>>();
-    }
 
     @Override
     public void setCollectionResources(Collection<I> id,
@@ -49,19 +42,35 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
 
     }
 
-    @Override
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id) {
-        return new LinkedHashMap<String,List<String>>();
-    }
 
     @Override
     public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources) {
   
     }
 
+
+
     @Override
-    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id) {
-        return new LinkedHashMap<String,List<String>>();
+    public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys) {
+        return new LinkedHashMap<String, List<String>>();
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getProviderResources(Provider<I> id,
+            List<String> keys) {
+        return new LinkedHashMap<String, List<String>>();
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id,
+            List<String> keys) {
+        return new LinkedHashMap<String, List<String>>();
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id,
+            List<String> keys) {
+        return new LinkedHashMap<String, List<String>>();
     }
 
     

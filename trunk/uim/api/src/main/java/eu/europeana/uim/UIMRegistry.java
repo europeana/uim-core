@@ -13,13 +13,14 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
  * The central service registry for UIM. The service container registers all services with this
  * registry (as configured in the blueprint xml files) so that one can get an overview of registered
- * services for storage, logging as well as workflows.
+ * services for storage, logging, resources as well as workflows.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
@@ -34,6 +35,11 @@ public class UIMRegistry implements Registry {
     private String                        configuredLoggingEngine;
     private LoggingEngine<?, ?>              activeLogging = null;
     private Map<String, LoggingEngine<?, ?>> loggers       = new HashMap<String, LoggingEngine<?, ?>>();
+    
+
+    private String                        configuredResourceEngine;
+    private ResourceEngine<?>             activeResource = null;
+    private Map<String, ResourceEngine<?>> resources       = new HashMap<String, ResourceEngine<?>>();
 
     private Map<String, IngestionPlugin>  plugins       = new HashMap<String, IngestionPlugin>();
     private List<Workflow>                workflows     = new ArrayList<Workflow>();
@@ -67,6 +73,18 @@ public class UIMRegistry implements Registry {
         if (this.activeLogging != null) {
             this.activeLogging = null;
             this.activeLogging = getLoggingEngine(configuredLoggingEngine);
+        }
+    }
+    
+    @Override
+    public void setConfiguredResourceEngine(String configuredResourceEngine) {
+        // this may happen before the resource services are loaded
+        // we set the active resource engine "lazy"
+
+        this.configuredResourceEngine = configuredResourceEngine;
+        if (this.activeResource != null) {
+            this.activeResource= null;
+            this.activeResource = getResourceEngine(configuredResourceEngine);
         }
     }
 
@@ -268,6 +286,63 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
+    public void addResourceEngine(ResourceEngine<?> resourceEngine) {
+        if (resourceEngine != null) {
+            log.info("Added logging engine:" + resourceEngine.getIdentifier());
+            if (!resources.containsKey(resourceEngine.getIdentifier())) {
+                resources.put(resourceEngine.getIdentifier(), resourceEngine);
+                // activate default logging
+                if (activeResource == null) {
+                    activeResource= resourceEngine;
+                } else if (resourceEngine.getIdentifier().equals(configuredLoggingEngine)) {
+                    activeResource = resourceEngine;
+                    log.info("Making logging engine " + resourceEngine.getIdentifier() + " default");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeResourceEngine(ResourceEngine<?> resourceEngine) {
+        if (resourceEngine != null) {
+            ResourceEngine<?> remove = resources.remove(resourceEngine.getIdentifier());
+            if (activeResource == remove) {
+                activeResource = null;
+            }
+
+        }
+    }
+
+    @Override
+    public List<ResourceEngine<?>> getResourceEngines() {
+        List<ResourceEngine<?>> res = new ArrayList<ResourceEngine<?>>();
+        res.addAll(resources.values());
+        return res;
+    }
+    
+
+    @Override
+    public ResourceEngine<?> getResourceEngine() {
+        if (resources == null || resources.isEmpty()) return null;
+
+        if (activeResource == null) {
+            if (getResourceEngine(configuredResourceEngine) != null) {
+                activeResource = getResourceEngine(configuredResourceEngine);
+            } else {
+                // default to first engine
+                activeResource = resources.values().iterator().next();
+            }
+        }
+        return activeResource;
+    }
+
+    @Override
+    public ResourceEngine<?> getResourceEngine(String identifier) {
+        if (identifier == null || resources == null || resources.isEmpty()) return null;
+        return resources.get(identifier);
+    }
+    
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
@@ -337,6 +412,24 @@ public class UIMRegistry implements Registry {
                 builder.append(loggingEngine.getIdentifier());
             }
         }
+        
+        builder.append("\nRegistered resource engines:");
+        builder.append("\n--------------------------------------");
+        if (loggers.isEmpty()) {
+            builder.append("\n\tNo resource engine.");
+        } else {
+            for (ResourceEngine<?> resourceEngine : resources.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\t");
+                }
+                if (activeResource != null && activeResource == resourceEngine) {
+                    builder.append("* ");
+                } else {
+                    builder.append("  ");
+                }
+                builder.append(resourceEngine.getIdentifier());
+            }
+        }
 
         builder.append("\nRegistered orchestrator:");
         builder.append("\n--------------------------------------");
@@ -345,4 +438,6 @@ public class UIMRegistry implements Registry {
 
         return builder.toString();
     }
+
+
 }
