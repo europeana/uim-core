@@ -26,7 +26,9 @@
         .leftPanel {
             background-color: #FFF;
         }
-        
+        .centerPanel {
+            background-color: #FFF;
+        }        
         .rightPanel {
             background-color: #FFF;
         }
@@ -38,27 +40,23 @@
                 <td valign='top'>
                     <g:DecoratorPanel addStyleNames='{style.decorator}' ui:field='decPanel'>
                                          <g:SplitLayoutPanel ui:field="splitPanel" addStyleNames="{style.splitpanel}">
-                                            <g:west size="700">
+                                            <g:west size="600">
                                                 <g:LayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel}">
 <!--                                                     <c:CellBrowser ui:field="cellBrowser" /> -->
                                                 </g:LayoutPanel>
                                             </g:west>
                                             <g:center>
-                                                <g:LayoutPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}">
+                                                <g:LayoutPanel ui:field="centerPanel" addStyleNames="{style.centerPanel}">
 <!--                                                     <c:CellTable ui:field="cellTable" /> -->
                                                 </g:LayoutPanel>
                                             </g:center>
+                                            <g:east size="400">
+                                                <g:LayoutPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}">
+<!--                                                     <c:CellTable ui:field="cellTable" /> -->
+                                                </g:LayoutPanel>
+                                            </g:east>
                         </g:SplitLayoutPanel>
                     </g:DecoratorPanel>
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.executionFormCell}' valign='top' align='left'>
-                    <s:ExecutionForm addStyleNames='{style.executionFormCell}' ui:field='executionForm' />
-                    <!-- <br /> -->
-                    <!-- <g:Button -->
-                    <!-- ui:field='startButton'> -->
-                    <!-- </g:Button> -->
                 </td>
             </tr>
         </table>

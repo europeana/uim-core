@@ -9,6 +9,7 @@ import java.util.Map;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionDetailWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionHistoryWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionTriggerWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceAdministrationWidget;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
@@ -162,11 +163,14 @@ public class SidebarTreeViewModel implements TreeViewModel {
         }
 
         {
-            Category category = new Category("Execution");
+            Category category = new Category("Administration");
             catList.add(category);
             category.addExample(
                     new ExecutionTriggerWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(ExecutionTriggerWidget.class));
+            category.addExample(
+                    new ResourceAdministrationWidget(orchestrationService),
+                    RunAsyncCode.runAsyncCode(ResourceAdministrationWidget.class));
         }
 
         {

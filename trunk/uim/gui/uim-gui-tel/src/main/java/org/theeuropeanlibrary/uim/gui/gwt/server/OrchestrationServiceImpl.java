@@ -62,7 +62,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 }
             }
         } catch (StorageEngineException e) {
-            res.add(new ProviderDTO(0l, "Failed to load provider. Notify system administrator."));
+            res.add(new ProviderDTO(0l, "Failed to load provider. Notify system administrator.", null));
             throw new RuntimeException(e);
         }
         return res;
@@ -76,7 +76,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             Provider<Long> p = storage.getProvider(provider);
             List<Collection<Long>> cols = storage.getCollections(p);
             for (Collection<Long> col : cols) {
-                res.add(new CollectionDTO(col.getId(), col.getName(), getWrappedProviderDTO(provider),
+                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(), getWrappedProviderDTO(provider),
                         storage.getTotalByCollection(col)));
             }
         } catch (StorageEngineException e) {
@@ -93,7 +93,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             List<Collection<Long>> cols = storage.getAllCollections();
             for (Collection<Long> col : cols) {
-                res.add(new CollectionDTO(col.getId(), col.getName(),
+                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
                         getWrappedProviderDTO(col.getProvider().getId()),
                         storage.getTotalByCollection(col)));
             }
@@ -139,7 +139,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public ExecutionDTO startCollection(String workflow, Long collection) {
+    public ExecutionDTO startCollection(String workflow, Long collection, String executionName) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             Collection<Long> c = storage.getCollection(collection);
@@ -152,7 +152,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
             ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c);
             ae.getMonitor().addListener(monitor);
-            populateWrappedExecutionDTO(execution, ae, w, c);
+            populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
             return execution;
         } catch (StorageEngineException e) {
@@ -163,7 +163,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public ExecutionDTO startProvider(String workflow, Long provider) {
+    public ExecutionDTO startProvider(String workflow, Long provider, String executionName) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             Provider<Long> p = storage.getProvider(provider);
@@ -174,7 +174,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
             ae.getMonitor().addListener(monitor);
 
-            populateWrappedExecutionDTO(execution, ae, w, p);
+            populateWrappedExecutionDTO(execution, ae, w, p, executionName);
             return execution;
         } catch (StorageEngineException e) {
             // TODO Auto-generated catch block
@@ -184,9 +184,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
-            eu.europeana.uim.workflow.Workflow w, UimEntity dataset) {
+            eu.europeana.uim.workflow.Workflow w, UimEntity dataset, String executionName) {
         execution.setId(ae.getId());
-        execution.setName(w.getName() + "/" + dataset.toString());
+        execution.setName(executionName);
         execution.setWorkflow(w.getName());
         execution.setCompleted(ae.getCompletedSize());
         execution.setFailure(ae.getFailureSize());
@@ -207,7 +207,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         if (wrapped == null) {
             try {
                 Provider<Long> p = storage.getProvider(provider);
-                wrapped = new ProviderDTO(p.getId(), p.getName());
+                wrapped = new ProviderDTO(p.getId(), p.getName(), p.getMnemonic());
                 wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
                 // TODO Auto-generated catch block

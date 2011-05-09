@@ -1,11 +1,19 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
+import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,91 +30,168 @@ public class ExecutionForm extends Composite {
     interface Binder extends UiBinder<Widget, ExecutionForm> {
     }
 
-    @UiField
-    TextBox  nameBox;
-    @UiField
-    TextBox  workflowBox;
-    @UiField
-    ListBox  categoryBox;
-    @UiField
-    TextBox  datasetBox;
-    @UiField
-    TextArea resourcesBox;
+    private final OrchestrationServiceAsync orchestrationService;
 
     @UiField
-    Button   commitButton;
+    TextBox                                 nameBox;
     @UiField
-    Button   cancelButton;
+    TextBox                                 providerBox;
+    @UiField
+    TextBox                                 collectionBox;
+    @UiField
+    TextBox                                 workflowBox;
+    @UiField
+    TextArea                                resourcesBox;
 
-// private ContactInfo contactInfo;
+    @UiField
+    Button                                  commitButton;
+    @UiField
+    Button                                  cancelButton;
+
+    private ProviderDTO                     provider;
+    private CollectionDTO                   collection;
+    private WorkflowDTO                     workflow;
+
+    private String                          autoText;
 
     /**
      * Creates a new instance of this class.
+     * 
+     * @param orchestrationService
+     * @param handler
      */
-    public ExecutionForm() {
+    public ExecutionForm(OrchestrationServiceAsync orchestrationService, final ClickHandler handler) {
+        this.orchestrationService = orchestrationService;
         initWidget(uiBinder.createAndBindUi(this));
-//        DateTimeFormat dateFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_LONG);
-//        birthdayBox.setFormat(new DateBox.DefaultFormat(dateFormat));
 
-// // Add the categories to the category box.
-// final Category[] categories = ContactDatabase.get().queryCategories();
-// for (Category category : categories) {
-// categoryBox.addItem(category.getDisplayName());
-// }
-//
-// // Initialize the contact to null.
-// setContact(null);
-//
-// // Handle events.
-// updateButton.addClickHandler(new ClickHandler() {
-// public void onClick(ClickEvent event) {
-// if (contactInfo == null) {
-// return;
-// }
-//
-// // Update the contact.
-// contactInfo.setFirstName(firstNameBox.getText());
-// contactInfo.setLastName(lastNameBox.getText());
-// contactInfo.setAddress(addressBox.getText());
-// contactInfo.setBirthday(birthdayBox.getValue());
-// int categoryIndex = categoryBox.getSelectedIndex();
-// contactInfo.setCategory(categories[categoryIndex]);
-//
-// // Update the views.
-// ContactDatabase.get().refreshDisplays();
-// }
-// });
-// createButton.addClickHandler(new ClickHandler() {
-// public void onClick(ClickEvent event) {
-// int categoryIndex = categoryBox.getSelectedIndex();
-// Category category = categories[categoryIndex];
-// contactInfo = new ContactInfo(category);
-// contactInfo.setFirstName(firstNameBox.getText());
-// contactInfo.setLastName(lastNameBox.getText());
-// contactInfo.setAddress(addressBox.getText());
-// contactInfo.setBirthday(birthdayBox.getValue());
-// ContactDatabase.get().addContact(contactInfo);
-// setContact(contactInfo);
-// }
-// });
+        providerBox.setReadOnly(true);
+        collectionBox.setReadOnly(true);
+        workflowBox.setReadOnly(true);
+        resourcesBox.setReadOnly(true);
+        commitButton.setEnabled(false);
+
+        commitButton.addClickHandler(handler);
+        commitButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                if (collection.getName().equals(BrowserTreeViewModel.ALL_COLLECTIONS)) {
+                    executeProvider();
+                } else {
+                    executeCollection();
+                }
+                clearForm();
+            }
+        });
+
+        cancelButton.addClickHandler(handler);
+        cancelButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                clearForm();
+            }
+        });
     }
 
-// public void setContact(ContactInfo contact) {
-// this.contactInfo = contact;
-// updateButton.setEnabled(contact != null);
-// if (contact != null) {
-// firstNameBox.setText(contact.getFirstName());
-// lastNameBox.setText(contact.getLastName());
-// addressBox.setText(contact.getAddress());
-// birthdayBox.setValue(contact.getBirthday());
-// Category category = contact.getCategory();
-// Category[] categories = ContactDatabase.get().queryCategories();
-// for (int i = 0; i < categories.length; i++) {
-// if (category == categories[i]) {
-// categoryBox.setSelectedIndex(i);
-// break;
-// }
-// }
-// }
-// }
+    private void clearForm() {
+        nameBox.setText("");
+        setProvider(null);
+        setCollection(null);
+        setWorkflow(null);
+    }
+
+    private void executeCollection() {
+        orchestrationService.startCollection(workflow.getName(), collection.getId(),
+                nameBox.getText(), new AsyncCallback<ExecutionDTO>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        // TODO panic
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(ExecutionDTO execution) {
+                    }
+                });
+    }
+
+    private void executeProvider() {
+        orchestrationService.startProvider(workflow.getName(), provider.getId(), nameBox.getText(),
+                new AsyncCallback<ExecutionDTO>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        // TODO panic
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(ExecutionDTO execution) {
+// application.getOverview().addExecution(execution);
+                    }
+                });
+    }
+
+    /**
+     * @param provider
+     */
+    public void setProvider(ProviderDTO provider) {
+        this.provider = provider;
+        providerBox.setText(provider != null ? provider.getName() : "");
+        if (nameBox.getText().equals(autoText)) {
+            nameBox.setText("");
+        }
+    }
+
+    /**
+     * @param collection
+     */
+    public void setCollection(CollectionDTO collection) {
+        this.collection = collection;
+        collectionBox.setText(collection != null ? collection.getName() : "");
+        if (nameBox.getText().equals(autoText)) {
+            nameBox.setText("");
+        }
+    }
+
+    /**
+     * @param workflow
+     */
+    public void setWorkflow(WorkflowDTO workflow) {
+        this.workflow = workflow;
+        workflowBox.setText(workflow != null ? workflow.getName() : "");
+        if (nameBox.getText().equals(autoText)) {
+            nameBox.setText("");
+        }
+        if (nameBox.getText().length() == 0 && workflow != null) {
+            autoText = workflow.getName() +
+                       "/" +
+                       (collection.getName().equals(BrowserTreeViewModel.ALL_COLLECTIONS)
+                               ? provider.toString() : collection.toString());
+            nameBox.setText(autoText);
+        }
+        checkCommit();
+    }
+
+    private void checkCommit() {
+        if (provider != null && collection != null && workflow != null) {
+            commitButton.setEnabled(true);
+        } else {
+            commitButton.setEnabled(false);
+        }
+    }
+
+    /**
+     * @param provider
+     * @param collection
+     * @param workflow
+     */
+    public void setDatasets(ProviderDTO provider, CollectionDTO collection, WorkflowDTO workflow) {
+        this.provider = provider;
+        this.collection = collection;
+        this.workflow = workflow;
+        providerBox.setText(provider != null ? provider.getName() : "");
+        collectionBox.setText(collection != null ? collection.getName() : "");
+        workflowBox.setText(workflow != null ? workflow.getName() : "");
+
+        checkCommit();
+    }
 }

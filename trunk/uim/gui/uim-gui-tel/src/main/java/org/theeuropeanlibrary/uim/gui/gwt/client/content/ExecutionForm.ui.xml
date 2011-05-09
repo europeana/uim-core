@@ -14,20 +14,32 @@
     }
     
     .label {
+      width: 100px;
       font-weight: bold;
     }
+    
+    .value {
+      width: 100%;
+    }
+    
+    .decorator {
+      height: 100%;
+      width: 100%;
+      min-width: 500px;
+      border: 4px solid #d0e4f6;
+    }    
   </ui:style>
 
-  <g:DecoratorPanel>
+  <g:DecoratorPanel addStyleNames='{style.decorator}'>
     <g:HTMLPanel>
-      <table>
+      <table cellspacing='5' cellpadding='5' style='width:100%;'>
         <tr>
-          <td
+          <td 
             colspan='2'
             align='center'
             class='{style.header}'>
             <ui:msg
-              key='executionFormTitle'>Execution Form</ui:msg>
+              key='executionFormTitle'>Execution Settings</ui:msg>
           </td>
         </tr>
         <tr>
@@ -37,8 +49,30 @@
               key='executionFormName'>Name</ui:msg>
           </td>
           <td>
-            <g:TextBox
+            <g:TextBox addStyleNames='{style.value}'
               ui:field='nameBox' />
+          </td>
+        </tr>
+        <tr>
+          <td
+            class='{style.label}'>
+            <ui:msg
+              key='executionFormProvider'>Provider</ui:msg>
+          </td>
+          <td>
+            <g:TextBox addStyleNames='{style.value}'
+              ui:field='providerBox' />
+          </td>
+        </tr>
+        <tr>
+          <td
+            class='{style.label}'>
+            <ui:msg
+              key='executionFormCollection'>Collection</ui:msg>
+          </td>
+          <td>
+            <g:TextBox addStyleNames='{style.value}'
+              ui:field='collectionBox' />
           </td>
         </tr>
         <tr>
@@ -48,7 +82,7 @@
               key='executionFormWorkflow'>Workflow</ui:msg>
           </td>
           <td>
-            <g:TextBox
+            <g:TextBox addStyleNames='{style.value}'
               ui:field='workflowBox' />
           </td>
         </tr>
@@ -56,32 +90,10 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='executionFormCategory'>:</ui:msg>
+              key='executionFormResources'>Resources</ui:msg>
           </td>
           <td>
-            <g:ListBox
-              ui:field='categoryBox' />
-          </td>
-        </tr>
-        <tr>
-          <td
-            class='{style.label}'>
-            <ui:msg
-              key='executionFormDataset'>Dataset:</ui:msg>
-          </td>
-          <td>
-            <g:TextBox
-              ui:field='datasetBox' />
-          </td>
-        </tr>
-        <tr>
-          <td
-            class='{style.label}'>
-            <ui:msg
-              key='executionFormResources'>Resources:</ui:msg>
-          </td>
-          <td>
-            <g:TextArea
+            <g:TextArea addStyleNames='{style.value}'
               ui:field='resourcesBox' />
           </td>
         </tr>

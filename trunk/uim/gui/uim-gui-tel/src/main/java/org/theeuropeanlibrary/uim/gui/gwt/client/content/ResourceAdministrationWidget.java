@@ -1,28 +1,25 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
 import java.util.Comparator;
-import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.BrowserTreeViewModel.BrowserObject;
-import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
-import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
-import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellBrowser;
+import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -35,6 +32,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SimpleKeyProvider;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Triggers execution.
@@ -42,11 +40,11 @@ import com.google.gwt.view.client.SimpleKeyProvider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionTriggerWidget extends IngestionCockpitWidget {
+public class ResourceAdministrationWidget extends IngestionCockpitWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ExecutionTriggerWidget> {
+    interface Binder extends UiBinder<Widget, ResourceAdministrationWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -61,29 +59,24 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     LayoutPanel                             leftPanel;
 
     @UiField
+    LayoutPanel                             centerPanel;
+
+    @UiField
     LayoutPanel                             rightPanel;
 
-// @UiField(provided = true)
     CellBrowser                             cellBrowser;
 
-// @UiField(provided = true)
+    CellList<String>                        cellList;
+
     CellTable<String>                       cellTable;
-
-    @UiField(provided = true)
-    ExecutionForm                           executionForm;
-
-// @UiField
-// Button startButton;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param orchestrationService
      */
-    public ExecutionTriggerWidget(OrchestrationServiceAsync orchestrationService) {
-        super(
-                "Start Execution",
-                "This view allows to select provider, collection and workflow and optional the resources to start a new execution!");
+    public ResourceAdministrationWidget(OrchestrationServiceAsync orchestrationService) {
+        super("Manage Resources", "This view allows to manage resources for known plugins!");
         this.orchestrationService = orchestrationService;
     }
 
@@ -92,15 +85,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      */
     @Override
     public Widget onInitialize() {
-        executionForm = new ExecutionForm(orchestrationService, new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent arg0) {
-                for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
-                    cellBrowser.getRootTreeNode().setChildOpen(i, false);
-                }
-            }
-        });
-        
+        // Create the UiBinder.
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -109,47 +94,65 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
-                for (BrowserObject val : vals) {
-                    if (val.getWrappedObject() instanceof ProviderDTO) {
-                        executionForm.setProvider((ProviderDTO) val.getWrappedObject());
-                        executionForm.setCollection(null); 
-                        executionForm.setWorkflow(null); 
-                    } else if (val.getWrappedObject() instanceof CollectionDTO) {
-                        executionForm.setCollection((CollectionDTO) val.getWrappedObject()); 
-                        executionForm.setWorkflow(null); 
-                    } else if (val.getWrappedObject() instanceof WorkflowDTO) {
-                        executionForm.setWorkflow((WorkflowDTO) val.getWrappedObject());
-                    } 
-                }
+//                Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
+//                for (BrowserObject val : vals) {
+//                    if (val.getWrappedObject() instanceof ProviderDTO) {
+//                        
+//                    } else if (val.getWrappedObject() instanceof CollectionDTO) {
+//                        
+//                    } else if (val.getWrappedObject() instanceof WorkflowDTO) {
+//                        
+//                    } 
+//                }
             }
         });
-
-        BrowserTreeViewModel browserTreeViewModel = new BrowserTreeViewModel(orchestrationService, selectionModelBrowser); 
+        
+        BrowserTreeViewModel browserTreeViewModel = new BrowserTreeViewModel(orchestrationService, selectionModelBrowser);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
+        // cellBrowser.setSize("300px", "350px");
         cellBrowser.setSize("100%", "100%");
 
         leftPanel.add(cellBrowser);
 
+        // Create a CellList.
+        TextCell valCell = new TextCell();
+
+        // Set a key provider that provides a unique key for each contact. If key is
+        // used to identify contacts when fields (such as the name and address)
+        // change.
+        cellList = new CellList<String>(valCell, new SimpleKeyProvider<String>());
+        cellList.setSize("100%", "100%");
+        cellList.setPageSize(30);
+        cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
+        cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+
+        // Add a selection model so we can select cells.
+        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>(
+                new SimpleKeyProvider<String>());
+        cellList.setSelectionModel(selectionModel);
+
+        centerPanel.add(cellList);
+
         cellTable = new CellTable<String>(new SimpleKeyProvider<String>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
-//        cellTable.setPageSize(15);
-//        cellTable.setRowCount(10);
 
         final ListDataProvider<String> dataProvider = new ListDataProvider<String>();
         dataProvider.addDataDisplay(cellTable);
 
+        // Attach a column sort handler to the ListDataProvider to sort the list.
         ListHandler<String> sortHandler = new ListHandler<String>(
                 new ListDataProvider<String>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
-        final MultiSelectionModel<String> selectionModelTable = new MultiSelectionModel<String>(
+        // Add a selection model so we can select cells.
+        final SelectionModel<String> selectionModelTable = new MultiSelectionModel<String>(
                 new SimpleKeyProvider<String>());
         cellTable.setSelectionModel(selectionModelTable,
                 DefaultSelectionEventManager.<String> createCheckboxManager());
 
+        // Initialize the columns.
         initTableColumns(selectionModelTable, sortHandler);
 
         rightPanel.add(cellTable);
@@ -159,7 +162,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ExecutionTriggerWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(ResourceAdministrationWidget.class, new RunAsyncCallback() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);
@@ -225,6 +228,6 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 5, Unit.PCT);
+        cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
     }
 }

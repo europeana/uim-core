@@ -12,7 +12,7 @@
       margin-bottom: 4px;
     }
     
-    .executionSatusCell {
+    .executionStatusCell {
       padding-left: 20px;
     }
   </ui:style>
@@ -27,8 +27,17 @@
             pageSize='15'
             ui:field='cellTable' />
         </td>
+      </tr>
+      <tr>
         <td
-          class='{style.executionSatusCell}'
+          align='center'>
+          <c:SimplePager
+            ui:field='pager' />
+        </td>
+      </tr>
+      <tr>
+        <td
+          class='{style.executionStatusCell}'
           valign='top'
           align='center'>
           <s:ExecutionStatus
@@ -37,13 +46,6 @@
           <g:Button
             ui:field='startButton'>
           </g:Button>
-        </td>
-      </tr>
-      <tr>
-        <td
-          align='center'>
-          <c:SimplePager
-            ui:field='pager' />
         </td>
       </tr>
     </table>

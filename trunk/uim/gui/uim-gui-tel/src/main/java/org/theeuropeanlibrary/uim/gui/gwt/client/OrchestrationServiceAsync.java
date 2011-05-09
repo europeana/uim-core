@@ -19,9 +19,9 @@ public interface OrchestrationServiceAsync {
 
     void getAllCollections(AsyncCallback<List<CollectionDTO>> async);
 
-    void startCollection(String workflow, Long collection, AsyncCallback<ExecutionDTO> async);
+    void startCollection(String workflow, Long collection, String executionName, AsyncCallback<ExecutionDTO> async);
 
-    void startProvider(String workflow, Long provider, AsyncCallback<ExecutionDTO> async);
+    void startProvider(String workflow, Long provider, String executionName, AsyncCallback<ExecutionDTO> async);
 
     void getExecution(Long id, AsyncCallback<ExecutionDTO> async);
 

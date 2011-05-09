@@ -14,6 +14,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.TreeViewModel;
 
 /**
@@ -23,21 +25,25 @@ import com.google.gwt.view.client.TreeViewModel;
  * @since Apr 29, 2011
  */
 public class BrowserTreeViewModel implements TreeViewModel {
-    private final OrchestrationServiceAsync orchestrationServ;
-// private final MultiSelectionModel<BrowserObject> selectionModel;
-    private ListDataProvider<BrowserObject> providersDataProvider;
-
-// private CompositeCell<BrowserObject> contactCell;
+    /**
+     * all collections used for a specific provider
+     */
+    public static final String ALL_COLLECTIONS = "All Collections";
+    
+    private final OrchestrationServiceAsync          orchestrationServ;
+    private final MultiSelectionModel<BrowserObject> selectionModel;
+    private ListDataProvider<BrowserObject>          providersDataProvider;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param orchestrationServ
+     * @param selectionModel
      */
-    public BrowserTreeViewModel(final OrchestrationServiceAsync orchestrationServ) {
-        // final MultiSelectionModel<BrowserObject> selectionModel) {
+    public BrowserTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
+                                final MultiSelectionModel<BrowserObject> selectionModel) {
         this.orchestrationServ = orchestrationServ;
-// this.selectionModel = selectionModel;
+        this.selectionModel = selectionModel;
 
         providersDataProvider = new ListDataProvider<BrowserObject>();
         loadProviders(providersDataProvider);
@@ -109,18 +115,18 @@ public class BrowserTreeViewModel implements TreeViewModel {
     public <T> NodeInfo<?> getNodeInfo(T value) {
         if (value == null) {
             return new DefaultNodeInfo<BrowserObject>(providersDataProvider,
-                    new BrowserObjectCell());
+                    new BrowserObjectCell(), selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof ProviderDTO) {
             ProviderDTO provider = (ProviderDTO)((BrowserObject)value).getWrappedObject();
             ListDataProvider<BrowserObject> collectionsDataProvider = new ListDataProvider<BrowserObject>();
             loadCollections(provider.getId(), collectionsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider,
-                    new BrowserObjectCell());
+                    new BrowserObjectCell(), selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
             ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
             loadWorkflows(workflowsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
-                    new BrowserObjectCell());
+                    new BrowserObjectCell(), selectionModel, null);
         }
 
         // Unhandled type.
@@ -165,6 +171,11 @@ public class BrowserTreeViewModel implements TreeViewModel {
             public void onSuccess(List<CollectionDTO> collections) {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
+                if (collections.size() > 0) {
+                    CollectionDTO fakeCollection = new CollectionDTO();
+                    fakeCollection.setName(ALL_COLLECTIONS);
+                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
+                }
                 for (CollectionDTO collection : collections) {
                     collectionList.add(new BrowserObject(collection.getName(), collection));
                 }
@@ -190,11 +201,23 @@ public class BrowserTreeViewModel implements TreeViewModel {
             }
         });
     }
-    
-    private static class BrowserObject {
+
+    /**
+     * Wrapped object.
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @since May 6, 2011
+     */
+    public static class BrowserObject {
         private final String name;
         private final Object wrappedObject;
 
+        /**
+         * Creates a new instance of this class.
+         * 
+         * @param name
+         * @param wrappedObject
+         */
         public BrowserObject(String name, Object wrappedObject) {
             this.name = name;
             this.wrappedObject = wrappedObject;
@@ -214,15 +237,18 @@ public class BrowserTreeViewModel implements TreeViewModel {
             return wrappedObject;
         }
     }
-    
-//    private static final ProvidesKey<BrowserObject> KEY_PROVIDER = new ProvidesKey<BrowserObject>() {
-//        @Override
-//        public Object getKey(
-//                BrowserObject item) {
-//            return item == null ? null
-//                    : item.getName();
-//        }
-//    };
+
+    /**
+     * provides keys for browser objects
+     */
+    public static final ProvidesKey<BrowserObject> KEY_PROVIDER = new ProvidesKey<BrowserObject>() {
+                                                                    @Override
+                                                                    public Object getKey(
+                                                                            BrowserObject item) {
+                                                                        return item == null ? null
+                                                                                : item.getName();
+                                                                    }
+                                                                };
 
     /**
      * The cell used to render categories.

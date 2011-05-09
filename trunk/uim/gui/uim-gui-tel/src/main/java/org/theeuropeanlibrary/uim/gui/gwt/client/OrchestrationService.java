@@ -26,9 +26,9 @@ public interface OrchestrationService extends RemoteService {
 
     List<CollectionDTO> getAllCollections();
 
-    ExecutionDTO startCollection(String workflow, Long collection);
+    ExecutionDTO startCollection(String workflow, Long collection, String executionName);
 
-    ExecutionDTO startProvider(String workflow, Long provider);
+    ExecutionDTO startProvider(String workflow, Long provider, String executionName);
 
     ExecutionDTO getExecution(Long id);
 
