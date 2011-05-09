@@ -8,11 +8,13 @@ import org.junit.Test;
 
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngineAdapter;
+import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.api.ResourceEngineAdapter;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineAdapter;
 
 /**
- * Tests registration of storage and logging engine.
+ * Tests registration of storage, logging and resource engine.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
@@ -28,8 +30,10 @@ public class UIMRegistryTest {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
         registry.addStorage(new StorageEngineAdapter() {
         });
+      
+        
         assertNotNull(registry.getStorage());
-
+        
         registry.setConfiguredStorageEngine("a");
         assertNull(registry.getActiveStorage());
         assertNotNull(registry.getStorage());
@@ -55,6 +59,23 @@ public class UIMRegistryTest {
         assertNotNull(registry.getLoggingEngine(LoggingEngineAdapter.class.getSimpleName()));
 
         assertEquals(1, registry.getLoggingEngines().size());
+    }
+    
+    /**
+     * Tests registration of a {@link ResourceEngine}.
+     */
+    @Test
+    public void testResourceEngine() {
+        registry.setConfiguredLoggingEngine(StorageEngineAdapter.class.getSimpleName());
+        registry.addResourceEngine(new ResourceEngineAdapter<Long>());
+        assertNotNull(registry.getResourceEngine());
+
+        registry.setConfiguredLoggingEngine("a");
+        assertNull(registry.getActiveLoggingEngine());
+        assertNotNull(registry.getResourceEngine());
+        assertNotNull(registry.getResourceEngine(ResourceEngineAdapter.class.getSimpleName()));
+
+        assertEquals(1, registry.getResourceEngines().size());
     }
     
     /**
