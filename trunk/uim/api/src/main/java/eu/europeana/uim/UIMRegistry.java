@@ -294,7 +294,7 @@ public class UIMRegistry implements Registry {
                 // activate default logging
                 if (activeResource == null) {
                     activeResource= resourceEngine;
-                } else if (resourceEngine.getIdentifier().equals(configuredLoggingEngine)) {
+                } else if (resourceEngine.getIdentifier().equals(configuredResourceEngine)) {
                     activeResource = resourceEngine;
                     log.info("Making logging engine " + resourceEngine.getIdentifier() + " default");
                 }
@@ -340,6 +340,10 @@ public class UIMRegistry implements Registry {
     public ResourceEngine<?> getResourceEngine(String identifier) {
         if (identifier == null || resources == null || resources.isEmpty()) return null;
         return resources.get(identifier);
+    }
+    
+    ResourceEngine<?> getActiveResourceEngine() {
+        return activeResource;
     }
     
     @Override
