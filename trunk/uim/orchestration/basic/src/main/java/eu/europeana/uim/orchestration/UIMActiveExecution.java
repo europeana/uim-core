@@ -49,6 +49,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     private final StorageEngine<I>            storageEngine;
     private final LoggingEngine<I, ?>            loggingEngine;
+    private final ResourceEngine<I>           resourceEngine;
 
     private final Execution<I>                execution;
     private final Workflow                    workflow;
@@ -74,12 +75,13 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * @param monitor
      */
     public UIMActiveExecution(Execution<I> execution, Workflow workflow,
-                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine,
+                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine, ResourceEngine<I> resourceEngine,
                               Properties properties, RevisableProgressMonitor monitor) {
         this.execution = execution;
         this.workflow = workflow;
         this.storageEngine = storageEngine;
         this.loggingEngine = loggingEngine;
+        this.resourceEngine = resourceEngine
         this.properties = properties;
         this.monitor = monitor;
 
@@ -108,6 +110,11 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public LoggingEngine<I, ?> getLoggingEngine() {
         return loggingEngine;
+    }
+    
+    @Override
+    public ResourceEngine<I> getResourceEngine() {
+        return resourceEngine;
     }
 
     @Override
