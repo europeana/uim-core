@@ -20,7 +20,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
 
     @Override
     public String getIdentifier() {
-       return ResourceEngineAdapter.class.getClass().getSimpleName();
+       return ResourceEngineAdapter.class.getSimpleName();
     }
 
     @Override
