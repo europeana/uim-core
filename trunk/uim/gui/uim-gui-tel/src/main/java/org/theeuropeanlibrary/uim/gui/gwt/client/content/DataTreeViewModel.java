@@ -24,7 +24,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 29, 2011
  */
-public class BrowserTreeViewModel implements TreeViewModel {
+public class DataTreeViewModel implements TreeViewModel {
     /**
      * all collections used for a specific provider
      */
@@ -32,6 +32,7 @@ public class BrowserTreeViewModel implements TreeViewModel {
     
     private final OrchestrationServiceAsync          orchestrationServ;
     private final MultiSelectionModel<BrowserObject> selectionModel;
+    private final boolean dataSetsOnly;
     private ListDataProvider<BrowserObject>          providersDataProvider;
 
     /**
@@ -39,11 +40,13 @@ public class BrowserTreeViewModel implements TreeViewModel {
      * 
      * @param orchestrationServ
      * @param selectionModel
+     * @param dataSetsOnly
      */
-    public BrowserTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
-                                final MultiSelectionModel<BrowserObject> selectionModel) {
+    public DataTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
+                                final MultiSelectionModel<BrowserObject> selectionModel, boolean dataSetsOnly) {
         this.orchestrationServ = orchestrationServ;
         this.selectionModel = selectionModel;
+        this.dataSetsOnly = dataSetsOnly;
 
         providersDataProvider = new ListDataProvider<BrowserObject>();
         loadProviders(providersDataProvider);
@@ -122,7 +125,7 @@ public class BrowserTreeViewModel implements TreeViewModel {
             loadCollections(provider.getId(), collectionsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider,
                     new BrowserObjectCell(), selectionModel, null);
-        } else if (((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
+        } else if (!dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
             ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
             loadWorkflows(workflowsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
@@ -136,7 +139,7 @@ public class BrowserTreeViewModel implements TreeViewModel {
 
     @Override
     public boolean isLeaf(Object value) {
-        return ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
+        return (dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) || ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {

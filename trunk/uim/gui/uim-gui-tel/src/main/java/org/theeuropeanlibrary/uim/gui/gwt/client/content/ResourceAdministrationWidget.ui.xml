@@ -40,7 +40,7 @@
                 <td valign='top'>
                     <g:DecoratorPanel addStyleNames='{style.decorator}' ui:field='decPanel'>
                                          <g:SplitLayoutPanel ui:field="splitPanel" addStyleNames="{style.splitpanel}">
-                                            <g:west size="600">
+                                            <g:west size="300">
                                                 <g:LayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel}">
 <!--                                                     <c:CellBrowser ui:field="cellBrowser" /> -->
                                                 </g:LayoutPanel>

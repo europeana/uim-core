@@ -1,16 +1,25 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.BrowserTreeViewModel.BrowserObject;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.DataTreeViewModel.BrowserObject;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellBrowser;
@@ -66,9 +75,16 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
 
     CellBrowser                             cellBrowser;
 
-    CellList<String>                        cellList;
+    CellList<WorkflowDTO>                   cellList;
 
-    CellTable<String>                       cellTable;
+    CellTable<ParameterDTO>                 cellTable;
+
+    private ProviderDTO                     provider;
+    private CollectionDTO                   collection;
+    private WorkflowDTO                     workflow;
+
+    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
+    private final List<WorkflowDTO>        activeWorkflows = new ArrayList<WorkflowDTO>();
 
     /**
      * Creates a new instance of this class.
@@ -90,74 +106,141 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
         Widget widget = uiBinder.createAndBindUi(this);
 
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
-                BrowserTreeViewModel.KEY_PROVIDER);
+                DataTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-//                Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
-//                for (BrowserObject val : vals) {
-//                    if (val.getWrappedObject() instanceof ProviderDTO) {
-//                        
-//                    } else if (val.getWrappedObject() instanceof CollectionDTO) {
-//                        
-//                    } else if (val.getWrappedObject() instanceof WorkflowDTO) {
-//                        
-//                    } 
-//                }
+                Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
+                for (BrowserObject val : vals) {
+                    if (val.getWrappedObject() instanceof ProviderDTO) {
+                        provider = (ProviderDTO)val.getWrappedObject();
+                    } else if (val.getWrappedObject() instanceof CollectionDTO) {
+                        collection = (CollectionDTO)val.getWrappedObject();
+                    }
+                    updateParameters();
+                }
             }
         });
-        
-        BrowserTreeViewModel browserTreeViewModel = new BrowserTreeViewModel(orchestrationService, selectionModelBrowser);
+
+        DataTreeViewModel browserTreeViewModel = new DataTreeViewModel(orchestrationService,
+                selectionModelBrowser, true);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
         // cellBrowser.setSize("300px", "350px");
         cellBrowser.setSize("100%", "100%");
 
-        leftPanel.add(cellBrowser);
+        centerPanel.add(cellBrowser);
 
-        // Create a CellList.
-        TextCell valCell = new TextCell();
-
-        // Set a key provider that provides a unique key for each contact. If key is
-        // used to identify contacts when fields (such as the name and address)
-        // change.
-        cellList = new CellList<String>(valCell, new SimpleKeyProvider<String>());
+        cellList = new CellList<WorkflowDTO>(new WorkflowDTOCell(),
+                new SimpleKeyProvider<WorkflowDTO>());
         cellList.setSize("100%", "100%");
         cellList.setPageSize(30);
         cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
         cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
 
+        final ListDataProvider<WorkflowDTO> workflowProvider = new ListDataProvider<WorkflowDTO>();
+        workflowProvider.setList(activeWorkflows);
+        workflowProvider.addDataDisplay(cellList);
+        
         // Add a selection model so we can select cells.
-        final SingleSelectionModel<String> selectionModel = new SingleSelectionModel<String>(
-                new SimpleKeyProvider<String>());
+        final SingleSelectionModel<WorkflowDTO> selectionModel = new SingleSelectionModel<WorkflowDTO>(
+                new SimpleKeyProvider<WorkflowDTO>());
         cellList.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                workflow = selectionModel.getSelectedObject();
+                provider = null;
+                collection = null;
+                for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
+                    cellBrowser.getRootTreeNode().setChildOpen(i, false);
+                }
+                updateParameters();
+            }
+        });
 
-        centerPanel.add(cellList);
+        leftPanel.add(cellList);
+        
+        updateWorkflows();
 
-        cellTable = new CellTable<String>(new SimpleKeyProvider<String>());
+        cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
 
-        final ListDataProvider<String> dataProvider = new ListDataProvider<String>();
+        final ListDataProvider<ParameterDTO> dataProvider = new ListDataProvider<ParameterDTO>();
+        dataProvider.setList(activeParameters);
         dataProvider.addDataDisplay(cellTable);
 
         // Attach a column sort handler to the ListDataProvider to sort the list.
-        ListHandler<String> sortHandler = new ListHandler<String>(
-                new ListDataProvider<String>().getList());
+        ListHandler<ParameterDTO> sortHandler = new ListHandler<ParameterDTO>(
+                new ListDataProvider<ParameterDTO>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
         // Add a selection model so we can select cells.
-        final SelectionModel<String> selectionModelTable = new MultiSelectionModel<String>(
-                new SimpleKeyProvider<String>());
+        final SelectionModel<ParameterDTO> selectionModelTable = new MultiSelectionModel<ParameterDTO>(
+                new SimpleKeyProvider<ParameterDTO>());
         cellTable.setSelectionModel(selectionModelTable,
-                DefaultSelectionEventManager.<String> createCheckboxManager());
+                DefaultSelectionEventManager.<ParameterDTO> createCheckboxManager());
 
         // Initialize the columns.
         initTableColumns(selectionModelTable, sortHandler);
 
-        rightPanel.add(cellTable);
-
+        rightPanel.add(cellTable); 
+        
         return widget;
+    }
+
+    /**
+     * Retrieve parameters for given settings.
+     */
+    public void updateParameters() {
+        orchestrationService.getParameters(provider != null ? provider.getId() : null, collection != null ? collection.getId() : null,
+                workflow != null ? workflow.getName() : null , new AsyncCallback<List<ParameterDTO>>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(List<ParameterDTO> parameters) {
+                        activeParameters.clear();
+                        activeParameters.addAll(parameters);
+                        cellTable.setRowData(0, activeParameters);
+                        cellTable.setRowCount(activeParameters.size());
+                        cellTable.setHeight((30 + 20 * parameters.size()) + "px");
+                    }
+                });
+    }
+    
+    /**
+     * Retrieve parameters for given settings.
+     */
+    public void updateWorkflows() {
+        orchestrationService.getWorkflows(new AsyncCallback<List<WorkflowDTO>>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(List<WorkflowDTO> workflows) {
+                        activeWorkflows.clear();
+                        activeWorkflows.addAll(workflows);
+                        cellList.setRowData(0, activeWorkflows);
+                        cellList.setRowCount(activeWorkflows.size());
+                    }
+                });
+    }
+
+    /**
+     * The Cell used to render a {@link WorkflowDTO}.
+     */
+    private static class WorkflowDTOCell extends AbstractCell<WorkflowDTO> {
+        @Override
+        public void render(Context context, WorkflowDTO value, SafeHtmlBuilder sb) {
+            if (value == null) { return; }
+            sb.appendHtmlConstant(value.getName());
+        }
     }
 
     @Override
@@ -178,56 +261,55 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
     /**
      * Add the columns to the table.
      */
-    private void initTableColumns(final SelectionModel<String> selectionModel,
-            ListHandler<String> sortHandler) {
+    private void initTableColumns(final SelectionModel<ParameterDTO> selectionModel,
+            ListHandler<ParameterDTO> sortHandler) {
         // Key
-        Column<String, String> keyColumn = new Column<String, String>(new TextCell()) {
+        Column<ParameterDTO, String> keyColumn = new Column<ParameterDTO, String>(new TextCell()) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                return object.getKey();
             }
         };
         keyColumn.setSortable(true);
-        sortHandler.setComparator(keyColumn, new Comparator<String>() {
+        sortHandler.setComparator(keyColumn, new Comparator<ParameterDTO>() {
             @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
+            public int compare(ParameterDTO o1, ParameterDTO o2) {
+                return o1.getKey().compareTo(o2.getKey());
             }
         });
         cellTable.addColumn(keyColumn, "Resource Name");
-        cellTable.setColumnWidth(keyColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(keyColumn, 40, Unit.PCT);
 
         // Value
-        Column<String, String> valueColumn = new Column<String, String>(new TextCell()) {
+        Column<ParameterDTO, String> valueColumn = new Column<ParameterDTO, String>(new TextCell()) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                StringBuilder builder = new StringBuilder();
+//                for (String val : object.getValues()) {
+//                    builder.append(val);
+//                    builder.append("\n");
+//                }
+                return builder.toString();
             }
         };
         valueColumn.setSortable(true);
-        sortHandler.setComparator(valueColumn, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
-        });
         cellTable.addColumn(valueColumn, "Resource Value");
-        cellTable.setColumnWidth(valueColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(valueColumn, 40, Unit.PCT);
 
         // Update Button
-        Column<String, String> updateColumn = new Column<String, String>(new ActionCell<String>(
-                "Update", new ActionCell.Delegate<String>() {
+        Column<ParameterDTO, String> updateColumn = new Column<ParameterDTO, String>(
+                new ActionCell<String>("Update", new ActionCell.Delegate<String>() {
                     @Override
                     public void execute(String contact) {
                         Window.alert("You clicked " + contact);
                     }
                 })) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                return "Update...";
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(updateColumn, 20, Unit.PCT);
     }
 }

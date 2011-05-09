@@ -41,7 +41,7 @@ public class ExecutionForm extends Composite {
     @UiField
     TextBox                                 workflowBox;
     @UiField
-    TextArea                                resourcesBox;
+    TextArea                                commandLineBox;
 
     @UiField
     Button                                  commitButton;
@@ -67,14 +67,14 @@ public class ExecutionForm extends Composite {
         providerBox.setReadOnly(true);
         collectionBox.setReadOnly(true);
         workflowBox.setReadOnly(true);
-        resourcesBox.setReadOnly(true);
+        commandLineBox.setReadOnly(true);
         commitButton.setEnabled(false);
 
         commitButton.addClickHandler(handler);
         commitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                if (collection.getName().equals(BrowserTreeViewModel.ALL_COLLECTIONS)) {
+                if (collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
                     executeProvider();
                 } else {
                     executeCollection();
@@ -97,6 +97,7 @@ public class ExecutionForm extends Composite {
         setProvider(null);
         setCollection(null);
         setWorkflow(null);
+        setCommandline(null);
     }
 
     private void executeCollection() {
@@ -153,6 +154,13 @@ public class ExecutionForm extends Composite {
     }
 
     /**
+     * @param commandLine
+     */
+    public void setCommandline(String commandLine) {
+        commandLineBox.setText(commandLine != null ? commandLine : "");
+    }
+    
+    /**
      * @param workflow
      */
     public void setWorkflow(WorkflowDTO workflow) {
@@ -164,7 +172,7 @@ public class ExecutionForm extends Composite {
         if (nameBox.getText().length() == 0 && workflow != null) {
             autoText = workflow.getName() +
                        "/" +
-                       (collection.getName().equals(BrowserTreeViewModel.ALL_COLLECTIONS)
+                       (collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)
                                ? provider.toString() : collection.toString());
             nameBox.setText(autoText);
         }

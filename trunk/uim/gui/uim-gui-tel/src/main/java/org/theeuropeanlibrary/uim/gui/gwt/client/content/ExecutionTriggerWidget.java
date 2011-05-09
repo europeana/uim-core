@@ -1,12 +1,15 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.BrowserTreeViewModel.BrowserObject;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.DataTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
@@ -67,13 +70,16 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     CellBrowser                             cellBrowser;
 
 // @UiField(provided = true)
-    CellTable<String>                       cellTable;
+    CellTable<ParameterDTO>                 cellTable;
 
     @UiField(provided = true)
     ExecutionForm                           executionForm;
 
-// @UiField
-// Button startButton;
+    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
+
+    private ProviderDTO                     provider;
+    private CollectionDTO                   collection;
+    private WorkflowDTO                     workflow;
 
     /**
      * Creates a new instance of this class.
@@ -100,55 +106,64 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                 }
             }
         });
-        
+
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
 
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
-                BrowserTreeViewModel.KEY_PROVIDER);
+                DataTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
                 Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
                 for (BrowserObject val : vals) {
                     if (val.getWrappedObject() instanceof ProviderDTO) {
-                        executionForm.setProvider((ProviderDTO) val.getWrappedObject());
-                        executionForm.setCollection(null); 
-                        executionForm.setWorkflow(null); 
+                        provider = (ProviderDTO)val.getWrappedObject();
+
+                        executionForm.setProvider((ProviderDTO)val.getWrappedObject());
+                        executionForm.setCollection(null);
+                        executionForm.setWorkflow(null);
                     } else if (val.getWrappedObject() instanceof CollectionDTO) {
-                        executionForm.setCollection((CollectionDTO) val.getWrappedObject()); 
-                        executionForm.setWorkflow(null); 
+                        collection = (CollectionDTO)val.getWrappedObject();
+
+                        executionForm.setCollection((CollectionDTO)val.getWrappedObject());
+                        executionForm.setWorkflow(null);
                     } else if (val.getWrappedObject() instanceof WorkflowDTO) {
-                        executionForm.setWorkflow((WorkflowDTO) val.getWrappedObject());
-                    } 
+                        workflow = (WorkflowDTO)val.getWrappedObject();
+
+                        executionForm.setWorkflow((WorkflowDTO)val.getWrappedObject());
+                    }
+                    updateParameters();
                 }
             }
         });
 
-        BrowserTreeViewModel browserTreeViewModel = new BrowserTreeViewModel(orchestrationService, selectionModelBrowser); 
+        DataTreeViewModel browserTreeViewModel = new DataTreeViewModel(orchestrationService,
+                selectionModelBrowser, false);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
         cellBrowser.setSize("100%", "100%");
 
         leftPanel.add(cellBrowser);
 
-        cellTable = new CellTable<String>(new SimpleKeyProvider<String>());
+        cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
-//        cellTable.setPageSize(15);
-//        cellTable.setRowCount(10);
+// cellTable.setPageSize(15);
+// cellTable.setRowCount(10);
 
-        final ListDataProvider<String> dataProvider = new ListDataProvider<String>();
+        final ListDataProvider<ParameterDTO> dataProvider = new ListDataProvider<ParameterDTO>();
+        dataProvider.setList(activeParameters);
         dataProvider.addDataDisplay(cellTable);
 
-        ListHandler<String> sortHandler = new ListHandler<String>(
-                new ListDataProvider<String>().getList());
+        ListHandler<ParameterDTO> sortHandler = new ListHandler<ParameterDTO>(
+                new ListDataProvider<ParameterDTO>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
-        final MultiSelectionModel<String> selectionModelTable = new MultiSelectionModel<String>(
-                new SimpleKeyProvider<String>());
+        final MultiSelectionModel<ParameterDTO> selectionModelTable = new MultiSelectionModel<ParameterDTO>(
+                new SimpleKeyProvider<ParameterDTO>());
         cellTable.setSelectionModel(selectionModelTable,
-                DefaultSelectionEventManager.<String> createCheckboxManager());
+                DefaultSelectionEventManager.<ParameterDTO> createCheckboxManager());
 
         initTableColumns(selectionModelTable, sortHandler);
 
@@ -173,58 +188,110 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     }
 
     /**
+     * Retrieve parameters for given settings.
+     */
+    public void updateParameters() {
+        orchestrationService.getParameters(provider.getId(), collection.getId(),
+                workflow.getName(), new AsyncCallback<List<ParameterDTO>>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(List<ParameterDTO> parameters) {
+                        activeParameters.clear();
+                        activeParameters.addAll(parameters);
+                        cellTable.setRowData(0, activeParameters);
+                        cellTable.setRowCount(activeParameters.size());
+                        cellTable.setHeight((30 + 20 * parameters.size()) + "px");
+                        
+                        // uim:exec -o start workflowname -c collectionmnemoic | -p providermnemonic key=value&key=value&...
+                        StringBuilder b = new StringBuilder();
+                        b.append("uim:exec -o start ");
+                        b.append(workflow.getName());
+                        if (collection != null && !collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
+                            b.append(" -c ");
+                            b.append(collection.getMnemonic());
+                        } else {
+                            b.append(" -p ");
+                            b.append(provider.getMnemonic());
+                        }
+                        b.append(" ");
+                        for (int i = 0; i < parameters.size(); i++) {
+                            ParameterDTO param = parameters.get(i);
+                            if (param.getValues() != null && param.getValues().length > 0) {
+                                b.append(param.getKey());
+                                b.append("=");
+
+                                for (int j = 0; j < param.getValues().length; j++) {
+                                    b.append(param.getValues()[j]);
+                                    if (j < param.getValues().length - 1) {
+                                        b.append("|");
+                                    }
+                                }
+                                if (i < parameters.size() - 1) {
+                                    b.append("&");
+                                }
+                            }
+                        }
+                        executionForm.setCommandline(b.toString());
+                    }
+                });
+    }
+
+    /**
      * Add the columns to the table.
      */
-    private void initTableColumns(final SelectionModel<String> selectionModel,
-            ListHandler<String> sortHandler) {
+    private void initTableColumns(final SelectionModel<ParameterDTO> selectionModel,
+            ListHandler<ParameterDTO> sortHandler) {
         // Key
-        Column<String, String> keyColumn = new Column<String, String>(new TextCell()) {
+        Column<ParameterDTO, String> keyColumn = new Column<ParameterDTO, String>(new TextCell()) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                return object.getKey();
             }
         };
         keyColumn.setSortable(true);
-        sortHandler.setComparator(keyColumn, new Comparator<String>() {
+        sortHandler.setComparator(keyColumn, new Comparator<ParameterDTO>() {
             @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
+            public int compare(ParameterDTO o1, ParameterDTO o2) {
+                return o1.getKey().compareTo(o2.getKey());
             }
         });
         cellTable.addColumn(keyColumn, "Resource Name");
-        cellTable.setColumnWidth(keyColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(keyColumn, 40, Unit.PCT);
 
         // Value
-        Column<String, String> valueColumn = new Column<String, String>(new TextCell()) {
+        Column<ParameterDTO, String> valueColumn = new Column<ParameterDTO, String>(new TextCell()) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                StringBuilder builder = new StringBuilder();
+//                for (String val : object.getValues()) {
+//                    builder.append(val);
+//                    builder.append("\n");
+//                }
+                return builder.toString();
             }
         };
         valueColumn.setSortable(true);
-        sortHandler.setComparator(valueColumn, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.compareTo(o2);
-            }
-        });
         cellTable.addColumn(valueColumn, "Resource Value");
-        cellTable.setColumnWidth(valueColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(valueColumn, 40, Unit.PCT);
 
         // Update Button
-        Column<String, String> updateColumn = new Column<String, String>(new ActionCell<String>(
-                "Update", new ActionCell.Delegate<String>() {
+        Column<ParameterDTO, String> updateColumn = new Column<ParameterDTO, String>(
+                new ActionCell<String>("Update", new ActionCell.Delegate<String>() {
                     @Override
                     public void execute(String contact) {
                         Window.alert("You clicked " + contact);
                     }
                 })) {
             @Override
-            public String getValue(String object) {
-                return object;
+            public String getValue(ParameterDTO object) {
+                return "Update...";
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 5, Unit.PCT);
+        cellTable.setColumnWidth(updateColumn, 20, Unit.PCT);
     }
 }

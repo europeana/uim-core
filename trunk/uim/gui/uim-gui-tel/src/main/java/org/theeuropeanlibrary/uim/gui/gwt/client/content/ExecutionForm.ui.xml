@@ -90,11 +90,11 @@
           <td
             class='{style.label}'>
             <ui:msg
-              key='executionFormResources'>Resources</ui:msg>
+              key='executionFormCommandLine'>Commandline</ui:msg>
           </td>
           <td>
             <g:TextArea addStyleNames='{style.value}'
-              ui:field='resourcesBox' />
+              ui:field='commandLineBox' />
           </td>
         </tr>
         <tr>

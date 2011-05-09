@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
@@ -32,4 +33,6 @@ public interface OrchestrationServiceAsync {
     void getPastExecutions(AsyncCallback<List<ExecutionDTO>> async);
 
     void getStatus(String workflow, AsyncCallback<List<StepStatusDTO>> async);
+    
+    void getParameters(Long provider, Long collection, String workflow, AsyncCallback<List<ParameterDTO>> async);
 }

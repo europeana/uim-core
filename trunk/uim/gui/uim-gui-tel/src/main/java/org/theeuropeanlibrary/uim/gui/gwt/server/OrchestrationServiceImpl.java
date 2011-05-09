@@ -9,17 +9,21 @@ import java.util.logging.Logger;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.store.UimEntity;
+import eu.europeana.uim.workflow.Workflow;
+import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
@@ -43,7 +47,26 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         List<eu.europeana.uim.workflow.Workflow> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
             for (eu.europeana.uim.workflow.Workflow w : workflows) {
-                res.add(new WorkflowDTO(w.getName(), w.getDescription()));
+                WorkflowDTO wd = new WorkflowDTO(w.getName(), w.getDescription());
+                res.add(wd);
+            }
+        }
+        return res;
+    }
+    
+    @Override
+    public List<ParameterDTO> getParameters(Long provider, Long collection, String workflow) {
+        List<ParameterDTO> res = new ArrayList<ParameterDTO>();
+        if (workflow != null) {
+            Workflow w = getWorkflow(workflow);
+            WorkflowStart start = w.getStart();
+            for (String param : start.getParameters()) {
+                res.add(new ParameterDTO(param));
+            }
+            for (IngestionPlugin i : w.getSteps()) {
+                for (String param : i.getParameters()) {
+                    res.add(new ParameterDTO(param));
+                }
             }
         }
         return res;
@@ -184,7 +207,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
-            eu.europeana.uim.workflow.Workflow w, UimEntity dataset, String executionName) {
+            eu.europeana.uim.workflow.Workflow w, DataSet<Long> dataset, String executionName) {
         execution.setId(ae.getId());
         execution.setName(executionName);
         execution.setWorkflow(w.getName());
@@ -193,6 +216,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         execution.setScheduled(ae.getScheduledSize());
         execution.setDone(ae.isFinished());
         execution.setStartTime(ae.getStartTime());
+        execution.setDataSet(dataset.toString());
         wrappedExecutionDTOs.put(ae.getId(), execution);
     }
 

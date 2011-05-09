@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
@@ -39,4 +40,6 @@ public interface OrchestrationService extends RemoteService {
     Integer getCollectionTotal(Long collection);
 
     List<StepStatusDTO> getStatus(String workflow);
+    
+    List<ParameterDTO> getParameters(Long provider, Long collection, String workflow);
 }
