@@ -1,12 +1,13 @@
 /* ResourceEngineAdapter.java - created on May 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
-import java.io.File;
-import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.io.input.NullInputStream;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.Provider;
 
 /**
  * Dummy implementation of the ResourceEngine
@@ -19,104 +20,49 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
 
     @Override
     public String getIdentifier() {
-        return ResourceEngineAdapter.class.getSimpleName();
+       return ResourceEngineAdapter.class.getClass().getSimpleName();
     }
 
     @Override
-    public void addGlobalResource(String key, String value) {
-
+    public void setGlobalResources(LinkedHashMap<String, List<String>> resources) {
+   
     }
 
     @Override
-    public void updateGlobalResource(String key, String value) {
-
+    public LinkedHashMap<String, List<String>> getGlobalResources(LinkedHashSet<String> keys) {
+      return new LinkedHashMap<String,List<String>>();
     }
 
     @Override
-    public void cleanGlobalResource(String key) {
-
+    public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources) {
+        
     }
 
     @Override
-    public Configuration getGlobalResources() {
-        return new BaseConfiguration();
+    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id) {
+        return new LinkedHashMap<String,List<String>>();
     }
 
     @Override
-    public void addProviderResource(I id, String key, String value) {
-
-    }
-
-    @Override
-    public void updateProviderResource(I id, String key, String value) {
+    public void setCollectionResources(Collection<I> id,
+            LinkedHashMap<String, List<String>> resources) {
 
     }
 
     @Override
-    public void truncateProviderResource(I id, String key) {
-
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id) {
+        return new LinkedHashMap<String,List<String>>();
     }
 
     @Override
-    public Configuration getProviderSpecificResources(I providerId) {
-        return new BaseConfiguration();
+    public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources) {
+  
     }
 
     @Override
-    public void addCollectionResource(I id, String key, String value) {
-
+    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id) {
+        return new LinkedHashMap<String,List<String>>();
     }
 
-    @Override
-    public void updateCollectionResource(I id, String key, String value) {
-
-    }
-
-    @Override
-    public void truncateCollectionResource(I id, String key) {
-
-    }
-
-    @Override
-    public Configuration getCollectionSpecificResources(I collectionId) {
-        return new BaseConfiguration();
-    }
-
-    @Override
-    public void addExecutionResource(I id, String key, String value) {
-
-    }
-
-    @Override
-    public void updateExecutionResource(I id, String key, String value) {
-
-    }
-
-    @Override
-    public void truncateExecutionResource(I id, String key) {
-
-    }
-
-    @Override
-    public Configuration getExecutionSpecificResources(I executionId) {
-        return new BaseConfiguration();
-    }
-
-
-    @Override
-    public File asFile(String value) {
-      return new File("");
-    }
-
-    @Override
-    public InputStream asInputStream(String value) {
-       return new NullInputStream(0);
-    }
-
-    @Override
-    public Configuration getExecutionEffectiveResources(I executionId, I collectionId,
-            I providerId) {
-       return new BaseConfiguration();
-    }
-
+    
 }

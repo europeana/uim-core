@@ -21,17 +21,17 @@ public interface ResourceEngine<I> {
     
 //    public Set<String> getAvailableResourceKeys();
     
-    public void setGlobalResoures(LinkedHashMap<String, List<String>> resources);
+    public void setGlobalResources(LinkedHashMap<String, List<String>> resources);
     public LinkedHashMap<String, List<String>> getGlobalResources(LinkedHashSet<String> keys);
 
-    public void setProviderResoures(Provider<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getProviderResoures(Provider<I> id);
+    public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id);
     
-    public void setCollectionResoures(Collection<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getCollectionResoures(Collection<I> id);
+    public void setCollectionResources(Collection<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id);
     
-    public void setExecutionResoures(Execution<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getExecutionResoures(Execution<I> id);
+    public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id);
 //
 //    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
 //    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);
