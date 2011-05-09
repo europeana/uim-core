@@ -81,7 +81,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         this.workflow = workflow;
         this.storageEngine = storageEngine;
         this.loggingEngine = loggingEngine;
-        this.resourceEngine = resourceEngine
+        this.resourceEngine = resourceEngine;
         this.properties = properties;
         this.monitor = monitor;
 
