@@ -58,6 +58,12 @@ public interface Registry {
      *            name of configured logging engine
      */
     void setConfiguredLoggingEngine(String configuredLoggingEngine);
+    
+    /**
+     * @param configuredResourceEngine
+     *            name of the  configured resource engine
+     */
+    void setConfiguredResourceEngine(String configuredResourceEngine);
 
     /**
      * @param workflow
@@ -120,4 +126,34 @@ public interface Registry {
      * @return logger for the given identifier or null
      */
     LoggingEngine<?, ?> getLoggingEngine(String identifier);
+    
+    /**
+     * @param resourceEngine
+     *            add logger to registration
+     */
+    void addResourceEngine(ResourceEngine<?> resourceEngine);
+
+    /**
+     * @param resourceEngine
+     *            remove logger to registration
+     */
+    void removeResourceEngine(ResourceEngine<?> resourceEngine);
+
+    /**
+     * @return resourceEngines
+     */
+    List<ResourceEngine<?>> getResourceEngines();
+
+    /**
+     * @return default logger
+     */
+    ResourceEngine<?> getResourceEngine();
+
+    /**
+     * @param identifier
+     * @return logger for the given identifier or null
+     */
+    ResourceEngine<?> getResourceEngine(String identifier);
+
+
 }
