@@ -1,10 +1,13 @@
 /* ResourceEngine.java - created on May 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
-import java.io.File;
-import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 
-import org.apache.commons.configuration.Configuration;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.Provider;
 
 /**
  * Interface for resource storage engine type to an identifier
@@ -16,48 +19,60 @@ public interface ResourceEngine<I> {
     
     public String getIdentifier();
     
-    public void addGlobalResource(String key,String value);
-    public void updateGlobalResource(String key,String value);
-    public void cleanGlobalResource(String key);
-    public Configuration getGlobalResources();
+//    public Set<String> getAvailableResourceKeys();
     
-    public void addProviderResource(I id,String key,String value);
-    public void updateProviderResource(I id,String key,String value);
-    public void truncateProviderResource(I id,String key);
-    public Configuration getProviderSpecificResources(I providerId);
+    public void setGlobalResoures(LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getGlobalResources(LinkedHashSet<String> keys);
+
+    public void setProviderResoures(Provider<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getProviderResoures(Provider<I> id);
     
-    public void addCollectionResource(I id,String key,String value);
-    public void updateCollectionResource(I id,String key,String value);
-    public void truncateCollectionResource(I id,String key);
-    public Configuration getCollectionSpecificResources(I collectionId);
+    public void setCollectionResoures(Collection<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getCollectionResoures(Collection<I> id);
     
-    public void addExecutionResource(I id,String key,String value);
-    public void updateExecutionResource(I id,String key,String value);
-    public void truncateExecutionResource(I id,String key); 
-    public Configuration getExecutionSpecificResources(I executionId);
+    public void setExecutionResoures(Execution<I> id, LinkedHashMap<String, List<String>> resources);
+    public LinkedHashMap<String, List<String>> getExecutionResoures(Execution<I> id);
+//
+//    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
+//    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);
     
-    /**
-     * Returns a combined configuration in which the properties are overwritten in the following order:
-     * 
-     * 1. Global configuration
-     * 2. Provider specific configuration
-     * 3. Collection specific configuration
-     * 4. Execution specific configuration
-     * 
-     * @param executionId
-     * @param collectionId
-     * @param providerId
-     * @return
-     */
-    public Configuration getExecutionEffectiveResources(I executionId,I collectionId,I providerId);
+//    
+//    public void addGlobalResource(String key,String value);
+//    public void clearGlobalResource(String key);
+//    public Configuration getGlobalResources(Set<String> keys);
+//    
+//    public void addProviderResource(I id,String key,String value);
+//    public void clearProviderResource(I id,String key);
+//    public Configuration getProviderSpecificResources(I providerId,Set<String> keys);
+//    
+//    public void addCollectionResource(I id,String key,String value);
+//    public void clearCollectionResource(I id,String key);
+//    public Configuration getCollectionSpecificResources(I collectionId,Set<String> keys);
+//    
+//    public void addExecutionResource(I id,String key,String value);
+//    public void clearExecutionResource(I id,String key); 
+//    public Configuration getExecutionSpecificResources(I executionId,Set<String> keys);
     
-    /**
-     * @return
-     */
+//    /**
+//     * Returns a combined configuration in which the properties are overwritten in the following order:
+//     * 
+//     * 1. Global configuration
+//     * 2. Provider specific configuration
+//     * 3. Collection specific configuration
+//     * 4. Execution specific configuration
+//     * 
+//     * @param executionId
+//     * @return
+//     */
+//    public Configuration getExecutionEffectiveResources(Execution<I> executionId);
+//    
+//    /**
+//     * @return
+//     */
     
-    public File asFile(String value);
-    
-    public InputStream asInputStream(String value);
+//    public File asFile(String value);
+//    
+//    public InputStream asInputStream(String value);
     
     //TODO: extend to support file up/load download, if necessary.
     
