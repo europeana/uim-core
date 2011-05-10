@@ -76,7 +76,7 @@ public class UIMRegistryTest {
         registry.setConfiguredResourceEngine("a");
         assertNull(registry.getActiveResourceEngine());
         assertNotNull(registry.getResourceEngine());
-        //assertNotNull(registry.getResourceEngine(ResourceEngineAdapter.class.getSimpleName()));
+        assertNotNull(registry.getResourceEngine(ResourceEngineAdapter.class.getSimpleName()));
 
         assertEquals(1, registry.getResourceEngines().size());
     }
