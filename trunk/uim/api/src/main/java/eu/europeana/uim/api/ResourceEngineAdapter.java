@@ -1,9 +1,11 @@
 /* ResourceEngineAdapter.java - created on May 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
@@ -71,6 +73,26 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id,
             List<String> keys) {
         return new LinkedHashMap<String, List<String>>();
+    }
+
+    @Override
+    public void setConfiguration(Map<String, String> config) {
+        
+    }
+
+    @Override
+    public Map<String, String> getConfiguration() {
+        return new HashMap<String, String>();
+    }
+
+    @Override
+    public void initialize() {
+      
+    }
+
+    @Override
+    public void shutdown() {
+        
     }
 
     

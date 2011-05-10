@@ -3,6 +3,7 @@ package eu.europeana.uim.api;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
@@ -17,6 +18,26 @@ import eu.europeana.uim.store.Provider;
 public interface ResourceEngine<I> {
     
     public String getIdentifier();
+    
+    /**
+     * @param config
+     */
+    public void setConfiguration(Map<String, String> config);
+
+    /**
+     * @return configuration
+     */
+    public Map<String, String> getConfiguration();
+
+    /**
+     * Initializes engine by for example opening database connection.
+     */
+    void initialize();
+
+    /**
+     * Shutdown the engine and its connected components like connection to database.
+     */
+    void shutdown();
     
 //    public Set<String> getAvailableResourceKeys();
     

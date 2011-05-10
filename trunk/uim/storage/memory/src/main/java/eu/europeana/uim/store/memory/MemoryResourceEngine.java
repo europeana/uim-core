@@ -1,8 +1,11 @@
 /* MemoryResourceEngine.java - created on May 9, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.store.memory;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.Collection;
@@ -38,7 +41,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
           List<String> values=globalResources.get(key);
           if (values !=null && values.size()>0) {
               results.put(key, values);
-          }
+          } 
       }
       return results;
     }
@@ -62,7 +65,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
             List<String> values=providerMap.get(key);
             if (values !=null && values.size()>0) {
                 results.put(key, values);
-            }
+            } 
         }
         return results;
       
@@ -114,6 +117,25 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
             }
         }
         return results;
+    }
+
+    @Override
+    public void setConfiguration(Map<String, String> config) {
+        //don't expect anything, just ignore; 
+    }
+
+    @Override
+    public Map<String, String> getConfiguration() {
+        //not needed, return empty
+        return new HashMap<String, String>();
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void shutdown() {
     }
 
 
