@@ -90,7 +90,7 @@ public class FileResourceDialogBox extends DialogBox {
         cellList.setSize("100%", "100%");
         cellList.setPageSize(30);
         cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
-        cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+        cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
         cellList.setTitle("File Resource List");
 
         final ListDataProvider<String> workflowProvider = new ListDataProvider<String>();
@@ -99,6 +99,11 @@ public class FileResourceDialogBox extends DialogBox {
 
         final MultiSelectionModel<String> selectionModel = new MultiSelectionModel<String>(
                 new SimpleKeyProvider<String>());
+        if (parameter.getValues() != null && parameter.getValues().length > 0) {
+            for (String str : parameter.getValues()) {
+                selectionModel.setSelected(str, true);
+            }
+        }
         cellList.setSelectionModel(selectionModel);
 
         scrollPanel.add(cellList);

@@ -1,5 +1,6 @@
 package org.theeuropeanlibrary.uim.gui.gwt.server;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -366,9 +367,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     @Override
     public List<String> getResourceFileNames() {
         List<String> fileNames = new ArrayList<String>();
-        fileNames.add("test");
-        fileNames.add("test2");
-        fileNames.add("test3");
+        ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
+        File rootDirectory = resource.getRootDirectory();
+        if (rootDirectory != null && rootDirectory.exists() && rootDirectory.isDirectory()) {
+            for (File file : rootDirectory.listFiles()) {
+                fileNames.add(file.getName());
+            }
+        }
         return fileNames;
     }
 }
