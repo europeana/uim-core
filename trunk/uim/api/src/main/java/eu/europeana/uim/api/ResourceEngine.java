@@ -1,6 +1,7 @@
 /* ResourceEngine.java - created on May 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,9 @@ public interface ResourceEngine<I> {
     
     public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources);
     public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id, List<String> keys);
+    
+    public File getRootDirectory();
+    
 //
 //    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
 //    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);

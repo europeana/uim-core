@@ -1,6 +1,7 @@
 package eu.europeana.uim.api;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Properties;
 
 import eu.europeana.uim.common.RevisableProgressMonitor;
@@ -41,12 +42,17 @@ public interface ExecutionContext {
      * @return logging engine
      */
     LoggingEngine<?, ?> getLoggingEngine();
+    
+    /**
+     * @return resource engine for this execution
+     */
+
+    ResourceEngine<?> getResourceEngine();
 
     /**
      * @return the execution specific properties
      */
-    public Properties getProperties();
-
+    public Properties getProperties();  
     /**
      * @param <NS>
      *            the namespace (type) in which the field is defined
@@ -68,5 +74,5 @@ public interface ExecutionContext {
      *            typed key which holds namespace, name and type information
      * @return value object typed using the type specified in the key
      */
-    <NS, T extends Serializable> T getValue(TKey<NS, T> key);
+    <NS, T extends Serializable> T getValue(TKey<NS, T> key);   
 }

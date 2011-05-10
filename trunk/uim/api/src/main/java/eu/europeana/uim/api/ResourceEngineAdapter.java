@@ -1,6 +1,7 @@
 /* ResourceEngineAdapter.java - created on May 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -104,6 +105,11 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     @Override
     public EngineStatus getStatus() {
         return EngineStatus.RUNNING;
+    }
+
+    @Override
+    public File getRootDirectory() {
+        return null;
     }
 
     

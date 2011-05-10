@@ -2,11 +2,12 @@
 package eu.europeana.uim.store;
 
 import org.junit.Before;
+import org.junit.Test;
 
 import eu.europeana.uim.api.ResourceEngine;
 
 /**
- * 
+ * Abstract base class to test the contract of the resource engine
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @param <I> 
@@ -37,6 +38,11 @@ public abstract class AbstractResourceEngineTest<I> {
          * @return configured storage engine
          */
         protected abstract ResourceEngine<I> getResourceEngine();
+        
+        @Test
+        public void testNoop() {
+            
+        }
         
         
 }

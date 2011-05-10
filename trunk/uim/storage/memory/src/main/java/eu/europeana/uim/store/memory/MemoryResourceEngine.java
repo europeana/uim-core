@@ -1,11 +1,15 @@
 /* MemoryResourceEngine.java - created on May 9, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.store.memory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.management.RuntimeErrorException;
 
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine.EngineStatus;
@@ -21,10 +25,16 @@ import eu.europeana.uim.store.Provider;
  */
 public class MemoryResourceEngine implements ResourceEngine<Long> {
 
+    
     LinkedHashMap<String, List<String>> globalResources=new LinkedHashMap<String, List<String>>();
     LinkedHashMap<Long,LinkedHashMap<String, List<String>>> providerResources=new  LinkedHashMap<Long,LinkedHashMap<String, List<String>>>();
     LinkedHashMap<Long,LinkedHashMap<String, List<String>>> collectionResources=new  LinkedHashMap<Long,LinkedHashMap<String, List<String>>>();
     LinkedHashMap<Long,LinkedHashMap<String, List<String>>> executionResources=new  LinkedHashMap<Long,LinkedHashMap<String, List<String>>>();
+    
+    private static final String DEFAULT_DATA_DIR=System.getProperty("java.io.tmpdir");
+    private String rootPath=DEFAULT_DATA_DIR;
+    private File rootDir=new File(DEFAULT_DATA_DIR);
+    
     @Override
     public String getIdentifier() {
       return MemoryResourceEngine.class.getSimpleName();
@@ -147,6 +157,38 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     @Override
     public void checkpoint() {
     }
+
+    @Override
+    public File getRootDirectory() {
+     return rootDir;
+        
+    }
+
+    /**
+     * Sets the rootPath to the given value.
+     * @param rootPath the rootPath to set
+     * @throws FileNotFoundException 
+     */
+    public void setRootPath(String rootPath) throws FileNotFoundException {
+        this.rootPath = rootPath;
+     rootDir =new File(getRootPath());
+        if (!rootDir.exists()&&!rootDir.mkdirs()) {
+            throw new FileNotFoundException("Directory "+rootDir.getAbsolutePath()+" not found and could not be created");
+        };
+        if (!rootDir.isDirectory()) {
+            throw new IllegalArgumentException(rootPath+" is not a directory");
+        }
+    }
+
+    /**
+     * Returns the rootPath.
+     * @return the rootPath
+     */
+    public String getRootPath() {
+        return rootPath;
+    }
+    
+    
 
 
 

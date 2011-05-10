@@ -25,11 +25,7 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      */
     StorageEngine<I> getStorageEngine();
     
-    /**
-     * @return resource engine for this execution
-     */
-
-    ResourceEngine<I> getResourceEngine();
+   
     
     /**
      * @param paused
