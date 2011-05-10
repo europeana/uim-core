@@ -107,7 +107,7 @@ public class FileResourceDialogBox extends DialogBox {
 
         final FormPanel form = new FormPanel();
         form.setWidth("100%");
-        form.setAction(GWT.getModuleBaseURL()+"fileupload");
+        form.setAction(GWT.getModuleBaseURL() + "fileupload");
         form.setEncoding(FormPanel.ENCODING_MULTIPART);
         form.setMethod(FormPanel.METHOD_POST);
 
@@ -117,8 +117,8 @@ public class FileResourceDialogBox extends DialogBox {
 
         final FileUpload upload = new FileUpload();
         upload.setName("uploadFormElement");
-//        Element ee = upload.getElement();
-//        DOM.setAttribute(ee, "size", "40");
+// Element ee = upload.getElement();
+// DOM.setAttribute(ee, "size", "40");
         panel.add(upload);
 
         panel.add(new Button("Upload", new ClickHandler() {
@@ -175,7 +175,7 @@ public class FileResourceDialogBox extends DialogBox {
         buttons.add(cancelButton);
         buttons.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_LEFT);
         dialogContents.add(buttons);
-        
+
         updateFileNames();
     }
 
@@ -183,7 +183,7 @@ public class FileResourceDialogBox extends DialogBox {
      * Retrieve parameters for given settings.
      */
     public void updateFileNames() {
-        orchestrationService.getResourceFiles(new AsyncCallback<List<String>>() {
+        orchestrationService.getResourceFileNames(new AsyncCallback<List<String>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();

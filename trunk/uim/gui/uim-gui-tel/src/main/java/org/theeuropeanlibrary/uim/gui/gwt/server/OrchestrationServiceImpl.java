@@ -364,7 +364,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public List<String> getResourceFiles() {
+    public List<String> getResourceFileNames() {
         List<String> fileNames = new ArrayList<String>();
         fileNames.add("test");
         fileNames.add("test2");

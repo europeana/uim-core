@@ -38,5 +38,5 @@ public interface OrchestrationServiceAsync {
     
     void setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow, AsyncCallback<Boolean> async);
     
-    void getResourceFiles(AsyncCallback<List<String>> async);
+    void getResourceFileNames(AsyncCallback<List<String>> async);
 }

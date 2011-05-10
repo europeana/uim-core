@@ -45,5 +45,5 @@ public interface OrchestrationService extends RemoteService {
     
     Boolean setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow);
     
-    List<String> getResourceFiles();
+    List<String> getResourceFileNames();
 }
