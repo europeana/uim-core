@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.api.StorageEngine.EngineStatus;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
@@ -136,6 +137,15 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
 
     @Override
     public void shutdown() {
+    }
+
+    @Override
+    public EngineStatus getStatus() {
+        return EngineStatus.RUNNING;
+    }
+
+    @Override
+    public void checkpoint() {
     }
 
 

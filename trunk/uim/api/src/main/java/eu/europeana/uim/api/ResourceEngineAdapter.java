@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import eu.europeana.uim.api.StorageEngine.EngineStatus;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
@@ -93,6 +94,16 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     @Override
     public void shutdown() {
         
+    }
+
+    @Override
+    public void checkpoint() {
+
+    }
+
+    @Override
+    public EngineStatus getStatus() {
+        return EngineStatus.RUNNING;
     }
 
     

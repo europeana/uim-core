@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import eu.europeana.uim.api.StorageEngine.EngineStatus;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
@@ -32,12 +33,22 @@ public interface ResourceEngine<I> {
     /**
      * Initializes engine by for example opening database connection.
      */
-    void initialize();
+    public void initialize();
 
     /**
      * Shutdown the engine and its connected components like connection to database.
      */
-    void shutdown();
+    public void shutdown();
+    
+    /**
+     * Saves all entries 
+     */
+    public void checkpoint();
+    
+    /**
+     * @return the current running status of the engine
+     */
+    public EngineStatus getStatus();
     
 //    public Set<String> getAvailableResourceKeys();
     
@@ -55,6 +66,10 @@ public interface ResourceEngine<I> {
 //
 //    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
 //    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);
+
+
+
+ 
     
 //    
 //    public void addGlobalResource(String key,String value);
