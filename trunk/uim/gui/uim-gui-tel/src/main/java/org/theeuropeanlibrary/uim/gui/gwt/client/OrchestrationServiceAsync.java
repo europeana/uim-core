@@ -35,4 +35,6 @@ public interface OrchestrationServiceAsync {
     void getStatus(String workflow, AsyncCallback<List<StepStatusDTO>> async);
     
     void getParameters(Long provider, Long collection, String workflow, AsyncCallback<List<ParameterDTO>> async);
+    
+    void setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow, AsyncCallback<Boolean> async);
 }

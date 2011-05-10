@@ -4,6 +4,7 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
@@ -25,6 +26,8 @@ public class ReflectionEngine extends Engine {
     private static String   configuredStorageEngine = "MemoryStorageEngine";
 
     private static String[] storage                 = new String[] { "eu.europeana.uim.store.memory.MemoryStorageEngine" };
+    
+    private static String[] resource                 = new String[] { "eu.europeana.uim.store.memory.MemoryResourceEngine" };
 
     private static String[] logging                 = new String[] { "eu.europeana.uim.logging.memory.MemoryLoggingEngine" };
 
@@ -49,6 +52,7 @@ public class ReflectionEngine extends Engine {
         }
 
         setupStorage();
+        setupResource();
         setupLogging();
         setupPlugins();
         setupWorkflows();
@@ -121,6 +125,20 @@ public class ReflectionEngine extends Engine {
                 Class<?> clazz = Class.forName(name);
                 StorageEngine storage = (StorageEngine)clazz.newInstance();
                 registry.addStorage(storage);
+            } catch (Throwable e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        registry.setConfiguredStorageEngine(configuredStorageEngine);
+    }
+    
+    private void setupResource() {
+        for (String name : resource) {
+            try {
+                Class<?> clazz = Class.forName(name);
+                ResourceEngine resource = (ResourceEngine)clazz.newInstance();
+                registry.addResourceEngine(resource);
             } catch (Throwable e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

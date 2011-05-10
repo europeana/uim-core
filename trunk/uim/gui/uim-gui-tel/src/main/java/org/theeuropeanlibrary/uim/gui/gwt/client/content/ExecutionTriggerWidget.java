@@ -26,11 +26,17 @@ import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
@@ -104,6 +110,10 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                 for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
                     cellBrowser.getRootTreeNode().setChildOpen(i, false);
                 }
+                provider = null;
+                collection = null;
+                workflow = null;
+                updateParameters();
             }
         });
 
@@ -119,12 +129,15 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                 for (BrowserObject val : vals) {
                     if (val.getWrappedObject() instanceof ProviderDTO) {
                         provider = (ProviderDTO)val.getWrappedObject();
+                        collection = null;
+                        workflow = null;
 
                         executionForm.setProvider((ProviderDTO)val.getWrappedObject());
                         executionForm.setCollection(null);
                         executionForm.setWorkflow(null);
                     } else if (val.getWrappedObject() instanceof CollectionDTO) {
                         collection = (CollectionDTO)val.getWrappedObject();
+                        workflow = null;
 
                         executionForm.setCollection((CollectionDTO)val.getWrappedObject());
                         executionForm.setWorkflow(null);
@@ -191,8 +204,10 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      * Retrieve parameters for given settings.
      */
     public void updateParameters() {
-        orchestrationService.getParameters(provider.getId(), collection.getId(),
-                workflow.getName(), new AsyncCallback<List<ParameterDTO>>() {
+        orchestrationService.getParameters(provider != null ? provider.getId() : null,
+                collection != null ? collection.getId() : null,
+                workflow != null ? workflow.getName() : null,
+                new AsyncCallback<List<ParameterDTO>>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         throwable.printStackTrace();
@@ -205,37 +220,42 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                         cellTable.setRowData(0, activeParameters);
                         cellTable.setRowCount(activeParameters.size());
                         cellTable.setHeight((30 + 20 * parameters.size()) + "px");
-                        
-                        // uim:exec -o start workflowname -c collectionmnemoic | -p providermnemonic key=value&key=value&...
-                        StringBuilder b = new StringBuilder();
-                        b.append("uim:exec -o start ");
-                        b.append(workflow.getName());
-                        if (collection != null && !collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
-                            b.append(" -c ");
-                            b.append(collection.getMnemonic());
-                        } else {
-                            b.append(" -p ");
-                            b.append(provider.getMnemonic());
-                        }
-                        b.append(" ");
-                        for (int i = 0; i < parameters.size(); i++) {
-                            ParameterDTO param = parameters.get(i);
-                            if (param.getValues() != null && param.getValues().length > 0) {
-                                b.append(param.getKey());
-                                b.append("=");
 
-                                for (int j = 0; j < param.getValues().length; j++) {
-                                    b.append(param.getValues()[j]);
-                                    if (j < param.getValues().length - 1) {
-                                        b.append("|");
+                        if (provider != null && collection != null && workflow != null) {
+                            // uim:exec -o start workflowname -c collectionmnemoic | -p
+// providermnemonic key=value&key=value&...
+                            StringBuilder b = new StringBuilder();
+                            b.append("uim:exec -o start ");
+                            b.append(workflow.getName());
+                            if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
+                                b.append(" -c ");
+                                b.append(collection.getMnemonic());
+                            } else {
+                                b.append(" -p ");
+                                b.append(provider.getMnemonic());
+                            }
+                            b.append(" ");
+                            for (int i = 0; i < parameters.size(); i++) {
+                                ParameterDTO param = parameters.get(i);
+                                if (param.getValues() != null && param.getValues().length > 0) {
+                                    b.append(param.getKey());
+                                    b.append("=");
+
+                                    for (int j = 0; j < param.getValues().length; j++) {
+                                        b.append(param.getValues()[j]);
+                                        if (j < param.getValues().length - 1) {
+                                            b.append("|");
+                                        }
+                                    }
+                                    if (i < parameters.size() - 1) {
+                                        b.append("&");
                                     }
                                 }
-                                if (i < parameters.size() - 1) {
-                                    b.append("&");
-                                }
                             }
+                            executionForm.setCommandline(b.toString());
+                        } else {
+                            executionForm.setCommandline(null);
                         }
-                        executionForm.setCommandline(b.toString());
                     }
                 });
     }
@@ -267,10 +287,12 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             @Override
             public String getValue(ParameterDTO object) {
                 StringBuilder builder = new StringBuilder();
-//                for (String val : object.getValues()) {
-//                    builder.append(val);
-//                    builder.append("\n");
-//                }
+                for (int i = 0; i < object.getValues().length; i++) {
+                    builder.append(object.getValues()[i]);
+                    if (i < object.getValues().length - 1) {
+                        builder.append("|");
+                    }
+                }
                 return builder.toString();
             }
         };
@@ -279,19 +301,138 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         cellTable.setColumnWidth(valueColumn, 40, Unit.PCT);
 
         // Update Button
-        Column<ParameterDTO, String> updateColumn = new Column<ParameterDTO, String>(
-                new ActionCell<String>("Update", new ActionCell.Delegate<String>() {
+        Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
+                new ActionCell<ParameterDTO>("Update...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
-                    public void execute(String contact) {
-                        Window.alert("You clicked " + contact);
+                    public void execute(ParameterDTO parameter) {
+                        final DialogBox updateBox = createDialogBox(parameter);
+                        updateBox.show();
                     }
                 })) {
             @Override
-            public String getValue(ParameterDTO object) {
-                return "Update...";
+            public ParameterDTO getValue(ParameterDTO object) {
+                return object;
             }
         };
         cellTable.addColumn(updateColumn, "Update");
         cellTable.setColumnWidth(updateColumn, 20, Unit.PCT);
+    }
+
+    /**
+     * Create the dialog box for this example.
+     * 
+     * @param parameter
+     * @return the new dialog box
+     */
+    public DialogBox createDialogBox(final ParameterDTO parameter) {
+        final DialogBox dialogBox = new DialogBox();
+        dialogBox.setText("Update Resource");
+// dialogBox.setSize("400px", "400px");
+        dialogBox.setGlassEnabled(true);
+        dialogBox.setAnimationEnabled(true);
+        dialogBox.center();
+
+        VerticalPanel dialogContents = new VerticalPanel();
+        dialogContents.setSpacing(4);
+        dialogContents.setSize("100%", "100%");
+        dialogBox.setWidget(dialogContents);
+
+        HorizontalPanel key = new HorizontalPanel();
+        key.setSpacing(4);
+        key.setWidth("100%");
+        Label keyLabel = new Label("Resource Key");
+        keyLabel.setWidth("30%");
+        key.add(keyLabel);
+        key.setCellHorizontalAlignment(keyLabel, HasHorizontalAlignment.ALIGN_LEFT);
+        Label keyValue = new Label(parameter.getKey());
+        keyValue.setWidth("70%");
+        key.add(keyValue);
+        key.setCellHorizontalAlignment(keyValue, HasHorizontalAlignment.ALIGN_LEFT);
+        dialogContents.add(key);
+
+        HorizontalPanel values = new HorizontalPanel();
+        values.setSpacing(4);
+        values.setWidth("100%");
+        Label valueLabel = new Label("Resource Values");
+        valueLabel.setWidth("30%");
+        values.add(valueLabel);
+        values.setCellHorizontalAlignment(valueLabel, HasHorizontalAlignment.ALIGN_LEFT);
+
+        final List<TextBox> boxes = new ArrayList<TextBox>();
+        VerticalPanel valuesPanel = new VerticalPanel();
+        valuesPanel.setWidth("70%");
+        for (String value : parameter.getValues()) {
+            TextBox box = new TextBox();
+            box.setWidth("100%");
+            box.setText(value);
+            box.setReadOnly(false);
+            valuesPanel.add(box);
+            boxes.add(box);
+        }
+        TextBox box = new TextBox();
+        box.setReadOnly(false);
+        box.setWidth("100%");
+        boxes.add(box);
+        valuesPanel.add(box);
+        values.add(valuesPanel);
+        values.setCellHorizontalAlignment(valuesPanel, HasHorizontalAlignment.ALIGN_LEFT);
+
+        dialogContents.add(values);
+
+        HorizontalPanel buttons = new HorizontalPanel();
+        buttons.setSpacing(4);
+        buttons.setWidth("100%");
+        Button okButton = new Button("Ok", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                List<String> vals = new ArrayList<String>();
+                for (TextBox box : boxes) {
+                    if (box.getText().length() > 0) {
+                        vals.add(box.getText());
+                    }
+                }
+                if (vals.size() > 0) {
+                    parameter.setValues(vals.toArray(new String[vals.size()]));
+//                    orchestrationService.setParameters(parameter,
+//                            provider != null ? provider.getId() : null, collection != null
+//                                    ? collection.getId() : null,
+//                            workflow != null ? workflow.getName() : null,
+//                            new AsyncCallback<Boolean>() {
+//                                @Override
+//                                public void onFailure(Throwable throwable) {
+//                                    throwable.printStackTrace();
+//                                }
+//
+//                                @Override
+//                                public void onSuccess(Boolean res) {
+//                                    if (!res) {
+//                                        Window.alert("Could not write resource!");
+//                                    } else {
+//                                        updateParameters();
+//                                    }
+//                                }
+//                            });
+                    cellTable.setRowData(0, activeParameters);
+                    cellTable.setRowCount(activeParameters.size());
+                    cellTable.setHeight((30 + 20 * activeParameters.subList(0, activeParameters.size()).size()) + "px");
+                }
+
+                dialogBox.hide();
+            }
+        });
+        buttons.add(okButton);
+        buttons.setCellHorizontalAlignment(okButton, HasHorizontalAlignment.ALIGN_RIGHT);
+
+        Button cancelButton = new Button("Cancel", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dialogBox.hide();
+            }
+        });
+        buttons.add(cancelButton);
+        buttons.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_LEFT);
+        dialogContents.add(buttons);
+
+        return dialogBox;
     }
 }

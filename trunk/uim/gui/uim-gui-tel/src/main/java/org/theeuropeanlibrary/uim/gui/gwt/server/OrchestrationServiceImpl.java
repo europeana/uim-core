@@ -1,9 +1,12 @@
 package org.theeuropeanlibrary.uim.gui.gwt.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
@@ -16,12 +19,15 @@ import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.bean.CollectionBean;
+import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 
@@ -60,17 +66,68 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         if (workflow != null) {
             Workflow w = getWorkflow(workflow);
             WorkflowStart start = w.getStart();
-            for (String param : start.getParameters()) {
-                res.add(new ParameterDTO(param));
-            }
+            
+            List<String> params = new ArrayList<String>();
+            params.addAll(start.getParameters());
             for (IngestionPlugin i : w.getSteps()) {
-                for (String param : i.getParameters()) {
-                    res.add(new ParameterDTO(param));
+                params.addAll(i.getParameters());
+            }
+            
+            ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
+            LinkedHashMap<String, List<String>> globalResources = resource.getGlobalResources(params);
+            for (String param : params) {
+                if (!globalResources.containsKey(param)) {
+                    globalResources.put(param, new ArrayList<String>());
                 }
+            }
+            
+            if (collection != null) {
+                LinkedHashMap<String, List<String>> collectionResources = resource.getCollectionResources(new CollectionBean<Long>(collection, new ProviderBean<Long>(provider)), params);
+                if (collectionResources != null && collectionResources.size() > 0) {
+                    for (String key : collectionResources.keySet()) {
+                        globalResources.remove(key);
+                    }
+                    globalResources.putAll(collectionResources);
+                }
+            }
+            if (provider != null) {
+                LinkedHashMap<String, List<String>> providerResources = resource.getProviderResources(new ProviderBean<Long>(provider), params);
+                if (providerResources != null && providerResources.size() > 0) {
+                    for (String key : providerResources.keySet()) {
+                        globalResources.remove(key);
+                    }
+                    globalResources.putAll(providerResources);
+                }
+            }
+            
+            for (Entry<String, List<String>> entry : globalResources.entrySet()) {
+                res.add(new ParameterDTO(entry.getKey(), entry.getValue().toArray(new String[entry.getValue().size()])));
             }
         }
         return res;
     }
+    
+    @Override
+    public Boolean setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow) {
+        Boolean res = true;
+
+        LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
+        values.put(parameter.getKey(), Arrays.asList(parameter.getValues()));
+        ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
+
+        if (provider == null && collection == null && workflow != null) {
+            resource.setGlobalResources(values);
+        } else if (provider != null && collection != null) {
+            resource.setCollectionResources(new CollectionBean<Long>(collection, new ProviderBean<Long>(provider)), values);
+        } else if (provider != null && collection == null) {
+            resource.setProviderResources(new ProviderBean<Long>(provider), values);
+        } else {
+            res = false;
+        }
+
+        return res;
+    }
+
 
     @Override
     public List<ProviderDTO> getProviders() {

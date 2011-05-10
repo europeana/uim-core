@@ -42,4 +42,6 @@ public interface OrchestrationService extends RemoteService {
     List<StepStatusDTO> getStatus(String workflow);
     
     List<ParameterDTO> getParameters(Long provider, Long collection, String workflow);
+    
+    Boolean setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow);
 }
