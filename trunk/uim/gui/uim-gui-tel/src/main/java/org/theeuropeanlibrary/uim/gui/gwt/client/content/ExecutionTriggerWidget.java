@@ -26,7 +26,6 @@ import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -210,43 +209,50 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                         cellTable.setRowCount(activeParameters.size());
                         cellTable.setHeight((30 + 20 * parameters.size()) + "px");
 
-                        if (provider != null && collection != null && workflow != null) {
-                            // uim:exec -o start workflowname -c collectionmnemoic | -p
-// providermnemonic key=value&key=value&...
-                            StringBuilder b = new StringBuilder();
-                            b.append("uim:exec -o start ");
-                            b.append(workflow.getName());
-                            if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
-                                b.append(" -c ");
-                                b.append(collection.getMnemonic());
-                            } else {
-                                b.append(" -p ");
-                                b.append(provider.getMnemonic());
-                            }
-                            b.append(" ");
-                            for (int i = 0; i < parameters.size(); i++) {
-                                ParameterDTO param = parameters.get(i);
-                                if (param.getValues() != null && param.getValues().length > 0) {
-                                    b.append(param.getKey());
-                                    b.append("=");
-
-                                    for (int j = 0; j < param.getValues().length; j++) {
-                                        b.append(param.getValues()[j]);
-                                        if (j < param.getValues().length - 1) {
-                                            b.append("|");
-                                        }
-                                    }
-                                    if (i < parameters.size() - 1) {
-                                        b.append("&");
-                                    }
-                                }
-                            }
-                            executionForm.setCommandline(b.toString());
-                        } else {
-                            executionForm.setCommandline(null);
-                        }
+                        updateCommandline();
                     }
                 });
+    }
+
+    /**
+     * Updates command line.
+     */
+    protected void updateCommandline() {
+        if (provider != null && collection != null && workflow != null) {
+            // uim:exec -o start workflowname -c collectionmnemoic | -p providermnemonic
+// key=value&key=value&...
+            StringBuilder b = new StringBuilder();
+            b.append("uim:exec -o start ");
+            b.append(workflow.getName());
+            if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
+                b.append(" -c ");
+                b.append(collection.getMnemonic());
+            } else {
+                b.append(" -p ");
+                b.append(provider.getMnemonic());
+            }
+            b.append(" ");
+            for (int i = 0; i < activeParameters.size(); i++) {
+                ParameterDTO param = activeParameters.get(i);
+                if (param.getValues() != null && param.getValues().length > 0) {
+                    b.append(param.getKey());
+                    b.append("=");
+
+                    for (int j = 0; j < param.getValues().length; j++) {
+                        b.append(param.getValues()[j]);
+                        if (j < param.getValues().length - 1) {
+                            b.append("|");
+                        }
+                    }
+                    if (i < activeParameters.size() - 1) {
+                        b.append("&");
+                    }
+                }
+            }
+            executionForm.setCommandline(b.toString());
+        } else {
+            executionForm.setCommandline(null);
+        }
     }
 
     /**
@@ -294,16 +300,8 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                 new ActionCell<ParameterDTO>("Update...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
-                        final DialogBox updateBox = new SimpleResourceDialogBox(parameter, new ResourceSettingCallback() {
-                            @Override
-                            public void changed(ParameterDTO parameter) {
-                                cellTable.setRowData(0, activeParameters);
-                                cellTable.setRowCount(activeParameters.size());
-                                cellTable.setHeight((30 + 20 * activeParameters.subList(0,
-                                        activeParameters.size()).size()) +
-                                                    "px");
-                            }
-                        });
+                        ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
+                        final DialogBox updateBox = new SimpleResourceDialogBox(parameter, callback);
                         updateBox.show();
                     }
                 })) {
@@ -314,37 +312,15 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         };
         cellTable.addColumn(updateColumn, "Update");
         cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
-        
+
         // File update Button
         Column<ParameterDTO, ParameterDTO> fileColumn = new Column<ParameterDTO, ParameterDTO>(
                 new ActionCell<ParameterDTO>("File...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
-                        final DialogBox updateBox = new FileResourceDialogBox(orchestrationService, parameter,
-                                new ResourceSettingCallback() {
-                                    @Override
-                                    public void changed(ParameterDTO parameter) {
-                                        orchestrationService.setParameters(parameter,
-                                                provider != null ? provider.getId() : null,
-                                                collection != null ? collection.getId() : null,
-                                                workflow != null ? workflow.getName() : null,
-                                                new AsyncCallback<Boolean>() {
-                                                    @Override
-                                                    public void onFailure(Throwable throwable) {
-                                                        throwable.printStackTrace();
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(Boolean res) {
-                                                        if (!res) {
-                                                            Window.alert("Could not write resource!");
-                                                        } else {
-                                                            updateParameters();
-                                                        }
-                                                    }
-                                                });
-                                    }
-                                });
+                        ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
+                        final DialogBox updateBox = new FileResourceDialogBox(orchestrationService,
+                                parameter, callback);
                         updateBox.show();
                     }
                 })) {
@@ -355,5 +331,17 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         };
         cellTable.addColumn(fileColumn, "File");
         cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
+    }
+
+    private final class ResourceSettingCallbackImplementation implements ResourceSettingCallback {
+        @Override
+        public void changed(ParameterDTO parameter) {
+            cellTable.setRowData(0, activeParameters);
+            cellTable.setRowCount(activeParameters.size());
+            cellTable.setHeight((30 + 20 * activeParameters.subList(0, activeParameters.size()).size()) +
+                                "px");
+
+            updateCommandline();
+        }
     }
 }

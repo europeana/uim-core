@@ -301,31 +301,8 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
                 new ActionCell<ParameterDTO>("Update...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
-                        final DialogBox updateBox = new SimpleResourceDialogBox(parameter,
-                                new ResourceSettingCallback() {
-                                    @Override
-                                    public void changed(ParameterDTO parameter) {
-                                        orchestrationService.setParameters(parameter,
-                                                provider != null ? provider.getId() : null,
-                                                collection != null ? collection.getId() : null,
-                                                workflow != null ? workflow.getName() : null,
-                                                new AsyncCallback<Boolean>() {
-                                                    @Override
-                                                    public void onFailure(Throwable throwable) {
-                                                        throwable.printStackTrace();
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(Boolean res) {
-                                                        if (!res) {
-                                                            Window.alert("Could not write resource!");
-                                                        } else {
-                                                            updateParameters();
-                                                        }
-                                                    }
-                                                });
-                                    }
-                                });
+                        ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
+                        final DialogBox updateBox = new SimpleResourceDialogBox(parameter, callback);
                         updateBox.show();
                     }
                 })) {
@@ -336,37 +313,15 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
         };
         cellTable.addColumn(updateColumn, "Update");
         cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
-        
+
         // File update Button
         Column<ParameterDTO, ParameterDTO> fileColumn = new Column<ParameterDTO, ParameterDTO>(
                 new ActionCell<ParameterDTO>("File...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
-                        final DialogBox updateBox = new FileResourceDialogBox(orchestrationService, parameter,
-                                new ResourceSettingCallback() {
-                                    @Override
-                                    public void changed(ParameterDTO parameter) {
-                                        orchestrationService.setParameters(parameter,
-                                                provider != null ? provider.getId() : null,
-                                                collection != null ? collection.getId() : null,
-                                                workflow != null ? workflow.getName() : null,
-                                                new AsyncCallback<Boolean>() {
-                                                    @Override
-                                                    public void onFailure(Throwable throwable) {
-                                                        throwable.printStackTrace();
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(Boolean res) {
-                                                        if (!res) {
-                                                            Window.alert("Could not write resource!");
-                                                        } else {
-                                                            updateParameters();
-                                                        }
-                                                    }
-                                                });
-                                    }
-                                });
+                        ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
+                        final DialogBox updateBox = new FileResourceDialogBox(orchestrationService,
+                                parameter, callback);
                         updateBox.show();
                     }
                 })) {
@@ -377,5 +332,28 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
         };
         cellTable.addColumn(fileColumn, "File");
         cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
+    }
+
+    private final class ResourceSettingCallbackImplementation implements ResourceSettingCallback {
+        @Override
+        public void changed(ParameterDTO parameter) {
+            orchestrationService.setParameters(parameter, provider != null ? provider.getId()
+                    : null, collection != null ? collection.getId() : null, workflow != null
+                    ? workflow.getName() : null, new AsyncCallback<Boolean>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+
+                @Override
+                public void onSuccess(Boolean res) {
+                    if (!res) {
+                        Window.alert("Could not write resource!");
+                    } else {
+                        updateParameters();
+                    }
+                }
+            });
+        }
     }
 }
