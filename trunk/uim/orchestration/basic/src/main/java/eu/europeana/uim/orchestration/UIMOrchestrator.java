@@ -1,20 +1,28 @@
 package eu.europeana.uim.orchestration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
+import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Orchestrates the ingestion job execution. The orchestrator keeps a map of WorkflowProcessors, one
@@ -52,7 +60,8 @@ public class UIMOrchestrator implements Orchestrator {
 
     /**
      * Executes a given workflow. A new Execution is created and a WorkflowProcessor created if none
-     * exists for this workflow
+     * exists for this workflow. Note, this method queries the registered resource engine for
+     * properties known to the plugins of the workflow.
      * 
      * @param w
      *            the workflow to execute
@@ -67,7 +76,8 @@ public class UIMOrchestrator implements Orchestrator {
 
     /**
      * Executes a given workflow. A new Execution is created and a WorkflowProcessor created if none
-     * exists for this workflow
+     * exists for this workflow. Note, this method queries the registered resource engine for
+     * properties known to the plugins of the workflow for all not given properties, but necessary for the plugins.
      * 
      * @param w
      *            the workflow to execute
@@ -78,6 +88,8 @@ public class UIMOrchestrator implements Orchestrator {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, Properties properties) {
+        setupProperties(w, dataset, properties);
+        
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
         monitor.beginTask(w.getName(), 1);
 
@@ -89,7 +101,8 @@ public class UIMOrchestrator implements Orchestrator {
 
             try {
                 UIMActiveExecution activeExecution = new UIMActiveExecution(e, w,
-                        registry.getStorage(), registry.getLoggingEngine(), registry.getResourceEngine(), properties, monitor);
+                        registry.getStorage(), registry.getLoggingEngine(),
+                        registry.getResourceEngine(), properties, monitor);
                 processor.schedule(activeExecution);
 
                 return activeExecution;
@@ -101,6 +114,61 @@ public class UIMOrchestrator implements Orchestrator {
             e1.printStackTrace();
         }
         return null;
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void setupProperties(Workflow w, DataSet<?> dataset, Properties properties) {
+        ResourceEngine<?> resourceEngine = this.registry.getResourceEngine();
+        if (resourceEngine != null) {
+            List<String> params = new ArrayList<String>();
+            WorkflowStart start = w.getStart();
+            params.addAll(start.getParameters());
+            for (IngestionPlugin i : w.getSteps()) {
+                params.addAll(i.getParameters());
+            }
+
+            LinkedHashMap<String, List<String>> globalResources = resourceEngine.getGlobalResources(params);
+            for (String param : params) {
+                if (!globalResources.containsKey(param)) {
+                    globalResources.put(param, new ArrayList<String>());
+                }
+            }
+
+            if (dataset != null && dataset instanceof Collection) {
+                LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources((Collection) dataset, params);
+                if (collectionResources != null && collectionResources.size() > 0) {
+                    for (String key : collectionResources.keySet()) {
+                        globalResources.remove(key);
+                    }
+                    globalResources.putAll(collectionResources);
+                }
+            }
+            if (dataset != null && dataset instanceof Provider) {
+                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources((Provider) dataset, params);
+                if (providerResources != null && providerResources.size() > 0) {
+                    for (String key : providerResources.keySet()) {
+                        globalResources.remove(key);
+                    }
+                    globalResources.putAll(providerResources);
+                }
+            }
+
+            for (Entry<String, List<String>> entry : globalResources.entrySet()) {
+                if (!properties.contains(entry.getKey()) ) {
+                    if (entry.getValue().size() > 1) {
+                        StringBuilder b = new StringBuilder();
+                        for (String val : entry.getValue()) {
+                            b.append(val);
+                            b.append(",");
+                        }
+                        b.deleteCharAt(b.length() - 1);
+                        properties.put(entry.getKey(), b.toString());
+                    } else if (entry.getValue().size() == 1) {
+                        properties.put(entry.getKey(), entry.getValue().get(0));
+                    }
+                }
+            }
+        }
     }
 
     @Override
