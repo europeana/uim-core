@@ -1,7 +1,6 @@
 package eu.europeana.uim.api;
 
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Properties;
 
 import eu.europeana.uim.common.RevisableProgressMonitor;
