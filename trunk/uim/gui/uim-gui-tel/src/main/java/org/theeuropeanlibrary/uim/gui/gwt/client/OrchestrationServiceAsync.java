@@ -1,6 +1,7 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client;
 
 import java.util.List;
+import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
@@ -20,9 +21,9 @@ public interface OrchestrationServiceAsync {
 
     void getAllCollections(AsyncCallback<List<CollectionDTO>> async);
 
-    void startCollection(String workflow, Long collection, String executionName, AsyncCallback<ExecutionDTO> async);
+    void startCollection(String workflow, Long collection, String executionName, Set<ParameterDTO> parameters, AsyncCallback<ExecutionDTO> async);
 
-    void startProvider(String workflow, Long provider, String executionName, AsyncCallback<ExecutionDTO> async);
+    void startProvider(String workflow, Long provider, String executionName, Set<ParameterDTO> parameters, AsyncCallback<ExecutionDTO> async);
 
     void getExecution(Long id, AsyncCallback<ExecutionDTO> async);
 

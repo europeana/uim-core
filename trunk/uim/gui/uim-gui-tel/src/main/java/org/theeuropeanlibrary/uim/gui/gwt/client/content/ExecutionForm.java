@@ -1,8 +1,12 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
@@ -54,6 +58,8 @@ public class ExecutionForm extends Composite {
 
     private String                          autoText;
 
+    private final Set<ParameterDTO>         changedParameters = new HashSet<ParameterDTO>();
+
     /**
      * Creates a new instance of this class.
      * 
@@ -102,7 +108,7 @@ public class ExecutionForm extends Composite {
 
     private void executeCollection() {
         orchestrationService.startCollection(workflow.getName(), collection.getId(),
-                nameBox.getText(), new AsyncCallback<ExecutionDTO>() {
+                nameBox.getText(), changedParameters, new AsyncCallback<ExecutionDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         // TODO panic
@@ -117,7 +123,7 @@ public class ExecutionForm extends Composite {
 
     private void executeProvider() {
         orchestrationService.startProvider(workflow.getName(), provider.getId(), nameBox.getText(),
-                new AsyncCallback<ExecutionDTO>() {
+                changedParameters, new AsyncCallback<ExecutionDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         // TODO panic
@@ -159,7 +165,7 @@ public class ExecutionForm extends Composite {
     public void setCommandline(String commandLine) {
         commandLineBox.setText(commandLine != null ? commandLine : "");
     }
-    
+
     /**
      * @param workflow
      */
@@ -201,5 +207,14 @@ public class ExecutionForm extends Composite {
         workflowBox.setText(workflow != null ? workflow.getName() : "");
 
         checkCommit();
+    }
+
+    /**
+     * Adds a changed and therefore local parameter setting to the changed parameter set.
+     * 
+     * @param parameter
+     */
+    public void addLocalParameter(ParameterDTO parameter) {
+        changedParameters.add(parameter);
     }
 }

@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
@@ -233,7 +235,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public ExecutionDTO startCollection(String workflow, Long collection, String executionName) {
+    public ExecutionDTO startCollection(String workflow, Long collection, String executionName,
+            Set<ParameterDTO> parameters) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             Collection<Long> c = storage.getCollection(collection);
@@ -244,7 +247,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
-            ActiveExecution ae = getEngine().getOrchestrator().executeWorkflow(w, c);
+            ActiveExecution<Long> ae;
+            if (parameters != null) {
+                Properties properties = prepareProperties(parameters);
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c, properties);
+            } else {
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c);
+            }
             ae.getMonitor().addListener(monitor);
             populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
@@ -256,8 +265,27 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return null;
     }
 
+    private Properties prepareProperties(Set<ParameterDTO> parameters) {
+        Properties properties = new Properties();
+        for (ParameterDTO parameter : parameters) {
+                if (parameter.getValues().length > 1) {
+                    StringBuilder b = new StringBuilder();
+                    for (String val : parameter.getValues()) {
+                        b.append(val);
+                        b.append(",");
+                    }
+                    b.deleteCharAt(b.length() - 1);
+                    properties.put(parameter.getKey(), b.toString());
+                } else if (parameter.getValues().length == 1) {
+                    properties.put(parameter.getKey(), parameter.getValues()[0]);
+                }
+        }
+        return properties;
+    }
+
     @Override
-    public ExecutionDTO startProvider(String workflow, Long provider, String executionName) {
+    public ExecutionDTO startProvider(String workflow, Long provider, String executionName,
+            Set<ParameterDTO> parameters) {
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             Provider<Long> p = storage.getProvider(provider);
@@ -265,8 +293,15 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
             ExecutionDTO execution = new ExecutionDTO();
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-            ActiveExecution<Long> ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(
-                    w, p);
+            
+            ActiveExecution<Long> ae;
+            if (parameters != null) {
+                Properties properties = prepareProperties(parameters);
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p, properties);
+            } else {
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
+            }
+
             ae.getMonitor().addListener(monitor);
 
             populateWrappedExecutionDTO(execution, ae, w, p, executionName);

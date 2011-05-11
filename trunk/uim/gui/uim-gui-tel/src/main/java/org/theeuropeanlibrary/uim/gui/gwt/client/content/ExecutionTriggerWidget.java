@@ -69,7 +69,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     @UiField(provided = true)
     ExecutionForm                           executionForm;
 
-    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
+    private final List<ParameterDTO>        activeParameters  = new ArrayList<ParameterDTO>();
 
     private ProviderDTO                     provider;
     private CollectionDTO                   collection;
@@ -342,6 +342,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                                 "px");
 
             updateCommandline();
+            executionForm.addLocalParameter(parameter);
         }
     }
 }

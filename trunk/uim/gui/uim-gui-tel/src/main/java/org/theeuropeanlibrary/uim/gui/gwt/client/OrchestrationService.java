@@ -1,6 +1,7 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client;
 
 import java.util.List;
+import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
@@ -27,9 +28,9 @@ public interface OrchestrationService extends RemoteService {
 
     List<CollectionDTO> getAllCollections();
 
-    ExecutionDTO startCollection(String workflow, Long collection, String executionName);
+    ExecutionDTO startCollection(String workflow, Long collection, String executionName, Set<ParameterDTO> parameters);
 
-    ExecutionDTO startProvider(String workflow, Long provider, String executionName);
+    ExecutionDTO startProvider(String workflow, Long provider, String executionName, Set<ParameterDTO> parameters);
 
     ExecutionDTO getExecution(Long id);
 

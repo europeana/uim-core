@@ -28,11 +28,11 @@ public class DataTreeViewModel implements TreeViewModel {
     /**
      * all collections used for a specific provider
      */
-    public static final String ALL_COLLECTIONS = "All Collections";
-    
+    public static final String                       ALL_COLLECTIONS = "All Collections";
+
     private final OrchestrationServiceAsync          orchestrationServ;
     private final MultiSelectionModel<BrowserObject> selectionModel;
-    private final boolean dataSetsOnly;
+    private final boolean                            dataSetsOnly;
     private ListDataProvider<BrowserObject>          providersDataProvider;
 
     /**
@@ -43,75 +43,14 @@ public class DataTreeViewModel implements TreeViewModel {
      * @param dataSetsOnly
      */
     public DataTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
-                                final MultiSelectionModel<BrowserObject> selectionModel, boolean dataSetsOnly) {
+                             final MultiSelectionModel<BrowserObject> selectionModel,
+                             boolean dataSetsOnly) {
         this.orchestrationServ = orchestrationServ;
         this.selectionModel = selectionModel;
         this.dataSetsOnly = dataSetsOnly;
 
         providersDataProvider = new ListDataProvider<BrowserObject>();
         loadProviders(providersDataProvider);
-
-// // Construct a composite cell for contacts that includes a checkbox.
-// List<HasCell<BrowserObject, ?>> hasCells = new ArrayList<HasCell<BrowserObject, ?>>();
-// hasCells.add(new HasCell<BrowserObject, Boolean>() {
-// private CheckboxCell cell = new CheckboxCell(true, false);
-//
-// @Override
-// public Cell<Boolean> getCell() {
-// return cell;
-// }
-//
-// @Override
-// public FieldUpdater<BrowserObject, Boolean> getFieldUpdater() {
-// return null;
-// }
-//
-// @Override
-// public Boolean getValue(BrowserObject object) {
-// return selectionModel.isSelected(object);
-// }
-// });
-// hasCells.add(new HasCell<BrowserObject, BrowserObject>() {
-// private BrowserObjectCell cell = new BrowserObjectCell();
-//
-// @Override
-// public Cell<BrowserObject> getCell() {
-// return cell;
-// }
-//
-// @Override
-// public FieldUpdater<BrowserObject, BrowserObject> getFieldUpdater() {
-// return null;
-// }
-//
-// @Override
-// public BrowserObject getValue(BrowserObject object) {
-// return object;
-// }
-// });
-// contactCell = new CompositeCell<BrowserObject>(hasCells) {
-// @Override
-// public void render(Context context, BrowserObject value, SafeHtmlBuilder sb) {
-// sb.appendHtmlConstant("<table><tbody><tr>");
-// super.render(context, value, sb);
-// sb.appendHtmlConstant("</tr></tbody></table>");
-// }
-//
-// @Override
-// protected Element getContainerElement(Element parent) {
-// // Return the first TR element in the table.
-// return parent.getFirstChildElement().getFirstChildElement().getFirstChildElement();
-// }
-//
-// @Override
-// protected <X> void render(Context context, BrowserObject value, SafeHtmlBuilder sb,
-// HasCell<BrowserObject, X> hasCell) {
-// Cell<X> cell = hasCell.getCell();
-// sb.appendHtmlConstant("<td>");
-// cell.render(context, hasCell.getValue(value), sb);
-// sb.appendHtmlConstant("</td>");
-// }
-// };
     }
 
     @Override
@@ -125,7 +64,8 @@ public class DataTreeViewModel implements TreeViewModel {
             loadCollections(provider.getId(), collectionsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider,
                     new BrowserObjectCell(), selectionModel, null);
-        } else if (!dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
+        } else if (!dataSetsOnly &&
+                   ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
             ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
             loadWorkflows(workflowsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
@@ -139,7 +79,8 @@ public class DataTreeViewModel implements TreeViewModel {
 
     @Override
     public boolean isLeaf(Object value) {
-        return (dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) || ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
+        return (dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) ||
+               ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {
