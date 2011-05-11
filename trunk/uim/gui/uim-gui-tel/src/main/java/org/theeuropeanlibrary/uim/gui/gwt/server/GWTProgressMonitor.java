@@ -1,7 +1,5 @@
 package org.theeuropeanlibrary.uim.gui.gwt.server;
 
-import java.util.logging.Logger;
-
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -9,32 +7,40 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import eu.europeana.uim.common.RevisingProgressMonitor;
 
 /**
- * GWT implementation of a ProgressMonitor. Since we display things on the client and the monitor is on the server,
- * we have to pass through an intermediary model (the Execution). We need to poll it from the client, this is why
- * we update it here. (Once WebSockets are standard, we'll be able to use those).
- *
+ * GWT implementation of a ProgressMonitor. Since we display things on the client and the monitor is
+ * on the server, we have to pass through an intermediary model (the Execution). We need to poll it
+ * from the client, this is why we update it here. (Once WebSockets are standard, we'll be able to
+ * use those).
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializable {
+//    private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
 
-    private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
+    @SuppressWarnings("unused")
+    private String       name;
+    private int           work;
+    private int           worked;
 
+    private long          start;
 
-    private String name;
-    private int work;
-    private int worked;
-    
-    private long start;
+    private boolean       cancelled;
+    private ExecutionDTO  execution;
 
-    private boolean cancelled;
-    private ExecutionDTO execution;
+    private String        task;
+    private String        subtask;
 
-    private String task;
-    private String subtask;
-
+    /**
+     * Creates a new instance of this class.
+     */
     public GWTProgressMonitor() {
     }
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param execution
+     */
     public GWTProgressMonitor(ExecutionDTO execution) {
         this.execution = execution;
     }
@@ -46,7 +52,6 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
         this.worked = 0;
     }
 
-    
     @Override
     public void worked(int work) {
         if (worked + work > work) {
@@ -73,7 +78,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
 
     @Override
     public void setCancelled(boolean cancelled) {
-        if(cancelled) {
+        if (cancelled) {
             execution.setActive(false);
         }
         this.cancelled = cancelled;
@@ -84,6 +89,9 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
         return cancelled;
     }
 
+    /**
+     * @return done?
+     */
     public boolean isDone() {
         return execution.isDone();
     }
@@ -127,8 +135,6 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     public void setSubtask(String subtask) {
         this.subtask = subtask;
     }
-    
-    
 
     @Override
     public long getStart() {

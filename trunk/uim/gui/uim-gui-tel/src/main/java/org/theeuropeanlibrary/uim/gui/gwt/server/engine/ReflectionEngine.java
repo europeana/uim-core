@@ -17,7 +17,8 @@ import eu.europeana.uim.workflow.Workflow;
  * developer can "add" dependencies in the IDE without changing dependencies of the bundle - so that
  * the SOA is not invalidated.
  * 
- * @author andreas.juffinger@kb.nl
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since May 11, 2011
  */
 public class ReflectionEngine extends Engine {
     private Registry        registry;
@@ -26,8 +27,8 @@ public class ReflectionEngine extends Engine {
     private static String   configuredStorageEngine = "MemoryStorageEngine";
 
     private static String[] storage                 = new String[] { "eu.europeana.uim.store.memory.MemoryStorageEngine" };
-    
-    private static String[] resource                 = new String[] { "eu.europeana.uim.store.memory.MemoryResourceEngine" };
+
+    private static String[] resource                = new String[] { "eu.europeana.uim.store.memory.MemoryResourceEngine" };
 
     private static String[] logging                 = new String[] { "eu.europeana.uim.logging.memory.MemoryLoggingEngine" };
 
@@ -35,6 +36,9 @@ public class ReflectionEngine extends Engine {
 
     private static String[] workflows               = new String[] { "eu.europeana.uim.workflows.SysoutWorkflow" };
 
+    /**
+     * Creates a new instance of this class.
+     */
     public ReflectionEngine() {
         try {
             Class<?> registryClazz = Class.forName("eu.europeana.uim.UIMRegistry");
@@ -123,6 +127,7 @@ public class ReflectionEngine extends Engine {
         for (String name : storage) {
             try {
                 Class<?> clazz = Class.forName(name);
+                @SuppressWarnings("rawtypes")
                 StorageEngine storage = (StorageEngine)clazz.newInstance();
                 registry.addStorage(storage);
             } catch (Throwable e) {
@@ -132,11 +137,12 @@ public class ReflectionEngine extends Engine {
         }
         registry.setConfiguredStorageEngine(configuredStorageEngine);
     }
-    
+
     private void setupResource() {
         for (String name : resource) {
             try {
                 Class<?> clazz = Class.forName(name);
+                @SuppressWarnings("rawtypes")
                 ResourceEngine resource = (ResourceEngine)clazz.newInstance();
                 registry.addResourceEngine(resource);
             } catch (Throwable e) {

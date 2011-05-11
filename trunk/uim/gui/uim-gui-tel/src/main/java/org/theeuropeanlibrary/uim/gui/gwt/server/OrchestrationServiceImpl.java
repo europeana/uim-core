@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
@@ -33,13 +32,21 @@ import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
+ * Orchestration service implementation.
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since May 11, 2011
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         OrchestrationService {
 
-    private static Logger log = Logger.getLogger(OrchestrationServiceImpl.class.getName());
+// private static Logger log = Logger.getLogger(OrchestrationServiceImpl.class.getName());
 
+    /**
+     * Creates a new instance of this class.
+     */
     public OrchestrationServiceImpl() {
         super();
     }
