@@ -276,7 +276,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(keyColumn, "Resource Name");
-        cellTable.setColumnWidth(keyColumn, 40, Unit.PCT);
+        cellTable.setColumnWidth(keyColumn, 20, Unit.PCT);
 
         // Value
         Column<ParameterDTO, String> valueColumn = new Column<ParameterDTO, String>(new TextCell()) {
@@ -294,7 +294,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
         };
         valueColumn.setSortable(true);
         cellTable.addColumn(valueColumn, "Resource Value");
-        cellTable.setColumnWidth(valueColumn, 40, Unit.PCT);
+        cellTable.setColumnWidth(valueColumn, 30, Unit.PCT);
 
         // Update Button
         Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
