@@ -49,11 +49,11 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ResourceAdministrationWidget extends IngestionCockpitWidget {
+public class ResourceManagementWidget extends IngestionCockpitWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ResourceAdministrationWidget> {
+    interface Binder extends UiBinder<Widget, ResourceManagementWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -88,7 +88,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
      * 
      * @param orchestrationService
      */
-    public ResourceAdministrationWidget(OrchestrationServiceAsync orchestrationService) {
+    public ResourceManagementWidget(OrchestrationServiceAsync orchestrationService) {
         super("Manage Resources", "This view allows to manage resources for known plugins!");
         this.orchestrationService = orchestrationService;
     }
@@ -243,7 +243,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ResourceAdministrationWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(ResourceManagementWidget.class, new RunAsyncCallback() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);
@@ -298,7 +298,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
 
         // Update Button
         Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
-                new ActionCell<ParameterDTO>("Update...", new ActionCell.Delegate<ParameterDTO>() {
+                new ActionCell<ParameterDTO>("Value...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
                         ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
@@ -330,7 +330,7 @@ public class ResourceAdministrationWidget extends IngestionCockpitWidget {
                 return object;
             }
         };
-        cellTable.addColumn(fileColumn, "File");
+        cellTable.addColumn(fileColumn, "Update");
         cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
     }
 

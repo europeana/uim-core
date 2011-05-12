@@ -14,6 +14,39 @@ import java.util.Date;
  */
 public interface Execution<I> extends UimEntity<I> {
     /**
+     * @return arbitrary name of this execution (must not be unique)
+     */
+    String getName();
+
+    /**
+     * @param name
+     *            arbitrary name of this execution (must not be unique)
+     */
+    void setName(String name);
+
+    /**
+     * @return name of the underlying workflow
+     */
+    String getWorkflowName();
+
+    /**
+     * @param name
+     *            name of the underlying workflow
+     */
+    void setWorkflowName(String name);
+
+    /**
+     * @return data set object on which the execution works
+     */
+    DataSet<I> getDataSet();
+
+    /**
+     * @param dataSet
+     *            data set object on which the execution works
+     */
+    void setDataSet(DataSet<I> dataSet);
+
+    /**
      * @return Is this execution active?
      */
     boolean isActive();
@@ -47,35 +80,15 @@ public interface Execution<I> extends UimEntity<I> {
     void setEndTime(Date end);
 
     /**
-     * @return When has it been canceled?
+     * @return Has the execution been run through (false) or cancelled (true)? Only together with an
+     *         end time this value makes sense, before that the execution is still running!
      */
-    Date getCancelTime();
+    Boolean isCanceled();
 
     /**
-     * @param end
-     *            When has it been canceled?
+     * @param canceled
+     *            Has the execution been run through (false) or cancelled (true)? Only together with
+     *            an end time this value makes sense, before that the execution is still running!
      */
-    void setCancelTime(Date end);
-
-    /**
-     * @return data set object on which the execution works
-     */
-    DataSet<I> getDataSet();
-
-    /**
-     * @param dataSet
-     *            data set object on which the execution works
-     */
-    void setDataSet(DataSet<I> dataSet);
-
-    /**
-     * @return name of the underlying workflow
-     */
-    String getWorkflowName();
-
-    /**
-     * @param name
-     *            name of the underlying workflow
-     */
-    void setWorkflowName(String name);
+    void setCanceled(Boolean canceled);
 }

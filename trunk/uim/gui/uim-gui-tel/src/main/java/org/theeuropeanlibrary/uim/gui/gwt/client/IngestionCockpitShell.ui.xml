@@ -182,7 +182,7 @@
                     <h2
                       class='{style.subtitle}'>
                       <ui:msg
-                        key='mainSubTitle'>Unified Ingestion Manager Cockpit</ui:msg>
+                        key='mainSubTitle'>Ingestion Control Panel</ui:msg>
                     </h2>
                   </td>
                 </tr>

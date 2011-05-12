@@ -49,7 +49,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<I, ?>            loggingEngine;
+    private final LoggingEngine<I, ?>         loggingEngine;
     private final ResourceEngine<I>           resourceEngine;
 
     private final Execution<I>                execution;
@@ -58,7 +58,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private final RevisableProgressMonitor    monitor;
 
     private boolean                           paused;
-    private boolean                             initialized;
+    private boolean                           initialized;
     private Throwable                         throwable;
 
     private int                               scheduled = 0;
@@ -72,12 +72,14 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * @param workflow
      * @param storageEngine
      * @param loggingEngine
+     * @param resourceEngine
      * @param properties
      * @param monitor
      */
     public UIMActiveExecution(Execution<I> execution, Workflow workflow,
-                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine, ResourceEngine<I> resourceEngine,
-                              Properties properties, RevisableProgressMonitor monitor) {
+                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine,
+                              ResourceEngine<I> resourceEngine, Properties properties,
+                              RevisableProgressMonitor monitor) {
         this.execution = execution;
         this.workflow = workflow;
         this.storageEngine = storageEngine;
@@ -112,7 +114,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public LoggingEngine<I, ?> getLoggingEngine() {
         return loggingEngine;
     }
-    
+
     @Override
     public ResourceEngine<I> getResourceEngine() {
         return resourceEngine;
@@ -159,13 +161,23 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public Date getCancelTime() {
-        return execution.getCancelTime();
+    public String getName() {
+        return execution.getName();
     }
 
     @Override
-    public void setCancelTime(Date end) {
-        execution.setCancelTime(end);
+    public void setName(String name) {
+        execution.setName(name);
+    }
+
+    @Override
+    public Boolean isCanceled() {
+        return execution.isCanceled();
+    }
+
+    @Override
+    public void setCanceled(Boolean canceled) {
+        execution.setCanceled(canceled);
     }
 
     @Override
@@ -326,7 +338,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public boolean isFinished() {
         if (!isInitialized()) return false;
-        
+
         boolean cancelled = getMonitor().isCancelled();
 
         boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());

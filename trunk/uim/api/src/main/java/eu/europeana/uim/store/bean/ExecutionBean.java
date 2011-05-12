@@ -18,9 +18,10 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     private boolean    active = false;
     private Date       startTime;
     private Date       endTime;
-    private Date       cancelTime;
     private DataSet<I> dataSet;
     private String     workflowIdentifier;
+    private String     name;
+    private Boolean    canceled;
 
     /**
      * Creates a new instance of this class.
@@ -40,33 +41,38 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public Date getStartTime() {
-        return startTime;
+    public String getName() {
+        if (name == null || name.length() == 0) {
+            return autoName();
+        } else {
+            return name;
+        }
     }
 
     @Override
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
-    public Date getEndTime() {
-        return endTime;
+    public String getWorkflowName() {
+        return workflowIdentifier;
     }
 
     @Override
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setWorkflowName(String identifier) {
+        this.workflowIdentifier = identifier;
     }
 
-    @Override
-    public Date getCancelTime() {
-        return cancelTime;
-    }
-
-    @Override
-    public void setCancelTime(Date cancelTime) {
-        this.cancelTime = cancelTime;
+    /**
+     * Creates a default name out of workflow name and data set.
+     */
+    private String autoName() {
+        String autoname = null;
+        if (workflowIdentifier != null && dataSet != null) {
+            autoname = workflowIdentifier + "/" + dataSet.toString();
+        }
+        return autoname;
     }
 
     @Override
@@ -90,18 +96,38 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public String getWorkflowName() {
-        return workflowIdentifier;
+    public Date getStartTime() {
+        return startTime;
     }
 
     @Override
-    public void setWorkflowName(String identifier) {
-        this.workflowIdentifier = identifier;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    @Override
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public Boolean isCanceled() {
+        return canceled;
+    }
+
+    @Override
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 
     @Override
     public String toString() {
-        return "MemoryExecution [id=" + getId() + ", workflowIdentifier=" + workflowIdentifier +
-               ", dataSet=" + dataSet + "]";
+        return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
+               workflowIdentifier + ", dataSet=" + dataSet + "]";
     }
 }

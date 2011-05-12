@@ -9,6 +9,7 @@ import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 
+import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -63,7 +64,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
      * @param orchestrationServiceAsync
      */
     public ExecutionHistoryWidget(OrchestrationServiceAsync orchestrationServiceAsync) {
-        super("Finished Executions", "This view shows all finished executions!");
+        super("Finished Ingestions", "This view shows all finished ingestion activities!");
         this.orchestrationServiceAsync = orchestrationServiceAsync;
     }
 
@@ -154,23 +155,22 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
      */
     private void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
-        // Workflow
-        Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
-                new TextCell()) {
+        // Name
+        Column<ExecutionDTO, String> nameColumn = new Column<ExecutionDTO, String>(new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return object.getWorkflow();
+                return object.getName();
             }
         };
-        workflowColumn.setSortable(true);
-        sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
+        nameColumn.setSortable(true);
+        sortHandler.setComparator(nameColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
+                return o1.getName().compareTo(o2.getName());
             }
         });
-        cellTable.addColumn(workflowColumn, "Workflow");
-        cellTable.setColumnWidth(workflowColumn, 20, Unit.PCT);
+        cellTable.addColumn(nameColumn, "Name");
+        cellTable.setColumnWidth(nameColumn, 15, Unit.PCT);
 
         // Data set
         Column<ExecutionDTO, String> datasetColumn = new Column<ExecutionDTO, String>(
@@ -190,6 +190,24 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         cellTable.addColumn(datasetColumn, "Dataset");
         cellTable.setColumnWidth(datasetColumn, 20, Unit.PCT);
 
+        // Workflow
+        Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
+                new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return object.getWorkflow();
+            }
+        };
+        workflowColumn.setSortable(true);
+        sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getWorkflow().compareTo(o2.getWorkflow());
+            }
+        });
+        cellTable.addColumn(workflowColumn, "Workflow");
+        cellTable.setColumnWidth(workflowColumn, 20, Unit.PCT);
+
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
         Column<ExecutionDTO, Date> startTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(
@@ -207,7 +225,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 10, Unit.PCT);
 
         // End Time
         Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
@@ -224,7 +242,73 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(endTimeColumn, 10, Unit.PCT);
+
+        // Canceled
+        Column<ExecutionDTO, Boolean> doneColumn = new Column<ExecutionDTO, Boolean>(
+                new CheckboxCell()) {
+            @Override
+            public Boolean getValue(ExecutionDTO object) {
+                return object.isCanceled();
+            }
+        };
+        doneColumn.setSortable(false);
+        cellTable.addColumn(doneColumn, "Canceled");
+        cellTable.setColumnWidth(doneColumn, 4, Unit.PCT);
+
+        // Completed
+        Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(
+                new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return "" + object.getCompleted();
+            }
+        };
+        completedColumn.setSortable(true);
+        sortHandler.setComparator(completedColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getWorkflow().compareTo(o2.getWorkflow());
+            }
+        });
+        cellTable.addColumn(completedColumn, "Completed");
+        cellTable.setColumnWidth(completedColumn, 7, Unit.PCT);
+
+        // Failure
+        Column<ExecutionDTO, String> failureColumn = new Column<ExecutionDTO, String>(
+                new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return "" + object.getCompleted();
+            }
+        };
+        failureColumn.setSortable(true);
+        sortHandler.setComparator(failureColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getWorkflow().compareTo(o2.getWorkflow());
+            }
+        });
+        cellTable.addColumn(failureColumn, "Failure");
+        cellTable.setColumnWidth(failureColumn, 7, Unit.PCT);
+
+        // Scheduled
+        Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
+                new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return "" + object.getCompleted();
+            }
+        };
+        scheduledColumn.setSortable(true);
+        sortHandler.setComparator(scheduledColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getWorkflow().compareTo(o2.getWorkflow());
+            }
+        });
+        cellTable.addColumn(scheduledColumn, "Scheduled");
+        cellTable.setColumnWidth(scheduledColumn, 7, Unit.PCT);
 
         updatePastExecutions();
     }

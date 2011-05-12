@@ -68,7 +68,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
 
     @Override
     public void done() {
-        execution.setDone(true);
+        execution.setCanceled(false);
         execution.setActive(false);
     }
 
@@ -79,6 +79,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     @Override
     public void setCancelled(boolean cancelled) {
         if (cancelled) {
+            execution.setCanceled(true);
             execution.setActive(false);
         }
         this.cancelled = cancelled;
@@ -93,7 +94,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
      * @return done?
      */
     public boolean isDone() {
-        return execution.isDone();
+        return execution.isCanceled() != null && !execution.isCanceled();
     }
 
     @Override

@@ -12,71 +12,88 @@ import eu.europeana.uim.store.Execution;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class MongoExecution<T> extends AbstractMongoEntity<Long> implements Execution<Long> {
-
-    private boolean isActive;
-    private Date startTime;
-    private Date endTime;
-    private Date cancelTime;
-    private String workflowIdentifier;
+public class MongoExecution extends AbstractMongoEntity<Long> implements Execution<Long> {
+    private boolean       isActive;
+    private Date          startTime;
+    private Date          endTime;
+    private Boolean       canceled;
+    private String        workflowIdentifier;
 
     @Reference
-    private DataSet dataSet;
+    private DataSet<Long> dataSet;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public MongoExecution() {
     }
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param id
+     */
     public MongoExecution(Long id) {
         super(id);
     }
 
+    @Override
     public boolean isActive() {
         return isActive;
     }
 
+    @Override
     public void setActive(boolean active) {
         isActive = active;
     }
 
+    @Override
     public Date getStartTime() {
         return startTime;
     }
 
+    @Override
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
+    @Override
     public Date getEndTime() {
         return endTime;
     }
 
+    @Override
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-    
-    
 
-    public Date getCancelTime() {
-        return cancelTime;
-    }
-
-    public void setCancelTime(Date cancelTime) {
-        this.cancelTime = cancelTime;
-    }
-
-    public DataSet getDataSet() {
+    @Override
+    public DataSet<Long> getDataSet() {
         return dataSet;
     }
 
-    public void setDataSet(DataSet dataSet) {
+    @Override
+    public void setDataSet(DataSet<Long> dataSet) {
         this.dataSet = dataSet;
     }
 
+    @Override
     public String getWorkflowName() {
         return workflowIdentifier;
     }
 
+    @Override
     public void setWorkflowName(String workflow) {
         this.workflowIdentifier = workflow;
+    }
+
+    @Override
+    public Boolean isCanceled() {
+        return canceled;
+    }
+
+    @Override
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 }

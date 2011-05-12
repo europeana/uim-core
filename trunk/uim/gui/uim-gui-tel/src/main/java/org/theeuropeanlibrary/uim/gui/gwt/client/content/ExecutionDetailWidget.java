@@ -75,8 +75,8 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      */
     public ExecutionDetailWidget(OrchestrationServiceAsync orchestrationService) {
         super(
-                "Active Executions",
-                "This view shows the current running executions together with their progress and a termination button!");
+                "Active Ingestions",
+                "This view shows the current running ingestion activities together with their progress and a cancel button!");
         this.orchestrationService = orchestrationService;
     }
 

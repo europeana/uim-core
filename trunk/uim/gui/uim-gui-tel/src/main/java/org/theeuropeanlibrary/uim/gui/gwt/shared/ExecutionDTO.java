@@ -25,7 +25,8 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     private Long        id;
     private String      name;
     private String      workflow;
-
+    private String      dataset;
+    
     private ProgressDTO progress;
 
     private int         scheduled;
@@ -35,8 +36,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     private boolean     isActive;
     private Date        startTime;
     private Date        endTime;
-    private String      dataset;
-    private boolean     done;
+    private Boolean     canceled;
 
     /**
      * Creates a new instance of this class.
@@ -208,17 +208,17 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     }
 
     /**
-     * @param done
+     * @param canceled
      */
-    public void setDone(boolean done) {
-        this.done = done;
+    public void setCanceled(boolean canceled) {
+        this.canceled = canceled;
     }
 
     /**
-     * @return Done?
+     * @return canceled?
      */
-    public boolean isDone() {
-        return done;
+    public Boolean isCanceled() {
+        return canceled;
     }
 
     @Override

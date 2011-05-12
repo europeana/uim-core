@@ -295,7 +295,9 @@ public class UIMWorkflowProcessor implements Runnable {
             execution.setActive(false);
             execution.setEndTime(new Date());
             if (cancel) {
-                execution.setCancelTime(new Date());
+                execution.setCanceled(true);
+            } else {
+                execution.setCanceled(false);
             }
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
@@ -327,6 +329,7 @@ public class UIMWorkflowProcessor implements Runnable {
 
         // init in separate thread, so that we are not blocking here.
         new Thread(new Runnable() {
+            @SuppressWarnings("unchecked")
             @Override
             public void run() {
                 try {

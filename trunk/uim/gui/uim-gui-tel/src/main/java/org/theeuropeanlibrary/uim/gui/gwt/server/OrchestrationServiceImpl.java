@@ -301,6 +301,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             } else {
                 ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
             }
+            ae.setName(executionName);
 
             ae.getMonitor().addListener(monitor);
 
@@ -321,7 +322,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         execution.setCompleted(ae.getCompletedSize());
         execution.setFailure(ae.getFailureSize());
         execution.setScheduled(ae.getScheduledSize());
-        execution.setDone(ae.isFinished());
+        execution.setCanceled(ae.isCanceled());
         execution.setStartTime(ae.getStartTime());
         execution.setDataSet(dataset.toString());
         wrappedExecutionDTOs.put(ae.getId(), execution);

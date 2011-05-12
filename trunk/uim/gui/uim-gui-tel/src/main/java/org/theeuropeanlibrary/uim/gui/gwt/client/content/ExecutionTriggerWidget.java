@@ -82,8 +82,8 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      */
     public ExecutionTriggerWidget(OrchestrationServiceAsync orchestrationService) {
         super(
-                "Start Execution",
-                "This view allows to select provider, collection and workflow and optional the resources to start a new execution!");
+                "Start Ingestion",
+                "This view allows selecting a provider, a collection, a workflow and optionally adjusted resources to start a new ingestion activity!");
         this.orchestrationService = orchestrationService;
     }
 
@@ -297,7 +297,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
 
         // Update Button
         Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
-                new ActionCell<ParameterDTO>("Update...", new ActionCell.Delegate<ParameterDTO>() {
+                new ActionCell<ParameterDTO>("Value...", new ActionCell.Delegate<ParameterDTO>() {
                     @Override
                     public void execute(ParameterDTO parameter) {
                         ResourceSettingCallback callback = new ResourceSettingCallbackImplementation();
@@ -329,7 +329,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                 return object;
             }
         };
-        cellTable.addColumn(fileColumn, "File");
+        cellTable.addColumn(fileColumn, "Update");
         cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
     }
 
