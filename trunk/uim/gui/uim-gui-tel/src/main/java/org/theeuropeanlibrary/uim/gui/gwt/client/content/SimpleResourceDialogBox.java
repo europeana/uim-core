@@ -96,30 +96,8 @@ public class SimpleResourceDialogBox extends DialogBox {
                         vals.add(box.getText());
                     }
                 }
-                if (vals.size() > 0) {
-                    parameter.setValues(vals.toArray(new String[vals.size()]));
-                    callback.changed(parameter);
-                    
-//                    orchestrationService.setParameters(parameter,
-//                            provider != null ? provider.getId() : null, collection != null
-//                                    ? collection.getId() : null,
-//                            workflow != null ? workflow.getName() : null,
-//                            new AsyncCallback<Boolean>() {
-//                                @Override
-//                                public void onFailure(Throwable throwable) {
-//                                    throwable.printStackTrace();
-//                                }
-//
-//                                @Override
-//                                public void onSuccess(Boolean res) {
-//                                    if (!res) {
-//                                        Window.alert("Could not write resource!");
-//                                    } else {
-//                                        callback.success();
-//                                    }
-//                                }
-//                            });
-                }
+                parameter.setValues(vals.toArray(new String[vals.size()]));
+                callback.changed(parameter);
 
                 hide();
             }
