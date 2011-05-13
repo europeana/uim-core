@@ -2,7 +2,7 @@
 package eu.europeana.uim.store;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
+import static org.junit.Assert.assertNull;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +26,8 @@ public abstract class AbstractResourceEngineTest<I> {
         ResourceEngine<I> engine = null;
         final String EXAMPLE_KEY_1="example1.property.file";
         final String EXAMPLE_KEY_2="example2.property";
+        final String EXAMPLE_KEY_3="3";
+        final String EXAMPLE_KEY_4="4";
         final String EXAMPLE_VALUE_1="exampleValue1";
         final String EXAMPLE_VALUE_2="exampleValue2";
               
@@ -95,6 +97,29 @@ public abstract class AbstractResourceEngineTest<I> {
                 assertNotNull(result2);
                 assertEquals(1,result2.get(EXAMPLE_KEY_1).size());
                 assertEquals(EXAMPLE_VALUE_1,result2.get(EXAMPLE_KEY_1).get(0)); 
+                
+                
+                //check if you ask for more keys than there are actually stored
+                //return only those which are in there
+                
+                List<String> testList=new LinkedList<String>();
+                testList.add(EXAMPLE_VALUE_1);
+                testList.add(EXAMPLE_VALUE_2); 
+                
+                LinkedHashMap<String, List<String>> testSet3=new LinkedHashMap<String, List<String>>();
+                testSet1.put(EXAMPLE_KEY_3,testList);
+                engine.setGlobalResources(testSet3);
+                
+                LinkedList<String> keys=new LinkedList<String>();
+                keys.add(EXAMPLE_KEY_3);
+                keys.add(EXAMPLE_KEY_4);
+                
+                LinkedHashMap<String,List<String>> result3=engine.getGlobalResources(keys);
+                assertNotNull(result3);
+                assertEquals(1,result3.size());
+                assertNotNull(result3.get(EXAMPLE_KEY_3));
+                assertEquals(2,result3.get(EXAMPLE_KEY_3).size());     
+                assertNull(result3.get(EXAMPLE_KEY_4));
             }
         }
         
@@ -132,30 +157,7 @@ public abstract class AbstractResourceEngineTest<I> {
             
             //ask for more keys than there are actually stored.
             //The keys should be included in the result but have empty entry at the global level
-            
-            
-            final String EXAMPLE_KEY_3="3";
-            final String EXAMPLE_KEY_4="4";
-            
-            List<String> testList=new LinkedList<String>();
-            testList.add(EXAMPLE_VALUE_1);
-            testList.add(EXAMPLE_VALUE_2); 
-            
-            LinkedHashMap<String, List<String>> testSet1=new LinkedHashMap<String, List<String>>();
-            testSet1.put(EXAMPLE_KEY_3,testList);
-            engine.setGlobalResources(testSet1);
-            
-            LinkedList<String> keys=new LinkedList<String>();
-            keys.add(EXAMPLE_KEY_3);
-            keys.add(EXAMPLE_KEY_4);
-            
-            LinkedHashMap<String,List<String>> result=engine.getGlobalResources(keys);
-            assertNotNull(result);
-            assertEquals(keys.size(),result.size());
-            assertNotNull(result.get(EXAMPLE_KEY_3));
-            assertEquals(2,result.get(EXAMPLE_KEY_3).size());     
-            assertNotNull(result.get(EXAMPLE_KEY_4));
-            assertEquals(0,result.get(EXAMPLE_KEY_4).size());
+
             
         }
         
