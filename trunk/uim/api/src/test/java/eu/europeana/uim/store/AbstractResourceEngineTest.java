@@ -107,14 +107,14 @@ public abstract class AbstractResourceEngineTest<I> {
                 testList.add(EXAMPLE_VALUE_2); 
                 
                 LinkedHashMap<String, List<String>> testSet3=new LinkedHashMap<String, List<String>>();
-                testSet1.put(EXAMPLE_KEY_3,testList);
-                engine.setGlobalResources(testSet3);
+                testSet3.put(EXAMPLE_KEY_3,testList);
+                setEntityResources(testEntity,testSet3);
                 
                 LinkedList<String> keys=new LinkedList<String>();
                 keys.add(EXAMPLE_KEY_3);
                 keys.add(EXAMPLE_KEY_4);
                 
-                LinkedHashMap<String,List<String>> result3=engine.getGlobalResources(keys);
+                LinkedHashMap<String,List<String>> result3=getEntityResources(testEntity,keys);
                 assertNotNull(result3);
                 assertEquals(1,result3.size());
                 assertNotNull(result3.get(EXAMPLE_KEY_3));
