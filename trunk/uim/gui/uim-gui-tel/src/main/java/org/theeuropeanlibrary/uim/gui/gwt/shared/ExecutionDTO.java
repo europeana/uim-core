@@ -16,27 +16,30 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
      * The key provider that provides the unique ID of a contact.
      */
     public static final ProvidesKey<ExecutionDTO> KEY_PROVIDER = new ProvidesKey<ExecutionDTO>() {
-        @Override
-        public Object getKey(ExecutionDTO item) {
-            return item == null ? null : item.getId();
-        }
-    };
-    
-    private Long        id;
-    private String      name;
-    private String      workflow;
-    private String      dataset;
-    
-    private ProgressDTO progress;
+                                                                   @Override
+                                                                   public Object getKey(
+                                                                           ExecutionDTO item) {
+                                                                       return item == null ? null
+                                                                               : item.getId();
+                                                                   }
+                                                               };
 
-    private int         scheduled;
-    private int         completed;
-    private int         failure;
+    private Long                                  id;
+    private String                                name;
+    private String                                workflow;
+    private String                                dataset;
 
-    private boolean     isActive;
-    private Date        startTime;
-    private Date        endTime;
-    private Boolean     canceled;
+    private ProgressDTO                           progress;
+
+    private int                                   scheduled;
+    private int                                   completed;
+    private int                                   failure;
+
+    private boolean                               isActive;
+    private Date                                  startTime;
+    private Date                                  endTime;
+    private Boolean                               canceled;
+    private boolean                               paused;
 
     /**
      * Creates a new instance of this class.
@@ -210,7 +213,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     /**
      * @param canceled
      */
-    public void setCanceled(boolean canceled) {
+    public void setCanceled(Boolean canceled) {
         this.canceled = canceled;
     }
 
@@ -219,6 +222,20 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
      */
     public Boolean isCanceled() {
         return canceled;
+    }
+
+    /**
+     * @return paused
+     */
+    public boolean isPaused() {
+        return paused;
+    }
+
+    /**
+     * @param paused
+     */
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     @Override

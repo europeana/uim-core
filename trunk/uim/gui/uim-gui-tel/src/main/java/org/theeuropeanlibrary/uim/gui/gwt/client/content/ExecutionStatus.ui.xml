@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM 'http://dl.google.com/gwt/DTD/xhtml.ent'>
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'
-    xmlns:d='urn:import:com.google.gwt.user.datepicker.client' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
-    ui:generateLocales='default'>
+    xmlns:d='urn:import:com.google.gwt.user.datepicker.client' xmlns:h='com.google.gwt.widgetideas.client'
+    ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat' ui:generateLocales='default'>
 
     <ui:style>
         .header {
@@ -11,70 +11,123 @@
         }
         
         .label {
+        	width: 100px;
         	font-weight: bold;
+        }
+        
+        .value {
+        	width: 100%;
+        }
+        
+        .decorator {
+        	height: 100%;
+        	width: 100%;
+        	min-width: 500px;
+        	border: 4px solid #d0e4f6;
+        }
+        
+        .leftPanel {
+        	width: 100%;
+        	height: 20px;
+        	background-color: #FFF;
+        	border: 1px solid #d0e4f6;
         }
     </ui:style>
 
-    <g:DecoratorPanel>
-        <g:HTMLPanel>
-            <table>
-                <tr>
-                    <td colspan='2' align='center' class='{style.header}'>
-                        <ui:msg key='contactInfoFormTitle'>Execution Details</ui:msg>
-                    </td>
-                </tr>
-                <tr>
-                    <td class='{style.label}'>
-                        <ui:msg key='contactInfoFormFirstName'>Name</ui:msg>
-                    </td>
-                    <td>
-                        <g:TextBox ui:field='nameBox' />
-                    </td>
-                </tr>
-                <tr>
-                    <td class='{style.label}'>
-                        <ui:msg key='contactInfoFormLastName'>Workflow</ui:msg>
-                    </td>
-                    <td>
-                        <g:TextBox ui:field='workflowBox' />
-                    </td>
-                </tr>
-                <tr>
-                    <td class='{style.label}'>
-                        <ui:msg key='contactInfoFormBirthday'>Dataset:</ui:msg>
-                    </td>
-                    <td>
-                        <g:TextBox ui:field='datasetBox' />
-                    </td>
-                </tr>
-                <tr>
-                    <td class='{style.label}'>
-                        <ui:msg key='contactInfoFormCategory'>Progress:</ui:msg>
-                    </td>
-                    <td>
-                        <g:ListBox ui:field='categoryBox' />
-                    </td>
-                </tr>
-                <tr>
-                    <td class='{style.label}'>
-                        <ui:msg key='contactInfoFormAddress'>Resources:</ui:msg>
-                    </td>
-                    <td>
-                        <g:TextArea ui:field='resourcesBox' />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan='2' align='center'>
-                        <g:Button ui:field='pauseButton'>
-                            <ui:msg key='contactInfoFormUpdateButton'>Pause</ui:msg>
-                        </g:Button>
-                        &nbsp;
-                        <g:Button ui:field='cancelButton'>
-                            <ui:msg key='contactInfoFormCreateButton'>Cancel</ui:msg>
-                        </g:Button>
-                    </td>
-                </tr>
-            </table>
-        </g:HTMLPanel>
-    </g:DecoratorPanel>
+    <g:HTMLPanel addStyleNames='{style.decorator}'>
+        <table cellspacing='5' cellpadding='5' style='width:100%;'>
+            <tr>
+                <td colspan='2' align='center' class='{style.header}'>
+                    <ui:msg key='executionFormTitle'>Ingestion Activity Details</ui:msg>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailName'>Name</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='nameBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailDataset'>Dataset</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='datasetBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailWorkflow'>Workflow</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='workflowBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='contactDetailProgress'>Progress</ui:msg>
+                </td>
+                <td>
+                    <g:LayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel}">
+                        <!-- <g:layer> -->
+                        <!-- <h:ProgressBar ui:field='progressBar' /> -->
+                        <!-- </g:layer> -->
+                    </g:LayoutPanel>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailStartTime'>Start Time</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='startTimeBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailScheduled'>Scheduled</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='scheduledBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailCompleted'>Completed</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='completedBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailFailed'>Failed</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='failedBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionDetailTotal'>Total</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='totalBox' />
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' align='center'>
+                    <g:Button ui:field='pauseButton'>
+                        <ui:msg key='contactDetailPauseButton'>Pause</ui:msg>
+                    </g:Button>
+                    &nbsp;
+                    <g:Button ui:field='cancelButton'>
+                        <ui:msg key='contactDetailCancelButton'>Cancel</ui:msg>
+                    </g:Button>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
 </ui:UiBinder>

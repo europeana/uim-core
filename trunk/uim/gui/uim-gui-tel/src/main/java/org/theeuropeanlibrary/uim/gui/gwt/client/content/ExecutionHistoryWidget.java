@@ -188,7 +188,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(datasetColumn, "Dataset");
-        cellTable.setColumnWidth(datasetColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(datasetColumn, 18, Unit.PCT);
 
         // Workflow
         Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
@@ -206,7 +206,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(workflowColumn, "Workflow");
-        cellTable.setColumnWidth(workflowColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(workflowColumn, 10, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
@@ -225,7 +225,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 15, Unit.PCT);
 
         // End Time
         Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
@@ -242,7 +242,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(endTimeColumn, 15, Unit.PCT);
 
         // Canceled
         Column<ExecutionDTO, Boolean> doneColumn = new Column<ExecutionDTO, Boolean>(
@@ -254,7 +254,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         };
         doneColumn.setSortable(false);
         cellTable.addColumn(doneColumn, "Canceled");
-        cellTable.setColumnWidth(doneColumn, 4, Unit.PCT);
+        cellTable.setColumnWidth(doneColumn, 7, Unit.PCT);
 
         // Completed
         Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(

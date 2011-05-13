@@ -60,3 +60,22 @@
   font-weight: bold;
   font-size: 1.4em;
 }
+
+.gwt-ProgressBar-shell {
+    border: 1px solid #faf9f7;
+    border-right: 1px solid #848280;
+    border-bottom: 1px solid #848280;
+    background-color: #AAAAAA;
+    width: 50%;
+    height: 12pt;
+}
+
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+    background-color: #67A7E3;
+}
+
+.gwt-VolumeSlider .gwt-ProgressBar-shell .gwt-ProgressBar-text {
+    padding: 0px;
+    margin: 0px;
+    color: white;
+}

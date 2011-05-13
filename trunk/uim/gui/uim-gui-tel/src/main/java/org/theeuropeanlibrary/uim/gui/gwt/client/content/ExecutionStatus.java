@@ -1,14 +1,22 @@
 package org.theeuropeanlibrary.uim.gui.gwt.client.content;
 
+import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.ProgressBar;
 
 /**
  * A form used for editing contacts.
@@ -23,90 +31,178 @@ public class ExecutionStatus extends Composite {
     }
 
     @UiField
-    TextBox  nameBox;
+    TextBox                                 nameBox;
     @UiField
-    TextBox  workflowBox;
+    TextBox                                 datasetBox;
     @UiField
-    ListBox  categoryBox;
+    TextBox                                 workflowBox;
     @UiField
-    TextBox  datasetBox;
+    LayoutPanel                             leftPanel;
+    ProgressBar                             progressBar;
     @UiField
-    TextArea resourcesBox;
+    TextBox                                 startTimeBox;
+    @UiField
+    TextBox                                 scheduledBox;
+    @UiField
+    TextBox                                 completedBox;
+    @UiField
+    TextBox                                 failedBox;
+    @UiField
+    TextBox                                 totalBox;
+    @UiField
+    Button                                  pauseButton;
+    @UiField
+    Button                                  cancelButton;
 
-    @UiField
-    Button   pauseButton;
-    @UiField
-    Button   cancelButton;
-
-// private ContactInfo contactInfo;
+    private ExecutionDTO                    execution;
+    private final OrchestrationServiceAsync orchestrationService;
 
     /**
      * Creates a new instance of this class.
+     * 
+     * @param orchestrationService
      */
-    public ExecutionStatus() {
+    public ExecutionStatus(OrchestrationServiceAsync orchestrationService) {
+        this.orchestrationService = orchestrationService;
         initWidget(uiBinder.createAndBindUi(this));
-//        DateTimeFormat dateFormat = DateTimeFormat.getFormat(PredefinedFormat.DATE_LONG);
-//        birthdayBox.setFormat(new DateBox.DefaultFormat(dateFormat));
 
-// // Add the categories to the category box.
-// final Category[] categories = ContactDatabase.get().queryCategories();
-// for (Category category : categories) {
-// categoryBox.addItem(category.getDisplayName());
-// }
-//
-// // Initialize the contact to null.
-// setContact(null);
-//
-// // Handle events.
-// updateButton.addClickHandler(new ClickHandler() {
-// public void onClick(ClickEvent event) {
-// if (contactInfo == null) {
-// return;
-// }
-//
-// // Update the contact.
-// contactInfo.setFirstName(firstNameBox.getText());
-// contactInfo.setLastName(lastNameBox.getText());
-// contactInfo.setAddress(addressBox.getText());
-// contactInfo.setBirthday(birthdayBox.getValue());
-// int categoryIndex = categoryBox.getSelectedIndex();
-// contactInfo.setCategory(categories[categoryIndex]);
-//
-// // Update the views.
-// ContactDatabase.get().refreshDisplays();
-// }
-// });
-// createButton.addClickHandler(new ClickHandler() {
-// public void onClick(ClickEvent event) {
-// int categoryIndex = categoryBox.getSelectedIndex();
-// Category category = categories[categoryIndex];
-// contactInfo = new ContactInfo(category);
-// contactInfo.setFirstName(firstNameBox.getText());
-// contactInfo.setLastName(lastNameBox.getText());
-// contactInfo.setAddress(addressBox.getText());
-// contactInfo.setBirthday(birthdayBox.getValue());
-// ContactDatabase.get().addContact(contactInfo);
-// setContact(contactInfo);
-// }
-// });
+        nameBox.setReadOnly(true);
+        datasetBox.setReadOnly(true);
+        workflowBox.setReadOnly(true);
+        startTimeBox.setReadOnly(true);
+        scheduledBox.setReadOnly(true);
+        completedBox.setReadOnly(true);
+        failedBox.setReadOnly(true);
+        totalBox.setReadOnly(true);
+
+        progressBar = new ProgressBar();
+        progressBar.setTitle("Ingestion Progress");
+        progressBar.setTextVisible(true);
+        progressBar.setHeight("20px");
+        progressBar.setWidth("100%");
+        progressBar.setVisible(true);
+
+        leftPanel.add(progressBar);
+        leftPanel.setVisible(true);
+
+        pauseButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                if (execution.isPaused()) {
+                    pauseExecution();
+                } else {
+                    resumeExecution();
+                }
+            }
+        });
+
+        cancelButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                cancelExecution();
+
+            }
+        });
     }
 
-// public void setContact(ContactInfo contact) {
-// this.contactInfo = contact;
-// updateButton.setEnabled(contact != null);
-// if (contact != null) {
-// firstNameBox.setText(contact.getFirstName());
-// lastNameBox.setText(contact.getLastName());
-// addressBox.setText(contact.getAddress());
-// birthdayBox.setValue(contact.getBirthday());
-// Category category = contact.getCategory();
-// Category[] categories = ContactDatabase.get().queryCategories();
-// for (int i = 0; i < categories.length; i++) {
-// if (category == categories[i]) {
-// categoryBox.setSelectedIndex(i);
-// break;
-// }
-// }
-// }
-// }
+    private void resumeExecution() {
+        orchestrationService.pauseExecution(execution.getId(), new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(Boolean success) {
+                pauseButton.setText("Pause");
+            }
+        });
+    }
+
+    private void pauseExecution() {
+        orchestrationService.resumeExecution(execution.getId(), new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(Boolean success) {
+                pauseButton.setText("Resume");
+            }
+        });
+
+    }
+
+    private void cancelExecution() {
+        orchestrationService.cancelExecution(execution.getId(), new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(Boolean success) {
+            }
+        });
+    }
+
+    /**
+     * @param execution
+     */
+    public void setExecution(final ExecutionDTO execution) {
+        this.execution = execution;
+
+        DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
+        nameBox.setText(execution.getName());
+        datasetBox.setText(execution.getDataSet());
+        workflowBox.setText(execution.getWorkflow());
+        startTimeBox.setText(dtf.format(execution.getStartTime()));
+        scheduledBox.setText("" + execution.getScheduled());
+        completedBox.setText("" + execution.getCompleted());
+        failedBox.setText("" + execution.getFailure());
+        totalBox.setText("" + execution.getProgress().getWork());
+
+        progressBar.setMinProgress(0);
+        progressBar.setMaxProgress(execution.getProgress().getWork());
+        progressBar.setProgress(execution.getProgress().getWorked());
+        progressBar.redraw();
+
+        if (execution.isPaused()) {
+            pauseButton.setText("Resume");
+        } else {
+            pauseButton.setText("Pause");
+        }
+
+        Timer t = new Timer() {
+            @Override
+            public void run() {
+                orchestrationService.getExecution(execution.getId(),
+                        new AsyncCallback<ExecutionDTO>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                // TODO panic
+                                throwable.printStackTrace();
+                            }
+
+                            @Override
+                            public void onSuccess(ExecutionDTO execution) {
+                                DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
+                                nameBox.setText(execution.getName());
+                                datasetBox.setText(execution.getDataSet());
+                                workflowBox.setText(execution.getWorkflow());
+                                startTimeBox.setText(dtf.format(execution.getStartTime()));
+                                scheduledBox.setText("" + execution.getScheduled());
+                                completedBox.setText("" + execution.getCompleted());
+                                failedBox.setText("" + execution.getFailure());
+                                totalBox.setText("" + execution.getProgress().getWork());
+
+                                progressBar.setProgress(execution.getProgress().getWorked());
+                                progressBar.redraw();
+                            }
+                        });
+            }
+        };
+        t.scheduleRepeating(5000);
+    }
 }

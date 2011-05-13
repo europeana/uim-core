@@ -15,6 +15,7 @@ import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.ProgressDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
@@ -210,6 +211,22 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                     r.add(getWrappedExecutionDTO(execution.getId(), execution));
                 }
             }
+// ExecutionDTO exec = new ExecutionDTO(1l);
+// exec.setName("test");
+// exec.setDataSet("test");
+// exec.setWorkflow("test");
+// exec.setStartTime(new Date());
+// exec.setCanceled(false);
+// exec.setActive(true);
+//
+// ProgressDTO progress = new ProgressDTO();
+// progress.setDone(false);
+// progress.setWork(100);
+// progress.setWorked(10);
+//
+// exec.setProgress(progress);
+//
+// r.add(exec);
         } catch (StorageEngineException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -250,7 +267,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c, properties);
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c,
+                        properties);
             } else {
                 ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c);
             }
@@ -268,17 +286,17 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     private Properties prepareProperties(Set<ParameterDTO> parameters) {
         Properties properties = new Properties();
         for (ParameterDTO parameter : parameters) {
-                if (parameter.getValues().length > 1) {
-                    StringBuilder b = new StringBuilder();
-                    for (String val : parameter.getValues()) {
-                        b.append(val);
-                        b.append(",");
-                    }
-                    b.deleteCharAt(b.length() - 1);
-                    properties.put(parameter.getKey(), b.toString());
-                } else if (parameter.getValues().length == 1) {
-                    properties.put(parameter.getKey(), parameter.getValues()[0]);
+            if (parameter.getValues().length > 1) {
+                StringBuilder b = new StringBuilder();
+                for (String val : parameter.getValues()) {
+                    b.append(val);
+                    b.append(",");
                 }
+                b.deleteCharAt(b.length() - 1);
+                properties.put(parameter.getKey(), b.toString());
+            } else if (parameter.getValues().length == 1) {
+                properties.put(parameter.getKey(), parameter.getValues()[0]);
+            }
         }
         return properties;
     }
@@ -293,11 +311,12 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
             ExecutionDTO execution = new ExecutionDTO();
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-            
+
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p, properties);
+                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p,
+                        properties);
             } else {
                 ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
             }
@@ -325,6 +344,15 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         execution.setCanceled(ae.isCanceled());
         execution.setStartTime(ae.getStartTime());
         execution.setDataSet(dataset.toString());
+
+        ProgressDTO progress = new ProgressDTO();
+        progress.setWork(ae.getTotalSize());
+        progress.setWorked(ae.getFailureSize() + ae.getCompletedSize());
+        progress.setTask(ae.getMonitor().getTask());
+        progress.setSubtask(ae.getMonitor().getSubtask());
+
+        execution.setProgress(progress);
+
         wrappedExecutionDTOs.put(ae.getId(), execution);
     }
 
@@ -357,8 +385,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             wrapped.setActive(e.isActive());
             wrapped.setStartTime(e.getStartTime());
             wrapped.setEndTime(e.getEndTime());
-            wrapped.setDataSet(e.getDataSet().getId().toString());
-            wrapped.setName(e.getWorkflowName() + "/" + e.getDataSet().getId().toString());
+            wrapped.setDataSet(e.getDataSet().toString());
+            wrapped.setName(e.getName());
+            wrapped.setWorkflow(e.getWorkflowName());
+            wrapped.setCanceled(e.isCanceled());
             wrappedExecutionDTOs.put(execution, wrapped);
         } else {
             // update what may have changed
@@ -369,6 +399,13 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 wrapped.setScheduled(ae.getScheduledSize());
                 wrapped.setCompleted(ae.getCompletedSize());
                 wrapped.setFailure(ae.getFailureSize());
+
+                ProgressDTO progress = wrapped.getProgress();
+                progress.setWork(ae.getTotalSize());
+                progress.setWorked(ae.getFailureSize() + ae.getCompletedSize());
+                progress.setTask(ae.getMonitor().getTask());
+                progress.setSubtask(ae.getMonitor().getSubtask());
+                progress.setDone(!e.isActive());
             }
         }
         return wrapped;
@@ -418,5 +455,44 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             }
         }
         return fileNames;
+    }
+
+    @Override
+    public Boolean pauseExecution(Long execution) {
+        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        if (ae != null) {
+            ae.setPaused(true);
+            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
+            exec.setPaused(true);
+            return ae.isPaused();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean resumeExecution(Long execution) {
+        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        if (ae != null) {
+            ae.setPaused(false);
+            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
+            exec.setPaused(false);
+            return !ae.isPaused();
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean cancelExecution(Long execution) {
+        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        if (ae != null) {
+            ae.setCanceled(true);
+            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
+            exec.setCanceled(true);
+            return ae.isCanceled();
+        } else {
+            return false;
+        }
     }
 }

@@ -31,7 +31,7 @@
         <table cellspacing='5' cellpadding='5' style='width:100%;'>
             <tr>
                 <td colspan='2' align='center' class='{style.header}'>
-                    <ui:msg key='executionFormTitle'>Execution Settings</ui:msg>
+                    <ui:msg key='executionFormTitle'>Ingestion Activity Settings</ui:msg>
                 </td>
             </tr>
             <tr>

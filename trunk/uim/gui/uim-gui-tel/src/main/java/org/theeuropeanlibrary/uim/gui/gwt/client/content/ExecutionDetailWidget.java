@@ -23,15 +23,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.SimplePager;
-import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.MultiSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 /**
@@ -50,6 +50,15 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
     private final OrchestrationServiceAsync orchestrationService;
     private final List<ExecutionDTO>        activeExecutions = new ArrayList<ExecutionDTO>();
 
+    @UiField
+    SplitLayoutPanel                        splitPanel;
+
+    @UiField
+    LayoutPanel                             leftPanel;
+
+    @UiField
+    LayoutPanel                             rightPanel;
+
     /**
      * The main CellTable.
      */
@@ -59,14 +68,8 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
     /**
      * The contact form used to update contacts.
      */
-    @UiField
-    ExecutionStatus                         executionStatus;
-
-    /**
-     * The pager used to change the range of data.
-     */
     @UiField(provided = true)
-    SimplePager                             pager;
+    ExecutionStatus                         executionStatus;
 
     /**
      * Creates a new instance of this class.
@@ -85,41 +88,33 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      */
     @Override
     public Widget onInitialize() {
-        // Create a CellTable.
+        executionStatus = new ExecutionStatus(orchestrationService);
 
-        // Set a key provider that provides a unique key for each contact. If key is
-        // used to identify contacts when fields (such as the name and address)
-        // change.
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
         cellTable.setWidth("100%", true);
+        cellTable.setHeight("30px");
 
         final ListDataProvider<ExecutionDTO> dataProvider = new ListDataProvider<ExecutionDTO>();
         dataProvider.setList(activeExecutions);
         dataProvider.addDataDisplay(cellTable);
 
-        // Attach a column sort handler to the ListDataProvider to sort the list.
         ListHandler<ExecutionDTO> sortHandler = new ListHandler<ExecutionDTO>(
                 new ListDataProvider<ExecutionDTO>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
-        // Create a Pager to control the table.
-        SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
-        pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
-        pager.setDisplay(cellTable);
-
-        // Add a selection model so we can select cells.
-        final SelectionModel<ExecutionDTO> selectionModel = new MultiSelectionModel<ExecutionDTO>(
+        final SingleSelectionModel<ExecutionDTO> selectionModel = new SingleSelectionModel<ExecutionDTO>(
                 ExecutionDTO.KEY_PROVIDER);
-        cellTable.setSelectionModel(selectionModel,
-                DefaultSelectionEventManager.<ExecutionDTO> createCheckboxManager());
+        cellTable.setSelectionModel(selectionModel);
+        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+            @Override
+            public void onSelectionChange(SelectionChangeEvent event) {
+                ExecutionDTO execution = selectionModel.getSelectedObject();
+                executionStatus.setExecution(execution);
+            }
+        });
 
-        // Initialize the columns.
         initTableColumns(selectionModel, sortHandler);
 
-// // Add the CellList to the adapter in the database.
-// ContactDatabase.get().addDataDisplay(cellTable);
-
-        // Create the UiBinder.
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
 
@@ -130,7 +125,6 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      * Retrieve current executions.
      */
     public void updateActiveExecutions() {
-        // load active executions
         orchestrationService.getActiveExecutions(new AsyncCallback<List<ExecutionDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -143,6 +137,7 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
                 activeExecutions.addAll(executions);
                 cellTable.setRowData(0, activeExecutions);
                 cellTable.setRowCount(activeExecutions.size());
+                cellTable.setHeight((30 + 20 * activeExecutions.size()) + "px");
             }
         });
     }
@@ -150,7 +145,6 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
         GWT.runAsync(ExecutionDetailWidget.class, new RunAsyncCallback() {
-
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);
@@ -168,41 +162,23 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      */
     private void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
-        // Workflow
+        // Name
         Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return object.getWorkflow();
+                return object.getName();
             }
         };
         workflowColumn.setSortable(true);
         sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
+                return o1.getName().compareTo(o2.getName());
             }
         });
-        cellTable.addColumn(workflowColumn, "Workflow");
-        cellTable.setColumnWidth(workflowColumn, 20, Unit.PCT);
-
-        // Data set
-        Column<ExecutionDTO, String> datasetColumn = new Column<ExecutionDTO, String>(
-                new TextCell()) {
-            @Override
-            public String getValue(ExecutionDTO object) {
-                return object.getDataSet();
-            }
-        };
-        datasetColumn.setSortable(true);
-        sortHandler.setComparator(datasetColumn, new Comparator<ExecutionDTO>() {
-            @Override
-            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getDataSet().compareTo(o2.getDataSet());
-            }
-        });
-        cellTable.addColumn(datasetColumn, "Dataset");
-        cellTable.setColumnWidth(datasetColumn, 20, Unit.PCT);
+        cellTable.addColumn(workflowColumn, "Name");
+        cellTable.setColumnWidth(workflowColumn, 35, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
@@ -221,28 +197,34 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 30, Unit.PCT);
 
         // Progress Bar
         Column<ExecutionDTO, ProgressBar> progressColumn = new Column<ExecutionDTO, ProgressBar>(
                 new ProgressBarCell()) {
             @Override
             public ProgressBar getValue(ExecutionDTO execution) {
-                final ProgressBar bar = new ProgressBar(0, execution.getScheduled());
-                bar.setTitle(execution.getName());
-                bar.setTextVisible(true);
-                return bar;
+                final ProgressBar progressBar = new ProgressBar(0, execution.getProgress().getWork());
+                progressBar.setTitle("Ingestion Progress");
+                progressBar.setTextVisible(true);
+                progressBar.setHeight("20px");
+                progressBar.setWidth("100%");
+                progressBar.setVisible(true);
+                progressBar.setProgress(execution.getProgress().getWorked());
+                return progressBar;
             }
         };
         progressColumn.setSortable(true);
         sortHandler.setComparator(progressColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getEndTime().compareTo(o2.getEndTime());
+                double one = (double)o1.getProgress().getWorked() / (double)o1.getProgress().getWork();
+                double two = (double)o2.getProgress().getWorked() / (double)o2.getProgress().getWork();
+                return Double.compare(one, two); 
             }
         });
         cellTable.addColumn(progressColumn, "Progress");
-        cellTable.setColumnWidth(progressColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(progressColumn, 35, Unit.PCT);
 
         updateActiveExecutions();
 
@@ -259,8 +241,7 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
         @Override
         public void render(Context context, ProgressBar value, SafeHtmlBuilder sb) {
             value.redraw();
-            sb.append(SafeHtmlUtils.fromString(value.getElement().getInnerHTML()));
+            sb.append(SafeHtmlUtils.fromTrustedString("<div style=\"position: relative; background: #F00;\">" + value.getElement().getInnerHTML() + "</div>"));
         }
     }
-
 }
