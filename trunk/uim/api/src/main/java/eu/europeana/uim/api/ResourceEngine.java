@@ -62,9 +62,6 @@ public interface ResourceEngine<I> {
     public void setCollectionResources(Collection<I> id, LinkedHashMap<String, List<String>> resources);
     public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id, List<String> keys);
     
-    public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id, List<String> keys);
-    
     public File getRootDirectory();
     
 //

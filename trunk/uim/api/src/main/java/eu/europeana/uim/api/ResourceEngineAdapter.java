@@ -47,11 +47,6 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
 
-    @Override
-    public void setExecutionResources(Execution<I> id, LinkedHashMap<String, List<String>> resources) {
-  
-    }
-
 
 
     @Override
@@ -71,11 +66,7 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
         return new LinkedHashMap<String, List<String>>();
     }
 
-    @Override
-    public LinkedHashMap<String, List<String>> getExecutionResources(Execution<I> id,
-            List<String> keys) {
-        return new LinkedHashMap<String, List<String>>();
-    }
+ 
 
     @Override
     public void setConfiguration(Map<String, String> config) {
