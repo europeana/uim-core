@@ -129,7 +129,7 @@ public class ReflectionEngine extends Engine {
                 Class<?> clazz = Class.forName(name);
                 @SuppressWarnings("rawtypes")
                 StorageEngine storage = (StorageEngine)clazz.newInstance();
-                registry.addStorage(storage);
+                registry.addStorageEngine(storage);
             } catch (Throwable e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

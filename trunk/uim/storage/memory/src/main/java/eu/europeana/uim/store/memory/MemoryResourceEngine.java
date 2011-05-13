@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.management.RuntimeErrorException;
 
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine.EngineStatus;
@@ -24,8 +21,6 @@ import eu.europeana.uim.store.Provider;
  * @date May 9, 2011
  */
 public class MemoryResourceEngine implements ResourceEngine<Long> {
-
-    
     LinkedHashMap<String, List<String>> globalResources=new LinkedHashMap<String, List<String>>();
     LinkedHashMap<Long,LinkedHashMap<String, List<String>>> providerResources=new  LinkedHashMap<Long,LinkedHashMap<String, List<String>>>();
     LinkedHashMap<Long,LinkedHashMap<String, List<String>>> collectionResources=new  LinkedHashMap<Long,LinkedHashMap<String, List<String>>>();
@@ -34,6 +29,13 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     private static final String DEFAULT_DATA_DIR=System.getProperty("java.io.tmpdir");
     private String rootPath=DEFAULT_DATA_DIR;
     private File rootDir=new File(DEFAULT_DATA_DIR);
+    
+    /**
+     * Creates a new instance of this class.
+     */
+    public MemoryResourceEngine() {
+        
+    }
     
     @Override
     public String getIdentifier() {

@@ -51,7 +51,7 @@ public class UIMOrchestratorTest {
             registry = new UIMRegistry();
             engine = spy(new MemoryStorageEngine());
 
-            registry.addStorage(engine);
+            registry.addStorageEngine(engine);
             registry.setConfiguredStorageEngine(MemoryStorageEngine.class.getSimpleName());
 
             UIMWorkflowProcessor processor = new UIMWorkflowProcessor(registry);

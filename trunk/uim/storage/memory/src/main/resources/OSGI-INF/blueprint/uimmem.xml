@@ -9,7 +9,7 @@
 		<bean class="eu.europeana.uim.store.memory.MemoryStorageEngine" />
 	</service>
     
-        <service interface="eu.europeana.uim.api.ResourceEngine" ranking="9">
+    <service interface="eu.europeana.uim.api.ResourceEngine" ranking="9">
         <bean class="eu.europeana.uim.store.memory.MemoryResourceEngine" />
     </service>
 </blueprint>

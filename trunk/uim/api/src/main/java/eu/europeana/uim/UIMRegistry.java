@@ -26,25 +26,24 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
-    private static Logger                 log           = Logger.getLogger(UIMRegistry.class.getName());
+    private static Logger                    log            = Logger.getLogger(UIMRegistry.class.getName());
 
-    private String                        configuredStorageEngine;
-    private StorageEngine<?>              activeStorage = null;
-    private Map<String, StorageEngine<?>> storages      = new HashMap<String, StorageEngine<?>>();
+    private String                           configuredStorageEngine;
+    private StorageEngine<?>                 activeStorage  = null;
+    private Map<String, StorageEngine<?>>    storages       = new HashMap<String, StorageEngine<?>>();
 
-    private String                        configuredLoggingEngine;
-    private LoggingEngine<?, ?>              activeLogging = null;
-    private Map<String, LoggingEngine<?, ?>> loggers       = new HashMap<String, LoggingEngine<?, ?>>();
-    
+    private String                           configuredLoggingEngine;
+    private LoggingEngine<?, ?>              activeLogging  = null;
+    private Map<String, LoggingEngine<?, ?>> loggers        = new HashMap<String, LoggingEngine<?, ?>>();
 
-    private String                        configuredResourceEngine;
-    private ResourceEngine<?>             activeResource = null;
-    private Map<String, ResourceEngine<?>> resources       = new HashMap<String, ResourceEngine<?>>();
+    private String                           configuredResourceEngine;
+    private ResourceEngine<?>                activeResource = null;
+    private Map<String, ResourceEngine<?>>   resources      = new HashMap<String, ResourceEngine<?>>();
 
-    private Map<String, IngestionPlugin>  plugins       = new HashMap<String, IngestionPlugin>();
-    private List<Workflow>                workflows     = new ArrayList<Workflow>();
+    private Map<String, IngestionPlugin>     plugins        = new HashMap<String, IngestionPlugin>();
+    private List<Workflow>                   workflows      = new ArrayList<Workflow>();
 
-    private Orchestrator                  orchestrator  = null;
+    private Orchestrator                     orchestrator   = null;
 
     /**
      * Creates a new instance of this class.
@@ -75,7 +74,7 @@ public class UIMRegistry implements Registry {
             this.activeLogging = getLoggingEngine(configuredLoggingEngine);
         }
     }
-    
+
     @Override
     public void setConfiguredResourceEngine(String configuredResourceEngine) {
         // this may happen before the resource services are loaded
@@ -83,7 +82,7 @@ public class UIMRegistry implements Registry {
 
         this.configuredResourceEngine = configuredResourceEngine;
         if (this.activeResource != null) {
-            this.activeResource= null;
+            this.activeResource = null;
             this.activeResource = getResourceEngine(configuredResourceEngine);
         }
     }
@@ -103,7 +102,6 @@ public class UIMRegistry implements Registry {
 
     @Override
     public void addPlugin(IngestionPlugin plugin) {
-        
 
         checkPluginForNonStaticMemberVariables(plugin);
         if (plugin != null) {
@@ -117,20 +115,22 @@ public class UIMRegistry implements Registry {
 
     /**
      * Checks if the plugin contains non-static member variables
+     * 
      * @param plugin
      */
     private void checkPluginForNonStaticMemberVariables(IngestionPlugin plugin) {
-       
-        log.info("Checking for non-static member-fields: "+plugin.getName());
-       StringBuffer nonStaticMembers=new StringBuffer();
-       
-       //getFields() only accesses public fields - use getDeclaredFields() instead
-       for (Field currentField: plugin.getClass().getDeclaredFields()) {
-           if (Modifier.isStatic(currentField.getModifiers())) continue;
-           nonStaticMembers.append(currentField.getName()+" ");
-       }
-       if (nonStaticMembers.length()>0)
-         throw new IllegalArgumentException(plugin.getName()+" has non-static member(s): "+nonStaticMembers.toString());
+
+        log.info("Checking for non-static member-fields: " + plugin.getName());
+        StringBuffer nonStaticMembers = new StringBuffer();
+
+        // getFields() only accesses public fields - use getDeclaredFields() instead
+        for (Field currentField : plugin.getClass().getDeclaredFields()) {
+            if (Modifier.isStatic(currentField.getModifiers())) continue;
+            nonStaticMembers.append(currentField.getName() + " ");
+        }
+        if (nonStaticMembers.length() > 0)
+            throw new IllegalArgumentException(plugin.getName() + " has non-static member(s): " +
+                                               nonStaticMembers.toString());
     }
 
     @Override
@@ -148,7 +148,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addStorage(StorageEngine<?> storage) {
+    public void addStorageEngine(StorageEngine<?> storage) {
         if (storage != null) {
             log.info("Added storage: " + storage.getIdentifier());
             if (!storages.containsKey(storage.getIdentifier())) {
@@ -165,7 +165,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeStorage(StorageEngine<?> storage) {
+    public void removeStorageEngine(StorageEngine<?> storage) {
         if (storage != null) {
             log.info("Removed storage: " + storage.getIdentifier());
             storage.shutdown();
@@ -288,15 +288,15 @@ public class UIMRegistry implements Registry {
     @Override
     public void addResourceEngine(ResourceEngine<?> resourceEngine) {
         if (resourceEngine != null) {
-            log.info("Added logging engine:" + resourceEngine.getIdentifier());
+            log.info("Added resource engine:" + resourceEngine.getIdentifier());
             if (!resources.containsKey(resourceEngine.getIdentifier())) {
                 resources.put(resourceEngine.getIdentifier(), resourceEngine);
-                // activate default logging
+                // activate default resource engine
                 if (activeResource == null) {
-                    activeResource= resourceEngine;
+                    activeResource = resourceEngine;
                 } else if (resourceEngine.getIdentifier().equals(configuredResourceEngine)) {
                     activeResource = resourceEngine;
-                    log.info("Making logging engine " + resourceEngine.getIdentifier() + " default");
+                    log.info("Making resource engine " + resourceEngine.getIdentifier() + " default");
                 }
             }
         }
@@ -319,7 +319,6 @@ public class UIMRegistry implements Registry {
         res.addAll(resources.values());
         return res;
     }
-    
 
     @Override
     public ResourceEngine<?> getResourceEngine() {
@@ -341,11 +340,11 @@ public class UIMRegistry implements Registry {
         if (identifier == null || resources == null || resources.isEmpty()) return null;
         return resources.get(identifier);
     }
-    
+
     ResourceEngine<?> getActiveResourceEngine() {
         return activeResource;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -416,7 +415,7 @@ public class UIMRegistry implements Registry {
                 builder.append(loggingEngine.getIdentifier());
             }
         }
-        
+
         builder.append("\nRegistered resource engines:");
         builder.append("\n--------------------------------------");
         if (loggers.isEmpty()) {
@@ -442,6 +441,5 @@ public class UIMRegistry implements Registry {
 
         return builder.toString();
     }
-
 
 }

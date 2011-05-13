@@ -52,6 +52,7 @@ public interface ExecutionContext {
      * @return the execution specific properties
      */
     public Properties getProperties();  
+    
     /**
      * @param <NS>
      *            the namespace (type) in which the field is defined

@@ -6,6 +6,7 @@
 
     <cm:property-placeholder persistent-id="eu.europeana.uim">
         <cm:default-properties>
+            <cm:property name="configuredResourceEngine" value="MemoryResourceEngine" />
             <cm:property name="configuredStorageEngine" value="MemoryStorageEngine" />
             <cm:property name="configuredLoggingEngine" value="MemoryLoggingEngine" />
         </cm:default-properties>
@@ -14,6 +15,7 @@
     <service id="registry" ref="uimRegistry" interface="eu.europeana.uim.api.Registry"/>
 
     <bean id="uimRegistry" class="eu.europeana.uim.UIMRegistry">
+        <property name="configuredResourceEngine" value="${configuredResourceEngine}" />
         <property name="configuredStorageEngine" value="${configuredStorageEngine}" />
         <property name="configuredLoggingEngine" value="${configuredLoggingEngine}" />
     </bean>
@@ -28,13 +30,13 @@
 
     <reference-list interface="eu.europeana.uim.api.StorageEngine" availability="optional">
         <reference-listener
-                bind-method="addStorage" unbind-method="removeStorage" ref="uimRegistry">
+                bind-method="addStorageEngine" unbind-method="removeStorageEngine" ref="uimRegistry">
         </reference-listener>
     </reference-list>
-
-    <reference-list interface="eu.europeana.uim.workflow.Workflow" availability="optional">
+    
+    <reference-list interface="eu.europeana.uim.api.ResourceEngine" availability="optional">
         <reference-listener
-                bind-method="addWorkflow" unbind-method="removeWorkflow" ref="uimRegistry">
+                bind-method="addResourceEngine" unbind-method="removeResourceEngine" ref="uimRegistry">
         </reference-listener>
     </reference-list>
 
@@ -43,7 +45,12 @@
                 bind-method="addLoggingEngine" unbind-method="removeLoggingEngine" ref="uimRegistry">
         </reference-listener>
     </reference-list>
-
+    
+    <reference-list interface="eu.europeana.uim.workflow.Workflow" availability="optional">
+        <reference-listener
+                bind-method="addWorkflow" unbind-method="removeWorkflow" ref="uimRegistry">
+        </reference-listener>
+    </reference-list>
 
     <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingIngestionPlugin">
     </bean>

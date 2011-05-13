@@ -28,7 +28,7 @@ public class UIMRegistryTest {
     @Test
     public void testStorageEngine() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
-        registry.addStorage(new StorageEngineAdapter() {
+        registry.addStorageEngine(new StorageEngineAdapter() {
         });      
         assertNotNull(registry.getStorage());
         registry.setConfiguredStorageEngine("a");

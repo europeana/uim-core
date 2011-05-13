@@ -34,13 +34,13 @@ public interface Registry {
      * @param storage
      *            add storage to registration
      */
-    void addStorage(StorageEngine<?> storage);
+    void addStorageEngine(StorageEngine<?> storage);
 
     /**
      * @param storage
      *            remove storage to registration
      */
-    void removeStorage(StorageEngine<?> storage);
+    void removeStorageEngine(StorageEngine<?> storage);
 
     /**
      * @return known storages
