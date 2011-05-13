@@ -21,4 +21,9 @@ public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
         return new MemoryResourceEngine();
     }
 
+    @Override
+    protected Long getExampleID() {
+        return 1L;
+    }
+
 }
