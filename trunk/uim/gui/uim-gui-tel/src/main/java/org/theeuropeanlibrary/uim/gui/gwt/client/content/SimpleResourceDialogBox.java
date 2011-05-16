@@ -77,6 +77,7 @@ public class SimpleResourceDialogBox extends DialogBox {
         TextBox box = new TextBox();
         box.setReadOnly(false);
         box.setWidth("100%");
+        box.setFocus(true);
         boxes.add(box);
         valuesPanel.add(box);
         values.add(valuesPanel);
