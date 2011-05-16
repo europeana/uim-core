@@ -222,6 +222,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             StringBuilder b = new StringBuilder();
             b.append("uim:exec -o start ");
             b.append(workflow.getName());
+            b.append(" ");
             if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
                 b.append(collection.getMnemonic());
             } else {
@@ -240,12 +241,10 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
                             b.append("|");
                         }
                     }
-                    if (i < activeParameters.size() - 1) {
-                        b.append("&");
-                    }
+                    b.append("&");
                 }
             }
-            executionForm.setCommandline(b.toString());
+            executionForm.setCommandline(b.toString().substring(0, b.length() - 1));
         } else {
             executionForm.setCommandline(null);
         }
