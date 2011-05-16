@@ -263,16 +263,18 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     private Properties prepareProperties(Set<ParameterDTO> parameters) {
         Properties properties = new Properties();
         for (ParameterDTO parameter : parameters) {
-            if (parameter.getValues().length > 1) {
-                StringBuilder b = new StringBuilder();
-                for (String val : parameter.getValues()) {
-                    b.append(val);
-                    b.append(",");
+            if (parameter.getValues() != null) {
+                if (parameter.getValues().length > 1) {
+                    StringBuilder b = new StringBuilder();
+                    for (String val : parameter.getValues()) {
+                        b.append(val);
+                        b.append(",");
+                    }
+                    b.deleteCharAt(b.length() - 1);
+                    properties.put(parameter.getKey(), b.toString());
+                } else if (parameter.getValues().length == 1) {
+                    properties.put(parameter.getKey(), parameter.getValues()[0]);
                 }
-                b.deleteCharAt(b.length() - 1);
-                properties.put(parameter.getKey(), b.toString());
-            } else if (parameter.getValues().length == 1) {
-                properties.put(parameter.getKey(), parameter.getValues()[0]);
             }
         }
         return properties;

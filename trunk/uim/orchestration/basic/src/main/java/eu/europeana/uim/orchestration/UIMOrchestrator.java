@@ -77,7 +77,8 @@ public class UIMOrchestrator implements Orchestrator {
     /**
      * Executes a given workflow. A new Execution is created and a WorkflowProcessor created if none
      * exists for this workflow. Note, this method queries the registered resource engine for
-     * properties known to the plugins of the workflow for all not given properties, but necessary for the plugins.
+     * properties known to the plugins of the workflow for all not given properties, but necessary
+     * for the plugins.
      * 
      * @param w
      *            the workflow to execute
@@ -89,7 +90,7 @@ public class UIMOrchestrator implements Orchestrator {
     @Override
     public ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, Properties properties) {
         setupProperties(w, dataset, properties);
-        
+
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
         monitor.beginTask(w.getName(), 1);
 
@@ -130,41 +131,55 @@ public class UIMOrchestrator implements Orchestrator {
             LinkedHashMap<String, List<String>> globalResources = resourceEngine.getGlobalResources(params);
             for (String param : params) {
                 if (!globalResources.containsKey(param)) {
-                    globalResources.put(param, new ArrayList<String>());
+                    globalResources.put(param, null);
                 }
             }
 
             if (dataset != null && dataset instanceof Collection) {
-                LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources((Collection) dataset, params);
+                LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources(
+                        (Collection)dataset, params);
                 if (collectionResources != null && collectionResources.size() > 0) {
-                    for (String key : collectionResources.keySet()) {
-                        globalResources.remove(key);
+                    for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
+                        if (entry.getValue() != null) {
+                            globalResources.put(entry.getKey(), entry.getValue());
+                        }
                     }
-                    globalResources.putAll(collectionResources);
+//                    for (String key : collectionResources.keySet()) {
+//                        globalResources.remove(key);
+//                    }
+//                    globalResources.putAll(collectionResources);
                 }
             }
             if (dataset != null && dataset instanceof Provider) {
-                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources((Provider) dataset, params);
+                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(
+                        (Provider)dataset, params);
                 if (providerResources != null && providerResources.size() > 0) {
-                    for (String key : providerResources.keySet()) {
-                        globalResources.remove(key);
+                    for (Entry<String, List<String>> entry : providerResources.entrySet()) {
+                        if (entry.getValue() != null) {
+                            globalResources.put(entry.getKey(), entry.getValue());
+                        }
                     }
-                    globalResources.putAll(providerResources);
+//                    for (String key : providerResources.keySet()) {
+//                        globalResources.remove(key);
+//                    }
+//                    globalResources.putAll(providerResources);
                 }
             }
 
             for (Entry<String, List<String>> entry : globalResources.entrySet()) {
-                if (!properties.contains(entry.getKey()) ) {
-                    if (entry.getValue().size() > 1) {
-                        StringBuilder b = new StringBuilder();
-                        for (String val : entry.getValue()) {
-                            b.append(val);
-                            b.append(",");
+                if (!properties.containsKey(entry.getKey())) {
+                    if (entry.getValue() != null) {
+                        if (entry.getValue().size() > 1) {
+                            StringBuilder b = new StringBuilder();
+                            for (String val : entry.getValue()) {
+                                b.append(val);
+                                b.append(",");
+                            }
+                            b.deleteCharAt(b.length() - 1);
+                            properties.put(entry.getKey(), b.toString());
+                        } else if (entry.getValue().size() == 1) {
+                            properties.put(entry.getKey(), entry.getValue().get(0));
                         }
-                        b.deleteCharAt(b.length() - 1);
-                        properties.put(entry.getKey(), b.toString());
-                    } else if (entry.getValue().size() == 1) {
-                        properties.put(entry.getKey(), entry.getValue().get(0));
                     }
                 }
             }
