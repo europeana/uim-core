@@ -219,16 +219,12 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      */
     protected void updateCommandline() {
         if (provider != null && collection != null && workflow != null) {
-            // uim:exec -o start workflowname -c collectionmnemoic | -p providermnemonic
-// key=value&key=value&...
             StringBuilder b = new StringBuilder();
             b.append("uim:exec -o start ");
             b.append(workflow.getName());
             if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
-                b.append(" -c ");
                 b.append(collection.getMnemonic());
             } else {
-                b.append(" -p ");
                 b.append(provider.getMnemonic());
             }
             b.append(" ");

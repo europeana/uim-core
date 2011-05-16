@@ -204,32 +204,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            for (Execution<Long> execution : storage.getAllExecutions()) {
-                if (execution.isActive()) {
-                    r.add(getWrappedExecutionDTO(execution.getId(), execution));
-                }
-            }
-// ExecutionDTO exec = new ExecutionDTO(1l);
-// exec.setName("test");
-// exec.setDataSet("test");
-// exec.setWorkflow("test");
-// exec.setStartTime(new Date());
-// exec.setCanceled(false);
-// exec.setActive(true);
-//
-// ProgressDTO progress = new ProgressDTO();
-// progress.setDone(false);
-// progress.setWork(100);
-// progress.setWorked(10);
-//
-// exec.setProgress(progress);
-//
-// r.add(exec);
-        } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        java.util.Collection<ActiveExecution<?>> activeExecutions = getEngine().getOrchestrator().getActiveExecutions();
+        for (ActiveExecution<?> execution : activeExecutions) {
+            ExecutionDTO exec = getWrappedExecutionDTO((Long)execution.getId(), execution);
+            r.add(exec);
         }
         return r;
     }
@@ -245,7 +223,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 }
             }
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return r;
@@ -382,31 +359,31 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
             wrapped.setId(execution);
-            wrapped.setActive(e.isActive());
             wrapped.setStartTime(e.getStartTime());
-            wrapped.setEndTime(e.getEndTime());
             wrapped.setDataSet(e.getDataSet().toString());
             wrapped.setName(e.getName());
             wrapped.setWorkflow(e.getWorkflowName());
-            wrapped.setCanceled(e.isCanceled());
+            wrapped.setProgress(new ProgressDTO());
             wrappedExecutionDTOs.put(execution, wrapped);
-        } else {
-            // update what may have changed
-            wrapped.setActive(e.isActive());
+        }
+        // update what may have changed
+        wrapped.setActive(e.isActive());
+        if (e.getEndTime() != null) {
             wrapped.setEndTime(e.getEndTime());
-            if (e.isActive() && e instanceof ActiveExecution) {
-                ActiveExecution ae = (ActiveExecution)e;
-                wrapped.setScheduled(ae.getScheduledSize());
-                wrapped.setCompleted(ae.getCompletedSize());
-                wrapped.setFailure(ae.getFailureSize());
+        }
+        wrapped.setCanceled(e.isCanceled());
+        if (e.isActive() && e instanceof ActiveExecution) {
+            ActiveExecution ae = (ActiveExecution)e;
+            wrapped.setScheduled(ae.getScheduledSize());
+            wrapped.setCompleted(ae.getCompletedSize());
+            wrapped.setFailure(ae.getFailureSize());
 
-                ProgressDTO progress = wrapped.getProgress();
-                progress.setWork(ae.getTotalSize());
-                progress.setWorked(ae.getFailureSize() + ae.getCompletedSize());
-                progress.setTask(ae.getMonitor().getTask());
-                progress.setSubtask(ae.getMonitor().getSubtask());
-                progress.setDone(!e.isActive());
-            }
+            ProgressDTO progress = wrapped.getProgress();
+            progress.setWork(ae.getTotalSize());
+            progress.setWorked(ae.getFailureSize() + ae.getCompletedSize());
+            progress.setTask(ae.getMonitor().getTask());
+            progress.setSubtask(ae.getMonitor().getSubtask());
+            progress.setDone(!e.isActive());
         }
         return wrapped;
     }
