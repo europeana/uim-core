@@ -93,14 +93,18 @@ public abstract class AbstractResourceEngineTest<I> {
                 setEntityResources(testEntity,testSet2);
                 
                 @SuppressWarnings({ "rawtypes", "unchecked" })
-                LinkedHashMap<String,List<String>> result2=getEntityResources(testEntity,new LinkedList(testSet2.keySet()));
+                //ask for all keys
+                LinkedHashMap<String,List<String>> result2=getEntityResources(testEntity,new LinkedList(testSet1.keySet()));
                 assertNotNull(result2);
+                //keys should still be the same as the first one
+                assertEquals(testSet1.keySet().size(),result2.keySet().size());
+                //but results for EXAMPLE_KEY_1 should differ
                 assertEquals(1,result2.get(EXAMPLE_KEY_1).size());
                 assertEquals(EXAMPLE_VALUE_1,result2.get(EXAMPLE_KEY_1).get(0)); 
                 
                 
                 //check if you ask for more keys than there are actually stored
-                //return only those which are in there
+                //return null for those not stored (yet)
                 
                 List<String> testList=new LinkedList<String>();
                 testList.add(EXAMPLE_VALUE_1);
@@ -116,10 +120,21 @@ public abstract class AbstractResourceEngineTest<I> {
                 
                 LinkedHashMap<String,List<String>> result3=getEntityResources(testEntity,keys);
                 assertNotNull(result3);
-                assertEquals(1,result3.size());
+                assertEquals(2,result3.size());
                 assertNotNull(result3.get(EXAMPLE_KEY_3));
                 assertEquals(2,result3.get(EXAMPLE_KEY_3).size());     
                 assertNull(result3.get(EXAMPLE_KEY_4));
+                
+                //delete resource
+                LinkedHashMap<String, List<String>> testSet4=new LinkedHashMap<String, List<String>>();
+                testSet4.put(EXAMPLE_KEY_3,null);
+                setEntityResources(testEntity, testSet4);
+                
+                LinkedHashMap<String,List<String>> result4=getEntityResources(testEntity,keys);
+                assertNotNull(result4);
+                assertEquals(2,result4.size());
+                assertNull(result4.get(EXAMPLE_KEY_3));
+                
             }
         }
         
@@ -161,10 +176,6 @@ public abstract class AbstractResourceEngineTest<I> {
             
         }
         
-        @Test(expected=IllegalArgumentException.class)
-        public void testNullGlobalResource() {
-            engine.setGlobalResources(null);
-        }
         
         
         

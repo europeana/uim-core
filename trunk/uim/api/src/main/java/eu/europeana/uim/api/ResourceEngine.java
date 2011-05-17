@@ -8,18 +8,21 @@ import java.util.Map;
 
 import eu.europeana.uim.api.StorageEngine.EngineStatus;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 
 /**
  * Interface for resource storage engine type to an identifier
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
+ * @param <I> the type of the identifier used in this resource engine
  * @date May 3, 2011
  */
 public interface ResourceEngine<I> {
     
-    public String getIdentifier();
+    /**
+     * @return the identifier for this resource engine. Usually the simpel class name.
+     */
+    public String getIdentifier(); 
     
     /**
      * @param config
@@ -51,67 +54,72 @@ public interface ResourceEngine<I> {
      */
     public EngineStatus getStatus();
     
-//    public Set<String> getAvailableResourceKeys();
     
+    /**
+     * Sets the global resources.
+     * Parameters are only overwritten, if they have a non-null List associated with them.
+     * Parameters are deleted, if the List is null.
+     * @param resources  key/resource map
+     */
     public void setGlobalResources(LinkedHashMap<String, List<String>> resources);
+    
+    /**
+     * Gets a hash map with every key that is requested and a List of resources, if there exist, or null if not.
+     * @param keys the keys to be in the HashMap
+     * @return key/resource map
+     */
     public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys);
 
-    public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> id, List<String> keys);
+    /**
+     * Sets the provider specific resources.
+     * if resources are null, then all provider specific resources are removed.
+     * Parameters are only overwritten, if they have a non-null List associated with them.
+     * Parameters are deleted, if the List is null.
+     * @param provider the relevant provider
+     * @param resources  key/resource map
+     */
+    public void setProviderResources(Provider<I> provider, LinkedHashMap<String, List<String>> resources);
     
-    public void setCollectionResources(Collection<I> id, LinkedHashMap<String, List<String>> resources);
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id, List<String> keys);
     
+    /**
+     * Gets a hash map of the provider specific resources with every key that is requested and a List of resources, if there exist, or null if not.
+     * @param provider the relevant provider    
+     * @param keys the keys to be in the HashMap
+     * @return key/resource map 
+     */
+    
+    public LinkedHashMap<String,List<String>> getProviderResources(Provider<I> provider, List<String> keys);
+    
+    /**
+     * Sets the collection specific resources.
+     * if resources are null, then all collection specific resources are removed.
+     * Parameters are only overwritten, if they have a non-null List associated with them.
+     * Parameters are deleted, if the List is null.
+     * @param collection the relevant collection
+     * @param resources  key/resource map
+     */
+    
+    public void setCollectionResources(Collection<I> collection, LinkedHashMap<String, List<String>> resources);
+    /**
+     * Gets a hash map of the collection specific resources with every key that is requested and a List of resources, if there exist, or null if not.
+     * @param collection the relevant collection   
+     * @param keys the keys to be in the HashMap
+     * @return key/resource map 
+     */
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> collection, List<String> keys);
+    
+    /**
+     * @return the root directory to store resource files in. 
+     */
     public File getRootDirectory();
     
-//
-//    public Map<String, List<String>> getGlobalResouresForKeys(Set<String> keys);
-//    public Map<String, List<String>> getLocalResoures(UimEntity<I> id,Set<String> keys);
-
-
-
- 
-    
-//    
-//    public void addGlobalResource(String key,String value);
-//    public void clearGlobalResource(String key);
-//    public Configuration getGlobalResources(Set<String> keys);
-//    
-//    public void addProviderResource(I id,String key,String value);
-//    public void clearProviderResource(I id,String key);
-//    public Configuration getProviderSpecificResources(I providerId,Set<String> keys);
-//    
-//    public void addCollectionResource(I id,String key,String value);
-//    public void clearCollectionResource(I id,String key);
-//    public Configuration getCollectionSpecificResources(I collectionId,Set<String> keys);
-//    
-//    public void addExecutionResource(I id,String key,String value);
-//    public void clearExecutionResource(I id,String key); 
-//    public Configuration getExecutionSpecificResources(I executionId,Set<String> keys);
-    
-//    /**
-//     * Returns a combined configuration in which the properties are overwritten in the following order:
-//     * 
-//     * 1. Global configuration
-//     * 2. Provider specific configuration
-//     * 3. Collection specific configuration
-//     * 4. Execution specific configuration
-//     * 
-//     * @param executionId
-//     * @return
-//     */
-//    public Configuration getExecutionEffectiveResources(Execution<I> executionId);
-//    
-//    /**
-//     * @return
-//     */
-    
-//    public File asFile(String value);
-//    
-//    public InputStream asInputStream(String value);
-    
-    //TODO: extend to support file up/load download, if necessary.
-    
-
+    /**
+     * @return the root directory for creating work directories for persisted output files from executions.
+     */
+    public File getWorkingRootDirectory();
+    /**
+     * @return the root directory for creating temporary directories for executions.
+     */
+    public File getTmpRootDirectory();   
         
 }

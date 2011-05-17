@@ -103,5 +103,15 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
         return null;
     }
 
+    @Override
+    public File getWorkingRootDirectory() {
+        return null;
+    }
+
+    @Override
+    public File getTmpRootDirectory() {
+        return null;
+    }
+
     
 }

@@ -1,6 +1,9 @@
 package eu.europeana.uim.api;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import eu.europeana.uim.common.RevisableProgressMonitor;
@@ -42,16 +45,25 @@ public interface ExecutionContext {
      */
     LoggingEngine<?, ?> getLoggingEngine();
     
-    /**
-     * @return resource engine for this execution
-     */
 
-    ResourceEngine<?> getResourceEngine();
+
 
     /**
      * @return the execution specific properties
      */
-    public Properties getProperties();  
+    public Properties getProperties();
+    
+    /**
+     * @param plugin 
+     * @return a working director, which is specific for this execution
+     */
+    public File getWorkingDirectory(IngestionPlugin plugin);
+    
+    /**
+     * @param plugin 
+     * @return a temporary directory, which is only valid for this execution and deleted after the workflow is over (if not overridden by configuration)
+     */
+    public File getTmpDirectory(IngestionPlugin plugin);
     
     /**
      * @param <NS>
