@@ -19,8 +19,8 @@ import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.DataSet;
@@ -171,12 +171,12 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public Boolean isCanceled() {
+    public boolean isCanceled() {
         return execution.isCanceled();
     }
 
     @Override
-    public void setCanceled(Boolean canceled) {
+    public void setCanceled(boolean canceled) {
         execution.setCanceled(canceled);
     }
 
@@ -203,6 +203,36 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public RevisableProgressMonitor getMonitor() {
         return monitor;
+    }
+    
+    @Override
+    public int getSuccessCount() {
+        return execution.getSuccessCount();
+    }
+
+    @Override
+    public void setSuccessCount(int number) {
+        execution.setSuccessCount(number);
+    }
+
+    @Override
+    public int getErrorCount() {
+        return execution.getErrorCount();
+    }
+
+    @Override
+    public void setErrorCount(int number) {
+        execution.setErrorCount(number);
+    }
+
+    @Override
+    public int getProcessedCount() {
+        return execution.getProcessedCount();
+    }
+
+    @Override
+    public void setProcessedCount(int number) {
+        execution.setProcessedCount(number);
     }
 
     @Override

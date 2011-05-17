@@ -16,8 +16,11 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     private boolean       isActive;
     private Date          startTime;
     private Date          endTime;
-    private Boolean       canceled;
+    private boolean       canceled;
     private String        workflowIdentifier;
+    private int           success;
+    private int           failure;
+    private int           processed;
 
     @Reference
     private DataSet<Long> dataSet;
@@ -88,12 +91,42 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     }
 
     @Override
-    public Boolean isCanceled() {
+    public boolean isCanceled() {
         return canceled;
     }
 
     @Override
-    public void setCanceled(Boolean canceled) {
+    public void setCanceled(boolean canceled) {
         this.canceled = canceled;
+    }
+
+    @Override
+    public int getSuccessCount() {
+        return success;
+    }
+
+    @Override
+    public void setSuccessCount(int number) {
+        this.success = number;
+    }
+
+    @Override
+    public int getErrorCount() {
+        return failure;
+    }
+
+    @Override
+    public void setErrorCount(int number) {
+        this.failure = number;
+    }
+
+    @Override
+    public int getProcessedCount() {
+        return processed;
+    }
+
+    @Override
+    public void setProcessedCount(int number) {
+        this.processed = number;
     }
 }

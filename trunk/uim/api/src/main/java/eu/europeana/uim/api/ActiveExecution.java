@@ -24,26 +24,23 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      * @return storage engine for this execution
      */
     StorageEngine<I> getStorageEngine();
-    
-   
-    
+
     /**
      * @param paused
      *            Should the execution be paused?
      */
-    public void setPaused(boolean paused);
+    void setPaused(boolean paused);
 
     /**
      * @return Is the execution be paused?
      */
     boolean isPaused();
 
-
     /**
      * @param initialized
      *            is the execution already initialized
      */
-    public void setInitialized(boolean initialized);
+    void setInitialized(boolean initialized);
 
     /**
      * @return Is the execution initialized

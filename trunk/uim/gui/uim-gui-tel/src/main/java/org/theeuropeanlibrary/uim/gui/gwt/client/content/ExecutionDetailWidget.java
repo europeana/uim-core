@@ -25,6 +25,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -200,27 +201,35 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
         cellTable.setColumnWidth(startTimeColumn, 30, Unit.PCT);
 
         // Progress Bar
-        Column<ExecutionDTO, ProgressBar> progressColumn = new Column<ExecutionDTO, ProgressBar>(
-                new ProgressBarCell()) {
+        Column<ExecutionDTO, FlowPanel> progressColumn = new Column<ExecutionDTO, FlowPanel>(
+                new FlowPanelCell()) {
             @Override
-            public ProgressBar getValue(ExecutionDTO execution) {
-                final ProgressBar progressBar = new ProgressBar(0, execution.getProgress().getWork());
+            public FlowPanel getValue(ExecutionDTO execution) {
+                final ProgressBar progressBar = new ProgressBar(0,
+                        execution.getProgress().getWork());
                 progressBar.setTitle("Ingestion Progress");
                 progressBar.setTextVisible(true);
                 progressBar.setHeight("20px");
                 progressBar.setWidth("100%");
                 progressBar.setVisible(true);
                 progressBar.setProgress(execution.getProgress().getWorked());
-                return progressBar;
+
+                FlowPanel panel = new FlowPanel();
+                panel.add(progressBar);
+                panel.setVisible(true);
+                panel.setSize("100%", "100%");
+                return panel;
             }
         };
         progressColumn.setSortable(true);
         sortHandler.setComparator(progressColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                double one = (double)o1.getProgress().getWorked() / (double)o1.getProgress().getWork();
-                double two = (double)o2.getProgress().getWorked() / (double)o2.getProgress().getWork();
-                return Double.compare(one, two); 
+                double one = (double)o1.getProgress().getWorked() /
+                             (double)o1.getProgress().getWork();
+                double two = (double)o2.getProgress().getWorked() /
+                             (double)o2.getProgress().getWork();
+                return Double.compare(one, two);
             }
         });
         cellTable.addColumn(progressColumn, "Progress");
@@ -237,11 +246,18 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
         t.scheduleRepeating(5000);
     }
 
-    private static class ProgressBarCell extends AbstractCell<ProgressBar> {
+    private static class FlowPanelCell extends AbstractCell<FlowPanel> {
         @Override
-        public void render(Context context, ProgressBar value, SafeHtmlBuilder sb) {
-            value.redraw();
-            sb.append(SafeHtmlUtils.fromTrustedString("<div style=\"position: relative; background: #F00;\">" + value.getElement().getInnerHTML() + "</div>"));
+        public void render(Context context, FlowPanel value, SafeHtmlBuilder sb) {
+// value.redraw();
+            sb.append(SafeHtmlUtils.fromTrustedString(value.getElement().getInnerHTML()));
+// <div
+// style="position: relative; height: 20px; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px;"
+// class="gwt-ProgressBar-shell" title="Ingestion Progress"><div style="height: 100%; width: 0%;"
+// class="gwt-ProgressBar-bar"></div><div style="position: absolute; top: 0px; left: 449px;"
+// class="gwt-ProgressBar-text gwt-ProgressBar-text-firstHalf">0%</div></div>
+// sb.append(SafeHtmlUtils.fromTrustedString("<div style=\"position: relative; height: 20px; width: 100%; left: 0px; top: 0px; right: 0px; bottom: 0px;\" class=\"gwt-ProgressBar-shell\" title=\"Ingestion Progress\">"
+// + value.getElement().getInnerHTML() + "</div>"));
         }
     }
 }

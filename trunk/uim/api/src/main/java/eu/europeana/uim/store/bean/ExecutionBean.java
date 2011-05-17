@@ -15,13 +15,16 @@ import eu.europeana.uim.store.Execution;
  * @since Mar 22, 2011
  */
 public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I> {
-    private boolean    active = false;
+    private boolean    active   = false;
     private Date       startTime;
     private Date       endTime;
     private DataSet<I> dataSet;
     private String     workflowIdentifier;
     private String     name;
-    private Boolean    canceled;
+    private boolean    canceled = false;
+    private int        success;
+    private int        failure;
+    private int        processed;
 
     /**
      * Creates a new instance of this class.
@@ -116,12 +119,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public Boolean isCanceled() {
+    public boolean isCanceled() {
         return canceled;
     }
 
     @Override
-    public void setCanceled(Boolean canceled) {
+    public void setCanceled(boolean canceled) {
         this.canceled = canceled;
     }
 
@@ -129,5 +132,35 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     public String toString() {
         return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
                workflowIdentifier + ", dataSet=" + dataSet + "]";
+    }
+
+    @Override
+    public int getSuccessCount() {
+        return success;
+    }
+
+    @Override
+    public void setSuccessCount(int number) {
+        this.success = number;
+    }
+
+    @Override
+    public int getErrorCount() {
+        return failure;
+    }
+
+    @Override
+    public void setErrorCount(int number) {
+        this.failure = number;
+    }
+
+    @Override
+    public int getProcessedCount() {
+        return processed;
+    }
+
+    @Override
+    public void setProcessedCount(int number) {
+        this.processed = number;
     }
 }

@@ -35,8 +35,6 @@ import eu.europeana.uim.workflow.WorkflowStart;
 public class UIMOrchestrator implements Orchestrator {
     private static Logger              log = Logger.getLogger(UIMOrchestrator.class.getName());
 
-// private static final int BATCH_SIZE = 100;
-
     private final Registry             registry;
     private final UIMWorkflowProcessor processor;
 
@@ -144,10 +142,6 @@ public class UIMOrchestrator implements Orchestrator {
                             globalResources.put(entry.getKey(), entry.getValue());
                         }
                     }
-//                    for (String key : collectionResources.keySet()) {
-//                        globalResources.remove(key);
-//                    }
-//                    globalResources.putAll(collectionResources);
                 }
             }
             if (dataset != null && dataset instanceof Provider) {
@@ -159,10 +153,6 @@ public class UIMOrchestrator implements Orchestrator {
                             globalResources.put(entry.getKey(), entry.getValue());
                         }
                     }
-//                    for (String key : providerResources.keySet()) {
-//                        globalResources.remove(key);
-//                    }
-//                    globalResources.putAll(providerResources);
                 }
             }
 
@@ -200,23 +190,17 @@ public class UIMOrchestrator implements Orchestrator {
         return null;
     }
 
-    /**
-     * @param execution
-     */
+    @Override
     public void pause(ActiveExecution<?> execution) {
         execution.setPaused(true);
     }
 
-    /**
-     * @param execution
-     */
+    @Override
     public void resume(ActiveExecution<?> execution) {
         execution.setPaused(false);
     }
 
-    /**
-     * @param execution
-     */
+    @Override
     public void cancel(ActiveExecution<?> execution) {
         execution.getMonitor().setCancelled(true);
     }

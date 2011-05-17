@@ -177,7 +177,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                         getWrappedProviderDTO(provider), storage.getTotalByCollection(col)));
             }
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return res;
@@ -306,7 +305,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             populateWrappedExecutionDTO(execution, ae, w, p, executionName);
             return execution;
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -337,7 +335,21 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public ExecutionDTO getExecution(Long id) {
-        return wrappedExecutionDTOs.get(id);
+        ExecutionDTO exec = null;
+        ActiveExecution<?> ae = getEngine().getOrchestrator().getActiveExecution(id);
+        if (ae != null) {
+            exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
+        } else {
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            Execution<Long> execution;
+            try {
+                execution = storage.getExecution(id);
+                exec = getWrappedExecutionDTO(execution.getId(), execution);
+            } catch (StorageEngineException e) {
+                e.printStackTrace();
+            }
+        }
+        return exec;
     }
 
     private ProviderDTO getWrappedProviderDTO(Long provider) {
@@ -349,7 +361,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 wrapped = new ProviderDTO(p.getId(), p.getName(), p.getMnemonic());
                 wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -386,6 +397,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             progress.setTask(ae.getMonitor().getTask());
             progress.setSubtask(ae.getMonitor().getSubtask());
             progress.setDone(!e.isActive());
+        } else {
+            wrapped.setScheduled(e.getProcessedCount());
+            wrapped.setCompleted(e.getSuccessCount());
+            wrapped.setFailure(e.getErrorCount());
         }
         return wrapped;
     }
@@ -403,7 +418,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
             return storage.getTotalByCollection(storage.getCollection(collection));
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return 0;
@@ -440,9 +454,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public Boolean pauseExecution(Long execution) {
         ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            ae.setPaused(true);
-            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
-            exec.setPaused(true);
+            getEngine().getOrchestrator().pause(ae);
             return ae.isPaused();
         } else {
             return false;
@@ -453,9 +465,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public Boolean resumeExecution(Long execution) {
         ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            ae.setPaused(false);
-            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
-            exec.setPaused(false);
+            getEngine().getOrchestrator().resume(ae);
             return !ae.isPaused();
         } else {
             return false;
@@ -466,9 +476,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public Boolean cancelExecution(Long execution) {
         ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            ae.setCanceled(true);
-            ExecutionDTO exec = wrappedExecutionDTOs.get(execution);
-            exec.setCanceled(true);
+            getEngine().getOrchestrator().cancel(ae);
             return ae.isCanceled();
         } else {
             return false;

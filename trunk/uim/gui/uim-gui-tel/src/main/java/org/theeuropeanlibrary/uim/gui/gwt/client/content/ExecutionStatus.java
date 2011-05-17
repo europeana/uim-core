@@ -85,6 +85,7 @@ public class ExecutionStatus extends Composite {
         leftPanel.add(progressBar);
         leftPanel.setVisible(true);
 
+        pauseButton.setText("Pause");
         pauseButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {

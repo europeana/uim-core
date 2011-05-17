@@ -83,12 +83,53 @@ public interface Execution<I> extends UimEntity<I> {
      * @return Has the execution been run through (false) or cancelled (true)? Only together with an
      *         end time this value makes sense, before that the execution is still running!
      */
-    Boolean isCanceled();
+    boolean isCanceled();
 
     /**
      * @param canceled
      *            Has the execution been run through (false) or cancelled (true)? Only together with
      *            an end time this value makes sense, before that the execution is still running!
      */
-    void setCanceled(Boolean canceled);
+    void setCanceled(boolean canceled);
+
+    /**
+     * gives the number of tasks/records which are completly finished successful by all steps.
+     * 
+     * @return amount of completed tasks
+     */
+    int getSuccessCount();
+
+    /**
+     * @param number
+     *            amount of completed tasks
+     */
+    void setSuccessCount(int number);
+
+    /**
+     * gives the number of tasks/records which have failed on the way through the workflow no matter
+     * where.
+     * 
+     * @return amount of failures
+     */
+    int getErrorCount();
+
+    /**
+     * @param number
+     *            amount of failures
+     */
+    void setErrorCount(int number);
+
+    /**
+     * gives the number of tasks/records which have been scheduled to be processed in the first
+     * place. So scheduled = finished + failure.
+     * 
+     * @return amount of scheduled ones
+     */
+    int getProcessedCount();
+
+    /**
+     * @param number
+     *            amount of scheduled ones
+     */
+    void setProcessedCount(int number);
 }

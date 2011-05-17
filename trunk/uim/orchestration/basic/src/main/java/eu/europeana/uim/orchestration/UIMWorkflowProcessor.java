@@ -192,7 +192,8 @@ public class UIMWorkflowProcessor implements Runnable {
                                 }
                             }
                         } else {
-                            // this is paused or not initialized ... are we now cancelled - if yes stop
+                            // this is paused or not initialized ... are we now cancelled - if yes
+// stop
                             if (execution.getMonitor().isCancelled()) {
                                 complete(execution, start, true);
                             }
@@ -299,6 +300,9 @@ public class UIMWorkflowProcessor implements Runnable {
             } else {
                 execution.setCanceled(false);
             }
+            execution.setSuccessCount(execution.getCompletedSize());
+            execution.setErrorCount(execution.getFailureSize());
+            execution.setProcessedCount(execution.getScheduledSize());
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
 
@@ -360,11 +364,11 @@ public class UIMWorkflowProcessor implements Runnable {
 
                     execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
                     execution.setInitialized(true);
-                    
+
                 } catch (Throwable t) {
                     log.log(Level.SEVERE, "Failed to startup execution.", t);
                     try {
-                        
+
                         execution.setThrowable(t);
                         execution.setActive(false);
                         execution.setEndTime(new Date());
@@ -449,10 +453,8 @@ public class UIMWorkflowProcessor implements Runnable {
     }
 
     /**
-     * Sets the maxInProgress to the given value.
-     * 
      * @param maxInProgress
-     *            the maxInProgress to set
+     *            maximum number of processes in progress
      */
     public void setMaxInProgress(int maxInProgress) {
         this.maxInProgress = maxInProgress;
@@ -461,7 +463,7 @@ public class UIMWorkflowProcessor implements Runnable {
     /**
      * Returns the maxInProgress.
      * 
-     * @return the maxInProgress
+     * @return maximum number of processes in progress
      */
     public int getMaxInProgress() {
         return maxInProgress;

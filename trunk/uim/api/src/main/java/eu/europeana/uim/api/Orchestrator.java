@@ -54,6 +54,24 @@ public interface Orchestrator {
     Collection<ActiveExecution<?>> getActiveExecutions();
 
     /**
+     * @param execution
+     *            pause this execution
+     */
+    void pause(ActiveExecution<?> execution);
+
+    /**
+     * @param execution
+     *            resume this execution
+     */
+    void resume(ActiveExecution<?> execution);
+
+    /**
+     * @param execution
+     *            cancel this execution
+     */
+    void cancel(ActiveExecution<?> execution);
+
+    /**
      * Shutdown the orchestrator.
      */
     void shutdown();

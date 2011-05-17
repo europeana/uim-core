@@ -14,7 +14,7 @@ import java.util.Date;
  * 
  * @param <I>
  *            generic ID
- *            
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
@@ -89,35 +89,28 @@ public interface Collection<I> extends DataSet<I> {
      *            a prefix for the metadata retrieved from this oai
      */
     void setOaiMetadataPrefix(String prefix);
-    
-    
-    /** 
+
+    /**
      * 
-     * @return date of last modification of any record in this collection 
+     * @return date of last modification of any record in this collection
      */
     Date getLastModified();
-    
-    
+
     /**
      * @param date
-     *          date of last modification of any record in this collection
+     *            date of last modification of any record in this collection
      */
     void setLastModified(Date date);
-    
-    
-    
-    /** 
+
+    /**
      * 
-     * @return date of last (live) system update of the collection 
+     * @return date of last (live) system update of the collection
      */
     Date getLastSynchronized();
-    
-    
+
     /**
      * @param date
-     *          date of last synchronization of all record in this collection
+     *            date of last synchronization of all record in this collection
      */
     void setLastSynchronized(Date date);
-    
-    
 }
