@@ -396,7 +396,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             progress.setTask(ae.getMonitor().getTask());
             progress.setSubtask(ae.getMonitor().getSubtask());
             progress.setDone(!e.isActive());
-        } else {
+        } else if (!e.isActive()) {
             wrapped.setScheduled(e.getProcessedCount());
             wrapped.setCompleted(e.getSuccessCount());
             wrapped.setFailure(e.getErrorCount());

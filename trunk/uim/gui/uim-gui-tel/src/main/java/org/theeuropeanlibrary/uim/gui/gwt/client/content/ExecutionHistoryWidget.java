@@ -188,7 +188,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(datasetColumn, "Dataset");
-        cellTable.setColumnWidth(datasetColumn, 18, Unit.PCT);
+        cellTable.setColumnWidth(datasetColumn, 15, Unit.PCT);
 
         // Workflow
         Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
@@ -206,7 +206,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(workflowColumn, "Workflow");
-        cellTable.setColumnWidth(workflowColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(workflowColumn, 15, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
@@ -272,7 +272,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(completedColumn, "Completed");
-        cellTable.setColumnWidth(completedColumn, 7, Unit.PCT);
+        cellTable.setColumnWidth(completedColumn, 6, Unit.PCT);
 
         // Failure
         Column<ExecutionDTO, String> failureColumn = new Column<ExecutionDTO, String>(
@@ -290,7 +290,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(failureColumn, "Failure");
-        cellTable.setColumnWidth(failureColumn, 7, Unit.PCT);
+        cellTable.setColumnWidth(failureColumn, 6, Unit.PCT);
 
         // Scheduled
         Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
@@ -308,7 +308,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
             }
         });
         cellTable.addColumn(scheduledColumn, "Scheduled");
-        cellTable.setColumnWidth(scheduledColumn, 7, Unit.PCT);
+        cellTable.setColumnWidth(scheduledColumn, 6, Unit.PCT);
 
         updatePastExecutions();
     }
