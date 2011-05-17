@@ -1,5 +1,6 @@
 package eu.europeana.uim.orchestration;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.RuntimeErrorException;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
@@ -463,5 +466,36 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         Object object = values.get(key);
         if (object != null) { return (T)object; }
         return null;
+    }
+
+    @Override
+    public File getWorkingDirectory(IngestionPlugin plugin) {
+        String workDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
+                               File.pathSeparator + plugin.getName();
+        File workingDirectory = new File(resourceEngine.getWorkingRootDirectory(), workDirSuffix);
+        if (!workingDirectory.exists() && !workingDirectory.mkdirs())
+            throw new RuntimeException("Could not create working directory for this execution: " +
+                                       workingDirectory.getAbsolutePath());
+        if (!workingDirectory.isDirectory()) { throw new RuntimeException(
+                "Path for working directory is not a directory: " +
+                        workingDirectory.getAbsolutePath()); }
+
+        return workingDirectory;
+
+    }
+
+    @Override
+    public File getTmpDirectory(IngestionPlugin plugin) {
+        String tmpDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
+                              File.pathSeparator + plugin.getName();
+        File tmpDirectory = new File(resourceEngine.getTmpRootDirectory(), tmpDirSuffix);
+        if (!tmpDirectory.exists() && !tmpDirectory.mkdirs())
+            throw new RuntimeException("Could not create temporary directory for this execution: " +
+                                       tmpDirectory.getAbsolutePath());
+        if (!tmpDirectory.isDirectory()) { throw new RuntimeException(
+                "Path for temporary directory is not a directory: " +
+                        tmpDirectory.getAbsolutePath()); }
+
+        return tmpDirectory;
     }
 }
