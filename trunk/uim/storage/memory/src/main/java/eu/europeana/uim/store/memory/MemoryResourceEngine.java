@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,16 +25,25 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     LinkedHashMap<Long, LinkedHashMap<String, List<String>>> providerResources   = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
     LinkedHashMap<Long, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
 
-    private static final String                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir");
-    private String                                           rootPath            = DEFAULT_DATA_DIR;
-    private File                                             rootDir             = new File(
-                                                                                         DEFAULT_DATA_DIR);
+    private static final String                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
+                                                                                   File.pathSeparator +
+                                                                                   "uim-memorystorage";
+    private String                                           rootPath;
+    private File                                             rootResourceDir;
+    private File                                             rootWorkingDir;
+    private File                                             rootTmpDir;
 
     /**
      * Creates a new instance of this class.
      */
     public MemoryResourceEngine() {
 
+        try {
+            setRootPath(DEFAULT_DATA_DIR);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not setup data directory for resource engine " +
+                                       DEFAULT_DATA_DIR, e);
+        }
     }
 
     @Override
@@ -45,16 +53,27 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
 
     @Override
     public void setGlobalResources(LinkedHashMap<String, List<String>> resources) {
-        if (resources == null) throw new IllegalArgumentException("Resources cannot be null");
-        globalResources = resources;
+        if (resources == null) {
+            globalResources.clear();
+            return;
+        }
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                globalResources.remove(key);
+            } else {
+                globalResources.put(key, resources.get(key));
+            }
+        }
+
     }
 
     @Override
     public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         for (String key : keys) {
-            List<String> values = globalResources.get(key);       
-            if (values != null && values.size() > 0) results.put(key, values);
+            List<String> values = globalResources.get(key);
+            results.put(key, values);
 
         }
         return results;
@@ -63,7 +82,27 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     @Override
     public void setProviderResources(Provider<Long> id,
             LinkedHashMap<String, List<String>> resources) {
-        providerResources.put(id.getId(), resources);
+        if (resources == null) {
+            // clean up and remove id entry from resources
+            providerResources.remove(id.getId());
+            return;
+        }
+
+        if (providerResources.get(id.getId()) == null) {
+            providerResources.put(id.getId(), new LinkedHashMap<String, List<String>>());
+        }
+
+        LinkedHashMap<String, List<String>> provResources = providerResources.get(id.getId());
+
+        // collectionResources.put(id.getId(), resources);
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                provResources.remove(key);
+            } else {
+                provResources.put(key, resources.get(key));
+            }
+        }
     }
 
     @Override
@@ -76,7 +115,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
         for (String key : keys) {
             List<String> values = providerMap.get(key);
 
-            if (values != null && values.size() > 0) results.put(key, values);
+            results.put(key, values);
 
         }
         return results;
@@ -86,7 +125,29 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     @Override
     public void setCollectionResources(Collection<Long> id,
             LinkedHashMap<String, List<String>> resources) {
-        collectionResources.put(id.getId(), resources);
+
+        if (resources == null) {
+            // clean up and remove id entry from resources
+            collectionResources.remove(id.getId());
+            return;
+        }
+
+        if (collectionResources.get(id.getId()) == null) {
+            collectionResources.put(id.getId(), new LinkedHashMap<String, List<String>>());
+        }
+
+        LinkedHashMap<String, List<String>> collResources = collectionResources.get(id.getId());
+
+        // collectionResources.put(id.getId(), resources);
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                collResources.remove(key);
+            } else {
+                collResources.put(key, resources.get(key));
+            }
+        }
+
     }
 
     @Override
@@ -98,7 +159,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
 
         for (String key : keys) {
             List<String> values = collectionMap.get(key);
-            if (values != null && values.size() > 0) results.put(key, values);
+            results.put(key, values);
 
         }
         return results;
@@ -134,8 +195,19 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
 
     @Override
     public File getRootDirectory() {
-        return rootDir;
+        return rootResourceDir;
 
+    }
+
+    private File createDir(String suffix) throws FileNotFoundException {
+        File directory = new File(getRootPath() + File.pathSeparator + suffix);
+
+        if (!directory.exists() && !directory.mkdirs()) { throw new FileNotFoundException(
+                "Directory " + directory.getAbsolutePath() + " not found and could not be created"); }
+
+        if (!directory.isDirectory()) { throw new IllegalArgumentException(rootPath +
+                                                                           " is not a directory"); }
+        return directory;
     }
 
     /**
@@ -146,13 +218,11 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
      * @throws FileNotFoundException
      */
     public void setRootPath(String rootPath) throws FileNotFoundException {
-        this.rootPath = rootPath;
-        rootDir = new File(getRootPath());
-        if (!rootDir.exists() && !rootDir.mkdirs()) { throw new FileNotFoundException(
-                "Directory " + rootDir.getAbsolutePath() + " not found and could not be created"); }
 
-        if (!rootDir.isDirectory()) { throw new IllegalArgumentException(rootPath +
-                                                                         " is not a directory"); }
+        this.rootPath = rootPath;
+        rootResourceDir = createDir("resources");
+        rootWorkingDir = createDir("work");
+        rootTmpDir = createDir("tmp");
     }
 
     /**
@@ -162,6 +232,16 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
      */
     public String getRootPath() {
         return rootPath;
+    }
+
+    @Override
+    public File getWorkingRootDirectory() {
+        return rootWorkingDir;
+    }
+
+    @Override
+    public File getTmpRootDirectory() {
+        return rootTmpDir;
     }
 
 }
