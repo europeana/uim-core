@@ -194,7 +194,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                         storage.getTotalByCollection(col)));
             }
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return res;

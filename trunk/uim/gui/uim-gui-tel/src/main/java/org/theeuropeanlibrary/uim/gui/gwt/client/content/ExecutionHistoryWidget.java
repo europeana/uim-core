@@ -268,7 +268,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         sortHandler.setComparator(completedColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
+                return new Integer(o1.getCompleted()).compareTo(o2.getCompleted());
             }
         });
         cellTable.addColumn(completedColumn, "Completed");
@@ -279,14 +279,14 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getCompleted();
+                return "" + object.getFailure();
             }
         };
         failureColumn.setSortable(true);
         sortHandler.setComparator(failureColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
+                return new Integer(o1.getFailure()).compareTo(o2.getFailure());
             }
         });
         cellTable.addColumn(failureColumn, "Failure");
@@ -297,14 +297,14 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getCompleted();
+                return "" + object.getScheduled();
             }
         };
         scheduledColumn.setSortable(true);
         sortHandler.setComparator(scheduledColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
+                return new Integer(o1.getScheduled()).compareTo(o2.getScheduled());
             }
         });
         cellTable.addColumn(scheduledColumn, "Scheduled");
