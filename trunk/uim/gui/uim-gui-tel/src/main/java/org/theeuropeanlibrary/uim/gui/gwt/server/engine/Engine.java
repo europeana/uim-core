@@ -43,8 +43,4 @@ public abstract class Engine {
      */
     public abstract Registry getRegistry();
 
-    /**
-     * @return orchestrator
-     */
-    public abstract Orchestrator getOrchestrator();
 }

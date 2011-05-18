@@ -202,7 +202,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
-        java.util.Collection<ActiveExecution<?>> activeExecutions = getEngine().getOrchestrator().getActiveExecutions();
+        java.util.Collection<ActiveExecution<?>> activeExecutions = getEngine().getRegistry().getOrchestrator().getActiveExecutions();
         for (ActiveExecution<?> execution : activeExecutions) {
             ExecutionDTO exec = getWrappedExecutionDTO((Long)execution.getId(), execution);
             r.add(exec);
@@ -242,10 +242,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c,
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, c,
                         properties);
             } else {
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, c);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, c);
             }
             ae.getMonitor().addListener(monitor);
             populateWrappedExecutionDTO(execution, ae, w, c, executionName);
@@ -292,10 +292,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p,
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, p,
                         properties);
             } else {
-                ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, p);
             }
             ae.setName(executionName);
 
@@ -335,7 +335,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     @Override
     public ExecutionDTO getExecution(Long id) {
         ExecutionDTO exec = null;
-        ActiveExecution<?> ae = getEngine().getOrchestrator().getActiveExecution(id);
+        ActiveExecution<?> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(id);
         if (ae != null) {
             exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
         } else {
@@ -452,9 +452,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean pauseExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            getEngine().getOrchestrator().pause(ae);
+            getEngine().getRegistry().getOrchestrator().pause(ae);
             return ae.isPaused();
         } else {
             return false;
@@ -463,9 +463,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean resumeExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            getEngine().getOrchestrator().resume(ae);
+            getEngine().getRegistry().getOrchestrator().resume(ae);
             return !ae.isPaused();
         } else {
             return false;
@@ -474,9 +474,9 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean cancelExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
         if (ae != null) {
-            getEngine().getOrchestrator().cancel(ae);
+            getEngine().getRegistry().getOrchestrator().cancel(ae);
             return ae.isCanceled();
         } else {
             return false;

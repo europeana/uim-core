@@ -27,12 +27,8 @@ public class OsgiEngineActivator implements BundleActivator {
         if(registryRef != null) {
             registry = (UIMRegistry) bundleContext.getService(registryRef);
         }
-        ServiceReference orchestratorRef = bundleContext.getServiceReference("eu.europeana.uim.api.Orchestrator");
-        if(orchestratorRef != null) {
-            orchestrator = (Orchestrator) bundleContext.getService(orchestratorRef);
-        }
 
-        engine = new OsgiEngine(registry, orchestrator);
+        engine = new OsgiEngine(registry);
         Engine.setEngine(engine);
     }
     
