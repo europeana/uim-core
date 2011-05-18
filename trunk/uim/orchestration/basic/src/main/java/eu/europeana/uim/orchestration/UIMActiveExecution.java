@@ -1,6 +1,7 @@
 package eu.europeana.uim.orchestration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 
 import eu.europeana.uim.MetaDataRecord;
@@ -43,13 +45,20 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * @since Mar 22, 2011
  */
 public class UIMActiveExecution<I> implements ActiveExecution<I> {
-    private static Logger                     log       = Logger.getLogger(UIMActiveExecution.class.getName());
 
-    private HashMap<String, LinkedList<Task>> success   = new LinkedHashMap<String, LinkedList<Task>>();
-    private HashMap<String, LinkedList<Task>> failure   = new LinkedHashMap<String, LinkedList<Task>>();
-    private HashMap<String, HashSet<Task>>    assigned  = new LinkedHashMap<String, HashSet<Task>>();
+    /** 
+     * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY
+     * if set to true, the directory with the temporary files is not deleted after the execution.
+     **/
+    
+    public static String                      KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
+    private static Logger                     log                                = Logger.getLogger(UIMActiveExecution.class.getName());
 
-    private HashMap<TKey<?, ?>, Object>       values    = new HashMap<TKey<?, ?>, Object>();
+    private HashMap<String, LinkedList<Task>> success                            = new LinkedHashMap<String, LinkedList<Task>>();
+    private HashMap<String, LinkedList<Task>> failure                            = new LinkedHashMap<String, LinkedList<Task>>();
+    private HashMap<String, HashSet<Task>>    assigned                           = new LinkedHashMap<String, HashSet<Task>>();
+
+    private HashMap<TKey<?, ?>, Object>       values                             = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
     private final LoggingEngine<I, ?>         loggingEngine;
@@ -64,9 +73,9 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private boolean                           initialized;
     private Throwable                         throwable;
 
-    private int                               scheduled = 0;
+    private int                               scheduled                          = 0;
 
-    private int                               completed = 0;
+    private int                               completed                          = 0;
 
     /**
      * Creates a new instance of this class.
@@ -500,8 +509,15 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public void cleanup() {
-        //TODO: implement cleanup of an tmp directory
-       throw new NotImplementedException("cleanup not implemented yet");
+    public synchronized void cleanup() {
+        if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
+            String tmpExecutionDirSuffix = workflow.getName() + File.separator + execution.getId();
+            File tmpExecutionDirectory = new File(resourceEngine.getTmpRootDirectory(),
+                    tmpExecutionDirSuffix);
+            if (tmpExecutionDirectory.isDirectory()) {
+                FileUtils.deleteQuietly(tmpExecutionDirectory);
+            }
+        }
+
     }
 }

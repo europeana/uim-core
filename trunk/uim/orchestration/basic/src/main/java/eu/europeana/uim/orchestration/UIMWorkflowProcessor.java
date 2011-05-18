@@ -306,8 +306,12 @@ public class UIMWorkflowProcessor implements Runnable {
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
 
+        
+        
+        
         try {
             execution.getStorageEngine().checkpoint();
+            execution.cleanup();
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + start, t);
         } finally {
@@ -318,6 +322,8 @@ public class UIMWorkflowProcessor implements Runnable {
                 executions.remove(execution);
             }
         }
+        
+        
     }
 
     /**
