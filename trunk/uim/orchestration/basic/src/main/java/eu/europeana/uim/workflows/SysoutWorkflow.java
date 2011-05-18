@@ -11,6 +11,8 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * @since Mar 4, 2011
  */
 public class SysoutWorkflow extends AbstractWorkflow {
+    private String savePointName;
+
     /**
      * Creates a new instance of this class.
      * 
@@ -27,16 +29,20 @@ public class SysoutWorkflow extends AbstractWorkflow {
      * @param randsleep
      * @param savepoint
      */
+    @SuppressWarnings("rawtypes")
     public SysoutWorkflow(int batchSize, boolean randsleep, boolean savepoint) {
         super(SysoutWorkflow.class.getSimpleName(),
                 "Simple workflow which uses several SysoutPlugins to report to the console about processing");
         setStart(new BatchWorkflowStart());
-        addStep(new SysoutPlugin());
+        SysoutPlugin step = new SysoutPlugin();
+        addStep(step);
+
+        savePointName = step.getName();
     }
 
     @Override
     public boolean isSavepoint(String pluginName) {
-        if (pluginName.equals(new SysoutPlugin().getName())) { return true; }
+        if (pluginName.equals(savePointName)) { return true; }
         return false;
     }
 
