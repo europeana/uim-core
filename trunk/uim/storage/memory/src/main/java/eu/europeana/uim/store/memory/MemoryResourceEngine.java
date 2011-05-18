@@ -26,7 +26,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     LinkedHashMap<Long, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
 
     private static final String                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
-                                                                                   File.pathSeparator +
+                                                                                   File.separator +
                                                                                    "uim-memorystorage";
     private String                                           rootPath;
     private File                                             rootResourceDir;
@@ -200,7 +200,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     }
 
     private File createDir(String suffix) throws FileNotFoundException {
-        File directory = new File(getRootPath() + File.pathSeparator + suffix);
+        File directory = new File(getRootPath() + File.separator + suffix);
 
         if (!directory.exists() && !directory.mkdirs()) { throw new FileNotFoundException(
                 "Directory " + directory.getAbsolutePath() + " not found and could not be created"); }
