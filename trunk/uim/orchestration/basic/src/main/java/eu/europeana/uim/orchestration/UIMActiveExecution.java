@@ -1,7 +1,6 @@
 package eu.europeana.uim.orchestration;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.NotImplementedException;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
@@ -46,11 +44,11 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  */
 public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
-    /** 
-     * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY
-     * if set to true, the directory with the temporary files is not deleted after the execution.
+    /**
+     * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY if set to true, the directory with the
+     * temporary files is not deleted after the execution.
      **/
-    
+
     public static String                      KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
     private static Logger                     log                                = Logger.getLogger(UIMActiveExecution.class.getName());
 
