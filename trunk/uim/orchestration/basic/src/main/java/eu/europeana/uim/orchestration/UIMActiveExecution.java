@@ -509,11 +509,14 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public synchronized void cleanup() {
         if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
-            String tmpExecutionDirSuffix = workflow.getName() + File.separator + execution.getId();
-            File tmpExecutionDirectory = new File(resourceEngine.getTmpRootDirectory(),
-                    tmpExecutionDirSuffix);
-            if (tmpExecutionDirectory.isDirectory()) {
-                FileUtils.deleteQuietly(tmpExecutionDirectory);
+            if (resourceEngine != null) {
+                String tmpExecutionDirSuffix = workflow.getName() + File.separator +
+                                               execution.getId();
+                File tmpExecutionDirectory = new File(resourceEngine.getTmpRootDirectory(),
+                        tmpExecutionDirSuffix);
+                if (tmpExecutionDirectory.isDirectory()) {
+                    FileUtils.deleteQuietly(tmpExecutionDirectory);
+                }
             }
         }
 
