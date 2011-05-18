@@ -93,11 +93,13 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
         try {
             long start = System.currentTimeMillis();
             BlockingQueue<I[]> queue;
+            int total = 0;
             
             DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
                 try {
                     queue = ((StorageEngine<I>)storage).getBatchesByProvider((Provider)dataSet, false);
+                    total = ((StorageEngine<I>)storage).getTotalByProvider((Provider)dataSet, false);
                 } catch (StorageEngineException e) {
                     throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
                                                            "' could not be retrieved!", e);
@@ -105,6 +107,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
             } else if (dataSet instanceof Collection) {
                 try {
                     queue = ((StorageEngine<I>)storage).getBatchesByCollection((Collection)dataSet);
+                    total = ((StorageEngine<I>)storage).getTotalByCollection((Collection)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Collection '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
@@ -112,6 +115,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
             } else if (dataSet instanceof Request) {
                 try {
                     queue = ((StorageEngine<I>)storage).getBatchesByRequest((Request)dataSet);
+                    total = ((StorageEngine<I>)storage).getTotalByRequest((Request)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Request '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
@@ -121,6 +125,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                 a[0] = (I)((MetaDataRecord)dataSet).getId();
                 queue = new LinkedBlockingQueue<I[]>();
                 queue.add(a);
+                total = 1;
             } else {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
@@ -173,6 +178,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
             } else {
                 // we do have already a blocking queue from the storage engine.
                 data.batches = queue;
+                data.total = total;
             }
 
             log.info(String.format("Created %d batches in %.3f sec", data.batches.size(), (System.currentTimeMillis() - start ) / 1000.0));
@@ -242,7 +248,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
     public int getTotalSize(ExecutionContext context) {
         Data value = context.getValue(DATA_KEY);
         if (value != null) {
-            return value.total;
+            return context.getValue(DATA_KEY).total;
         } else {
             return 0;
         }
