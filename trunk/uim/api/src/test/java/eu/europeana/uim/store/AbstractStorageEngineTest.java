@@ -490,6 +490,8 @@ public abstract class AbstractStorageEngineTest<I> {
 
         Request<I> request0 = engine.createRequest(collection0, new Date(0));
         engine.updateRequest(request0);
+        
+        assertEquals(0, engine.getTotalByRequest(request0));
 
         Set<Enum<?>> qualifiers = new HashSet<Enum<?>>() { { add(TestEnum.EN); } };
         
@@ -500,12 +502,15 @@ public abstract class AbstractStorageEngineTest<I> {
 
         record0.addField(MDRFieldRegistry.rawformat, "MARC21");
         engine.updateMetaDataRecord(record0);
-
+        assertEquals(1, engine.getTotalByRequest(request0));
+        
         MetaDataRecord<I> record3 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record3.getFirstField(MDRFieldRegistry.rawrecord)); 
         assertEquals("title 03", record3.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
 
         assertEquals(3, record3.getField(MDRFieldRegistry.rawrecord).size());
+        engine.command("commit");
+        assertEquals(1, engine.getTotalByRequest(request0));
     }
 
     /**
