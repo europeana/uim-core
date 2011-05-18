@@ -240,7 +240,12 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
 
     @Override
     public int getTotalSize(ExecutionContext context) {
-        return context.getValue(DATA_KEY).total;
+        Data value = context.getValue(DATA_KEY);
+        if (value != null) {
+            return value.total;
+        } else {
+            return 0;
+        }
     }
 
     @Override
