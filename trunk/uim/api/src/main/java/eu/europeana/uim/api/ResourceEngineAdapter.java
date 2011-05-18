@@ -19,33 +19,26 @@ import eu.europeana.uim.store.Provider;
  * @date May 3, 2011
  */
 public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
-
     @Override
     public String getIdentifier() {
-       return ResourceEngineAdapter.class.getSimpleName();
+        return ResourceEngineAdapter.class.getSimpleName();
     }
 
     @Override
     public void setGlobalResources(LinkedHashMap<String, List<String>> resources) {
-   
+
     }
-
-
 
     @Override
     public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources) {
-        
-    }
 
+    }
 
     @Override
     public void setCollectionResources(Collection<I> id,
             LinkedHashMap<String, List<String>> resources) {
 
     }
-
-
-
 
     @Override
     public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys) {
@@ -64,11 +57,9 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
         return new LinkedHashMap<String, List<String>>();
     }
 
- 
-
     @Override
     public void setConfiguration(Map<String, String> config) {
-        
+
     }
 
     @Override
@@ -78,12 +69,12 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
 
     @Override
     public void initialize() {
-      
+
     }
 
     @Override
     public void shutdown() {
-        
+
     }
 
     @Override
@@ -110,6 +101,4 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     public File getTmpRootDirectory() {
         return null;
     }
-
-    
 }

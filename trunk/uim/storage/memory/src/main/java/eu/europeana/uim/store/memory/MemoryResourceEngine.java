@@ -20,7 +20,6 @@ import eu.europeana.uim.store.Provider;
  * @date May 9, 2011
  */
 public class MemoryResourceEngine implements ResourceEngine<Long> {
-
     LinkedHashMap<String, List<String>>                      globalResources     = new LinkedHashMap<String, List<String>>();
     LinkedHashMap<Long, LinkedHashMap<String, List<String>>> providerResources   = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
     LinkedHashMap<Long, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
@@ -243,5 +242,4 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     public File getTmpRootDirectory() {
         return rootTmpDir;
     }
-
 }
