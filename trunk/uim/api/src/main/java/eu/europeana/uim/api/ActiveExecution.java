@@ -156,4 +156,10 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      *            increment next work
      */
     void incrementScheduled(int work);
+   
+    
+    /**
+     * Clean up the temporary files created during the execution, if configured in that way
+     */
+    void cleanup();
 }

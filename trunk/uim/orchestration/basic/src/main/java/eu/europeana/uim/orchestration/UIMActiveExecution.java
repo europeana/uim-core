@@ -15,6 +15,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.lang.NotImplementedException;
+
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
@@ -483,8 +486,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public File getTmpDirectory(IngestionPlugin plugin) {
-        String tmpDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
-                              File.pathSeparator + plugin.getName();
+        String tmpDirSuffix = workflow.getName() + File.separator + execution.getId() +
+                              File.separator + plugin.getName();
         File tmpDirectory = new File(resourceEngine.getTmpRootDirectory(), tmpDirSuffix);
         if (!tmpDirectory.exists() && !tmpDirectory.mkdirs())
             throw new RuntimeException("Could not create temporary directory for this execution: " +
@@ -494,5 +497,11 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                         tmpDirectory.getAbsolutePath()); }
 
         return tmpDirectory;
+    }
+
+    @Override
+    public void cleanup() {
+        //TODO: implement cleanup of an tmp directory
+       throw new NotImplementedException("cleanup not implemented yet");
     }
 }
