@@ -5,6 +5,10 @@
 
     <bp:reference id="registry" interface="eu.europeana.uim.api.Registry"/>
 
+    <cm:property-placeholder persistent-id="eu.europeana.uim.logging">
+    </cm:property-placeholder>
+
+
     <service interface="eu.europeana.uim.api.LoggingEngine">
         <bean class="eu.europeana.uim.logging.database.DatabaseLoggingEngine">
         </bean>

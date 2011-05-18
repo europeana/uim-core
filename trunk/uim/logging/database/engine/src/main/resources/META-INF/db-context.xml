@@ -14,16 +14,9 @@
                  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
         >
 
-<!--     <context:annotation-config/> -->
-
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:logdatabase.properties</value>
-            </list>
-        </property>
-        <property name="ignoreResourceNotFound" value="false"/>
-        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+    <bean class="eu.europeana.uim.logging.database.OsgiResourceConfigurer">
+        <property name="osgiConfigurationName" value="eu.europeana.uim.logging" />
+        <property name="fallbackPropertiesName" value="/META-INF/database.properties"/>
     </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -34,6 +27,7 @@
     </bean>
 
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="${db.dialect}"/>
         <property name="showSql" value="${db.showsql}"/>
     </bean>
 

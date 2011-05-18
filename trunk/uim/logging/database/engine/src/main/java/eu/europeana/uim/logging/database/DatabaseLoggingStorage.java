@@ -25,10 +25,15 @@ public class DatabaseLoggingStorage {
     private TDurationDatabaseEntryHome  durationHome;
 
     
+    /**
+     * Creates a new instance of this class.
+     */
     public DatabaseLoggingStorage(){
     }
     
-
+    /**
+     * @return the dao for database log entries
+     */
     public TStringDatabaseLogEntryHome getStringHome() {
         return stringHome;
     }

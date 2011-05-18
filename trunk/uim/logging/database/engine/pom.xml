@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-logging-database</artifactId>
-	<name>Unified Ingestion Manager: API Database Logging</name>
+	<name>Unified Ingestion Manager: API Database Only Storage</name>
 	<packaging>bundle</packaging>
 
 	<build>
@@ -23,9 +23,11 @@
 					<instructions>
 						<Import-Package>
 							eu.europeana.uim.*,
-                            javax.sql.*,
-                            javax.naming.*,
-                            javax.management.*,
+                            org.osgi.framework.*,
+                            org.osgi.service.*,
+							javax.sql.*,
+							javax.naming.*,
+							javax.management.*,
 							!*
                         </Import-Package>
 						<Export-Package>
@@ -44,8 +46,8 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
 				</includes>
 			</resource>
 		</resources>
@@ -58,13 +60,6 @@
 				</includes>
 			</testResource>
 		</testResources>
-		<extensions>
-			<extension>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>8.4-701.jdbc3</version>
-			</extension>
-		</extensions>
 	</build>
 
 	<dependencies>
@@ -157,11 +152,11 @@
 			<artifactId>xml-apis</artifactId>
 			<version>1.3.04</version>
 		</dependency>
-		
+
 		<dependency>
-			  <groupId>org.apache.xerces</groupId>
-			  <artifactId>com.springsource.org.apache.xerces</artifactId>
-			  <version>2.8.1</version>
+			<groupId>org.apache.xerces</groupId>
+			<artifactId>com.springsource.org.apache.xerces</artifactId>
+			<version>2.8.1</version>
 		</dependency>
 
 		<dependency>
@@ -170,11 +165,17 @@
 			<version>1.5.5</version>
 		</dependency>
 
-        <dependency>
-            <groupId>hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>1.8.0.7</version>
-        </dependency>
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<version>1.8.0.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>8.4-701.jdbc3</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

@@ -50,6 +50,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
                     context.setValidating(false);
                     context.setConfigLocations(
                             new String[]{"/META-INF/db-context.xml", "/META-INF/db-beans.xml"});
+                    
                     context.refresh();
 
                     storage = (DatabaseLoggingStorage)context.getAutowireCapableBeanFactory().autowire(
