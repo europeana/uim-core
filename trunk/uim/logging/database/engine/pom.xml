@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-logging-database</artifactId>
-	<name>Unified Ingestion Manager: API Database Only Storage</name>
+	<name>Unified Ingestion Manager: API Database Logging</name>
 	<packaging>bundle</packaging>
 
 	<build>
