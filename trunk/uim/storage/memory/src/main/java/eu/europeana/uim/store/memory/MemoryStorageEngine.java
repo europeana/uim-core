@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.ArrayUtils;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.EngineStatus;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;

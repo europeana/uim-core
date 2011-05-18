@@ -23,16 +23,6 @@ import eu.europeana.uim.store.Request;
  */
 public interface StorageEngine<I>  {
     /**
-     * Status of the engine (starting, etc.)
-     * 
-     * @author Markus Muhr (markus.muhr@kb.nl)
-     * @since Mar 21, 2011
-     */
-    enum EngineStatus {
-        REGISTERED, BOOTING, RUNNING, STOPPED, FAILURE
-    }
-
-    /**
      * @return identifier of the storage engine
      */
     String getIdentifier();
