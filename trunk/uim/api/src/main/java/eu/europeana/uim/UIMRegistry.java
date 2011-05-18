@@ -418,7 +418,7 @@ public class UIMRegistry implements Registry {
 
         builder.append("\nRegistered resource engines:");
         builder.append("\n--------------------------------------");
-        if (loggers.isEmpty()) {
+        if (resources.isEmpty()) {
             builder.append("\n\tNo resource engine.");
         } else {
             for (ResourceEngine<?> resourceEngine : resources.values()) {
