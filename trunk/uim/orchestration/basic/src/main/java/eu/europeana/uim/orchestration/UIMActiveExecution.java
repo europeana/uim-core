@@ -15,9 +15,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.management.RuntimeErrorException;
-
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
@@ -207,7 +204,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public RevisableProgressMonitor getMonitor() {
         return monitor;
     }
-    
+
     @Override
     public int getSuccessCount() {
         return execution.getSuccessCount();
