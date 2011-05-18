@@ -2,8 +2,6 @@ package eu.europeana.uim.api;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import eu.europeana.uim.common.RevisableProgressMonitor;
@@ -44,27 +42,25 @@ public interface ExecutionContext {
      * @return logging engine
      */
     LoggingEngine<?, ?> getLoggingEngine();
-    
-
-
 
     /**
      * @return the execution specific properties
      */
     public Properties getProperties();
-    
+
     /**
-     * @param plugin 
+     * @param plugin
      * @return a working director, which is specific for this execution
      */
     public File getWorkingDirectory(IngestionPlugin plugin);
-    
+
     /**
-     * @param plugin 
-     * @return a temporary directory, which is only valid for this execution and deleted after the workflow is over (if not overridden by configuration)
+     * @param plugin
+     * @return a temporary directory, which is only valid for this execution and deleted after the
+     *         workflow is over (if not overridden by configuration)
      */
     public File getTmpDirectory(IngestionPlugin plugin);
-    
+
     /**
      * @param <NS>
      *            the namespace (type) in which the field is defined
@@ -86,5 +82,5 @@ public interface ExecutionContext {
      *            typed key which holds namespace, name and type information
      * @return value object typed using the type specified in the key
      */
-    <NS, T extends Serializable> T getValue(TKey<NS, T> key);   
+    <NS, T extends Serializable> T getValue(TKey<NS, T> key);
 }
