@@ -120,11 +120,11 @@
             <tr>
                 <td colspan='2' align='center'>
                     <g:Button ui:field='pauseButton'>
-                        <ui:msg key='contactDetailPauseButton'>Pause</ui:msg>
+<!--                         <ui:msg key='contactDetailPauseButton'>Pause</ui:msg> -->
                     </g:Button>
                     &nbsp;
                     <g:Button ui:field='cancelButton'>
-                        <ui:msg key='contactDetailCancelButton'>Cancel</ui:msg>
+<!--                         <ui:msg key='contactDetailCancelButton'>Cancel</ui:msg> -->
                     </g:Button>
                 </td>
             </tr>

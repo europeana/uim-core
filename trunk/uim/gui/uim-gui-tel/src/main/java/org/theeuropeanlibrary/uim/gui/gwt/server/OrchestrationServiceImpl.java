@@ -389,6 +389,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             wrapped.setScheduled(ae.getScheduledSize());
             wrapped.setCompleted(ae.getCompletedSize());
             wrapped.setFailure(ae.getFailureSize());
+            wrapped.setPaused(ae.isPaused());
 
             ProgressDTO progress = wrapped.getProgress();
             progress.setWork(ae.getTotalSize());

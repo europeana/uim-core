@@ -68,8 +68,15 @@ public class ReflectionEngine extends Engine {
         try {
             SampleProperties sample = new SampleProperties();
             sample.loadSampleData(registry.getStorage());
+
+//            Collection coll = registry.getStorage().getAllCollections().iterator().next();
+//            System.out.println(coll.getName());
+//            Request req = registry.getStorage().createRequest(coll, new Date());
+//            for (int i = 0; i < 10000; i++) {
+//                MetaDataRecord mdr = registry.getStorage().createMetaDataRecord(req, "Record " + i);
+//                registry.getStorage().updateMetaDataRecord(mdr);
+//            }
         } catch (Throwable e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -82,7 +89,6 @@ public class ReflectionEngine extends Engine {
                         registry);
                 registry.addWorkflow(workflow);
             } catch (Throwable e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

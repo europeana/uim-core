@@ -38,7 +38,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     private boolean                               isActive;
     private Date                                  startTime;
     private Date                                  endTime;
-    private Boolean                               canceled;
+    private boolean                               canceled;
     private boolean                               paused;
 
     /**
@@ -213,14 +213,14 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     /**
      * @param canceled
      */
-    public void setCanceled(Boolean canceled) {
+    public void setCanceled(boolean canceled) {
         this.canceled = canceled;
     }
 
     /**
      * @return canceled?
      */
-    public Boolean isCanceled() {
+    public boolean isCanceled() {
         return canceled;
     }
 

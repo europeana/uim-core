@@ -15,20 +15,20 @@ import eu.europeana.uim.common.RevisingProgressMonitor;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializable {
-//    private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
+// private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
 
     @SuppressWarnings("unused")
     private String       name;
-    private int           work;
-    private int           worked;
+    private int          work;
+    private int          worked;
 
-    private long          start;
+    private long         start;
 
-    private boolean       cancelled;
-    private ExecutionDTO  execution;
+    private boolean      cancelled;
+    private ExecutionDTO execution;
 
-    private String        task;
-    private String        subtask;
+    private String       task;
+    private String       subtask;
 
     /**
      * Creates a new instance of this class.
@@ -94,7 +94,7 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
      * @return done?
      */
     public boolean isDone() {
-        return execution.isCanceled() != null && !execution.isCanceled();
+        return !execution.isActive() && !execution.isCanceled();
     }
 
     @Override

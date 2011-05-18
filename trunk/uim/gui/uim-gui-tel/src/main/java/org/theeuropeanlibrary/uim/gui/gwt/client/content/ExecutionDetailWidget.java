@@ -139,6 +139,18 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
                 cellTable.setRowData(0, activeExecutions);
                 cellTable.setRowCount(activeExecutions.size());
                 cellTable.setHeight((30 + 20 * activeExecutions.size()) + "px");
+
+                boolean updated = false;
+                for (ExecutionDTO exec : executions) {
+                    if (executionStatus.getExecution() != null &&  executionStatus.getExecution().getId().equals(exec.getId())) {
+                        executionStatus.setExecution(exec);
+                        updated = true;
+                        break;
+                    }
+                }
+                if (!updated) {
+                    executionStatus.clearForm();
+                }
             }
         });
     }
