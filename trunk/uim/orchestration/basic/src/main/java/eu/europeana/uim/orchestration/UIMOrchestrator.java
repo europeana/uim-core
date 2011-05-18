@@ -185,7 +185,7 @@ public class UIMOrchestrator implements Orchestrator {
     @Override
     public <I> ActiveExecution<I> getActiveExecution(I id) {
         for (ActiveExecution<?> ae : processor.getExecutions()) {
-            if (ae.getId() == id) { return (ActiveExecution<I>)ae; }
+            if (ae.getId().equals(id)) { return (ActiveExecution<I>)ae; }
         }
         return null;
     }
