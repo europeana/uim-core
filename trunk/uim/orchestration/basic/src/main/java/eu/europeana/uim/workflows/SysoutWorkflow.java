@@ -31,9 +31,7 @@ public class SysoutWorkflow extends AbstractWorkflow {
         super(SysoutWorkflow.class.getSimpleName(),
                 "Simple workflow which uses several SysoutPlugins to report to the console about processing");
         setStart(new BatchWorkflowStart());
-
         addStep(new SysoutPlugin());
-
     }
 
     @Override
