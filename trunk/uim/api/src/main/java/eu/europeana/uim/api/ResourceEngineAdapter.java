@@ -4,13 +4,11 @@ package eu.europeana.uim.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
 import eu.europeana.uim.api.StorageEngine.EngineStatus;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 
 /**
