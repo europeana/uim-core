@@ -20,7 +20,11 @@
         <property name="configuredLoggingEngine" value="${configuredLoggingEngine}" />
     </bean>
 
-    <reference id="orchestrator" interface="eu.europeana.uim.api.Orchestrator" availability="optional"/>
+    <reference id="orchestrator" interface="eu.europeana.uim.api.Orchestrator" availability="optional">
+        <reference-listener
+                bind-method="setOrchestrator" unbind-method="unsetOrchestrator" ref="uimRegistry">
+        </reference-listener>
+    </reference>
 
     <reference-list interface="eu.europeana.uim.api.IngestionPlugin" availability="optional">
         <reference-listener

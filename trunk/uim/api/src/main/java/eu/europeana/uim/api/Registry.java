@@ -155,5 +155,11 @@ public interface Registry {
      */
     ResourceEngine<?> getResourceEngine(String identifier);
 
+    
+    Orchestrator getOrchestrator();
+    
+    void setOrchestrator(Orchestrator orchestrator);
+    
+    void unsetOrchestrator(Orchestrator orchestrator);
 
 }

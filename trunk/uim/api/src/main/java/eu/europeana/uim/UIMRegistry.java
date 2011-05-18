@@ -344,6 +344,21 @@ public class UIMRegistry implements Registry {
     ResourceEngine<?> getActiveResourceEngine() {
         return activeResource;
     }
+    
+    @Override
+    public Orchestrator getOrchestrator() {
+        return orchestrator;
+    }
+
+    @Override
+    public void setOrchestrator(Orchestrator orchestrator) {
+        this.orchestrator = orchestrator;
+    }
+
+    @Override
+    public void unsetOrchestrator(Orchestrator orchestrator) {
+        this.orchestrator = null;
+    }
 
     @Override
     public String toString() {
