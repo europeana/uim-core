@@ -82,7 +82,6 @@
         <shell:command name="uim/exec">
             <shell:action class="eu.europeana.uim.command.UIMExecution">
                 <shell:argument ref="uimRegistry"/>
-                <shell:argument ref="orchestrator"/>
             </shell:action>
         </shell:command>
 
