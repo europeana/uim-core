@@ -22,6 +22,7 @@ import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -184,6 +185,10 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public List<CollectionDTO> getAllCollections() {
+        LoggingEngine<?, ?> loggingEngine = getEngine().getRegistry().getLoggingEngine();
+        if (loggingEngine != null) {
+            loggingEngine.log(, execution, mdr, scope, level, message)
+        }
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();

@@ -2,6 +2,7 @@ package eu.europeana.uim.workflows;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.util.BatchWorkflowStart;
+import eu.europeana.uim.util.LoggingIngestionPlugin;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
 /**
@@ -32,10 +33,14 @@ public class SysoutWorkflow extends AbstractWorkflow {
     @SuppressWarnings("rawtypes")
     public SysoutWorkflow(int batchSize, boolean randsleep, boolean savepoint) {
         super(SysoutWorkflow.class.getSimpleName(),
-                "Simple workflow which uses several SysoutPlugins to report to the console about processing");
+                "Simple workflow which uses sysout and logging plugins to report to the console about processing");
         setStart(new BatchWorkflowStart());
+        
         SysoutPlugin step = new SysoutPlugin();
         addStep(step);
+        
+        LoggingIngestionPlugin log = new LoggingIngestionPlugin();
+        addStep(log);
 
         savePointName = step.getName();
     }

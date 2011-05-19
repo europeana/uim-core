@@ -15,7 +15,6 @@ import org.apache.felix.service.command.CommandSession;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -43,8 +42,6 @@ public class UIMExecution implements Action {
 
     private final Registry          registry;
 
-    private final Orchestrator      orchestrator;
-
     private static final DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
     @Option(name = "-o", aliases = { "--operation" }, required = false)
@@ -63,11 +60,9 @@ public class UIMExecution implements Action {
      * Creates a new instance of this class.
      * 
      * @param registry
-     * @param orchestrator
      */
-    public UIMExecution(Registry registry, Orchestrator orchestrator) {
+    public UIMExecution(Registry registry) {
         this.registry = registry;
-        this.orchestrator = orchestrator;
     }
 
     @Override
@@ -146,14 +141,14 @@ public class UIMExecution implements Action {
         if (argument0 == null) {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
-            for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format("Execution %d: Workflow %s, data set %s", e.getId(),
                         e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
         }
         ActiveExecution<?> execution = null;
-        for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+        for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
             if (e.getId().equals(Long.parseLong(argument0))) {
                 execution = e;
                 break;
@@ -195,9 +190,9 @@ public class UIMExecution implements Action {
 
             out.println();
             out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
-                        collection.getMnemonic() + "' with properties:" + properties.toString());
+                        collection.getMnemonic() + "' (" + collection.getName() + ") with properties:" + properties.toString());
 
-            ActiveExecution<?> execution = orchestrator.executeWorkflow(workflow, collection,
+            ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow, collection,
                     properties);
             execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
 
@@ -238,10 +233,10 @@ public class UIMExecution implements Action {
 
     private void listExecutions(PrintStream out) {
         out.println("Active executions:");
-        if (orchestrator.getActiveExecutions().isEmpty()) {
+        if (registry.getOrchestrator().getActiveExecutions().isEmpty()) {
             out.println("No active executions.");
         } else {
-            for (ActiveExecution<?> e : orchestrator.getActiveExecutions()) {
+            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
                                 df.format(e.getStartTime()) + ", paused=" + e.isPaused(), e.getId(), e.getWorkflow().getName(),
