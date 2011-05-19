@@ -66,13 +66,15 @@ public class SimpleResourceDialogBox extends DialogBox {
         final List<TextBox> boxes = new ArrayList<TextBox>();
         VerticalPanel valuesPanel = new VerticalPanel();
         valuesPanel.setWidth("100%");
-        for (String value : parameter.getValues()) {
-            TextBox box = new TextBox();
-            box.setWidth("100%");
-            box.setText(value);
-            box.setReadOnly(false);
-            valuesPanel.add(box);
-            boxes.add(box);
+        if (parameter.getValues() != null) {
+            for (String value : parameter.getValues()) {
+                TextBox box = new TextBox();
+                box.setWidth("100%");
+                box.setText(value);
+                box.setReadOnly(false);
+                valuesPanel.add(box);
+                boxes.add(box);
+            }
         }
         TextBox box = new TextBox();
         box.setReadOnly(false);

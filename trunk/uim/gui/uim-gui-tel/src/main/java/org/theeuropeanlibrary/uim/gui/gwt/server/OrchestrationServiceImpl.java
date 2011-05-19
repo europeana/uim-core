@@ -22,7 +22,6 @@ import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -87,37 +86,38 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
             ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
             LinkedHashMap<String, List<String>> globalResources = resource.getGlobalResources(params);
-            for (String param : params) {
-                if (!globalResources.containsKey(param)) {
-                    globalResources.put(param, new ArrayList<String>());
-                }
-            }
 
             if (collection != null) {
                 LinkedHashMap<String, List<String>> collectionResources = resource.getCollectionResources(
                         new CollectionBean<Long>(collection, new ProviderBean<Long>(provider)),
                         params);
                 if (collectionResources != null && collectionResources.size() > 0) {
-                    for (String key : collectionResources.keySet()) {
-                        globalResources.remove(key);
+                    for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
+                        if (entry.getValue() != null) {
+                            globalResources.put(entry.getKey(), entry.getValue());
+                        }
                     }
-                    globalResources.putAll(collectionResources);
                 }
             }
             if (provider != null) {
                 LinkedHashMap<String, List<String>> providerResources = resource.getProviderResources(
                         new ProviderBean<Long>(provider), params);
                 if (providerResources != null && providerResources.size() > 0) {
-                    for (String key : providerResources.keySet()) {
-                        globalResources.remove(key);
+                    for (Entry<String, List<String>> entry : providerResources.entrySet()) {
+                        if (entry.getValue() != null) {
+                            globalResources.put(entry.getKey(), entry.getValue());
+                        }
                     }
-                    globalResources.putAll(providerResources);
                 }
             }
 
             for (Entry<String, List<String>> entry : globalResources.entrySet()) {
-                res.add(new ParameterDTO(entry.getKey(), entry.getValue().toArray(
-                        new String[entry.getValue().size()])));
+                if (entry.getValue() != null) {
+                    res.add(new ParameterDTO(entry.getKey(), entry.getValue().toArray(
+                            new String[entry.getValue().size()])));
+                } else {
+                    res.add(new ParameterDTO(entry.getKey(), null));
+                }
             }
         }
         return res;
@@ -129,7 +129,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         Boolean res = true;
 
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
-        values.put(parameter.getKey(), Arrays.asList(parameter.getValues()));
+        values.put(parameter.getKey(), parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
         ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
 
         if (provider == null && collection == null && workflow != null) {
@@ -242,17 +242,17 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, c,
-                        properties);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                        w, c, properties);
             } else {
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, c);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                        w, c);
             }
             ae.getMonitor().addListener(monitor);
             populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
             return execution;
         } catch (StorageEngineException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
@@ -292,10 +292,11 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ActiveExecution<Long> ae;
             if (parameters != null) {
                 Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, p,
-                        properties);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                        w, p, properties);
             } else {
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(w, p);
+                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                        w, p);
             }
             ae.setName(executionName);
 
@@ -452,7 +453,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean pauseExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+                execution);
         if (ae != null) {
             getEngine().getRegistry().getOrchestrator().pause(ae);
             return ae.isPaused();
@@ -463,7 +465,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean resumeExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+                execution);
         if (ae != null) {
             getEngine().getRegistry().getOrchestrator().resume(ae);
             return !ae.isPaused();
@@ -474,7 +477,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public Boolean cancelExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(execution);
+        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+                execution);
         if (ae != null) {
             getEngine().getRegistry().getOrchestrator().cancel(ae);
             return ae.isCanceled();

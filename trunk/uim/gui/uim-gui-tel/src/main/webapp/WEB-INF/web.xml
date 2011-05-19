@@ -26,6 +26,6 @@
 
     <!-- Default page to serve -->
     <welcome-file-list>
-        <welcome-file>IngestionCockpit.html</welcome-file>
+        <welcome-file>IngestionControlPanel.html</welcome-file>
     </welcome-file-list>
 </web-app>

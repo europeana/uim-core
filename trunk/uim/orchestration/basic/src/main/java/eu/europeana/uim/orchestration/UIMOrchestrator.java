@@ -127,11 +127,6 @@ public class UIMOrchestrator implements Orchestrator {
             }
 
             LinkedHashMap<String, List<String>> globalResources = resourceEngine.getGlobalResources(params);
-            for (String param : params) {
-                if (!globalResources.containsKey(param)) {
-                    globalResources.put(param, null);
-                }
-            }
 
             if (dataset != null && dataset instanceof Collection) {
                 LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources(

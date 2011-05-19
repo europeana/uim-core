@@ -25,7 +25,7 @@ public class ParameterDTO implements IsSerializable {
      * @param key
      * @param values
      */
-    public ParameterDTO(String key, String... values) {
+    public ParameterDTO(String key, String[] values) {
         this.key = key;
         this.values = values;
     }

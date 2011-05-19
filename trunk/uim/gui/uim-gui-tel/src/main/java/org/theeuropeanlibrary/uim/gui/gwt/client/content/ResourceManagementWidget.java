@@ -283,10 +283,12 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
             @Override
             public String getValue(ParameterDTO object) {
                 StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < object.getValues().length; i++) {
-                    builder.append(object.getValues()[i]);
-                    if (i < object.getValues().length - 1) {
-                        builder.append("|");
+                if (object.getValues() != null) {
+                    for (int i = 0; i < object.getValues().length; i++) {
+                        builder.append(object.getValues()[i]);
+                        if (i < object.getValues().length - 1) {
+                            builder.append("|");
+                        }
                     }
                 }
                 return builder.toString();
