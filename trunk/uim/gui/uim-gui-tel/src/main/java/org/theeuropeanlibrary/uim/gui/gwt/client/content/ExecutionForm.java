@@ -104,6 +104,7 @@ public class ExecutionForm extends Composite {
         setCollection(null);
         setWorkflow(null);
         setCommandline(null);
+        changedParameters.clear();
     }
 
     private void executeCollection() {

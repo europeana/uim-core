@@ -69,7 +69,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     @UiField(provided = true)
     ExecutionForm                           executionForm;
 
-    private final List<ParameterDTO>        activeParameters  = new ArrayList<ParameterDTO>();
+    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
 
     private ProviderDTO                     provider;
     private CollectionDTO                   collection;
@@ -277,10 +277,12 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             @Override
             public String getValue(ParameterDTO object) {
                 StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < object.getValues().length; i++) {
-                    builder.append(object.getValues()[i]);
-                    if (i < object.getValues().length - 1) {
-                        builder.append("|");
+                if (object.getValues() != null) {
+                    for (int i = 0; i < object.getValues().length; i++) {
+                        builder.append(object.getValues()[i]);
+                        if (i < object.getValues().length - 1) {
+                            builder.append("|");
+                        }
                     }
                 }
                 return builder.toString();
