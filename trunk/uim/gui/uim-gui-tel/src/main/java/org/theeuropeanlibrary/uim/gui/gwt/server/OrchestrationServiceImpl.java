@@ -175,7 +175,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             List<Collection<Long>> cols = storage.getCollections(p);
             for (Collection<Long> col : cols) {
                 res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
-                        getWrappedProviderDTO(provider), storage.getTotalByCollection(col)));
+                        getWrappedProviderDTO(provider)));
             }
         } catch (StorageEngineException e) {
             e.printStackTrace();
@@ -191,8 +191,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             List<Collection<Long>> cols = storage.getAllCollections();
             for (Collection<Long> col : cols) {
                 res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
-                        getWrappedProviderDTO(col.getProvider().getId()),
-                        storage.getTotalByCollection(col)));
+                        getWrappedProviderDTO(col.getProvider().getId())));
             }
         } catch (StorageEngineException e) {
             e.printStackTrace();

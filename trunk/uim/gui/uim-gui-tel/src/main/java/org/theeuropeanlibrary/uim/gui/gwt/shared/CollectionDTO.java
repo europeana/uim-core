@@ -8,9 +8,8 @@ package org.theeuropeanlibrary.uim.gui.gwt.shared;
  */
 public class CollectionDTO extends DataSourceDTO {
     private String      name;
-    private String mnemonic;
+    private String      mnemonic;
     private ProviderDTO provider;
-    private Integer     total;
 
     /**
      * Creates a new instance of this class.
@@ -19,14 +18,12 @@ public class CollectionDTO extends DataSourceDTO {
      * @param name
      * @param mnemonic
      * @param provider
-     * @param total
      */
-    public CollectionDTO(Long id, String name, String mnemonic, ProviderDTO provider, Integer total) {
+    public CollectionDTO(Long id, String name, String mnemonic, ProviderDTO provider) {
         super(id);
         this.name = name;
         this.mnemonic = mnemonic;
         this.provider = provider;
-        this.total = total;
     }
 
     /**
@@ -56,7 +53,7 @@ public class CollectionDTO extends DataSourceDTO {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     /**
      * @return mnemonic
      */
@@ -76,21 +73,6 @@ public class CollectionDTO extends DataSourceDTO {
      */
     public void setProvider(ProviderDTO provider) {
         this.provider = provider;
-    }
-
-    /**
-     * @return total number of records
-     */
-    public Integer getTotal() {
-        return total;
-    }
-
-    /**
-     * @param total
-     *            number of records
-     */
-    public void setTotal(Integer total) {
-        this.total = total;
     }
 
     @Override
