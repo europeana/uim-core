@@ -160,7 +160,12 @@ public class FileResourceDialogBox extends DialogBox {
             @Override
             public void onClick(ClickEvent event) {
                 Set<String> vals = selectionModel.getSelectedSet();
-                parameter.setValues(vals.toArray(new String[vals.size()]));
+                if (vals.size() == 0) {
+                    parameter.setValues(null); 
+                } else {
+                    parameter.setValues(vals.toArray(new String[vals.size()]));
+                }
+                
                 callback.changed(parameter);
 
                 hide();

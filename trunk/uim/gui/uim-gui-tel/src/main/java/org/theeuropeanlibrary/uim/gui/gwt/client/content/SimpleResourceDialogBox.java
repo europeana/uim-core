@@ -99,7 +99,11 @@ public class SimpleResourceDialogBox extends DialogBox {
                         vals.add(box.getText());
                     }
                 }
-                parameter.setValues(vals.toArray(new String[vals.size()]));
+                if (vals.size() == 0) {
+                    parameter.setValues(null); 
+                } else {
+                    parameter.setValues(vals.toArray(new String[vals.size()]));
+                }
                 callback.changed(parameter);
 
                 hide();
