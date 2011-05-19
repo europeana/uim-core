@@ -58,10 +58,10 @@ public interface Registry {
      *            name of configured logging engine
      */
     void setConfiguredLoggingEngine(String configuredLoggingEngine);
-    
+
     /**
      * @param configuredResourceEngine
-     *            name of the  configured resource engine
+     *            name of the configured resource engine
      */
     void setConfiguredResourceEngine(String configuredResourceEngine);
 
@@ -126,7 +126,7 @@ public interface Registry {
      * @return logger for the given identifier or null
      */
     LoggingEngine<?, ?> getLoggingEngine(String identifier);
-    
+
     /**
      * @param resourceEngine
      *            add logger to registration
@@ -155,11 +155,22 @@ public interface Registry {
      */
     ResourceEngine<?> getResourceEngine(String identifier);
 
-    
+    /**
+     * @return registered orchestrator
+     */
     Orchestrator getOrchestrator();
-    
-    void setOrchestrator(Orchestrator orchestrator);
-    
-    void unsetOrchestrator(Orchestrator orchestrator);
 
+    /**
+     * Registers the given orchestrator.
+     * 
+     * @param orchestrator
+     */
+    void setOrchestrator(Orchestrator orchestrator);
+
+    /**
+     * Unregisters the given orchestrator.
+     * 
+     * @param orchestrator
+     */
+    void unsetOrchestrator(Orchestrator orchestrator);
 }
