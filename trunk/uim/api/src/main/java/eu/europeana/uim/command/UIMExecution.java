@@ -70,7 +70,6 @@ public class UIMExecution implements Action {
     @Override
     public Object execute(CommandSession session) throws Exception {
         PrintStream out = session.getConsole();
-
         if (operation == null) {
             out.println("Please specify an operation with the '-o' option. Possible values are:");
             out.println("  list\t\t\t\t\t\tlists the current executions");
@@ -81,30 +80,34 @@ public class UIMExecution implements Action {
             return null;
         }
 
-        switch (operation) {
-        case list:
-            listExecutions(out);
-            break;
-        case start:
-            start(out);
-            break;
-        case pause:
-            pause(out);
-            break;
-        case resume:
-            resume(out);
-            break;
-        case cancel:
-            cancel(out);
-            break;
-        case status:
-            out.println("Master, this is not implemented yet.");
-            break;
-        default:
-            out.println("Master, I am truly sorry but this doesn't work.");
-            break;
-        }
+        try {
+            switch (operation) {
+            case list:
+                listExecutions(out);
+                break;
+            case start:
+                start(out);
+                break;
+            case pause:
+                pause(out);
+                break;
+            case resume:
+                resume(out);
+                break;
+            case cancel:
+                cancel(out);
+                break;
+            case status:
+                out.println("Master, this is not implemented yet.");
+                break;
+            default:
+                out.println("Master, I am truly sorry but this doesn't work.");
+                break;
+            }
 
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Failed to start execution command:", t);
+        }
         return null;
     }
 
@@ -194,19 +197,13 @@ public class UIMExecution implements Action {
             out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
                         collection.getMnemonic() + "' (" + collection.getName() +
                         ") with properties:" + properties.toString());
-            try {
-                ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow,
-                        collection, properties);
-                execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
+            ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow,
+                    collection, properties);
+            execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                }
-            } catch (Throwable t) {
-                log.log(Level.SEVERE, "failed to start execution.", t);
-            } finally {
-                listExecutions(out);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
             }
         }
     }

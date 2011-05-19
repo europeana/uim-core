@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.felix.gogo.commands.Action;
@@ -31,6 +33,8 @@ import eu.europeana.uim.util.SampleProperties;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Command(name = "uim", scope = "store")
 public class UIMStore implements Action {
+    private static final Logger log = Logger.getLogger(UIMStore.class.getName());
+
     private enum Operation {
         createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
                                                                                                                 "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
@@ -92,36 +96,42 @@ public class UIMStore implements Action {
             return null;
         }
 
-        StorageEngine<?> storage = registry.getStorage();
-        switch (operation) {
-        case createProvider:
-            createProvider(storage, out);
-            break;
-        case updateProvider:
-            updateProvider(storage, out);
-            break;
-        case listProvider:
-            listProvider(storage, out);
-            break;
-        case createCollection:
-            createCollection(storage, out);
-            break;
-        case updateCollection:
-            updateCollection(storage, out);
-            break;
-        case listCollection:
-            listCollection(storage, out);
-            break;
-        case checkpoint:
-            checkpoint(storage, out);
-            break;
-        case loadConfigData:
-            new SampleProperties().loadConfigData(storage, new FileInputStream(new File(argument0)));
-            break;
-        case loadSampleData:
-            new SampleProperties().loadSampleData(storage);
-            break;
+        try {
+            StorageEngine<?> storage = registry.getStorage();
+            switch (operation) {
+            case createProvider:
+                createProvider(storage, out);
+                break;
+            case updateProvider:
+                updateProvider(storage, out);
+                break;
+            case listProvider:
+                listProvider(storage, out);
+                break;
+            case createCollection:
+                createCollection(storage, out);
+                break;
+            case updateCollection:
+                updateCollection(storage, out);
+                break;
+            case listCollection:
+                listCollection(storage, out);
+                break;
+            case checkpoint:
+                checkpoint(storage, out);
+                break;
+            case loadConfigData:
+                new SampleProperties().loadConfigData(storage, new FileInputStream(new File(
+                        argument0)));
+                break;
+            case loadSampleData:
+                new SampleProperties().loadSampleData(storage);
+                break;
+            }
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Failed to start storage command:", t);
         }
+
         return null;
     }
 

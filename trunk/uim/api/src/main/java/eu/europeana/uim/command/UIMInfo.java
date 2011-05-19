@@ -2,6 +2,8 @@ package eu.europeana.uim.command;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Command;
@@ -18,6 +20,8 @@ import eu.europeana.uim.api.Registry;
  */
 @Command(name = "uim", scope = "info")
 public class UIMInfo implements Function, Action {
+    private static final Logger log = Logger.getLogger(UIMInfo.class.getName());
+
     private Registry registry;
 
     /**
@@ -31,7 +35,12 @@ public class UIMInfo implements Function, Action {
 
     @Override
     public Object execute(CommandSession session) throws Exception {
+        try {
         return execute(session, Collections.emptyList());
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Failed to start info command:", t);
+        }
+        return null;
     }
 
     @Override
