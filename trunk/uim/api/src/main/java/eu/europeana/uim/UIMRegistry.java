@@ -447,7 +447,10 @@ public class UIMRegistry implements Registry {
                 } else {
                     builder.append("  ");
                 }
+                
                 builder.append(resourceEngine.getIdentifier());
+                builder.append(" [").append(resourceEngine.getStatus()).append("] ");
+                builder.append(resourceEngine.getConfiguration().toString());
             }
         }
 
