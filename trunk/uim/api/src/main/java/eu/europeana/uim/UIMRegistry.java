@@ -286,17 +286,19 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addResourceEngine(ResourceEngine<?> resourceEngine) {
-        if (resourceEngine != null) {
-            log.info("Added resource engine:" + resourceEngine.getIdentifier());
-            if (!resources.containsKey(resourceEngine.getIdentifier())) {
-                resources.put(resourceEngine.getIdentifier(), resourceEngine);
+    public void addResourceEngine(ResourceEngine<?> resource) {
+        if (resource != null) {
+            log.info("Added resource engine:" + resource.getIdentifier());
+            if (!resources.containsKey(resource.getIdentifier())) {
+                resource.initialize();
+                resources.put(resource.getIdentifier(), resource);
+
                 // activate default resource engine
                 if (activeResource == null) {
-                    activeResource = resourceEngine;
-                } else if (resourceEngine.getIdentifier().equals(configuredResourceEngine)) {
-                    activeResource = resourceEngine;
-                    log.info("Making resource engine " + resourceEngine.getIdentifier() + " default");
+                    activeResource = resource;
+                } else if (resource.getIdentifier().equals(configuredResourceEngine)) {
+                    activeResource = resource;
+                    log.info("Making resource engine " + resource.getIdentifier() + " default");
                 }
             }
         }
