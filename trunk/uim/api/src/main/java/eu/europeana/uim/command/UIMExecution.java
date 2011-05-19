@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.gogo.commands.Action;
 import org.apache.felix.gogo.commands.Argument;
@@ -35,6 +36,7 @@ import eu.europeana.uim.workflow.Workflow;
  */
 @Command(name = "uim", scope = "exec")
 public class UIMExecution implements Action {
+    private static final Logger log = Logger.getLogger(UIMExecution.class.getName());
 
     enum Operation {
         list, start, pause, resume, cancel, status, help
@@ -190,17 +192,22 @@ public class UIMExecution implements Action {
 
             out.println();
             out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
-                        collection.getMnemonic() + "' (" + collection.getName() + ") with properties:" + properties.toString());
-
-            ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow, collection,
-                    properties);
-            execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
-
+                        collection.getMnemonic() + "' (" + collection.getName() +
+                        ") with properties:" + properties.toString());
             try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow,
+                        collection, properties);
+                execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                }
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "failed to start execution.", t);
+            } finally {
+                listExecutions(out);
             }
-            listExecutions(out);
         }
     }
 
@@ -239,8 +246,8 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getStartTime()) + ", paused=" + e.isPaused(), e.getId(), e.getWorkflow().getName(),
-                        e.getDataSet()));
+                                df.format(e.getStartTime()) + ", paused=" + e.isPaused(),
+                        e.getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
         }
     }
