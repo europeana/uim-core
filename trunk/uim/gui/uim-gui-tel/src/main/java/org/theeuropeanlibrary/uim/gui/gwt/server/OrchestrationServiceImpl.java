@@ -185,10 +185,6 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public List<CollectionDTO> getAllCollections() {
-        LoggingEngine<?, ?> loggingEngine = getEngine().getRegistry().getLoggingEngine();
-        if (loggingEngine != null) {
-            loggingEngine.log(, execution, mdr, scope, level, message)
-        }
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
             StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
