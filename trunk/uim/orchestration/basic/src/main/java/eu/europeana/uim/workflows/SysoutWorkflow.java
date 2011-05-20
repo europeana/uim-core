@@ -32,8 +32,8 @@ public class SysoutWorkflow extends AbstractWorkflow {
      */
     @SuppressWarnings("rawtypes")
     public SysoutWorkflow(int batchSize, boolean randsleep, boolean savepoint) {
-        super(SysoutWorkflow.class.getSimpleName(),
-                "Simple workflow which uses sysout and logging plugins to report to the console about processing");
+        super("Console Reporting Workflow",
+                "Simple workflow which uses sysout and logging plugins to report to the console about processing!");
         setStart(new BatchWorkflowStart());
         
         SysoutPlugin step = new SysoutPlugin();

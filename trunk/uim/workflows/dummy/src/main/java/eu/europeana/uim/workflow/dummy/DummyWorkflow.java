@@ -19,9 +19,10 @@ public class DummyWorkflow extends AbstractWorkflow implements Workflow {
      * 
      * @param registry
      */
+    @SuppressWarnings("rawtypes")
     public DummyWorkflow(Registry registry) {
-        super(DummyWorkflow.class.getName(),
-                "This awesome workflow demonstrates the capabilities of the UIM");
+        super("UIM Showcase Workflow",
+                "This awesome workflow demonstrates the capabilities of the UIM by plainly iterating over batch loaded records without altering any data.");
 
         setStart(new BatchWorkflowStart());
 
