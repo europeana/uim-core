@@ -9,10 +9,16 @@ import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
@@ -190,12 +196,40 @@ public class TriggerTreeViewModel implements TreeViewModel {
      * The cell used to render categories.
      */
     private static class BrowserObjectCell extends AbstractCell<BrowserObject> {
+        public BrowserObjectCell() {
+            super("dblclick");
+        }
+
         @Override
         public void render(Context context, BrowserObject value, SafeHtmlBuilder sb) {
             if (value != null) {
                 SafeHtml html = SafeHtmlUtils.fromString(value.getName());
                 sb.append(html);
             }
+        }
+
+        @Override
+        public void onBrowserEvent(Context context, Element parent, BrowserObject value,
+                NativeEvent event, ValueUpdater<BrowserObject> valueUpdater) {
+            super.onBrowserEvent(context, parent, value, event, valueUpdater);
+
+            if (value.getWrappedObject() instanceof WorkflowDTO) {
+                final PopupPanel panel = new PopupPanel();
+                HTML contents = new HTML(((WorkflowDTO)value.getWrappedObject()).getDescription());
+                panel.add(contents);
+                panel.setPopupPosition(parent.getAbsoluteLeft(), parent.getAbsoluteTop());
+                panel.show();
+                Timer t = new Timer() {
+                    @Override
+                    public void run() {
+                        panel.hide();
+                    }
+                };
+                t.schedule(3000);
+            }
+//            if (value.getWrappedObject() instanceof WorkflowDTO) {
+//                Window.alert(((WorkflowDTO)value.getWrappedObject()).getDescription());
+//            }
         }
     }
 }

@@ -1,11 +1,16 @@
 package org.theeuropeanlibrary.uim.gui.gwt.server.engine;
 
+import java.util.Date;
+
+import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Request;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -71,13 +76,13 @@ public class ReflectionEngine extends Engine {
             SampleProperties sample = new SampleProperties();
             sample.loadSampleData(registry.getStorage());
 
-//            Collection coll = registry.getStorage().getAllCollections().iterator().next();
-//            System.out.println(coll.getName());
-//            Request req = registry.getStorage().createRequest(coll, new Date());
-//            for (int i = 0; i < 10000; i++) {
-//                MetaDataRecord mdr = registry.getStorage().createMetaDataRecord(req, "Record " + i);
-//                registry.getStorage().updateMetaDataRecord(mdr);
-//            }
+            Collection coll = registry.getStorage().getAllCollections().iterator().next();
+            System.out.println(coll.getName());
+            Request req = registry.getStorage().createRequest(coll, new Date());
+            for (int i = 0; i < 10000; i++) {
+                MetaDataRecord mdr = registry.getStorage().createMetaDataRecord(req, "Record " + i);
+                registry.getStorage().updateMetaDataRecord(mdr);
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         }
