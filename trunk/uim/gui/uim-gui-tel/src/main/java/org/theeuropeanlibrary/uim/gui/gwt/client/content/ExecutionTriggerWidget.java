@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.DataTreeViewModel.BrowserObject;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.TriggerTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
@@ -109,7 +109,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         Widget widget = uiBinder.createAndBindUi(this);
 
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
-                DataTreeViewModel.KEY_PROVIDER);
+                TriggerTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
@@ -139,8 +139,8 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             }
         });
 
-        DataTreeViewModel browserTreeViewModel = new DataTreeViewModel(orchestrationService,
-                selectionModelBrowser, false);
+        TriggerTreeViewModel browserTreeViewModel = new TriggerTreeViewModel(orchestrationService,
+                selectionModelBrowser);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
         cellBrowser.setSize("100%", "100%");
@@ -171,6 +171,12 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
         rightPanel.add(cellTable);
 
         return widget;
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        updateParameters();
     }
 
     @Override
@@ -223,7 +229,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
             b.append("uim:exec -o start ");
             b.append(workflow.getName());
             b.append(" ");
-            if (!collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
+            if (!collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)) {
                 b.append(collection.getMnemonic());
             } else {
                 b.append(provider.getMnemonic());

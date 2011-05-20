@@ -73,11 +73,6 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
      */
     @Override
     public Widget onInitialize() {
-        // Create a CellTable.
-
-        // Set a key provider that provides a unique key for each contact. If key is
-        // used to identify contacts when fields (such as the name and address)
-        // change.
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
         cellTable.setWidth("100%", true);
 
@@ -85,33 +80,31 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
         dataProvider.setList(pastExecutions);
         dataProvider.addDataDisplay(cellTable);
 
-        // Attach a column sort handler to the ListDataProvider to sort the list.
         ListHandler<ExecutionDTO> sortHandler = new ListHandler<ExecutionDTO>(
                 dataProvider.getList());
         cellTable.addColumnSortHandler(sortHandler);
 
-        // Create a Pager to control the table.
         SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
         pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
         pager.setDisplay(cellTable);
 
-        // Add a selection model so we can select cells.
         final SelectionModel<ExecutionDTO> selectionModel = new MultiSelectionModel<ExecutionDTO>(
                 ExecutionDTO.KEY_PROVIDER);
         cellTable.setSelectionModel(selectionModel,
                 DefaultSelectionEventManager.<ExecutionDTO> createCheckboxManager());
 
-        // Initialize the columns.
         initTableColumns(selectionModel, sortHandler);
 
-// // Add the CellList to the adapter in the database.
-// ContactDatabase.get().addDataDisplay(cellTable);
-
-        // Create the UiBinder.
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
 
         return widget;
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        updatePastExecutions();
     }
 
     /**

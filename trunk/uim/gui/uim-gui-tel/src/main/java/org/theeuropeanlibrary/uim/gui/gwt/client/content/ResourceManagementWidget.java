@@ -7,28 +7,23 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.DataTreeViewModel.BrowserObject;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellBrowser;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -41,7 +36,6 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SimpleKeyProvider;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 /**
  * Triggers execution.
@@ -67,12 +61,7 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
     @UiField
     LayoutPanel                             centerPanel;
 
-    @UiField
-    LayoutPanel                             rightPanel;
-
     CellBrowser                             cellBrowser;
-
-    CellList<WorkflowDTO>                   cellList;
 
     CellTable<ParameterDTO>                 cellTable;
 
@@ -81,7 +70,6 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
     private WorkflowDTO                     workflow;
 
     private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
-    private final List<WorkflowDTO>         activeWorkflows  = new ArrayList<WorkflowDTO>();
 
     /**
      * Creates a new instance of this class.
@@ -103,13 +91,15 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
         Widget widget = uiBinder.createAndBindUi(this);
 
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
-                DataTreeViewModel.KEY_PROVIDER);
+                ResourceTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
                 Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
                 for (BrowserObject val : vals) {
-                    if (val.getWrappedObject() instanceof ProviderDTO) {
+                    if (val.getWrappedObject() instanceof WorkflowDTO) {
+                        workflow = (WorkflowDTO)val.getWrappedObject();
+                    } else if (val.getWrappedObject() instanceof ProviderDTO) {
                         provider = (ProviderDTO)val.getWrappedObject();
                     } else if (val.getWrappedObject() instanceof CollectionDTO) {
                         collection = (CollectionDTO)val.getWrappedObject();
@@ -119,45 +109,14 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
             }
         });
 
-        DataTreeViewModel browserTreeViewModel = new DataTreeViewModel(orchestrationService,
-                selectionModelBrowser, true);
+        ResourceTreeViewModel browserTreeViewModel = new ResourceTreeViewModel(
+                orchestrationService, selectionModelBrowser);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
         // cellBrowser.setSize("300px", "350px");
         cellBrowser.setSize("100%", "100%");
 
-        centerPanel.add(cellBrowser);
-
-        cellList = new CellList<WorkflowDTO>(new WorkflowDTOCell(),
-                new SimpleKeyProvider<WorkflowDTO>());
-        cellList.setSize("100%", "100%");
-        cellList.setPageSize(30);
-        cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
-        cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
-
-        final ListDataProvider<WorkflowDTO> workflowProvider = new ListDataProvider<WorkflowDTO>();
-        workflowProvider.setList(activeWorkflows);
-        workflowProvider.addDataDisplay(cellList);
-
-        final SingleSelectionModel<WorkflowDTO> selectionModel = new SingleSelectionModel<WorkflowDTO>(
-                new SimpleKeyProvider<WorkflowDTO>());
-        cellList.setSelectionModel(selectionModel);
-        selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-            @Override
-            public void onSelectionChange(SelectionChangeEvent event) {
-                workflow = selectionModel.getSelectedObject();
-                provider = null;
-                collection = null;
-                for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
-                    cellBrowser.getRootTreeNode().setChildOpen(i, false);
-                }
-                updateParameters();
-            }
-        });
-
-        leftPanel.add(cellList);
-
-        updateWorkflows();
+        leftPanel.add(cellBrowser);
 
         cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
@@ -181,7 +140,7 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
         // Initialize the columns.
         initTableColumns(selectionModelTable, sortHandler);
 
-        rightPanel.add(cellTable);
+        centerPanel.add(cellTable);
 
         return widget;
     }
@@ -208,37 +167,6 @@ public class ResourceManagementWidget extends IngestionCockpitWidget {
                         cellTable.setHeight((30 + 20 * parameters.size()) + "px");
                     }
                 });
-    }
-
-    /**
-     * Retrieve parameters for given settings.
-     */
-    public void updateWorkflows() {
-        orchestrationService.getWorkflows(new AsyncCallback<List<WorkflowDTO>>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onSuccess(List<WorkflowDTO> workflows) {
-                activeWorkflows.clear();
-                activeWorkflows.addAll(workflows);
-                cellList.setRowData(0, activeWorkflows);
-                cellList.setRowCount(activeWorkflows.size());
-            }
-        });
-    }
-
-    /**
-     * The Cell used to render a {@link WorkflowDTO}.
-     */
-    private static class WorkflowDTOCell extends AbstractCell<WorkflowDTO> {
-        @Override
-        public void render(Context context, WorkflowDTO value, SafeHtmlBuilder sb) {
-            if (value == null) { return; }
-            sb.appendHtmlConstant(value.getName());
-        }
     }
 
     @Override

@@ -80,7 +80,7 @@ public class ExecutionForm extends Composite {
         commitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                if (collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)) {
+                if (collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)) {
                     executeProvider();
                 } else {
                     executeCollection();
@@ -179,7 +179,7 @@ public class ExecutionForm extends Composite {
         if (nameBox.getText().length() == 0 && workflow != null) {
             autoText = workflow.getName() +
                        "/" +
-                       (collection.getName().equals(DataTreeViewModel.ALL_COLLECTIONS)
+                       (collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)
                                ? provider.toString() : collection.toString());
             nameBox.setText(autoText);
         }

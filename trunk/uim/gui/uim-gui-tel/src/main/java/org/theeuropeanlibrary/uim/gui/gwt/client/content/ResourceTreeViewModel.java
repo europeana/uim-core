@@ -24,7 +24,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 29, 2011
  */
-public class DataTreeViewModel implements TreeViewModel {
+public class ResourceTreeViewModel implements TreeViewModel {
     /**
      * all collections used for a specific provider
      */
@@ -32,30 +32,29 @@ public class DataTreeViewModel implements TreeViewModel {
 
     private final OrchestrationServiceAsync          orchestrationServ;
     private final MultiSelectionModel<BrowserObject> selectionModel;
-    private final boolean                            dataSetsOnly;
-    private ListDataProvider<BrowserObject>          providersDataProvider;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param orchestrationServ
      * @param selectionModel
-     * @param dataSetsOnly
      */
-    public DataTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
-                             final MultiSelectionModel<BrowserObject> selectionModel,
-                             boolean dataSetsOnly) {
+    public ResourceTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
+                                 final MultiSelectionModel<BrowserObject> selectionModel) {
         this.orchestrationServ = orchestrationServ;
         this.selectionModel = selectionModel;
-        this.dataSetsOnly = dataSetsOnly;
-
-        providersDataProvider = new ListDataProvider<BrowserObject>();
-        loadProviders(providersDataProvider);
     }
 
     @Override
     public <T> NodeInfo<?> getNodeInfo(T value) {
         if (value == null) {
+            ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
+            loadWorkflows(workflowsDataProvider);
+            return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
+                    new BrowserObjectCell(), selectionModel, null);
+        } else if (((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO) {
+            ListDataProvider<BrowserObject> providersDataProvider = new ListDataProvider<BrowserObject>();
+            loadProviders(providersDataProvider);
             return new DefaultNodeInfo<BrowserObject>(providersDataProvider,
                     new BrowserObjectCell(), selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof ProviderDTO) {
@@ -64,13 +63,7 @@ public class DataTreeViewModel implements TreeViewModel {
             loadCollections(provider.getId(), collectionsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider,
                     new BrowserObjectCell(), selectionModel, null);
-        } else if (!dataSetsOnly &&
-                   ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
-            ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
-            loadWorkflows(workflowsDataProvider);
-            return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
-                    new BrowserObjectCell(), selectionModel, null);
-        }
+        } 
 
         // Unhandled type.
         String type = value.getClass().getName();
@@ -79,8 +72,7 @@ public class DataTreeViewModel implements TreeViewModel {
 
     @Override
     public boolean isLeaf(Object value) {
-        return (dataSetsOnly && ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) ||
-               ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
+        return ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO;
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {

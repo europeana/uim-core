@@ -121,6 +121,12 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
 
         return widget;
     }
+    
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        updateActiveExecutions();
+    }
 
     /**
      * Retrieve current executions.
