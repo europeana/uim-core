@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
