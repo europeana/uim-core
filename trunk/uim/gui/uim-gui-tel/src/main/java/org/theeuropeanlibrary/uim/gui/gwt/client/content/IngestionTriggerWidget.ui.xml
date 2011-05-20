@@ -44,7 +44,7 @@
             </tr>
             <tr>
                 <td class='{style.executionFormCell}' valign='top' align='left'>
-                    <s:ExecutionForm ui:field='executionForm' />
+                    <s:IngestionForm ui:field='executionForm' />
                 </td>
             </tr>
         </table>

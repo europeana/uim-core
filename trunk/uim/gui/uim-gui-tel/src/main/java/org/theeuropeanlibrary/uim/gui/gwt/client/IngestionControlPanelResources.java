@@ -6,7 +6,7 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * The images and styles used throughout the Showcase.
  */
-public interface IngestionCockpitResources extends ClientBundle {
+public interface IngestionControlPanelResources extends ClientBundle {
     /**
      * @return resource to the tel logo
      */

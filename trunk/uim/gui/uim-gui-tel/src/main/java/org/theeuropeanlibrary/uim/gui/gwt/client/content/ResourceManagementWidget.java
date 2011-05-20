@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
@@ -43,7 +43,7 @@ import com.google.gwt.view.client.SimpleKeyProvider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ResourceManagementWidget extends IngestionCockpitWidget {
+public class ResourceManagementWidget extends IngestionControlPanelWidget {
     /**
      * The UiBinder interface used by this example.
      */

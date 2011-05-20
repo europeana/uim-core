@@ -19,7 +19,7 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.TreeViewModel;
 
 /**
- * {@link TreeViewModel} implementation for {@link ExecutionTriggerWidget}.
+ * {@link TreeViewModel} implementation for {@link IngestionTriggerWidget}.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 29, 2011

@@ -20,8 +20,8 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class IngestionCockpitShell extends Composite {
-    interface IngestionCockpitUiBinder extends UiBinder<Widget, IngestionCockpitShell> {
+public class IngestionControlPanelShell extends Composite {
+    interface IngestionCockpitUiBinder extends UiBinder<Widget, IngestionControlPanelShell> {
     }
 
     private static IngestionCockpitUiBinder uiBinder      = GWT.create(IngestionCockpitUiBinder.class);
@@ -45,9 +45,9 @@ public class IngestionCockpitShell extends Composite {
     CellTree                                mainMenu;
 
     /**
-     * The current {@link IngestionCockpitWidget} being displayed.
+     * The current {@link IngestionControlPanelWidget} being displayed.
      */
-    private IngestionCockpitWidget          content;
+    private IngestionControlPanelWidget          content;
 
     /**
      * The widget that holds CSS or source code for an example.
@@ -55,12 +55,12 @@ public class IngestionCockpitShell extends Composite {
     private HTML                            contentSource = new HTML();
 
     /**
-     * Construct the {@link IngestionCockpitShell}.
+     * Construct the {@link IngestionControlPanelShell}.
      * 
      * @param treeModel
      *            the treeModel that backs the main menu
      */
-    public IngestionCockpitShell(TreeViewModel treeModel) {
+    public IngestionControlPanelShell(TreeViewModel treeModel) {
         // Create the cell tree.
         mainMenu = new CellTree(treeModel, null);
         mainMenu.setAnimationEnabled(true);
@@ -90,7 +90,7 @@ public class IngestionCockpitShell extends Composite {
      * @param content
      *            the content
      */
-    public void setContent(final IngestionCockpitWidget content) {
+    public void setContent(final IngestionControlPanelWidget content) {
         this.content = content;
         if (content == null) {
             contentPanel.setWidget(null);

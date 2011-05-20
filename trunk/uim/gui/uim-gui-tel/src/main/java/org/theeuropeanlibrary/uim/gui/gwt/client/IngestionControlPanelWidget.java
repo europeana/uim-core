@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public abstract class IngestionCockpitWidget extends LazyPanel implements
+public abstract class IngestionControlPanelWidget extends LazyPanel implements
         HasValueChangeHandlers<String> {
     /**
      * Generic callback used for asynchronously loaded data.
@@ -61,7 +61,7 @@ public abstract class IngestionCockpitWidget extends LazyPanel implements
     /**
      * The view that holds the name, description, and example.
      */
-    private IngestionCockpitWidgetView view;
+    private IngestionControlPanelWidgetView view;
 
     /**
      * Whether the demo widget has been initialized.
@@ -74,14 +74,14 @@ public abstract class IngestionCockpitWidget extends LazyPanel implements
     private boolean                    widgetInitializing;
 
     /**
-     * Construct a {@link IngestionCockpitWidget}.
+     * Construct a {@link IngestionControlPanelWidget}.
      * 
      * @param name
      *            the name of the example
      * @param description
      *            a description of the example
      */
-    public IngestionCockpitWidget(String name, String description) {
+    public IngestionControlPanelWidget(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -148,7 +148,7 @@ public abstract class IngestionCockpitWidget extends LazyPanel implements
      */
     @Override
     protected final Widget createWidget() {
-        view = new IngestionCockpitWidgetView(hasMargins());
+        view = new IngestionControlPanelWidgetView(hasMargins());
         view.setName(getName());
         view.setDescription(getDescription());
         return view;

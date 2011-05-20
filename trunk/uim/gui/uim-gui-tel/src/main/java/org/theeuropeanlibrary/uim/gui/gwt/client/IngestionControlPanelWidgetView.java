@@ -10,14 +10,14 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * A view of a {@link IngestionCockpitWidget}.
+ * A view of a {@link IngestionControlPanelWidget}.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class IngestionCockpitWidgetView extends Composite {
+public class IngestionControlPanelWidgetView extends Composite {
     interface IngestionCockpitWidgetViewUiBinder extends
-            UiBinder<Widget, IngestionCockpitWidgetView> {
+            UiBinder<Widget, IngestionControlPanelWidgetView> {
     }
 
     private static IngestionCockpitWidgetViewUiBinder uiBinder = GWT.create(IngestionCockpitWidgetViewUiBinder.class);
@@ -36,7 +36,7 @@ public class IngestionCockpitWidgetView extends Composite {
      * 
      * @param useMargins
      */
-    public IngestionCockpitWidgetView(boolean useMargins) {
+    public IngestionControlPanelWidgetView(boolean useMargins) {
         initWidget(uiBinder.createAndBindUi(this));
         if (useMargins) {
             examplePanel.getElement().getStyle().setMarginLeft(10.0, Unit.PX);

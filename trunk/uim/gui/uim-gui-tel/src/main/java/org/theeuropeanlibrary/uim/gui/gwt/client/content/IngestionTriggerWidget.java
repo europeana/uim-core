@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.TriggerTreeViewModel.BrowserObject;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
@@ -44,11 +44,11 @@ import com.google.gwt.view.client.SimpleKeyProvider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionTriggerWidget extends IngestionCockpitWidget {
+public class IngestionTriggerWidget extends IngestionControlPanelWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ExecutionTriggerWidget> {
+    interface Binder extends UiBinder<Widget, IngestionTriggerWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -67,7 +67,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
     CellTable<ParameterDTO>                 cellTable;
 
     @UiField(provided = true)
-    ExecutionForm                           executionForm;
+    IngestionForm                           executionForm;
 
     private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
 
@@ -80,7 +80,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      * 
      * @param orchestrationService
      */
-    public ExecutionTriggerWidget(OrchestrationServiceAsync orchestrationService) {
+    public IngestionTriggerWidget(OrchestrationServiceAsync orchestrationService) {
         super(
                 "Start Ingestion",
                 "This view allows selecting a provider, a collection, a workflow and optionally adjusted resources to start a new ingestion activity!");
@@ -92,7 +92,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
      */
     @Override
     public Widget onInitialize() {
-        executionForm = new ExecutionForm(orchestrationService, new ClickHandler() {
+        executionForm = new IngestionForm(orchestrationService, new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
                 for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
@@ -181,7 +181,7 @@ public class ExecutionTriggerWidget extends IngestionCockpitWidget {
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ExecutionTriggerWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(IngestionTriggerWidget.class, new RunAsyncCallback() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);

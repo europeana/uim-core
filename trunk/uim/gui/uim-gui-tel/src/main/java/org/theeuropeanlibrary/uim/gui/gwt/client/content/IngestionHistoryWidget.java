@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 
@@ -36,11 +36,11 @@ import com.google.gwt.view.client.SelectionModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionHistoryWidget extends IngestionCockpitWidget {
+public class IngestionHistoryWidget extends IngestionControlPanelWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ExecutionHistoryWidget> {
+    interface Binder extends UiBinder<Widget, IngestionHistoryWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationServiceAsync;
@@ -63,7 +63,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
      * 
      * @param orchestrationServiceAsync
      */
-    public ExecutionHistoryWidget(OrchestrationServiceAsync orchestrationServiceAsync) {
+    public IngestionHistoryWidget(OrchestrationServiceAsync orchestrationServiceAsync) {
         super("Finished Ingestions", "This view shows all finished ingestion activities!");
         this.orchestrationServiceAsync = orchestrationServiceAsync;
     }
@@ -129,7 +129,7 @@ public class ExecutionHistoryWidget extends IngestionCockpitWidget {
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ExecutionHistoryWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(IngestionHistoryWidget.class, new RunAsyncCallback() {
 
             @Override
             public void onFailure(Throwable caught) {

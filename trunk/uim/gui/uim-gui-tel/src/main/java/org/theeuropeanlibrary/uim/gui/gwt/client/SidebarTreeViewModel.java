@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionDetailWidget;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionHistoryWidget;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.ExecutionTriggerWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionDetailWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionHistoryWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionTriggerWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceManagementWidget;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -44,9 +44,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
     /**
      * The cell used to render examples.
      */
-    private static class IngestionCockpitWidgetCell extends AbstractCell<IngestionCockpitWidget> {
+    private static class IngestionCockpitWidgetCell extends AbstractCell<IngestionControlPanelWidget> {
         @Override
-        public void render(Context context, IngestionCockpitWidget value, SafeHtmlBuilder sb) {
+        public void render(Context context, IngestionControlPanelWidget value, SafeHtmlBuilder sb) {
             if (value != null) {
                 sb.appendEscaped(value.getName());
             }
@@ -60,9 +60,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
      * @since Apr 27, 2011
      */
     public class Category {
-        private final ListDataProvider<IngestionCockpitWidget> examples    = new ListDataProvider<IngestionCockpitWidget>();
+        private final ListDataProvider<IngestionControlPanelWidget> examples    = new ListDataProvider<IngestionControlPanelWidget>();
         private final String                                   name;
-        private NodeInfo<IngestionCockpitWidget>               nodeInfo;
+        private NodeInfo<IngestionControlPanelWidget>               nodeInfo;
         private final List<RunAsyncCode>                       splitPoints = new ArrayList<RunAsyncCode>();
 
         /**
@@ -78,13 +78,13 @@ public class SidebarTreeViewModel implements TreeViewModel {
          * @param example
          * @param splitPoint
          */
-        public void addExample(IngestionCockpitWidget example, RunAsyncCode splitPoint) {
+        public void addExample(IngestionControlPanelWidget example, RunAsyncCode splitPoint) {
             examples.getList().add(example);
             if (splitPoint != null) {
                 splitPoints.add(splitPoint);
             }
             contentCategory.put(example, this);
-            contentToken.put(IngestionCockpit.getContentWidgetToken(example), example);
+            contentToken.put(IngestionControlPanel.getContentWidgetToken(example), example);
         }
 
         /**
@@ -99,9 +99,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
          * 
          * @return the node info
          */
-        public NodeInfo<IngestionCockpitWidget> getNodeInfo() {
+        public NodeInfo<IngestionControlPanelWidget> getNodeInfo() {
             if (nodeInfo == null) {
-                nodeInfo = new DefaultNodeInfo<IngestionCockpitWidget>(examples,
+                nodeInfo = new DefaultNodeInfo<IngestionControlPanelWidget>(examples,
                         ingestionCockpitWidgetCell, selectionModel, null);
             }
             return nodeInfo;
@@ -123,9 +123,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
     private final ListDataProvider<Category>             categories                 = new ListDataProvider<Category>();
 
     /**
-     * A mapping of {@link IngestionCockpitWidget}s to their associated categories.
+     * A mapping of {@link IngestionControlPanelWidget}s to their associated categories.
      */
-    private final Map<IngestionCockpitWidget, Category>  contentCategory            = new HashMap<IngestionCockpitWidget, Category>();
+    private final Map<IngestionControlPanelWidget, Category>  contentCategory            = new HashMap<IngestionControlPanelWidget, Category>();
 
     /**
      * The cell used to render examples.
@@ -133,21 +133,21 @@ public class SidebarTreeViewModel implements TreeViewModel {
     private final IngestionCockpitWidgetCell             ingestionCockpitWidgetCell = new IngestionCockpitWidgetCell();
 
     /**
-     * A mapping of history tokens to their associated {@link IngestionCockpitWidget}.
+     * A mapping of history tokens to their associated {@link IngestionControlPanelWidget}.
      */
-    private final Map<String, IngestionCockpitWidget>    contentToken               = new HashMap<String, IngestionCockpitWidget>();
+    private final Map<String, IngestionControlPanelWidget>    contentToken               = new HashMap<String, IngestionControlPanelWidget>();
 
     /**
      * The selection model used to select examples.
      */
-    private final SelectionModel<IngestionCockpitWidget> selectionModel;
+    private final SelectionModel<IngestionControlPanelWidget> selectionModel;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param selectionModel
      */
-    public SidebarTreeViewModel(SingleSelectionModel<IngestionCockpitWidget> selectionModel) {
+    public SidebarTreeViewModel(SingleSelectionModel<IngestionControlPanelWidget> selectionModel) {
         this.selectionModel = selectionModel;
 
         List<Category> catList = categories.getList();
@@ -156,18 +156,18 @@ public class SidebarTreeViewModel implements TreeViewModel {
             Category category = new Category("Monitoring");
             catList.add(category);
             category.addExample(
-                    new ExecutionDetailWidget(orchestrationService),
-                    RunAsyncCode.runAsyncCode(ExecutionDetailWidget.class));
-            category.addExample(new ExecutionHistoryWidget(orchestrationService),
-                    RunAsyncCode.runAsyncCode(ExecutionHistoryWidget.class));
+                    new IngestionDetailWidget(orchestrationService),
+                    RunAsyncCode.runAsyncCode(IngestionDetailWidget.class));
+            category.addExample(new IngestionHistoryWidget(orchestrationService),
+                    RunAsyncCode.runAsyncCode(IngestionHistoryWidget.class));
         }
 
         {
             Category category = new Category("Managing");
             catList.add(category);
             category.addExample(
-                    new ExecutionTriggerWidget(orchestrationService),
-                    RunAsyncCode.runAsyncCode(ExecutionTriggerWidget.class));
+                    new IngestionTriggerWidget(orchestrationService),
+                    RunAsyncCode.runAsyncCode(IngestionTriggerWidget.class));
             category.addExample(
                     new ResourceManagementWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(ResourceManagementWidget.class));
@@ -188,10 +188,10 @@ public class SidebarTreeViewModel implements TreeViewModel {
      * Get the {@link Category} associated with a widget.
      * 
      * @param widget
-     *            the {@link IngestionCockpitWidget}
+     *            the {@link IngestionControlPanelWidget}
      * @return the associated {@link Category}
      */
-    public Category getCategoryForContentWidget(IngestionCockpitWidget widget) {
+    public Category getCategoryForContentWidget(IngestionControlPanelWidget widget) {
         return contentCategory.get(widget);
     }
 
@@ -200,9 +200,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
      * 
      * @param token
      *            the history token
-     * @return the associated {@link IngestionCockpitWidget}
+     * @return the associated {@link IngestionControlPanelWidget}
      */
-    public IngestionCockpitWidget getContentWidgetForToken(String token) {
+    public IngestionControlPanelWidget getContentWidgetForToken(String token) {
         return contentToken.get(token);
     }
 

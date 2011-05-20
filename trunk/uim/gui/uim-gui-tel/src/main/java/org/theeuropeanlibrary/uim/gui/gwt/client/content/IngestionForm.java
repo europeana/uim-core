@@ -28,10 +28,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionForm extends Composite {
+public class IngestionForm extends Composite {
     private static Binder uiBinder = GWT.create(Binder.class);
 
-    interface Binder extends UiBinder<Widget, ExecutionForm> {
+    interface Binder extends UiBinder<Widget, IngestionForm> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -66,7 +66,7 @@ public class ExecutionForm extends Composite {
      * @param orchestrationService
      * @param handler
      */
-    public ExecutionForm(OrchestrationServiceAsync orchestrationService, final ClickHandler handler) {
+    public IngestionForm(OrchestrationServiceAsync orchestrationService, final ClickHandler handler) {
         this.orchestrationService = orchestrationService;
         initWidget(uiBinder.createAndBindUi(this));
 

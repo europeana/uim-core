@@ -23,10 +23,10 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionStatus extends Composite {
+public class IngestionStatus extends Composite {
     private static Binder uiBinder = GWT.create(Binder.class);
 
-    interface Binder extends UiBinder<Widget, ExecutionStatus> {
+    interface Binder extends UiBinder<Widget, IngestionStatus> {
     }
 
     @UiField
@@ -62,7 +62,7 @@ public class ExecutionStatus extends Composite {
      * 
      * @param orchestrationService
      */
-    public ExecutionStatus(final OrchestrationServiceAsync orchestrationService) {
+    public IngestionStatus(final OrchestrationServiceAsync orchestrationService) {
 // this.orchestrationService = orchestrationService;
         initWidget(uiBinder.createAndBindUi(this));
 

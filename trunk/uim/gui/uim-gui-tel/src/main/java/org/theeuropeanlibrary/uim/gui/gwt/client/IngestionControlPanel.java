@@ -25,14 +25,14 @@ import com.google.gwt.view.client.SingleSelectionModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 26, 2011
  */
-public class IngestionCockpit implements EntryPoint {
-    private IngestionCockpitShell shell;
+public class IngestionControlPanel implements EntryPoint {
+    private IngestionControlPanelShell shell;
 
     @Override
     public void onModuleLoad() {
-        final SingleSelectionModel<IngestionCockpitWidget> selectionModel = new SingleSelectionModel<IngestionCockpitWidget>();
+        final SingleSelectionModel<IngestionControlPanelWidget> selectionModel = new SingleSelectionModel<IngestionControlPanelWidget>();
         final SidebarTreeViewModel treeModel = new SidebarTreeViewModel(selectionModel);
-        shell = new IngestionCockpitShell(treeModel);
+        shell = new IngestionControlPanelShell(treeModel);
         RootLayoutPanel.get().add(shell);
 
         // Prefetch examples when opening the Category tree nodes.
@@ -59,7 +59,7 @@ public class IngestionCockpit implements EntryPoint {
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                IngestionCockpitWidget selected = selectionModel.getSelectedObject();
+                IngestionControlPanelWidget selected = selectionModel.getSelectedObject();
                 if (selected != null) {
                     History.newItem(getContentWidgetToken(selected), true);
                 }
@@ -71,7 +71,7 @@ public class IngestionCockpit implements EntryPoint {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 // Get the content widget associated with the history token.
-                IngestionCockpitWidget ingestionCockpitWidget = treeModel.getContentWidgetForToken(event.getValue());
+                IngestionControlPanelWidget ingestionCockpitWidget = treeModel.getContentWidgetForToken(event.getValue());
                 if (ingestionCockpitWidget == null) { return; }
 
                 // Expand the tree node associated with the content.
@@ -101,18 +101,18 @@ public class IngestionCockpit implements EntryPoint {
             // Use the first token available.
             TreeNode root = mainMenu.getRootTreeNode();
             TreeNode category = root.setChildOpen(0, true);
-            IngestionCockpitWidget content = (IngestionCockpitWidget)category.getChildValue(0);
+            IngestionControlPanelWidget content = (IngestionControlPanelWidget)category.getChildValue(0);
             selectionModel.setSelected(content, true);
         }
     }
 
     /**
-     * Set the content to the {@link IngestionCockpitWidget}.
+     * Set the content to the {@link IngestionControlPanelWidget}.
      * 
      * @param content
-     *            the {@link IngestionCockpitWidget} to display
+     *            the {@link IngestionControlPanelWidget} to display
      */
-    private void displayIngestionCockpitWidget(IngestionCockpitWidget ingestionCockpitWidget) {
+    private void displayIngestionCockpitWidget(IngestionControlPanelWidget ingestionCockpitWidget) {
         if (ingestionCockpitWidget == null) { return; }
 
         shell.setContent(ingestionCockpitWidget);
@@ -125,7 +125,7 @@ public class IngestionCockpit implements EntryPoint {
      * @param content
      * @return the content widget token.
      */
-    public static String getContentWidgetToken(IngestionCockpitWidget content) {
+    public static String getContentWidgetToken(IngestionControlPanelWidget content) {
         return getContentWidgetToken(content.getClass());
     }
 
@@ -136,7 +136,7 @@ public class IngestionCockpit implements EntryPoint {
      * @param cwClass
      * @return the content widget token.
      */
-    public static <C extends IngestionCockpitWidget> String getContentWidgetToken(Class<C> cwClass) {
+    public static <C extends IngestionControlPanelWidget> String getContentWidgetToken(Class<C> cwClass) {
         String className = cwClass.getName();
         className = className.substring(className.lastIndexOf('.') + 1);
         return "!" + className;

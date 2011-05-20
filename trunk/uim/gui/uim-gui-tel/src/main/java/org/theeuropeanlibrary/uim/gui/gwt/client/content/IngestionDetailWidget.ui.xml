@@ -41,7 +41,7 @@
             <g:center>
                 <g:LayoutPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}">
                     <g:layer>
-                        <s:ExecutionStatus ui:field='executionStatus' />
+                        <s:IngestionStatus ui:field='executionStatus' />
                     </g:layer>
                 </g:LayoutPanel>
             </g:center>

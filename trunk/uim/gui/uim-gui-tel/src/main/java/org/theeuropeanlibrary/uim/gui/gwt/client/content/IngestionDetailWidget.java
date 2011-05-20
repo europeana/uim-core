@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionCockpitWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
 
@@ -41,11 +41,11 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ExecutionDetailWidget extends IngestionCockpitWidget {
+public class IngestionDetailWidget extends IngestionControlPanelWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ExecutionDetailWidget> {
+    interface Binder extends UiBinder<Widget, IngestionDetailWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -70,14 +70,14 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      * The contact form used to update contacts.
      */
     @UiField(provided = true)
-    ExecutionStatus                         executionStatus;
+    IngestionStatus                         executionStatus;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param orchestrationService
      */
-    public ExecutionDetailWidget(OrchestrationServiceAsync orchestrationService) {
+    public IngestionDetailWidget(OrchestrationServiceAsync orchestrationService) {
         super(
                 "Active Ingestions",
                 "This view shows the current running ingestion activities together with their progress and a cancel button!");
@@ -89,7 +89,7 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
      */
     @Override
     public Widget onInitialize() {
-        executionStatus = new ExecutionStatus(orchestrationService);
+        executionStatus = new IngestionStatus(orchestrationService);
 
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
         cellTable.setWidth("100%", true);
@@ -163,7 +163,7 @@ public class ExecutionDetailWidget extends IngestionCockpitWidget {
 
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ExecutionDetailWidget.class, new RunAsyncCallback() {
+        GWT.runAsync(IngestionDetailWidget.class, new RunAsyncCallback() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);

@@ -19,7 +19,7 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.TreeViewModel;
 
 /**
- * {@link TreeViewModel} implementation for {@link ExecutionTriggerWidget}.
+ * {@link TreeViewModel} implementation for {@link IngestionTriggerWidget}.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 29, 2011
@@ -107,11 +107,6 @@ public class ResourceTreeViewModel implements TreeViewModel {
             public void onSuccess(List<CollectionDTO> collections) {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
-                if (collections.size() > 0) {
-                    CollectionDTO fakeCollection = new CollectionDTO();
-                    fakeCollection.setName(ALL_COLLECTIONS);
-                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
-                }
                 for (CollectionDTO collection : collections) {
                     collectionList.add(new BrowserObject(collection.getName(), collection));
                 }
