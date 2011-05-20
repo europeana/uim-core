@@ -37,11 +37,7 @@ Path                              Name                                          
 ===============
 
 1) Get Apache Felix Karaf at http://karaf.apache.org/
-        In top pom make sure karaf.version matches the version you are using!
-            Versions:
-                2.2.0   uim build fails
-                2.1.4   Ok
-                2.1.3   Ok
+   (Currently Karaf works only with version 2.2.0 and above)   
 
 2) Build UIM with maven
 
