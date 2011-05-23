@@ -23,8 +23,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 public class BrowserObjectCell extends AbstractCell<BrowserObject> {
     private final PopupPanel panel;
     private final Timer      showTimer;
-    private final Timer      hideTimer;
-    private BrowserObject    current;
 
     /**
      * Creates a new instance of this class.
@@ -39,15 +37,6 @@ public class BrowserObjectCell extends AbstractCell<BrowserObject> {
                 panel.show();
             }
         };
-        hideTimer = new Timer() {
-            @Override
-            public void run() {
-                panel.hide();
-                showTimer.cancel();
-                current = null;
-            }
-        };
-        current = null;
     }
 
     @Override
@@ -65,24 +54,16 @@ public class BrowserObjectCell extends AbstractCell<BrowserObject> {
 
         if (value.getWrappedObject() != null && value.getWrappedObject() instanceof WorkflowDTO) {
             if ("mouseover".equals(event.getType())) {
-                if (current == null || !current.equals(value)) {
-                    panel.clear();
-                    panel.hide();
-                    HTML contents = new HTML(
-                            ((WorkflowDTO)value.getWrappedObject()).getDescription());
-                    panel.add(contents);
-                    panel.setPopupPosition(parent.getAbsoluteLeft(), parent.getAbsoluteTop());
-                    showTimer.schedule(2000);
-                } else {
-                    hideTimer.cancel();
-                }
+                panel.clear();
+                panel.hide();
+                HTML contents = new HTML(((WorkflowDTO)value.getWrappedObject()).getDescription());
+                panel.add(contents);
+                panel.setPopupPosition(event.getClientX(), event.getClientY());
+                showTimer.schedule(2000);
             } else if ("mouseout".equals(event.getType())) {
-//                hideTimer.schedule(50);
+                panel.hide();
+                showTimer.cancel();
             }
-        } else {
-            panel.hide();
-            current = null;
-            showTimer.cancel();
         }
     }
 }
