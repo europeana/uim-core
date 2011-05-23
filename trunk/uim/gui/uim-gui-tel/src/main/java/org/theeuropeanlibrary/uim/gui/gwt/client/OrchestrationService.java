@@ -168,5 +168,4 @@ public interface OrchestrationService extends RemoteService {
 // List<MetaDataRecordDTO> searchNgram(String searchQuery, int maxSize, int offset);
 // List<MetaDataRecordDTO> searchMacs(String searchQuery, int maxSize, int offset);
 // String getSearchRecord(long recordId);
-
 }
