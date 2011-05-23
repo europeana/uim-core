@@ -183,21 +183,21 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return res;
     }
 
-    @Override
-    public List<CollectionDTO> getAllCollections() {
-        List<CollectionDTO> res = new ArrayList<CollectionDTO>();
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            List<Collection<Long>> cols = storage.getAllCollections();
-            for (Collection<Long> col : cols) {
-                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
-                        getWrappedProviderDTO(col.getProvider().getId())));
-            }
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
+//    @Override
+//    public List<CollectionDTO> getAllCollections() {
+//        List<CollectionDTO> res = new ArrayList<CollectionDTO>();
+//        try {
+//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+//            List<Collection<Long>> cols = storage.getAllCollections();
+//            for (Collection<Long> col : cols) {
+//                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
+//                        getWrappedProviderDTO(col.getProvider().getId())));
+//            }
+//        } catch (StorageEngineException e) {
+//            e.printStackTrace();
+//        }
+//        return res;
+//    }
 
     @Override
     public List<ExecutionDTO> getActiveExecutions() {

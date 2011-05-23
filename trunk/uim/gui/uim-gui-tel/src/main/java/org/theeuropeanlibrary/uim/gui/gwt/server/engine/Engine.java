@@ -2,7 +2,6 @@ package org.theeuropeanlibrary.uim.gui.gwt.server.engine;
 
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 
 /**
@@ -42,5 +41,4 @@ public abstract class Engine {
      * @return registry
      */
     public abstract Registry getRegistry();
-
 }

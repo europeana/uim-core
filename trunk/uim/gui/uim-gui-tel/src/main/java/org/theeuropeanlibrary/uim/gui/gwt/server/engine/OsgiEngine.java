@@ -1,6 +1,5 @@
 package org.theeuropeanlibrary.uim.gui.gwt.server.engine;
 
-import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 
 /**
@@ -10,7 +9,7 @@ import eu.europeana.uim.api.Registry;
  * @since May 11, 2011
  */
 public class OsgiEngine extends Engine {
-    private final Registry     registry;
+    private final Registry registry;
 
     /**
      * Creates a new instance of this class.
