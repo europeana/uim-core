@@ -442,7 +442,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<String> getResourceFileNames() {
         List<String> fileNames = new ArrayList<String>();
         ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
-        File rootDirectory = resource.getRootDirectory();
+        File rootDirectory = resource.getResourceDirectory();
         if (rootDirectory != null && rootDirectory.exists() && rootDirectory.isDirectory()) {
             for (File file : rootDirectory.listFiles()) {
                 fileNames.add(file.getName());

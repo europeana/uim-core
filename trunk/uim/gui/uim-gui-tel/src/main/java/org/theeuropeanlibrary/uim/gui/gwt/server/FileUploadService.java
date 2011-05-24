@@ -48,7 +48,7 @@ public class FileUploadService extends HttpServlet {
                 FileItemStream item = iter.next();
                 InputStream stream = item.openStream();
 
-                FileOutputStream ofile = new FileOutputStream(new File(resourceEngine.getRootDirectory() + File.separator + item.getName()));
+                FileOutputStream ofile = new FileOutputStream(new File(resourceEngine.getResourceDirectory() + File.separator + item.getName()));
                 
                 // Process the input stream
                 int len;
