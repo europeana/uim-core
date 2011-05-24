@@ -42,7 +42,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     public DatabaseLoggingEngine() {
         BlockingInitializer initializer = new BlockingInitializer() {
             @Override
-            public void initialize() {
+            public void initializeInternal() {
                 try {
                     status = STATUS_BOOTING;
                     
