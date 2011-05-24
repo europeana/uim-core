@@ -191,7 +191,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     }
 
     @Override
-    public File getRootDirectory() {
+    public File getResourceDirectory() {
         return rootResourceDir;
 
     }
@@ -221,12 +221,12 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     }
 
     @Override
-    public File getWorkingRootDirectory() {
+    public File getWorkingDirectory() {
         return rootWorkingDir;
     }
 
     @Override
-    public File getTmpRootDirectory() {
+    public File getTemporaryDirectory() {
         return rootTmpDir;
     }
 }

@@ -129,16 +129,16 @@ public interface ResourceEngine<I> {
     /**
      * @return the root directory to store resource files in.
      */
-    public File getRootDirectory();
+    public File getResourceDirectory();
 
     /**
      * @return the root directory for creating work directories for persisted output files from
      *         executions.
      */
-    public File getWorkingRootDirectory();
+    public File getWorkingDirectory();
 
     /**
      * @return the root directory for creating temporary directories for executions.
      */
-    public File getTmpRootDirectory();
+    public File getTemporaryDirectory();
 }

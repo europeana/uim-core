@@ -479,7 +479,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public File getWorkingDirectory(IngestionPlugin plugin) {
         String workDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
                                File.pathSeparator + plugin.getName();
-        File workingDirectory = new File(resourceEngine.getWorkingRootDirectory(), workDirSuffix);
+        File workingDirectory = new File(resourceEngine.getWorkingDirectory(), workDirSuffix);
         if (!workingDirectory.exists() && !workingDirectory.mkdirs())
             throw new RuntimeException("Could not create working directory for this execution: " +
                                        workingDirectory.getAbsolutePath());
@@ -495,7 +495,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public File getTmpDirectory(IngestionPlugin plugin) {
         String tmpDirSuffix = workflow.getName() + File.separator + execution.getId() +
                               File.separator + plugin.getName();
-        File tmpDirectory = new File(resourceEngine.getTmpRootDirectory(), tmpDirSuffix);
+        File tmpDirectory = new File(resourceEngine.getTemporaryDirectory(), tmpDirSuffix);
         if (!tmpDirectory.exists() && !tmpDirectory.mkdirs())
             throw new RuntimeException("Could not create temporary directory for this execution: " +
                                        tmpDirectory.getAbsolutePath());
@@ -512,7 +512,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
             if (resourceEngine != null) {
                 String tmpExecutionDirSuffix = workflow.getName() + File.separator +
                                                execution.getId();
-                File tmpExecutionDirectory = new File(resourceEngine.getTmpRootDirectory(),
+                File tmpExecutionDirectory = new File(resourceEngine.getTemporaryDirectory(),
                         tmpExecutionDirSuffix);
                 if (tmpExecutionDirectory.isDirectory()) {
                     FileUtils.deleteQuietly(tmpExecutionDirectory);

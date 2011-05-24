@@ -87,17 +87,17 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public File getRootDirectory() {
+    public File getResourceDirectory() {
         return null;
     }
 
     @Override
-    public File getWorkingRootDirectory() {
+    public File getWorkingDirectory() {
         return null;
     }
 
     @Override
-    public File getTmpRootDirectory() {
+    public File getTemporaryDirectory() {
         return null;
     }
 }
