@@ -13,7 +13,7 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
-/**
+/**In-memory implementation of the resource engine. This does not persist data. NOT FOR PRODUCTION USE !
  * 
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
