@@ -339,4 +339,44 @@ public interface StorageEngine<I> {
      * @throws StorageEngineException
      */
     int getTotalForAllIds() throws StorageEngineException;
+    
+    // potentially simplified storage engine
+//    String getIdentifier();
+//    public void setConfiguration(Map<String, String> config);
+//    public Map<String, String> getConfiguration();
+//    void initialize();
+//    void shutdown();
+//    void checkpoint();
+//    void command(String command);
+//    void completed(ExecutionContext context);
+//    EngineStatus getStatus();
+//
+//    Provider<I> createProvider(String mnemonic) throws StorageEngineException;
+//    void updateProvider(Provider<I> provider) throws StorageEngineException;
+//    Provider<I> getProvider(I id) throws StorageEngineException;
+//    Provider<I> findProvider(String mnemonic) throws StorageEngineException;
+//    List<Provider<I>> getProviders() throws StorageEngineException;
+//
+//    Collection<I> createCollection(Provider<I> provider, String mnemonic) throws StorageEngineException;
+//    void updateCollection(Collection<I> collection) throws StorageEngineException;
+//    Collection<I> getCollection(I id) throws StorageEngineException;
+//    Collection<I> findCollection(String mnemonic) throws StorageEngineException;
+//    List<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException;
+//
+//    Request<I> createRequest(Collection<I> collection, Date date) throws StorageEngineException;
+//    void updateRequest(Request<I> request) throws StorageEngineException;
+//    Request<I> getRequest(I id) throws StorageEngineException;
+//    List<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
+//
+//    Execution<I> createExecution(DataSet<I> dataSet, String workflow) throws StorageEngineException;
+//    void updateExecution(Execution<I> execution) throws StorageEngineException;
+//    Execution<I> getExecution(I id) throws StorageEngineException;
+//    List<Execution<I>> getExecutions() throws StorageEngineException;
+//    
+//    MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws StorageEngineException;
+//    void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
+//    MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
+//    List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException;
+//    List<MetaDataRecord<I>> getMetaDataRecords(Request<I> request, int start, int limit) throws StorageEngineException;
+//    int getMetaDataRecordNumberByRequest(Request<I> request) throws StorageEngineException;
 }
