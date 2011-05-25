@@ -62,6 +62,11 @@ public abstract class AbstractWorkflow implements Workflow {
     }
 
     @Override
+    public String getIdentifier() {
+        return getClass().getSimpleName();
+    }
+    
+    @Override
     public String getName() {
         return this.name;
     }

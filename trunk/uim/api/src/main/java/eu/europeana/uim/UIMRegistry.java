@@ -41,7 +41,7 @@ public class UIMRegistry implements Registry {
     private Map<String, ResourceEngine<?>>   resources      = new HashMap<String, ResourceEngine<?>>();
 
     private Map<String, IngestionPlugin>     plugins        = new HashMap<String, IngestionPlugin>();
-    private List<Workflow>                   workflows      = new ArrayList<Workflow>();
+    private Map<String, Workflow>            workflows      = new HashMap<String, Workflow>();
 
     private Orchestrator                     orchestrator   = null;
 
@@ -89,15 +89,12 @@ public class UIMRegistry implements Registry {
 
     @Override
     public List<Workflow> getWorkflows() {
-        return workflows;
+        return new ArrayList<Workflow>(workflows.values());
     }
 
     @Override
-    public Workflow getWorkflow(String name) {
-        for (Workflow w : workflows) {
-            if (w.getName().equals(name)) { return w; }
-        }
-        return null;
+    public Workflow getWorkflow(String identifier) {
+        return workflows.get(identifier);
     }
 
     @Override
@@ -186,7 +183,7 @@ public class UIMRegistry implements Registry {
     public void addWorkflow(Workflow workflow) {
         if (workflow != null) {
             log.info("Added workflow: " + workflow.getName());
-            if (!workflows.contains(workflow)) workflows.add(workflow);
+            if (!workflows.containsKey(workflow.getIdentifier())) workflows.put(workflow.getIdentifier(), workflow);
         }
     }
 
@@ -194,7 +191,7 @@ public class UIMRegistry implements Registry {
     public void removeWorkflow(Workflow workflow) {
         if (workflow != null) {
             log.info("Removed workflow: " + workflow.getName());
-            workflows.remove(workflow);
+            workflows.remove(workflow.getIdentifier());
         }
     }
 
@@ -346,7 +343,7 @@ public class UIMRegistry implements Registry {
     ResourceEngine<?> getActiveResourceEngine() {
         return activeResource;
     }
-    
+
     @Override
     public Orchestrator getOrchestrator() {
         return orchestrator;
@@ -385,11 +382,11 @@ public class UIMRegistry implements Registry {
         if (plugins.isEmpty()) {
             builder.append("\n\tNo workflows. ");
         } else {
-            for (Workflow worfklow : workflows) {
+            for (Workflow worfklow : workflows.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\tWorkflow:");
                 }
-                builder.append(worfklow.getName()).append(": [").append(worfklow.getDescription()).append(
+                builder.append(worfklow.getIdentifier()).append("|").append(worfklow.getName()).append(": [").append(worfklow.getDescription()).append(
                         "]");
             }
         }
@@ -447,7 +444,7 @@ public class UIMRegistry implements Registry {
                 } else {
                     builder.append("  ");
                 }
-                
+
                 builder.append(resourceEngine.getIdentifier());
                 builder.append(" [").append(resourceEngine.getStatus()).append("] ");
                 builder.append(resourceEngine.getConfiguration().toString());

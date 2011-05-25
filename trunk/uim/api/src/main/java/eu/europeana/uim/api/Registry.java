@@ -77,10 +77,10 @@ public interface Registry {
     List<Workflow> getWorkflows();
 
     /**
-     * @param name
+     * @param identifier unique identifier of workflow (most likely class name)
      * @return workflow for the given name or null
      */
-    Workflow getWorkflow(String name);
+    Workflow getWorkflow(String identifier);
 
     /**
      * @param workflow

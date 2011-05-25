@@ -15,6 +15,11 @@ import eu.europeana.uim.api.IngestionPlugin;
  */
 public interface Workflow {
     /**
+     * @return identifier of the workflow, should be simple classname
+     */
+    String getIdentifier();
+    
+    /**
      * @return name of the workflow, should be reasonable meaningful
      */
     String getName();
