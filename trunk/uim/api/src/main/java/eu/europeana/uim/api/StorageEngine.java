@@ -21,7 +21,7 @@ import eu.europeana.uim.store.Request;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface StorageEngine<I>  {
+public interface StorageEngine<I> {
     /**
      * @return identifier of the storage engine
      */
@@ -29,11 +29,12 @@ public interface StorageEngine<I>  {
 
     /**
      * @param config
+     *            arbitrary key - value map
      */
     public void setConfiguration(Map<String, String> config);
 
     /**
-     * @return configuration
+     * @return configuration as arbitrary key - value map
      */
     public Map<String, String> getConfiguration();
 
@@ -68,8 +69,7 @@ public interface StorageEngine<I>  {
      *            to be handled carefully.
      */
     void completed(ExecutionContext context);
-    
-    
+
     /**
      * @return status of the engine (starting, ...)
      */
@@ -104,6 +104,7 @@ public interface StorageEngine<I>  {
 
     /**
      * @param mnemonic
+     *            defines uniquely a provider
      * @return find a specific provider with the given mnemonic, might not always been supported by
      *         the backend
      * @throws StorageEngineException
@@ -117,8 +118,8 @@ public interface StorageEngine<I>  {
     List<Provider<I>> getAllProviders() throws StorageEngineException;
 
     /**
-     * * @param provider parenting provider
-     * 
+     * @param provider
+     *            parenting provider
      * @return newly created collection for the given provider
      * @throws StorageEngineException
      */
@@ -142,6 +143,7 @@ public interface StorageEngine<I>  {
 
     /**
      * @param mnemonic
+     *            unique name
      * @return find a specific collection with the given mnemonic, might not always been supported
      *         by the backend
      * @throws StorageEngineException
@@ -156,7 +158,6 @@ public interface StorageEngine<I>  {
     List<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException;
 
     /**
-     * @param provider
      * @return all collections
      * @throws StorageEngineException
      */
@@ -250,7 +251,7 @@ public interface StorageEngine<I>  {
      * @throws StorageEngineException
      */
     MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
-    
+
     /**
      * @param ids
      *            unique IDs, unique over collection, provider, ...
@@ -285,7 +286,8 @@ public interface StorageEngine<I>  {
      * @return IDs for records for this collection
      * @throws StorageEngineException
      */
-    BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection) throws StorageEngineException;
+    BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection)
+            throws StorageEngineException;
 
     /**
      * @param provider
@@ -295,14 +297,14 @@ public interface StorageEngine<I>  {
      */
     I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
 
-
     /**
      * @param provider
      * @param recursive
      * @return IDs for records for this provider
      * @throws StorageEngineException
      */
-    BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+    BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive)
+            throws StorageEngineException;
 
     /**
      * @return IDs for all known records
