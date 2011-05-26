@@ -182,6 +182,9 @@ public class UIMStore implements Action {
         String method = "set" + StringUtils.capitalize(argument1);
         try {
             Method setter = provider.getClass().getMethod(method, String.class);
+            if ("null".equalsIgnoreCase(argument2)) {
+                argument2 = null;
+            }
             setter.invoke(provider, argument2);
 
             storage.updateProvider(provider);
@@ -256,6 +259,9 @@ public class UIMStore implements Action {
         String method = "set" + StringUtils.capitalize(argument1);
         try {
             Method setter = collection.getClass().getMethod(method, String.class);
+            if ("null".equalsIgnoreCase(argument2)) {
+                argument2 = null;
+            }
             setter.invoke(collection, argument2);
 
             storage.updateCollection(collection);

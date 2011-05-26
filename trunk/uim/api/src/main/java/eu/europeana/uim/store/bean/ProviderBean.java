@@ -91,4 +91,18 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
     public Set<Provider<I>> getRelatedIn() {
         return relatedIn;
     }
+    
+    @Override
+    public String toString() {
+        String string = super.toString();
+        
+        String oai = getOaiBaseUrl();
+        if (oai != null) {
+            string += " OAI:[";
+            string += oai + "?verb={x}";
+            string += getOaiMetadataPrefix() != null ? "&metadataPrefix=" + getOaiMetadataPrefix() : "";
+            string += "]";
+        }
+        return string;
+    }
 }
