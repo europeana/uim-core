@@ -108,7 +108,7 @@ public class IngestionForm extends Composite {
     }
 
     private void executeCollection() {
-        orchestrationService.startCollection(workflow.getName(), collection.getId(),
+        orchestrationService.startCollection(workflow.getIdentifier(), collection.getId(),
                 nameBox.getText(), changedParameters, new AsyncCallback<ExecutionDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -123,7 +123,7 @@ public class IngestionForm extends Composite {
     }
 
     private void executeProvider() {
-        orchestrationService.startProvider(workflow.getName(), provider.getId(), nameBox.getText(),
+        orchestrationService.startProvider(workflow.getIdentifier(), provider.getId(), nameBox.getText(),
                 changedParameters, new AsyncCallback<ExecutionDTO>() {
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -177,7 +177,7 @@ public class IngestionForm extends Composite {
             nameBox.setText("");
         }
         if (nameBox.getText().length() == 0 && workflow != null) {
-            autoText = workflow.getName() +
+            autoText = workflow.getIdentifier() +
                        "/" +
                        (collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)
                                ? provider.toString() : collection.toString());

@@ -150,7 +150,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
     public void updateParameters() {
         orchestrationService.getParameters(provider != null ? provider.getId() : null,
                 collection != null ? collection.getId() : null,
-                workflow != null ? workflow.getName() : null,
+                workflow != null ? workflow.getIdentifier() : null,
                 new AsyncCallback<List<ParameterDTO>>() {
                     @Override
                     public void onFailure(Throwable throwable) {

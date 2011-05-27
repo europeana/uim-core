@@ -9,16 +9,18 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @since Apr 28, 2011
  */
 public class WorkflowDTO implements IsSerializable {
+    private String identifier;
     private String name;
     private String description;
 
     /**
      * Creates a new instance of this class.
      * 
+     * @param identifier
      * @param name
      * @param description
      */
-    public WorkflowDTO(String name, String description) {
+    public WorkflowDTO(String identifier, String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -56,5 +58,19 @@ public class WorkflowDTO implements IsSerializable {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * @return identifier
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * @param identifier
+     */
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 }

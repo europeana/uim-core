@@ -68,7 +68,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         List<eu.europeana.uim.workflow.Workflow> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
             for (eu.europeana.uim.workflow.Workflow w : workflows) {
-                WorkflowDTO wd = new WorkflowDTO(w.getName(), w.getDescription());
+                WorkflowDTO wd = new WorkflowDTO(w.getIdentifier(), w.getName(), w.getDescription());
                 res.add(wd);
             }
         }
@@ -411,8 +411,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return wrapped;
     }
 
-    private eu.europeana.uim.workflow.Workflow getWorkflow(String name) {
-        eu.europeana.uim.workflow.Workflow workflow = getEngine().getRegistry().getWorkflow(name);
+    private eu.europeana.uim.workflow.Workflow getWorkflow(String identifier) {
+        eu.europeana.uim.workflow.Workflow workflow = getEngine().getRegistry().getWorkflow(identifier);
         if (workflow == null) { throw new RuntimeException("Error: cannot find workflow " +
                                                            workflow); }
         return workflow;

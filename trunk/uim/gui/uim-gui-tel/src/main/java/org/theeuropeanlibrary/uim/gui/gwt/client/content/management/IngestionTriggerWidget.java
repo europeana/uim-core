@@ -199,7 +199,7 @@ public class IngestionTriggerWidget extends IngestionControlPanelWidget {
     public void updateParameters() {
         orchestrationService.getParameters(provider != null ? provider.getId() : null,
                 collection != null ? collection.getId() : null,
-                workflow != null ? workflow.getName() : null,
+                workflow != null ? workflow.getIdentifier() : null,
                 new AsyncCallback<List<ParameterDTO>>() {
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -226,7 +226,7 @@ public class IngestionTriggerWidget extends IngestionControlPanelWidget {
         if (provider != null && collection != null && workflow != null) {
             StringBuilder b = new StringBuilder();
             b.append("uim:exec -o start ");
-            b.append(workflow.getName());
+            b.append(workflow.getIdentifier());
             b.append(" ");
             if (!collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)) {
                 b.append(collection.getMnemonic());
