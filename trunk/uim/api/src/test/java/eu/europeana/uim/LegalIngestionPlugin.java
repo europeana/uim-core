@@ -11,22 +11,23 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 
 /**
- * This is a minimal plugin.
- * This should not throw an exception.
+ * This is a minimal plugin. This should not throw an exception.
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
 public class LegalIngestionPlugin implements IngestionPlugin {
-
-    
     private static String constantConstant = "This is okay";
-    
-    
+
+    @Override
+    public String getIdentifier() {
+        return getClass().getSimpleName();
+    }
+
     @Override
     public String getName() {
-        return LegalIngestionPlugin.class.getSimpleName();
+        return "Non-evil Fields Plugins";
     }
 
     @Override
@@ -81,13 +82,12 @@ public class LegalIngestionPlugin implements IngestionPlugin {
 
     @Override
     public void completed(ExecutionContext context) throws IngestionPluginFailedException {
-       
+
     }
 
     @Override
     public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context) {
-            return true;
+        return true;
 
     }
-
 }

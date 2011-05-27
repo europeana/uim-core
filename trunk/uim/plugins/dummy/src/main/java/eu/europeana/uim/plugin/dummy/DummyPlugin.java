@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 
@@ -17,7 +17,7 @@ import eu.europeana.uim.common.TKey;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class DummyPlugin implements IngestionPlugin {
+public class DummyPlugin extends AbstractIngestionPlugin {
     private static Logger log     = Logger.getLogger(DummyPlugin.class.getName());
 
     private static int    counter = 0;
@@ -26,7 +26,7 @@ public class DummyPlugin implements IngestionPlugin {
      * Creates a new instance of this class.
      */
     public DummyPlugin() {
-        // nothing to do
+        super("Java Logging Plugin", "Logging number of processed metadata and nothing more.");
     }
 
     @Override
@@ -37,16 +37,6 @@ public class DummyPlugin implements IngestionPlugin {
             log.info("Dummy plugin is processing MDR " + mdr.getId());
         }
         return true;
-    }
-
-    @Override
-    public String getName() {
-        return DummyPlugin.class.getSimpleName();
-    }
-
-    @Override
-    public String getDescription() {
-        return "Logging number of processed metadata and nothing more.";
     }
 
     @Override

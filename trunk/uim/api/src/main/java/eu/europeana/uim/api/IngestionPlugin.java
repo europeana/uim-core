@@ -34,12 +34,19 @@ import eu.europeana.uim.common.TKey;
  */
 public interface IngestionPlugin {
     /**
-     * Get the class name of the plugin which is used to register the plugin with the registry.
+     * A unique identifier used to register the plugin with the registry.
      * 
-     * @return the name for this plugin (should be Plugin.class.getSimpleName()).
+     * @return identifier for this plugin (should be Plugin.class.getSimpleName()).
+     */
+    String getIdentifier();
+
+    /**
+     * Get a useful name of the plugin to clarify meaning of a plugin.
+     * 
+     * @return name for this plugin (should be Plugin.class.getSimpleName()).
      */
     String getName();
-
+    
     /**
      * Get the description of the plugin which is provided to the operators when starting analyzing
      * workflows.

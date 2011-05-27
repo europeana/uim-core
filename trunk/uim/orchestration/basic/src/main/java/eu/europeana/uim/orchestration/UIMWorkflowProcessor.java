@@ -127,17 +127,17 @@ public class UIMWorkflowProcessor implements Runnable {
                                     IngestionPlugin thisStep = steps[i];
 
                                     Queue<Task> prevSuccess = i > 0
-                                            ? execution.getSuccess(steps[i - 1].getName())
-                                            : execution.getSuccess(start.getName());
+                                            ? execution.getSuccess(steps[i - 1].getIdentifier())
+                                            : execution.getSuccess(start.getIdentifier());
 
-                                    Queue<Task> thisSuccess = execution.getSuccess(thisStep.getName());
-                                    Queue<Task> thisFailure = execution.getFailure(thisStep.getName());
-                                    Set<Task> thisAssigned = execution.getAssigned(thisStep.getName());
+                                    Queue<Task> thisSuccess = execution.getSuccess(thisStep.getIdentifier());
+                                    Queue<Task> thisFailure = execution.getFailure(thisStep.getIdentifier());
+                                    Set<Task> thisAssigned = execution.getAssigned(thisStep.getIdentifier());
 
                                     boolean savepoint = execution.getWorkflow().isSavepoint(
-                                            thisStep.getName());
+                                            thisStep.getIdentifier());
                                     boolean mandatory = execution.getWorkflow().isMandatory(
-                                            thisStep.getName());
+                                            thisStep.getIdentifier());
 
                                     // if we are the "last" step we need to handle
                                     // the last success queue here.
@@ -149,7 +149,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     // and schedule them into the step executor
                                     // of this step
                                     TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(
-                                            thisStep.getName());
+                                            thisStep.getIdentifier());
 
                                     Task task = null;
                                     synchronized (prevSuccess) {
@@ -263,10 +263,10 @@ public class UIMWorkflowProcessor implements Runnable {
                 TaskCreator createLoader = start.createLoader(execution,
                         execution.getStorageEngine());
                 if (createLoader != null) {
-                    createLoader.setQueue(execution.getSuccess(start.getName()));
+                    createLoader.setQueue(execution.getSuccess(start.getIdentifier()));
                     creators.add(createLoader);
 
-                    TaskExecutorRegistry.getInstance().getExecutor(start.getName()).execute(
+                    TaskExecutorRegistry.getInstance().getExecutor(start.getIdentifier()).execute(
                             createLoader);
                     return true;
                 }
@@ -306,9 +306,6 @@ public class UIMWorkflowProcessor implements Runnable {
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }
 
-        
-        
-        
         try {
             execution.getStorageEngine().checkpoint();
             execution.cleanup();
@@ -322,8 +319,7 @@ public class UIMWorkflowProcessor implements Runnable {
                 executions.remove(execution);
             }
         }
-        
-        
+
     }
 
     /**
@@ -350,21 +346,21 @@ public class UIMWorkflowProcessor implements Runnable {
                     WorkflowStart start = execution.getWorkflow().getStart();
                     start.initialize(execution, execution.getStorageEngine());
 
-                    TaskExecutorRegistry.getInstance().initialize(start.getName(),
+                    TaskExecutorRegistry.getInstance().initialize(start.getIdentifier(),
                             start.getPreferredThreadCount(), start.getMaximumThreadCount());
 
                     HashSet<String> unique = new HashSet<String>();
                     for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
-                        if (unique.contains(step.getName())) {
+                        if (unique.contains(step.getIdentifier())) {
                             throw new IllegalArgumentException(
                                     "Workflow contains duplicate plugin:" +
                                             step.getClass().getSimpleName());
                         } else {
-                            unique.add(step.getName());
+                            unique.add(step.getIdentifier());
                         }
 
                         step.initialize(execution);
-                        TaskExecutorRegistry.getInstance().initialize(step.getName(),
+                        TaskExecutorRegistry.getInstance().initialize(step.getIdentifier(),
                                 step.getPreferredThreadCount(), step.getMaximumThreadCount());
                     }
 

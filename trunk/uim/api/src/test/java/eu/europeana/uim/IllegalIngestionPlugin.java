@@ -4,30 +4,31 @@ package eu.europeana.uim;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 
 /**
- * This is a minimal plugin containing non-static member fields.
- * This should throw an exception.
+ * This is a minimal plugin containing non-static member fields. This should throw an exception.
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
 public class IllegalIngestionPlugin implements IngestionPlugin {
-
-    
     private static String constantConstant = "This is okay";
-    
-    private String soNotRight;
-    
+
+    private String        soNotRight;
+
+    @Override
+    public String getIdentifier() {
+        return getClass().getSimpleName();
+    }
+
     @Override
     public String getName() {
-        return IllegalIngestionPlugin.class.getSimpleName();
+        return "Evil Fields Plugins";
     }
 
     @Override
@@ -82,12 +83,12 @@ public class IllegalIngestionPlugin implements IngestionPlugin {
 
     @Override
     public void completed(ExecutionContext context) throws IngestionPluginFailedException {
-       
+
     }
 
     @Override
     public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context) {
-            return true;
+        return true;
 
     }
 

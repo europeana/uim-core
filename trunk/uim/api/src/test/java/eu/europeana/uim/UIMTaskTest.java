@@ -71,8 +71,13 @@ public class UIMTaskTest {
             }
 
             @Override
+            public String getIdentifier() {
+                return getClass().getSimpleName();
+            }
+            
+            @Override
             public String getName() {
-                return IngestionPlugin.class.getSimpleName();
+                return "Anonymous Plugin";
             }
 
             @Override

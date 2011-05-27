@@ -20,22 +20,22 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
-import eu.europeana.uim.workflow.WorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStartFailedException;
 
 /**
  * Loads batches from the storage and pulls them into as tasks.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @param <I> The identifier type
+ * @param <I>
+ *            The identifier type
  * @since Feb 14, 2011
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class BatchWorkflowStart<I> implements WorkflowStart {
-    private static final Logger                       log      = Logger.getLogger(BatchWorkflowStart.class.getName());
-
+public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
+    private static final Logger                   log           = Logger.getLogger(BatchWorkflowStart.class.getName());
 
     /** String BATCH_SUBSET */
     public static final String                    BATCH_SUBSET  = "batch.subset";
@@ -59,17 +59,9 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
      * Creates a new instance of this class.
      */
     public BatchWorkflowStart() {
-        // nothing to do
-    }
-
-    @Override
-    public String getName() {
-        return BatchWorkflowStart.class.getSimpleName();
-    }
-
-    @Override
-    public String getDescription() {
-        return "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.";
+        super(
+                "Batch Loading Workflow Start",
+                "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.");
     }
 
     @Override
@@ -94,11 +86,12 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
             long start = System.currentTimeMillis();
             BlockingQueue<I[]> queue;
             int total = 0;
-            
+
             DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
                 try {
-                    queue = ((StorageEngine<I>)storage).getBatchesByProvider((Provider)dataSet, false);
+                    queue = ((StorageEngine<I>)storage).getBatchesByProvider((Provider)dataSet,
+                            false);
                     total = ((StorageEngine<I>)storage).getTotalByProvider((Provider)dataSet, false);
                 } catch (StorageEngineException e) {
                     throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
@@ -121,7 +114,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof MetaDataRecord) {
-                I[] a = (I[]) Array.newInstance(((MetaDataRecord)dataSet).getId().getClass(), 1);
+                I[] a = (I[])Array.newInstance(((MetaDataRecord)dataSet).getId().getClass(), 1);
                 a[0] = (I)((MetaDataRecord)dataSet).getId();
                 queue = new LinkedBlockingQueue<I[]>();
                 queue.add(a);
@@ -130,7 +123,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
             }
-            
+
             // this is for testing to allow injection of a data object
             Data data = context.getValue(DATA_KEY);
             if (data == null) {
@@ -138,7 +131,8 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                 context.putValue(DATA_KEY, data);
             }
 
-            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
+            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_SHUFFLE, "false"));
             if (shuffle) {
                 List<I> allids = new ArrayList<I>();
                 while (!queue.isEmpty()) {
@@ -155,7 +149,8 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                log.info(String.format("Loaded %d records in %.3f sec", ids.length, (System.currentTimeMillis() - start ) / 1000.0));
+                log.info(String.format("Loaded %d records in %.3f sec", ids.length,
+                        (System.currentTimeMillis() - start) / 1000.0));
             } else if (context.getProperties().getProperty(BATCH_SUBSET) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET));
 
@@ -169,19 +164,21 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                     } catch (InterruptedException e) {
                     }
                 }
-                
+
                 allids = allids.subList(0, subset);
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                log.info(String.format("Loaded %d records in %.3f sec", ids.length, (System.currentTimeMillis() - start ) / 1000.0));
+                log.info(String.format("Loaded %d records in %.3f sec", ids.length,
+                        (System.currentTimeMillis() - start) / 1000.0));
             } else {
                 // we do have already a blocking queue from the storage engine.
                 data.batches = queue;
                 data.total = total;
             }
 
-            log.info(String.format("Created %d batches in %.3f sec", data.batches.size(), (System.currentTimeMillis() - start ) / 1000.0));
+            log.info(String.format("Created %d batches in %.3f sec", data.batches.size(),
+                    (System.currentTimeMillis() - start) / 1000.0));
             data.initialized = true;
         } finally {
         }
@@ -224,7 +221,7 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
                     if (poll != null) {
                         List<MetaDataRecord> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
                         MetaDataRecord[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
-                            
+
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord mdr = mdrs[i];
                             Task task = new Task(mdr, storage, context);
@@ -267,8 +264,8 @@ public class BatchWorkflowStart<I> implements WorkflowStart {
      * @since Feb 28, 2011
      */
     final static class Data<I> implements Serializable {
-        public int                     total       = 0;
-        public boolean                 initialized = false;
+        public int                total       = 0;
+        public boolean            initialized = false;
         public BlockingQueue<I[]> batches     = new LinkedBlockingQueue<I[]>();
     }
 

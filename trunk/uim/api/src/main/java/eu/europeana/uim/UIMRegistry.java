@@ -99,13 +99,12 @@ public class UIMRegistry implements Registry {
 
     @Override
     public void addPlugin(IngestionPlugin plugin) {
-
         checkPluginForNonStaticMemberVariables(plugin);
         if (plugin != null) {
-            log.info("Added plugin: " + plugin.getName());
-            if (!plugins.containsKey(plugin.getName())) {
+            log.info("Added plugin: " + plugin.getIdentifier());
+            if (!plugins.containsKey(plugin.getIdentifier())) {
                 plugin.initialize();
-                plugins.put(plugin.getName(), plugin);
+                plugins.put(plugin.getIdentifier(), plugin);
             }
         }
     }
@@ -116,8 +115,7 @@ public class UIMRegistry implements Registry {
      * @param plugin
      */
     private void checkPluginForNonStaticMemberVariables(IngestionPlugin plugin) {
-
-        log.info("Checking for non-static member-fields: " + plugin.getName());
+        log.info("Checking for non-static member-fields: " + plugin.getIdentifier());
         StringBuffer nonStaticMembers = new StringBuffer();
 
         // getFields() only accesses public fields - use getDeclaredFields() instead
@@ -126,7 +124,7 @@ public class UIMRegistry implements Registry {
             nonStaticMembers.append(currentField.getName() + " ");
         }
         if (nonStaticMembers.length() > 0)
-            throw new IllegalArgumentException(plugin.getName() + " has non-static member(s): " +
+            throw new IllegalArgumentException(plugin.getIdentifier() + " has non-static member(s): " +
                                                nonStaticMembers.toString());
     }
 
@@ -138,8 +136,8 @@ public class UIMRegistry implements Registry {
     @Override
     public void removePlugin(IngestionPlugin plugin) {
         if (plugin != null) {
-            log.info("Removed plugin: " + plugin.getName());
-            plugins.remove(plugin.getName());
+            log.info("Removed plugin: " + plugin.getIdentifier());
+            plugins.remove(plugin.getIdentifier());
             plugin.shutdown();
         }
     }
@@ -183,7 +181,8 @@ public class UIMRegistry implements Registry {
     public void addWorkflow(Workflow workflow) {
         if (workflow != null) {
             log.info("Added workflow: " + workflow.getName());
-            if (!workflows.containsKey(workflow.getIdentifier())) workflows.put(workflow.getIdentifier(), workflow);
+            if (!workflows.containsKey(workflow.getIdentifier()))
+                workflows.put(workflow.getIdentifier(), workflow);
         }
     }
 
@@ -372,7 +371,7 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getName()).append(": [").append(plugin.getDescription()).append(
+                builder.append(plugin.getIdentifier()).append("|").append(plugin.getName()).append(": [").append(plugin.getDescription()).append(
                         "]");
             }
         }
@@ -386,8 +385,8 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tWorkflow:");
                 }
-                builder.append(worfklow.getIdentifier()).append("|").append(worfklow.getName()).append(": [").append(worfklow.getDescription()).append(
-                        "]");
+                builder.append(worfklow.getIdentifier()).append("|").append(worfklow.getName()).append(
+                        ": [").append(worfklow.getDescription()).append("]");
             }
         }
 

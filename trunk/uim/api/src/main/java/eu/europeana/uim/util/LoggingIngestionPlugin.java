@@ -8,9 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 
@@ -20,7 +20,7 @@ import eu.europeana.uim.common.TKey;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 25, 2011
  */
-public class LoggingIngestionPlugin implements IngestionPlugin {
+public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     private static final Logger                       log      = Logger.getLogger(LoggingIngestionPlugin.class.getName());
 
     private static TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(
@@ -31,17 +31,7 @@ public class LoggingIngestionPlugin implements IngestionPlugin {
      * Creates a new instance of this class.
      */
     public LoggingIngestionPlugin() {
-        // nothing to do
-    }
-
-    @Override
-    public String getName() {
-        return LoggingIngestionPlugin.class.getSimpleName();
-    }
-
-    @Override
-    public String getDescription() {
-        return "Logges the identifiers of MDRs according the specififed level in the execution (default INFO)";
+        super("Identifier Logging", "Logges the identifiers of MDRs according the specififed level in the execution (default INFO)");
     }
 
     @Override

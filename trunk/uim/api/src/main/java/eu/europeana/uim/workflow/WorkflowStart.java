@@ -13,12 +13,15 @@ import eu.europeana.uim.api.StorageEngine;
  */
 public interface WorkflowStart {
     /**
-     * Get the class name of the plugin which is used to register the plugin with the registry.
-     * 
-     * @return the name for this plugin (should be Plugin.class.getSimpleName()).
+     * @return identifier of the workflow start, should be simple classname
+     */
+    String getIdentifier();
+    
+    /**
+     * @return name of the workflow, should be reasonable meaningful
      */
     String getName();
-
+   
     /**
      * Get the description of the plugin which is provided to the operators when starting analyzing
      * workflows.

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Random;
 
 import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 
@@ -18,7 +18,7 @@ import eu.europeana.uim.common.TKey;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class SyserrPlugin implements IngestionPlugin {
+public class SyserrPlugin extends AbstractIngestionPlugin {
     private static TKey<SyserrPlugin, Data> DATA_KEY = TKey.register(SyserrPlugin.class, "data",
                                                              Data.class);
 
@@ -26,17 +26,7 @@ public class SyserrPlugin implements IngestionPlugin {
      * Creates a new instance of this class.
      */
     public SyserrPlugin() {
-        // nothing to do
-    }
-
-    @Override
-    public String getName() {
-        return SyserrPlugin.class.getSimpleName();
-    }
-
-    @Override
-    public String getDescription() {
-        return "Writes the identifiers of MDRs to sysout.";
+        super("Error Writer Plugin", "Writes the identifiers of MDRs to sysout.");
     }
 
     @Override

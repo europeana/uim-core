@@ -99,14 +99,14 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         this.monitor = monitor;
 
         WorkflowStart start = workflow.getStart();
-        success.put(start.getName(), new LinkedList<Task>());
-        failure.put(start.getName(), new LinkedList<Task>());
-        assigned.put(start.getName(), new HashSet<Task>());
+        success.put(start.getIdentifier(), new LinkedList<Task>());
+        failure.put(start.getIdentifier(), new LinkedList<Task>());
+        assigned.put(start.getIdentifier(), new HashSet<Task>());
 
         for (IngestionPlugin step : workflow.getSteps()) {
-            success.put(step.getName(), new LinkedList<Task>());
-            failure.put(step.getName(), new LinkedList<Task>());
-            assigned.put(step.getName(), new HashSet<Task>());
+            success.put(step.getIdentifier(), new LinkedList<Task>());
+            failure.put(step.getIdentifier(), new LinkedList<Task>());
+            assigned.put(step.getIdentifier(), new HashSet<Task>());
         }
     }
 
@@ -299,10 +299,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public int getProgressSize() {
         int size = 0;
         WorkflowStart start = getWorkflow().getStart();
-        size += getProgressSize(start.getName());
+        size += getProgressSize(start.getIdentifier());
 
         for (IngestionPlugin step : getWorkflow().getSteps()) {
-            size += getProgressSize(step.getName());
+            size += getProgressSize(step.getIdentifier());
         }
         return size;
     }
@@ -343,17 +343,17 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 StringBuilder builder = new StringBuilder();
 
                 WorkflowStart start = getWorkflow().getStart();
-                int startSize = getProgressSize(start.getName());
+                int startSize = getProgressSize(start.getIdentifier());
                 totalProgress += startSize;
-                builder.append(start.getName());
+                builder.append(start.getIdentifier());
                 builder.append("=");
                 builder.append(startSize);
                 builder.append(", ");
 
                 for (IngestionPlugin step : getWorkflow().getSteps()) {
-                    int stepSize = getProgressSize(step.getName());
+                    int stepSize = getProgressSize(step.getIdentifier());
                     totalProgress += stepSize;
-                    builder.append(step.getName());
+                    builder.append(step.getIdentifier());
                     builder.append("=");
                     builder.append(stepSize);
                     builder.append(", ");
@@ -402,8 +402,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public WorkflowStepStatus getStepStatus(IngestionPlugin step) {
-        Queue<Task> success = getSuccess(step.getName());
-        Queue<Task> failure = getFailure(step.getName());
+        Queue<Task> success = getSuccess(step.getIdentifier());
+        Queue<Task> failure = getFailure(step.getIdentifier());
 
         int successSize = 0;
         synchronized (success) {
@@ -478,7 +478,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public File getWorkingDirectory(IngestionPlugin plugin) {
         String workDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
-                               File.pathSeparator + plugin.getName();
+                               File.pathSeparator + plugin.getIdentifier();
         File workingDirectory = new File(resourceEngine.getWorkingDirectory(), workDirSuffix);
         if (!workingDirectory.exists() && !workingDirectory.mkdirs())
             throw new RuntimeException("Could not create working directory for this execution: " +
@@ -486,15 +486,13 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         if (!workingDirectory.isDirectory()) { throw new RuntimeException(
                 "Path for working directory is not a directory: " +
                         workingDirectory.getAbsolutePath()); }
-
         return workingDirectory;
-
     }
 
     @Override
     public File getTmpDirectory(IngestionPlugin plugin) {
         String tmpDirSuffix = workflow.getName() + File.separator + execution.getId() +
-                              File.separator + plugin.getName();
+                              File.separator + plugin.getIdentifier();
         File tmpDirectory = new File(resourceEngine.getTemporaryDirectory(), tmpDirSuffix);
         if (!tmpDirectory.exists() && !tmpDirectory.mkdirs())
             throw new RuntimeException("Could not create temporary directory for this execution: " +
@@ -502,7 +500,6 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         if (!tmpDirectory.isDirectory()) { throw new RuntimeException(
                 "Path for temporary directory is not a directory: " +
                         tmpDirectory.getAbsolutePath()); }
-
         return tmpDirectory;
     }
 
@@ -519,6 +516,5 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 }
             }
         }
-
     }
 }
