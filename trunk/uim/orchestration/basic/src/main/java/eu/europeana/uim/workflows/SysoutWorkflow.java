@@ -12,7 +12,7 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * @since Mar 4, 2011
  */
 public class SysoutWorkflow extends AbstractWorkflow {
-    private String savePointName;
+    private String savePointIdentifier;
 
     /**
      * Creates a new instance of this class.
@@ -42,17 +42,17 @@ public class SysoutWorkflow extends AbstractWorkflow {
         LoggingIngestionPlugin log = new LoggingIngestionPlugin();
         addStep(log);
 
-        savePointName = step.getName();
+        savePointIdentifier = step.getIdentifier();
     }
 
     @Override
-    public boolean isSavepoint(String pluginName) {
-        if (pluginName.equals(savePointName)) { return true; }
+    public boolean isSavepoint(String pluginIdentifier) {
+        if (pluginIdentifier.equals(savePointIdentifier)) { return true; }
         return false;
     }
 
     @Override
-    public boolean isMandatory(String pluginName) {
+    public boolean isMandatory(String pluginIdentifier) {
         return false;
     }
 }

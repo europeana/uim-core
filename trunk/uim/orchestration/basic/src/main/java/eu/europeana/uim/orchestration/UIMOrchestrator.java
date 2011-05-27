@@ -93,7 +93,7 @@ public class UIMOrchestrator implements Orchestrator {
         monitor.beginTask(w.getName(), 1);
 
         try {
-            Execution e = registry.getStorage().createExecution(dataset, w.getName());
+            Execution e = registry.getStorage().createExecution(dataset, w.getIdentifier());
             e.setActive(true);
             e.setStartTime(new Date());
             registry.getStorage().updateExecution(e);

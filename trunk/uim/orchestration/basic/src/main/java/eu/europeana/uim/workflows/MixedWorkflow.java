@@ -37,7 +37,7 @@ public class MixedWorkflow extends AbstractWorkflow {
 
     @Override
     public boolean isSavepoint(String pluginName) {
-        if (pluginName.equals(new SyserrPlugin().getName())) { return true; }
+        if (pluginName.equals(new SyserrPlugin().getIdentifier())) { return true; }
         return false;
     }
 

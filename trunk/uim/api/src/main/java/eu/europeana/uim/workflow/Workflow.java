@@ -18,7 +18,7 @@ public interface Workflow {
      * @return identifier of the workflow, should be simple classname
      */
     String getIdentifier();
-    
+
     /**
      * @return name of the workflow, should be reasonable meaningful
      */
@@ -41,14 +41,14 @@ public interface Workflow {
     List<IngestionPlugin> getSteps();
 
     /**
-     * @param pluginName
+     * @param pluginIdentifier
      * @return Is this a save point plugin?
      */
-    boolean isSavepoint(String pluginName);
+    boolean isSavepoint(String pluginIdentifier);
 
     /**
-     * @param pluginName
+     * @param pluginIdentifier
      * @return Is this a mandatory plugin, so unsuccesful processing is a failure?
      */
-    boolean isMandatory(String pluginName);
+    boolean isMandatory(String pluginIdentifier);
 }

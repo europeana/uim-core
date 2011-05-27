@@ -79,7 +79,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginName(plugin.getName());
+        entry.setPluginName(plugin.getIdentifier());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(message);
 
@@ -93,7 +93,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginName(plugin.getName());
+        entry.setPluginName(plugin.getIdentifier());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(payload);
 
@@ -129,7 +129,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         for (int i = 0; i < count; i++) {
             TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / count);
-            entry.setPluginName(plugin.getName());
+            entry.setPluginName(plugin.getIdentifier());
             entries[i] = entry;
         }
         storage.getDurationHome().insert(entries);
@@ -141,7 +141,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         for (int i = 0; i < mdr.length; i++) {
             TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / mdr.length);
-            entry.setPluginName(plugin.getName());
+            entry.setPluginName(plugin.getIdentifier());
             entries[i] = entry;
         }
         storage.getDurationHome().insert(entries);
@@ -151,7 +151,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     public Long getAverageDuration(IngestionPlugin plugin) {
         long average = 0;
         List<TDurationDatabaseEntry> entries = storage.getDurationHome().findByPlugin(
-                plugin.getName());
+                plugin.getIdentifier());
         for (TDurationDatabaseEntry entry : entries) {
             average += entry.getDuration();
         }
