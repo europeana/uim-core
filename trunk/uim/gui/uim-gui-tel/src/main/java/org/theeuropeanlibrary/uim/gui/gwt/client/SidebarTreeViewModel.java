@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionDetailWidget;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionHistoryWidget;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.IngestionTriggerWidget;
-import org.theeuropeanlibrary.uim.gui.gwt.client.content.ResourceManagementWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.management.IngestionTriggerWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.management.ResourceManagementWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.monitoring.IngestionDetailWidget;
+import org.theeuropeanlibrary.uim.gui.gwt.client.content.monitoring.IngestionHistoryWidget;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;

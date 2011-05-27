@@ -1,5 +1,5 @@
 /* BrowserTreeViewModel.java - created on Apr 29, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.management;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 29, 2011
  */
-public class TriggerTreeViewModel implements TreeViewModel {
+public class ResourceTreeViewModel implements TreeViewModel {
     /**
      * all collections used for a specific provider
      */
@@ -29,19 +29,18 @@ public class TriggerTreeViewModel implements TreeViewModel {
     private final OrchestrationServiceAsync          orchestrationServ;
     private final MultiSelectionModel<BrowserObject> selectionModel;
     private final BrowserObjectCell                  browserObjectCell;
-
+    
     /**
      * provides keys for browser objects
      */
-    public static final ProvidesKey<BrowserObject>   KEY_PROVIDER    = new ProvidesKey<BrowserObject>() {
-                                                                         @Override
-                                                                         public Object getKey(
-                                                                                 BrowserObject item) {
-                                                                             return item == null
-                                                                                     ? null
-                                                                                     : item.getName();
-                                                                         }
-                                                                     };
+    public static final ProvidesKey<BrowserObject> KEY_PROVIDER = new ProvidesKey<BrowserObject>() {
+                                                                    @Override
+                                                                    public Object getKey(
+                                                                            BrowserObject item) {
+                                                                        return item == null ? null
+                                                                                : item.getName();
+                                                                    }
+                                                                };
 
     /**
      * Creates a new instance of this class.
@@ -49,8 +48,8 @@ public class TriggerTreeViewModel implements TreeViewModel {
      * @param orchestrationServ
      * @param selectionModel
      */
-    public TriggerTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
-                                final MultiSelectionModel<BrowserObject> selectionModel) {
+    public ResourceTreeViewModel(final OrchestrationServiceAsync orchestrationServ,
+                                 final MultiSelectionModel<BrowserObject> selectionModel) {
         this.orchestrationServ = orchestrationServ;
         this.selectionModel = selectionModel;
         browserObjectCell = new BrowserObjectCell();
@@ -59,21 +58,21 @@ public class TriggerTreeViewModel implements TreeViewModel {
     @Override
     public <T> NodeInfo<?> getNodeInfo(T value) {
         if (value == null) {
+            ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
+            loadWorkflows(workflowsDataProvider);
+            return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider,
+                    browserObjectCell, selectionModel, null);
+        } else if (((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO) {
             ListDataProvider<BrowserObject> providersDataProvider = new ListDataProvider<BrowserObject>();
             loadProviders(providersDataProvider);
-            return new DefaultNodeInfo<BrowserObject>(providersDataProvider, browserObjectCell,
-                    selectionModel, null);
+            return new DefaultNodeInfo<BrowserObject>(providersDataProvider,
+                    browserObjectCell, selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof ProviderDTO) {
             ProviderDTO provider = (ProviderDTO)((BrowserObject)value).getWrappedObject();
             ListDataProvider<BrowserObject> collectionsDataProvider = new ListDataProvider<BrowserObject>();
             loadCollections(provider.getId(), collectionsDataProvider);
-            return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider, browserObjectCell,
-                    selectionModel, null);
-        } else if (((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
-            ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
-            loadWorkflows(workflowsDataProvider);
-            return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider, browserObjectCell,
-                    selectionModel, null);
+            return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider,
+                    browserObjectCell, selectionModel, null);
         }
 
         // Unhandled type.
@@ -83,7 +82,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
     @Override
     public boolean isLeaf(Object value) {
-        return ((BrowserObject)value).getWrappedObject() instanceof WorkflowDTO;
+        return ((BrowserObject)value).getWrappedObject() instanceof CollectionDTO;
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {
@@ -118,11 +117,6 @@ public class TriggerTreeViewModel implements TreeViewModel {
             public void onSuccess(List<CollectionDTO> collections) {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
-                if (collections.size() > 0) {
-                    CollectionDTO fakeCollection = new CollectionDTO();
-                    fakeCollection.setName(ALL_COLLECTIONS);
-                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
-                }
                 for (CollectionDTO collection : collections) {
                     collectionList.add(new BrowserObject(collection.getName(), collection));
                 }

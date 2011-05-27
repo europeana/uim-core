@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.validation;
 
 import java.util.ArrayList;
 import java.util.List;

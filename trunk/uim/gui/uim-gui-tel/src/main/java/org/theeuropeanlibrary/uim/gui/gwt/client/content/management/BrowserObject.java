@@ -1,5 +1,5 @@
 /* BrowserObject.java - created on May 20, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.management;
 
 /**
  * Wrapped arbitrary object with a name to be shown in browser widget.

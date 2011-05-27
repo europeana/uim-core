@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.management;
 
 import java.util.HashSet;
 import java.util.Set;

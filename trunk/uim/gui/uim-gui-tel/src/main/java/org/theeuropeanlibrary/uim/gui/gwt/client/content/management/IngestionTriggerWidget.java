@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.management;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,13 +17,14 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellBrowser;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.LayoutPanel;
@@ -42,11 +43,11 @@ import com.google.gwt.view.client.SimpleKeyProvider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class ResourceManagementWidget extends IngestionControlPanelWidget {
+public class IngestionTriggerWidget extends IngestionControlPanelWidget {
     /**
      * The UiBinder interface used by this example.
      */
-    interface Binder extends UiBinder<Widget, ResourceManagementWidget> {
+    interface Binder extends UiBinder<Widget, IngestionTriggerWidget> {
     }
 
     private final OrchestrationServiceAsync orchestrationService;
@@ -58,25 +59,30 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
     LayoutPanel                             leftPanel;
 
     @UiField
-    LayoutPanel                             centerPanel;
+    LayoutPanel                             rightPanel;
 
     CellBrowser                             cellBrowser;
 
     CellTable<ParameterDTO>                 cellTable;
 
+    @UiField(provided = true)
+    IngestionForm                           executionForm;
+
+    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
+
     private ProviderDTO                     provider;
     private CollectionDTO                   collection;
     private WorkflowDTO                     workflow;
-
-    private final List<ParameterDTO>        activeParameters = new ArrayList<ParameterDTO>();
 
     /**
      * Creates a new instance of this class.
      * 
      * @param orchestrationService
      */
-    public ResourceManagementWidget(OrchestrationServiceAsync orchestrationService) {
-        super("Manage Resources", "This view allows to manage resources for known plugins!");
+    public IngestionTriggerWidget(OrchestrationServiceAsync orchestrationService) {
+        super(
+                "Start Ingestion",
+                "This view allows selecting a provider, a collection, a workflow and optionally adjusted resources to start a new ingestion activity!");
         this.orchestrationService = orchestrationService;
     }
 
@@ -85,34 +91,57 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
      */
     @Override
     public Widget onInitialize() {
-        // Create the UiBinder.
+        executionForm = new IngestionForm(orchestrationService, new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent arg0) {
+                for (int i = 0; i < cellBrowser.getRootTreeNode().getChildCount(); i++) {
+                    cellBrowser.getRootTreeNode().setChildOpen(i, false);
+                }
+                provider = null;
+                collection = null;
+                workflow = null;
+                updateParameters();
+            }
+        });
+
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
 
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
-                ResourceTreeViewModel.KEY_PROVIDER);
+                TriggerTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
                 Set<BrowserObject> vals = selectionModelBrowser.getSelectedSet();
                 for (BrowserObject val : vals) {
-                    if (val.getWrappedObject() instanceof WorkflowDTO) {
-                        workflow = (WorkflowDTO)val.getWrappedObject();
-                    } else if (val.getWrappedObject() instanceof ProviderDTO) {
+                    if (val.getWrappedObject() instanceof ProviderDTO) {
                         provider = (ProviderDTO)val.getWrappedObject();
+                        collection = null;
+                        workflow = null;
+
+                        executionForm.setProvider((ProviderDTO)val.getWrappedObject());
+                        executionForm.setCollection(null);
+                        executionForm.setWorkflow(null);
                     } else if (val.getWrappedObject() instanceof CollectionDTO) {
                         collection = (CollectionDTO)val.getWrappedObject();
+                        workflow = null;
+
+                        executionForm.setCollection((CollectionDTO)val.getWrappedObject());
+                        executionForm.setWorkflow(null);
+                    } else if (val.getWrappedObject() instanceof WorkflowDTO) {
+                        workflow = (WorkflowDTO)val.getWrappedObject();
+
+                        executionForm.setWorkflow((WorkflowDTO)val.getWrappedObject());
                     }
                     updateParameters();
                 }
             }
         });
 
-        ResourceTreeViewModel browserTreeViewModel = new ResourceTreeViewModel(
-                orchestrationService, selectionModelBrowser);
+        TriggerTreeViewModel browserTreeViewModel = new TriggerTreeViewModel(orchestrationService,
+                selectionModelBrowser);
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
-        // cellBrowser.setSize("300px", "350px");
         cellBrowser.setSize("100%", "100%");
 
         leftPanel.add(cellBrowser);
@@ -120,28 +149,48 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
         cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
+// cellTable.setPageSize(15);
+// cellTable.setRowCount(10);
 
         final ListDataProvider<ParameterDTO> dataProvider = new ListDataProvider<ParameterDTO>();
         dataProvider.setList(activeParameters);
         dataProvider.addDataDisplay(cellTable);
 
-        // Attach a column sort handler to the ListDataProvider to sort the list.
         ListHandler<ParameterDTO> sortHandler = new ListHandler<ParameterDTO>(
                 new ListDataProvider<ParameterDTO>().getList());
         cellTable.addColumnSortHandler(sortHandler);
 
-        // Add a selection model so we can select cells.
-        final SelectionModel<ParameterDTO> selectionModelTable = new MultiSelectionModel<ParameterDTO>(
+        final MultiSelectionModel<ParameterDTO> selectionModelTable = new MultiSelectionModel<ParameterDTO>(
                 new SimpleKeyProvider<ParameterDTO>());
         cellTable.setSelectionModel(selectionModelTable,
                 DefaultSelectionEventManager.<ParameterDTO> createCheckboxManager());
 
-        // Initialize the columns.
         initTableColumns(selectionModelTable, sortHandler);
 
-        centerPanel.add(cellTable);
+        rightPanel.add(cellTable);
 
         return widget;
+    }
+
+    @Override
+    protected void onLoad() {
+        super.onLoad();
+        updateParameters();
+    }
+
+    @Override
+    protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
+        GWT.runAsync(IngestionTriggerWidget.class, new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess(onInitialize());
+            }
+        });
     }
 
     /**
@@ -164,23 +213,46 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
                         cellTable.setRowData(0, activeParameters);
                         cellTable.setRowCount(activeParameters.size());
                         cellTable.setHeight((30 + 20 * parameters.size()) + "px");
+
+                        updateCommandline();
                     }
                 });
     }
 
-    @Override
-    protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
-        GWT.runAsync(ResourceManagementWidget.class, new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
+    /**
+     * Updates command line.
+     */
+    protected void updateCommandline() {
+        if (provider != null && collection != null && workflow != null) {
+            StringBuilder b = new StringBuilder();
+            b.append("uim:exec -o start ");
+            b.append(workflow.getName());
+            b.append(" ");
+            if (!collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)) {
+                b.append(collection.getMnemonic());
+            } else {
+                b.append(provider.getMnemonic());
             }
+            b.append(" ");
+            for (int i = 0; i < activeParameters.size(); i++) {
+                ParameterDTO param = activeParameters.get(i);
+                if (param.getValues() != null && param.getValues().length > 0) {
+                    b.append(param.getKey());
+                    b.append("=");
 
-            @Override
-            public void onSuccess() {
-                callback.onSuccess(onInitialize());
+                    for (int j = 0; j < param.getValues().length; j++) {
+                        b.append(param.getValues()[j]);
+                        if (j < param.getValues().length - 1) {
+                            b.append("|");
+                        }
+                    }
+                    b.append("&");
+                }
             }
-        });
+            executionForm.setCommandline(b.toString().substring(0, b.length() - 1));
+        } else {
+            executionForm.setCommandline(null);
+        }
     }
 
     /**
@@ -203,7 +275,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         });
         cellTable.addColumn(keyColumn, "Resource Name");
-        cellTable.setColumnWidth(keyColumn, 30, Unit.PCT);
+        cellTable.setColumnWidth(keyColumn, 40, Unit.PCT);
 
         // Value
         Column<ParameterDTO, String> valueColumn = new Column<ParameterDTO, String>(new TextCell()) {
@@ -223,7 +295,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
         };
         valueColumn.setSortable(true);
         cellTable.addColumn(valueColumn, "Resource Value");
-        cellTable.setColumnWidth(valueColumn, 70, Unit.PCT);
+        cellTable.setColumnWidth(valueColumn, 40, Unit.PCT);
 
         // Update Button
         Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
@@ -241,7 +313,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 20, Unit.PX);
+        cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
 
         // File update Button
         Column<ParameterDTO, ParameterDTO> fileColumn = new Column<ParameterDTO, ParameterDTO>(
@@ -260,29 +332,19 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         };
         cellTable.addColumn(fileColumn, "Update");
-        cellTable.setColumnWidth(fileColumn, 20, Unit.PX);
+        cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
     }
 
     private final class ResourceSettingCallbackImplementation implements ResourceSettingCallback {
         @Override
         public void changed(ParameterDTO parameter) {
-            orchestrationService.setParameters(parameter, provider != null ? provider.getId()
-                    : null, collection != null ? collection.getId() : null, workflow != null
-                    ? workflow.getName() : null, new AsyncCallback<Boolean>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    throwable.printStackTrace();
-                }
+            cellTable.setRowData(0, activeParameters);
+            cellTable.setRowCount(activeParameters.size());
+            cellTable.setHeight((30 + 20 * activeParameters.subList(0, activeParameters.size()).size()) +
+                                "px");
 
-                @Override
-                public void onSuccess(Boolean res) {
-                    if (!res) {
-                        Window.alert("Could not write resource!");
-                    } else {
-                        updateParameters();
-                    }
-                }
-            });
+            updateCommandline();
+            executionForm.addLocalParameter(parameter);
         }
     }
 }

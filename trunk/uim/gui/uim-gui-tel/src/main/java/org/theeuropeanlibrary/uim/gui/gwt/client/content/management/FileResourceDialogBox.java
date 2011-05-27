@@ -1,5 +1,5 @@
 /* SimpleResourcejava - created on May 10, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.uim.gui.gwt.client.content;
+package org.theeuropeanlibrary.uim.gui.gwt.client.content.management;
 
 import java.util.ArrayList;
 import java.util.List;
