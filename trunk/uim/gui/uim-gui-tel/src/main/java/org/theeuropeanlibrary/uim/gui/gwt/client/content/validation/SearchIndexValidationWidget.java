@@ -54,7 +54,6 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
     private final List<SearchRecordDTO>     records       = new ArrayList<SearchRecordDTO>();
     private final List<ProviderDTO>         providers     = new ArrayList<ProviderDTO>();
     private final List<CollectionDTO>       collections   = new ArrayList<CollectionDTO>();
-    private final List<String>              indexFields   = new ArrayList<String>();
     private String                          lastQuery     = null;
 
     private static final List<String>       SEARCH_FACETS = new ArrayList<String>() {
@@ -72,6 +71,11 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
      */
     @UiField
     ListBox                                 collectionBox;
+    /**
+     * Box with languages to provide a specific index field
+     */
+    @UiField
+    ListBox                                 languageBox;
     /**
      * Box with index fields for selection
      */
@@ -180,15 +184,37 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
                         });
             }
         });
+
+        fieldBox.addItem("all");
+        for (String field : IndexFieldNames.languageIndexFields) {
+            fieldBox.addItem(field);
+        }
+        for (String field : IndexFieldNames.plainIndexFields) {
+            fieldBox.addItem(field);
+        }
+
+        languageBox.addItem("Undefined (und)");
+        for (String field : IndexFieldNames.languages) {
+            languageBox.addItem(field);
+        }
+
         searchButton.setText("Search");
         searchButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
-                String searchField = indexFields.get(fieldBox.getSelectedIndex());
-                if (searchField != null) {
-                    lastQuery = searchField + ":" + queryBox.getText();
-                } else {
+                String indexField = fieldBox.getItemText(fieldBox.getSelectedIndex());
+                if (indexField == null || indexField.equals("all")) {
                     lastQuery = queryBox.getText();
+                } else {
+                    if (IndexFieldNames.languageIndexFields.contains(indexField)) {
+                        String language = languageBox.getItemText(languageBox.getSelectedIndex());
+                        int start = language.indexOf("(");
+                        int end = language.indexOf(")");
+                        lastQuery = indexField + "_" + language.substring(start, end) + ":" +
+                                    queryBox.getText();
+                    } else {
+                        lastQuery = indexField + ":" + queryBox.getText();
+                    }
                 }
                 CollectionDTO collection = collections.get(collectionBox.getSelectedIndex());
                 if (collection != null) {

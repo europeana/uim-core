@@ -45,6 +45,7 @@
                         <g:ListBox ui:field='providerBox' addStyleNames='{style.value}' />
                         <g:ListBox ui:field='collectionBox' addStyleNames='{style.value}' />
                         <g:ListBox ui:field='fieldBox' addStyleNames='{style.value}' />
+                        <g:ListBox ui:field='languageBox' addStyleNames='{style.value}' />
                         <g:TextBox addStyleNames='{style.value}' ui:field='queryBox' />
                         <g:Button ui:field='searchButton' />
                     </g:HorizontalPanel>
