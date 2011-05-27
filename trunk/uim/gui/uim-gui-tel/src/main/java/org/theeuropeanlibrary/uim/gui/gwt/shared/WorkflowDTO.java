@@ -21,6 +21,7 @@ public class WorkflowDTO implements IsSerializable {
      * @param description
      */
     public WorkflowDTO(String identifier, String name, String description) {
+        this.identifier = identifier;
         this.name = name;
         this.description = description;
     }
