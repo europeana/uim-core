@@ -5,8 +5,10 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.MetaDataRecordDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.SearchResultDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
@@ -45,10 +47,10 @@ public interface OrchestrationServiceAsync {
     /**
      * Returns a list of all known collection for a given provider
      * 
-     * @param collection
+     * @param provider
      * @param async
      */
-    void getCollections(Long collection, AsyncCallback<List<CollectionDTO>> async);
+    void getCollections(Long provider, AsyncCallback<List<CollectionDTO>> async);
 
     /**
      * Returns number of metadata records in the provided collection
@@ -176,4 +178,53 @@ public interface OrchestrationServiceAsync {
      * @param async
      */
     void cancelExecution(Long execution, AsyncCallback<Boolean> async);
+
+    /**
+     * Delivers up to a maxSize number of records starting at the offset for the provided collection
+     * from the central repository
+     * 
+     * @param collection
+     * @param maxSize
+     * @param offset
+     * @param async
+     */
+    void getRecordsForCollection(Long collection, int offset, int maxSize,
+            AsyncCallback<List<MetaDataRecordDTO>> async);
+
+    /**
+     * raw record how we got it in our uim
+     * 
+     * @param recordId
+     * @param async
+     */
+    void getRawRecord(long recordId, AsyncCallback<String> async);
+
+    /**
+     * xml representation of our metadata record object model
+     * 
+     * @param recordId
+     * @param async
+     */
+    void getXmlRecord(long recordId, AsyncCallback<String> async);
+
+    /**
+     * Delivers up to a maxSize number of records starting at the offset for the provided collection
+     * from the search index together with facets and the total number of results.
+     * 
+     * @param searchQuery
+     * @param offset
+     * @param maxSize
+     * @param facets
+     * @param async
+     */
+    void searchIndex(String searchQuery, int offset, int maxSize, List<String> facets,
+            AsyncCallback<SearchResultDTO> async);
+
+    /**
+     * xml representation of the actual record in the search index
+     * 
+     * @param recordId
+     * @param async
+     */
+    void getSearchRecord(long recordId, AsyncCallback<String> async);
 }

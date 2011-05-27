@@ -203,7 +203,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         });
         cellTable.addColumn(keyColumn, "Resource Name");
-        cellTable.setColumnWidth(keyColumn, 20, Unit.PCT);
+        cellTable.setColumnWidth(keyColumn, 30, Unit.PCT);
 
         // Value
         Column<ParameterDTO, String> valueColumn = new Column<ParameterDTO, String>(new TextCell()) {
@@ -223,7 +223,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
         };
         valueColumn.setSortable(true);
         cellTable.addColumn(valueColumn, "Resource Value");
-        cellTable.setColumnWidth(valueColumn, 30, Unit.PCT);
+        cellTable.setColumnWidth(valueColumn, 70, Unit.PCT);
 
         // Update Button
         Column<ParameterDTO, ParameterDTO> updateColumn = new Column<ParameterDTO, ParameterDTO>(
@@ -241,7 +241,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(updateColumn, 20, Unit.PX);
 
         // File update Button
         Column<ParameterDTO, ParameterDTO> fileColumn = new Column<ParameterDTO, ParameterDTO>(
@@ -260,7 +260,7 @@ public class ResourceManagementWidget extends IngestionControlPanelWidget {
             }
         };
         cellTable.addColumn(fileColumn, "Update");
-        cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(fileColumn, 20, Unit.PX);
     }
 
     private final class ResourceSettingCallbackImplementation implements ResourceSettingCallback {

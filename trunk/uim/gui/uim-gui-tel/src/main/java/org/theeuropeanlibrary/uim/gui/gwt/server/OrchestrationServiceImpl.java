@@ -14,9 +14,13 @@ import java.util.Set;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationService;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.MetaDataRecordDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProgressDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.SearchRecordDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.SearchResultDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.SearchResultDTO.FacetValue;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
@@ -129,7 +133,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         Boolean res = true;
 
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
-        values.put(parameter.getKey(), parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
+        values.put(parameter.getKey(),
+                parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
         ResourceEngine<Long> resource = (ResourceEngine<Long>)getEngine().getRegistry().getResourceEngine();
 
         if (provider == null && collection == null && workflow != null) {
@@ -183,21 +188,21 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         return res;
     }
 
-//    @Override
-//    public List<CollectionDTO> getAllCollections() {
-//        List<CollectionDTO> res = new ArrayList<CollectionDTO>();
-//        try {
-//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-//            List<Collection<Long>> cols = storage.getAllCollections();
-//            for (Collection<Long> col : cols) {
-//                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
-//                        getWrappedProviderDTO(col.getProvider().getId())));
-//            }
-//        } catch (StorageEngineException e) {
-//            e.printStackTrace();
-//        }
-//        return res;
-//    }
+// @Override
+// public List<CollectionDTO> getAllCollections() {
+// List<CollectionDTO> res = new ArrayList<CollectionDTO>();
+// try {
+// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+// List<Collection<Long>> cols = storage.getAllCollections();
+// for (Collection<Long> col : cols) {
+// res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
+// getWrappedProviderDTO(col.getProvider().getId())));
+// }
+// } catch (StorageEngineException e) {
+// e.printStackTrace();
+// }
+// return res;
+// }
 
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
@@ -485,5 +490,50 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<MetaDataRecordDTO> getRecordsForCollection(Long collection, int offset, int maxSize) {
+        List<MetaDataRecordDTO> results = new ArrayList<MetaDataRecordDTO>();
+        for (int i = offset; i < offset + maxSize; i++) {
+            results.add(new MetaDataRecordDTO((long)i, "title" + i, "creator" + i, "contributor" +
+                                                                                   i, "year" + i,
+                    "language" + i, "country" + i));
+        }
+        return results;
+    }
+
+    @Override
+    public String getRawRecord(long recordId) {
+        return "TEST RAW";
+    }
+
+    @Override
+    public String getXmlRecord(long recordId) {
+        return "TEST XML";
+    }
+
+    @Override
+    public SearchResultDTO searchIndex(String searchQuery, int offset, int maxSize,
+            List<String> facets) {
+        List<SearchRecordDTO> results = new ArrayList<SearchRecordDTO>();
+        for (int i = offset; i < offset + maxSize; i++) {
+            results.add(new SearchRecordDTO((long)i, "title" + i, "creator" + i, "year" + i));
+        }
+        
+        Map<String, FacetValue> facetsCount = null;
+        if (facets != null) {
+            facetsCount = new HashMap<String, FacetValue>();
+            for (String facet : facets) {
+                facetsCount.put(facet, new FacetValue("eng",10));
+            }
+        }
+        
+        return new SearchResultDTO(results, facetsCount, 35);
+    }
+
+    @Override
+    public String getSearchRecord(long recordId) {
+        return "TEST Search";
     }
 }

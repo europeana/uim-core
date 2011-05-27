@@ -75,6 +75,7 @@ public class IngestionHistoryWidget extends IngestionControlPanelWidget {
     public Widget onInitialize() {
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
         cellTable.setWidth("100%", true);
+        cellTable.setPageSize(10);
 
         final ListDataProvider<ExecutionDTO> dataProvider = new ListDataProvider<ExecutionDTO>();
         dataProvider.setList(pastExecutions);

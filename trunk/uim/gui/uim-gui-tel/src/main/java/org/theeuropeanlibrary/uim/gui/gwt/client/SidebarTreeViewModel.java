@@ -27,7 +27,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @since Apr 27, 2011
  */
 public class SidebarTreeViewModel implements TreeViewModel {
-    private final OrchestrationServiceAsync orchestrationService = (OrchestrationServiceAsync) GWT.create(OrchestrationService.class);
+    private final OrchestrationServiceAsync orchestrationService = (OrchestrationServiceAsync)GWT.create(OrchestrationService.class);
 
     /**
      * The cell used to render categories.
@@ -44,7 +44,8 @@ public class SidebarTreeViewModel implements TreeViewModel {
     /**
      * The cell used to render examples.
      */
-    private static class IngestionCockpitWidgetCell extends AbstractCell<IngestionControlPanelWidget> {
+    private static class IngestionCockpitWidgetCell extends
+            AbstractCell<IngestionControlPanelWidget> {
         @Override
         public void render(Context context, IngestionControlPanelWidget value, SafeHtmlBuilder sb) {
             if (value != null) {
@@ -61,9 +62,9 @@ public class SidebarTreeViewModel implements TreeViewModel {
      */
     public class Category {
         private final ListDataProvider<IngestionControlPanelWidget> examples    = new ListDataProvider<IngestionControlPanelWidget>();
-        private final String                                   name;
+        private final String                                        name;
         private NodeInfo<IngestionControlPanelWidget>               nodeInfo;
-        private final List<RunAsyncCode>                       splitPoints = new ArrayList<RunAsyncCode>();
+        private final List<RunAsyncCode>                            splitPoints = new ArrayList<RunAsyncCode>();
 
         /**
          * Creates a new instance of this class.
@@ -120,7 +121,7 @@ public class SidebarTreeViewModel implements TreeViewModel {
     /**
      * The top level categories.
      */
-    private final ListDataProvider<Category>             categories                 = new ListDataProvider<Category>();
+    private final ListDataProvider<Category>                  categories                 = new ListDataProvider<Category>();
 
     /**
      * A mapping of {@link IngestionControlPanelWidget}s to their associated categories.
@@ -130,7 +131,7 @@ public class SidebarTreeViewModel implements TreeViewModel {
     /**
      * The cell used to render examples.
      */
-    private final IngestionCockpitWidgetCell             ingestionCockpitWidgetCell = new IngestionCockpitWidgetCell();
+    private final IngestionCockpitWidgetCell                  ingestionCockpitWidgetCell = new IngestionCockpitWidgetCell();
 
     /**
      * A mapping of history tokens to their associated {@link IngestionControlPanelWidget}.
@@ -155,8 +156,7 @@ public class SidebarTreeViewModel implements TreeViewModel {
         {
             Category category = new Category("Monitoring");
             catList.add(category);
-            category.addExample(
-                    new IngestionDetailWidget(orchestrationService),
+            category.addExample(new IngestionDetailWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(IngestionDetailWidget.class));
             category.addExample(new IngestionHistoryWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(IngestionHistoryWidget.class));
@@ -165,17 +165,19 @@ public class SidebarTreeViewModel implements TreeViewModel {
         {
             Category category = new Category("Managing");
             catList.add(category);
-            category.addExample(
-                    new IngestionTriggerWidget(orchestrationService),
+            category.addExample(new IngestionTriggerWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(IngestionTriggerWidget.class));
-            category.addExample(
-                    new ResourceManagementWidget(orchestrationService),
+            category.addExample(new ResourceManagementWidget(orchestrationService),
                     RunAsyncCode.runAsyncCode(ResourceManagementWidget.class));
         }
 
         {
             Category category = new Category("Validation");
             catList.add(category);
+//            category.addExample(new RepositoryValidationWidget(orchestrationService),
+//                    RunAsyncCode.runAsyncCode(RepositoryValidationWidget.class));
+//            category.addExample(new SearchIndexValidationWidget(orchestrationService),
+//                    RunAsyncCode.runAsyncCode(SearchIndexValidationWidget.class));
         }
 
         {

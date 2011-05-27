@@ -94,6 +94,7 @@ public class IngestionDetailWidget extends IngestionControlPanelWidget {
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
+        cellTable.setPageSize(10);
 
         final ListDataProvider<ExecutionDTO> dataProvider = new ListDataProvider<ExecutionDTO>();
         dataProvider.setList(activeExecutions);

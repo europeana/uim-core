@@ -5,8 +5,10 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.uim.gui.gwt.shared.CollectionDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ExecutionDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.MetaDataRecordDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ParameterDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.ProviderDTO;
+import org.theeuropeanlibrary.uim.gui.gwt.shared.SearchResultDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.StepStatusDTO;
 import org.theeuropeanlibrary.uim.gui.gwt.shared.WorkflowDTO;
 
@@ -157,15 +159,49 @@ public interface OrchestrationService extends RemoteService {
      */
     Boolean cancelExecution(Long execution);
 
-    // metadata records
-// String getMarcRecord(long recordId);
-// String getXmlRecord(long recordId);
-// List<MetaDataRecordDTO> getRecordsForCollection(Long collection, int maxSize, int offset);
+    /**
+     * Delivers up to a maxSize number of records starting at the offset for the provided collection
+     * from the central repository.
+     * 
+     * @param collection
+     * @param maxSize
+     * @param offset
+     * @return list of simple metadata records to be shown in repository browsing view
+     */
+    List<MetaDataRecordDTO> getRecordsForCollection(Long collection, int offset, int maxSize);
+
+    /**
+     * @param recordId
+     * @return raw record how we got it in our uim
+     */
+    String getRawRecord(long recordId);
+
+    /**
+     * @param recordId
+     * @return xml representation of our metadata record object model
+     */
+    String getXmlRecord(long recordId);
+
 // List<MetaDataRecordDTO> getRecordsForProvider(Long provider, int maxSize, int offset);
 
-    // search
-// List<MetaDataRecordDTO> searchIndex(String searchQuery, int maxSize, int offset);
-// List<MetaDataRecordDTO> searchNgram(String searchQuery, int maxSize, int offset);
-// List<MetaDataRecordDTO> searchMacs(String searchQuery, int maxSize, int offset);
-// String getSearchRecord(long recordId);
+    /**
+     * Delivers up to a maxSize number of records starting at the offset for the provided collection
+     * from the search index together with facets and the total number of results.
+     * 
+     * @param searchQuery
+     * @param offset
+     * @param maxSize
+     * @param facets
+     * @return search result object with e.g. list of simple metadata records to be shown in search
+     *         view
+     */
+    SearchResultDTO searchIndex(String searchQuery, int offset, int maxSize, List<String> facets);
+
+    /**
+     * @param recordId
+     * @return xml representation of the actual record in the search index
+     */
+    String getSearchRecord(long recordId);
+// List<SearchRecordDTO> searchNgram(String searchQuery, int maxSize, int offset);
+// List<SearchRecordDTO> searchMacs(String searchQuery, int maxSize, int offset);
 }
