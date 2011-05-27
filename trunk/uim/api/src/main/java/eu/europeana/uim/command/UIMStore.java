@@ -172,7 +172,7 @@ public class UIMStore implements Action {
 
     private void updateProvider(StorageEngine storage, PrintStream out)
             throws StorageEngineException {
-        if (argument0 == null || argument1 == null || argument2 == null) {
+        if (argument0 == null || argument1 == null) {
             out.println("Failed to update provider. No arguments specified, should be <mnemonic> <field> <value>");
             return;
         }
@@ -182,13 +182,12 @@ public class UIMStore implements Action {
         String method = "set" + StringUtils.capitalize(argument1);
         try {
             Method setter = provider.getClass().getMethod(method, String.class);
-            if ("null".equalsIgnoreCase(argument2)) {
-                argument2 = null;
-            }
             setter.invoke(provider, argument2);
 
             storage.updateProvider(provider);
             storage.checkpoint();
+            
+            out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
             out.println("Failed to update provider. Failed to update using method <" + method +
                         "(" + argument2 + ")");
@@ -249,7 +248,7 @@ public class UIMStore implements Action {
 
     private void updateCollection(StorageEngine storage, PrintStream out)
             throws StorageEngineException {
-        if (argument0 == null || argument1 == null || argument2 == null) {
+        if (argument0 == null || argument1 == null) {
             out.println("Failed to update collection. No arguments specified, should be <mnemonic> <field> <value>");
             return;
         }
@@ -266,6 +265,8 @@ public class UIMStore implements Action {
 
             storage.updateCollection(collection);
             storage.checkpoint();
+
+            out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
             out.println("Failed to update collection. Failed to update using method <" + method +
                         "(\"" + argument2 + "\")");
