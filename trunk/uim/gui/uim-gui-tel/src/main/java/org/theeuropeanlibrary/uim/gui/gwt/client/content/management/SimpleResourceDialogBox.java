@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * 
+ * Simple value based resources are managed with this dialog.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since May 10, 2011
@@ -100,7 +100,7 @@ public class SimpleResourceDialogBox extends DialogBox {
                     }
                 }
                 if (vals.size() == 0) {
-                    parameter.setValues(null); 
+                    parameter.setValues(null);
                 } else {
                     parameter.setValues(vals.toArray(new String[vals.size()]));
                 }

@@ -21,7 +21,7 @@ public class SearchResultDTO implements IsSerializable {
     /**
      * facets uplooks
      */
-    private Map<String, FacetValue> facets;
+    private Map<String, List<FacetValue>> facets;
     /**
      * number of records
      */
@@ -44,7 +44,7 @@ public class SearchResultDTO implements IsSerializable {
      * @param numberRecords
      *            number of records
      */
-    public SearchResultDTO(List<SearchRecordDTO> records, Map<String, FacetValue> facets,
+    public SearchResultDTO(List<SearchRecordDTO> records, Map<String, List<FacetValue>> facets,
                            int numberRecords) {
         this.records = records;
         this.facets = facets;
@@ -61,7 +61,7 @@ public class SearchResultDTO implements IsSerializable {
     /**
      * @return facets uplooks
      */
-    public Map<String, FacetValue> getFacets() {
+    public Map<String, List<FacetValue>> getFacets() {
         return facets;
     }
 
@@ -84,7 +84,7 @@ public class SearchResultDTO implements IsSerializable {
      * @param facets
      *            facets uplooks
      */
-    public void setFacets(Map<String, FacetValue> facets) {
+    public void setFacets(Map<String, List<FacetValue>> facets) {
         this.facets = facets;
     }
 

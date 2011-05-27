@@ -2,7 +2,6 @@ package org.theeuropeanlibrary.uim.gui.gwt.client.content.validation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.theeuropeanlibrary.uim.gui.gwt.client.IngestionControlPanelWidget;
 import org.theeuropeanlibrary.uim.gui.gwt.client.OrchestrationServiceAsync;
@@ -31,7 +30,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -95,7 +95,7 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
      * Facet of search results.
      */
     @UiField
-    FlowPanel                               languageFacet;
+    Grid                                    languageFacet;
 
     /**
      * The main CellTable.
@@ -224,6 +224,8 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
             }
         });
 
+        languageFacet.setVisible(false);
+
         return widget;
     }
 
@@ -244,15 +246,32 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
                             cellTable.setRowCount(result.getNumberRecords());
                         }
 
-                        for (Entry<String, FacetValue> entry : result.getFacets().entrySet()) {
-                            Anchor label = new Anchor(entry.getValue().getValue() + " (" +
-                                                      entry.getValue().getCount() + ")");
-                            label.addClickHandler(new FacetClickHandler(entry.getKey(),
-                                    entry.getValue().getValue()));
-                            label.setStyleName("hyperlink_style_label");
-                            languageFacet.add(label);
-                        }
+                        List<FacetValue> facets = result.getFacets().get("language");
+                        if (facets != null) {
+                            languageFacet.clear();
+                            languageFacet.setVisible(true);
 
+                            int size = facets.size();
+                            languageFacet.resize(1 + size / 2, 2);
+
+                            languageFacet.setWidget(0, 0, new Label("language"));
+                            int rows = 1;
+                            int cols = 0;
+                            for (FacetValue facet : facets) {
+                                Anchor label = new Anchor(facet.getValue() + " (" +
+                                                          facet.getCount() + ")");
+                                label.addClickHandler(new FacetClickHandler("language",
+                                        facet.getValue()));
+                                label.setStyleName("hyperlink_style_label");
+                                languageFacet.setWidget(rows, rows, label);
+                                if (cols == 1) {
+                                    rows++;
+                                    cols = 0;
+                                } else {
+                                    cols++;
+                                }
+                            }
+                        }
                     }
                 });
     }
@@ -337,26 +356,15 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
         cellTable.addColumn(yearColumn, "Creator");
         cellTable.setColumnWidth(yearColumn, 15, Unit.PCT);
 
-        // Show Plain Record
+        // Show Record Details
         Column<SearchRecordDTO, SearchRecordDTO> plainColumn = new Column<SearchRecordDTO, SearchRecordDTO>(
-                new ActionCell<SearchRecordDTO>("Plain",
+                new ActionCell<SearchRecordDTO>("Content",
                         new ActionCell.Delegate<SearchRecordDTO>() {
                             @Override
                             public void execute(SearchRecordDTO record) {
-                                final DialogBox box = new DialogBox();
-                                orchestrationServiceAsync.getRawRecord(record.getId(),
-                                        new AsyncCallback<String>() {
-                                            @Override
-                                            public void onFailure(Throwable caught) {
-                                                caught.printStackTrace();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(String result) {
-                                                box.setText(result);
-                                                box.show();
-                                            }
-                                        });
+                                final DialogBox updateBox = new RecordDetailsDialogBox(
+                                        record.getId(), orchestrationServiceAsync);
+                                updateBox.show();
                             }
                         })) {
             @Override
@@ -366,64 +374,5 @@ public class SearchIndexValidationWidget extends IngestionControlPanelWidget {
         };
         cellTable.addColumn(plainColumn, "Show");
         cellTable.setColumnWidth(plainColumn, 10, Unit.PX);
-
-        // Show XML Button
-        Column<SearchRecordDTO, SearchRecordDTO> xmlColumn = new Column<SearchRecordDTO, SearchRecordDTO>(
-                new ActionCell<SearchRecordDTO>("XML", new ActionCell.Delegate<SearchRecordDTO>() {
-                    @Override
-                    public void execute(SearchRecordDTO record) {
-                        final DialogBox box = new DialogBox();
-                        orchestrationServiceAsync.getXmlRecord(record.getId(),
-                                new AsyncCallback<String>() {
-                                    @Override
-                                    public void onFailure(Throwable caught) {
-                                        caught.printStackTrace();
-                                    }
-
-                                    @Override
-                                    public void onSuccess(String result) {
-                                        box.setText(result);
-                                        box.show();
-                                    }
-                                });
-                    }
-                })) {
-            @Override
-            public SearchRecordDTO getValue(SearchRecordDTO object) {
-                return object;
-            }
-        };
-        cellTable.addColumn(xmlColumn, "Show");
-        cellTable.setColumnWidth(xmlColumn, 10, Unit.PX);
-
-        // Show Search Button
-        Column<SearchRecordDTO, SearchRecordDTO> searchColumn = new Column<SearchRecordDTO, SearchRecordDTO>(
-                new ActionCell<SearchRecordDTO>("Search",
-                        new ActionCell.Delegate<SearchRecordDTO>() {
-                            @Override
-                            public void execute(SearchRecordDTO record) {
-                                final DialogBox box = new DialogBox();
-                                orchestrationServiceAsync.getSearchRecord(record.getId(),
-                                        new AsyncCallback<String>() {
-                                            @Override
-                                            public void onFailure(Throwable caught) {
-                                                caught.printStackTrace();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(String result) {
-                                                box.setText(result);
-                                                box.show();
-                                            }
-                                        });
-                            }
-                        })) {
-            @Override
-            public SearchRecordDTO getValue(SearchRecordDTO object) {
-                return object;
-            }
-        };
-        cellTable.addColumn(searchColumn, "Show");
-        cellTable.setColumnWidth(searchColumn, 10, Unit.PX);
     }
 }

@@ -4,7 +4,7 @@
 
     <ui:style>
         .splitpanel {
-        	height: 500px;
+        	height: 600px;
         	width: 100%;
         	min-width: 500px;
         	border: 4px solid #d0e4f6;
@@ -35,6 +35,14 @@
         .rightPanel {
         	background-color: #FFF;
         }
+        
+        .facet {
+<!--         	width: 100%; -->
+        	color: #4B4A4A;
+        	padding: 10px 0px;
+        	border-bottom: 1px solid #6F7277;
+        	margin: 0px 10px 12px 10px;
+        }
     </ui:style>
 
     <g:HTMLPanel>
@@ -55,12 +63,9 @@
                 <td valign='top'>
                     <g:SplitLayoutPanel addStyleNames='{style.splitpanel}'>
                         <g:west size='200'>
-                            <g:FlowPanel addStyleNames='{style.leftPanel}'>
-                                <g:ScrollPanel>
-                                    <g:FlowPanel ui:field='languageFacet'>
-                                    </g:FlowPanel>
-                                </g:ScrollPanel>
-                            </g:FlowPanel>
+                            <g:ScrollPanel addStyleNames='{style.leftPanel}'>
+                                <g:Grid ui:field='languageFacet' addStyleNames='{style.facet}' />
+                            </g:ScrollPanel>
                         </g:west>
                         <g:center>
                             <g:VerticalPanel addStyleNames='{style.rightPanel}' horizontalAlignment='center'>

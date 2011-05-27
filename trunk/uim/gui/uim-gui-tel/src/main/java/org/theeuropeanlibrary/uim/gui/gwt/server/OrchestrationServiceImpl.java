@@ -496,8 +496,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<MetaDataRecordDTO> getRecordsForCollection(Long collection, int offset, int maxSize) {
         List<MetaDataRecordDTO> results = new ArrayList<MetaDataRecordDTO>();
         for (int i = offset; i < offset + maxSize; i++) {
-            results.add(new MetaDataRecordDTO((long)i, "title" + i, "creator" + i, "contributor" +
-                                                                                   i, "year" + i,
+            results.add(new MetaDataRecordDTO((long)i, "title" + i, "creator" + i, "contributor" + i, "year" + i,
                     "language" + i, "country" + i));
         }
         return results;
@@ -520,15 +519,19 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         for (int i = offset; i < offset + maxSize; i++) {
             results.add(new SearchRecordDTO((long)i, "title" + i, "creator" + i, "year" + i));
         }
-        
-        Map<String, FacetValue> facetsCount = null;
+
+        Map<String, List<FacetValue>> facetsCount = null;
         if (facets != null) {
-            facetsCount = new HashMap<String, FacetValue>();
+            facetsCount = new HashMap<String, List<FacetValue>>();
             for (String facet : facets) {
-                facetsCount.put(facet, new FacetValue("eng",10));
+                List<FacetValue> facetsValues = new ArrayList<FacetValue>();
+                facetsValues.add(new FacetValue("eng", 10));
+                facetsValues.add(new FacetValue("ger", 15));
+                facetsValues.add(new FacetValue("fre", 5));
+                facetsCount.put(facet, facetsValues);
             }
         }
-        
+
         return new SearchResultDTO(results, facetsCount, 35);
     }
 

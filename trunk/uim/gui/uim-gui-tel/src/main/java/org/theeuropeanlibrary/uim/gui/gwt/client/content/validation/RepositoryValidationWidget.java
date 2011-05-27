@@ -315,26 +315,14 @@ public class RepositoryValidationWidget extends IngestionControlPanelWidget {
         cellTable.addColumn(countryColumn, "Country");
         cellTable.setColumnWidth(countryColumn, 10, Unit.PCT);
 
-        // Show Plain Record
+        // Show Record Details
         Column<MetaDataRecordDTO, MetaDataRecordDTO> plainColumn = new Column<MetaDataRecordDTO, MetaDataRecordDTO>(
-                new ActionCell<MetaDataRecordDTO>("Plain",
+                new ActionCell<MetaDataRecordDTO>("Content",
                         new ActionCell.Delegate<MetaDataRecordDTO>() {
                             @Override
                             public void execute(MetaDataRecordDTO record) {
-                                final DialogBox box = new DialogBox();
-                                orchestrationServiceAsync.getRawRecord(record.getId(),
-                                        new AsyncCallback<String>() {
-                                            @Override
-                                            public void onFailure(Throwable caught) {
-                                                caught.printStackTrace();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(String result) {
-                                                box.setText(result);
-                                                box.show();
-                                            }
-                                        });
+                                final DialogBox updateBox = new RecordDetailsDialogBox(record.getId(), orchestrationServiceAsync);
+                                updateBox.show();
                             }
                         })) {
             @Override
@@ -344,35 +332,5 @@ public class RepositoryValidationWidget extends IngestionControlPanelWidget {
         };
         cellTable.addColumn(plainColumn, "Show");
         cellTable.setColumnWidth(plainColumn, 10, Unit.PX);
-
-        // Show XML Button
-        Column<MetaDataRecordDTO, MetaDataRecordDTO> xmlColumn = new Column<MetaDataRecordDTO, MetaDataRecordDTO>(
-                new ActionCell<MetaDataRecordDTO>("XML",
-                        new ActionCell.Delegate<MetaDataRecordDTO>() {
-                            @Override
-                            public void execute(MetaDataRecordDTO record) {
-                                final DialogBox box = new DialogBox();
-                                orchestrationServiceAsync.getXmlRecord(record.getId(),
-                                        new AsyncCallback<String>() {
-                                            @Override
-                                            public void onFailure(Throwable caught) {
-                                                caught.printStackTrace();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(String result) {
-                                                box.setText(result);
-                                                box.show();
-                                            }
-                                        });
-                            }
-                        })) {
-            @Override
-            public MetaDataRecordDTO getValue(MetaDataRecordDTO object) {
-                return object;
-            }
-        };
-        cellTable.addColumn(xmlColumn, "Show");
-        cellTable.setColumnWidth(xmlColumn, 10, Unit.PX);
     }
 }
