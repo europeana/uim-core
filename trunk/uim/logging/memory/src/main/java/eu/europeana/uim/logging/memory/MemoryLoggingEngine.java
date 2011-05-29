@@ -44,7 +44,7 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
             logs = new ArrayList<LogEntry<I, String[]>>();
             executionLogs.put(execution, logs);
         }
-        logs.add(new MemoryLogEntry<I, String[]>(null, execution, null, scope, level, new Date(),
+        logs.add(new MemoryLogEntry<I, String[]>(module, execution, scope, level, new Date(),
                 message));
     }
 
