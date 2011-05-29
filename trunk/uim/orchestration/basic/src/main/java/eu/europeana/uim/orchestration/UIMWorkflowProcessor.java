@@ -314,7 +314,8 @@ public class UIMWorkflowProcessor implements Runnable {
             log.log(Level.SEVERE, "Failed to complete:" + start, t);
         } finally {
             execution.getStorageEngine().completed(execution);
-            registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish", LoggingEngine.Level.INFO, "Finished:" + execution.getName());
+            if (registry.getLoggingEngine() != null)
+                registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish", LoggingEngine.Level.INFO, "Finished:" + execution.getName());
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {

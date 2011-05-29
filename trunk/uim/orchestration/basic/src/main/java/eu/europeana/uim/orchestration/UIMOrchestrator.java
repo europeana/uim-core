@@ -105,7 +105,8 @@ public class UIMOrchestrator implements Orchestrator {
                         registry.getResourceEngine(), properties, monitor);
                 processor.schedule(activeExecution);
 
-                registry.getLoggingEngine().log("UIMOrchestrator", e, "start", LoggingEngine.Level.INFO, "Started:" + activeExecution.getName());
+                if (registry.getLoggingEngine() != null)
+                    registry.getLoggingEngine().log("UIMOrchestrator", e, "start", LoggingEngine.Level.INFO, "Started:" + activeExecution.getName());
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
