@@ -24,7 +24,7 @@ public class TDurationDatabaseEntry {
     private Long   oid;
 
     @Column
-    private String pluginName;
+    private String module;
 
     @Column
     private Long   duration;
@@ -39,16 +39,16 @@ public class TDurationDatabaseEntry {
     /**
      * @return name of plugin
      */
-    public String getPluginName() {
-        return pluginName;
+    public String getModule() {
+        return module;
     }
 
     /**
-     * @param pluginName
+     * @param module
      *            name of plugin
      */
-    public void setPluginName(String pluginName) {
-        this.pluginName = pluginName;
+    public void setModule(String module) {
+        this.module = module;
     }
 
     /**

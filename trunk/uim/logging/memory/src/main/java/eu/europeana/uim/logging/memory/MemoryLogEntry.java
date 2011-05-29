@@ -24,10 +24,33 @@ public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
     private final LoggingEngine.Level level;
     private final Date                date;
     private final Execution<I>        execution;
-    private final IngestionPlugin     plugin;
+
+    private final String     module;
     private final MetaDataRecord<I>   mdr;
     private final T                   message;
     private final String              scope;
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param module
+     * @param execution
+     * @param scope
+     * @param level
+     * @param date
+     * @param message
+     */
+    public MemoryLogEntry(String module, Execution<I> execution, 
+                          String scope, LoggingEngine.Level level, Date date, T message) {
+        this.scope = scope;
+        this.level = level;
+        this.date = date;
+        this.execution = execution;
+        this.module = module;
+        this.message = message;
+        
+        this.mdr = null;
+    }
 
     /**
      * Creates a new instance of this class.
@@ -46,9 +69,11 @@ public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
         this.level = level;
         this.date = date;
         this.execution = execution;
-        this.plugin = plugin;
+
         this.mdr = mdr;
         this.message = message;
+        
+        this.module = plugin.getIdentifier();
     }
 
     @Override
@@ -67,8 +92,8 @@ public class MemoryLogEntry<I, T> implements LogEntry<I, T> {
     }
 
     @Override
-    public String getPluginName() {
-        return plugin.getClass().getSimpleName();
+    public String getModule() {
+        return module;
     }
 
     @Override

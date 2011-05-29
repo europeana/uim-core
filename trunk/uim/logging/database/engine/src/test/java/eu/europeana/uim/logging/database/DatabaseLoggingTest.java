@@ -46,7 +46,7 @@ public class DatabaseLoggingTest {
         Assert.assertTrue(date.before(logEntry.getDate()));
         Assert.assertEquals("Test", logEntry.getMessage()[0]);
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
-        Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());
+        Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getModule());
         Assert.assertEquals(Level.WARNING, logEntry.getLevel());
 
         loggingEngine.logStructured(new LoggingIngestionPlugin(), new ExecutionBean<Long>(1l),
@@ -61,7 +61,7 @@ public class DatabaseLoggingTest {
         Assert.assertTrue(date.before(logEntry.getDate()));
         Assert.assertEquals("Test", logEntry.getMessage()[0]);
         Assert.assertEquals(new Long(2l), logEntry.getMetaDataRecordId());
-        Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getPluginName());
+        Assert.assertEquals(LoggingIngestionPlugin.class.getSimpleName(), logEntry.getModule());
         Assert.assertEquals(Level.WARNING, logEntry.getLevel());
 
         loggingEngine.logDuration(new LoggingIngestionPlugin(), 10l, 1);

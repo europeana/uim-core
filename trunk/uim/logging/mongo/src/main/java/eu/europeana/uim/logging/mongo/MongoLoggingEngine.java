@@ -78,6 +78,17 @@ public class MongoLoggingEngine<T> implements LoggingEngine<Long, T> {
     }
 
     @Override
+    public void log(String module, Execution execution, String scope, Level level, String... message) {
+        DBObject entry = new BasicDBObject();
+        entry.put("level", level.toString());
+        entry.put("executionId", execution.getId());
+        entry.put("pluginIdentifier", module);
+        entry.put("date", new Date());
+        entry.put("message", message);
+        logEntries.insert(entry);
+    }
+
+    @Override
     public void log(IngestionPlugin plugin, Execution execution, MetaDataRecord mdr, String scope, Level level, String... message) {
         DBObject entry = new BasicDBObject();
         entry.put("level", level.toString());

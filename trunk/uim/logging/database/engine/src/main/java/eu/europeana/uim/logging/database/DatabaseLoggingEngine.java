@@ -73,13 +73,26 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
     }
 
     @Override
+    public void log(String module, Execution<Long> execution,
+            String scope, Level level, String... message) {
+        TStringDatabaseLogEntry entry = new TStringDatabaseLogEntry();
+        entry.setLevel(level);
+        entry.setDate(new Date());
+        entry.setExecutionId(execution.getId());
+        entry.setModule(module);
+        entry.setMessage(message);
+
+        storage.getStringHome().update(entry);
+    }
+
+    @Override
     public void log(IngestionPlugin plugin, Execution<Long> execution, MetaDataRecord<Long> mdr,
             String scope, Level level, String... message) {
         TStringDatabaseLogEntry entry = new TStringDatabaseLogEntry();
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginName(plugin.getIdentifier());
+        entry.setModule(plugin.getIdentifier());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(message);
 
@@ -93,7 +106,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         entry.setLevel(level);
         entry.setDate(new Date());
         entry.setExecutionId(execution.getId());
-        entry.setPluginName(plugin.getIdentifier());
+        entry.setModule(plugin.getIdentifier());
         entry.setMetaDataRecordId(mdr.getId());
         entry.setMessage(payload);
 
@@ -129,7 +142,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         for (int i = 0; i < count; i++) {
             TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / count);
-            entry.setPluginName(plugin.getIdentifier());
+            entry.setModule(plugin.getIdentifier());
             entries[i] = entry;
         }
         storage.getDurationHome().insert(entries);
@@ -141,7 +154,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         for (int i = 0; i < mdr.length; i++) {
             TDurationDatabaseEntry entry = new TDurationDatabaseEntry();
             entry.setDuration(duration / mdr.length);
-            entry.setPluginName(plugin.getIdentifier());
+            entry.setModule(plugin.getIdentifier());
             entries[i] = entry;
         }
         storage.getDurationHome().insert(entries);

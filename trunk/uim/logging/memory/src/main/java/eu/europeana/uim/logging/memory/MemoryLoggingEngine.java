@@ -37,6 +37,18 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     }
 
     @Override
+    public void log(String module, Execution<I> execution, 
+            String scope, Level level, String... message) {
+        List<LogEntry<I, String[]>> logs = executionLogs.get(execution);
+        if (logs == null) {
+            logs = new ArrayList<LogEntry<I, String[]>>();
+            executionLogs.put(execution, logs);
+        }
+        logs.add(new MemoryLogEntry<I, String[]>(null, execution, null, scope, level, new Date(),
+                message));
+    }
+
+    @Override
     public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
             String scope, Level level, String... message) {
         List<LogEntry<I, String[]>> logs = executionLogs.get(execution);

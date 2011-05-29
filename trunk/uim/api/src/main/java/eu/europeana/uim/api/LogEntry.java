@@ -19,7 +19,7 @@ public interface LogEntry<I, T> {
     /**
      * @return name of plugin
      */
-    String getPluginName();
+    String getModule();
 
     /**
      * @return for which execution

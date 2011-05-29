@@ -28,7 +28,7 @@ public class MongoLogEntry implements LogEntry<Long, String[]> {
     }
 
     @Override
-    public String getPluginName() {
+    public String getModule() {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }

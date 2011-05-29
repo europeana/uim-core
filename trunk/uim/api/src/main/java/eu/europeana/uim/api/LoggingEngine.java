@@ -38,6 +38,23 @@ public interface LoggingEngine<I, T> {
 
     /**
      * Logs a message
+     * @param modul 
+     *              the module which logs this messages
+     * 
+     * @param execution
+     *            the execution during which this log was issues
+     * @param scope
+     *            scope of logging message (further dividing of plugins/processor for example)
+     * @param level
+     *            the level of the message
+     * @param message
+     *            message strings
+     */
+    void log(String modul, Execution<I> execution, String scope,
+            Level level, String... message);
+
+    /**
+     * Logs a message
      * 
      * @param plugin
      *            the plugin reporting the log

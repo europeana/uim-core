@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
+import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
@@ -313,6 +314,7 @@ public class UIMWorkflowProcessor implements Runnable {
             log.log(Level.SEVERE, "Failed to complete:" + start, t);
         } finally {
             execution.getStorageEngine().completed(execution);
+            registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish", LoggingEngine.Level.INFO, "Finished:" + execution.getName());
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {

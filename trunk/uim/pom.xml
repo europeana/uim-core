@@ -21,23 +21,23 @@
         <!--  the uim api module -->
         <module>api</module>
 
-        <!--  the standard orchestration implementation module -->
-        <module>orchestration/basic</module>
-
         <!--  the uim standard in memory storage implementation -->
         <module>storage/memory</module>
 
         <!-- simplistic in-memory logging -->
         <module>logging/memory</module>
+
+        <!--  the standard orchestration implementation module -->
+        <module>orchestration/basic</module>
         
         <!-- a dummy plugin for testing -->
-        <module>plugins/dummy</module>
+<!--         <module>plugins/dummy</module> -->
 
         <!--  the uim standard file import module -->
-        <module>plugins/fileimp</module>
+<!--         <module>plugins/fileimp</module> -->
 
         <!-- a dummy workflow for testing -->
-        <module>workflows/dummy</module>
+<!--         <module>workflows/dummy</module> -->
 
         <!--  the uim integration test module -->
 <!--        <module>plugins/integration</module>-->

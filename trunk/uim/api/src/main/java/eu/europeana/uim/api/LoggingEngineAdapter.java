@@ -24,6 +24,11 @@ public abstract class LoggingEngineAdapter<I, T> implements LoggingEngine<I, T> 
     }
 
     @Override
+    public void log(String module, Execution<I> execution,
+            String scope, Level level, String... message) {
+    }
+
+    @Override
     public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
             String scope, Level level, String... message) {
     }

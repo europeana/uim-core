@@ -38,7 +38,7 @@ public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     private Long   oid;
 
     @Column
-    private String pluginName;
+    private String module;
 
     @Column
     private Long   executionId;
@@ -103,16 +103,16 @@ public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     }
 
     @Override
-    public String getPluginName() {
-        return pluginName;
+    public String getModule() {
+        return module;
     }
 
     /**
      * @param pluginName
      *            name of plugin
      */
-    public void setPluginName(String pluginName) {
-        this.pluginName = pluginName;
+    public void setModule(String module) {
+        this.module = module;
     }
 
     @Override

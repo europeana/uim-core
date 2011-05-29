@@ -21,8 +21,8 @@
     <query name="eu.europeana.uim.logging.database.model.TDurationDatabaseEntry.findByPlugin">
         SELECT d
         FROM TDurationDatabaseEntry d
-        WHERE d.pluginName = :pluginName
-        <query-param name="pluginName" type="java.lang.String" />
+        WHERE d.module = :module
+        <query-param name="module" type="java.lang.String" />
     </query>
 
 </hibernate-mapping>

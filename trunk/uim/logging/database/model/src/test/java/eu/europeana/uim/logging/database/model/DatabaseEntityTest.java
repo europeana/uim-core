@@ -52,7 +52,7 @@ public class DatabaseEntityTest {
         stringEntry.setDate(date);
         stringEntry.setMessage(new String[] { "TEST-LOG" });
         stringEntry.setMetaDataRecordId(2l);
-        stringEntry.setPluginName("TEST-PLUGIN");
+        stringEntry.setModule("TEST-PLUGIN");
         stringEntry.setLevel(LoggingEngine.Level.WARNING);
 
         stringHome.insert(stringEntry);
@@ -65,7 +65,7 @@ public class DatabaseEntityTest {
         Assert.assertArrayEquals(stringEntry.getMessage(), storedStringEntry.getMessage());
         Assert.assertEquals(stringEntry.getMetaDataRecordId(),
                 storedStringEntry.getMetaDataRecordId());
-        Assert.assertEquals(stringEntry.getPluginName(), storedStringEntry.getPluginName());
+        Assert.assertEquals(stringEntry.getModule(), storedStringEntry.getModule());
         Assert.assertEquals(stringEntry.getLevel(), storedStringEntry.getLevel());
     }
 
@@ -82,7 +82,7 @@ public class DatabaseEntityTest {
         entry.setDate(date);
         entry.setMessage("TEST-LOG");
         entry.setMetaDataRecordId(2l);
-        entry.setPluginName("TEST-PLUGIN");
+        entry.setModule("TEST-PLUGIN");
         entry.setLevel(LoggingEngine.Level.WARNING);
 
         objectHome.insert(entry);
@@ -94,7 +94,7 @@ public class DatabaseEntityTest {
         Assert.assertEquals(entry.getDate(), sentry.getDate());
         Assert.assertEquals(entry.getMessage(), sentry.getMessage());
         Assert.assertEquals(entry.getMetaDataRecordId(), sentry.getMetaDataRecordId());
-        Assert.assertEquals(entry.getPluginName(), sentry.getPluginName());
+        Assert.assertEquals(entry.getModule(), sentry.getModule());
         Assert.assertEquals(entry.getLevel(), sentry.getLevel());
     }
 
@@ -104,7 +104,7 @@ public class DatabaseEntityTest {
     @Test
     public void testDurationDatabaseEntity() {
         TDurationDatabaseEntry durEntry = new TDurationDatabaseEntry();
-        durEntry.setPluginName("TEST-PLUGIN");
+        durEntry.setModule("TEST-PLUGIN");
         durEntry.setDuration(10l);
 
         durationHome.insert(durEntry);
@@ -112,7 +112,7 @@ public class DatabaseEntityTest {
 
         TDurationDatabaseEntry sdurEntry = durationHome.findByOid(oid);
         Assert.assertNotNull(sdurEntry);
-        Assert.assertEquals(durEntry.getPluginName(), sdurEntry.getPluginName());
+        Assert.assertEquals(durEntry.getModule(), sdurEntry.getModule());
         Assert.assertEquals(durEntry.getDuration(), sdurEntry.getDuration());
     }
 }
