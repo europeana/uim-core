@@ -72,7 +72,7 @@ public class LoggingTest extends AbstractUIMIntegrationTest {
             Thread.sleep(500);
         }
 
-        logging.log(null, null, null, "test", Level.INFO, "tst tst");
+        logging.log("module", null, "test", Level.INFO, "tst tst");
 
     }
 
