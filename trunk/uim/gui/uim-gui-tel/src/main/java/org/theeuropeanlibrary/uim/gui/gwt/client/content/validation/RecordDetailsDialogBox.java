@@ -30,6 +30,7 @@ public class RecordDetailsDialogBox extends DialogBox {
                                   final OrchestrationServiceAsync orchestrationServiceAsync) {
         setText("Metadata Record Details");
         setWidth("400px");
+//        setHeight("400px");
         setGlassEnabled(true);
         setAnimationEnabled(true);
         center();
@@ -40,8 +41,8 @@ public class RecordDetailsDialogBox extends DialogBox {
         setWidget(dialogContents);
 
         TabPanel tabPanel = new TabPanel();
-        tabPanel.setSize("100%", "100%");
-        setWidget(tabPanel);
+//        tabPanel.setSize("100%", "100%");
+        tabPanel.setWidth("100%");
 
         final TextBox raw = new TextBox();
         final TextBox xml = new TextBox();
@@ -50,6 +51,8 @@ public class RecordDetailsDialogBox extends DialogBox {
         tabPanel.add(raw, "Raw");
         tabPanel.add(xml, "XML");
         tabPanel.add(search, "Search");
+        
+        dialogContents.add(tabPanel);
 
         Button closeButton = new Button("Close", new ClickHandler() {
             @Override
@@ -57,8 +60,8 @@ public class RecordDetailsDialogBox extends DialogBox {
                 hide();
             }
         });
-        dialogContents.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
         dialogContents.add(closeButton);
+        dialogContents.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
 
         orchestrationServiceAsync.getRawRecord(recordId, new AsyncCallback<String>() {
             @Override
