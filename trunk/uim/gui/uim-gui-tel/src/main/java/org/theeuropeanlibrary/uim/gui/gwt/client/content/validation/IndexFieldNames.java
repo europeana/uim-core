@@ -15,7 +15,7 @@ public class IndexFieldNames {
      * fields used plainly
      */
     public static final Set<String> plainIndexFields    = new HashSet<String>();
-    {
+    static {
         plainIndexFields.add("c_mod");
         plainIndexFields.add("c_coll");
         plainIndexFields.add("c_lang_coll");
@@ -45,21 +45,21 @@ public class IndexFieldNames {
      * language dependent fields used plainly
      */
     public static final Set<String> languageIndexFields = new HashSet<String>();
-    {
-        plainIndexFields.add("title");
-        plainIndexFields.add("subtitle");
-        plainIndexFields.add("description");
-        plainIndexFields.add("subject");
-        plainIndexFields.add("others");
+    static {
+        languageIndexFields.add("title");
+        languageIndexFields.add("subtitle");
+        languageIndexFields.add("description");
+        languageIndexFields.add("subject");
+        languageIndexFields.add("others");
     }
 
     /**
      * languages
      */
-    public static final Set<String> languages      = new HashSet<String>();
-    {
-        plainIndexFields.add("English (eng)");
-        plainIndexFields.add("German (ger)");
-        plainIndexFields.add("French (fre)");
+    public static final Set<String> languages           = new HashSet<String>();
+    static {
+        languages.add("English (eng)");
+        languages.add("German (ger)");
+        languages.add("French (fre)");
     }
 }

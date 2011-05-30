@@ -43,6 +43,7 @@ public class RecordDetailsDialogBox extends DialogBox {
         TabPanel tabPanel = new TabPanel();
 //        tabPanel.setSize("100%", "100%");
         tabPanel.setWidth("100%");
+        tabPanel.setHeight("400px");
 
         final TextBox raw = new TextBox();
         final TextBox xml = new TextBox();

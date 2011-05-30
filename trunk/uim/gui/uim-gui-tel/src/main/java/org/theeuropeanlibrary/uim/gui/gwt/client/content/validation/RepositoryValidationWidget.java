@@ -178,12 +178,6 @@ public class RepositoryValidationWidget extends IngestionControlPanelWidget {
         return widget;
     }
 
-// @Override
-// protected void onLoad() {
-// super.onLoad();
-// updateRowsCount();
-// }
-
     private void updateRowsCount(CollectionDTO collection) {
         orchestrationServiceAsync.getCollectionTotal(collection.getId(),
                 new AsyncCallback<Integer>() {
