@@ -1,6 +1,7 @@
 /* TKeyTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
@@ -51,7 +52,8 @@ public class TKeyTest {
 	
 	/** Test if TKey can be resolved correctly with namespaces
 	 */
-	@Test
+	@SuppressWarnings("rawtypes")
+    @Test
 	public void testRoundtrip() {
 		TKey<TKey,String> key = TKey.register(TKey.class, "test", String.class);
 		
@@ -61,4 +63,20 @@ public class TKeyTest {
 		assertSame(key, key2);
 	}
 	
+	/**
+	 * This tests the backward compatible way of getting a key from a string
+	 */
+	@SuppressWarnings({ "rawtypes" })
+    @Test
+	public void testFromStringBackwardCompatibility() {
+	    TKey<TKey,String> key = TKey.register(TKey.class, "key", String.class);
+	    String string=TKey.class.getName()+"/key";
+	    TKey<?,?> tkey=TKey.fromString(string);
+	    assertNotNull(tkey);	    
+	    assertSame(key, tkey);
+	    String string2=TKey.class.getName()+"/key2";
+        TKey<?,?> tkey2=TKey.fromString(string2);
+        assertNull(tkey2);
+	    
+	}
 }

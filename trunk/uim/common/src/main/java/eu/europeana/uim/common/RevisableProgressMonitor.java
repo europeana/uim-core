@@ -72,18 +72,30 @@ public class RevisableProgressMonitor implements ProgressMonitor {
     }
 
     
+    /**
+     * @return the task
+     */
     public String getTask() {
         return delegate.getTask();
     }
 
+    /**
+     * @return the subtask
+     */
     public String getSubtask() {
         return delegate.getSubtask();
     }
 
+    /**
+     * @return the number of expected work units
+     */
     public int getWork() {
         return delegate.getWork();
     }
 
+    /**
+     * @return the number of work units already completed
+     */
     public int getWorked() {
         return delegate.getWorked();
     }
@@ -91,10 +103,17 @@ public class RevisableProgressMonitor implements ProgressMonitor {
     
     
     
+    /**
+     * @return the start time of this monitor
+     */
     public long getStart() {
         return delegate.getStart();
     }
 
+    /**
+     * Adds a listening monitor to be informed when the work progress changes.
+     * @param monitor the supervising monitor to report to
+     */
     public void addListener(RevisingProgressMonitor monitor) {
         monitor.setStart(getStart());
         monitor.setTask(getTask());
@@ -108,6 +127,10 @@ public class RevisableProgressMonitor implements ProgressMonitor {
     }
     
     
+    /**
+     * Remove a  listening monitor 
+     * @param monitor the supervising monitor
+     */
     public void removeListener(RevisingProgressMonitor monitor) {
         boolean remove = monitors.remove(monitor);
         if (remove) {

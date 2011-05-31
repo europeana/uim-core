@@ -44,7 +44,8 @@
 							org.w3c.dom, 
 							org.xml.sax, 
 							org.xml.sax.ext, 
-							org.xml.sax.helpers,</Import-Package>
+							org.xml.sax.helpers
+                        </Import-Package>
 						<DynamicImport-Package>*</DynamicImport-Package>
 						<Export-Package>
 						    eu.europeana.uim.common,

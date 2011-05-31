@@ -4,7 +4,6 @@ package eu.europeana.uim.common;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * 
  * 
@@ -12,24 +11,47 @@ import java.util.logging.Logger;
  * @since Mar 2, 2011
  */
 public abstract class BlockingInitializer implements Runnable {
-    private static final Logger  log                = Logger.getLogger(BlockingInitializer.class.getName());
+    private static final Logger log                = Logger.getLogger(BlockingInitializer.class.getName());
 
-    public static final int      STATUS_NEW         = 0;
-    public static final int      STATUS_BOOTING     = 1;
+    /**
+     * BlockingInitializer STATUS_NEW object created
+     */
+    public static final int     STATUS_NEW         = 0;
 
-    public static final int      STATUS_FAILED      = 97;
-    public static final int      STATUS_INITIALIZED = 98;
-    public static final int      STATUS_SHUTDOWN    = 99;
+    /**
+     * BlockingInitializer STATUS_BOOTING object is being initialized
+     */
+    public static final int     STATUS_BOOTING     = 1;
 
-    protected int                  status             = 0;
+    /**
+     * BlockingInitializer STATUS_FAILED Initialization failed
+     */
+    public static final int     STATUS_FAILED      = 97;
+    /**
+     * BlockingInitializer STATUS_INITIALIZED Initialization successful
+     * */
+    public static final int     STATUS_INITIALIZED = 98;
+    /** BlockingInitializer STATUS_SHUTDOWN  Initializer has ended */
+    public static final int     STATUS_SHUTDOWN    = 99;
 
+    /** BlockingInitializer status 
+     * current status of the initializer */
+    protected int               status             = STATUS_NEW;
+
+    /**
+     * Creates a new instance of this class.
+     */
     public BlockingInitializer() {
     }
-    
+
+    /**
+     * Start the guarded initialization in a new thread and wait till the result for that is clear.
+     * @param cl the class loader relevant for this context
+     */
     public final synchronized void initialize(ClassLoader cl) {
         if (status >= STATUS_FAILED) return;
 
-        // if status is REGISTERED, STOPPED, or FAILED
+        // if status is NEW or BOOTING
         // we start a new initialization process.
         Thread thread = new Thread(this);
         thread.setContextClassLoader(cl);
@@ -42,7 +64,7 @@ public abstract class BlockingInitializer implements Runnable {
             }
         }
     }
-    
+
     /**
      * @return status information
      */
@@ -50,18 +72,24 @@ public abstract class BlockingInitializer implements Runnable {
         return status;
     }
 
-
+    @Override
     public final void run() {
         try {
             status = STATUS_BOOTING;
             initializeInternal();
             status = STATUS_INITIALIZED;
         } catch (Throwable t) {
-            log.log(Level.SEVERE, "Failed to initialize with classloader:" + Thread.currentThread().getContextClassLoader(), t);
+            log.log(Level.SEVERE, "Failed to initialize with classloader:" +
+                                  Thread.currentThread().getContextClassLoader(), t);
             status = STATUS_FAILED;
         }
     }
-    
+
+    /**
+     * This is the extension point for implementations. Everything that needs to be setup during
+     * initialization should be in here
+     * 
+     */
     protected abstract void initializeInternal();
 
 }

@@ -58,28 +58,32 @@ public class MemoryProgressMonitor implements RevisingProgressMonitor {
 	/**
 	 * @return the task
 	 */
-	public String getTask() {
+	@Override
+    public String getTask() {
 		return task;
 	}
 
 	/**
 	 * @return the subtask
 	 */
-	public String getSubtask() {
+	@Override
+    public String getSubtask() {
 		return subtask;
 	}
 
 	/**
 	 * @return the work
 	 */
-	public int getWork() {
+	@Override
+    public int getWork() {
 		return work;
 	}
 
 	/**
 	 * @return the worked
 	 */
-	public int getWorked() {
+	@Override
+    public int getWorked() {
 		return worked;
 	}
 

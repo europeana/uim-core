@@ -13,7 +13,7 @@ public interface RevisingProgressMonitor extends ProgressMonitor {
 
     /** access the start time
      * 
-     * @return
+     * @return the start time of this progress monitor
      */
     public long getStart();
     

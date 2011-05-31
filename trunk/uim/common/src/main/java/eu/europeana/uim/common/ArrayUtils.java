@@ -4,7 +4,7 @@ package eu.europeana.uim.common;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/** Utility functions to split arrays into a list of smaller arrays
  * 
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
@@ -12,6 +12,12 @@ import java.util.List;
  */
 public class ArrayUtils {
 
+    /** 
+     * Split arrays into a list of smaller arrays
+     * @param data the array to be splitted
+     * @param batchsize the default size of the batch
+     * @return a list of arrays
+     */
     public static List<long[]> batches(long[] data, int batchsize) {
         ArrayList<long[]> result = new ArrayList<long[]>();
 
@@ -27,6 +33,13 @@ public class ArrayUtils {
         return result;
     }
 
+
+    /** 
+     * Split arrays into a list of smaller arrays
+     * @param data the array to be splitted
+     * @param batchsize the default size of the batch
+     * @return a list of arrays
+     */
     public static List<String[]> batches(String[] data, int batchsize) {
         ArrayList<String[]> result = new ArrayList<String[]>();
 
@@ -42,6 +55,13 @@ public class ArrayUtils {
         return result;
     }
 
+
+    /** 
+     * Split arrays into a list of smaller arrays
+     * @param data the array to be splitted
+     * @param batchsize the default size of the batch
+     * @return a list of arrays
+     */  
     public static List<Long[]> batches(Long[] data, int batchsize) {
         ArrayList<Long[]> result = new ArrayList<Long[]>();
 
@@ -57,6 +77,13 @@ public class ArrayUtils {
         return result;
     }
 
+
+    /** 
+     * Split arrays into a list of smaller arrays
+     * @param data the array to be splitted
+     * @param batchsize the default size of the batch
+     * @return a list of arrays
+     */
     public static List<Integer[]> batches(Integer[] data, int batchsize) {
         ArrayList<Integer[]> result = new ArrayList<Integer[]>();
 

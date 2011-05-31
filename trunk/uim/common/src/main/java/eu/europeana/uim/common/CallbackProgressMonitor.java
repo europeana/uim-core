@@ -1,7 +1,7 @@
 package eu.europeana.uim.common;
 
 
-/** Simple memor based implementation of a ProgressMonitor. This class just
+/** Simple memory based implementation of a ProgressMonitor. This class just
  * overwrites 
  * 
  * @author andreas.juffinger@kb.nl
@@ -38,6 +38,10 @@ public abstract class CallbackProgressMonitor extends MemoryProgressMonitor {
 		}
 	}
 
+	/**
+	 * Extension point to output results. This is called whenever a next set of work (defined by the event frequency) has been finished.
+	 * @param worked the total number of units of work done so far 
+	 */
 	public abstract void event(int worked);
 	
 }

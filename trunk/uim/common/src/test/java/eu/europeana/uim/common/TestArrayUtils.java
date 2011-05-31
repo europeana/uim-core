@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 /**
- * 
+ * Tests for the utility functions for separating arrays into batches
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 20, 2011
@@ -16,6 +16,9 @@ import org.junit.Test;
 public class TestArrayUtils {
 
     
+    /**
+     * Test for long batches
+     */
     @Test
     public void testLongBatches() {
         long[] data = new long[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -37,6 +40,9 @@ public class TestArrayUtils {
         assertEquals(10, batches.get(0).length);
     }
 
+    /**
+     * Test for string batches
+     */
     @Test
     public void testStringBatches() {
         String[] data = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
