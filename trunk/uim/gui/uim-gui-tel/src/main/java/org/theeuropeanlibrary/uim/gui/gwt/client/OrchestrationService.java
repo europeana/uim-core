@@ -174,13 +174,13 @@ public interface OrchestrationService extends RemoteService {
      * @param recordId
      * @return raw record how we got it in our uim
      */
-    String getRawRecord(long recordId);
+    String getRawRecord(Long recordId);
 
     /**
      * @param recordId
      * @return xml representation of our metadata record object model
      */
-    String getXmlRecord(long recordId);
+    String getXmlRecord(Long recordId);
 
 // List<MetaDataRecordDTO> getRecordsForProvider(Long provider, int maxSize, int offset);
 
@@ -201,7 +201,7 @@ public interface OrchestrationService extends RemoteService {
      * @param recordId
      * @return xml representation of the actual record in the search index
      */
-    String getSearchRecord(long recordId);
+    String getSearchRecord(Long recordId);
 // List<SearchRecordDTO> searchNgram(String searchQuery, int maxSize, int offset);
 // List<SearchRecordDTO> searchMacs(String searchQuery, int maxSize, int offset);
 }

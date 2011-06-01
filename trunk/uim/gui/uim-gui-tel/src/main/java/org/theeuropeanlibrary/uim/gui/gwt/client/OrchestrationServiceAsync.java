@@ -197,7 +197,7 @@ public interface OrchestrationServiceAsync {
      * @param recordId
      * @param async
      */
-    void getRawRecord(long recordId, AsyncCallback<String> async);
+    void getRawRecord(Long recordId, AsyncCallback<String> async);
 
     /**
      * xml representation of our metadata record object model
@@ -205,7 +205,7 @@ public interface OrchestrationServiceAsync {
      * @param recordId
      * @param async
      */
-    void getXmlRecord(long recordId, AsyncCallback<String> async);
+    void getXmlRecord(Long recordId, AsyncCallback<String> async);
 
     /**
      * Delivers up to a maxSize number of records starting at the offset for the provided collection
@@ -226,5 +226,5 @@ public interface OrchestrationServiceAsync {
      * @param recordId
      * @param async
      */
-    void getSearchRecord(long recordId, AsyncCallback<String> async);
+    void getSearchRecord(Long recordId, AsyncCallback<String> async);
 }

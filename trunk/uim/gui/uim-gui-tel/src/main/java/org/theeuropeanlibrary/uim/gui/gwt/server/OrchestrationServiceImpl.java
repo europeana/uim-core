@@ -412,7 +412,8 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     private eu.europeana.uim.workflow.Workflow getWorkflow(String identifier) {
-        eu.europeana.uim.workflow.Workflow workflow = getEngine().getRegistry().getWorkflow(identifier);
+        eu.europeana.uim.workflow.Workflow workflow = getEngine().getRegistry().getWorkflow(
+                identifier);
         if (workflow == null) { throw new RuntimeException("Error: cannot find workflow " +
                                                            workflow); }
         return workflow;
@@ -496,19 +497,28 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<MetaDataRecordDTO> getRecordsForCollection(Long collection, int offset, int maxSize) {
         List<MetaDataRecordDTO> results = new ArrayList<MetaDataRecordDTO>();
         for (int i = offset; i < offset + maxSize; i++) {
-            results.add(new MetaDataRecordDTO((long)i, "title" + i, "creator" + i, "contributor" + i, "year" + i,
+            results.add(new MetaDataRecordDTO((long)i, "title" + i, "creator" + i, "contributor" +
+                                                                                   i, "year" + i,
                     "language" + i, "country" + i));
         }
         return results;
     }
 
     @Override
-    public String getRawRecord(long recordId) {
+    public String getRawRecord(Long recordId) {
+//        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+//        MetaDataRecord<Long> metaDataRecord = storage.getMetaDataRecord(recordId);
+//        metaDataRecord.getFirstQField(ObjectModelRegistry.METADATA,
+//                new HashSet<Enum<?>>() {
+//            {
+//                add(FieldSource.PROVIDER);
+//            }
+//        });
         return "TEST RAW";
     }
 
     @Override
-    public String getXmlRecord(long recordId) {
+    public String getXmlRecord(Long recordId) {
         return "TEST XML";
     }
 
@@ -536,7 +546,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     @Override
-    public String getSearchRecord(long recordId) {
+    public String getSearchRecord(Long recordId) {
         return "TEST Search";
     }
 }
