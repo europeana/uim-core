@@ -8,7 +8,7 @@ import eu.europeana.uim.common.MemoryProgressMonitor;
 import eu.europeana.uim.common.ProgressMonitor;
 
 /**
- * 
+ * A progress monitor which can be monitored by another monitor. This is useful to make a hierarchy of monitors.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 4, 2011

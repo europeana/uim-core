@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * 
+ * Test for BlockingInitializer
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 31, 2011

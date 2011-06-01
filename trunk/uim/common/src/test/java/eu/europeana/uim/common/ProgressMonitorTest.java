@@ -11,7 +11,7 @@ import eu.europeana.uim.common.LoggingProgressMonitor;
 import eu.europeana.uim.common.MemoryProgressMonitor;
 
 /**
- * 
+ * Test for the ProgressMonitor
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
@@ -50,5 +50,10 @@ public class ProgressMonitorTest {
 
 		monitor.subTask("subtask");
 		assertEquals("subtask", monitor.getSubtask());
+		
+		//trigger logging event
+		for (int i=0;i<50;i++) {
+		   monitor.worked(1); 
+		}
 	}
 }

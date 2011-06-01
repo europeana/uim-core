@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import eu.europeana.uim.common.TKey;
 
-/**
+/**Test for TKey
  * 
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
