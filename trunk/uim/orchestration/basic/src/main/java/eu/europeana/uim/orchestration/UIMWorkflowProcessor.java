@@ -41,7 +41,6 @@ public class UIMWorkflowProcessor implements Runnable {
                                                                                                "processor");
     private TaskExecutorThread                                        dispatcherThread;
 
-    @SuppressWarnings("unused")
     private final Registry                                            registry;
 
     private boolean                                                   running          = false;
@@ -315,7 +314,8 @@ public class UIMWorkflowProcessor implements Runnable {
         } finally {
             execution.getStorageEngine().completed(execution);
             if (registry.getLoggingEngine() != null)
-                registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish", LoggingEngine.Level.INFO, "Finished:" + execution.getName());
+                registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish",
+                        LoggingEngine.Level.INFO, "Finished:" + execution.getName());
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {
