@@ -50,7 +50,7 @@ public class ReflectionEngine extends Engine {
                     registry);
             ochestrator = (Orchestrator)orchestratorClazz.getConstructor(Registry.class,
                     workflowObject.getClass()).newInstance(registry, workflowObject);
-            
+
             registry.setOrchestrator(ochestrator);
         } catch (Throwable e) {
             // TODO Auto-generated catch block
@@ -165,5 +165,4 @@ public class ReflectionEngine extends Engine {
     public Registry getRegistry() {
         return registry;
     }
-
 }
