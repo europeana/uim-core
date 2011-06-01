@@ -13,10 +13,10 @@ import eu.europeana.uim.common.RevisingProgressMonitor;
  * use those).
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since Jun 1, 2011
  */
 public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializable {
-// private static Logger log = Logger.getLogger(GWTProgressMonitor.class.getName());
-
     @SuppressWarnings("unused")
     private String       name;
     private int          work;
@@ -154,5 +154,4 @@ public class GWTProgressMonitor implements RevisingProgressMonitor, IsSerializab
     @Override
     public void detached() {
     }
-
 }
