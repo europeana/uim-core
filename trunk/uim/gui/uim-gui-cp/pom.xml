@@ -75,6 +75,7 @@
                         <!-- add the generated manifest to the war -->
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
+                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
 
