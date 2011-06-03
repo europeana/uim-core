@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Anchor;
 public class EuropeanaCustomization implements IngestionCustomization {
     @Override
     public String mainTitle() {
-        return "The European Library";
+        return "Europeana";
     }
 
     @Override
@@ -28,9 +28,6 @@ public class EuropeanaCustomization implements IngestionCustomization {
 
     @Override
     public Anchor[] links() {
-        return new Anchor[] {
-                new Anchor("The European Library",
-                        "http://search.theeuropeanlibrary.org/portal/en/index.html"),
-                new Anchor("TRAC", "http://trac.tel.ulcc.ac.uk/team01") };
+        return new Anchor[] { new Anchor("Europeana", "http://www.europeana.eu/portal/") };
     }
 }
