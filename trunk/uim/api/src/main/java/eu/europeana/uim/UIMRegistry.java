@@ -410,25 +410,7 @@ public class UIMRegistry implements Registry {
                 builder.append(storage.getConfiguration().toString());
             }
         }
-
-        builder.append("\nRegistered logging:");
-        builder.append("\n--------------------------------------");
-        if (loggers.isEmpty()) {
-            builder.append("\n\tNo logging.");
-        } else {
-            for (LoggingEngine<?, ?> loggingEngine : loggers.values()) {
-                if (builder.length() > 0) {
-                    builder.append("\n\t");
-                }
-                if (activeLogging != null && activeLogging == loggingEngine) {
-                    builder.append("* ");
-                } else {
-                    builder.append("  ");
-                }
-                builder.append(loggingEngine.getIdentifier());
-            }
-        }
-
+        
         builder.append("\nRegistered resource engines:");
         builder.append("\n--------------------------------------");
         if (resources.isEmpty()) {
@@ -447,6 +429,25 @@ public class UIMRegistry implements Registry {
                 builder.append(resourceEngine.getIdentifier());
                 builder.append(" [").append(resourceEngine.getStatus()).append("] ");
                 builder.append(resourceEngine.getConfiguration().toString());
+            }
+        }
+
+
+        builder.append("\nRegistered logging:");
+        builder.append("\n--------------------------------------");
+        if (loggers.isEmpty()) {
+            builder.append("\n\tNo logging.");
+        } else {
+            for (LoggingEngine<?, ?> loggingEngine : loggers.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\t");
+                }
+                if (activeLogging != null && activeLogging == loggingEngine) {
+                    builder.append("* ");
+                } else {
+                    builder.append("  ");
+                }
+                builder.append(loggingEngine.getIdentifier());
             }
         }
 

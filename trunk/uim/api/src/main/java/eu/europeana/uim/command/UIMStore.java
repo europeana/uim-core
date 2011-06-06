@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -17,12 +19,15 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.util.SampleProperties;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Store for the UIM process.
@@ -36,15 +41,16 @@ public class UIMStore implements Action {
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
 
     private enum Operation {
-        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
-                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
-                                                                                                                                                                                                                                "lists the providers"), createCollection(
-                                                                                                                                                                                                                                                                         "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"), updateCollection(
-                                                                                                                                                                                                                                                                                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"), listCollection(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           "lists the collections"), checkpoint(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "creates a checkpoint (a data synchronization)"), loadConfigData(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "loads a set of provider/collections"), loadSampleData(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "loads a set of sample provider/collections");
+        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), 
+        updateProvider("<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), 
+        listProvider("lists the providers"), 
+        createCollection("p provider <mnemonic> <name> the provider as well as the mnemonic and name values"), 
+        updateCollection("<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"), 
+        listCollection("lists the collections"), 
+        listResources("lists the global resources"), 
+        checkpoint("creates a checkpoint (a data synchronization)"), 
+        loadConfigData("loads a set of provider/collections"), 
+        loadSampleData("loads a set of sample provider/collections");
 
         private String desc;
 
@@ -98,6 +104,8 @@ public class UIMStore implements Action {
 
         try {
             StorageEngine<?> storage = registry.getStorage();
+            ResourceEngine<?> resource = registry.getResourceEngine();
+            
             switch (operation) {
             case createProvider:
                 createProvider(storage, out);
@@ -117,6 +125,9 @@ public class UIMStore implements Action {
             case listCollection:
                 listCollection(storage, out);
                 break;
+            case listResources:
+                listResources(resource, out);
+                break;
             case checkpoint:
                 checkpoint(storage, out);
                 break;
@@ -134,6 +145,29 @@ public class UIMStore implements Action {
 
         return null;
     }
+
+    /**
+     * @param resource
+     * @param out
+     */
+    private void listResources(ResourceEngine<?> resource, PrintStream out) {
+        Workflow workflow = registry.getWorkflow(argument0);
+        
+        if (workflow == null) {
+            out.println("No matching workflow: <" + argument0 + ">");
+            return;
+        }
+        
+        List<String> keys = new ArrayList<String>();
+        keys.addAll(workflow.getStart().getParameters());
+        for (IngestionPlugin plugin : workflow.getSteps()) {
+            keys.addAll(plugin.getParameters());
+        }
+        
+        LinkedHashMap<String,List<String>> resources = resource.getGlobalResources(keys);
+        out.println("Global Resources for <" + workflow.getIdentifier() + ">:" + resources.toString());
+    }
+    
 
     private Provider createProvider(StorageEngine<?> storage, PrintStream out)
             throws StorageEngineException {
@@ -186,7 +220,7 @@ public class UIMStore implements Action {
 
             storage.updateProvider(provider);
             storage.checkpoint();
-            
+
             out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
             out.println("Failed to update provider. Failed to update using method <" + method +
