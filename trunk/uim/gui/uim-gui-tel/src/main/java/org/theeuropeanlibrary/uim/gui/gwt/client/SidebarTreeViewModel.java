@@ -174,7 +174,10 @@ public class SidebarTreeViewModel implements TreeViewModel {
         {
             Category category = new Category("Validation");
             catList.add(category);
-//            category.addExample(new RepositoryValidationWidget(orchestO
+// category.addExample(new RepositoryValidationWidget(orchestrationService),
+// RunAsyncCode.runAsyncCode(RepositoryValidationWidget.class));
+// category.addExample(new SearchIndexValidationWidget(orchestrationService),
+// RunAsyncCode.runAsyncCode(SearchIndexValidationWidget.class));
         }
 
         {
