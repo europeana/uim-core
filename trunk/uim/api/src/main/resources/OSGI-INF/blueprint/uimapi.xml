@@ -84,12 +84,6 @@
                 <shell:argument ref="uimRegistry"/>
             </shell:action>
         </shell:command>
-
-        <shell:command name="uimconfig/storage">
-            <shell:action class="eu.europeana.uim.command.UIMConfigStorage">
-                <shell:argument ref="uimRegistry"/>
-            </shell:action>
-        </shell:command>
     </shell:command-bundle>
 
 </blueprint>
