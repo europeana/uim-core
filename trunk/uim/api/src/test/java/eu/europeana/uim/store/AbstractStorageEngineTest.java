@@ -210,8 +210,8 @@ public abstract class AbstractStorageEngineTest<I> {
         Collection<I> collection3 = engine.getCollection(collection0.getId());
         assertEquals(collection3.getMnemonic(), collection0.getMnemonic());
         assertEquals(collection3.getName(), collection0.getName());
-        assertEquals(collection3.getOaiBaseUrl(), collection0.getOaiBaseUrl());
-        assertEquals(collection3.getOaiMetadataPrefix(), collection0.getOaiMetadataPrefix());
+        assertEquals(collection3.getOaiBaseUrl(false), collection0.getOaiBaseUrl(false));
+        assertEquals(collection3.getOaiMetadataPrefix(false), collection0.getOaiMetadataPrefix(false));
 
         assertEquals(collection3.getProvider().getMnemonic(), provider0.getMnemonic());
 

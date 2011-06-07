@@ -60,7 +60,7 @@ public interface Collection<I> extends DataSet<I> {
     /**
      * @return base url to retrieve the collections data
      */
-    String getOaiBaseUrl();
+    String getOaiBaseUrl(boolean fallback);
 
     /**
      * @param baseUrl
@@ -82,7 +82,7 @@ public interface Collection<I> extends DataSet<I> {
     /**
      * @return a prefix for the metadata retrieved from this oai
      */
-    String getOaiMetadataPrefix();
+    String getOaiMetadataPrefix(boolean fallback);
 
     /**
      * @param prefix

@@ -61,8 +61,13 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
 		this.language = language;
 	}
 
-	public String getOaiBaseUrl() {
-        return oaiBaseUrl;
+	public String getOaiBaseUrl(boolean fallback) {
+        if (oaiBaseUrl != null) { return oaiBaseUrl; }
+        
+        if (fallback) {
+        return provider.getOaiBaseUrl();
+        }
+        return null;
     }
 
     public String getOaiSet() {
@@ -77,8 +82,12 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
         this.oaiBaseUrl = oaiBaseUrl;
     }
 
-    public String getOaiMetadataPrefix() {
-        return oaiMetadataPrefix;
+    public String getOaiMetadataPrefix(boolean fallback) {
+        if (oaiMetadataPrefix != null) { return oaiMetadataPrefix; }
+        if (fallback) {
+        return provider.getOaiMetadataPrefix();
+        }
+        return null;
     }
 
     public void setOaiMetadataPrefix(String oaiMetadataPrefix) {
@@ -138,11 +147,17 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
     @Override
     public String toString() {
         String string = super.toString();
-        string += " [";
-        string += getOaiBaseUrl() != null ? getOaiBaseUrl() : (getProvider().getOaiBaseUrl() != null ? getProvider().getOaiBaseUrl() : "undefined");
-
-        string += "?metadataPrefix=";
-        string += getOaiMetadataPrefix() != null ? getOaiMetadataPrefix() : getProvider().getOaiMetadataPrefix();
-        return string + "]";
+        
+        string += "@" + getLanguage();
+        String oai = getOaiBaseUrl(true);
+        if (oai != null) {
+            string += " OAI:[";
+            string += oai + "?verb={x}";
+            
+            string += getOaiSet() != null ? "&set=" + getOaiSet() : "";
+            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix=" + getOaiMetadataPrefix(true) : "";
+            string += "]";
+        }
+        return string;
     }
 }

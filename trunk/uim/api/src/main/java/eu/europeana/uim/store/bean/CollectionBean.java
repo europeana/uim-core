@@ -67,9 +67,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     }
 
     @Override
-    public String getOaiBaseUrl() {
+    public String getOaiBaseUrl(boolean fallback) {
         if (oaiBaseUrl != null) { return oaiBaseUrl; }
+        
+        if (fallback) {
         return provider.getOaiBaseUrl();
+        }
+        return null;
     }
 
     @Override
@@ -92,9 +96,12 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     }
 
     @Override
-    public String getOaiMetadataPrefix() {
+    public String getOaiMetadataPrefix(boolean fallback) {
         if (oaiMetadataPrefix != null) { return oaiMetadataPrefix; }
+        if (fallback) {
         return provider.getOaiMetadataPrefix();
+        }
+        return null;
     }
 
     @Override
@@ -127,13 +134,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         String string = super.toString();
         
         string += "@" + getLanguage();
-        String oai = getOaiBaseUrl();
+        String oai = getOaiBaseUrl(true);
         if (oai != null) {
             string += " OAI:[";
             string += oai + "?verb={x}";
             
             string += getOaiSet() != null ? "&set=" + getOaiSet() : "";
-            string += getOaiMetadataPrefix() != null ? "&metadataPrefix=" + getOaiMetadataPrefix() : "";
+            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix=" + getOaiMetadataPrefix(true) : "";
             string += "]";
         }
         return string;
