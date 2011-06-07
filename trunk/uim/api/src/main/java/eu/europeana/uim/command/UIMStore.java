@@ -203,7 +203,7 @@ public class UIMStore implements Action {
         for (Provider provider : providers) {
             LinkedHashMap<String, List<String>> resources = resource.getProviderResources(provider,
                     keys);
-            out.println("Provider " + provider.getMnemonic() + "Resources for <" +
+            out.println("Provider " + provider.getMnemonic() + " Resources for <" +
                         workflow.getIdentifier() + ">:" + resources.toString());
 
         }
@@ -237,7 +237,7 @@ public class UIMStore implements Action {
                 for (Collection collection : collections) {
                     LinkedHashMap<String, List<String>> resources = resource.getCollectionResources(
                             collection, keys);
-                    out.println("Collection " + collection.getMnemonic() + "Resources for <" +
+                    out.println("Collection " + collection.getMnemonic() + " Resources for <" +
                                 workflow.getIdentifier() + ">:" + resources.toString());
                 }
             }
@@ -300,6 +300,7 @@ public class UIMStore implements Action {
         } catch (Throwable e) {
             out.println("Failed to update provider. Failed to update using method <" + method +
                         "(" + argument2 + ") reason:" + e.getLocalizedMessage());
+            e.printStackTrace(out);
         }
     }
 
@@ -378,7 +379,8 @@ public class UIMStore implements Action {
             out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
             out.println("Failed to update collection. Failed to update using method <" + method +
-                        "(\"" + argument2 + "\") reason:" + e.getLocalizedMessage());
+                        "(\"" + argument2 + "\") reason:" + e.getMessage());
+            e.printStackTrace(out);
         }
     }
 
