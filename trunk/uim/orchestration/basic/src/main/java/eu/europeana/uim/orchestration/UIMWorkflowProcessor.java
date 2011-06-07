@@ -89,6 +89,7 @@ public class UIMWorkflowProcessor implements Runnable {
                 Iterator<ActiveExecution<?>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
                     ActiveExecution<?> execution = activeIterator.next();
+                    if (!execution.isActive()) continue;
 
                     try {
                         // we ask the workflow start if we have more to do
@@ -164,8 +165,6 @@ public class UIMWorkflowProcessor implements Runnable {
                                                     IngestionPluginFailedException.class)) {
                                             execution.setThrowable(task.getThrowable());
                                             complete(execution, start, false);
-                                            
-                                            task.getThrowable().printStackTrace();
                                             break;
                                         }
                                         task.setStep(thisStep, mandatory);
