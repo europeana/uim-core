@@ -162,8 +162,11 @@ public class UIMWorkflowProcessor implements Runnable {
                                         if (task.getThrowable() != null &&
                                             task.getThrowable().getClass().equals(
                                                     IngestionPluginFailedException.class)) {
+                                            execution.setThrowable(task.getThrowable());
                                             complete(execution, start, false);
+                                            
                                             task.getThrowable().printStackTrace();
+                                            break;
                                         }
                                         task.setStep(thisStep, mandatory);
                                         task.setSavepoint(savepoint);
