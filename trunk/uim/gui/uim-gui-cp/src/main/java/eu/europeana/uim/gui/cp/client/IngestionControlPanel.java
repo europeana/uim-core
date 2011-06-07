@@ -24,7 +24,7 @@ import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 public class IngestionControlPanel extends AbstractIngestionControlPanel implements EntryPoint {
     @Override
     public void onModuleLoad() {
-        initialize();
+        // initialize();
     }
 
     @Override
