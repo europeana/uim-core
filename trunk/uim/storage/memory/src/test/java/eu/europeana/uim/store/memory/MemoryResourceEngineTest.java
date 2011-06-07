@@ -1,6 +1,8 @@
 /* MemoryResourceEngineTest.java - created on May 9, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.store.memory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -20,10 +22,12 @@ public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
     protected ResourceEngine<Long> getResourceEngine() {
         return new MemoryResourceEngine();
     }
-
+    
+    private static AtomicLong id = new AtomicLong();
+    
     @Override
-    protected Long getExampleID() {
-        return 1L;
+    protected Long nextID() {
+        return id.incrementAndGet();
     }
 
 }

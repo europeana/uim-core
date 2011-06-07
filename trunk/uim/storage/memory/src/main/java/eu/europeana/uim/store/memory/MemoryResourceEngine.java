@@ -107,10 +107,12 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
             List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         LinkedHashMap<String, List<String>> providerMap = providerResources.get(id.getId());
-        if (providerMap == null) { return null; }
 
         for (String key : keys) {
-            List<String> values = providerMap.get(key);
+            List<String> values = null;
+            if (providerMap != null) {
+                values = providerMap.get(key);
+            }
 
             results.put(key, values);
 
@@ -152,10 +154,12 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
             List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         LinkedHashMap<String, List<String>> collectionMap = collectionResources.get(id.getId());
-        if (collectionMap == null) { return null; }
 
         for (String key : keys) {
-            List<String> values = collectionMap.get(key);
+            List<String> values = null;
+            if (collectionMap != null) {
+                values = collectionMap.get(key);
+            }
             results.put(key, values);
 
         }

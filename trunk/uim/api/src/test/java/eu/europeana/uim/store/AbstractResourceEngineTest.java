@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +58,7 @@ public abstract class AbstractResourceEngineTest<I> {
     /**
      * @return provide an example identifier
      */
-    protected abstract I getExampleID();
+    protected abstract I nextID();
 
     abstract class AbstractCreateAndGetResourceTestCase<J> {
 
@@ -73,6 +75,8 @@ public abstract class AbstractResourceEngineTest<I> {
             List<String> testList1 = new LinkedList<String>();
             testList1.add(EXAMPLE_VALUE_1);
             testList1.add(EXAMPLE_VALUE_2);
+            
+            
             LinkedHashMap<String, List<String>> testSet1 = new LinkedHashMap<String, List<String>>();
             testSet1.put(EXAMPLE_KEY_1, testList1);
             J testEntity = getExampleEntity();
@@ -142,90 +146,247 @@ public abstract class AbstractResourceEngineTest<I> {
         }
     }
 
-    /**
-     * Tests creation and retrieval of global resources.
-     */
-    @Test
-    public void testCreateAndGetGlobalResources() {
-        new AbstractCreateAndGetResourceTestCase<String>() {
-
-            @Override
-            public LinkedHashMap<String, List<String>> getEntityResources(String entity,
-                    List<String> keys) {
-                return engine.getGlobalResources(keys);
-            }
-
-            @Override
-            public void setEntityResources(String entity,
-                    LinkedHashMap<String, List<String>> resources) {
-                engine.setGlobalResources(resources);
-            }
-
-            @Override
-            public String getExampleEntity() {
-                return null;
-            }
-        }.run();
-    }
-
-    /**
-     *  Tests creation and retrieval of global resources.
-     */
-    @Test
-    public void testMoreGlobalPropertiesRequestedThenExists() {
-        // ask for more keys than there are actually stored.
-        // The keys should be included in the result but have empty entry at the global level
-    }
-
-    /**
-     *  Tests creation and retrieval of provider specific resources.
-     */
-    @Test
-    public void testCreateAndGetProviderResources() {
-        new AbstractCreateAndGetResourceTestCase<Provider<I>>() {
-            @Override
-            public LinkedHashMap<String, List<String>> getEntityResources(Provider<I> entity,
-                    List<String> keys) {
-                return engine.getProviderResources(entity, keys);
-            }
-
-            @Override
-            public void setEntityResources(Provider<I> entity,
-                    LinkedHashMap<String, List<String>> resources) {
-                engine.setProviderResources(entity, resources);
-            }
-
-            @Override
-            public Provider<I> getExampleEntity() {
-                return new ProviderBean<I>(getExampleID());
-
-            }
-        }.run();
-    }
 
     /**
      *  Tests creation and retrieval of collection specific resources.
      */
     @Test
     public void testCreateAndGetCollectionResources() {
-        new AbstractCreateAndGetResourceTestCase<Collection<I>>() {
-            @Override
-            public LinkedHashMap<String, List<String>> getEntityResources(Collection<I> entity,
-                    List<String> keys) {
-                return engine.getCollectionResources(entity, keys);
-            }
+        Provider<I> provider = new ProviderBean<I>(nextID());
+        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
+        
+        LinkedHashMap<String,List<String>> resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        assertEquals(2, resources.keySet().size());
+        
+        assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        assertNull(resources.get(EXAMPLE_KEY_3));
 
-            @Override
-            public void setEntityResources(Collection<I> entity,
-                    LinkedHashMap<String, List<String>> resources) {
-                engine.setCollectionResources(entity, resources);
-            }
+        engine.checkpoint();
+        
+        resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
+        resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
+        resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
+        engine.setCollectionResources(collection, resources);
+        engine.checkpoint();
+        
+        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_4));
 
-            @Override
-            public Collection<I> getExampleEntity() {
-                return new CollectionBean<I>(getExampleID(), new ProviderBean<I>(getExampleID()));
+        
+        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_2));
+        assertEquals(1, resources.get(EXAMPLE_KEY_2).size());
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_4));
+        assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
+        
+        resources.put(EXAMPLE_KEY_1, null);
+        engine.setCollectionResources(collection, resources);
+        engine.checkpoint();
+        
+        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNull(resources.get(EXAMPLE_KEY_1));
+    }
+    
+    
+    /**
+     *  Tests creation and retrieval of collection specific resources.
+     */
+    @Test
+    public void testCreateAndGetProviderResource() {
+        Provider<I> provider = new ProviderBean<I>(nextID());
+        
+        LinkedHashMap<String,List<String>> resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        assertEquals(2, resources.keySet().size());
 
-            }
-        }.run();
+        assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        assertNull(resources.get(EXAMPLE_KEY_3));
+
+        engine.checkpoint();
+        
+        resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
+        resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
+        resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
+        engine.setProviderResources(provider, resources);
+        engine.checkpoint();
+        
+        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_4));
+
+        
+        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_2));
+        assertEquals(1, resources.get(EXAMPLE_KEY_2).size());
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_4));
+        assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
+        
+        resources.put(EXAMPLE_KEY_1, null);
+        engine.setProviderResources(provider, resources);
+        engine.checkpoint();
+        
+        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNull(resources.get(EXAMPLE_KEY_1));
+
+    }
+    
+    
+    /**
+     *  Tests creation and retrieval of collection specific resources.
+     */
+    @Test
+    public void testCreateAndGetGlobalResource() {
+        LinkedHashMap<String,List<String>> resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        assertEquals(2, resources.keySet().size());
+
+        assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        assertNull(resources.get(EXAMPLE_KEY_3));
+
+        engine.checkpoint();
+        
+        resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
+        resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
+        resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
+        engine.setGlobalResources(resources);
+        engine.checkpoint();
+        
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_4));
+
+        
+        resources = engine.getGlobalResources( Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_2));
+        assertEquals(1, resources.get(EXAMPLE_KEY_2).size());
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_4));
+        assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
+        
+        resources.put(EXAMPLE_KEY_1, null);
+        engine.setGlobalResources(resources);
+        engine.checkpoint();
+        
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+        
+        // value given
+        assertNull(resources.get(EXAMPLE_KEY_1));
+    }
+    
+    
+    /**
+     *  Tests creation and retrieval of collection specific resources.
+     */
+    @Test
+    public void testCreateAndGetMixedResource() {
+        Provider<I> provider = new ProviderBean<I>(nextID());
+        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
+        
+        LinkedHashMap<String,List<String>> colResources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        LinkedHashMap<String,List<String>> proResources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        LinkedHashMap<String,List<String>> gloResources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        assertNull(colResources.get(EXAMPLE_KEY_1));
+        assertNull(colResources.get(EXAMPLE_KEY_2));
+        assertNull(colResources.get(EXAMPLE_KEY_3));
+
+        
+        assertNull(proResources.get(EXAMPLE_KEY_1));
+        assertNull(proResources.get(EXAMPLE_KEY_2));
+        assertNull(proResources.get(EXAMPLE_KEY_3));
+
+        
+        assertNull(gloResources.get(EXAMPLE_KEY_1));
+        assertNull(gloResources.get(EXAMPLE_KEY_2));
+        assertNull(gloResources.get(EXAMPLE_KEY_3));
+
+        engine.checkpoint();
+
+        colResources.put(EXAMPLE_KEY_1, Arrays.asList("cone","ctwo"));
+        proResources.put(EXAMPLE_KEY_1, Arrays.asList("pone","ptwo"));
+        gloResources.put(EXAMPLE_KEY_1, Arrays.asList("gone","gtwo"));
+
+        engine.setCollectionResources(collection, colResources);
+        engine.setProviderResources(provider, proResources);
+        engine.setGlobalResources(gloResources);
+        engine.checkpoint();
+        
+        colResources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        proResources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        gloResources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        
+        assertNotNull(colResources.get(EXAMPLE_KEY_1));
+        assertNotNull(proResources.get(EXAMPLE_KEY_1));
+        assertNotNull(gloResources.get(EXAMPLE_KEY_1));
+        
+        assertEquals(colResources.get(EXAMPLE_KEY_1).get(0), "cone");
+        assertEquals(proResources.get(EXAMPLE_KEY_1).get(1), "ptwo");
+        assertEquals(gloResources.get(EXAMPLE_KEY_1).get(0), "gone");
+
     }
 }
