@@ -160,13 +160,12 @@ public class UIMWorkflowProcessor implements Runnable {
                                     while (task != null) {
                                         isbusy |= true; // well there is something todo
 
-                                        if (task.getThrowable() != null &&
-                                            task.getThrowable().getClass().equals(
-                                                    IngestionPluginFailedException.class)) {
+                                        if (task.getThrowable() instanceof IngestionPluginFailedException) {
                                             execution.setThrowable(task.getThrowable());
                                             complete(execution, start, false);
                                             break;
                                         }
+                                        
                                         task.setStep(thisStep, mandatory);
                                         task.setSavepoint(savepoint);
                                         task.setOnSuccess(thisSuccess);
@@ -178,18 +177,21 @@ public class UIMWorkflowProcessor implements Runnable {
                                         synchronized (thisAssigned) {
                                             thisAssigned.add(task);
                                         }
-                                        executor.execute(task);
+                                        if (!executor.isShutdown()) {
+                                            executor.execute(task);
+                                            
+                                            // if this is the first step,
+                                            // then we have just now scheduled a
+                                            // newly created task from the start plugin.
+                                            if (i == 0) {
+                                                execution.incrementScheduled(1);
+                                            }
 
-                                        // if this is the first step,
-                                        // then we have just now scheduled a
-                                        // newly created task from the start plugin.
-                                        if (i == 0) {
-                                            execution.incrementScheduled(1);
+                                            synchronized (prevSuccess) {
+                                                task = prevSuccess.poll();
+                                            }
                                         }
 
-                                        synchronized (prevSuccess) {
-                                            task = prevSuccess.poll();
-                                        }
                                     }
                                 }
                             }
