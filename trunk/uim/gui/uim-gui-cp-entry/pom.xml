@@ -10,9 +10,9 @@
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>europeana-uim-gui-cp</artifactId>
+    <artifactId>europeana-uim-gui-cp-entry</artifactId>
     <packaging>war</packaging>
-    <name>Unified Ingestion Manager: Base GWT Module Ingestion Control Panel GUI</name>
+    <name>Unified Ingestion Manager: Europeana Ingestion Control Panel GUI (GWT)</name>
 
     <properties>
         <gwtVersion>2.2.0</gwtVersion>
@@ -41,7 +41,6 @@
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
         <plugins>
-
             <!-- GWT Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -57,7 +56,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <runTarget>IngestionControlPanel.html</runTarget>
+                    <runTarget>EuropeanaIngestionControlPanel.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <!-- <i18nMessagesBundle>eu.europeana.uim.gui.cp.client.Messages</i18nMessagesBundle> -->
 
@@ -65,7 +64,7 @@
                         OSGI platform -->
                     <port>8181</port>
                     <noServer>true</noServer>
-                    <runTarget>gui/IngestionControlPanel.html</runTarget>
+                    <runTarget>gui/EuropeanaIngestionControlPanel.html</runTarget>
                     <!-- custom argument to tell the AbstractOSGIRemoteServiceServlet that it can trust this environment -->
                     <!-- note the whitespace, I suppose this is due to the maven-gwt-plugin already providing some additional 
                         VM arguments -->
@@ -159,46 +158,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwtVersion}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google</groupId>
-            <artifactId>gwt-incubator</artifactId>
-            <version>20101117-r1766</version>
-        </dependency>
-
-        <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
+            <artifactId>europeana-uim-gui-cp</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+            <classifier>classes</classifier>
         </dependency>
     </dependencies>
 </project>
