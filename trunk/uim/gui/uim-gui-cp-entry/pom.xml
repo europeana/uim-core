@@ -20,23 +20,6 @@
     </properties>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.java</include>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.java</include>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
-        </resources>
-
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
@@ -161,7 +144,6 @@
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-gui-cp</artifactId>
             <version>1.2.0-SNAPSHOT</version>
-            <classifier>classes</classifier>
         </dependency>
     </dependencies>
 </project>

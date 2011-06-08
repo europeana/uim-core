@@ -172,7 +172,7 @@ public class SidebarMenu implements TreeViewModel {
                 splitPoints.add(splitPoint);
             }
             contentCategory.put(example, this);
-            contentToken.put(IngestionControlPanel.getContentWidgetToken(example), example);
+            contentToken.put(AbstractIngestionControlPanel.getContentWidgetToken(example), example);
         }
 
         /**

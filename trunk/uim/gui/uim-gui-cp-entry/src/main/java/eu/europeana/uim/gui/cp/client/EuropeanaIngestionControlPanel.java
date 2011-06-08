@@ -21,10 +21,11 @@ import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 26, 2011
  */
-public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPanel implements EntryPoint {
+public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPanel implements
+        EntryPoint {
     @Override
     public void onModuleLoad() {
-        // initialize();
+        initialize();
     }
 
     @Override
