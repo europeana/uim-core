@@ -58,6 +58,7 @@ public interface Collection<I> extends DataSet<I> {
     void setLanguage(String language);
 
     /**
+     * @param fallback 
      * @return base url to retrieve the collections data
      */
     String getOaiBaseUrl(boolean fallback);
@@ -80,6 +81,7 @@ public interface Collection<I> extends DataSet<I> {
     void setOaiSet(String set);
 
     /**
+     * @param fallback 
      * @return a prefix for the metadata retrieved from this oai
      */
     String getOaiMetadataPrefix(boolean fallback);
