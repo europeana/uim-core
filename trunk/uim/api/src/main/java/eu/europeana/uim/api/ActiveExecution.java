@@ -61,16 +61,6 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      */
     boolean isFinished();
 
-    /**
-     * @param throwable
-     *            holding heavy errors
-     */
-    void setThrowable(Throwable throwable);
-
-    /**
-     * @return throwable with errors
-     */
-    Throwable getThrowable();
 
     /**
      * @param name

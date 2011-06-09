@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
+import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngine.Level;
 import eu.europeana.uim.api.StorageEngineException;
@@ -83,12 +84,28 @@ public class TaskExecutor extends ThreadPoolExecutor {
             MetaDataRecord metaDataRecord = task.getMetaDataRecord();
             if (t != null) {
                 success = false;
-                if (loggingEngine != null &&
-                    t.getClass().equals(CorruptedMetadataRecordException.class)) {
-                    loggingEngine.log(task.getStep(), execution, metaDataRecord, "Taskexecution",
-                            Level.WARNING,
-                            "Major error in the workflow the metadata record is broken!");
+                if (t instanceof CorruptedMetadataRecordException) {
+                    if (loggingEngine != null) {
+                        loggingEngine.log(task.getStep(), execution, metaDataRecord,
+                                "Taskexecution", Level.WARNING,
+                                "Major error in the workflow the metadata record is broken!");
+                    }
+                } else if (t instanceof IngestionPluginFailedException) {
+                    if (loggingEngine != null) {
+                        loggingEngine.log(task.getStep(), execution, metaDataRecord,
+                                "PluginFailed", Level.SEVERE,
+                                "Major error in the workflow plugin execution must be stopped!");
+                    }
+                    task.getExecutionContext().setThrowable(t);
+
+                } else {
+                    if (loggingEngine != null) {
+                        loggingEngine.log(task.getStep(), execution, metaDataRecord,
+                                "Taskexception", Level.WARNING, "An uncatched throwable occured:" +
+                                                                t.getMessage());
+                    }
                 }
+
             } else if (!task.isSuccessfulProcessing()) {
                 if (task.isMandatory()) {
                     success = false;
@@ -126,7 +143,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                     }
 
                 } catch (StorageEngineException e1) {
-                    task.setThrowable(t);
+                    task.setThrowable(e1);
                     task.setStatus(TaskStatus.FAILED);
                     synchronized (task.getOnFailure()) {
                         task.getOnFailure().add(task);

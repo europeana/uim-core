@@ -1,5 +1,6 @@
 package eu.europeana.uim.orchestration.processing;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
@@ -17,6 +18,7 @@ public class TaskExecutorThreadFactory implements ThreadFactory {
     private String                   threadname       = "anonymouse";
 
     private ThreadGroup              threadgroup;
+    private UncaughtExceptionHandler exceptionhandler;
 
     private List<TaskExecutorThread> deliveredThreads = new LinkedList<TaskExecutorThread>();
 
@@ -34,6 +36,7 @@ public class TaskExecutorThreadFactory implements ThreadFactory {
      */
     public TaskExecutorThreadFactory(String threadname) {
         this.threadname = threadname;
+        
         threadgroup = new ThreadGroup(groupname);
     }
 
@@ -46,6 +49,7 @@ public class TaskExecutorThreadFactory implements ThreadFactory {
     public TaskExecutorThreadFactory(String groupname, String threadname) {
         this.groupname = groupname;
         this.threadname = threadname;
+        
         threadgroup = new ThreadGroup(groupname);
     }
 
@@ -53,6 +57,7 @@ public class TaskExecutorThreadFactory implements ThreadFactory {
     public Thread newThread(Runnable runable) {
         TaskExecutorThread worker = new TaskExecutorThread(threadgroup, runable, threadname + "[" +
                                                                                  id++ + "]");
+        worker.setUncaughtExceptionHandler(exceptionhandler);
         deliveredThreads.add(worker);
         return worker;
     }
@@ -70,4 +75,22 @@ public class TaskExecutorThreadFactory implements ThreadFactory {
     public String getThreadname() {
         return threadname;
     }
+
+    /**
+     * Returns the exceptionhandler.
+     * @return the exceptionhandler
+     */
+    public UncaughtExceptionHandler getExceptionHandler() {
+        return exceptionhandler;
+    }
+
+    /**
+     * Sets the exceptionhandler to the given value.
+     * @param exceptionhandler the exceptionhandler to set
+     */
+    public void setExceptionHandler(UncaughtExceptionHandler exceptionhandler) {
+        this.exceptionhandler = exceptionhandler;
+    }
+    
+    
 }

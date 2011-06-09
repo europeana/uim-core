@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
@@ -89,7 +88,6 @@ public class UIMWorkflowProcessor implements Runnable {
                 Iterator<ActiveExecution<?>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
                     ActiveExecution<?> execution = activeIterator.next();
-                    if (!execution.isActive()) continue;
 
                     try {
                         // we ask the workflow start if we have more to do
@@ -108,7 +106,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     if (execution.getMonitor().isCancelled()) {
                                         // cancelled and nothing in progress
                                         if (execution.isFinished()) {
-                                            complete(execution, start, true);
+                                            complete(execution, true);
                                         }
                                     } else if (start.isFinished(execution,
                                             execution.getStorageEngine())) {
@@ -116,7 +114,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                         if (execution.isFinished()) {
                                             Thread.sleep(100);
                                             if (execution.isFinished()) {
-                                                complete(execution, start, false);
+                                                complete(execution, false);
                                             }
                                         }
                                     }
@@ -159,12 +157,6 @@ public class UIMWorkflowProcessor implements Runnable {
 
                                     while (task != null) {
                                         isbusy |= true; // well there is something todo
-
-                                        if (task.getThrowable() instanceof IngestionPluginFailedException) {
-                                            execution.setThrowable(task.getThrowable());
-                                            complete(execution, start, false);
-                                            break;
-                                        }
                                         
                                         task.setStep(thisStep, mandatory);
                                         task.setSavepoint(savepoint);
@@ -187,6 +179,14 @@ public class UIMWorkflowProcessor implements Runnable {
                                                 execution.incrementScheduled(1);
                                             }
 
+                                            if (execution.getThrowable() != null) {
+                                                //log.log(Level.WARNING, "Failed execution.", execution.getThrowable());
+                                                
+                                                execution.setThrowable(task.getThrowable());
+                                                complete(execution, true);
+                                                break;
+                                            }
+
                                             synchronized (prevSuccess) {
                                                 task = prevSuccess.poll();
                                             }
@@ -199,7 +199,7 @@ public class UIMWorkflowProcessor implements Runnable {
                             // this is paused or not initialized ... are we now cancelled - if yes
 // stop
                             if (execution.getMonitor().isCancelled()) {
-                                complete(execution, start, true);
+                                complete(execution, true);
                             }
                         }
                     } catch (Throwable exc) {
@@ -281,12 +281,12 @@ public class UIMWorkflowProcessor implements Runnable {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void complete(ActiveExecution execution, WorkflowStart start, boolean cancel)
+    private void complete(ActiveExecution execution, boolean cancel)
             throws StorageEngineException {
         try {
-            start.completed(execution);
+            execution.getWorkflow().getStart().completed(execution);
         } catch (Throwable t) {
-            log.log(Level.SEVERE, "Failed to complete:" + start, t);
+            log.log(Level.SEVERE, "Failed to complete:" + execution.getWorkflow().getStart(), t);
         }
         for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
             try {
@@ -314,7 +314,7 @@ public class UIMWorkflowProcessor implements Runnable {
             execution.getStorageEngine().checkpoint();
             execution.cleanup();
         } catch (Throwable t) {
-            log.log(Level.SEVERE, "Failed to complete:" + start, t);
+            log.log(Level.SEVERE, "Failed to complete:" + execution, t);
         } finally {
             execution.getStorageEngine().completed(execution);
             if (registry.getLoggingEngine() != null)

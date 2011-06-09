@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Date;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -141,6 +142,36 @@ public class UIMOrchestratorTest {
 
         assertEquals(20, execution0.getCompletedSize());
         assertEquals(10, execution0.getFailureSize());
+        assertEquals(30, execution0.getScheduledSize());
+    }
+    /**
+     * Tests partial failures.
+     * 
+     * @throws InterruptedException
+     * @throws StorageEngineException
+     */
+    @Test
+    public void testSimplePluginFailedSetup() throws InterruptedException, StorageEngineException {
+        assertEquals(0, orchestrator.getActiveExecutions().size());
+
+        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 30);
+        // creating the data calles 30 times the update method.
+        verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
+
+        Workflow w = new MixedWorkflow(7, true);
+
+        Properties properties = new Properties();
+        properties.setProperty("syserr.fullfailure", "true");
+        
+        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+                request, properties);
+        execution0.waitUntilFinished();
+
+        // each failed metadata record is saved once 30 + original count of 30
+        verify(engine, times(32)).updateMetaDataRecord(any(MetaDataRecord.class));
+
+        assertEquals(0, execution0.getCompletedSize());
+        assertEquals(2, execution0.getFailureSize());
         assertEquals(30, execution0.getScheduledSize());
     }
 

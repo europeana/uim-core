@@ -9,10 +9,6 @@ import java.util.Hashtable;
  * @since Mar 22, 2011
  */
 public class TaskExecutorThread extends Thread {
-    /**
-     * thread group the executor runs in
-     */
-    protected ThreadGroup               group;
 
     /**
      * context for this thread to hold thread specific information
@@ -28,7 +24,6 @@ public class TaskExecutorThread extends Thread {
      */
     public TaskExecutorThread(ThreadGroup group, Runnable runable, String name) {
         super(group, runable, name);
-        this.group = group;
     }
 
     /**

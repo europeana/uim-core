@@ -72,9 +72,21 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
         } else {
             System.err.println(getClass().getSimpleName() + ": " + identifier);
         }
+        data.processed++;
+        
+        if (data.fullfailure) { 
+            throw new IngestionPluginFailedException(
+                    "Failed plugin at record: " + data.processed); 
+        }
 
-        if (data.processed++ % data.errorrate == 0) { throw new CorruptedMetadataRecordException(
-                "Failed plugin at record: " + data.processed); }
+        if (data.processed % data.errorrate == 0) { 
+            if (data.corrupted) {
+            throw new CorruptedMetadataRecordException(
+                "Failed plugin at record: " + data.processed); 
+            } else {
+                throw new NullPointerException("Failed plugin at record: " + data.processed);
+            }
+        }
 
         return true;
     }
@@ -89,6 +101,12 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
 
         property = context.getProperties().getProperty("syserr.error.rate", "3");
         data.errorrate = Integer.parseInt(property);
+
+        property = context.getProperties().getProperty("syserr.corrupted", "true");
+        data.corrupted = Boolean.parseBoolean(property);
+
+        property = context.getProperties().getProperty("syserr.fullfailure", "false");
+        data.fullfailure = Boolean.parseBoolean(property);
     }
 
     @Override
@@ -99,6 +117,9 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
     private final static class Data implements Serializable {
         public Random  random    = new Random();
         public boolean randsleep = false;
+        public boolean corrupted = true;
+        
+        public boolean fullfailure = false;
         public int     errorrate = 3;
         public int     processed = 0;
     }

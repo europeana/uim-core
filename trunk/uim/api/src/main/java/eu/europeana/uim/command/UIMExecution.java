@@ -243,7 +243,8 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getStartTime()) + ", paused=" + e.isPaused(),
+                                df.format(e.getStartTime()) + ", active=" + e.isActive() + ", paused=" + e.isPaused() + 
+                                ", cancelled=" + e.getMonitor().isCancelled(),
                         e.getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
         }

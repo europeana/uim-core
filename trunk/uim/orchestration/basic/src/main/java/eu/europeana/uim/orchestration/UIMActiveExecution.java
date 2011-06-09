@@ -378,6 +378,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public boolean isFinished() {
         if (!isInitialized()) return false;
+        if (getThrowable() != null) return true;
 
         boolean cancelled = getMonitor().isCancelled();
 

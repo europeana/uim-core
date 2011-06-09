@@ -29,6 +29,17 @@ public interface ExecutionContext {
     Workflow getWorkflow();
 
     /**
+     * @param throwable
+     *            holding heavy errors
+     */
+    void setThrowable(Throwable throwable);
+
+    /**
+     * @return throwable with errors
+     */
+    Throwable getThrowable();
+
+    /**
      * @return DataSet for this execution (provider, collection, ...)
      */
     DataSet<?> getDataSet();
