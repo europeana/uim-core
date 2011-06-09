@@ -112,8 +112,7 @@ public class UIMOrchestratorTest {
         // each failed metadata record is saved once 21 + original count of 21
         verify(engine, times(42)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        assertEquals(14, execution0.getCompletedSize());
-        assertEquals(7, execution0.getFailureSize());
+        assertEquals(21, execution0.getCompletedSize() + execution0.getFailureSize());
         assertEquals(21, execution0.getScheduledSize());
     }
 
