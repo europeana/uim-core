@@ -391,8 +391,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         
         boolean empty = getProgressSize() == 0;
 
-        // System.out.println(String.format("s=%d, p=%d, f=%d, c=%d", getScheduledSize(),
-// getProgressSize(), getFailureSize(), getCompletedSize()));
+        System.out.println(String.format("s=%d, p=%d, f=%d, c=%d", getScheduledSize(),
+        getProgressSize(), getFailureSize(), getCompletedSize()));
         return (finished || cancelled) && processed && empty;
     }
 
