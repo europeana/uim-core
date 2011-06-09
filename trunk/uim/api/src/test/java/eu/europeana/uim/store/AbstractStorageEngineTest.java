@@ -509,7 +509,13 @@ public abstract class AbstractStorageEngineTest<I> {
         assertEquals("title 03", record3.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
 
         assertEquals(3, record3.getField(MDRFieldRegistry.rawrecord).size());
-        engine.command("commit");
+        engine.checkpoint();
+        
+        MetaDataRecord<I> record4 = engine.getMetaDataRecord(record0.getId());
+        assertEquals("title 01", record4.getFirstField(MDRFieldRegistry.rawrecord)); 
+        assertEquals("title 03", record4.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
+        assertEquals(request0.getId(), record4.getRequest().getId());
+        
         assertEquals(1, engine.getTotalByRequest(request0));
     }
 
