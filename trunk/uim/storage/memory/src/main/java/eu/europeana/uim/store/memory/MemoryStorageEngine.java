@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
@@ -116,11 +114,6 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     @Override
     public EngineStatus getStatus() {
         return status;
-    }
-
-    @Override
-    public long size() {
-        return metadatas.size();
     }
 
     @Override
@@ -423,29 +416,6 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
     
     
-    @Override
-    public BlockingQueue<Long[]> getBatchesByRequest(Request<Long> request)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByRequest(request), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-    @Override
-    public BlockingQueue<Long[]> getBatchesByCollection(Collection<Long> collection)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByCollection(collection), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-    @Override
-    public BlockingQueue<Long[]> getBatchesByProvider(Provider<Long> provider, boolean recursive)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByProvider(provider, recursive), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-    
-
     @Override
     public int getTotalByRequest(Request<Long> request) {
         int result = 0;

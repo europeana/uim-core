@@ -2,7 +2,6 @@ package eu.europeana.uim.util;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,10 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
     private static final Logger                   log           = Logger.getLogger(BatchWorkflowStart.class.getName());
 
     /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET  = "batch.subset";
+    public static final String                    BATCH_SUBSET_HEAD  = "batch.subset.head";
+
+    /** String BATCH_SUBSET */
+    public static final String                    BATCH_SUBSET_SHUFFLE  = "batch.subset.shuffle";
 
     /** String BATCH_SHUFFLE */
     public static final String                    BATCH_SHUFFLE = "batch.shuffle";
@@ -76,7 +78,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
 
     @Override
     public List<String> getParameters() {
-        return Collections.EMPTY_LIST;
+        return Arrays.asList(BATCH_SUBSET_HEAD, BATCH_SUBSET_SHUFFLE, BATCH_SHUFFLE);
     }
 
     @Override
@@ -84,41 +86,34 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
             throws WorkflowStartFailedException {
         try {
             long start = System.currentTimeMillis();
-            BlockingQueue<I[]> queue;
-            int total = 0;
+            I[] records = null;
+            
 
             DataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
                 try {
-                    queue = ((StorageEngine<I>)storage).getBatchesByProvider((Provider)dataSet,
-                            false);
-                    total = ((StorageEngine<I>)storage).getTotalByProvider((Provider)dataSet, false);
+                    records = ((StorageEngine<I>)storage).getByProvider((Provider)dataSet, false);
                 } catch (StorageEngineException e) {
                     throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
                                                            "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof Collection) {
                 try {
-                    queue = ((StorageEngine<I>)storage).getBatchesByCollection((Collection)dataSet);
-                    total = ((StorageEngine<I>)storage).getTotalByCollection((Collection)dataSet);
+                    records = ((StorageEngine<I>)storage).getByCollection((Collection)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Collection '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof Request) {
                 try {
-                    queue = ((StorageEngine<I>)storage).getBatchesByRequest((Request)dataSet);
-                    total = ((StorageEngine<I>)storage).getTotalByRequest((Request)dataSet);
+                    records = ((StorageEngine<I>)storage).getByRequest((Request)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Request '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof MetaDataRecord) {
-                I[] a = (I[])Array.newInstance(((MetaDataRecord)dataSet).getId().getClass(), 1);
-                a[0] = (I)((MetaDataRecord)dataSet).getId();
-                queue = new LinkedBlockingQueue<I[]>();
-                queue.add(a);
-                total = 1;
+                records = (I[])Array.newInstance(((MetaDataRecord)dataSet).getId().getClass(), 1);
+                records[0] = (I)((MetaDataRecord)dataSet).getId();
             } else {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
@@ -131,54 +126,51 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
                 context.putValue(DATA_KEY, data);
             }
 
-            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(
-                    BATCH_SHUFFLE, "false"));
+            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
+            
             if (shuffle) {
-                List<I> allids = new ArrayList<I>();
-                while (!queue.isEmpty()) {
-                    try {
-                        I[] poll = queue.poll(500, TimeUnit.MILLISECONDS);
-                        if (poll != null) {
-                            allids.addAll(Arrays.asList(poll));
-                        }
-                    } catch (InterruptedException e) {
-                    }
-                }
+                List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
 
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                log.info(String.format("Loaded %d records in %.3f sec", ids.length,
+                
+                log.info(String.format("Loaded %d records in %.3f sec created shuffled.", ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
-            } else if (context.getProperties().getProperty(BATCH_SUBSET) != null) {
-                int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET));
+                
+            } else if (context.getProperties().getProperty(BATCH_SUBSET_HEAD) != null) {
+                int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
-                List<I> allids = new ArrayList<I>();
-                while (!queue.isEmpty()) {
-                    try {
-                        I[] poll = queue.poll(500, TimeUnit.MILLISECONDS);
-                        if (poll != null) {
-                            allids.addAll(Arrays.asList(poll));
-                        }
-                    } catch (InterruptedException e) {
-                    }
-                }
+                List<I> allids = Arrays.asList(records);
+                allids = allids.subList(0, subset);
+                Object[] ids = allids.toArray(new Object[allids.size()]);
+                data.total = ids.length;
+                addArray(context, ids);
+                
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" + subset, ids.length,
+                        (System.currentTimeMillis() - start) / 1000.0));
+            } else if (context.getProperties().getProperty(BATCH_SUBSET_SHUFFLE) != null) {
+                int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_SHUFFLE));
+
+                List<I> allids = Arrays.asList(records);
+                Collections.shuffle(allids);
 
                 allids = allids.subList(0, subset);
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                log.info(String.format("Loaded %d records in %.3f sec", ids.length,
+                
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" + subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else {
-                // we do have already a blocking queue from the storage engine.
-                data.batches = queue;
-                data.total = total;
+                addArray(context, records);
+                data.total = records.length;
+
+                log.info(String.format("Created %d batches in %.3f sec", data.batches.size(),
+                        (System.currentTimeMillis() - start) / 1000.0));
             }
 
-            log.info(String.format("Created %d batches in %.3f sec", data.batches.size(),
-                    (System.currentTimeMillis() - start) / 1000.0));
             data.initialized = true;
         } finally {
         }

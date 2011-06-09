@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -491,29 +489,6 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
     
     
-    @Override
-    public BlockingQueue<Long[]> getBatchesByRequest(Request<Long> request)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByRequest(request), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-    @Override
-    public BlockingQueue<Long[]> getBatchesByCollection(Collection<Long> collection)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByCollection(collection), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-    @Override
-    public BlockingQueue<Long[]> getBatchesByProvider(Provider<Long> provider, boolean recursive)
-            throws StorageEngineException {
-        List<Long[]> batches = eu.europeana.uim.common.ArrayUtils.batches(getByProvider(provider, recursive), 250);
-        return new LinkedBlockingQueue<Long[]>(batches);
-    }
-
-
-
     @Override
     public Execution getExecution(Long id) throws StorageEngineException {
         return ds.find(MongoExecution.class, AbstractMongoEntity.LID, id).get();

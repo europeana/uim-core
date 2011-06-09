@@ -492,6 +492,7 @@ public abstract class AbstractStorageEngineTest<I> {
         engine.updateRequest(request0);
         
         assertEquals(0, engine.getTotalByRequest(request0));
+        assertEquals(0, engine.getTotalByCollection(collection0));
 
         Set<Enum<?>> qualifiers = new HashSet<Enum<?>>() { { add(TestEnum.EN); } };
         
@@ -517,6 +518,7 @@ public abstract class AbstractStorageEngineTest<I> {
         assertEquals(request0.getId(), record4.getRequest().getId());
         
         assertEquals(1, engine.getTotalByRequest(request0));
+        assertEquals(1, engine.getTotalByCollection(collection0));
     }
 
     /**
