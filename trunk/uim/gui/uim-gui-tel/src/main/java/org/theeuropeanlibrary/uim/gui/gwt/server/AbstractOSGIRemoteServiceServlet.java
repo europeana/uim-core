@@ -14,13 +14,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class AbstractOSGIRemoteServiceServlet extends RemoteServiceServlet {
     private static final String DEVMODE = "devmode";
 
-    private final Engine        engine;
+    //private final Engine        engine;
 
     /**
      * Creates a new instance of this class.
      */
     public AbstractOSGIRemoteServiceServlet() {
-        this.engine = Engine.getInstance();
     }
 
     @Override
@@ -40,6 +39,7 @@ public class AbstractOSGIRemoteServiceServlet extends RemoteServiceServlet {
      * @return implementation of an engine
      */
     protected Engine getEngine() {
+        Engine engine = Engine.getInstance();
         if (engine == null) { throw new RuntimeException(
                 "No engine found. Make sure the OSGi platform is running and all UIM modules are started"); }
         return engine;
