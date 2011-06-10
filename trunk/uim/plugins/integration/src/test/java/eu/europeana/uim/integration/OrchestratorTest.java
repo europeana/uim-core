@@ -88,7 +88,7 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
 
         for (int i = 0; i < 999; i++) {
             MetaDataRecord record = storage.createMetaDataRecord(c, "id=" + i);
-            storage.updateMetaDataRecord(record);
+            storage.updateMetaDataRecord(c, record);
             storage.addRequestRecord(r, record);
         }
 

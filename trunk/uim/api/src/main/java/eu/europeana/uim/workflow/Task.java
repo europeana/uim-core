@@ -8,7 +8,10 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Generic task to processed by the workflow pipeline. It extends Runnable to provide getter and
@@ -110,7 +113,16 @@ public class Task implements Runnable {
      */
     @SuppressWarnings("unchecked")
     public void save() throws StorageEngineException {
-        engine.updateMetaDataRecord(record);
+        UimDataSet<?> dataSet = context.getDataSet();
+        if (dataSet instanceof Collection) {
+            engine.updateMetaDataRecord((Collection<?>)dataSet, record);
+        } else if (dataSet instanceof Request) {
+            engine.updateMetaDataRecord(((Request<?>)dataSet).getCollection(), record);
+        } else if (dataSet instanceof MetaDataRecord<?>) {
+            engine.updateMetaDataRecord(record.getCollection(), record);
+        } else {
+            throw new IllegalArgumentException("Dataset:" + dataSet + " is not a valid data set.");
+        }
     }
 
     /**

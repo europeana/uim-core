@@ -32,7 +32,7 @@ public class StorageEngineAdapterTest {
         engine.updateProvider(null);
         engine.updateCollection(null);
         engine.updateRequest(null);
-        engine.updateMetaDataRecord(null);
+        engine.updateMetaDataRecord(null, null);
 
         assertNotNull(engine.getAllProviders());
         assertNotNull(engine.getAllCollections());

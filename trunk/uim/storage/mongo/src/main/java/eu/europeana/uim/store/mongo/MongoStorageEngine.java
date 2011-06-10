@@ -308,7 +308,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     
     
     @Override
-    public void updateMetaDataRecord(MetaDataRecord record) throws StorageEngineException {
+    public void updateMetaDataRecord(Collection<Long> collection, MetaDataRecord<Long> record) throws StorageEngineException {
 /*
         if(!ALLOW_DUPLICATE_MDR_IDENTIFIERS) {
             String unique = "MDR/" + record.getRequest().getCollection().getProvider().getMnemonic() + "/" + record.getIdentifier();

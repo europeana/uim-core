@@ -303,7 +303,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public void updateMetaDataRecord(MetaDataRecord<Long> record) {
+    public void updateMetaDataRecord(Collection<Long> collection, MetaDataRecord<Long> record) {
         synchronized (metadatas) {
             metadatas.put(record.getId(), record);
             metacollection.put(record.getId(), ((MetaDataRecordBean<Long>)record).getCollection().getId());

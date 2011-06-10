@@ -73,7 +73,7 @@ public class UIMOrchestratorTest {
         Request<Long> request = createTestData(engine, 1);
 
         // creating the data calles 20 times the update method.
-        verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(1)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         Workflow w = new SysoutWorkflow(7, true, false);
 
@@ -82,7 +82,7 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each delivered metadata record is saved
-        verify(engine, times(2)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(2)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         assertEquals(1, execution0.getCompletedSize());
         assertEquals(0, execution0.getFailureSize());
@@ -101,7 +101,7 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 21);
         // creating the data calles 21 times the update method.
-        verify(engine, times(21)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(21)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         Workflow w = new SyserrWorkflow(7, true);
 
@@ -110,7 +110,7 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 21 + original count of 21
-        verify(engine, times(42)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(42)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         assertEquals(21, execution0.getCompletedSize() + execution0.getFailureSize());
         assertEquals(21, execution0.getScheduledSize());
@@ -128,7 +128,7 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 30);
         // creating the data calles 30 times the update method.
-        verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         Workflow w = new MixedWorkflow(7, true);
 
@@ -137,7 +137,7 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 30 + original count of 30
-        verify(engine, times(60)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(60)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         assertEquals(20, execution0.getCompletedSize());
         assertEquals(10, execution0.getFailureSize());
@@ -155,7 +155,7 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 30);
         // creating the data calles 30 times the update method.
-        verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         Workflow w = new MixedWorkflow(7, true);
 
@@ -188,7 +188,7 @@ public class UIMOrchestratorTest {
         Request<Long> request = createTestData(engine, 20);
 
         // creating the data calles 20 times the update method.
-        verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(20)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         Workflow w = new SysoutWorkflow(7, true, true);
 
@@ -198,7 +198,7 @@ public class UIMOrchestratorTest {
 
         // each delivered metadata record is saved once per plugin (only one plugin in the
         // workflow) 20 plus the initial 20
-        verify(engine, times(40)).updateMetaDataRecord(any(MetaDataRecord.class));
+        verify(engine, times(40)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
         assertEquals(20, execution0.getCompletedSize());
         assertEquals(0, execution0.getFailureSize());
@@ -223,7 +223,7 @@ public class UIMOrchestratorTest {
         for (int i = 0; i < count; i++) {
             MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0, "abcd" + i);
             record0.addField(MDRFieldRegistry.rawrecord, "title " + i);
-            engine.updateMetaDataRecord(record0);
+            engine.updateMetaDataRecord(collection0, record0);
             engine.addRequestRecord(request0, record0);
         }
 

@@ -153,7 +153,7 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     }
 
     @Override
-    public void updateMetaDataRecord(MetaDataRecord<Long> record) throws StorageEngineException {
+    public void updateMetaDataRecord(Collection<Long> collection, MetaDataRecord<Long> record) throws StorageEngineException {
 
     }
 

@@ -22,7 +22,7 @@ import java.util.Set;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface Provider<I> extends UimDataSet<I> {
+public interface Provider<I> extends UimEntity<I> {
     /**
      * @return retrieve providers to which this provider seems to be dependent on
      */

@@ -228,7 +228,7 @@ public interface StorageEngine<I> {
      * @param record
      * @throws StorageEngineException
      */
-    void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
+    void updateMetaDataRecord(Collection<I> collection, MetaDataRecord<I> record) throws StorageEngineException;
 
     /**
      * @param dataSet
