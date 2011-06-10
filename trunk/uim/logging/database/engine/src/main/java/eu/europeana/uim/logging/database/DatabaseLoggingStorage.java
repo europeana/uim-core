@@ -14,23 +14,21 @@ import eu.europeana.uim.logging.database.model.TStringDatabaseLogEntryHome;
  * @since Apr 27, 2011
  */
 public class DatabaseLoggingStorage {
-
     @Autowired
     private TStringDatabaseLogEntryHome stringHome;
-    
+
     @Autowired
     private TObjectDatabaseLogEntryHome objectHome;
-    
+
     @Autowired
     private TDurationDatabaseEntryHome  durationHome;
 
-    
     /**
      * Creates a new instance of this class.
      */
-    public DatabaseLoggingStorage(){
+    public DatabaseLoggingStorage() {
     }
-    
+
     /**
      * @return the dao for database log entries
      */
@@ -57,7 +55,4 @@ public class DatabaseLoggingStorage {
     public void setDurationHome(TDurationDatabaseEntryHome durationHome) {
         this.durationHome = durationHome;
     }
-
-    
-    
 }

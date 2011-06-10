@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
@@ -19,6 +18,7 @@ import eu.europeana.uim.logging.database.model.TDurationDatabaseEntry;
 import eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry;
 import eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Database backend of {@link LoggingEngine} using JPA for object relational mapping.

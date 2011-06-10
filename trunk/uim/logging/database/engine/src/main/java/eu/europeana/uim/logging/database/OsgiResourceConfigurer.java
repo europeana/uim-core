@@ -8,7 +8,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,9 +28,9 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
  * @since May 18, 2011
  */
 public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
-    private static final Logger log                   = Logger.getLogger(OsgiResourceConfigurer.class.getName());
+    private static final Logger log                    = Logger.getLogger(OsgiResourceConfigurer.class.getName());
 
-    private String              osgiConfigurationName = "eu.europeana.uim";
+    private String              osgiConfigurationName  = "eu.europeana.uim";
     private String              fallbackPropertiesName = "";
 
     /**
@@ -62,7 +61,6 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
     public void setOsgiConfigurationName(String osgiConfigurationName) {
         this.osgiConfigurationName = osgiConfigurationName;
     }
-    
 
     /**
      * @return the fallback properties name
@@ -93,7 +91,7 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
                     Configuration[] configurations = configAdmin.listConfigurations(null);
                     if (configurations == null || configurations.length == 0) {
                         Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
-                        
+
                         Properties defaultproperties = new Properties();
                         InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
                         if (stream != null) {
@@ -105,7 +103,7 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
                             config.update(hashtable);
                         }
                     }
-                    
+
                     Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
 
                     Dictionary<String, String> dictionary = config.getProperties();
@@ -125,19 +123,20 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
                     throw new RuntimeException("Caused by InvalidSyntaxException", e);
                 }
             }
-        } else if (fallbackPropertiesName != null && fallbackPropertiesName.length() > 0){
+        } else if (fallbackPropertiesName != null && fallbackPropertiesName.length() > 0) {
             try {
                 InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
                 if (stream != null) {
                     properties.load(stream);
                 } else {
-                    log.log(Level.INFO, "Failed to load properties filw in classpath <" + fallbackPropertiesName + ">");
+                    log.log(Level.INFO, "Failed to load properties filw in classpath <" +
+                                        fallbackPropertiesName + ">");
                 }
             } catch (IOException e) {
-                log.log(Level.INFO, "Failed to load properties fiel in classpath <" + fallbackPropertiesName + ">", e);
+                log.log(Level.INFO, "Failed to load properties fiel in classpath <" +
+                                    fallbackPropertiesName + ">", e);
             }
         }
         return properties;
     }
-
 }
