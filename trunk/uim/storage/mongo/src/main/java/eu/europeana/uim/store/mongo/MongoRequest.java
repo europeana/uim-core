@@ -69,6 +69,12 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
         return values.get(key);
     }
 
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
 
     @Override
     public boolean equals(Object o) {

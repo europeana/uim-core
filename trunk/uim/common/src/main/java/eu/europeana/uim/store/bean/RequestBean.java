@@ -82,6 +82,13 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
         return values.get(key);
     }
 
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
+
     @Override
     public String toString() {
         return "Request [collection=" + collection + ", date=" + date + "]";

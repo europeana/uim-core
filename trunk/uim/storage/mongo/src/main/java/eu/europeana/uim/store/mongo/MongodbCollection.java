@@ -127,6 +127,12 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
         return values.get(key);
     }
 
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
 
 
     @Override

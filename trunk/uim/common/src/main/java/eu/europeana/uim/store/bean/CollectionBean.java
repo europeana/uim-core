@@ -143,6 +143,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         return values.get(key);
     }
 
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
+
     @Override
     public String toString() {
         String string = super.toString();

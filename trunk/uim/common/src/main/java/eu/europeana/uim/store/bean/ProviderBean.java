@@ -108,6 +108,13 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
     }
 
     
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
+
+    
     @Override
     public String toString() {
         String string = super.toString();

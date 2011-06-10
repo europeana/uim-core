@@ -82,6 +82,12 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
         return values.get(key);
     }
 
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
+    }
 
 
     @Override

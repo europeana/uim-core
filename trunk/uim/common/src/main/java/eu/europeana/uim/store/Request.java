@@ -1,6 +1,7 @@
 package eu.europeana.uim.store;
 
 import java.util.Date;
+import java.util.Map;
 
 
 /*
@@ -55,5 +56,10 @@ public interface Request<I> extends UimDataSet<I> {
      * @return the string value or null
      */
     String getValue(String key);
+
+    /**
+     * @return the values map
+     */
+    Map<String, String> values();
 
 }

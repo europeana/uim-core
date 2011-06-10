@@ -1,5 +1,6 @@
 package eu.europeana.uim.store;
 
+import java.util.Map;
 import java.util.Set;
 
 
@@ -100,5 +101,11 @@ public interface Provider<I> extends UimDataSet<I> {
      * @return the string value or null
      */
     String getValue(String key);
+    
+    /**
+     * @return the values map
+     */
+    Map<String, String> values();
+
 
 }
