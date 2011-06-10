@@ -160,6 +160,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         execution.setCanceled(ae.isCanceled());
         execution.setStartTime(ae.getStartTime());
         execution.setDataSet(dataset.toString());
+        if (dataset instanceof Collection) {
+            execution.setDataSet(((Collection)dataset).getName());
+        } else if (dataset instanceof Provider) {
+            execution.setDataSet(((Provider)dataset).getName());
+        } else {
+            execution.setDataSet(dataset.toString());
+        }
 
         ProgressDTO progress = new ProgressDTO();
         progress.setWork(ae.getTotalSize());
@@ -197,7 +204,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped = new ExecutionDTO();
             wrapped.setId(execution);
             wrapped.setStartTime(e.getStartTime());
-            wrapped.setDataSet(e.getDataSet().toString());
+            if (e.getDataSet() instanceof Collection) {
+                wrapped.setDataSet(((Collection)e.getDataSet()).getName());
+            } else if (e.getDataSet() instanceof Provider) {
+                wrapped.setDataSet(((Provider)e.getDataSet()).getName());
+            } else {
+                wrapped.setDataSet(e.getDataSet().toString());
+            }
             wrapped.setName(e.getName());
             wrapped.setWorkflow(e.getWorkflowName());
             wrapped.setProgress(new ProgressDTO());

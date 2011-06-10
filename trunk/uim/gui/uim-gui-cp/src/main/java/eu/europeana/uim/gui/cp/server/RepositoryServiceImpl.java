@@ -25,9 +25,6 @@ import eu.europeana.uim.store.Provider;
 @SuppressWarnings({ "unchecked" })
 public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         RepositoryService {
-
-// private static Logger log = Logger.getLogger(OrchestrationServiceImpl.class.getName());
-
     /**
      * Creates a new instance of this class.
      */
