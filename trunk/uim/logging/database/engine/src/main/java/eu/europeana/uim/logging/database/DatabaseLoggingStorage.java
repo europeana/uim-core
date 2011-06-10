@@ -36,22 +36,37 @@ public class DatabaseLoggingStorage {
         return stringHome;
     }
 
+    /**
+     * @param stringHome
+     */
     public void setStringHome(TStringDatabaseLogEntryHome stringHome) {
         this.stringHome = stringHome;
     }
 
+    /**
+     * @return log entry home
+     */
     public TObjectDatabaseLogEntryHome getObjectHome() {
         return objectHome;
     }
 
+    /**
+     * @param objectHome
+     */
     public void setObjectHome(TObjectDatabaseLogEntryHome objectHome) {
         this.objectHome = objectHome;
     }
 
+    /**
+     * @return duration home
+     */
     public TDurationDatabaseEntryHome getDurationHome() {
         return durationHome;
     }
 
+    /**
+     * @param durationHome
+     */
     public void setDurationHome(TDurationDatabaseEntryHome durationHome) {
         this.durationHome = durationHome;
     }
