@@ -30,9 +30,9 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.workflow.Workflow;
@@ -316,7 +316,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
-            eu.europeana.uim.workflow.Workflow w, DataSet<Long> dataset, String executionName) {
+            eu.europeana.uim.workflow.Workflow w, UimDataSet<Long> dataset, String executionName) {
         execution.setId(ae.getId());
         execution.setName(executionName);
         execution.setWorkflow(w.getName());
@@ -506,14 +506,14 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public String getRawRecord(Long recordId) {
-//        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-//        MetaDataRecord<Long> metaDataRecord = storage.getMetaDataRecord(recordId);
-//        metaDataRecord.getFirstQField(ObjectModelRegistry.METADATA,
-//                new HashSet<Enum<?>>() {
-//            {
-//                add(FieldSource.PROVIDER);
-//            }
-//        });
+// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+// MetaDataRecord<Long> metaDataRecord = storage.getMetaDataRecord(recordId);
+// metaDataRecord.getFirstQField(ObjectModelRegistry.METADATA,
+// new HashSet<Enum<?>>() {
+// {
+// add(FieldSource.PROVIDER);
+// }
+// });
         return "TEST RAW";
     }
 
