@@ -203,9 +203,29 @@ public class IngestionForm extends Composite {
         this.provider = provider;
         this.collection = collection;
         this.workflow = workflow;
-        providerBox.setText(provider != null ? provider.getName() : "");
-        collectionBox.setText(collection != null ? collection.getName() : "");
-        workflowBox.setText(workflow != null ? workflow.getName() : "");
+        if (provider != null) {
+            providerBox.setText(provider.getName());
+        }
+
+        if (collection != null) {
+            String string = collection.getName();
+            string += "@" + collection.getLanguage();
+            String oai = collection.getOaiBaseUrl(true);
+            if (oai != null) {
+                string += " OAI:[";
+                string += oai + "?verb={x}";
+
+                string += collection.getOaiSet() != null ? "&set=" + collection.getOaiSet() : "";
+                string += collection.getOaiMetadataPrefix(true) != null
+                        ? "&metadataPrefix=" + collection.getOaiMetadataPrefix(true) : "";
+                string += "]";
+            }
+            collectionBox.setText(string);
+        }
+
+        if (workflow != null) {
+            workflowBox.setText(workflow.getName());
+        }
 
         checkCommit();
     }

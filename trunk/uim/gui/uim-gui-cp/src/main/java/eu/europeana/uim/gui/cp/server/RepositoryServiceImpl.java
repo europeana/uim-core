@@ -60,8 +60,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 }
             }
         } catch (StorageEngineException e) {
-            res.add(new ProviderDTO(0l, "Failed to load provider. Notify system administrator.",
-                    null));
             throw new RuntimeException(e);
         }
         return res;
@@ -75,8 +73,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             Provider<Long> p = storage.getProvider(provider);
             List<Collection<Long>> cols = storage.getCollections(p);
             for (Collection<Long> col : cols) {
-                res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
-                        getWrappedProviderDTO(provider)));
+                CollectionDTO collDTO = new CollectionDTO(col.getId());
+                collDTO.setName(col.getName());
+                collDTO.setMnemonic(col.getMnemonic());
+                collDTO.setProvider(getWrappedProviderDTO(provider));
+                collDTO.setLanguage(col.getLanguage());
+                collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
+                collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
+                res.add(collDTO);
             }
         } catch (StorageEngineException e) {
             e.printStackTrace();
@@ -90,7 +94,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (wrapped == null) {
             try {
                 Provider<Long> p = storage.getProvider(provider);
-                wrapped = new ProviderDTO(p.getId(), p.getName(), p.getMnemonic());
+                wrapped = new ProviderDTO(p.getId());
+                wrapped.setName(p.getName());
+                wrapped.setMnemonic(p.getMnemonic());
+                wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
+                wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
                 wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
                 e.printStackTrace();

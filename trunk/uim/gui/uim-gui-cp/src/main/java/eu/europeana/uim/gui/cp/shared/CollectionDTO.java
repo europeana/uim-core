@@ -11,19 +11,19 @@ public class CollectionDTO extends DataSourceDTO {
     private String      mnemonic;
     private ProviderDTO provider;
 
+    private String      language;
+
+    private String      oaiBaseUrl;
+    private String      oaiMetadataPrefix;
+    private String      oaiSet;
+
     /**
      * Creates a new instance of this class.
      * 
      * @param id
-     * @param name
-     * @param mnemonic
-     * @param provider
      */
-    public CollectionDTO(Long id, String name, String mnemonic, ProviderDTO provider) {
+    public CollectionDTO(Long id) {
         super(id);
-        this.name = name;
-        this.mnemonic = mnemonic;
-        this.provider = provider;
     }
 
     /**
@@ -73,6 +73,73 @@ public class CollectionDTO extends DataSourceDTO {
      */
     public void setProvider(ProviderDTO provider) {
         this.provider = provider;
+    }
+
+    /**
+     * @return in which language is the collection
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * @param language
+     *            in which language is the collection
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * @param fallback
+     * @return base url to retrieve the collections data
+     */
+    public String getOaiBaseUrl(boolean fallback) {
+        if (oaiBaseUrl != null) { return oaiBaseUrl; }
+
+        if (fallback) { return provider.getOaiBaseUrl(); }
+        return null;
+    }
+
+    /**
+     * @param oaiBaseUrl
+     *            base url to retrieve the collections data
+     */
+    public void setOaiBaseUrl(String oaiBaseUrl) {
+        this.oaiBaseUrl = oaiBaseUrl;
+    }
+
+    /**
+     * @return set identifier for the oai
+     */
+    public String getOaiSet() {
+        return oaiSet;
+    }
+
+    /**
+     * @param oaiSet
+     *            set identifier for the oai
+     */
+    public void setOaiSet(String oaiSet) {
+        this.oaiSet = oaiSet;
+    }
+
+    /**
+     * @param fallback
+     * @return a prefix for the metadata retrieved from this oai
+     */
+    public String getOaiMetadataPrefix(boolean fallback) {
+        if (oaiMetadataPrefix != null) { return oaiMetadataPrefix; }
+        if (fallback) { return provider.getOaiMetadataPrefix(); }
+        return null;
+    }
+
+    /**
+     * @param oaiMetadataPrefix
+     *            a prefix for the metadata retrieved from this oai
+     */
+    public void setOaiMetadataPrefix(String oaiMetadataPrefix) {
+        this.oaiMetadataPrefix = oaiMetadataPrefix;
     }
 
     @Override

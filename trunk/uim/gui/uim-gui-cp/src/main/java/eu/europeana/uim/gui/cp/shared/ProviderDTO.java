@@ -10,6 +10,9 @@ public class ProviderDTO extends DataSourceDTO {
     private String name;
     private String mnemonic;
 
+    private String oaiBaseUrl;
+    private String oaiMetadataPrefix;
+
     /**
      * Creates a new instance of this class.
      */
@@ -21,13 +24,9 @@ public class ProviderDTO extends DataSourceDTO {
      * Creates a new instance of this class.
      * 
      * @param id
-     * @param name
-     * @param mnemonic
      */
-    public ProviderDTO(Long id, String name, String mnemonic) {
+    public ProviderDTO(Long id) {
         super(id);
-        this.name = name;
-        this.mnemonic = mnemonic;
     }
 
     /**
@@ -45,6 +44,36 @@ public class ProviderDTO extends DataSourceDTO {
     }
 
     /**
+     * @return oai prefix a prefix for the metadata retrieved from this oai
+     */
+    public String getOaiMetadataPrefix() {
+        return oaiMetadataPrefix;
+    }
+
+    /**
+     * @param oaiPrefix
+     *            a prefix for the metadata retrieved from this oai
+     */
+    public void setOaiMetadataPrefix(String oaiPrefix) {
+        this.oaiMetadataPrefix = oaiPrefix;
+    }
+
+    /**
+     * @return base url to retrieve the providers data
+     */
+    public String getOaiBaseUrl() {
+        return oaiBaseUrl;
+    }
+
+    /**
+     * @param oaiBaseUrl
+     *            base url to retrieve the providers data
+     */
+    public void setOaiBaseUrl(String oaiBaseUrl) {
+        this.oaiBaseUrl = oaiBaseUrl;
+    }
+
+    /**
      * @return mnemonic
      */
     public String getMnemonic() {
@@ -57,7 +86,7 @@ public class ProviderDTO extends DataSourceDTO {
     public void setMnemonic(String mnemonic) {
         this.mnemonic = mnemonic;
     }
-    
+
     @Override
     public String toString() {
         return getMnemonic() + "\t" + getName();
