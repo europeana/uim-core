@@ -6,10 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * In-memory implemenation of {@link MetaDataRecord} that uses Long as ID. It is supposed to be the
@@ -25,9 +24,9 @@ import eu.europeana.uim.store.Request;
 @SuppressWarnings("unchecked")
 public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I> {
     /**
-     * the request that is responsible for this record
+     * the collection that is responsible for this record
      */
-    private Request<I>                                   request;
+    private Collection<I>                                   collection;
 
     /**
      * holds for each key a list of known qualified values
@@ -46,35 +45,28 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      * 
      * @param id
      *            unique ID
-     * @param request
-     *            the request that is responsible for this record
+     * @param collection
+     *            the collection that is responsible for this record
      */
-    public MetaDataRecordBean(I id, Request<I> request) {
+    public MetaDataRecordBean(I id, Collection<I> collection) {
         super(id);
-        this.request = request;
-    }
-
-    
-    
-    @Override
-    public Request<I> getRequest() {
-        return request;
+        this.collection = collection;
     }
     
     
+    /**
+     * @return the collection this mdr belongs to
+     */
     @Override
     public Collection<I> getCollection() {
-        if (request != null) {
-            return request.getCollection();
-        }
-        return null;
+        return  collection;
     }
 
     /**
-     * @param request
+     * @param collection
      */
-    public void setRequest(Request<I> request) {
-        this.request = request;
+    public void setCollection(Collection<I> collection) {
+        this.collection = collection;
     }
 
     @Override

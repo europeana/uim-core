@@ -16,11 +16,11 @@ import eu.europeana.uim.api.StorageEngineAdapter;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.util.BatchWorkflowStart.Data;
 
 /**
- * Tests {@link BatchWorkflowStart} using mocks of {@link DataSet}s and {@link StorageEngine}.
+ * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and {@link StorageEngine}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011

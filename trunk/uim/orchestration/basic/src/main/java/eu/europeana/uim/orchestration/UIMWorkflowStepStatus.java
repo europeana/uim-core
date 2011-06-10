@@ -2,8 +2,8 @@ package eu.europeana.uim.orchestration;
 
 import java.util.Map;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**

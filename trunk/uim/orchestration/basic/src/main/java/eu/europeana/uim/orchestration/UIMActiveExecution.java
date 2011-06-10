@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
@@ -26,8 +25,9 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
@@ -191,12 +191,12 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public DataSet<I> getDataSet() {
+    public UimDataSet<I> getDataSet() {
         return execution.getDataSet();
     }
 
     @Override
-    public void setDataSet(DataSet<I> entity) {
+    public void setDataSet(UimDataSet<I> entity) {
         execution.setDataSet(entity);
     }
 
@@ -392,8 +392,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         boolean empty = getProgressSize() == 0;
 
         
-        System.out.println(String.format("s=%d, p=%d, f=%d, c=%d, t=" + (getThrowable() != null ? getThrowable().getMessage() : ""), getScheduledSize(),
-        getProgressSize(), getFailureSize(), getCompletedSize()));
+//        System.out.println(String.format("s=%d, p=%d, f=%d, c=%d, t=" + (getThrowable() != null ? getThrowable().getMessage() : ""), getScheduledSize(),
+//        getProgressSize(), getFailureSize(), getCompletedSize()));
         return (finished || cancelled) && processed && empty;
     }
 
@@ -464,8 +464,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         } catch (InterruptedException e) {
         }
 
-        System.out.println("Finished:" + getCompletedSize());
-        System.out.println("Failed:" + getFailureSize());
+//        System.out.println("Finished:" + getCompletedSize());
+//        System.out.println("Failed:" + getFailureSize());
     }
 
     @Override

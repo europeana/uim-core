@@ -4,12 +4,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Base class for storage engine typed with a ID class.
@@ -189,6 +189,14 @@ public interface StorageEngine<I> {
     Request<I> getRequest(I id) throws StorageEngineException;
 
     /**
+     * @param mdr
+     *            the metadata record for which to lookup the request
+     * @return all requests where this record was delivered in
+     * @throws StorageEngineException
+     */
+    List<Request<I>> getRequests(MetaDataRecord<I> mdr) throws StorageEngineException;
+
+    /**
      * @param collection
      * @return all requests for the provided collection
      * @throws StorageEngineException
@@ -196,14 +204,23 @@ public interface StorageEngine<I> {
     List<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
 
     /**
-     * @param request
+     * @param collection
      * @param externalIdentifier
      * @return creates a new record for the given external identifier (might differ from internal
      *         one)
      * @throws StorageEngineException
      */
-    MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier)
+    MetaDataRecord<I> createMetaDataRecord(Collection<I> collection, String externalIdentifier)
             throws StorageEngineException;
+
+    /**
+     * Adds the given record request relation.
+     *
+     * @param request 
+     * @param record
+     * @throws StorageEngineException
+     */
+    void addRequestRecord(Request<I> request, MetaDataRecord<I> record) throws StorageEngineException;
 
     /**
      * Stores the given record and its updated values.
@@ -219,7 +236,7 @@ public interface StorageEngine<I> {
      * @return newly created execution for the given data set and workflow
      * @throws StorageEngineException
      */
-    Execution<I> createExecution(DataSet<I> dataSet, String workflow) throws StorageEngineException;
+    Execution<I> createExecution(UimDataSet<I> dataSet, String workflow) throws StorageEngineException;
 
     /**
      * Stores the given execution and its updated values.

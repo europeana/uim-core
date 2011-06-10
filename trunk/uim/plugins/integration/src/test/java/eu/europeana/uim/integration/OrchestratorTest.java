@@ -20,7 +20,6 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
@@ -28,6 +27,7 @@ import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.common.MemoryProgressMonitor;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.workflow.Workflow;
@@ -87,8 +87,9 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
         Request<Long> r = storage.createRequest(c, new Date());
 
         for (int i = 0; i < 999; i++) {
-            MetaDataRecord record = storage.createMetaDataRecord(r, "id=" + i);
+            MetaDataRecord record = storage.createMetaDataRecord(c, "id=" + i);
             storage.updateMetaDataRecord(record);
+            storage.addRequestRecord(r, record);
         }
 
         assertEquals("Wrong count of imported test MDRs", 999, storage.getTotalByCollection(c));

@@ -2,6 +2,7 @@ package eu.europeana.uim.store;
 
 import java.util.Date;
 
+
 /*
  collection  // ref to Collection obj
  created_time    // time stamp creation
@@ -30,7 +31,7 @@ import java.util.Date;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface Request<I> extends DataSet<I> {
+public interface Request<I> extends UimDataSet<I> {
     /**
      * @return for which collection this request has been started
      */
@@ -40,4 +41,19 @@ public interface Request<I> extends DataSet<I> {
      * @return a specific date when this request has been initiated
      */
     Date getDate();
+    
+    
+    /** string key,value pairs for arbitraty information on colleciton level
+     * @param key
+     * @param value
+     */
+    void putValue(String key, String value);
+    
+    
+    /** retrieve the stirng value for the specific key
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(String key);
+
 }

@@ -3,7 +3,7 @@ package eu.europeana.uim.api;
 import java.util.Collection;
 import java.util.Properties;
 
-import eu.europeana.uim.store.DataSet;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -26,7 +26,7 @@ public interface Orchestrator {
      *            data set executed in the process
      * @return an newly created active execution
      */
-    ActiveExecution<?> executeWorkflow(Workflow workflow, DataSet<?> dataset);
+    ActiveExecution<?> executeWorkflow(Workflow workflow, UimDataSet<?> dataset);
 
     /**
      * @param workflow
@@ -37,7 +37,7 @@ public interface Orchestrator {
      *            arbitrary additional settings
      * @return an newly created active execution
      */
-    ActiveExecution<?> executeWorkflow(Workflow workflow, DataSet<?> dataset, Properties properties);
+    ActiveExecution<?> executeWorkflow(Workflow workflow, UimDataSet<?> dataset, Properties properties);
 
     /**
      * @param <I>

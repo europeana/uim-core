@@ -7,12 +7,12 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Simple logging plugin which logs which {@link MetaDataRecord} is just be processed.

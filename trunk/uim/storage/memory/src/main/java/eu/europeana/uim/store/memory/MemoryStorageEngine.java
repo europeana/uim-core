@@ -13,16 +13,16 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.EngineStatus;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ExecutionBean;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
@@ -56,7 +56,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
 
     private Map<String, Long>                        mdrIdentifier       = new HashMap<String, Long>();
 
-    private TLongLongHashMap                         metarequest         = new TLongLongHashMap();
+    private TLongObjectHashMap<List<Long>>                         metarequest         = new TLongObjectHashMap<List<Long>>();
     private TLongLongHashMap                         metacollection      = new TLongLongHashMap();
     private TLongLongHashMap                         metaprovider        = new TLongLongHashMap();
     private TLongObjectHashMap<MetaDataRecord<Long>> metadatas           = new TLongObjectHashMap<MetaDataRecord<Long>>();
@@ -287,14 +287,14 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public MetaDataRecord<Long> createMetaDataRecord(Request<Long> request, String identifier)
+    public MetaDataRecord<Long> createMetaDataRecord(Collection<Long> collection, String identifier)
             throws StorageEngineException {
         MetaDataRecordBean<Long> mdr;
         Long id = mdrIdentifier.get(identifier);
         if (id != null) {
-            mdr = new MetaDataRecordBean<Long>(id, request);
+            mdr = new MetaDataRecordBean<Long>(id, collection);
         } else {
-            mdr = new MetaDataRecordBean<Long>(mdrId.getAndIncrement(), request);
+            mdr = new MetaDataRecordBean<Long>(mdrId.getAndIncrement(), collection);
             synchronized (mdrIdentifier) {
                 mdrIdentifier.put(identifier, mdr.getId());
             }
@@ -306,18 +306,38 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public void updateMetaDataRecord(MetaDataRecord<Long> record) {
         synchronized (metadatas) {
             metadatas.put(record.getId(), record);
-            addMetaDataRecord(record);
+            metacollection.put(record.getId(), ((MetaDataRecordBean<Long>)record).getCollection().getId());
+            metaprovider.put(record.getId(), ((MetaDataRecordBean<Long>)record).getCollection().getProvider().getId());
         }
     }
 
-    private void addMetaDataRecord(MetaDataRecord<Long> record) {
-        metarequest.put(record.getId(), record.getRequest().getId());
-        metacollection.put(record.getId(), record.getRequest().getCollection().getId());
-        metaprovider.put(record.getId(), record.getRequest().getCollection().getProvider().getId());
+
+    
+    
+    @Override
+    public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
+            throws StorageEngineException {
+        if (!metarequest.contains(record.getId())) {
+            metarequest.put(record.getId(), new ArrayList<Long>());
+        }
+        metarequest.get(record.getId()).add(request.getId());
+    }
+
+
+    @Override
+    public List<Request<Long>> getRequests(MetaDataRecord<Long> record) throws StorageEngineException {
+        List<Request<Long>> result = new ArrayList<Request<Long>>();
+        if (metarequest.contains(record.getId())) {
+            List<Long> list = metarequest.get(record.getId());
+            for (Long id : list) {
+                result.add(getRequest(id));
+            }
+        }
+        return result;
     }
 
     @Override
-    public Execution<Long> createExecution(DataSet<Long> entity, String workflow) {
+    public Execution<Long> createExecution(UimDataSet<Long> entity, String workflow) {
         ExecutionBean<Long> execution = new ExecutionBean<Long>(executionId.getAndIncrement());
         execution.setDataSet(entity);
         execution.setWorkflowName(workflow);
@@ -348,10 +368,10 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     @Override
     public Long[] getByRequest(Request<Long> request) {
         List<Long> result = new ArrayList<Long>();
-        TLongLongIterator iterator = metarequest.iterator();
+        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
-            if (iterator.value() == request.getId()) {
+            if (iterator.value().contains(request.getId())) {
                 result.add(iterator.key());
             }
         }
@@ -419,10 +439,10 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     @Override
     public int getTotalByRequest(Request<Long> request) {
         int result = 0;
-        TLongLongIterator iterator = metarequest.iterator();
+        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
-            if (iterator.value() == request.getId()) {
+            if (iterator.value().contains(request.getId())) {
                 result++;
             }
         }

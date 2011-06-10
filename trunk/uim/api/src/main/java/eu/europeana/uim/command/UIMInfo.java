@@ -45,7 +45,7 @@ public class UIMInfo implements Function, Action {
 
     @Override
     public Object execute(CommandSession commandSession, List<Object> objects) throws Exception {
-        System.out.println("UIM Registry: " + registry.toString());
+        commandSession.getConsole().println("UIM Registry: " + registry.toString());
         return null;
     }
 }

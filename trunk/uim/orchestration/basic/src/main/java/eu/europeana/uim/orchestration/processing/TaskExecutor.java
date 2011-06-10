@@ -6,13 +6,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngine.Level;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskStatus;
 

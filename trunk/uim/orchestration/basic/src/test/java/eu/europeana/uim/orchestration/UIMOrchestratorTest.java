@@ -12,7 +12,6 @@ import java.util.Properties;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Registry;
@@ -20,6 +19,7 @@ import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.memory.MemoryStorageEngine;
@@ -221,9 +221,10 @@ public class UIMOrchestratorTest {
         engine.updateRequest(request0);
 
         for (int i = 0; i < count; i++) {
-            MetaDataRecord<Long> record0 = engine.createMetaDataRecord(request0, "abcd" + i);
+            MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0, "abcd" + i);
             record0.addField(MDRFieldRegistry.rawrecord, "title " + i);
             engine.updateMetaDataRecord(record0);
+            engine.addRequestRecord(request0, record0);
         }
 
         return request0;

@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.mongo;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.code.morphia.annotations.Entity;
@@ -21,6 +23,8 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
     private Set<Provider<Long>> relatedOut = new HashSet<Provider<Long>>();
     @Reference
     private Set<Provider<Long>> relatedIn = new HashSet<Provider<Long>>();
+
+    private Map<String, String> values = new HashMap<String, String>();
 
 
     public MongoProvider() {
@@ -67,6 +71,18 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
     public void setOaiMetadataPrefix(String prefix) {
         oaiMetadataPrefix = prefix;
     }
+    
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -2,6 +2,7 @@ package eu.europeana.uim.store;
 
 import java.util.Date;
 
+
 /*
  provider    // ref to Provider obj
  name_code   // ingestion internal shorthand for Aggregator
@@ -18,7 +19,7 @@ import java.util.Date;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface Collection<I> extends DataSet<I> {
+public interface Collection<I> extends UimDataSet<I> {
     /**
      * @return the provider holding this collection
      */
@@ -115,4 +116,19 @@ public interface Collection<I> extends DataSet<I> {
      *            date of last synchronization of all record in this collection
      */
     void setLastSynchronized(Date date);
+    
+    
+    /** string key,value pairs for arbitraty information on colleciton level
+     * @param key
+     * @param value
+     */
+    void putValue(String key, String value);
+    
+    
+    /** retrieve the stirng value for the specific key
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(String key);
+
 }

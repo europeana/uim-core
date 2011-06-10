@@ -6,8 +6,8 @@ import java.util.Properties;
 
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -42,7 +42,7 @@ public interface ExecutionContext {
     /**
      * @return DataSet for this execution (provider, collection, ...)
      */
-    DataSet<?> getDataSet();
+    UimDataSet<?> getDataSet();
 
     /**
      * @return progress monitor

@@ -3,12 +3,12 @@ package eu.europeana.uim.workflow;
 import java.util.Queue;
 import java.util.Set;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Generic task to processed by the workflow pipeline. It extends Runnable to provide getter and

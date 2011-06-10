@@ -2,8 +2,8 @@ package eu.europeana.uim.store.bean;
 
 import java.util.Date;
 
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Implementation of {@link Exception} using Longs as IDs.
@@ -18,7 +18,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     private boolean    active   = false;
     private Date       startTime;
     private Date       endTime;
-    private DataSet<I> dataSet;
+    private UimDataSet<I> dataSet;
     private String     workflowIdentifier;
     private String     name;
     private boolean    canceled = false;
@@ -79,12 +79,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public DataSet<I> getDataSet() {
+    public UimDataSet<I> getDataSet() {
         return dataSet;
     }
 
     @Override
-    public void setDataSet(DataSet<I> dataSet) {
+    public void setDataSet(UimDataSet<I> dataSet) {
         this.dataSet = dataSet;
     }
 
@@ -129,12 +129,6 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public String toString() {
-        return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
-               workflowIdentifier + ", dataSet=" + dataSet + "]";
-    }
-
-    @Override
     public int getSuccessCount() {
         return success;
     }
@@ -162,5 +156,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     @Override
     public void setProcessedCount(int number) {
         this.processed = number;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
+               workflowIdentifier + ", dataSet=" + dataSet + "]";
     }
 }

@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.bean;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import eu.europeana.uim.store.Provider;
@@ -24,6 +26,8 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
     private String            oaiMetadataPrefix;
 
     private boolean           aggregator;
+
+    private Map<String, String> values = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -91,6 +95,18 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
     public Set<Provider<I>> getRelatedIn() {
         return relatedIn;
     }
+    
+    
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+
     
     @Override
     public String toString() {

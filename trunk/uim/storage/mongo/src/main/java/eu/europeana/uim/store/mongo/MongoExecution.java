@@ -5,8 +5,8 @@ import java.util.Date;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
@@ -23,7 +23,7 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     private int           processed;
 
     @Reference
-    private DataSet<Long> dataSet;
+    private UimDataSet<Long> dataSet;
 
     /**
      * Creates a new instance of this class.
@@ -71,12 +71,12 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     }
 
     @Override
-    public DataSet<Long> getDataSet() {
+    public UimDataSet<Long> getDataSet() {
         return dataSet;
     }
 
     @Override
-    public void setDataSet(DataSet<Long> dataSet) {
+    public void setDataSet(UimDataSet<Long> dataSet) {
         this.dataSet = dataSet;
     }
 

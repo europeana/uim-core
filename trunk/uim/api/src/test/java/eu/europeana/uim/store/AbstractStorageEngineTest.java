@@ -15,7 +15,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
@@ -496,14 +495,25 @@ public abstract class AbstractStorageEngineTest<I> {
 
         Set<Enum<?>> qualifiers = new HashSet<Enum<?>>() { { add(TestEnum.EN); } };
         
-        MetaDataRecord<I> record0 = engine.createMetaDataRecord(request0, "abcd");
+        MetaDataRecord<I> record0 = engine.createMetaDataRecord(collection0, "abcd-1");
         record0.addField(MDRFieldRegistry.rawrecord, "title 01");
         record0.addField(MDRFieldRegistry.rawrecord, "title 02");
         record0.addQField(MDRFieldRegistry.rawrecord, "title 03", qualifiers);
-
         record0.addField(MDRFieldRegistry.rawformat, "MARC21");
         engine.updateMetaDataRecord(record0);
+        engine.addRequestRecord(request0, record0);
+        
         assertEquals(1, engine.getTotalByRequest(request0));
+
+        MetaDataRecord<I> record1 = engine.createMetaDataRecord(collection0, "abcd-2");
+        record1.addField(MDRFieldRegistry.rawrecord, "title 11");
+        record1.addField(MDRFieldRegistry.rawrecord, "title 12");
+        record1.addQField(MDRFieldRegistry.rawrecord, "title 13", qualifiers);
+        record1.addField(MDRFieldRegistry.rawformat, "MARC21");
+        engine.updateMetaDataRecord(record1);
+        engine.addRequestRecord(request0, record1);
+
+        assertEquals(2, engine.getTotalByRequest(request0));
         
         MetaDataRecord<I> record3 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record3.getFirstField(MDRFieldRegistry.rawrecord)); 
@@ -515,12 +525,15 @@ public abstract class AbstractStorageEngineTest<I> {
         MetaDataRecord<I> record4 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record4.getFirstField(MDRFieldRegistry.rawrecord)); 
         assertEquals("title 03", record4.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
-        assertEquals(request0.getId(), record4.getRequest().getId());
+        assertEquals(request0.getCollection().getId(), record4.getCollection().getId());
         
-        assertEquals(1, engine.getTotalByRequest(request0));
-        assertEquals(1, engine.getTotalByCollection(collection0));
-    }
+        assertEquals(2, engine.getTotalByRequest(request0));
+        assertEquals(2, engine.getTotalByCollection(collection0));
 
+        assertEquals(request0.getCollection().getId(), record1.getCollection().getId());
+    }
+    
+    
     /**
      * Tests creation of duplicate records.
      * 
@@ -550,22 +563,25 @@ public abstract class AbstractStorageEngineTest<I> {
         Request<I> request1 = engine.createRequest(collection1, new Date(0));
         engine.updateRequest(request1);
 
-        MetaDataRecord<I> record0 = engine.createMetaDataRecord(request0, "abcd");
+        MetaDataRecord<I> record0 = engine.createMetaDataRecord(collection0, "abcd");
         record0.addField(MDRFieldRegistry.rawrecord, "title 01");
+        engine.addRequestRecord(request0, record0);
         engine.updateMetaDataRecord(record0);
 
         try {
-            MetaDataRecord<I> record1 = engine.createMetaDataRecord(request0, "abcd");
+            MetaDataRecord<I> record1 = engine.createMetaDataRecord(collection0, "abcd");
             record1.addField(MDRFieldRegistry.rawrecord, "title 01");
             engine.updateMetaDataRecord(record1);
+            engine.addRequestRecord(request0, record1);
         } catch (Exception e) {
             fail("Duplicate record with same identifier for provider should be allowed.");
         }
 
         try {
-            MetaDataRecord<I> record2 = engine.createMetaDataRecord(request1, "abcd");
+            MetaDataRecord<I> record2 = engine.createMetaDataRecord(collection1, "abcd");
             record2.addField(MDRFieldRegistry.rawrecord, "title 01");
             engine.updateMetaDataRecord(record2);
+            engine.addRequestRecord(request1, record2);
         } catch (Exception e) {
             fail("Duplicate record with same identifier for provider should be allowed even in different collections.");
         }
@@ -584,9 +600,10 @@ public abstract class AbstractStorageEngineTest<I> {
         engine.updateRequest(request2);
 
         // same identifier for different providers is ok.
-        MetaDataRecord<I> record2 = engine.createMetaDataRecord(request2, "abcd");
-        record2.addField(MDRFieldRegistry.rawrecord, "title 01");
-        engine.updateMetaDataRecord(record2);
+        MetaDataRecord<I> record3 = engine.createMetaDataRecord(collection2, "abcd");
+        record3.addField(MDRFieldRegistry.rawrecord, "title 01");
+        engine.updateMetaDataRecord(record3);
+        engine.addRequestRecord(request2, record3);
     }
 
     /**
@@ -640,33 +657,40 @@ public abstract class AbstractStorageEngineTest<I> {
         Request<I> request4 = engine.createRequest(collection2, new Date(1000));
         engine.updateRequest(request4);
 
-        MetaDataRecord<I> record0 = engine.createMetaDataRecord(request0, "abcd0");
+        MetaDataRecord<I> record0 = engine.createMetaDataRecord(collection0, "abcd0");
         record0.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record0);
+        engine.addRequestRecord(request0, record0);
 
-        MetaDataRecord<I> record1 = engine.createMetaDataRecord(request0, "abcd1");
+        MetaDataRecord<I> record1 = engine.createMetaDataRecord(collection0, "abcd1");
         record1.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record1);
+        engine.addRequestRecord(request0, record1);
 
-        MetaDataRecord<I> record2 = engine.createMetaDataRecord(request0, "abcd2");
+        MetaDataRecord<I> record2 = engine.createMetaDataRecord(collection0, "abcd2");
         record2.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record2);
+        engine.addRequestRecord(request0, record2);
 
-        MetaDataRecord<I> record3 = engine.createMetaDataRecord(request1, "abcd3");
+        MetaDataRecord<I> record3 = engine.createMetaDataRecord(collection0, "abcd3");
         record3.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record3);
+        engine.addRequestRecord(request1, record3);
 
-        MetaDataRecord<I> record4 = engine.createMetaDataRecord(request2, "abcd4");
+        MetaDataRecord<I> record4 = engine.createMetaDataRecord(collection1, "abcd4");
         record4.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record4);
+        engine.addRequestRecord(request2, record4);
 
-        MetaDataRecord<I> record5 = engine.createMetaDataRecord(request3, "abcd5");
+        MetaDataRecord<I> record5 = engine.createMetaDataRecord(collection1, "abcd5");
         record5.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record5);
+        engine.addRequestRecord(request3, record5);
 
-        MetaDataRecord<I> record6 = engine.createMetaDataRecord(request4, "abcd6");
+        MetaDataRecord<I> record6 = engine.createMetaDataRecord(collection2, "abcd6");
         record6.addField(MDRFieldRegistry.rawrecord, "title 01");
         engine.updateMetaDataRecord(record6);
+        engine.addRequestRecord(request4, record6);
 
         // validate by request
         I[] ids = engine.getByRequest(request0);

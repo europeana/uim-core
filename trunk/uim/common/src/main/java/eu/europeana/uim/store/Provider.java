@@ -2,6 +2,7 @@ package eu.europeana.uim.store;
 
 import java.util.Set;
 
+
 /*
  aggregator // ref to Aggregator obj
  name_code       // ingestion internal shorthand for Aggregator
@@ -20,7 +21,7 @@ import java.util.Set;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface Provider<I> extends DataSet<I> {
+public interface Provider<I> extends UimDataSet<I> {
     /**
      * @return retrieve providers to which this provider seems to be dependent on
      */
@@ -85,4 +86,19 @@ public interface Provider<I> extends DataSet<I> {
      *            a prefix for the metadata retrieved from this oai
      */
     void setOaiMetadataPrefix(String prefix);
+    
+    
+    /** string key,value pairs for arbitraty information on colleciton level
+     * @param key
+     * @param value
+     */
+    void putValue(String key, String value);
+    
+    
+    /** retrieve the stirng value for the specific key
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(String key);
+
 }

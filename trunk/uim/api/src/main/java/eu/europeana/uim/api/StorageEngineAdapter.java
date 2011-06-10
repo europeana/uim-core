@@ -5,12 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * noop storage engine adapter for testing purposes
@@ -129,14 +129,25 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     public Request<Long> getRequest(Long id) throws StorageEngineException {
         return null;
     }
+    
+    @Override
+    public List<Request<Long>> getRequests(MetaDataRecord<Long> mdr) throws StorageEngineException {
+         return null;
+    }
 
     @Override
     public List<Request<Long>> getRequests(Collection<Long> collection) {
         return new ArrayList<Request<Long>>();
     }
 
+    
     @Override
-    public MetaDataRecord<Long> createMetaDataRecord(Request<Long> request, String identifier)
+    public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
+            throws StorageEngineException {
+    }
+
+    @Override
+    public MetaDataRecord<Long> createMetaDataRecord(Collection<Long> collection, String identifier)
             throws StorageEngineException {
         return null;
     }
@@ -147,7 +158,7 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     }
 
     @Override
-    public Execution<Long> createExecution(DataSet<Long> entity, String workflow) {
+    public Execution<Long> createExecution(UimDataSet<Long> entity, String workflow) {
         return null;
     }
 

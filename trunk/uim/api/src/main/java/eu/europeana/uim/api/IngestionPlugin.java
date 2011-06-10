@@ -2,8 +2,8 @@ package eu.europeana.uim.api;
 
 import java.util.List;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * The interface for general ingestion plugins. An ingestion plugin is a single processing step

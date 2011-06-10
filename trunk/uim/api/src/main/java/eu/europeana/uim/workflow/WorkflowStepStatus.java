@@ -3,8 +3,8 @@ package eu.europeana.uim.workflow;
 import java.io.Serializable;
 import java.util.Map;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * The runtime status of a workflow execution

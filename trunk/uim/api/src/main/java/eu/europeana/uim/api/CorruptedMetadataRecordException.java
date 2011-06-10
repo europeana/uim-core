@@ -1,7 +1,7 @@
 /* CorruptedMetadataException.java - created on Mar 4ßÏÍ, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.api;
 
-import eu.europeana.uim.MetaDataRecord;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This exception should be thrown by {@link IngestionPlugin}s during processing of a

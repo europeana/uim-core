@@ -11,9 +11,9 @@ import java.util.Set;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 
 /**
@@ -28,15 +28,15 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
 
     public static final String FIELD = "_field_";
     private DBObject object = new BasicDBObject();
-    private Request request;
+    private Collection collection;
     private String identifier;
 
-    public MongoMetadataRecord(DBObject object, Request request, String identifier, long lid) {
+    public MongoMetadataRecord(DBObject object, Collection collection, String identifier, long lid) {
         this.object = object;
-        this.request = request;
+        this.collection = collection;
         this.identifier = identifier;
         object.put(AbstractMongoEntity.LID, lid);
-        object.put("request", request.getId());
+        object.put("collection", collection.getId());
         object.put("identifier", identifier);
     }
 
@@ -53,12 +53,8 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         return object;
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
     public Collection getCollection() {
-        return request.getCollection();
+        return collection;
     }
 
     public String getIdentifier() {

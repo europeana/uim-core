@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.mongo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
@@ -24,6 +26,7 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
     private Date        lastModified;
     private Date        lastSynchronized;
 
+    private Map<String, String> values = new HashMap<String, String>();
 
     @Reference
     private MongoProvider provider = null;
@@ -114,7 +117,17 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
         this.lastSynchronized = lastSynchronized;
     }
 
-    
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

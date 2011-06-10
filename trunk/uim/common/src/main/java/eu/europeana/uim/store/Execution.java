@@ -2,6 +2,7 @@ package eu.europeana.uim.store;
 
 import java.util.Date;
 
+
 /**
  * Interface for executions to retrieve information about start, end or cancellation time and the
  * data set to be worked on and the used workflow.
@@ -38,13 +39,13 @@ public interface Execution<I> extends UimEntity<I> {
     /**
      * @return data set object on which the execution works
      */
-    DataSet<I> getDataSet();
+    UimDataSet<I> getDataSet();
 
     /**
      * @param dataSet
      *            data set object on which the execution works
      */
-    void setDataSet(DataSet<I> dataSet);
+    void setDataSet(UimDataSet<I> dataSet);
 
     /**
      * @return Is this execution active?
@@ -132,4 +133,19 @@ public interface Execution<I> extends UimEntity<I> {
      *            amount of scheduled ones
      */
     void setProcessedCount(int number);
+    
+    
+//    /** string key,value pairs for arbitraty information on colleciton level
+//     * @param key
+//     * @param value
+//     */
+//    void putValue(String key, String value);
+//    
+//    
+//    /** retrieve the stirng value for the specific key
+//     * @param key
+//     * @return the string value or null
+//     */
+//    String getValue(String key);
+
 }

@@ -51,7 +51,7 @@ public class RecordField {
     /**
      * @param namespace
      * @param content
-     * @return
+     * @return the string XML representation of the record field
      */
     public String toXml(boolean namespace, String content) {
         StringBuilder line = new StringBuilder("<");

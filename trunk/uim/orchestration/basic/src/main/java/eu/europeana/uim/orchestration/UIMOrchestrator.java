@@ -19,9 +19,9 @@ import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 
@@ -69,7 +69,7 @@ public class UIMOrchestrator implements Orchestrator {
      * @return a new ActiveExecution for this execution request
      */
     @Override
-    public ActiveExecution<?> executeWorkflow(Workflow w, DataSet<?> dataset) {
+    public ActiveExecution<?> executeWorkflow(Workflow w, UimDataSet<?> dataset) {
         return executeWorkflow(w, dataset, new Properties());
     }
 
@@ -87,7 +87,7 @@ public class UIMOrchestrator implements Orchestrator {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public ActiveExecution<?> executeWorkflow(Workflow w, DataSet dataset, Properties properties) {
+    public ActiveExecution<?> executeWorkflow(Workflow w, UimDataSet dataset, Properties properties) {
         setupProperties(w, dataset, properties);
 
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
@@ -119,7 +119,7 @@ public class UIMOrchestrator implements Orchestrator {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void setupProperties(Workflow w, DataSet<?> dataset, Properties properties) {
+    private void setupProperties(Workflow w, UimDataSet<?> dataset, Properties properties) {
         ResourceEngine<?> resourceEngine = this.registry.getResourceEngine();
         if (resourceEngine != null) {
             List<String> params = new ArrayList<String>();

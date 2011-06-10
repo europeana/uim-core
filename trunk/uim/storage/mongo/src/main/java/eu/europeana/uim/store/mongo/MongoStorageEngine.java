@@ -19,16 +19,16 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.EngineStatus;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -281,15 +281,32 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     public Request getRequest(Long id) throws StorageEngineException {
         return ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, id).get();
     }
-
+    
     @Override
-    public MetaDataRecord createMetaDataRecord(Request request, String identifier) throws StorageEngineException {
+    public List<Request<Long>> getRequests(MetaDataRecord<Long> mdr) throws StorageEngineException {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    
+    @Override
+    public MetaDataRecord createMetaDataRecord(Collection request, String identifier) throws StorageEngineException {
         BasicDBObject object = new BasicDBObject();
         MongoMetadataRecord mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
         records.insert(mdr.getObject());
         return mdr;
     }
 
+    
+    
+    @Override
+    public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
+            throws StorageEngineException {
+        //FIXME: no idea how to do that
+    }
+
+    
+    
     @Override
     public void updateMetaDataRecord(MetaDataRecord record) throws StorageEngineException {
 /*
@@ -318,7 +335,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Execution createExecution(DataSet entity, String workflow) throws StorageEngineException {
+    public Execution createExecution(UimDataSet entity, String workflow) throws StorageEngineException {
         MongoExecution me = new MongoExecution(executionIdCounter.getAndIncrement());
         me.setDataSet(entity);
         me.setWorkflowName(workflow);
@@ -347,7 +364,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         query.put(AbstractMongoEntity.LID, new BasicDBObject("$in", ids));
         for (DBObject object : records.find(query)) {
             Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, object.get("request")).get();
-            res.add(new MongoMetadataRecord(object, request, (String) object.get("identifier"), ((Long) object.get(AbstractMongoEntity.LID)).longValue()));
+            res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(AbstractMongoEntity.LID)).longValue()));
         }
 
         return res;
@@ -358,7 +375,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, id);
         DBObject theOne = records.findOne(query);
         Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, theOne.get("request")).get();
-        return new MongoMetadataRecord<Long>(theOne, request, (String) theOne.get("identifier"), id);
+        return new MongoMetadataRecord<Long>(theOne, request.getCollection(), (String) theOne.get("identifier"), id);
     }
 
 

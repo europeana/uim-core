@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.bean;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -25,6 +27,8 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     private Date        lastModified;
     private Date        lastSynchronized;
+    
+    private Map<String, String> values = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -127,6 +131,16 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     @Override
     public void setLastSynchronized(Date lastSynchronized) {
         this.lastSynchronized = lastSynchronized;
+    }
+    
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
     }
 
     @Override

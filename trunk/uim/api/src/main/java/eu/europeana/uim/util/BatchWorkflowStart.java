@@ -10,15 +10,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
@@ -89,7 +89,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
             I[] records = null;
             
 
-            DataSet dataSet = context.getDataSet();
+            UimDataSet dataSet = context.getDataSet();
             if (dataSet instanceof Provider) {
                 try {
                     records = ((StorageEngine<I>)storage).getByProvider((Provider)dataSet, false);

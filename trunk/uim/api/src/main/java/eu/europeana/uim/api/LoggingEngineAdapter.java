@@ -3,8 +3,8 @@ package eu.europeana.uim.api;
 
 import java.util.List;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Dummy implementation of logging engine.

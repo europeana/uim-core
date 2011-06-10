@@ -2,14 +2,16 @@ package eu.europeana.uim.store.mongo;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import eu.europeana.uim.store.DataSet;
+
+import eu.europeana.uim.store.UimDataSet;
+
 import org.bson.types.ObjectId;
 
 /**
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @Entity
-public class AbstractMongoEntity<T> implements DataSet<Long> {
+public class AbstractMongoEntity<T> implements UimDataSet<Long> {
 
     public static final String LID = "lid";
 

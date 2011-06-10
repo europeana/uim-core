@@ -60,6 +60,6 @@ public abstract class AbstractNamedEntityBean<I> extends AbstractEntityBean<I> {
 
     @Override
     public String toString() {
-        return getMnemonic() + "\t" + getName();
+        return getMnemonic() + " " + getName();
     }
 }

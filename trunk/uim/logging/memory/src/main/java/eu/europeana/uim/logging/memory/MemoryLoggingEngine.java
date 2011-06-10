@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Simplistic implementation of the logging service. In this implementation we do not care to keep

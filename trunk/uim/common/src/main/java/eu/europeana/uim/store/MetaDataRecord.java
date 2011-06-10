@@ -1,12 +1,9 @@
-package eu.europeana.uim;
+package eu.europeana.uim.store;
 
 import java.util.List;
 import java.util.Set;
 
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
-import eu.europeana.uim.store.Request;
 
 /**
  * This interface defines a highly dynamic model of records consisting of metadata. A meta data
@@ -18,17 +15,13 @@ import eu.europeana.uim.store.Request;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface MetaDataRecord<I> extends DataSet<I> {
+public interface MetaDataRecord<I> extends UimDataSet<I> {
+
     /**
-     * @return the request in which this record is valid
+     * @return the collection the record belongs to
      */
     Collection<I> getCollection();
-
-    /**
-     * @return the request in which this record is valid
-     */
-    Request<I> getRequest();
-
+    
     /**
      * Retrieves the first value of the list of values represented under that key qualified or
      * unqualified. In other words the first unqualified field is always the same value no matter if

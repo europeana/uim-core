@@ -78,11 +78,6 @@
        </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-fileimp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-dummy</artifactId>
             <version>${project.version}</version>
         </dependency>

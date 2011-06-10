@@ -9,6 +9,7 @@ import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This is a minimal plugin. This should not throw an exception.

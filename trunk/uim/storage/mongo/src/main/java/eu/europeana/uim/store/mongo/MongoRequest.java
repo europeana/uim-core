@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.mongo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
@@ -16,6 +18,8 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
 
     @Reference
     private MongodbCollection collection = null;
+
+    private Map<String, String> values = new HashMap<String, String>();
 
     private Date date = new Date();
 
@@ -54,6 +58,17 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+
 
     @Override
     public boolean equals(Object o) {

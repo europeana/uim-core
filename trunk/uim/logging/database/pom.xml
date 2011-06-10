@@ -11,6 +11,7 @@
     <artifactId>europeana-uim-logging-database-parent</artifactId>
     <packaging>pom</packaging>
 
+    <name>Unified Ingestion Manager: API Database Logging Parent</name>
     <modules>
         <module>model</module>
         <module>engine</module>

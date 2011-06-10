@@ -8,7 +8,6 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
@@ -45,7 +44,7 @@ public abstract class AbstractMetaDataRecordTest<I> {
     public void testNullNotNullFields() throws StorageEngineException {
         Request<I> request = createRequest();
 
-        MetaDataRecord<I> record = engine.createMetaDataRecord(request, null);
+        MetaDataRecord<I> record = engine.createMetaDataRecord(request.getCollection(), null);
 
         // no value for this field exists, therefore the first field is null
         assertNull(record.getFirstField(MDRFieldRegistry.rawformat));

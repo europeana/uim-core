@@ -12,11 +12,11 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-import eu.europeana.uim.MetaDataRecord;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Generic implementation of a mongo-based LoggingEngine. It does not implement the structured logging, this has to be performed by subclasses.
