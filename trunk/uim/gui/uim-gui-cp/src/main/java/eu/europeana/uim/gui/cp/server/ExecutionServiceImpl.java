@@ -15,9 +15,9 @@ import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.ProgressDTO;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.DataSet;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Orchestration service implementation.
@@ -150,7 +150,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
-            eu.europeana.uim.workflow.Workflow w, DataSet<Long> dataset, String executionName) {
+            eu.europeana.uim.workflow.Workflow w, UimDataSet<Long> dataset, String executionName) {
         execution.setId(ae.getId());
         execution.setName(executionName);
         execution.setWorkflow(w.getName());
