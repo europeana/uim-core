@@ -99,8 +99,9 @@ public class UIMRegistry implements Registry {
 
     @Override
     public void addPlugin(IngestionPlugin plugin) {
-        checkPluginForNonStaticMemberVariables(plugin);
         if (plugin != null) {
+            checkPluginForNonStaticMemberVariables(plugin);
+
             log.info("Added plugin: " + plugin.getIdentifier());
             if (!plugins.containsKey(plugin.getIdentifier())) {
                 plugin.initialize();
