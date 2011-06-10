@@ -169,11 +169,12 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
             ExecutionDTO execution = new ExecutionDTO();
-            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-            ActiveExecution<Long> ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
-            ae.getMonitor().addListener(monitor);
-
-            populateWrappedExecutionDTO(execution, ae, w, p);
+//FIXME            
+//            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
+//            ActiveExecution<Long> ae = (ActiveExecution<Long>)getEngine().getOrchestrator().executeWorkflow(w, p);
+//            ae.getMonitor().addListener(monitor);
+//
+//            populateWrappedExecutionDTO(execution, ae, w, p);
             return execution;
         } catch (StorageEngineException e) {
             // TODO Auto-generated catch block

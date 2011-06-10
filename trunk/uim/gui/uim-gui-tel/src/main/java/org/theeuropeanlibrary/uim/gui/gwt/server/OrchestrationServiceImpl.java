@@ -294,20 +294,21 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
             ExecutionDTO execution = new ExecutionDTO();
             GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
-            ActiveExecution<Long> ae;
-            if (parameters != null) {
-                Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-                        w, p, properties);
-            } else {
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-                        w, p);
-            }
-            ae.setName(executionName);
-
-            ae.getMonitor().addListener(monitor);
-
-            populateWrappedExecutionDTO(execution, ae, w, p, executionName);
+            //FIXME
+//            ActiveExecution<Long> ae;
+//            if (parameters != null) {
+//                Properties properties = prepareProperties(parameters);
+//                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+//                        w, p, properties);
+//            } else {
+//                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+//                        w, p);
+//            }
+//            ae.setName(executionName);
+//
+//            ae.getMonitor().addListener(monitor);
+//
+//            populateWrappedExecutionDTO(execution, ae, w, p, executionName);
             return execution;
         } catch (StorageEngineException e) {
             e.printStackTrace();
