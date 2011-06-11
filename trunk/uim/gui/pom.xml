@@ -19,9 +19,7 @@
     <modules>
         <module>uim-gui-cp</module>
         <module>uim-gui-cp-entry</module>
-        <module>uim-gui-gwt</module>
         <module>uim-gui-tel</module>
-        <module>uim-webconsole-extension</module>
     </modules>
 
     <build>
