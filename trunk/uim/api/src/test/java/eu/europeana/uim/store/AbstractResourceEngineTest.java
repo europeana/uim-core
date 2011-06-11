@@ -202,6 +202,8 @@ public abstract class AbstractResourceEngineTest<I> {
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
         
         resources.put(EXAMPLE_KEY_1, null);
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
+        resources.put(EXAMPLE_KEY_4, null);
         engine.setCollectionResources(collection, resources);
         engine.checkpoint();
         
@@ -209,6 +211,9 @@ public abstract class AbstractResourceEngineTest<I> {
         
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_4));
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
         
         resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
         engine.setCollectionResources(collection, resources);
@@ -276,6 +281,8 @@ public abstract class AbstractResourceEngineTest<I> {
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
         
         resources.put(EXAMPLE_KEY_1, null);
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
+        resources.put(EXAMPLE_KEY_4, null);
         engine.setProviderResources(provider, resources);
         engine.checkpoint();
         
@@ -283,6 +290,9 @@ public abstract class AbstractResourceEngineTest<I> {
         
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_4));
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
 
         resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
         engine.setProviderResources(provider, resources);
@@ -348,6 +358,7 @@ public abstract class AbstractResourceEngineTest<I> {
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
         
         resources.put(EXAMPLE_KEY_1, null);
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
         resources.put(EXAMPLE_KEY_4, null);
         engine.setGlobalResources(resources);
         engine.checkpoint();
@@ -357,6 +368,8 @@ public abstract class AbstractResourceEngineTest<I> {
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
         assertNull(resources.get(EXAMPLE_KEY_4));
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
 
         resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
         engine.setGlobalResources(resources);

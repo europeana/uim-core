@@ -31,12 +31,15 @@ public abstract class BlockingInitializer implements Runnable {
      * BlockingInitializer STATUS_INITIALIZED Initialization successful
      * */
     public static final int     STATUS_INITIALIZED = 98;
-    /** BlockingInitializer STATUS_SHUTDOWN  Initializer has ended */
+    /** BlockingInitializer STATUS_SHUTDOWN Initializer has ended */
     public static final int     STATUS_SHUTDOWN    = 99;
 
-    /** BlockingInitializer status 
-     * current status of the initializer */
+    /**
+     * BlockingInitializer status current status of the initializer
+     */
     protected int               status             = STATUS_NEW;
+
+    protected RuntimeException  exception          = null;
 
     /**
      * Creates a new instance of this class.
@@ -46,7 +49,9 @@ public abstract class BlockingInitializer implements Runnable {
 
     /**
      * Start the guarded initialization in a new thread and wait till the result for that is clear.
-     * @param cl the class loader relevant for this context
+     * 
+     * @param cl
+     *            the class loader relevant for this context
      */
     public final synchronized void initialize(ClassLoader cl) {
         if (status >= STATUS_FAILED) return;
@@ -63,6 +68,8 @@ public abstract class BlockingInitializer implements Runnable {
             } catch (InterruptedException e) {
             }
         }
+
+        if (exception != null) { throw exception; }
     }
 
     /**
@@ -78,10 +85,11 @@ public abstract class BlockingInitializer implements Runnable {
             status = STATUS_BOOTING;
             initializeInternal();
             status = STATUS_INITIALIZED;
-        } catch (Throwable t) {
+        } catch (RuntimeException t) {
             log.log(Level.SEVERE, "Failed to initialize with classloader:" +
                                   Thread.currentThread().getContextClassLoader(), t);
             status = STATUS_FAILED;
+            exception = t;
         }
     }
 
