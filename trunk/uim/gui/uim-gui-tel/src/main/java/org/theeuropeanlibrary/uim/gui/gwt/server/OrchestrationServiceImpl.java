@@ -3,6 +3,8 @@ package org.theeuropeanlibrary.uim.gui.gwt.server;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -72,6 +74,14 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 res.add(wd);
             }
         }
+
+        Collections.sort(res, new Comparator<WorkflowDTO>(){
+            @Override
+            public int compare(WorkflowDTO o1, WorkflowDTO o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        
         return res;
     }
 
@@ -162,7 +172,16 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                     ProviderDTO provider = getWrappedProviderDTO(p.getId());
                     res.add(provider);
                 }
+                
+                Collections.sort(res, new Comparator<ProviderDTO>(){
+                    @Override
+                    public int compare(ProviderDTO o1, ProviderDTO o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+
             }
+            
         } catch (StorageEngineException e) {
             res.add(new ProviderDTO(0l, "Failed to load provider. Notify system administrator.",
                     null));
@@ -182,6 +201,14 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
                 res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
                         getWrappedProviderDTO(provider)));
             }
+            
+            Collections.sort(res, new Comparator<CollectionDTO>(){
+                @Override
+                public int compare(CollectionDTO o1, CollectionDTO o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
         } catch (StorageEngineException e) {
             e.printStackTrace();
         }
