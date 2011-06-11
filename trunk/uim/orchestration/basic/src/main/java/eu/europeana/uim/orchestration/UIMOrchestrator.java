@@ -20,7 +20,9 @@ import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
@@ -122,6 +124,20 @@ public class UIMOrchestrator implements Orchestrator {
     private void setupProperties(Workflow w, UimDataSet<?> dataset, Properties properties) {
         ResourceEngine<?> resourceEngine = this.registry.getResourceEngine();
         if (resourceEngine != null) {
+            Collection collection = null;
+            Provider provider = null;
+            if (dataset instanceof MetaDataRecord<?>){
+                collection = ((MetaDataRecord<?>)dataset).getCollection();
+                provider = collection.getProvider();
+            } else if (dataset instanceof Request<?>) {
+                collection = ((Request<?>)dataset).getCollection();
+                provider = collection.getProvider();
+                
+            } else if (dataset instanceof Collection<?>){
+                collection = ((Collection<?>)dataset);
+                provider = collection.getProvider();
+            }
+            
             List<String> params = new ArrayList<String>();
             WorkflowStart start = w.getStart();
             params.addAll(start.getParameters());
@@ -131,9 +147,11 @@ public class UIMOrchestrator implements Orchestrator {
 
             LinkedHashMap<String, List<String>> globalResources = resourceEngine.getGlobalResources(params);
 
-            if (dataset != null && dataset instanceof Collection) {
+            
+            
+            if (collection != null) {
                 LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources(
-                        (Collection)dataset, params);
+                        collection, params);
                 if (collectionResources != null && collectionResources.size() > 0) {
                     for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
                         if (entry.getValue() != null) {
@@ -142,9 +160,8 @@ public class UIMOrchestrator implements Orchestrator {
                     }
                 }
             }
-            if (dataset != null && dataset instanceof Provider) {
-                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(
-                        (Provider)dataset, params);
+            if (provider != null) {
+                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(provider, params);
                 if (providerResources != null && providerResources.size() > 0) {
                     for (Entry<String, List<String>> entry : providerResources.entrySet()) {
                         if (entry.getValue() != null) {
