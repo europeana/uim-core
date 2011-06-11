@@ -225,6 +225,7 @@ public interface StorageEngine<I> {
     /**
      * Stores the given record and its updated values.
      * 
+     * @param collection 
      * @param record
      * @throws StorageEngineException
      */

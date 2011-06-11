@@ -41,8 +41,7 @@ public class UIMStore implements Action {
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
 
     private enum Operation {
-        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), 
-        updateProvider(
+        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
                                                                                                                 "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
                                                                                                                                                                                                                                 "lists the providers"), createCollection(
                                                                                                                                                                                                                                                                          "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"), updateCollection(
@@ -161,22 +160,21 @@ public class UIMStore implements Action {
      */
     private <I> void listGlobalResources(StorageEngine<I> storage, ResourceEngine<I> resource,
             PrintStream out) {
+        List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
-
         if (workflow == null) {
-            out.println("No matching workflow: <" + argument0 + ">");
-            return;
+            workflows = registry.getWorkflows();
+        } else {
+            workflows.add(workflow);
         }
 
-        List<String> keys = new ArrayList<String>();
-        keys.addAll(workflow.getStart().getParameters());
-        for (IngestionPlugin plugin : workflow.getSteps()) {
-            keys.addAll(plugin.getParameters());
-        }
+        for (Workflow current : workflows) {
+            List<String> keys = getParameters(current);
 
-        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(keys);
-        out.println("Global Resources for <" + workflow.getIdentifier() + ">:" +
-                    resources.toString());
+            LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(keys);
+            out.println("Global Resources for <" + current.getIdentifier() + ">:" +
+                        resources.toString() + "\n");
+        }
     }
 
     /**
@@ -186,27 +184,35 @@ public class UIMStore implements Action {
      */
     private <I> void listProviderResources(StorageEngine<I> storage, ResourceEngine<I> resource,
             PrintStream out) throws StorageEngineException {
+        List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
-
         if (workflow == null) {
-            out.println("No matching workflow: <" + argument0 + ">");
-            return;
+            workflows = registry.getWorkflows();
+        } else {
+            workflows.add(workflow);
         }
 
+        for (Workflow current : workflows) {
+            List<String> keys = getParameters(current);
+
+            List<Provider<I>> providers = storage.getAllProviders();
+            for (Provider provider : providers) {
+                LinkedHashMap<String, List<String>> resources = resource.getProviderResources(
+                        provider, keys);
+                out.println("Provider " + provider.getMnemonic() + " Resources for <" +
+                            current.getIdentifier() + ">:" + resources.toString());
+
+            }
+        }
+    }
+
+    private List<String> getParameters(Workflow current) {
         List<String> keys = new ArrayList<String>();
-        keys.addAll(workflow.getStart().getParameters());
-        for (IngestionPlugin plugin : workflow.getSteps()) {
+        keys.addAll(current.getStart().getParameters());
+        for (IngestionPlugin plugin : current.getSteps()) {
             keys.addAll(plugin.getParameters());
         }
-
-        List<Provider<I>> providers = storage.getAllProviders();
-        for (Provider provider : providers) {
-            LinkedHashMap<String, List<String>> resources = resource.getProviderResources(provider,
-                    keys);
-            out.println("Provider " + provider.getMnemonic() + " Resources for <" +
-                        workflow.getIdentifier() + ">:" + resources.toString());
-
-        }
+        return keys;
     }
 
     /**
@@ -216,29 +222,28 @@ public class UIMStore implements Action {
      */
     private <I> void listCollectionResources(StorageEngine<I> storage, ResourceEngine<I> resource,
             PrintStream out) throws StorageEngineException {
+        List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
-
         if (workflow == null) {
-            out.println("No matching workflow: <" + argument0 + ">");
-            return;
+            workflows = registry.getWorkflows();
+        } else {
+            workflows.add(workflow);
         }
 
-        List<String> keys = new ArrayList<String>();
-        keys.addAll(workflow.getStart().getParameters());
-        for (IngestionPlugin plugin : workflow.getSteps()) {
-            keys.addAll(plugin.getParameters());
-        }
+        for (Workflow current : workflows) {
+            List<String> keys = getParameters(current);
 
-        List<Provider<I>> providers = storage.getAllProviders();
-        for (Provider provider : providers) {
-            List<Collection<I>> collections = storage.getCollections(provider);
-            if (collections != null && !collections.isEmpty()) {
-                out.println(provider.getMnemonic());
-                for (Collection collection : collections) {
-                    LinkedHashMap<String, List<String>> resources = resource.getCollectionResources(
-                            collection, keys);
-                    out.println("Collection " + collection.getMnemonic() + " Resources for <" +
-                                workflow.getIdentifier() + ">:" + resources.toString());
+            List<Provider<I>> providers = storage.getAllProviders();
+            for (Provider provider : providers) {
+                List<Collection<I>> collections = storage.getCollections(provider);
+                if (collections != null && !collections.isEmpty()) {
+                    out.println(provider.getMnemonic());
+                    for (Collection collection : collections) {
+                        LinkedHashMap<String, List<String>> resources = resource.getCollectionResources(
+                                collection, keys);
+                        out.println("Collection " + collection.getMnemonic() + " Resources for <" +
+                                    current.getIdentifier() + ">:" + resources.toString() + "\n");
+                    }
                 }
             }
         }
