@@ -2,6 +2,8 @@ package eu.europeana.uim.orchestration;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -359,9 +361,18 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                     builder.append(", ");
                 }
 
+                
                 log.info(scheduled + " scheduled, " + totalProgress + " in progress:" +
                          builder.toString());
             }
+        }
+
+        if (scheduled % 5000 == 0) {
+            MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+            MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+
+            long mb = 1024 * 1024;
+            log.info(String.format("Memory status: %d MB UsedHeap, %d MB MaxHeap, %d MB NonHeap, %d MB MaxNonHeap",heapMemoryUsage.getUsed()/mb, heapMemoryUsage.getMax()/mb, nonHeapMemoryUsage.getUsed()/mb, nonHeapMemoryUsage.getMax()/mb));
         }
     }
 

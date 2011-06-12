@@ -98,7 +98,7 @@ public class UIMExecution implements Action {
                 cancel(out);
                 break;
             case status:
-                out.println("Master, this is not implemented yet.");
+                status(out);
                 break;
             default:
                 out.println("Master, I am truly sorry but this doesn't work.");
@@ -110,6 +110,16 @@ public class UIMExecution implements Action {
         }
         return null;
     }
+
+    private void status(PrintStream out) {
+        ActiveExecution<?> execution = getOrListExecution(out, "status");
+        if (execution != null) {
+            execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO, 2500));
+        } else {
+            out.println("Could not find execution to start status with ID " + argument0);
+        }
+    }
+
 
     private void pause(PrintStream out) {
         ActiveExecution<?> execution = getOrListExecution(out, "pause");
