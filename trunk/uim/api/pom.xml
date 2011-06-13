@@ -25,7 +25,6 @@
                             eu.europeana.uim.common.*,
                             eu.europeana.uim.store.*,
                             org.apache.commons.lang.*,
-                            org.apache.commons.io.*,
                             org.apache.commons.logging,
                             org.apache.commons.logging.impl,
                             org.apache.felix.gogo.commands,
@@ -33,37 +32,18 @@
                             org.osgi.framework,
                             org.osgi.service.blueprint,
                             org.osgi.service.cm,
-                            javax.xml.*,
                             org.w3c.dom, 
                             org.xml.sax, 
                             org.xml.sax.ext, 
-                            org.xml.sax.helpers,
-                            !com.sun.msv.*,
-                            !org.relaxng.*,
-                            !org.apache.commons.jxpath.*,
-                            !org.apache.commons.codec.*,
-                            !org.apache.commons.digester.*,
-                            !org.apache.commons.beanutils.*,
-                            !org.apache.tools.*,
-                            !org.apache.avalon.*,
-                            !org.apache.log.*,
-                            !org.apache.log4j.*,
-                            !javax.sql.*,
-                            !javax.servlet.*,
-                            !javax.mail.*,
-                            !javax.naming.*
+                            org.xml.sax.helpers
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim,
                             eu.europeana.uim.api,
                             eu.europeana.uim.command,
                             eu.europeana.uim.workflow,
-                            eu.europeana.uim.util,
-                            org.apache.commons.configuration,
-                            org.apache.commons.collections
+                            eu.europeana.uim.util
 						</Export-Package>
-                        <Embed-Transitive>true</Embed-Transitive>
-                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|trove4j|wstx-asl|geronimo-stax-api_1.0_spec</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
@@ -88,32 +68,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
         </dependency>
-
-    
-        <dependency>
-            <groupId>commons-configuration </groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>1.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-digester</groupId>
-                    <artifactId>commons-digester</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-codec</groupId>
-                    <artifactId>commons-codec</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-jxpath</groupId>
-                    <artifactId>commons-jxpath</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
 
 
         <!-- Shared resources -->
