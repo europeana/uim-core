@@ -81,8 +81,9 @@ public interface ExecutionContext {
      *            typed key which holds namespace, name and type information
      * @param value
      *            object typed using the type specified in the key
+     * @return the previous object with this key (@see Map.put())
      */
-    <NS, T extends Serializable> void putValue(TKey<NS, T> key, T value);
+    <NS, T extends Serializable> Object putValue(TKey<NS, T> key, T value);
 
     /**
      * @param <NS>

@@ -480,8 +480,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public <NS, T extends Serializable> void putValue(TKey<NS, T> key, T value) {
-        values.put(key, value);
+    public <NS, T extends Serializable> Object putValue(TKey<NS, T> key, T value) {
+        return values.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
