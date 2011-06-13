@@ -85,11 +85,11 @@ public abstract class BlockingInitializer implements Runnable {
             status = STATUS_BOOTING;
             initializeInternal();
             status = STATUS_INITIALIZED;
-        } catch (RuntimeException t) {
+        } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to initialize with classloader:" +
                                   Thread.currentThread().getContextClassLoader(), t);
             status = STATUS_FAILED;
-            exception = t;
+            exception = new RuntimeException("Exception while running initialization.",t);
         }
     }
 
