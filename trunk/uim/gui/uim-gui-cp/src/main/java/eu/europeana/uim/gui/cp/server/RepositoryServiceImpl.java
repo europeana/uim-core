@@ -14,6 +14,7 @@ import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Orchestration service implementation.
@@ -37,9 +38,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public List<WorkflowDTO> getWorkflows() {
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
-        List<eu.europeana.uim.workflow.Workflow> workflows = getEngine().getRegistry().getWorkflows();
+        List<Workflow> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
-            for (eu.europeana.uim.workflow.Workflow w : workflows) {
+            for (Workflow w : workflows) {
                 WorkflowDTO wd = new WorkflowDTO(w.getIdentifier(), w.getName(), w.getDescription());
                 res.add(wd);
             }
