@@ -1,6 +1,8 @@
 /* BrowserTreeViewModel.java - created on Apr 29, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.gui.cp.client.management;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -96,6 +98,12 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
             @Override
             public void onSuccess(List<ProviderDTO> providers) {
+                Collections.sort(providers, new Comparator<ProviderDTO>() {
+                    @Override
+                    public int compare(ProviderDTO o1, ProviderDTO o2) {
+                         return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 List<BrowserObject> providerList = providersDataProvider.getList();
                 providerList.clear();
                 for (ProviderDTO p : providers) {
@@ -116,6 +124,12 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
             @Override
             public void onSuccess(List<CollectionDTO> collections) {
+                Collections.sort(collections, new Comparator<CollectionDTO>() {
+                    @Override
+                    public int compare(CollectionDTO o1, CollectionDTO o2) {
+                         return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
                 if (collections.size() > 0) {
@@ -140,6 +154,12 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
             @Override
             public void onSuccess(List<WorkflowDTO> workflows) {
+                Collections.sort(workflows, new Comparator<WorkflowDTO>() {
+                    @Override
+                    public int compare(WorkflowDTO o1, WorkflowDTO o2) {
+                         return o1.getName().compareTo(o2.getName());
+                    }
+                });
                 List<BrowserObject> workflowList = workflowDataProvider.getList();
                 workflowList.clear();
                 for (WorkflowDTO w : workflows) {
