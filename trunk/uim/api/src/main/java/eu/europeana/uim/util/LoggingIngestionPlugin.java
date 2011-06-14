@@ -31,7 +31,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
      * Creates a new instance of this class.
      */
     public LoggingIngestionPlugin() {
-        super("Identifier Logging", "Logges the identifiers of MDRs according the specififed level in the execution (default INFO)");
+        super("Identifier Logging", "Loggs the identifiers of MDRs according the specififed level in the execution (default INFO)");
     }
 
     @Override
