@@ -1,6 +1,8 @@
 package eu.europeana.uim.gui.cp.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 WorkflowDTO wd = new WorkflowDTO(w.getIdentifier(), w.getName(), w.getDescription());
                 res.add(wd);
             }
+            
+            Collections.sort(res, new Comparator<WorkflowDTO>() {
+                @Override
+                public int compare(WorkflowDTO o1, WorkflowDTO o2) {
+                     return o1.getName().compareTo(o2.getName());
+                }
+            });
         }
         return res;
     }
@@ -59,6 +68,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     ProviderDTO provider = getWrappedProviderDTO(p.getId());
                     res.add(provider);
                 }
+                
+                Collections.sort(res, new Comparator<ProviderDTO>() {
+                    @Override
+                    public int compare(ProviderDTO o1, ProviderDTO o2) {
+                         return o1.getName().compareTo(o2.getName());
+                    }
+                });
             }
         } catch (StorageEngineException e) {
             throw new RuntimeException(e);
@@ -83,6 +99,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                 res.add(collDTO);
             }
+            
+            Collections.sort(res, new Comparator<CollectionDTO>() {
+                @Override
+                public int compare(CollectionDTO o1, CollectionDTO o2) {
+                     return o1.getName().compareTo(o2.getName());
+                }
+            });
         } catch (StorageEngineException e) {
             e.printStackTrace();
         }
