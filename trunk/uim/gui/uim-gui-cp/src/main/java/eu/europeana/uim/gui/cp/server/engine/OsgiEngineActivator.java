@@ -4,7 +4,6 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.api.Registry;
 
 /**
@@ -21,7 +20,7 @@ public class OsgiEngineActivator implements BundleActivator {
         Registry registry = null;
         ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.api.Registry");
         if(registryRef != null) {
-            registry = (UIMRegistry) bundleContext.getService(registryRef);
+            registry = (Registry) bundleContext.getService(registryRef);
         }
 
         engine = new OsgiEngine(registry);
