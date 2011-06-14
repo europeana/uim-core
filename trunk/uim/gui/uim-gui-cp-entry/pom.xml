@@ -102,10 +102,20 @@
                         <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
                         <Bundle-Activator>eu.europeana.uim.gui.cp.server.engine.OsgiEngineActivator</Bundle-Activator>
                         <Embed-Directory>WEB-INF/lib</Embed-Directory>
-                        <Embed-Dependency>*;scope=compile|runtime|system;inline=false;artifactId=!europeana-uim-common|europeana-uim-api|commons-lang|commons-io|trove4j</Embed-Dependency>
+                        <Embed-Dependency>
+                            europeana-uim-gui-cp,gwt-servlet,gwt-incubator,commons-fileupload
+                        </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Import-Package>
-                            *;resolution:=optional,
+                            !eu.europeana.uim.gui.cp.*,
+                            eu.europeana.uim.*,
+                            org.apache.solr.*,
+                            org.osgi.framework,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.xml.sax.helpers,
+                            javax.xml.parsers,
                             javax.servlet,
                             javax.servlet.http
                         </Import-Package>
