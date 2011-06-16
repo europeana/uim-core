@@ -27,6 +27,7 @@
                             !org.apache.log.*,
                             eu.europeana.uim.common,
                             javax.xml.*,
+                            javax.naming.*,
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
