@@ -165,7 +165,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<ProviderDTO> getProviders() {
         List<ProviderDTO> res = new ArrayList<ProviderDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             List<Provider<Long>> providers = storage.getAllProviders();
             if (providers != null) {
                 for (Provider<Long> p : providers) {
@@ -194,7 +194,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<CollectionDTO> getCollections(Long provider) {
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Provider<Long> p = storage.getProvider(provider);
             List<Collection<Long>> cols = storage.getCollections(p);
             for (Collection<Long> col : cols) {
@@ -246,7 +246,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public List<ExecutionDTO> getPastExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             for (Execution<Long> execution : storage.getAllExecutions()) {
                 if (!execution.isActive()) {
                     r.add(getWrappedExecutionDTO(execution.getId(), execution));
@@ -262,7 +262,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public ExecutionDTO startCollection(String workflow, Long collection, String executionName,
             Set<ParameterDTO> parameters) {
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Collection<Long> c = storage.getCollection(collection);
             if (c == null) { throw new RuntimeException("Error: cannot find collection " +
                                                         collection); }
@@ -314,7 +314,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     public ExecutionDTO startProvider(String workflow, Long provider, String executionName,
             Set<ParameterDTO> parameters) {
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Provider<Long> p = storage.getProvider(provider);
             if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
             eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
@@ -373,7 +373,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         if (ae != null) {
             exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
         } else {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Execution<Long> execution;
             try {
                 execution = storage.getExecution(id);
@@ -386,7 +386,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     }
 
     private ProviderDTO getWrappedProviderDTO(Long provider) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
         ProviderDTO wrapped = wrappedProviderDTOs.get(provider);
         if (wrapped == null) {
             try {
@@ -450,7 +450,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
     @Override
     public Integer getCollectionTotal(Long collection) {
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             return storage.getTotalByCollection(storage.getCollection(collection));
         } catch (StorageEngineException e) {
             e.printStackTrace();

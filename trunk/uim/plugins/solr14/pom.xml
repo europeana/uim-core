@@ -38,7 +38,7 @@
                             org.apache.solr.*
 						</Export-Package>
                         <Embed-Transitive>true</Embed-Transitive>
-                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|trove4j|wstx-asl</Embed-Dependency>
+                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|trove4j</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
 					</instructions>
 				</configuration>
@@ -68,7 +68,32 @@
             <artifactId>solr-core</artifactId>
             <groupId>org.apache.solr</groupId>
             <version>1.4.1</version>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>wstx-asl</artifactId>
+            		<groupId>woodstox</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>        
+
+        <!-- Stax -->
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+            
+        <dependency>
+          <groupId>org.apache.geronimo.specs</groupId>
+          <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+          <version>1.0.1</version>
+        </dependency>   
 
         <dependency>
             <groupId>javax.servlet</groupId>
