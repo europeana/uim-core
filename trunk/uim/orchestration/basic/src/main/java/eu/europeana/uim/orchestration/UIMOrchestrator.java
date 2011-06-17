@@ -96,14 +96,14 @@ public class UIMOrchestrator implements Orchestrator {
         monitor.beginTask(w.getName(), 1);
 
         try {
-            Execution e = registry.getStorage().createExecution(dataset, w.getIdentifier());
+            Execution e = registry.getStorageEngine().createExecution(dataset, w.getIdentifier());
             e.setActive(true);
             e.setStartTime(new Date());
-            registry.getStorage().updateExecution(e);
+            registry.getStorageEngine().updateExecution(e);
 
             try {
                 UIMActiveExecution activeExecution = new UIMActiveExecution(e, w,
-                        registry.getStorage(), registry.getLoggingEngine(),
+                        registry.getStorageEngine(), registry.getLoggingEngine(),
                         registry.getResourceEngine(), properties, monitor);
                 processor.schedule(activeExecution);
 

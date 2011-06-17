@@ -66,7 +66,7 @@ public class CommandTest extends AbstractUIMIntegrationTest {
 
         StorageEngine storage = null;
         while (storage == null) {
-            storage = registry.getStorage();
+            storage = registry.getStorageEngine();
             Thread.sleep(500);
         }
 
@@ -76,7 +76,7 @@ public class CommandTest extends AbstractUIMIntegrationTest {
         collection.setMnemonic("CCCC");
         storage.updateCollection(collection);
 
-        assertEquals("MemoryStorageEngine", registry.getStorage().getIdentifier());
+        assertEquals("MemoryStorageEngine", registry.getStorageEngine().getIdentifier());
 
         String property = bundleContext.getProperty(Constants.FRAMEWORK_VERSION);
         assertEquals("1.5", property);

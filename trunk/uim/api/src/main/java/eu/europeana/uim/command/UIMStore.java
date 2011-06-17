@@ -105,7 +105,7 @@ public class UIMStore implements Action {
         }
 
         try {
-            StorageEngine storage = registry.getStorage();
+            StorageEngine storage = registry.getStorageEngine();
             ResourceEngine resource = registry.getResourceEngine();
 
             switch (operation) {

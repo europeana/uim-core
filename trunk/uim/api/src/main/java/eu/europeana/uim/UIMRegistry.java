@@ -59,7 +59,7 @@ public class UIMRegistry implements Registry {
         this.configuredStorageEngine = configuredStorageEngine;
         if (this.activeStorage != null) {
             this.activeStorage = null;
-            this.activeStorage = getStorage(configuredStorageEngine);
+            this.activeStorage = getStorageEngine(configuredStorageEngine);
         }
     }
 
@@ -196,12 +196,12 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public StorageEngine<?> getStorage() {
+    public StorageEngine<?> getStorageEngine() {
         if (storages == null || storages.isEmpty()) return null;
 
         if (activeStorage == null) {
-            if (getStorage(configuredStorageEngine) != null) {
-                activeStorage = getStorage(configuredStorageEngine);
+            if (getStorageEngine(configuredStorageEngine) != null) {
+                activeStorage = getStorageEngine(configuredStorageEngine);
             } else {
                 // default to first engine
                 activeStorage = storages.values().iterator().next();
@@ -216,7 +216,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public StorageEngine<?> getStorage(String identifier) {
+    public StorageEngine<?> getStorageEngine(String identifier) {
         if (identifier == null || storages == null || storages.isEmpty()) return null;
         return storages.get(identifier);
     }

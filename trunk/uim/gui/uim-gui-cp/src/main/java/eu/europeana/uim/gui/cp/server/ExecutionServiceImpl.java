@@ -53,7 +53,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public List<ExecutionDTO> getPastExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             for (Execution<Long> execution : storage.getAllExecutions()) {
                 if (!execution.isActive()) {
                     r.add(getWrappedExecutionDTO(execution.getId(), execution));
@@ -69,7 +69,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public ExecutionDTO startCollection(String workflow, Long collection, String executionName,
             Set<ParameterDTO> parameters) {
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Collection<Long> c = storage.getCollection(collection);
             if (c == null) { throw new RuntimeException("Error: cannot find collection " +
                                                         collection); }
@@ -187,7 +187,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         if (ae != null) {
             exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
         } else {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Execution<Long> execution;
             try {
                 execution = storage.getExecution(id);

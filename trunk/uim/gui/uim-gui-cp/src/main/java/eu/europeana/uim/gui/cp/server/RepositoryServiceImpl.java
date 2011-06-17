@@ -61,7 +61,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<ProviderDTO> getProviders() {
         List<ProviderDTO> res = new ArrayList<ProviderDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             List<Provider<Long>> providers = storage.getAllProviders();
             if (providers != null) {
                 for (Provider<Long> p : providers) {
@@ -86,7 +86,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<CollectionDTO> getCollections(Long provider) {
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Provider<Long> p = storage.getProvider(provider);
             List<Collection<Long>> cols = storage.getCollections(p);
             for (Collection<Long> col : cols) {
@@ -113,7 +113,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     private ProviderDTO getWrappedProviderDTO(Long provider) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
         ProviderDTO wrapped = wrappedProviderDTOs.get(provider);
         if (wrapped == null) {
             try {
@@ -134,7 +134,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public Integer getCollectionTotal(Long collection) {
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             return storage.getTotalByCollection(storage.getCollection(collection));
         } catch (StorageEngineException e) {
             e.printStackTrace();

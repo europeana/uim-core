@@ -91,13 +91,13 @@ public interface Registry {
     /**
      * @return default storage
      */
-    StorageEngine<?> getStorage();
+    StorageEngine<?> getStorageEngine();
 
     /**
      * @param identifier
      * @return storage for identifier
      */
-    StorageEngine<?> getStorage(String identifier);
+    StorageEngine<?> getStorageEngine(String identifier);
 
     /**
      * @param loggingEngine

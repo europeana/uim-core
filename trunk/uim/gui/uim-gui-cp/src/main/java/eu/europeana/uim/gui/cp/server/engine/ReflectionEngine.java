@@ -69,7 +69,7 @@ public class ReflectionEngine extends Engine {
     private void setupSampleData() {
         try {
             SampleProperties sample = new SampleProperties();
-            sample.loadSampleData(registry.getStorage());
+            sample.loadSampleData(registry.getStorageEngine());
 
 //            Collection coll = registry.getStorage().getAllCollections().iterator().next();
 //            System.out.println(coll.getName());

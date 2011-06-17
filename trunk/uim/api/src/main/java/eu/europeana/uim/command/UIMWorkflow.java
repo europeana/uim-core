@@ -50,7 +50,7 @@ public class UIMWorkflow implements Action {
             return null;
         }
 
-        StorageEngine<?> storage = registry.getStorage();
+        StorageEngine<?> storage = registry.getStorageEngine();
         switch (operation) {
         case listWorkflows:
             listWorkflows(storage, out);

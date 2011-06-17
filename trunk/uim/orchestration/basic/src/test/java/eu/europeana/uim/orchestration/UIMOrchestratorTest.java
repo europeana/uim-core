@@ -99,7 +99,7 @@ public class UIMOrchestratorTest {
     public void testSimpleFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 21);
+        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 21);
         // creating the data calles 21 times the update method.
         verify(engine, times(21)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
@@ -126,7 +126,7 @@ public class UIMOrchestratorTest {
     public void testSimplePartlyFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 30);
+        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 
@@ -153,7 +153,7 @@ public class UIMOrchestratorTest {
     public void testSimplePluginFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorage(), 30);
+        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
 

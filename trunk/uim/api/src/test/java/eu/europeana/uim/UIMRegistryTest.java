@@ -30,11 +30,11 @@ public class UIMRegistryTest {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
         registry.addStorageEngine(new StorageEngineAdapter() {
         });      
-        assertNotNull(registry.getStorage());
+        assertNotNull(registry.getStorageEngine());
         registry.setConfiguredStorageEngine("a");
         assertNull(registry.getActiveStorage());
-        assertNotNull(registry.getStorage());
-        assertNotNull(registry.getStorage(StorageEngineAdapter.class.getSimpleName()));
+        assertNotNull(registry.getStorageEngine());
+        assertNotNull(registry.getStorageEngine(StorageEngineAdapter.class.getSimpleName()));
         assertEquals(1, registry.getStorages().size());
     }
 

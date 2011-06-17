@@ -32,6 +32,7 @@ public class SolrInitializer extends BlockingInitializer {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param url
      * @param core
      */
@@ -67,13 +68,9 @@ public class SolrInitializer extends BlockingInitializer {
             status = STATUS_BOOTING;
             if (url.startsWith("file://")) {
                 File home = new File(url.substring(7));
-                try {
-                    container = new CoreContainer();
-                    container.load(home.getAbsolutePath(), new File(home, "solr.xml"));
-                    server = new EmbeddedSolrServer(container, core);
-                } catch (Throwable e) {
-                    throw new IOException("Failed to setup core <" + core + "> at <" + home + ">");
-                }
+                container = new CoreContainer();
+                container.load(home.getAbsolutePath(), new File(home, "solr.xml"));
+                server = new EmbeddedSolrServer(container, core);
             } else {
                 server = new CommonsHttpSolrServer(new URL(url) + core);
             }
@@ -82,6 +79,8 @@ public class SolrInitializer extends BlockingInitializer {
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to initialize repository at <" + url + ">", t);
             status = STATUS_FAILED;
+
+            throw new RuntimeException("Failed to setup core <" + core + "> at <" + url + ">");
         }
     }
 

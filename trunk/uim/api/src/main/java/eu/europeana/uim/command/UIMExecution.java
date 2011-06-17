@@ -180,7 +180,7 @@ public class UIMExecution implements Action {
             out.println();
         }
 
-        StorageEngine storage = registry.getStorage();
+        StorageEngine storage = registry.getStorageEngine();
 
         Workflow workflow = registry.getWorkflow(argument0);
         Collection collection = storage.findCollection(argument1);
