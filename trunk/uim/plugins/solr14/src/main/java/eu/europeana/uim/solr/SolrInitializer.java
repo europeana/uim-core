@@ -55,13 +55,6 @@ public class SolrInitializer extends BlockingInitializer {
         return container;
     }
 
-    /**
-     * @param container
-     */
-    public void setContainer(CoreContainer container) {
-        this.container = container;
-    }
-
     @Override
     protected void initializeInternal() {
         try {
