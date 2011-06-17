@@ -120,13 +120,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     @Override
     public ExecutionDTO startProvider(String workflow, Long provider, String executionName,
             Set<ParameterDTO> parameters) {
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
-            Provider<Long> p = storage.getProvider(provider);
-            if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
-            eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
+//        try {
+//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+//            Provider<Long> p = storage.getProvider(provider);
+//            if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
+//            eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
             ExecutionDTO execution = new ExecutionDTO();
-            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
+//            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
 //FIXME            
 //            ActiveExecution<Long> ae;
@@ -144,10 +144,10 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 //
 //            populateWrappedExecutionDTO(execution, ae, w, p, executionName);
             return execution;
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
-        }
-        return null;
+//        } catch (StorageEngineException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
