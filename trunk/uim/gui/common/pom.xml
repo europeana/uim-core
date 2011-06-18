@@ -10,7 +10,7 @@
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>europeana-uim-gui-cp</artifactId>
+    <artifactId>europeana-uim-gui-common</artifactId>
     <packaging>jar</packaging>
     <name>Unified Ingestion Manager: Base GWT Module Ingestion Control Panel GUI</name>
 
