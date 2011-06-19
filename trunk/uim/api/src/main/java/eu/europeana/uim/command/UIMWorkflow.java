@@ -22,14 +22,17 @@ import eu.europeana.uim.workflow.WorkflowStart;
  */
 @Command(name = "uim", scope = "workflow")
 public class UIMWorkflow implements Action {
-    private enum Operation {
+
+    /**
+     */
+    protected enum Operation {
         listWorkflows
     }
 
     private Registry  registry;
 
     @Option(name = "-o", aliases = { "--operation" }, required = false)
-    private Operation operation;
+    protected Operation operation;
 
     /**
      * Creates a new instance of this class.

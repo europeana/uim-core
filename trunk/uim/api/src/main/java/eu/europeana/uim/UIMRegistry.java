@@ -135,6 +135,11 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
+    public List<IngestionPlugin> getPlugins() {
+        return new ArrayList<IngestionPlugin>(plugins.values());
+    }
+
+    @Override
     public void removePlugin(IngestionPlugin plugin) {
         if (plugin != null) {
             log.info("Removed plugin: " + plugin.getIdentifier());
@@ -174,7 +179,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public Collection<StorageEngine<?>> getStorages() {
+    public Collection<StorageEngine<?>> getStorageEngines() {
         return storages.values();
     }
 
@@ -211,7 +216,7 @@ public class UIMRegistry implements Registry {
         return activeStorage;
     }
 
-    StorageEngine<?> getActiveStorage() {
+    StorageEngine<?> getActiveStorageEngine() {
         return activeStorage;
     }
 

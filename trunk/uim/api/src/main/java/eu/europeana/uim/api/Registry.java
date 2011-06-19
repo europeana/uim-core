@@ -31,6 +31,11 @@ public interface Registry {
     void removePlugin(IngestionPlugin plugin);
 
     /**
+     * @return a list of all registered plugins
+     */
+    public List<IngestionPlugin> getPlugins();
+
+    /**
      * @param storage
      *            add storage to registration
      */
@@ -45,7 +50,7 @@ public interface Registry {
     /**
      * @return known storages
      */
-    Collection<StorageEngine<?>> getStorages();
+    Collection<StorageEngine<?>> getStorageEngines();
 
     /**
      * @param configuredStorageEngine
@@ -77,7 +82,8 @@ public interface Registry {
     List<Workflow> getWorkflows();
 
     /**
-     * @param identifier unique identifier of workflow (most likely class name)
+     * @param identifier
+     *            unique identifier of workflow (most likely class name)
      * @return workflow for the given name or null
      */
     Workflow getWorkflow(String identifier);

@@ -37,8 +37,8 @@ public class ConsoleProgressMonitor implements RevisingProgressMonitor {
 
     @Override
     public void attached() {
-        out.print("Attached to monitor current status:" + task + ", " + work +
-                  " units of work. Worked so far:" + getWorked());
+        out.print("Attached to monitor current status: <" + task + "> total " + work +
+                  " units of work. Worked so far:" + getWorked() + " [");
     }
 
     @Override
@@ -49,6 +49,8 @@ public class ConsoleProgressMonitor implements RevisingProgressMonitor {
 
     @Override
     public void beginTask(String task, int work) {
+        setTask(task);
+        setWork(work);
         out.print("Starting:" + task + ", " + work + " units of work. [");
     }
 

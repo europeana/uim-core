@@ -1,17 +1,29 @@
 package eu.europeana.uim;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
+import java.util.Collection;
+import java.util.Properties;
 
 import org.junit.Test;
 
+import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngineAdapter;
+import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.ResourceEngineAdapter;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineAdapter;
+import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Tests registration of storage, logging and resource engine.
@@ -32,10 +44,10 @@ public class UIMRegistryTest {
         });      
         assertNotNull(registry.getStorageEngine());
         registry.setConfiguredStorageEngine("a");
-        assertNull(registry.getActiveStorage());
+        assertNull(registry.getActiveStorageEngine());
         assertNotNull(registry.getStorageEngine());
         assertNotNull(registry.getStorageEngine(StorageEngineAdapter.class.getSimpleName()));
-        assertEquals(1, registry.getStorages().size());
+        assertEquals(1, registry.getStorageEngines().size());
     }
 
     /**
@@ -94,6 +106,57 @@ public class UIMRegistryTest {
     public void testPluginMemberFieldCheckToSucceed() {
         registry.addPlugin(new LegalIngestionPlugin());
         
+    }
+    
+    /**
+     * Test if registration fails registration
+     */
+    @Test
+    public void testPluginRoundTrip() {
+        assertTrue(registry.getPlugins().isEmpty());
+        
+        LegalIngestionPlugin plugin = new LegalIngestionPlugin();
+        registry.addPlugin(plugin);
+        assertFalse(registry.getPlugins().isEmpty());
+
+        IngestionPlugin plugin2 = registry.getPlugin(plugin.getIdentifier());
+        assertSame(plugin, plugin2);
+
+        plugin2 = registry.getPlugin(new LegalIngestionPlugin().getIdentifier());
+        assertSame(plugin, plugin2);
+    }
+    
+    /**
+     * Test if registration fails registration
+     */
+    @Test
+    public void testWorkflowRoundTrip() {
+        assertTrue(registry.getWorkflows().isEmpty());
+        
+        LegalIngestionWorkflow plugin = new LegalIngestionWorkflow();
+        registry.addWorkflow(plugin);
+        assertFalse(registry.getWorkflows().isEmpty());
+
+        Workflow plugin2 = registry.getWorkflow(plugin.getIdentifier());
+        assertSame(plugin, plugin2);
+
+        plugin2 = registry.getWorkflow(new LegalIngestionWorkflow().getIdentifier());
+        assertSame(plugin, plugin2);
+    }
+    
+    /**
+     * Test getter setter tuples
+     */
+    @Test
+    public void testGetterSetterCheckToSucceed() {
+        assertNull(registry.getOrchestrator());
+
+        Orchestrator orchestrator = mock(Orchestrator.class);
+        registry.setOrchestrator(orchestrator);
+        assertNotNull(registry.getOrchestrator());
+
+        registry.unsetOrchestrator(orchestrator);
+        assertNull(registry.getOrchestrator());
     }
     
 }
