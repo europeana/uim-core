@@ -38,7 +38,7 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMExecution implements Action {
     private static final Logger log = Logger.getLogger(UIMExecution.class.getName());
 
-    enum Operation {
+    protected enum Operation {
         list, start, pause, resume, cancel, status, help
     }
 
@@ -47,16 +47,16 @@ public class UIMExecution implements Action {
     private static final DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
     @Option(name = "-o", aliases = { "--operation" }, required = false)
-    private Operation               operation;
+    protected Operation               operation;
 
     @Argument(index = 0)
-    private String                  argument0;
+    protected String                  argument0;
 
     @Argument(index = 1)
-    private String                  argument1;
+    protected String                  argument1;
 
     @Argument(index = 2)
-    private String                  argument2;
+    protected String                  argument2;
 
     /**
      * Creates a new instance of this class.

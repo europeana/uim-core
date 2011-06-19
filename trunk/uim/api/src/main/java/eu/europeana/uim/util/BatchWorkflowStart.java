@@ -90,14 +90,16 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
             
 
             UimDataSet dataSet = context.getDataSet();
-            if (dataSet instanceof Provider) {
-                try {
-                    records = ((StorageEngine<I>)storage).getByProvider((Provider)dataSet, false);
-                } catch (StorageEngineException e) {
-                    throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
-                                                           "' could not be retrieved!", e);
-                }
-            } else if (dataSet instanceof Collection) {
+//            if (dataSet instanceof Provider) {
+//                try {
+//                    records = ((StorageEngine<I>)storage).getByProvider((Provider)dataSet, false);
+//                } catch (StorageEngineException e) {
+//                    throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
+//                                                           "' could not be retrieved!", e);
+//                }
+//            } else 
+//                
+            if (dataSet instanceof Collection) {
                 try {
                     records = ((StorageEngine<I>)storage).getByCollection((Collection)dataSet);
                 } catch (StorageEngineException e) {

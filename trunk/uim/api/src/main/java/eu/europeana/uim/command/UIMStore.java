@@ -40,7 +40,7 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMStore implements Action {
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
 
-    private enum Operation {
+    protected enum Operation {
         createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
                                                                                                                 "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
                                                                                                                                                                                                                                 "lists the providers"), createCollection(
@@ -69,19 +69,19 @@ public class UIMStore implements Action {
     private Registry  registry;
 
     @Option(name = "-o", aliases = { "--operation" }, required = false)
-    private Operation operation;
+    protected Operation operation;
 
     @Option(name = "-p", aliases = { "--parent" })
-    private String    parent;
+    protected String    parent;
 
     @Argument(index = 0)
-    private String    argument0;
+    protected String    argument0;
 
     @Argument(index = 1)
-    private String    argument1;
+    protected String    argument1;
 
     @Argument(index = 2)
-    private String    argument2;
+    protected String    argument2;
 
     /**
      * Creates a new instance of this class.
