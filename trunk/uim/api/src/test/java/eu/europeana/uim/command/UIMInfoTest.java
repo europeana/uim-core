@@ -42,7 +42,7 @@ public class UIMInfoTest {
         command.execute(session);
         
         String msg = new String(baos.toByteArray());
-        System.out.println(msg);
+//        System.out.println(msg);
         assertEquals(488, msg.length());
     }
 }
