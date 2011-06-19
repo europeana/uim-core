@@ -1,5 +1,5 @@
 /* TKeyTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim;
+package eu.europeana.uim.common;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

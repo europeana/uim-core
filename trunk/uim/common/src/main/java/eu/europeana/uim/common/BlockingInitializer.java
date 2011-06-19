@@ -39,6 +39,7 @@ public abstract class BlockingInitializer implements Runnable {
      */
     protected int               status             = STATUS_NEW;
 
+    /** BlockingInitializer exception which is catched from the internal run method */
     protected RuntimeException  exception          = null;
 
     /**
