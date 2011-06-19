@@ -8,12 +8,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import java.util.Collection;
-import java.util.Properties;
-
 import org.junit.Test;
 
-import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngineAdapter;
@@ -22,7 +18,6 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.ResourceEngineAdapter;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineAdapter;
-import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -34,20 +29,47 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMRegistryTest {
     private UIMRegistry registry = new UIMRegistry();
 
+    
+    /**
+     * Tests registration of a {@link StorageEngine}.
+     */
+    @Test
+    public void testRegistryOutput() {
+        registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
+        StorageEngineAdapter storage = new StorageEngineAdapter() {};
+        registry.addStorageEngine(storage);   
+        LoggingEngineAdapter logging = new LoggingEngineAdapter() {};
+        registry.addLoggingEngine(logging);
+        ResourceEngineAdapter resource = new ResourceEngineAdapter() {};
+        registry.addResourceEngine(resource);
+        LegalIngestionPlugin plugin = new LegalIngestionPlugin();
+        registry.addPlugin(plugin);
+        LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();
+        registry.addWorkflow(workflow);
+        Orchestrator orchestrator = mock(Orchestrator.class);
+        registry.setOrchestrator(orchestrator);
+
+        assertEquals(664, registry.toString().length());
+    }
+    
+    
     /**
      * Tests registration of a {@link StorageEngine}.
      */
     @Test
     public void testStorageEngine() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
-        registry.addStorageEngine(new StorageEngineAdapter() {
-        });      
+        StorageEngineAdapter storage = new StorageEngineAdapter() {};
+        registry.addStorageEngine(storage);      
+        
         assertNotNull(registry.getStorageEngine());
         registry.setConfiguredStorageEngine("a");
         assertNull(registry.getActiveStorageEngine());
         assertNotNull(registry.getStorageEngine());
         assertNotNull(registry.getStorageEngine(StorageEngineAdapter.class.getSimpleName()));
         assertEquals(1, registry.getStorageEngines().size());
+        
+        registry.removeStorageEngine(storage);
     }
 
     /**
@@ -57,8 +79,8 @@ public class UIMRegistryTest {
     @Test
     public void testLoggingEngine() {
         registry.setConfiguredLoggingEngine(LoggingEngineAdapter.class.getSimpleName());
-        registry.addLoggingEngine(new LoggingEngineAdapter() {
-        });
+        LoggingEngineAdapter logging = new LoggingEngineAdapter() {};
+        registry.addLoggingEngine(logging);
         assertNotNull(registry.getLoggingEngine());
 
         registry.setConfiguredLoggingEngine("a");
@@ -67,6 +89,7 @@ public class UIMRegistryTest {
         assertNotNull(registry.getLoggingEngine(LoggingEngineAdapter.class.getSimpleName()));
 
         assertEquals(1, registry.getLoggingEngines().size());
+        registry.removeLoggingEngine(logging);
     }
     
     /**
@@ -76,9 +99,8 @@ public class UIMRegistryTest {
     @Test
     public void testResourceEngine() {
         registry.setConfiguredLoggingEngine(ResourceEngineAdapter.class.getSimpleName());
-        registry.addResourceEngine(new ResourceEngineAdapter() {
-            
-        });
+        ResourceEngineAdapter resource = new ResourceEngineAdapter() {};
+        registry.addResourceEngine(resource);
         assertNotNull(registry.getResourceEngine());
 
         registry.setConfiguredResourceEngine("a");
@@ -87,6 +109,8 @@ public class UIMRegistryTest {
         assertNotNull(registry.getResourceEngine(ResourceEngineAdapter.class.getSimpleName()));
 
         assertEquals(1, registry.getResourceEngines().size());
+        
+        registry.removeResourceEngine(resource);
     }
     
     /**

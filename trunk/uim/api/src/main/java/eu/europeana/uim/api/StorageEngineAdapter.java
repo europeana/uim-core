@@ -2,6 +2,7 @@ package eu.europeana.uim.api;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
 
     @Override
     public Map<String, String> getConfiguration() {
-        return null;
+        return new HashMap<String, String>();
     }
 
     @Override

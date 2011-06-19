@@ -29,8 +29,7 @@ public class LegalIngestionWorkflow implements Workflow {
 
     @Override
     public String getDescription() {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+         return "Legal Ingestion Workflow description";
     }
 
     @Override
