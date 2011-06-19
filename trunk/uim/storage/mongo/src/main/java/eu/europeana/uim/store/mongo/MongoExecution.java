@@ -111,12 +111,12 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     }
 
     @Override
-    public int getErrorCount() {
+    public int getFailureCount() {
         return failure;
     }
 
     @Override
-    public void setErrorCount(int number) {
+    public void setFailureCount(int number) {
         this.failure = number;
     }
 

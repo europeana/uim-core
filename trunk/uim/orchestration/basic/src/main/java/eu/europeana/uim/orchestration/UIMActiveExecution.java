@@ -228,13 +228,13 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public int getErrorCount() {
-        return execution.getErrorCount();
+    public int getFailureCount() {
+        return execution.getFailureCount();
     }
 
     @Override
-    public void setErrorCount(int number) {
-        execution.setErrorCount(number);
+    public void setFailureCount(int number) {
+        execution.setFailureCount(number);
     }
 
     @Override

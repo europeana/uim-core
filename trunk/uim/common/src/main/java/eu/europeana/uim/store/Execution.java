@@ -112,13 +112,13 @@ public interface Execution<I> extends UimEntity<I> {
      * 
      * @return amount of failures
      */
-    int getErrorCount();
+    int getFailureCount();
 
     /**
      * @param number
      *            amount of failures
      */
-    void setErrorCount(int number);
+    void setFailureCount(int number);
 
     /**
      * gives the number of tasks/records which have been scheduled to be processed in the first

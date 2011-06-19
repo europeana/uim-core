@@ -305,7 +305,7 @@ public class UIMWorkflowProcessor implements Runnable {
                 execution.setCanceled(false);
             }
             execution.setSuccessCount(execution.getCompletedSize());
-            execution.setErrorCount(execution.getFailureSize());
+            execution.setFailureCount(execution.getFailureSize());
             execution.setProcessedCount(execution.getScheduledSize());
             execution.getStorageEngine().updateExecution(execution.getExecution());
         }

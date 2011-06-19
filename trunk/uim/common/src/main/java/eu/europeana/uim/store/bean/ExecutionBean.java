@@ -139,12 +139,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public int getErrorCount() {
+    public int getFailureCount() {
         return failure;
     }
 
     @Override
-    public void setErrorCount(int number) {
+    public void setFailureCount(int number) {
         this.failure = number;
     }
 
