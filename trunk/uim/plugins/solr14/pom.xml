@@ -11,7 +11,7 @@
 	<name>Unified Ingestion Manager: Solr Commons Plugin</name>
 	<packaging>bundle</packaging>
 
-	<version>1.2.0-SNAPSHOT</version>
+	<version>1.2.0</version>
 	<build>
 		<plugins>
 			<plugin>
@@ -126,4 +126,9 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-solr14-1.2.0</connection>
+    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-solr14-1.2.0</developerConnection>
+  </scm>
 </project>
