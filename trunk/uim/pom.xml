@@ -72,7 +72,7 @@
 				<version>2.1</version>
 				<configuration>
 					<tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-					<preparationGoals>clean install</preparationGoals>
+					<preparationGoals>clean source:jar install</preparationGoals>
 				</configuration>
 			</plugin>
 			<plugin>
