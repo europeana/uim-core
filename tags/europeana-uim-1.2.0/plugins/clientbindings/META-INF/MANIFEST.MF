@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Export-Package: com.sugarcrm.sugarcrm;uses:="javax.xml.bind.annotation
+ ";version="1.2.0.SNAPSHOT"
+Private-Package: org.xmlsoap.schemas.soap.encoding;version="1.2.0-SNAP
+ SHOT"
+Tool: Bnd-0.0.238
+Bundle-Name: Unified Ingestion Manager: Sugar CRM WS Client Bindings
+Created-By: 1.6.0_20 (Sun Microsystems Inc.)
+Bundle-Version: 1.2.0.SNAPSHOT
+Bnd-LastModified: 1297778948567
+Bundle-ManifestVersion: 2
+Bundle-Description: Jaxb bindings for the Sugar CRM Webservice client 
+ module
+Import-Package: com.sugarcrm.sugarcrm;version="1.2.0.SNAPSHOT",javax.x
+ ml.bind,javax.xml.bind.annotation,javax.xml.bind.annotation.adapters,
+ javax.xml.datatype,javax.xml.namespace
+Bundle-SymbolicName: eu.europeana.europeana-uim-plugin-sugarclientbind
+ ings
+

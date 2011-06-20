@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0">
+
+   <reference id="repoxPluginService" interface="eu.europeana.uim.repoxclient.plugin.RepoxRestClient" availability="optional"/>
+
+   <shell:command-bundle>
+        <shell:command name="uim/repoxAgent">
+            <shell:action class="eu.europeana.uim.repoxclient.command.RepoxPluginCommand">
+                <shell:argument ref="repoxPluginService"/>
+            </shell:action>
+        </shell:command>
+    </shell:command-bundle>
+
+</blueprint>

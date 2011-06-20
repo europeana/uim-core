@@ -1,0 +1,36 @@
+<response> 
+  <recordResult urn="repox.ist.utl.pt:bmfinancas:urn:repox.ist.utl.pt:bmfinancas:1648"> 
+    <europeana:record xmlns:europeana="http://www.europeana.eu/schemas/ese/" xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
+      <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">1648</dc:identifier> 
+      <dc:title xmlns:dc="http://purl.org/dc/elements/1.1/">As relações financeiras com as Regiões Autónomas</dc:title> 
+      <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Universidade Nova de Lisboa. Faculdade de Economia. Gabinete de Análise Económica</dc:creator> 
+      <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/">ADMINISTRAÇÃO PÚBLICA</dc:subject> 
+      <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/">DÍVIDA PÚBLICA</dc:subject> 
+      <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/">FINANÇAS PÚBLICAS</dc:subject> 
+      <dc:subject xmlns:dc="http://purl.org/dc/elements/1.1/">SISTEMA FINANCEIRO</dc:subject> 
+      <dcterms:extent xmlns:dcterms="http://purl.org/dc/terms/">Paginação: 91 p.</dcterms:extent> 
+      <dc:coverage xmlns:dc="http://purl.org/dc/elements/1.1/">Edição: Lisboa: MF, 1995</dc:coverage> 
+      <europeana:provider>EuropeanaLocal Portugal</europeana:provider> 
+      <europeana:type>TEXT</europeana:type> 
+      <europeana:dataProvider>Biblioteca Digital do Ministério das Finanças</europeana:dataProvider> 
+      <europeana:isShownAt>http://213.58.158.153/COL-MF-0027/1/</europeana:isShownAt> 
+    </europeana:record> 
+  </recordResult> 
+  <dataSources> 
+    <dataSource id="rr">rr</dataSource> 
+    <dataSource id="bmfinancas">bmfinancas</dataSource> 
+    <dataSource id="Bokrijk">Bokrijk</dataSource> 
+    <dataSource id="EFG_08602">test</dataSource> 
+    <dataSource id="EFG_08601">films</dataSource> 
+    <dataSource id="EFG_08606">test</dataSource> 
+    <dataSource id="ELocal_Fr_09418">Archives</dataSource> 
+    <dataSource id="09409_arquivocmlx">09409_arquivocmlx</dataSource> 
+    <dataSource id="09409_Bucoimbra">09409_Bucoimbra</dataSource> 
+    <dataSource id="08901">DISMARC</dataSource> 
+  </dataSources>
+  
+  <dataSource>
+  </dataSource>
+   
+  <error type="invalidRequest" requestURI="http://sip-manager.isti.cnr.it:8080/repoxbeta/rest/records/operation=listDataSources" cause="Data Source is invalid"/> 
+</response>

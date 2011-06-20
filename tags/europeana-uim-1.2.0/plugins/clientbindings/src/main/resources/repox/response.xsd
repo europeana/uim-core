@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:europeana="http://www.europeana.eu/schemas/ese/">
+  <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="dc.xsd"/>
+  <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="dcterms.xsd"/>
+  <xs:import namespace="http://www.europeana.eu/schemas/ese/" schemaLocation="europeana.xsd"/>
+
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="recordResult" maxOccurs="1" minOccurs="0"/>
+        <xs:element ref="aggregators" maxOccurs="1" minOccurs="0"/>
+        <xs:element ref="providers" maxOccurs="1" minOccurs="0"/>
+        <xs:element ref="dataSources" maxOccurs="1" minOccurs="0"/>
+        <xs:element ref="status" maxOccurs="1" minOccurs="0"/>
+        <xs:element ref="error" maxOccurs="1" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  
+  <xs:element name="activeSessions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dataSource"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="scheduledSessions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dataSource"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  
+  
+  <xs:element name="recordResult">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="europeana:record"/>
+      </xs:sequence>
+      <xs:attribute name="urn" use="required" type="xs:anyURI"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="aggregators">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="aggregator"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="aggregator">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NMTOKEN">
+          <xs:attribute name="id" use="required" type="xs:NMTOKEN"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="providers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="provider"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+ <xs:element name="provider">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NMTOKEN">
+          <xs:attribute name="id" use="required" type="xs:NMTOKEN"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="dataSources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dataSource"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dataSource">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NMTOKEN">
+          <xs:attribute name="id" use="required" type="xs:NMTOKEN"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="status">
+    <xs:complexType>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="status" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="harvestlog">
+    <xs:complexType>
+      <xs:attribute name="id" use="required"/>
+      <xs:attribute name="content" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="error">
+    <xs:complexType>
+      <xs:attribute name="cause" use="required"/>
+      <xs:attribute name="requestURI" use="required" type="xs:anyURI"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

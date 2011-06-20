@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:osgi="http://www.springframework.org/schema/osgi"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                      http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd">
+
+
+    <bean id="repoxRestClient" class="eu.europeana.uim.repoxclient.rest.RepoxRestClientImpl">
+        <property name="restTemplate" ref="restTemplate"/>
+        <property name="defaultURI" value="http://sip-manager.isti.cnr.it:8080/repoxbeta/rest/records"/>
+    </bean>
+
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+        <property name="messageConverters">
+            <list>
+                <bean id="messageConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+                    <property name="marshaller" ref="jibxMarshaller" />
+                    <property name="unmarshaller" ref="jibxMarshaller" />
+                </bean>
+                <bean id="stringMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="jibxMarshaller" class="org.springframework.oxm.jibx.JibxMarshaller"> 
+         <property name="targetClass" value="eu.europeana.uim.repoxclient.jibxbindings.Response"/> 
+    </bean>
+
+    <!--Expose the SugarCRM plugin functionality as a service -->  
+
+   
+   <bean id="repoxAgent" class=" eu.europeana.uim.repoxclient.rest.RepoxUIMServiceImpl">    
+       <property name="repoxRestClient" ref="repoxRestClient"/>  
+       <property name="orchestrator" ref="orchestrator"/>  
+       <property name="registry" ref="registry"/>  
+   </bean>
+   
+   <osgi:service id="repoxAgentService" ref="repoxAgent" interface="eu.europeana.uim.repoxclient.plugin.RepoxUIMService"/>
+   
+   
+   <osgi:reference id="orchestrator" interface="eu.europeana.uim.api.Orchestrator"/>
+   <osgi:reference id="registry" interface="eu.europeana.uim.api.Registry"/>
+    
+</beans>

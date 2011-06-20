@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.europeana.eu/schemas/ese/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:europeana="http://www.europeana.eu/schemas/ese/">
+  <xs:import schemaLocation="response.xsd"/>
+  <xs:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="dc.xsd"/>
+  <xs:import namespace="http://purl.org/dc/terms/" schemaLocation="dcterms.xsd"/>
+  <xs:element name="record">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dc:identifier"/>
+        <xs:element ref="dc:title"/>
+        <xs:element ref="dc:creator"/>
+        <xs:element maxOccurs="unbounded" ref="dc:subject"/>
+        <xs:element ref="dcterms:extent"/>
+        <xs:element ref="dc:coverage"/>
+        <xs:element ref="europeana:provider"/>
+        <xs:element ref="europeana:type"/>
+        <xs:element ref="europeana:dataProvider"/>
+        <xs:element ref="europeana:isShownAt"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="provider" type="xs:string"/>
+  <xs:element name="type" type="xs:NCName"/>
+  <xs:element name="dataProvider" type="xs:string"/>
+  <xs:element name="isShownAt" type="xs:anyURI"/>
+</xs:schema>

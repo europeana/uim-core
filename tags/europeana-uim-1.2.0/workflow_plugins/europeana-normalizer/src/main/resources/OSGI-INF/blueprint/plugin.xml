@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright 2007 EDL FOUNDATION
+  ~
+  ~ Licensed under the EUPL, Version 1.0 or as soon they
+  ~ will be approved by the European Commission - subsequent
+  ~ versions of the EUPL (the "Licence");
+  ~ you may not use this work except in compliance with the
+  ~ Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~
+  ~ http://ec.europa.eu/idabc/eupl
+  ~
+  ~ Unless required by applicable law or agreed to in
+  ~ writing, software distributed under the Licence is
+  ~ distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+  ~ express or implied.
+  ~ See the Licence for the specific language governing
+  ~ permissions and limitations under the Licence.
+  -->
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0">
+
+    <bean id="normalizer" class="eu.europeana.normalizer.plugin.EuropeanaNormalizerImpl"/>
+
+    <service id="normalizerService" ref="normalizer" interface="eu.europeana.normalizer.plugin.EuropeanaNormalizer"/>
+
+    <shell:command-bundle>
+        <shell:command name="test/normalizer">
+            <shell:action class="eu.europeana.normalizer.command.NormalizerConsole">
+                <shell:argument ref="normalizer"/>
+            </shell:action>
+        </shell:command>
+    </shell:command-bundle>
+
+</blueprint>

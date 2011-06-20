@@ -1,0 +1,8 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <bean id="linkchecker" class="eu.europeana.uim.plugin.linkchecker.service.LinkCheckerPlugin">
+    </bean>
+
+	<service id="linkcheckerPlugin" ref="linkchecker" interface="eu.europeana.uim.api.IngestionPlugin" />
+
+</blueprint>
