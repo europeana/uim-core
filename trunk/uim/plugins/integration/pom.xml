@@ -1,125 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>eu.europeana</groupId>
-        <artifactId>europeana-uim</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
-    </parent>
-    
-    <artifactId>europeana-uim-plugin-integration</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.europeana</groupId>
+		<artifactId>europeana-uim</artifactId>
+		<version>1.2.0-SNAPSHOT</version>
+	</parent>
 
-    <name>Unified Ingestion Manager: Integration Tests</name>
+	<artifactId>europeana-uim-plugin-integration</artifactId>
 
-    <properties>
-        <junit-version>4.5</junit-version>
-        <pax-exam-version>1.2.4</pax-exam-version>
-    </properties>
+	<name>Unified Ingestion Manager: Integration Tests</name>
 
-    <dependencies>
-        <!-- Pax-Exam dependencies -->
-        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam</artifactId>
-            <version>${pax-exam-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam-junit</artifactId>
-            <version>${pax-exam-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam-container-default</artifactId>
-            <version>${pax-exam-version}</version>
-        </dependency>
-
-        <!-- JUnit dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit-version}</version>
-        </dependency>
-
-        <!-- Apache Karaf integration -->
-        <dependency>
-            <groupId>org.apache.karaf.tooling</groupId>
-            <artifactId>org.apache.karaf.tooling.testing</artifactId>
-            <version>2.2.0</version>
-            <scope>test</scope>
-        </dependency>
+	<properties>
+		<junit-version>4.5</junit-version>
+		<pax-exam-version>1.2.4</pax-exam-version>
+	</properties>
 
 
-        <!-- UIM dependencies! Required for the maven-pax integration to work -->
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
+	<build>
+		<plugins>
+			<!-- Note: settings and dependencies for the final osgi runtime (TESTS) 
+				are just used in TestCases that annotated with this: @RunWith( MavenConfiguredJUnit4TestRunner.class 
+				) All other testcases will use their own settings/provisioning inside @Configure 
+				Methods. -->
+			<plugin>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>maven-paxexam-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-config</id>
+						<goals>
+							<goal>generate-depends-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Pax-Exam dependencies -->
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam</artifactId>
+			<version>${pax-exam-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-junit</artifactId>
+			<version>${pax-exam-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-container-default</artifactId>
+			<version>${pax-exam-version}</version>
+		</dependency>
+
+		<!-- JUnit dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+		</dependency>
+
+		<!-- Apache Karaf integration -->
+		<dependency>
+			<groupId>org.apache.karaf.tooling</groupId>
+			<artifactId>org.apache.karaf.tooling.testing</artifactId>
+			<version>2.2.0</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- UIM dependencies! Required for the maven-pax integration to work -->
+		<dependency>
+			<groupId>eu.europeana</groupId>
+			<artifactId>europeana-uim-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.europeana</groupId>
+			<artifactId>europeana-uim-plugin-basic</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.europeana</groupId>
+			<artifactId>europeana-uim-storage-memory</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-logging-memory</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-       <dependency>
-           <groupId>eu.europeana</groupId>
-			<artifactId>europeana-uim-logging-database</artifactId>
-           <version>${project.version}</version>
-       </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-dummy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-workflow-dummy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 
-    <build>
-        <plugins>
-            <!--
-              Note: settings and dependencies for the final osgi runtime (TESTS) are just used in TestCases
-              that annotated with this:
-              @RunWith( MavenConfiguredJUnit4TestRunner.class )
-
-              All other testcases will use their own settings/provisioning inside @Configure Methods.
-            -->
-            <plugin>
-                <groupId>org.ops4j.pax.exam</groupId>
-                <artifactId>maven-paxexam-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-config</id>
-                        <goals>
-                            <goal>generate-depends-file</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>-DintegrationDir=${project.basedir}</argLine>
-                    <excludes>
-                        <exclude>**/AbstractUIMIntegrationTest.*</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
+	<scm>
+		<connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr14</connection>
+		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr14</developerConnection>
+	</scm>
 </project>

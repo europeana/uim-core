@@ -1,13 +1,12 @@
 package eu.europeana.uim.integration;
 
 import static org.ops4j.pax.exam.CoreOptions.felix;
-import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
-import static org.ops4j.pax.exam.container.def.PaxRunnerOptions.scanFeatures;
 
+import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ import eu.europeana.uim.api.Registry;
  * @author Manuel Bernhardt
  */
 @RunWith(JUnit4TestRunner.class)
-public class LoggingTest extends AbstractUIMIntegrationTest {
+public class LoggingTest extends AbstractIntegrationTest {
 
     @Configuration
     public static Option[] configuration() throws Exception {
@@ -37,25 +36,11 @@ public class LoggingTest extends AbstractUIMIntegrationTest {
                         systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
                                 "INFO")),
 
-//                scanFeatures(
-//                        maven().groupId("org.apache.karaf").artifactId("apache-karaf").type("xml").classifier(
-//                                "features").versionAsInProject(), "spring"),
-
-                // PaxRunnerOptions.vmOption(
-// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
-
-                // our modules. Karaf / Pax Exam don't fare well together in regards to feature
-// descriptors
-                // so until they do have these, we need to specify the OSGIfied maven bundles by
-// hand here
-                // this should be in sync with the feature descriptor at /etc/uim-features.xml
-
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-database").versionAsInProject(),
 
                 felix(),
 
@@ -73,7 +58,6 @@ public class LoggingTest extends AbstractUIMIntegrationTest {
         }
 
         logging.log("module", null, "test", Level.INFO, "tst tst");
-
     }
 
 }

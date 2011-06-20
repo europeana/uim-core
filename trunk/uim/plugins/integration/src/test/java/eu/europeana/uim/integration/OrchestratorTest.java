@@ -3,16 +3,14 @@ package eu.europeana.uim.integration;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.ops4j.pax.exam.CoreOptions.felix;
-import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
-import static org.ops4j.pax.exam.container.def.PaxRunnerOptions.scanFeatures;
 
 import java.util.Date;
-import java.util.List;
 
+import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +28,11 @@ import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.bean.CollectionBean;
+import eu.europeana.uim.store.bean.ProviderBean;
+import eu.europeana.uim.store.bean.RequestBean;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.dummy.DummyWorkflow;
+import eu.europeana.uim.workflows.SysoutWorkflow;
 
 /**
  * Integration test for the Orchestrator, using the MemoryStorageEngine
@@ -39,7 +40,7 @@ import eu.europeana.uim.workflow.dummy.DummyWorkflow;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 @RunWith(JUnit4TestRunner.class)
-public class OrchestratorTest extends AbstractUIMIntegrationTest {
+public class OrchestratorTest extends AbstractIntegrationTest {
 
     @Configuration
     public static Option[] configuration() throws Exception {
@@ -59,9 +60,8 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-plugin-basic").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-plugin-dummy").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-workflow-dummy").versionAsInProject(),
 
                 felix(),
 
@@ -78,13 +78,16 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
             Thread.sleep(500);
         }
 
+        Provider p = new ProviderBean(1L);
+        Collection c = new CollectionBean(2L, p);
+        Request r = new RequestBean(3L, c, new Date());
+        
         // load the provider data
-        getCommandResult("uim:store -o loadSampleData");
         Thread.sleep(1000);
 
-        Provider<Long> p = storage.getProvider(0l);
-        Collection<Long> c = storage.getCollections(p).get(0);
-        Request<Long> r = storage.createRequest(c, new Date());
+//        Provider<Long> p = storage.getProvider(0l);
+//        Collection<Long> c = storage.getCollections(p).get(0);
+//        Request<Long> r = storage.createRequest(c, new Date());
 
         for (int i = 0; i < 999; i++) {
             MetaDataRecord record = storage.createMetaDataRecord(c, "id=" + i);
@@ -98,14 +101,16 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
         MemoryProgressMonitor monitor = new MemoryProgressMonitor();
         // run the workflow
         Workflow w = null;
-        List<Workflow> workflows = registry.getWorkflows();
-        for (Workflow workflow : workflows) {
-            if (workflow.getName().equals(DummyWorkflow.class.getName())) {
-                w = workflow;
-            }
+        
+        //Initialize workflow
+        Workflow workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+        int wait = 0;
+        while (workflow == null && wait++ < 10) {
+            workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+            Thread.sleep(1000);
         }
 
-        ActiveExecution<Long> execution = (ActiveExecution<Long>)o.executeWorkflow(w, c);
+        ActiveExecution<Long> execution = (ActiveExecution<Long>)o.executeWorkflow(workflow, c);
         execution.getMonitor().addListener(monitor);
 
         execution.waitUntilFinished();
