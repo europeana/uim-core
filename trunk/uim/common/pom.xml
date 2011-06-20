@@ -139,9 +139,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-    
-	<scm>
-	    <connection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/common/</connection>
-	    <developerConnection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/common/</developerConnection>
-	</scm>	
 </project>

@@ -301,7 +301,7 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/</connection>
-		<developerConnection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/</developerConnection>
+		<connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</connection>
+		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</developerConnection>
 	</scm>
 </project>

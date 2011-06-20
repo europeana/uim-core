@@ -39,9 +39,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/gui/</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/europeana/trunk/uim/gui/</developerConnection>
-    </scm>
 </project>
