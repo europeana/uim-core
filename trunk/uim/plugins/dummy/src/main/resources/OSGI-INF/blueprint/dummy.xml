@@ -1,8 +1,0 @@
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-
-    <bean id="dummyPlugin" class="eu.europeana.uim.plugin.dummy.DummyPlugin">
-    </bean>
-
-	<service id="dummyOne" ref="dummyPlugin" interface="eu.europeana.uim.api.IngestionPlugin" />
-
-</blueprint>
