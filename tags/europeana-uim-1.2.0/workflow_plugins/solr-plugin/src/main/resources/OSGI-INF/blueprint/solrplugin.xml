@@ -1,8 +1,0 @@
-<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
-
-    <bean id="solrbean" class="eu.europeana.uim.plugin.solr.service.SolrWorkflowPlugin">
-    </bean>
-
-	<service id="solrPlugin" ref="solrbean" interface="eu.europeana.uim.api.IngestionPlugin" />
-
-</blueprint>
