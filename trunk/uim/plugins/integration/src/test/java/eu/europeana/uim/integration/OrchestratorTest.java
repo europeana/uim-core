@@ -74,7 +74,7 @@ public class OrchestratorTest extends AbstractUIMIntegrationTest {
 
         StorageEngine<Long> storage = null;
         while (storage == null) {
-            storage = (StorageEngine<Long>)registry.getStorageEngine();
+            storage = (StorageEngine<Long>)registry.getStorage();
             Thread.sleep(500);
         }
 

@@ -41,8 +41,8 @@ public class CommandTest extends AbstractUIMIntegrationTest {
                         systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
                                 "INFO")),
 
-                // PaxRunnerOptions.vmOption( "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
-
+                // PaxRunnerOptions.vmOption(
+// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
 
                 mavenBundle().groupId("org.apache.karaf.shell").artifactId(
                         "org.apache.karaf.shell.console").versionAsInProject(),
@@ -66,7 +66,7 @@ public class CommandTest extends AbstractUIMIntegrationTest {
 
         StorageEngine storage = null;
         while (storage == null) {
-            storage = registry.getStorageEngine();
+            storage = registry.getStorage();
             Thread.sleep(500);
         }
 
@@ -76,7 +76,7 @@ public class CommandTest extends AbstractUIMIntegrationTest {
         collection.setMnemonic("CCCC");
         storage.updateCollection(collection);
 
-        assertEquals("MemoryStorageEngine", registry.getStorageEngine().getIdentifier());
+        assertEquals("MemoryStorageEngine", registry.getStorage().getIdentifier());
 
         String property = bundleContext.getProperty(Constants.FRAMEWORK_VERSION);
         assertEquals("1.5", property);
