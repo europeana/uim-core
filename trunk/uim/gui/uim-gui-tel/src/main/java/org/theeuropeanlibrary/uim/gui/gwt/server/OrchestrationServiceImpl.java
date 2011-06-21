@@ -434,7 +434,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
         } else if (!e.isActive()) {
             wrapped.setScheduled(e.getProcessedCount());
             wrapped.setCompleted(e.getSuccessCount());
-            wrapped.setFailure(e.getErrorCount());
+            wrapped.setFailure(e.getFailureCount());
         }
         return wrapped;
     }

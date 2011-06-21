@@ -17,8 +17,6 @@
     </properties>
 
     <modules>
-        <module>uim-gui-cp</module>
-        <module>uim-gui-cp-entry</module>
         <module>uim-gui-tel</module>
     </modules>
 
@@ -37,6 +35,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
+                    <preparationGoals>clean source:jar install</preparationGoals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
+      <scm>
+    <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</connection>
+    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim</developerConnection>
+  </scm>    
+    
+    
 </project>
