@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+
+    <bp:reference id="registry" interface="eu.europeana.uim.api.Registry"/>
+
+    <!-- Property place holder -->
+    <cm:property-placeholder persistent-id="eu.europeana.uim.basic">
+        <cm:default-properties>
+            <cm:property name="maxInProgress" value="1000"/>
+            <cm:property name="maxTotalProgress" value="5000"/>
+        </cm:default-properties>
+    </cm:property-placeholder>         
+
+    <bean id="uimWorkflowProcessor" class="eu.europeana.uim.orchestration.UIMWorkflowProcessor">
+        <argument ref="registry" />
+        <property name="maxInProgress" value="${maxInProgress}" />
+        <property name="maxTotalProgress" value="${maxTotalProgress}" />
+    </bean>
+
+    <bean id="uimOrchestrator" class="eu.europeana.uim.orchestration.UIMOrchestrator" scope="singleton">
+        <argument ref="registry"/>
+        <argument ref="uimWorkflowProcessor" />
+    </bean>
+
+    <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.api.Orchestrator" />
+
+    <bean id="sw" class="eu.europeana.uim.workflows.SysoutWorkflow">
+        <argument ref="registry" />
+    </bean>
+
+    <service id="sysoutWorkflow" ref="sw" interface="eu.europeana.uim.workflow.Workflow"/>
+
+
+</blueprint>
