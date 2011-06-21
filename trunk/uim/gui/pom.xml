@@ -7,7 +7,7 @@
     </parent>
 
     <artifactId>europeana-uim-gui</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
     <name>Unified Ingestion Manager: Graphical User Interfaces</name>
@@ -48,8 +48,8 @@
     </build>
     
       <scm>
-    <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-gui-1.2.0</connection>
-    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-gui-1.2.0</developerConnection>
+    <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</connection>
+    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</developerConnection>
   </scm>    
     
     
