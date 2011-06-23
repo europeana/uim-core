@@ -106,9 +106,11 @@
                             europeana-uim-gui-common,gwt-servlet,gwt-incubator,commons-fileupload
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-StripVersion>true</Embed-StripVersion>
                         <Import-Package>
                             !eu.europeana.uim.gui.cp.*,
                             eu.europeana.uim.*,
+                            eu.europeana.uim.workflow,
                             org.apache.solr.*,
                             org.osgi.framework,
                             org.w3c.dom,
