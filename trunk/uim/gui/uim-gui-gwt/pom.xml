@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.2.0-SNAPSHOT</version>
+        <version>1.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>europeana-uim-gui-gwt</artifactId>
@@ -44,15 +43,14 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <i18nMessagesBundle>eu.europeana.uim.gui.gwt.client.Messages</i18nMessagesBundle>
 
-                    <!-- Additional configuration to be able to run the development mode against the webapp
-                         deployed on the OSGI platform -->
+                    <!-- Additional configuration to be able to run the development mode against the webapp deployed on the 
+                        OSGI platform -->
                     <port>8181</port>
                     <noServer>true</noServer>
                     <runTarget>gui/Application.html</runTarget>
-                    <!-- custom argument to tell the AbstractOSGIRemoteServiceServlet that it can trust
-                         this environment -->
-                    <!-- note the whitespace, I suppose this is due to the maven-gwt-plugin already providing some
-                    additional VM arguments -->
+                    <!-- custom argument to tell the AbstractOSGIRemoteServiceServlet that it can trust this environment -->
+                    <!-- note the whitespace, I suppose this is due to the maven-gwt-plugin already providing some additional 
+                        VM arguments -->
                     <extraJvmArgs> -Ddevmode=true </extraJvmArgs>
                 </configuration>
             </plugin>
@@ -129,11 +127,11 @@
                     <wtpversion>2.0</wtpversion>
                     <wtpContextName>${project.artifactId}</wtpContextName>
                     <additionalProjectnatures>
-                       <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+                        <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
                     </additionalProjectnatures>
                     <classpathContainers>
-                       <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
-                       <classpathContainer>com.google.gwt.eclipse.core.GWT_CONTAINER</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                        <classpathContainer>com.google.gwt.eclipse.core.GWT_CONTAINER</classpathContainer>
                     </classpathContainers>
                 </configuration>
             </plugin>
@@ -146,14 +144,14 @@
             <artifactId>gwt-servlet</artifactId>
             <version>${gwtVersion}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
             <version>${gwtVersion}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>com.google</groupId>
             <artifactId>gwt-incubator</artifactId>
@@ -171,12 +169,11 @@
             <artifactId>org.osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.compendium</artifactId>
             <scope>provided</scope>
         </dependency>
-        
     </dependencies>
 </project>
