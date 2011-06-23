@@ -7,30 +7,35 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import eu.europeana.uim.api.EngineStatus;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.workflow.Workflow;
 
-/**In-memory implementation of the resource engine. This does not persist data. NOT FOR PRODUCTION USE !
+/**
+ * In-memory implementation of the resource engine. This does not persist data. NOT FOR PRODUCTION
+ * USE !
  * 
- * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
  * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @date May 9, 2011
+ * @since May 9, 2011
  */
-public class MemoryResourceEngine implements ResourceEngine<Long> {
-    private static final String                                            DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
-                                                                                                 File.separator +
-                                                                                                 "uim-memorystorage";
+public class MemoryResourceEngine implements ResourceEngine {
+    private static final String                                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
+                                                                                                   File.separator +
+                                                                                                   "uim-memorystorage";
 
-    private final LinkedHashMap<String, List<String>>                      globalResources     = new LinkedHashMap<String, List<String>>();
-    private final LinkedHashMap<Long, LinkedHashMap<String, List<String>>> providerResources   = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
-    private final LinkedHashMap<Long, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Long, LinkedHashMap<String, List<String>>>();
+    private final LinkedHashMap<String, List<String>>                        globalResources     = new LinkedHashMap<String, List<String>>();
+    private final LinkedHashMap<String, LinkedHashMap<String, List<String>>> workflowResources   = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
+    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> providerResources   = new LinkedHashMap<Object, LinkedHashMap<String, List<String>>>();
+    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Object, LinkedHashMap<String, List<String>>>();
 
-    private File                                                           rootResourceDir;
-    private File                                                           rootWorkingDir;
-    private File                                                           rootTmpDir;
+    private File                                                             rootResourceDir;
+    private File                                                             rootWorkingDir;
+    private File                                                             rootTmpDir;
 
     /**
      * Creates a new instance of this class.
@@ -77,8 +82,49 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     }
 
     @Override
-    public void setProviderResources(Provider<Long> id,
+    public void setWorkflowResources(Workflow workflow,
             LinkedHashMap<String, List<String>> resources) {
+        if (resources == null) {
+            // clean up and remove id entry from resources
+            workflowResources.remove(workflow.getIdentifier());
+            return;
+        }
+
+        LinkedHashMap<String, List<String>> workResources = workflowResources.get(workflow.getIdentifier());
+        if (workResources == null) {
+            workResources = new LinkedHashMap<String, List<String>>();
+            workflowResources.put(workflow.getIdentifier(), workResources);
+        }
+
+        for (Entry<String, List<String>> entry : resources.entrySet()) {
+            if (entry.getValue() == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                workResources.remove(entry.getKey());
+            } else {
+                workResources.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow workflow,
+            List<String> keys) {
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> workflowMap = workflowResources.get(workflow.getIdentifier());
+
+        for (String key : keys) {
+            List<String> values = null;
+            if (workflowMap != null) {
+                values = workflowMap.get(key);
+            }
+
+            results.put(key, values);
+        }
+        return results;
+    }
+
+    @Override
+    public void setProviderResources(Provider<?> id, LinkedHashMap<String, List<String>> resources) {
         if (resources == null) {
             // clean up and remove id entry from resources
             providerResources.remove(id.getId());
@@ -103,7 +149,7 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getProviderResources(Provider<Long> id,
+    public LinkedHashMap<String, List<String>> getProviderResources(Provider<?> id,
             List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         LinkedHashMap<String, List<String>> providerMap = providerResources.get(id.getId());
@@ -118,13 +164,11 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
 
         }
         return results;
-
     }
 
     @Override
-    public void setCollectionResources(Collection<Long> id,
+    public void setCollectionResources(Collection<?> id,
             LinkedHashMap<String, List<String>> resources) {
-
         if (resources == null) {
             // clean up and remove id entry from resources
             collectionResources.remove(id.getId());
@@ -146,11 +190,10 @@ public class MemoryResourceEngine implements ResourceEngine<Long> {
                 collResources.put(key, resources.get(key));
             }
         }
-
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<Long> id,
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> id,
             List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         LinkedHashMap<String, List<String>> collectionMap = collectionResources.get(id.getId());

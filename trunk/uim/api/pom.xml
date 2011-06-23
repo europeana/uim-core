@@ -1,108 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>eu.europeana</groupId>
-		<artifactId>europeana-uim</artifactId>
-		<version>1.3.0-SNAPSHOT</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>europeana-uim-api</artifactId>
-	<name>Unified Ingestion Manager: API</name>
-	<packaging>bundle</packaging>
+    <artifactId>europeana-uim-api</artifactId>
+    <name>Unified Ingestion Manager: API</name>
+    <packaging>bundle</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.1.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Import-Package>
-							eu.europeana.uim.common.*,
-							eu.europeana.uim.store.*,
-							org.apache.commons.lang.*,
-							org.apache.commons.logging,
-							org.apache.commons.logging.impl,
-							org.apache.felix.gogo.commands,
-							org.apache.felix.service.command,
-							org.osgi.framework,
-							org.osgi.service.blueprint,
-							org.osgi.service.cm,
-							org.w3c.dom,
-							org.xml.sax,
-							org.xml.sax.ext,
-							org.xml.sax.helpers
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            eu.europeana.uim.common.*,
+                            eu.europeana.uim.store.*,
+                            org.apache.commons.lang.*,
+                            org.apache.commons.logging,
+                            org.apache.commons.logging.impl,
+                            org.apache.felix.gogo.commands,
+                            org.apache.felix.service.command,
+                            org.osgi.framework,
+                            org.osgi.service.blueprint,
+                            org.osgi.service.cm,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.xml.sax.helpers
                         </Import-Package>
-						<Export-Package>
-							eu.europeana.uim,
-							eu.europeana.uim.api,
-							eu.europeana.uim.command,
-							eu.europeana.uim.workflow,
-							eu.europeana.uim.util
+                        <Export-Package>
+                            eu.europeana.uim,
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.command,
+                            eu.europeana.uim.workflow,
+                            eu.europeana.uim.util
 						</Export-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>europeana-uim-common</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+        </dependency>
 
+        <!-- Shared resources -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-		<!-- Shared resources -->
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.compendium</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-
-		<!-- Karaf Shell, for OSGi shell commands -->
-		<dependency>
-			<groupId>org.apache.karaf.shell</groupId>
-			<artifactId>org.apache.karaf.shell.console</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 
+        <!-- Karaf Shell, for OSGi shell commands -->
+        <dependency>
+            <groupId>org.apache.karaf.shell</groupId>
+            <artifactId>org.apache.karaf.shell.console</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

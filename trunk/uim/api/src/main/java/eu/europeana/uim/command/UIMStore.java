@@ -41,18 +41,38 @@ public class UIMStore implements Action {
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
 
     protected enum Operation {
-        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"), updateProvider(
-                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"), listProvider(
-                                                                                                                                                                                                                                "lists the providers"), createCollection(
-                                                                                                                                                                                                                                                                         "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"), updateCollection(
-                                                                                                                                                                                                                                                                                                                                                                                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"), listCollection(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           "lists the collections"), listGlobalResources(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         "lists the global resources"), listProviderResources(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "lists the provider resources"), listCollectionResources(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       "lists the collection resources"), checkpoint(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "creates a checkpoint (a data synchronization)"), loadConfigData(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      "loads a set of provider/collections"), loadSampleData(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "loads a set of sample provider/collections");
+        createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"),
+
+        updateProvider(
+                       "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"),
+
+        listProvider("lists the providers"),
+
+        createCollection(
+                         "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"),
+
+        updateCollection(
+                         "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"),
+
+        addBlacklistWorkflow(
+                             "Puts the given workflow onto the blacklist (stored in resource engine)"),
+
+        removeBlacklistWorkflow(
+                                "Remove the given workflow from the blacklist (stored in resource engine)"),
+
+        listCollection("lists the collections"),
+
+        listGlobalResources("lists the global resources"),
+
+        listProviderResources("lists the provider resources"),
+
+        listCollectionResources("lists the collection resources"),
+
+        checkpoint("creates a checkpoint (a data synchronization)"),
+
+        loadConfigData("loads a set of provider/collections"),
+
+        loadSampleData("loads a set of sample provider/collections");
 
         private String desc;
 
@@ -63,10 +83,9 @@ public class UIMStore implements Action {
         public String getDescription() {
             return desc;
         }
-
     }
 
-    private Registry  registry;
+    private Registry    registry;
 
     @Option(name = "-o", aliases = { "--operation" }, required = false)
     protected Operation operation;
@@ -124,6 +143,12 @@ public class UIMStore implements Action {
             case updateCollection:
                 updateCollection(storage, out);
                 break;
+            case addBlacklistWorkflow:
+                addBlacklistWorkflow(resource, argument0);
+                break;
+            case removeBlacklistWorkflow:
+                removeBlacklistWorkflow(resource, argument0);
+                break;
             case listCollection:
                 listCollection(storage, out);
                 break;
@@ -155,10 +180,41 @@ public class UIMStore implements Action {
     }
 
     /**
+     * key for blacklisted workflows in resource engine
+     */
+    public static List<String> blackListKey = new ArrayList<String>() {
+                                                {
+                                                    add("Workflow Blacklist");
+                                                }
+                                            };
+
+    private void removeBlacklistWorkflow(ResourceEngine resource, String blacklistWorkflow) {
+        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
+        List<String> blackList = resources.get(blackListKey.get(0));
+        if (blackList == null) { return; }
+        boolean remove = true;
+        while (remove) {
+            remove = blackList.remove(blacklistWorkflow);
+        }
+        resource.setGlobalResources(resources);
+    }
+
+    private void addBlacklistWorkflow(ResourceEngine resource, String blacklistWorkflow) {
+        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
+        List<String> blackList = resources.get(blackListKey.get(0));
+        if (blackList == null) {
+            blackList = new ArrayList<String>();
+            resources.put(blackListKey.get(0), blackList);
+        }
+        blackList.add(blacklistWorkflow);
+        resource.setGlobalResources(resources);
+    }
+
+    /**
      * @param resource
      * @param out
      */
-    private <I> void listGlobalResources(StorageEngine<I> storage, ResourceEngine<I> resource,
+    private <I> void listGlobalResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) {
         List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
@@ -175,6 +231,9 @@ public class UIMStore implements Action {
             out.println("Global Resources for <" + current.getIdentifier() + ">:" +
                         resources.toString() + "\n");
         }
+
+        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
+        out.println("Blacklisted Workflows are:" + resources.toString() + "\n");
     }
 
     /**
@@ -182,7 +241,7 @@ public class UIMStore implements Action {
      * @param out
      * @throws StorageEngineException
      */
-    private <I> void listProviderResources(StorageEngine<I> storage, ResourceEngine<I> resource,
+    private <I> void listProviderResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
         List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
@@ -220,7 +279,7 @@ public class UIMStore implements Action {
      * @param out
      * @throws StorageEngineException
      */
-    private <I> void listCollectionResources(StorageEngine<I> storage, ResourceEngine<I> resource,
+    private <I> void listCollectionResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
         List<Workflow> workflows = new ArrayList<Workflow>();
         Workflow workflow = registry.getWorkflow(argument0);
@@ -440,10 +499,9 @@ public class UIMStore implements Action {
     }
 
     /**
-     * @return the registry
+     * @return registry
      */
     public Registry getRegistry() {
         return registry;
     }
-
 }

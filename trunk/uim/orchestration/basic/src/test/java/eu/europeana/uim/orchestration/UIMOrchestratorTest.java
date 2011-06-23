@@ -6,8 +6,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Properties;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +20,7 @@ import org.junit.Test;
 import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
@@ -22,6 +28,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.memory.MemoryResourceEngine;
 import eu.europeana.uim.store.memory.MemoryStorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflows.MixedWorkflow;
@@ -39,6 +46,7 @@ public class UIMOrchestratorTest {
     private Registry            registry;
 
     private StorageEngine<Long> engine;
+    private ResourceEngine      resource;
     private UIMOrchestrator     orchestrator;
 
     /**
@@ -50,11 +58,15 @@ public class UIMOrchestratorTest {
     public void setUp() throws Exception {
         if (orchestrator == null) {
             registry = new UIMRegistry();
+            
             engine = spy(new MemoryStorageEngine());
-
             registry.addStorageEngine(engine);
             registry.setConfiguredStorageEngine(MemoryStorageEngine.class.getSimpleName());
 
+            resource = new MemoryResourceEngine();
+            registry.addResourceEngine(resource);
+            registry.setConfiguredResourceEngine(MemoryResourceEngine.class.getSimpleName());
+            
             UIMWorkflowProcessor processor = new UIMWorkflowProcessor(registry);
             orchestrator = new UIMOrchestrator(registry, processor);
         }
@@ -73,7 +85,8 @@ public class UIMOrchestratorTest {
         Request<Long> request = createTestData(engine, 1);
 
         // creating the data calles 20 times the update method.
-        verify(engine, times(1)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(1)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         Workflow w = new SysoutWorkflow(7, true, false);
 
@@ -82,7 +95,8 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each delivered metadata record is saved
-        verify(engine, times(2)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(2)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         assertEquals(1, execution0.getCompletedSize());
         assertEquals(0, execution0.getFailureSize());
@@ -101,7 +115,8 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 21);
         // creating the data calles 21 times the update method.
-        verify(engine, times(21)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(21)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         Workflow w = new SyserrWorkflow(7, true);
 
@@ -110,7 +125,8 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 21 + original count of 21
-        verify(engine, times(42)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(42)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         assertEquals(21, execution0.getCompletedSize() + execution0.getFailureSize());
         assertEquals(21, execution0.getScheduledSize());
@@ -128,7 +144,8 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
-        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         Workflow w = new MixedWorkflow(7, true);
 
@@ -137,12 +154,14 @@ public class UIMOrchestratorTest {
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 30 + original count of 30
-        verify(engine, times(60)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(60)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         assertEquals(20, execution0.getCompletedSize());
         assertEquals(10, execution0.getFailureSize());
         assertEquals(30, execution0.getScheduledSize());
     }
+
     /**
      * Tests partial failures.
      * 
@@ -155,13 +174,14 @@ public class UIMOrchestratorTest {
 
         Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
-        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         Workflow w = new MixedWorkflow(7, true);
 
         Properties properties = new Properties();
         properties.setProperty("syserr.fullfailure", "true");
-        
+
         ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
                 request, properties);
         execution0.waitUntilFinished();
@@ -171,8 +191,58 @@ public class UIMOrchestratorTest {
         // verify(engine, times(32)).updateMetaDataRecord(any(MetaDataRecord.class));
 
         assertEquals(0, execution0.getCompletedSize());
-        //assertEquals(2, execution0.getFailureSize());
+        // assertEquals(2, execution0.getFailureSize());
         assertEquals(30, execution0.getScheduledSize());
+    }
+
+    /**
+     * Tests partial failures.
+     * 
+     * @throws InterruptedException
+     * @throws StorageEngineException
+     */
+    @Test
+    public void testResourcesSetup() throws InterruptedException, StorageEngineException {
+        assertEquals(0, orchestrator.getActiveExecutions().size());
+
+        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
+        // creating the data calles 30 times the update method.
+        verify(engine, times(30)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
+
+        Workflow w = new SysoutWorkflow(7, true, false);
+
+        LinkedHashMap<String, List<String>> resources = new LinkedHashMap<String, List<String>>();
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("true");
+        resources.put("sysout.random.sleep", list);
+        resource.setGlobalResources(resources);
+
+        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+                request);
+        execution0.waitUntilFinished();
+        Assert.assertEquals("true", execution0.getProperties().get("sysout.random.sleep"));
+
+        list.set(0, "false");
+        resource.setWorkflowResources(w, resources);
+
+        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0.waitUntilFinished();
+        Assert.assertEquals("false", execution0.getProperties().get("sysout.random.sleep"));
+
+        list.set(0, "true");
+        resource.setProviderResources(request.getCollection().getProvider(), resources);
+
+        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0.waitUntilFinished();
+        Assert.assertEquals("true", execution0.getProperties().get("sysout.random.sleep"));
+
+        list.set(0, "false");
+        resource.setCollectionResources(request.getCollection(), resources);
+
+        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0.waitUntilFinished();
+        Assert.assertEquals("false", execution0.getProperties().get("sysout.random.sleep"));
     }
 
     /**
@@ -188,7 +258,8 @@ public class UIMOrchestratorTest {
         Request<Long> request = createTestData(engine, 20);
 
         // creating the data calles 20 times the update method.
-        verify(engine, times(20)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(20)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         Workflow w = new SysoutWorkflow(7, true, true);
 
@@ -198,7 +269,8 @@ public class UIMOrchestratorTest {
 
         // each delivered metadata record is saved once per plugin (only one plugin in the
         // workflow) 20 plus the initial 20
-        verify(engine, times(40)).updateMetaDataRecord(any(Collection.class), any(MetaDataRecord.class));
+        verify(engine, times(40)).updateMetaDataRecord(any(Collection.class),
+                any(MetaDataRecord.class));
 
         assertEquals(20, execution0.getCompletedSize());
         assertEquals(0, execution0.getFailureSize());

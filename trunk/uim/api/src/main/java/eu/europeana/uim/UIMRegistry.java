@@ -37,8 +37,8 @@ public class UIMRegistry implements Registry {
     private Map<String, LoggingEngine<?, ?>> loggers        = new HashMap<String, LoggingEngine<?, ?>>();
 
     private String                           configuredResourceEngine;
-    private ResourceEngine<?>                activeResource = null;
-    private Map<String, ResourceEngine<?>>   resources      = new HashMap<String, ResourceEngine<?>>();
+    private ResourceEngine                activeResource = null;
+    private Map<String, ResourceEngine>   resources      = new HashMap<String, ResourceEngine>();
 
     private Map<String, IngestionPlugin>     plugins        = new HashMap<String, IngestionPlugin>();
     private Map<String, Workflow>            workflows      = new HashMap<String, Workflow>();
@@ -288,7 +288,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addResourceEngine(ResourceEngine<?> resource) {
+    public void addResourceEngine(ResourceEngine resource) {
         if (resource != null) {
             log.info("Added resource engine:" + resource.getIdentifier());
             if (!resources.containsKey(resource.getIdentifier())) {
@@ -307,9 +307,9 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeResourceEngine(ResourceEngine<?> resourceEngine) {
+    public void removeResourceEngine(ResourceEngine resourceEngine) {
         if (resourceEngine != null) {
-            ResourceEngine<?> remove = resources.remove(resourceEngine.getIdentifier());
+            ResourceEngine remove = resources.remove(resourceEngine.getIdentifier());
             if (activeResource == remove) {
                 activeResource = null;
             }
@@ -318,14 +318,14 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public List<ResourceEngine<?>> getResourceEngines() {
-        List<ResourceEngine<?>> res = new ArrayList<ResourceEngine<?>>();
+    public List<ResourceEngine> getResourceEngines() {
+        List<ResourceEngine> res = new ArrayList<ResourceEngine>();
         res.addAll(resources.values());
         return res;
     }
 
     @Override
-    public ResourceEngine<?> getResourceEngine() {
+    public ResourceEngine getResourceEngine() {
         if (resources == null || resources.isEmpty()) return null;
 
         if (activeResource == null) {
@@ -340,12 +340,12 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public ResourceEngine<?> getResourceEngine(String identifier) {
+    public ResourceEngine getResourceEngine(String identifier) {
         if (identifier == null || resources == null || resources.isEmpty()) return null;
         return resources.get(identifier);
     }
 
-    ResourceEngine<?> getActiveResourceEngine() {
+    ResourceEngine getActiveResourceEngine() {
         return activeResource;
     }
 
@@ -422,7 +422,7 @@ public class UIMRegistry implements Registry {
         if (resources.isEmpty()) {
             builder.append("\n\tNo resource engine.");
         } else {
-            for (ResourceEngine<?> resourceEngine : resources.values()) {
+            for (ResourceEngine resourceEngine : resources.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\t");
                 }

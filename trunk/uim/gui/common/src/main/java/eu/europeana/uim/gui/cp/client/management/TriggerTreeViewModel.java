@@ -118,11 +118,11 @@ public class TriggerTreeViewModel implements TreeViewModel {
             public void onSuccess(List<CollectionDTO> collections) {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
-                if (collections.size() > 0) {
-                    CollectionDTO fakeCollection = new CollectionDTO();
-                    fakeCollection.setName(ALL_COLLECTIONS);
-                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
-                }
+//                if (collections.size() > 0) {
+//                    CollectionDTO fakeCollection = new CollectionDTO();
+//                    fakeCollection.setName(ALL_COLLECTIONS);
+//                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
+//                }
                 for (CollectionDTO collection : collections) {
                     collectionList.add(new BrowserObject(collection.getName(), collection));
                 }

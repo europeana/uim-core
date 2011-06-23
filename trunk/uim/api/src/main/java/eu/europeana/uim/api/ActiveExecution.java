@@ -29,7 +29,7 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      * @return resource engine for this execution
      */
 
-    ResourceEngine<?> getResourceEngine();
+    ResourceEngine getResourceEngine();
     /**
      * @param paused
      *            Should the execution be paused?

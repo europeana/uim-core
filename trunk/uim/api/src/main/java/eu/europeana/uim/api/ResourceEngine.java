@@ -8,16 +8,16 @@ import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Interface for resource storage engine type to an identifier
  * 
+ * @author Markus Muhr (markus.muhr@kb.nl)
  * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @param <I>
- *            the type of the identifier used in this resource engine
- * @date May 3, 2011
+ * @since May 3, 2011
  */
-public interface ResourceEngine<I> {
+public interface ResourceEngine {
     /**
      * @return the identifier for this resource engine. Usually the simpel class name.
      */
@@ -73,6 +73,33 @@ public interface ResourceEngine<I> {
     public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys);
 
     /**
+     * Sets the workflow specific resources. If resources are null, then all workflow specific
+     * resources are removed. Parameters are only overwritten, if they have a non-null List
+     * associated with them. Parameters are deleted, if the List is null.
+     * 
+     * @param workflow
+     *            the relevant workflow
+     * @param resources
+     *            key/resource map
+     */
+    public void setWorkflowResources(Workflow workflow,
+            LinkedHashMap<String, List<String>> resources);
+
+    /**
+     * Gets a hash map of the workflow specific resources with every key that is requested and a
+     * list of resources, if they exist, or null if not.
+     * 
+     * @param workflow
+     *            the relevant workflow
+     * @param keys
+     *            the keys to be in the HashMap
+     * @return key/resource map
+     */
+
+    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow workflow,
+            List<String> keys);
+
+    /**
      * Sets the provider specific resources. if resources are null, then all provider specific
      * resources are removed. Parameters are only overwritten, if they have a non-null List
      * associated with them. Parameters are deleted, if the List is null.
@@ -82,7 +109,7 @@ public interface ResourceEngine<I> {
      * @param resources
      *            key/resource map
      */
-    public void setProviderResources(Provider<I> provider,
+    public void setProviderResources(Provider<?> provider,
             LinkedHashMap<String, List<String>> resources);
 
     /**
@@ -96,7 +123,7 @@ public interface ResourceEngine<I> {
      * @return key/resource map
      */
 
-    public LinkedHashMap<String, List<String>> getProviderResources(Provider<I> provider,
+    public LinkedHashMap<String, List<String>> getProviderResources(Provider<?> provider,
             List<String> keys);
 
     /**
@@ -110,7 +137,7 @@ public interface ResourceEngine<I> {
      *            key/resource map
      */
 
-    public void setCollectionResources(Collection<I> collection,
+    public void setCollectionResources(Collection<?> collection,
             LinkedHashMap<String, List<String>> resources);
 
     /**
@@ -123,7 +150,7 @@ public interface ResourceEngine<I> {
      *            the keys to be in the HashMap
      * @return key/resource map
      */
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> collection,
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> collection,
             List<String> keys);
 
     /**

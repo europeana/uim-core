@@ -10,24 +10,22 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.AbstractResourceEngineTest;
 
 /**
- * 
+ * Implementation of test cases for memory based resource engine.
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 9, 2011
  */
 @RunWith(JUnit4.class)
 public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
-
     @Override
-    protected ResourceEngine<Long> getResourceEngine() {
+    protected ResourceEngine getResourceEngine() {
         return new MemoryResourceEngine();
     }
-    
+
     private static AtomicLong id = new AtomicLong();
-    
+
     @Override
     protected Long nextID() {
         return id.incrementAndGet();
     }
-
 }

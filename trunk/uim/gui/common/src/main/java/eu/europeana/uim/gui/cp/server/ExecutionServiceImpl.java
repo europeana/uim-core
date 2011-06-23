@@ -121,7 +121,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public ExecutionDTO startProvider(String workflow, Long provider, String executionName,
             Set<ParameterDTO> parameters) {
 //        try {
-//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
 //            Provider<Long> p = storage.getProvider(provider);
 //            if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
 //            eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);

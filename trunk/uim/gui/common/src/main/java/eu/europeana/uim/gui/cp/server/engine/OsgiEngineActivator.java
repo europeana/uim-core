@@ -12,6 +12,8 @@ import eu.europeana.uim.api.Registry;
  * servlet container
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since Jun 17, 2011
  */
 public class OsgiEngineActivator implements BundleActivator {
     private static OsgiEngine engine = null;
@@ -19,9 +21,14 @@ public class OsgiEngineActivator implements BundleActivator {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         Registry registry = null;
-        ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.api.Registry");
-        if (registryRef != null) {
-            registry = (Registry)bundleContext.getService(registryRef);
+
+        int wait = 0;
+        while (registry == null && wait++ < 10) {
+            ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.api.Registry");
+            if (registryRef != null) {
+                registry = (Registry)bundleContext.getService(registryRef);
+            }
+            Thread.sleep(1000);
         }
 
         engine = new OsgiEngine(registry);

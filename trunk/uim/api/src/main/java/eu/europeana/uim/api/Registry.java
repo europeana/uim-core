@@ -137,29 +137,29 @@ public interface Registry {
      * @param resourceEngine
      *            add logger to registration
      */
-    void addResourceEngine(ResourceEngine<?> resourceEngine);
+    void addResourceEngine(ResourceEngine resourceEngine);
 
     /**
      * @param resourceEngine
      *            remove logger to registration
      */
-    void removeResourceEngine(ResourceEngine<?> resourceEngine);
+    void removeResourceEngine(ResourceEngine resourceEngine);
 
     /**
      * @return resourceEngines
      */
-    List<ResourceEngine<?>> getResourceEngines();
+    List<ResourceEngine> getResourceEngines();
 
     /**
      * @return default logger
      */
-    ResourceEngine<?> getResourceEngine();
+    ResourceEngine getResourceEngine();
 
     /**
      * @param identifier
      * @return logger for the given identifier or null
      */
-    ResourceEngine<?> getResourceEngine(String identifier);
+    ResourceEngine getResourceEngine(String identifier);
 
     /**
      * @return registered orchestrator

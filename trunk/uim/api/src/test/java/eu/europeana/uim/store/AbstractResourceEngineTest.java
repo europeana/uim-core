@@ -4,6 +4,8 @@ package eu.europeana.uim.store;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,10 +15,13 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Abstract base class to test the contract of the resource engine
@@ -25,14 +30,15 @@ import eu.europeana.uim.store.bean.ProviderBean;
  * @param <I>
  * @date May 9, 2011
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class AbstractResourceEngineTest<I> {
-    ResourceEngine<I> engine          = null;
-    final String      EXAMPLE_KEY_1   = "example1.property.file";
-    final String      EXAMPLE_KEY_2   = "example2.property";
-    final String      EXAMPLE_KEY_3   = "3";
-    final String      EXAMPLE_KEY_4   = "4";
-    final String      EXAMPLE_VALUE_1 = "exampleValue1";
-    final String      EXAMPLE_VALUE_2 = "exampleValue2";
+    ResourceEngine engine          = null;
+    final String   EXAMPLE_KEY_1   = "example1.property.file";
+    final String   EXAMPLE_KEY_2   = "example2.property";
+    final String   EXAMPLE_KEY_3   = "3";
+    final String   EXAMPLE_KEY_4   = "4";
+    final String   EXAMPLE_VALUE_1 = "exampleValue1";
+    final String   EXAMPLE_VALUE_2 = "exampleValue2";
 
     /**
      * Setups storage engine.
@@ -53,7 +59,7 @@ public abstract class AbstractResourceEngineTest<I> {
     /**
      * @return configured storage engine
      */
-    protected abstract ResourceEngine<I> getResourceEngine();
+    protected abstract ResourceEngine getResourceEngine();
 
     /**
      * @return provide an example identifier
@@ -61,7 +67,6 @@ public abstract class AbstractResourceEngineTest<I> {
     protected abstract I nextID();
 
     abstract class AbstractCreateAndGetResourceTestCase<J> {
-
         public abstract LinkedHashMap<String, List<String>> getEntityResources(J entity,
                 List<String> keys);
 
@@ -75,14 +80,12 @@ public abstract class AbstractResourceEngineTest<I> {
             List<String> testList1 = new LinkedList<String>();
             testList1.add(EXAMPLE_VALUE_1);
             testList1.add(EXAMPLE_VALUE_2);
-            
-            
+
             LinkedHashMap<String, List<String>> testSet1 = new LinkedHashMap<String, List<String>>();
             testSet1.put(EXAMPLE_KEY_1, testList1);
             J testEntity = getExampleEntity();
             setEntityResources(testEntity, testSet1);
 
-            @SuppressWarnings({ "unchecked", "rawtypes" })
             LinkedHashMap<String, List<String>> result = getEntityResources(testEntity,
                     new LinkedList(testSet1.keySet()));
             assertNotNull(result);
@@ -100,7 +103,6 @@ public abstract class AbstractResourceEngineTest<I> {
 
             setEntityResources(testEntity, testSet2);
 
-            @SuppressWarnings({ "rawtypes", "unchecked" })
             // ask for all keys
             LinkedHashMap<String, List<String>> result2 = getEntityResources(testEntity,
                     new LinkedList(testSet1.keySet()));
@@ -113,7 +115,6 @@ public abstract class AbstractResourceEngineTest<I> {
 
             // check if you ask for more keys than there are actually stored
             // return null for those not stored (yet)
-
             List<String> testList = new LinkedList<String>();
             testList.add(EXAMPLE_VALUE_1);
             testList.add(EXAMPLE_VALUE_2);
@@ -142,38 +143,34 @@ public abstract class AbstractResourceEngineTest<I> {
             assertNotNull(result4);
             assertEquals(2, result4.size());
             assertNull(result4.get(EXAMPLE_KEY_3));
-
         }
     }
 
-
     /**
-     *  Tests creation and retrieval of collection specific resources.
+     * Tests creation and retrieval of collection specific resources.
      */
     @Test
-    public void testCreateAndGetCollectionResources() {
-        Provider<I> provider = new ProviderBean<I>(nextID());
-        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
-        
-        LinkedHashMap<String,List<String>> resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+    public void testCreateAndGetGlobalResource() {
+        LinkedHashMap<String, List<String>> resources = engine.getGlobalResources(Arrays.asList(
+                EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         assertEquals(2, resources.keySet().size());
-        
+
         assertNull(resources.get(EXAMPLE_KEY_1));
         assertNull(resources.get(EXAMPLE_KEY_2));
         assertNull(resources.get(EXAMPLE_KEY_3));
 
         engine.checkpoint();
-        
+
         resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
         resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
         resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
-        engine.setCollectionResources(collection, resources);
+        engine.setGlobalResources(resources);
         engine.checkpoint();
-        
-        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -185,9 +182,9 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNull(resources.get(EXAMPLE_KEY_4));
 
-        
-        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2,
+                EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -200,42 +197,132 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNotNull(resources.get(EXAMPLE_KEY_4));
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
-        
+
         resources.put(EXAMPLE_KEY_1, null);
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
         resources.put(EXAMPLE_KEY_4, null);
-        engine.setCollectionResources(collection, resources);
+        engine.setGlobalResources(resources);
         engine.checkpoint();
-        
-        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2,
+                EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
         assertNull(resources.get(EXAMPLE_KEY_4));
         assertNotNull(resources.get(EXAMPLE_KEY_3));
         assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
-        
+
         resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
-        engine.setCollectionResources(collection, resources);
+        engine.setGlobalResources(resources);
         engine.checkpoint();
 
-        resources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2,
+                EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
-
     }
-    
-    
+
     /**
-     *  Tests creation and retrieval of collection specific resources.
+     * Tests creation and retrieval of collection specific resources.
+     */
+    @Test
+    public void testCreateAndGetWorkflowResource() {
+        Workflow workflow = mock(Workflow.class);
+
+        when(workflow.getIdentifier()).thenAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return "Workflow";
+            }
+        });
+
+        LinkedHashMap<String, List<String>> resources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
+        assertEquals(2, resources.keySet().size());
+
+        assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        assertNull(resources.get(EXAMPLE_KEY_3));
+
+        engine.checkpoint();
+
+        resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
+        resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
+        resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
+        engine.setWorkflowResources(workflow, resources);
+        engine.checkpoint();
+
+        resources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_2));
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNull(resources.get(EXAMPLE_KEY_4));
+
+        resources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+        assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_2));
+        assertEquals(1, resources.get(EXAMPLE_KEY_2).size());
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(2, resources.get(EXAMPLE_KEY_3).size());
+        // its not in the query
+        assertNotNull(resources.get(EXAMPLE_KEY_4));
+        assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
+
+        resources.put(EXAMPLE_KEY_1, null);
+        resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
+        resources.put(EXAMPLE_KEY_4, null);
+        engine.setWorkflowResources(workflow, resources);
+        engine.checkpoint();
+
+        resources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
+        // value given
+        assertNull(resources.get(EXAMPLE_KEY_1));
+        assertNull(resources.get(EXAMPLE_KEY_4));
+        assertNotNull(resources.get(EXAMPLE_KEY_3));
+        assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
+
+        resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
+        engine.setWorkflowResources(workflow, resources);
+        engine.checkpoint();
+
+        resources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
+        // value given
+        assertNotNull(resources.get(EXAMPLE_KEY_1));
+    }
+
+    /**
+     * Tests creation and retrieval of collection specific resources.
      */
     @Test
     public void testCreateAndGetProviderResource() {
         Provider<I> provider = new ProviderBean<I>(nextID());
-        
-        LinkedHashMap<String,List<String>> resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+        provider.setMnemonic("pro");
+
+        LinkedHashMap<String, List<String>> resources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         assertEquals(2, resources.keySet().size());
 
         assertNull(resources.get(EXAMPLE_KEY_1));
@@ -243,16 +330,17 @@ public abstract class AbstractResourceEngineTest<I> {
         assertNull(resources.get(EXAMPLE_KEY_3));
 
         engine.checkpoint();
-        
+
         resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
         resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
         resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
         engine.setProviderResources(provider, resources);
         engine.checkpoint();
-        
-        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+
+        resources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -264,9 +352,9 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNull(resources.get(EXAMPLE_KEY_4));
 
-        
-        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -279,15 +367,16 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNotNull(resources.get(EXAMPLE_KEY_4));
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
-        
+
         resources.put(EXAMPLE_KEY_1, null);
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
         resources.put(EXAMPLE_KEY_4, null);
         engine.setProviderResources(provider, resources);
         engine.checkpoint();
-        
-        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+
+        resources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
         assertNull(resources.get(EXAMPLE_KEY_4));
@@ -298,21 +387,26 @@ public abstract class AbstractResourceEngineTest<I> {
         engine.setProviderResources(provider, resources);
         engine.checkpoint();
 
-        resources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
-
     }
-    
-    
+
     /**
-     *  Tests creation and retrieval of collection specific resources.
+     * Tests creation and retrieval of collection specific resources.
      */
     @Test
-    public void testCreateAndGetGlobalResource() {
-        LinkedHashMap<String,List<String>> resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+    public void testCreateAndGetCollectionResources() {
+        Provider<I> provider = new ProviderBean<I>(nextID());
+        provider.setMnemonic("pro");
+        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
+        collection.setMnemonic("col");
+
+        LinkedHashMap<String, List<String>> resources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         assertEquals(2, resources.keySet().size());
 
         assertNull(resources.get(EXAMPLE_KEY_1));
@@ -320,16 +414,17 @@ public abstract class AbstractResourceEngineTest<I> {
         assertNull(resources.get(EXAMPLE_KEY_3));
 
         engine.checkpoint();
-        
+
         resources.put(EXAMPLE_KEY_1, Arrays.asList("one"));
         resources.put(EXAMPLE_KEY_2, Arrays.asList(""));
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two", "three"));
         resources.put(EXAMPLE_KEY_4, Collections.EMPTY_LIST);
-        engine.setGlobalResources(resources);
+        engine.setCollectionResources(collection, resources);
         engine.checkpoint();
-        
-        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+
+        resources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -341,9 +436,9 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNull(resources.get(EXAMPLE_KEY_4));
 
-        
-        resources = engine.getGlobalResources( Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
         assertEquals(1, resources.get(EXAMPLE_KEY_1).size());
@@ -356,15 +451,16 @@ public abstract class AbstractResourceEngineTest<I> {
         // its not in the query
         assertNotNull(resources.get(EXAMPLE_KEY_4));
         assertEquals(0, resources.get(EXAMPLE_KEY_4).size());
-        
+
         resources.put(EXAMPLE_KEY_1, null);
         resources.put(EXAMPLE_KEY_3, Arrays.asList("two"));
         resources.put(EXAMPLE_KEY_4, null);
-        engine.setGlobalResources(resources);
+        engine.setCollectionResources(collection, resources);
         engine.checkpoint();
-        
-        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+
+        resources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNull(resources.get(EXAMPLE_KEY_1));
         assertNull(resources.get(EXAMPLE_KEY_4));
@@ -372,64 +468,88 @@ public abstract class AbstractResourceEngineTest<I> {
         assertEquals(1, resources.get(EXAMPLE_KEY_3).size());
 
         resources.put(EXAMPLE_KEY_1, Arrays.asList("a"));
-        engine.setGlobalResources(resources);
+        engine.setCollectionResources(collection, resources);
         engine.checkpoint();
 
-        resources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
-        
+        resources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_2, EXAMPLE_KEY_3, EXAMPLE_KEY_4));
+
         // value given
         assertNotNull(resources.get(EXAMPLE_KEY_1));
+
     }
-    
-    
+
     /**
-     *  Tests creation and retrieval of collection specific resources.
+     * Tests creation and retrieval of collection specific resources.
      */
     @Test
     public void testCreateAndGetMixedResource() {
+        Workflow workflow = mock(Workflow.class);
+        when(workflow.getIdentifier()).thenAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return "Workflow";
+            }
+        });
         Provider<I> provider = new ProviderBean<I>(nextID());
+        provider.setMnemonic("pro");
         Collection<I> collection = new CollectionBean<I>(nextID(), provider);
-        
-        LinkedHashMap<String,List<String>> colResources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        LinkedHashMap<String,List<String>> proResources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        LinkedHashMap<String,List<String>> gloResources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+        collection.setMnemonic("col");
+
+        LinkedHashMap<String, List<String>> colResources = engine.getCollectionResources(
+                collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        LinkedHashMap<String, List<String>> proResources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        LinkedHashMap<String, List<String>> worResources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        LinkedHashMap<String, List<String>> gloResources = engine.getGlobalResources(Arrays.asList(
+                EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
         assertNull(colResources.get(EXAMPLE_KEY_1));
         assertNull(colResources.get(EXAMPLE_KEY_2));
         assertNull(colResources.get(EXAMPLE_KEY_3));
 
-        
         assertNull(proResources.get(EXAMPLE_KEY_1));
         assertNull(proResources.get(EXAMPLE_KEY_2));
         assertNull(proResources.get(EXAMPLE_KEY_3));
 
-        
+        assertNull(worResources.get(EXAMPLE_KEY_1));
+        assertNull(worResources.get(EXAMPLE_KEY_2));
+        assertNull(worResources.get(EXAMPLE_KEY_3));
+
         assertNull(gloResources.get(EXAMPLE_KEY_1));
         assertNull(gloResources.get(EXAMPLE_KEY_2));
         assertNull(gloResources.get(EXAMPLE_KEY_3));
 
         engine.checkpoint();
 
-        colResources.put(EXAMPLE_KEY_1, Arrays.asList("cone","ctwo"));
-        proResources.put(EXAMPLE_KEY_1, Arrays.asList("pone","ptwo"));
-        gloResources.put(EXAMPLE_KEY_1, Arrays.asList("gone","gtwo"));
+        colResources.put(EXAMPLE_KEY_1, Arrays.asList("cone", "ctwo"));
+        proResources.put(EXAMPLE_KEY_1, Arrays.asList("pone", "ptwo"));
+        worResources.put(EXAMPLE_KEY_1, Arrays.asList("wone", "wtwo"));
+        gloResources.put(EXAMPLE_KEY_1, Arrays.asList("gone", "gtwo"));
 
         engine.setCollectionResources(collection, colResources);
         engine.setProviderResources(provider, proResources);
+        engine.setWorkflowResources(workflow, worResources);
         engine.setGlobalResources(gloResources);
         engine.checkpoint();
-        
-        colResources = engine.getCollectionResources(collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        proResources = engine.getProviderResources(provider, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+
+        colResources = engine.getCollectionResources(collection,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        proResources = engine.getProviderResources(provider,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
+        worResources = engine.getWorkflowResources(workflow,
+                Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
         gloResources = engine.getGlobalResources(Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
-        
+
         assertNotNull(colResources.get(EXAMPLE_KEY_1));
         assertNotNull(proResources.get(EXAMPLE_KEY_1));
+        assertNotNull(worResources.get(EXAMPLE_KEY_1));
         assertNotNull(gloResources.get(EXAMPLE_KEY_1));
-        
+
         assertEquals(colResources.get(EXAMPLE_KEY_1).get(0), "cone");
         assertEquals(proResources.get(EXAMPLE_KEY_1).get(1), "ptwo");
+        assertEquals(worResources.get(EXAMPLE_KEY_1).get(1), "wtwo");
         assertEquals(gloResources.get(EXAMPLE_KEY_1).get(0), "gone");
-
     }
 }

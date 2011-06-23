@@ -150,7 +150,6 @@ public class ReflectionEngine extends Engine {
         for (String name : resource) {
             try {
                 Class<?> clazz = Class.forName(name);
-                @SuppressWarnings("rawtypes")
                 ResourceEngine resource = (ResourceEngine)clazz.newInstance();
                 registry.addResourceEngine(resource);
             } catch (Throwable e) {

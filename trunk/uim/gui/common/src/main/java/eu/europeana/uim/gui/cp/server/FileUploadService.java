@@ -34,11 +34,10 @@ public class FileUploadService extends HttpServlet {
         this.engine = Engine.getInstance();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ResourceEngine<Long> resourceEngine = (ResourceEngine<Long>)engine.getRegistry().getResourceEngine();
+        ResourceEngine resourceEngine = engine.getRegistry().getResourceEngine();
         ServletFileUpload upload = new ServletFileUpload();
 
         try {

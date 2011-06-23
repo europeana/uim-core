@@ -59,7 +59,7 @@ public class ReflectionEngine extends Engine {
     private void setupSampleData() {
         try {
             SampleProperties sample = new SampleProperties();
-            sample.loadSampleData(registry.getStorage());
+            sample.loadSampleData(registry.getStorageEngine());
         } catch (Throwable e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

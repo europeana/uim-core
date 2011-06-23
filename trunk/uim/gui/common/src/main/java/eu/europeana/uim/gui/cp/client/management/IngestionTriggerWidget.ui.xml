@@ -3,24 +3,25 @@
     xmlns:c='urn:import:com.google.gwt.user.cellview.client' xmlns:s="urn:import:eu.europeana.uim.gui.cp.client.management">
 
     <ui:style>
-        .splitpanel {
-        	height: 400px;
-        	width: 100%;
-        	min-width: 500px;
-        	border: 4px solid #d0e4f6;
+        .splitPanel {
+            height: 400px;
+            width: 100%;
+            min-width: 500px;
+            border: 4px solid #d0e4f6;
         }
         
         .executionFormCell {
-        	width: 100%;
-        	padding-top: 20px;
+            width: 100%;
+            padding-top: 20px;
         }
         
-        .leftPanel {
-        	background-color: #FFF;
+        .cellBrowser {
+            background-color: #FFF;
         }
         
-        .rightPanel {
-        	background-color: #FFF;
+        .cellTable {
+            min-width: 400px;
+            background-color: #FFF;
         }
     </ui:style>
 
@@ -28,16 +29,18 @@
         <table cellspacing='0' cellpadding='0' style='width:100%;'>
             <tr>
                 <td valign='top'>
-                    <g:SplitLayoutPanel ui:field="splitPanel" addStyleNames="{style.splitpanel}">
+                    <g:SplitLayoutPanel addStyleNames="{style.splitPanel}">
                         <g:west size="500">
-                            <g:LayoutPanel ui:field="leftPanel" addStyleNames="{style.leftPanel}">
-                                <!-- <c:CellBrowser ui:field="cellBrowser" /> -->
+                            <g:LayoutPanel>
+                                <g:layer>
+                                    <c:CellBrowser ui:field="cellBrowser" addStyleNames="{style.cellBrowser}" />
+                                </g:layer>
                             </g:LayoutPanel>
                         </g:west>
                         <g:center>
-                            <g:LayoutPanel ui:field="rightPanel" addStyleNames="{style.rightPanel}">
-                                <!-- <c:CellTable ui:field="cellTable" /> -->
-                            </g:LayoutPanel>
+                            <g:ScrollPanel>
+                                <c:CellTable ui:field="cellTable" addStyleNames="{style.cellTable}" />
+                            </g:ScrollPanel>
                         </g:center>
                     </g:SplitLayoutPanel>
                 </td>

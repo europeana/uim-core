@@ -9,15 +9,15 @@ import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Dummy implementation of the ResourceEngine
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @param <I>
  * @date May 3, 2011
  */
-public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
+public class ResourceEngineAdapter implements ResourceEngine {
     @Override
     public String getIdentifier() {
         return ResourceEngineAdapter.class.getSimpleName();
@@ -25,18 +25,20 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
 
     @Override
     public void setGlobalResources(LinkedHashMap<String, List<String>> resources) {
-
     }
 
     @Override
-    public void setProviderResources(Provider<I> id, LinkedHashMap<String, List<String>> resources) {
-
-    }
-
-    @Override
-    public void setCollectionResources(Collection<I> id,
+    public void setWorkflowResources(Workflow workflow,
             LinkedHashMap<String, List<String>> resources) {
+    }
 
+    @Override
+    public void setProviderResources(Provider<?> id, LinkedHashMap<String, List<String>> resources) {
+    }
+
+    @Override
+    public void setCollectionResources(Collection<?> id,
+            LinkedHashMap<String, List<String>> resources) {
     }
 
     @Override
@@ -45,13 +47,19 @@ public class ResourceEngineAdapter<I> implements ResourceEngine<I> {
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getProviderResources(Provider<I> id,
+    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow workflow,
             List<String> keys) {
         return new LinkedHashMap<String, List<String>>();
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<I> id,
+    public LinkedHashMap<String, List<String>> getProviderResources(Provider<?> id,
+            List<String> keys) {
+        return new LinkedHashMap<String, List<String>>();
+    }
+
+    @Override
+    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> id,
             List<String> keys) {
         return new LinkedHashMap<String, List<String>>();
     }

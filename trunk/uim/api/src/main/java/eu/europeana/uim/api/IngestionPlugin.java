@@ -95,9 +95,14 @@ public interface IngestionPlugin {
 
     /**
      * List of configuration parameters this plugin can take from the execution context to be
-     * configured for a specific execution. NOTE: any execution related configuration/information
-     * needs to be stored into the context and retrieved from the context during the processRecord
-     * method.
+     * configured for a specific execution. As a policy the parameters must follow a certain schema
+     * to qualify as a valid parameter, namely prefixed by the identifier of the plugin, the name of
+     * the parameter, and the type of the value as simple value of the class, e.g.
+     * TopicMatchingIngestionPlugin.macs-input.File (points are not valid inside the name only
+     * dashes).
+     * 
+     * NOTE: any execution related configuration/information needs to be stored into the context and
+     * retrieved from the context during the processRecord method.
      * 
      * @return list of configuration parameters.
      */

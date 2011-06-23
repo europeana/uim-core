@@ -219,7 +219,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 // public List<CollectionDTO> getAllCollections() {
 // List<CollectionDTO> res = new ArrayList<CollectionDTO>();
 // try {
-// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
 // List<Collection<Long>> cols = storage.getAllCollections();
 // for (Collection<Long> col : cols) {
 // res.add(new CollectionDTO(col.getId(), col.getName(), col.getMnemonic(),
@@ -534,7 +534,7 @@ public class OrchestrationServiceImpl extends AbstractOSGIRemoteServiceServlet i
 
     @Override
     public String getRawRecord(Long recordId) {
-// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorage();
+// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
 // MetaDataRecord<Long> metaDataRecord = storage.getMetaDataRecord(recordId);
 // metaDataRecord.getFirstQField(ObjectModelRegistry.METADATA,
 // new HashSet<Enum<?>>() {

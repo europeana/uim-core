@@ -120,9 +120,9 @@ public class UIMOrchestrator implements Orchestrator {
         return null;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     private void setupProperties(Workflow w, UimDataSet<?> dataset, Properties properties) {
-        ResourceEngine<?> resourceEngine = this.registry.getResourceEngine();
+        ResourceEngine resourceEngine = this.registry.getResourceEngine();
         if (resourceEngine != null) {
             Collection collection = null;
             Provider provider = null;
@@ -132,7 +132,6 @@ public class UIMOrchestrator implements Orchestrator {
             } else if (dataset instanceof Request<?>) {
                 collection = ((Request<?>)dataset).getCollection();
                 provider = collection.getProvider();
-                
             } else if (dataset instanceof Collection<?>){
                 collection = ((Collection<?>)dataset);
                 provider = collection.getProvider();
@@ -147,19 +146,16 @@ public class UIMOrchestrator implements Orchestrator {
 
             LinkedHashMap<String, List<String>> globalResources = resourceEngine.getGlobalResources(params);
 
-            
-            
-            if (collection != null) {
-                LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources(
-                        collection, params);
-                if (collectionResources != null && collectionResources.size() > 0) {
-                    for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
-                        if (entry.getValue() != null) {
-                            globalResources.put(entry.getKey(), entry.getValue());
-                        }
+            LinkedHashMap<String, List<String>> workflowResources = resourceEngine.getWorkflowResources(
+                    w, params);
+            if (workflowResources != null && workflowResources.size() > 0) {
+                for (Entry<String, List<String>> entry : workflowResources.entrySet()) {
+                    if (entry.getValue() != null) {
+                        globalResources.put(entry.getKey(), entry.getValue());
                     }
                 }
             }
+            
             if (provider != null) {
                 LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(provider, params);
                 if (providerResources != null && providerResources.size() > 0) {
@@ -171,6 +167,18 @@ public class UIMOrchestrator implements Orchestrator {
                 }
             }
 
+            if (collection != null) {
+                LinkedHashMap<String, List<String>> collectionResources = resourceEngine.getCollectionResources(
+                        collection, params);
+                if (collectionResources != null && collectionResources.size() > 0) {
+                    for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
+                        if (entry.getValue() != null) {
+                            globalResources.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+            
             for (Entry<String, List<String>> entry : globalResources.entrySet()) {
                 if (!properties.containsKey(entry.getKey())) {
                     if (entry.getValue() != null) {

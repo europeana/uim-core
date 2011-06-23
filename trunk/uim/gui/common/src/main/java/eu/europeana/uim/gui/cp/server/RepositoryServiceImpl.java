@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -42,15 +45,29 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
         List<Workflow> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
+            List<String> blackListKey = new ArrayList<String>() {
+                {
+                    add("Workflow Blacklist");
+                }
+            };
+            
+            LinkedHashMap<String, List<String>> globalResources = getEngine().getRegistry().getResourceEngine().getGlobalResources(
+                    blackListKey);
+            List<String> blacklist = globalResources.get(blackListKey.get(0));
+            Set<String> blackSet = blacklist != null && blacklist.size() > 0
+                    ? new HashSet<String>(blacklist) : null;
             for (Workflow w : workflows) {
+                if (blackSet != null && blackSet.contains(w.getIdentifier())) {
+                    continue;
+                }
                 WorkflowDTO wd = new WorkflowDTO(w.getIdentifier(), w.getName(), w.getDescription());
                 res.add(wd);
             }
-            
+
             Collections.sort(res, new Comparator<WorkflowDTO>() {
                 @Override
                 public int compare(WorkflowDTO o1, WorkflowDTO o2) {
-                     return o1.getName().compareTo(o2.getName());
+                    return o1.getName().compareTo(o2.getName());
                 }
             });
         }
@@ -68,11 +85,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     ProviderDTO provider = getWrappedProviderDTO(p.getId());
                     res.add(provider);
                 }
-                
+
                 Collections.sort(res, new Comparator<ProviderDTO>() {
                     @Override
                     public int compare(ProviderDTO o1, ProviderDTO o2) {
-                         return o1.getName().compareTo(o2.getName());
+                        return o1.getName().compareTo(o2.getName());
                     }
                 });
             }
@@ -99,11 +116,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                 res.add(collDTO);
             }
-            
+
             Collections.sort(res, new Comparator<CollectionDTO>() {
                 @Override
                 public int compare(CollectionDTO o1, CollectionDTO o2) {
-                     return o1.getName().compareTo(o2.getName());
+                    return o1.getName().compareTo(o2.getName());
                 }
             });
         } catch (StorageEngineException e) {

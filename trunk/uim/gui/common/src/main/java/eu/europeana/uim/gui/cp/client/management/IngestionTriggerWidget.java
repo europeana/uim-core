@@ -20,8 +20,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
@@ -56,17 +54,10 @@ public class IngestionTriggerWidget extends IngestionWidget {
     private final ResourceServiceAsync   resourceService;
     private final ExecutionServiceAsync  executionService;
 
-    @UiField
-    SplitLayoutPanel                     splitPanel;
-
-    @UiField
-    LayoutPanel                          leftPanel;
-
-    @UiField
-    LayoutPanel                          rightPanel;
-
+    @UiField(provided = true)
     CellBrowser                          cellBrowser;
 
+    @UiField(provided = true)
     CellTable<ParameterDTO>              cellTable;
 
     @UiField(provided = true)
@@ -114,9 +105,6 @@ public class IngestionTriggerWidget extends IngestionWidget {
             }
         });
 
-        Binder uiBinder = GWT.create(Binder.class);
-        Widget widget = uiBinder.createAndBindUi(this);
-
         final MultiSelectionModel<BrowserObject> selectionModelBrowser = new MultiSelectionModel<BrowserObject>(
                 TriggerTreeViewModel.KEY_PROVIDER);
         selectionModelBrowser.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
@@ -154,13 +142,9 @@ public class IngestionTriggerWidget extends IngestionWidget {
         cellBrowser.setAnimationEnabled(true);
         cellBrowser.setSize("100%", "100%");
 
-        leftPanel.add(cellBrowser);
-
         cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
-// cellTable.setPageSize(15);
-// cellTable.setRowCount(10);
 
         final ListDataProvider<ParameterDTO> dataProvider = new ListDataProvider<ParameterDTO>();
         dataProvider.setList(activeParameters);
@@ -177,7 +161,8 @@ public class IngestionTriggerWidget extends IngestionWidget {
 
         initTableColumns(selectionModelTable, sortHandler);
 
-        rightPanel.add(cellTable);
+        Binder uiBinder = GWT.create(Binder.class);
+        Widget widget = uiBinder.createAndBindUi(this);
 
         return widget;
     }
@@ -323,7 +308,7 @@ public class IngestionTriggerWidget extends IngestionWidget {
             }
         };
         cellTable.addColumn(updateColumn, "Update");
-        cellTable.setColumnWidth(updateColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(updateColumn, 80, Unit.PX);
 
         // File update Button
         Column<ParameterDTO, ParameterDTO> fileColumn = new Column<ParameterDTO, ParameterDTO>(
@@ -342,7 +327,7 @@ public class IngestionTriggerWidget extends IngestionWidget {
             }
         };
         cellTable.addColumn(fileColumn, "Update");
-        cellTable.setColumnWidth(fileColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(fileColumn, 80, Unit.PX);
     }
 
     private final class ResourceSettingCallbackImplementation implements ResourceSettingCallback {
