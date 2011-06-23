@@ -109,6 +109,8 @@
                         <Embed-StripVersion>true</Embed-StripVersion>
                         <Import-Package>
                             !eu.europeana.uim.gui.cp.*,
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
                             eu.europeana.uim.*,
                             eu.europeana.uim.workflow,
                             eu.europeana.uim.api,
