@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml version="1.0" encoding="UTF-8"?> -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -70,11 +70,11 @@
                 </executions>
                 <configuration>
                     <webappDirectory>${webappDirectory}</webappDirectory>
+                    <outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
                     <archive>
                         <!-- add the generated manifest to the war -->
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
-                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
 
@@ -111,6 +111,7 @@
                             !eu.europeana.uim.gui.cp.*,
                             eu.europeana.uim.*,
                             eu.europeana.uim.workflow,
+                            eu.europeana.uim.api,
                             org.apache.solr.*,
                             org.osgi.framework,
                             org.w3c.dom,
