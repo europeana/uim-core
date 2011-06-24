@@ -32,6 +32,7 @@
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
+                            org.apache.commons.io,
                             !*</Import-Package>
                         <Export-Package>
                             eu.europeana.uim.solr32.*,
