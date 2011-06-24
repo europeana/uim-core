@@ -33,7 +33,7 @@
                             org.xml.sax.ext,
                             !*</Import-Package>
 						<Export-Package>
-						    eu.europeana.uim.solr.*,
+                            eu.europeana.uim.solr32.*,
                             org.apache.lucene.*,
                             org.apache.solr.*
 						</Export-Package>
