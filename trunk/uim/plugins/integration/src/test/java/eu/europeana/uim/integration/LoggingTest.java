@@ -28,6 +28,10 @@ import eu.europeana.uim.api.Registry;
 @RunWith(JUnit4TestRunner.class)
 public class LoggingTest extends AbstractIntegrationTest {
 
+    /**
+     * @return setup configuration
+     * @throws Exception
+     */
     @Configuration
     public static Option[] configuration() throws Exception {
         return combine(
@@ -37,7 +41,6 @@ public class LoggingTest extends AbstractIntegrationTest {
                                 "INFO")),
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
-
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
@@ -47,6 +50,11 @@ public class LoggingTest extends AbstractIntegrationTest {
                 waitForFrameworkStartup());
     }
 
+    /**
+     * Tests logging.
+     * 
+     * @throws Exception
+     */
     @Test
     public void testLogging() throws Exception {
         Registry registry = getOsgiService(Registry.class);
@@ -59,5 +67,4 @@ public class LoggingTest extends AbstractIntegrationTest {
 
         logging.log("module", null, "test", Level.INFO, "tst tst");
     }
-
 }

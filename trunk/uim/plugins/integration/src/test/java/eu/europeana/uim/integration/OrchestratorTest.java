@@ -41,7 +41,10 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
  */
 @RunWith(JUnit4TestRunner.class)
 public class OrchestratorTest extends AbstractIntegrationTest {
-
+    /**
+     * @return setup configuration
+     * @throws Exception
+     */
     @Configuration
     public static Option[] configuration() throws Exception {
         return combine(
@@ -55,8 +58,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
 
                 // PaxRunnerOptions.vmOption(
                 // "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
-                                
-                                
+
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
@@ -68,6 +70,10 @@ public class OrchestratorTest extends AbstractIntegrationTest {
                 waitForFrameworkStartup());
     }
 
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
     @Test
     public void processSampleData() throws Exception {
         Registry registry = getOsgiService(Registry.class);
@@ -78,19 +84,19 @@ public class OrchestratorTest extends AbstractIntegrationTest {
             Thread.sleep(500);
         }
 
-        Provider p = new ProviderBean(1L);
-        Collection c = new CollectionBean(2L, p);
-        Request r = new RequestBean(3L, c, new Date());
-        
+        Provider<Long> p = new ProviderBean<Long>(1L);
+        Collection<Long> c = new CollectionBean<Long>(2L, p);
+        Request<Long> r = new RequestBean<Long>(3L, c, new Date());
+
         // load the provider data
         Thread.sleep(1000);
 
-//        Provider<Long> p = storage.getProvider(0l);
-//        Collection<Long> c = storage.getCollections(p).get(0);
-//        Request<Long> r = storage.createRequest(c, new Date());
+// Provider<Long> p = storage.getProvider(0l);
+// Collection<Long> c = storage.getCollections(p).get(0);
+// Request<Long> r = storage.createRequest(c, new Date());
 
         for (int i = 0; i < 999; i++) {
-            MetaDataRecord record = storage.createMetaDataRecord(c, "id=" + i);
+            MetaDataRecord<Long> record = storage.createMetaDataRecord(c, "id=" + i);
             storage.updateMetaDataRecord(c, record);
             storage.addRequestRecord(r, record);
         }
@@ -100,9 +106,8 @@ public class OrchestratorTest extends AbstractIntegrationTest {
         Orchestrator o = getOsgiService(Orchestrator.class);
         MemoryProgressMonitor monitor = new MemoryProgressMonitor();
         // run the workflow
-        Workflow w = null;
-        
-        //Initialize workflow
+
+        // Initialize workflow
         Workflow workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
         int wait = 0;
         while (workflow == null && wait++ < 10) {
