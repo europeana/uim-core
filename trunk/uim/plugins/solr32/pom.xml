@@ -35,6 +35,7 @@
                             org.apache.commons.io,
                             !*</Import-Package>
                         <Export-Package>
+                            eu.europeana.uim.solr32,
                             eu.europeana.uim.solr32.*,
                             org.apache.lucene.*,
                             org.apache.solr.*
@@ -73,7 +74,7 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
