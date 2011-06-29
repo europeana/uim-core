@@ -16,12 +16,11 @@ import eu.europeana.uim.common.TKey;
  * @since Mar 21, 2011
  */
 public interface MetaDataRecord<I> extends UimDataSet<I> {
-
     /**
      * @return the collection the record belongs to
      */
     Collection<I> getCollection();
-    
+
     /**
      * Retrieves the first value of the list of values represented under that key qualified or
      * unqualified. In other words the first unqualified field is always the same value no matter if
@@ -51,7 +50,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return first field qualified with the given qualifiers or null (no field or no one matching
      *         all provided qualifiers)
      */
-    <N, T> T getFirstQField(TKey<N, T> key, Set<Enum<?>> qualifiers);
+    <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers);
 
     /**
      * Retrieves all field values of this key (qualified and unqualified fields).
@@ -65,7 +64,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return values as list of qualified values (value + known qualifiers)
      */
     <N, T> List<QualifiedValue<T>> getField(TKey<N, T> key);
-    
+
     /**
      * Retrieves as list the field values matching the given qualifiers and key.
      * 
@@ -79,8 +78,8 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            information typed by enumerations to provide additional data
      * @return the list of values qualified with the given qualifier
      */
-    <N, T> List<T> getQField(TKey<N, T> key, Set<Enum<?>> qualifiers);
-    
+    <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers);
+
     /**
      * Retrieves all field values of this key without qualifier information.
      * 
@@ -126,7 +125,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @param qualifiers
      *            information typed by enumerations to provide additional data
      */
-    <N, T> void addQField(TKey<N, T> key, T value, Set<Enum<?>> qualifiers);
+    <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers);
 
     /**
      * Deletes all values known under the given typed key and returns this list of values.

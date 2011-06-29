@@ -36,7 +36,7 @@ public class BatchWorkflowStartTest {
      * 
      * @throws StorageEngineException
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "rawtypes", "unchecked", "unused" })
     @Test
     public void testInitialization() throws StorageEngineException {
         StorageEngine engine = mock(StorageEngineAdapter.class);

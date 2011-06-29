@@ -493,12 +493,10 @@ public abstract class AbstractStorageEngineTest<I> {
         assertEquals(0, engine.getTotalByRequest(request0));
         assertEquals(0, engine.getTotalByCollection(collection0));
 
-        Set<Enum<?>> qualifiers = new HashSet<Enum<?>>() { { add(TestEnum.EN); } };
-        
         MetaDataRecord<I> record0 = engine.createMetaDataRecord(collection0, "abcd-1");
         record0.addField(MDRFieldRegistry.rawrecord, "title 01");
         record0.addField(MDRFieldRegistry.rawrecord, "title 02");
-        record0.addQField(MDRFieldRegistry.rawrecord, "title 03", qualifiers);
+        record0.addQField(MDRFieldRegistry.rawrecord, "title 03", TestEnum.EN);
         record0.addField(MDRFieldRegistry.rawformat, "MARC21");
         engine.updateMetaDataRecord(collection0, record0);
         engine.addRequestRecord(request0, record0);
@@ -508,7 +506,7 @@ public abstract class AbstractStorageEngineTest<I> {
         MetaDataRecord<I> record1 = engine.createMetaDataRecord(collection0, "abcd-2");
         record1.addField(MDRFieldRegistry.rawrecord, "title 11");
         record1.addField(MDRFieldRegistry.rawrecord, "title 12");
-        record1.addQField(MDRFieldRegistry.rawrecord, "title 13", qualifiers);
+        record1.addQField(MDRFieldRegistry.rawrecord, "title 13", TestEnum.EN);
         record1.addField(MDRFieldRegistry.rawformat, "MARC21");
         engine.updateMetaDataRecord(collection0, record1);
         engine.addRequestRecord(request0, record1);
@@ -517,14 +515,14 @@ public abstract class AbstractStorageEngineTest<I> {
         
         MetaDataRecord<I> record3 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record3.getFirstField(MDRFieldRegistry.rawrecord)); 
-        assertEquals("title 03", record3.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
+        assertEquals("title 03", record3.getQField(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
 
         assertEquals(3, record3.getField(MDRFieldRegistry.rawrecord).size());
         engine.checkpoint();
         
         MetaDataRecord<I> record4 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record4.getFirstField(MDRFieldRegistry.rawrecord)); 
-        assertEquals("title 03", record4.getQField(MDRFieldRegistry.rawrecord, qualifiers).get(0));
+        assertEquals("title 03", record4.getQField(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
         assertEquals(request0.getCollection().getId(), record4.getCollection().getId());
         
         assertEquals(2, engine.getTotalByRequest(request0));

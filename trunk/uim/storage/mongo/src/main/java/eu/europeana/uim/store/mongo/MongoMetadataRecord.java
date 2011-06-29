@@ -25,7 +25,6 @@ import eu.europeana.uim.store.Request;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
-
     public static final String FIELD = "_field_";
     private DBObject object = new BasicDBObject();
     private Collection collection;
@@ -100,7 +99,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     @Override
-    public <N, T> void addQField(TKey<N, T> key, T value, Set<Enum<?>> qualifiers) {
+    public <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         BasicDBObject qFields = (BasicDBObject) object.get(fieldName(key.getFullName()));
         if (qFields == null) {
             qFields = new BasicDBObject();
@@ -150,7 +149,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     @Override
-    public <N, T> List<T> getQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
+    public <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers) {
         List<T> res = new ArrayList<T>();
         BasicDBObject data = (BasicDBObject) object.get(fieldName(key.getFullName()));
         if (data == null) {
@@ -166,7 +165,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     @Override
-    public <N, T> T getFirstQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
+    public <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers) {
         return getQField(key, qualifiers).get(0);
     }
 

@@ -1,6 +1,7 @@
 package eu.europeana.uim.store.bean;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,12 +81,12 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> T getFirstQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
+    public <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers) {
         T result = null;
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(qualifiers)) {
+                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
                     result = (T)value.getValue();
                     break;
                 }
@@ -119,12 +120,12 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> List<T> getQField(TKey<N, T> key, Set<Enum<?>> qualifiers) {
+    public <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers) {
         List<T> result = new ArrayList<T>();
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(qualifiers)) {
+                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
                     result.add((T)value.getValue());
                 }
             }
@@ -134,21 +135,29 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
     @Override
     public <N, T> void addField(TKey<N, T> key, T value) {
-        this.addQField(key, value, new HashSet<Enum<?>>());
+        List<QualifiedValue<?>> values = fields.get(key);
+        if (values == null) {
+            values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
+            fields.put(key, values);
+        }
+        values.add(new QualifiedValue<T>(value, new HashSet<Enum<?>>()));
     }
 
     @Override
-    public <N, T> void addQField(TKey<N, T> key, T value, Set<Enum<?>> qualifiers) {
+    public <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         if (value == null) {
             throw new IllegalArgumentException("Argument 'value' should not be null!");
         }
-        if (qualifiers == null) {
-            throw new IllegalArgumentException("Argument 'qualifiers' should not be null (Use addField for unqualified qualifiers)!");
+        if (qualifiers == null || qualifiers.length == 0) {
+            throw new IllegalArgumentException("Argument 'qualifiers' should not be null or empty(Use addField for unqualified qualifiers)!");
         }
+        
+        Set<Enum<?>> quals = new HashSet<Enum<?>>();
         for (Enum<?> qualifier : qualifiers) {
             if (qualifier == null) {
                 throw new IllegalArgumentException("Argument 'qualifiers' should not have null entries!");
             }
+            quals.add(qualifier);
         }
 
         List<QualifiedValue<?>> values = fields.get(key);
@@ -156,7 +165,8 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
             fields.put(key, values);
         }
-        values.add(new QualifiedValue<T>(value, qualifiers));
+        
+        values.add(new QualifiedValue<T>(value, quals));
     }
 
     @Override

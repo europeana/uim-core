@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Date;
-import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -52,7 +51,7 @@ public abstract class AbstractMetaDataRecordTest<I> {
         // never return null - get empty list when nothing is there
         assertNotNull(record.getField(MDRFieldRegistry.rawformat));
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getQField(MDRFieldRegistry.rawformat, new HashSet<Enum<?>>() { { add(TestEnum.EN); } }));
+        assertNotNull(record.getQField(MDRFieldRegistry.rawformat, TestEnum.EN));
     }
 
     /**

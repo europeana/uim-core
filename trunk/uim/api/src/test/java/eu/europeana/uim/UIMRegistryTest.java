@@ -29,10 +29,10 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMRegistryTest {
     private UIMRegistry registry = new UIMRegistry();
 
-    
     /**
      * Tests registration of a {@link StorageEngine}.
      */
+    @SuppressWarnings("rawtypes")
     @Test
     public void testRegistryOutput() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
@@ -51,8 +51,7 @@ public class UIMRegistryTest {
 
         assertEquals(664, registry.toString().length());
     }
-    
-    
+
     /**
      * Tests registration of a {@link StorageEngine}.
      */
@@ -95,7 +94,6 @@ public class UIMRegistryTest {
     /**
      * Tests registration of a {@link ResourceEngine}.
      */
-    @SuppressWarnings("rawtypes")
     @Test
     public void testResourceEngine() {
         registry.setConfiguredLoggingEngine(ResourceEngineAdapter.class.getSimpleName());
@@ -120,7 +118,6 @@ public class UIMRegistryTest {
    
     public void testPluginMemberFieldCheckToFail() {
         registry.addPlugin(new IllegalIngestionPlugin());
-        
     }
     
     /**
@@ -129,7 +126,6 @@ public class UIMRegistryTest {
     @Test
     public void testPluginMemberFieldCheckToSucceed() {
         registry.addPlugin(new LegalIngestionPlugin());
-        
     }
     
     /**
@@ -182,5 +178,4 @@ public class UIMRegistryTest {
         registry.unsetOrchestrator(orchestrator);
         assertNull(registry.getOrchestrator());
     }
-    
 }

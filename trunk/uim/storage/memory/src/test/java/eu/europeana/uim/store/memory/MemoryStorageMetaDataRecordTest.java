@@ -1,6 +1,5 @@
 package eu.europeana.uim.store.memory;
 
-import java.util.HashSet;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -27,10 +26,9 @@ public class MemoryStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<
     }
 
     private enum Language {
-        ENGLISH,
-        FRENCH
+        ENGLISH, FRENCH
     }
-    
+
     /**
      * Tests adding and retrieving values from a {@link MetaDataRecord}.
      * 
@@ -38,22 +36,20 @@ public class MemoryStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<
      */
     @Test
     public void testMetadataRecord() throws StorageEngineException {
-        MetaDataRecord<Long> record = getStorageEngine().createMetaDataRecord(createRequest().getCollection(),
-                "ID 1");
+        MetaDataRecord<Long> record = getStorageEngine().createMetaDataRecord(
+                createRequest().getCollection(), "ID 1");
 
-        TKey<MemoryStorageMetaDataRecordTest, String> testKey = TKey.register(MemoryStorageMetaDataRecordTest.class,
-                "test", String.class);
-        
+        TKey<MemoryStorageMetaDataRecordTest, String> testKey = TKey.register(
+                MemoryStorageMetaDataRecordTest.class, "test", String.class);
+
         record.addField(testKey, "unqualified");
-        HashSet<Enum<?>> englishQualifier = new HashSet<Enum<?>>() { { add(Language.ENGLISH); }};
-        record.addQField(testKey, "english", englishQualifier);
-        HashSet<Enum<?>> frenchQualifier = new HashSet<Enum<?>>() { { add(Language.FRENCH); }};
-        record.addQField(testKey, "french", frenchQualifier);
-        
+        record.addQField(testKey, "english", Language.ENGLISH);
+        record.addQField(testKey, "french", Language.FRENCH);
+
         Assert.assertEquals("unqualified", record.getFirstField(testKey));
         List<QualifiedValue<String>> values = record.getField(testKey);
         Assert.assertEquals(3, values.size());
-        List<String> frenchValues = record.getQField(testKey, frenchQualifier);
+        List<String> frenchValues = record.getQField(testKey, Language.FRENCH);
         Assert.assertEquals(1, frenchValues.size());
     }
 }
