@@ -243,6 +243,7 @@ public class UIMOrchestratorTest {
         execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
         execution0.waitUntilFinished();
         Assert.assertEquals("false", execution0.getProperties().get("sysout.random.sleep"));
+        
     }
 
     /**

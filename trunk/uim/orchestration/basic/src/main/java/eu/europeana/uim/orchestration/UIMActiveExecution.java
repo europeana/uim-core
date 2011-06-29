@@ -494,8 +494,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public File getWorkingDirectory(IngestionPlugin plugin) {
-        String workDirSuffix = workflow.getName() + File.pathSeparator + execution.getId() +
-                               File.pathSeparator + plugin.getIdentifier();
+        String workDirSuffix = workflow.getName() + File.separator + execution.getId() +
+                               File.separator + plugin.getIdentifier();
         File workingDirectory = new File(resourceEngine.getWorkingDirectory(), workDirSuffix);
         if (!workingDirectory.exists() && !workingDirectory.mkdirs())
             throw new RuntimeException("Could not create working directory for this execution: " +
@@ -521,6 +521,16 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
+    public File getFileResource(String fileReference) {
+      if (fileReference==null||fileReference.isEmpty()) {
+          return null;
+      }
+      
+      File resourceFile=new File(getResourceEngine().getResourceDirectory().getAbsolutePath()+File.separator+fileReference);
+      return resourceFile;
+    }
+    
+    @Override
     public synchronized void cleanup() {
         if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
             if (resourceEngine != null) {
@@ -534,4 +544,6 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
             }
         }
     }
+
+ 
 }
