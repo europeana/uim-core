@@ -58,17 +58,17 @@ public class GlobalModelRegistryTest {
 
         Agent xCreator = new ConceptBean("urn:agent/aggregator/x");
 
-        record.addQField(GlobalModelRegistry.AGENT, aCreator, ConceptLevel.AGGREGATION,
+        record.addField(GlobalModelRegistry.AGENT, aCreator, ConceptLevel.AGGREGATION,
                 AgentRelation.CREATOR);
-        record.addQField(GlobalModelRegistry.AGENT, xCreator, ConceptLevel.AGGREGATION,
+        record.addField(GlobalModelRegistry.AGENT, xCreator, ConceptLevel.AGGREGATION,
                 AgentRelation.MANUFACTURER);
-        record.addQField(GlobalModelRegistry.AGENT, bCreator, ConceptLevel.PROXY,
+        record.addField(GlobalModelRegistry.AGENT, bCreator, ConceptLevel.PROXY,
                 AgentRelation.CREATOR);
-        record.addQField(GlobalModelRegistry.AGENT, p1Creator, ConceptLevel.OBJECT,
+        record.addField(GlobalModelRegistry.AGENT, p1Creator, ConceptLevel.OBJECT,
                 AgentRelation.CREATOR);
-        record.addQField(GlobalModelRegistry.AGENT, p2Creator, ConceptLevel.OBJECT,
+        record.addField(GlobalModelRegistry.AGENT, p2Creator, ConceptLevel.OBJECT,
                 AgentRelation.CREATOR);
-        record.addQField(GlobalModelRegistry.AGENT, p3Creator, ConceptLevel.OBJECT,
+        record.addField(GlobalModelRegistry.AGENT, p3Creator, ConceptLevel.OBJECT,
                 AgentRelation.CONTRIBUTOR);
 
         // retrieve all agents at once
@@ -76,15 +76,15 @@ public class GlobalModelRegistryTest {
         assertEquals(6, alist.size());
 
         // retrieve all creators at once - one agent is a manufacturer
-        List<Agent> clist = record.getQField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR);
+        List<Agent> clist = record.getPlainField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR);
         assertEquals(4, clist.size());
 
         // retrieve all object related agents
-        List<Agent> plist = record.getQField(GlobalModelRegistry.AGENT, ConceptLevel.OBJECT);
+        List<Agent> plist = record.getPlainField(GlobalModelRegistry.AGENT, ConceptLevel.OBJECT);
         assertEquals(3, plist.size());
 
         // retrieve all object related creators
-        List<Agent> pclist = record.getQField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR,
+        List<Agent> pclist = record.getPlainField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR,
                 ConceptLevel.OBJECT);
         assertEquals(2, pclist.size());
     }

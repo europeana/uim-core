@@ -22,21 +22,6 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
     Collection<I> getCollection();
 
     /**
-     * Retrieves the first value of the list of values represented under that key qualified or
-     * unqualified. In other words the first unqualified field is always the same value no matter if
-     * it used with a qualifier or not.
-     * 
-     * @param <N>
-     *            the namespace (type) in which the field is defined
-     * @param <T>
-     *            the runtime type of the values for this field
-     * @param key
-     *            typed key which holds namespace, name and type information
-     * @return the first value or null
-     */
-    <N, T> T getFirstField(TKey<N, T> key);
-
-    /**
      * Retrieves the first field value for this key and qualifiers.
      * 
      * @param <N>
@@ -50,7 +35,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return first field qualified with the given qualifiers or null (no field or no one matching
      *         all provided qualifiers)
      */
-    <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers);
+    <N, T> T getFirstField(TKey<N, T> key, Enum<?>... qualifiers);
 
     /**
      * Retrieves all field values of this key (qualified and unqualified fields).
@@ -66,7 +51,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
     <N, T> List<QualifiedValue<T>> getField(TKey<N, T> key);
 
     /**
-     * Retrieves as list the field values matching the given qualifiers and key.
+     * Retrieves as list the field values matching the optional qualifiers and key.
      * 
      * @param <N>
      *            the namespace (type) in which the field is defined
@@ -78,41 +63,10 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            information typed by enumerations to provide additional data
      * @return the list of values qualified with the given qualifier
      */
-    <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers);
+    <N, T> List<T> getPlainField(TKey<N, T> key, Enum<?>... qualifiers);
 
     /**
-     * Retrieves all field values of this key without qualifier information.
-     * 
-     * @param <N>
-     *            the namespace (type) in which the field is defined
-     * @param <T>
-     *            the runtime type of the values for this field
-     * @param key
-     *            typed key which holds namespace, name and type information
-     * @return values as list of values
-     */
-    <N, T> List<T> getPlainField(TKey<N, T> key);
-
-    /**
-     * Adds the value to the internal list of values under the specified key. Note, it can be
-     * expected to get the same ordering back when calling getFields.
-     * 
-     * @param <N>
-     *            the namespace (type) in which the field is defined
-     * @param <T>
-     *            the runtime type of the values for this field
-     * @param key
-     *            typed key which holds namespace, name and type information
-     * @param value
-     *            object typed using the type specified in the key
-     * @param qualifiers
-     *            optional information typed by enumerations to provide additional data (null or
-     *            empty set means unqualified)
-     */
-    <N, T> void addField(TKey<N, T> key, T value);
-
-    /**
-     * Adds value to the list of values under the specified key and qualifiers.
+     * Adds value to the list of values under the specified key and optional qualifiers.
      * 
      * @param <N>
      *            the namespace (type) in which the field is defined
@@ -125,7 +79,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @param qualifiers
      *            information typed by enumerations to provide additional data
      */
-    <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers);
+    <N, T> void addField(TKey<N, T> key, T value, Enum<?>... qualifiers);
 
     /**
      * Deletes all values known under the given typed key and returns this list of values.

@@ -51,7 +51,7 @@ public abstract class AbstractMetaDataRecordTest<I> {
         // never return null - get empty list when nothing is there
         assertNotNull(record.getField(MDRFieldRegistry.rawformat));
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getQField(MDRFieldRegistry.rawformat, TestEnum.EN));
+        assertNotNull(record.getPlainField(MDRFieldRegistry.rawformat, TestEnum.EN));
     }
 
     /**

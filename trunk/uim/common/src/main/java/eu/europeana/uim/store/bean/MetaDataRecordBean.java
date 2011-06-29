@@ -27,7 +27,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     /**
      * the collection that is responsible for this record
      */
-    private Collection<I>                                   collection;
+    private Collection<I>                                collection;
 
     /**
      * holds for each key a list of known qualified values
@@ -53,14 +53,13 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         super(id);
         this.collection = collection;
     }
-    
-    
+
     /**
      * @return the collection this mdr belongs to
      */
     @Override
     public Collection<I> getCollection() {
-        return  collection;
+        return collection;
     }
 
     /**
@@ -71,17 +70,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> T getFirstField(TKey<N, T> key) {
-        T result = null;
-        List<QualifiedValue<?>> values = fields.get(key);
-        if (values != null && values.size() > 0) {
-            result = (T)values.get(0).getValue();
-        }
-        return result;
-    }
-
-    @Override
-    public <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers) {
+    public <N, T> T getFirstField(TKey<N, T> key, Enum<?>... qualifiers) {
         T result = null;
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
@@ -108,19 +97,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> List<T> getPlainField(TKey<N, T> key) {
-        List<T> result = new ArrayList<T>();
-        List<QualifiedValue<?>> values = fields.get(key);
-        if (values != null && values.size() > 0) {
-            for (QualifiedValue<?> value : values) {
-                result.add((T)value.getValue());
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers) {
+    public <N, T> List<T> getPlainField(TKey<N, T> key, Enum<?>... qualifiers) {
         List<T> result = new ArrayList<T>();
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
@@ -134,29 +111,14 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> void addField(TKey<N, T> key, T value) {
-        List<QualifiedValue<?>> values = fields.get(key);
-        if (values == null) {
-            values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
-            fields.put(key, values);
-        }
-        values.add(new QualifiedValue<T>(value, new HashSet<Enum<?>>()));
-    }
+    public <N, T> void addField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+        if (value == null) { throw new IllegalArgumentException(
+                "Argument 'value' should not be null!"); }
 
-    @Override
-    public <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        if (value == null) {
-            throw new IllegalArgumentException("Argument 'value' should not be null!");
-        }
-        if (qualifiers == null || qualifiers.length == 0) {
-            throw new IllegalArgumentException("Argument 'qualifiers' should not be null or empty(Use addField for unqualified qualifiers)!");
-        }
-        
         Set<Enum<?>> quals = new HashSet<Enum<?>>();
         for (Enum<?> qualifier : qualifiers) {
-            if (qualifier == null) {
-                throw new IllegalArgumentException("Argument 'qualifiers' should not have null entries!");
-            }
+            if (qualifier == null) { throw new IllegalArgumentException(
+                    "Argument 'qualifiers' should not have null entries!"); }
             quals.add(qualifier);
         }
 
@@ -165,7 +127,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
             fields.put(key, values);
         }
-        
+
         values.add(new QualifiedValue<T>(value, quals));
     }
 

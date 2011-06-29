@@ -14,21 +14,23 @@ import com.mongodb.DBObject;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.store.Request;
 
 /**
- * Mongo implementation of the {@link MetaDataRecord}. We make use of Mongo's document-storage nature and store MDRs as basic documents (i.e. basic mongo db objects).
- * In order to conform to the {@link MetaDataRecord} interface, we wrap a {@link DBObject} which is the object persisted by MongoDB.
- *
- * We store unqualified fields with the prefix FIELD, qualified fields have as prefix the name() of the qualifying Enum.
- *
+ * Mongo implementation of the {@link MetaDataRecord}. We make use of Mongo's document-storage
+ * nature and store MDRs as basic documents (i.e. basic mongo db objects). In order to conform to
+ * the {@link MetaDataRecord} interface, we wrap a {@link DBObject} which is the object persisted by
+ * MongoDB.
+ * 
+ * We store unqualified fields with the prefix FIELD, qualified fields have as prefix the name() of
+ * the qualifying Enum.
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  */
 public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
-    public static final String FIELD = "_field_";
-    private DBObject object = new BasicDBObject();
-    private Collection collection;
-    private String identifier;
+    public static final String FIELD  = "_field_";
+    private DBObject           object = new BasicDBObject();
+    private Collection         collection;
+    private String             identifier;
 
     public MongoMetadataRecord(DBObject object, Collection collection, String identifier, long lid) {
         this.object = object;
@@ -39,9 +41,8 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         object.put("identifier", identifier);
     }
 
-
     public Long getId() {
-        return (Long) object.get(AbstractMongoEntity.LID);
+        return (Long)object.get(AbstractMongoEntity.LID);
     }
 
     public void setObject(BasicDBObject object) {
@@ -61,7 +62,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     public <N, T extends Serializable> void setFirstField(TKey<N, T> nttKey, T value) {
-        BasicDBObject unqualifiedFields = (BasicDBObject) object.get(fieldName(nttKey.getFullName()));
+        BasicDBObject unqualifiedFields = (BasicDBObject)object.get(fieldName(nttKey.getFullName()));
         if (unqualifiedFields == null) {
             unqualifiedFields = new BasicDBObject();
             object.put(fieldName(nttKey.getFullName()), unqualifiedFields);
@@ -69,19 +70,14 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         unqualifiedFields.put(FIELD + "0", value);
     }
 
-
-    @Override
-    public <N, T> T getFirstField(TKey<N, T> nttKey) {
-        return getField(nttKey).get(0).getValue();
-    }
-
-    public <N, T extends Serializable> void setFirstQField(TKey<N, T> nttKey, String qualifier, T value) {
-        BasicDBObject qualifiedFields = (BasicDBObject) object.get(fieldName(nttKey.getFullName()));
+    public <N, T extends Serializable> void setFirstQField(TKey<N, T> nttKey, String qualifier,
+            T value) {
+        BasicDBObject qualifiedFields = (BasicDBObject)object.get(fieldName(nttKey.getFullName()));
         if (qualifiedFields == null) {
             qualifiedFields = new BasicDBObject();
             object.put(fieldName(nttKey.getFullName()), qualifiedFields);
         }
-        BasicDBObject values = (BasicDBObject) qualifiedFields.get(qualifier);
+        BasicDBObject values = (BasicDBObject)qualifiedFields.get(qualifier);
         if (values == null) {
             values = new BasicDBObject();
             qualifiedFields.put(qualifier, values);
@@ -89,24 +85,16 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         values.put(FIELD + "0", value);
     }
 
-    public <N, T> void addField(TKey<N, T> key, T value) {
-        BasicDBObject unqualifiedFields = (BasicDBObject) object.get(fieldName(key.getFullName()));
-        if (unqualifiedFields == null) {
-            unqualifiedFields = new BasicDBObject();
-            object.put(fieldName(key.getFullName()), unqualifiedFields);
-        }
-        unqualifiedFields.put(FIELD + new Integer(unqualifiedFields.size()).toString(), value);
-    }
-
     @Override
-    public <N, T> void addQField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        BasicDBObject qFields = (BasicDBObject) object.get(fieldName(key.getFullName()));
+    public <N, T> void addField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+        BasicDBObject qFields = (BasicDBObject)object.get(fieldName(key.getFullName()));
         if (qFields == null) {
             qFields = new BasicDBObject();
             object.put(fieldName(key.getFullName()), qFields);
         }
 
-        // TODO adapt this to also store the type of the Enum<?> values so that we can re-hydrate them when retrieving them from the storage.
+        // TODO adapt this to also store the type of the Enum<?> values so that we can re-hydrate
+// them when retrieving them from the storage.
 
         for (Enum<?> q : qualifiers) {
             qFields.put(q.name(), value);
@@ -114,21 +102,21 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
 
     }
 
-
     public <N, T> List<QualifiedValue<T>> getField(TKey<N, T> nttKey) {
         Map<String, QualifiedValue<T>> qFields = new HashMap<String, QualifiedValue<T>>();
         List<QualifiedValue<T>> res = new ArrayList<QualifiedValue<T>>();
 
-        BasicDBObject values = (BasicDBObject) object.get(fieldName(nttKey.getFullName()));
+        BasicDBObject values = (BasicDBObject)object.get(fieldName(nttKey.getFullName()));
         for (String s : values.keySet()) {
             // unqualified fields
             if (s.startsWith(FIELD)) {
-                QualifiedValue<T> val = new QualifiedValue<T>((T) values.get(s), new HashSet<Enum<?>>());
+                QualifiedValue<T> val = new QualifiedValue<T>((T)values.get(s),
+                        new HashSet<Enum<?>>());
                 res.add(val);
             } else {
 
                 // qualified fields
-                T value = (T) values.get(s);
+                T value = (T)values.get(s);
                 QualifiedValue<T> v = qFields.get(s);
                 if (v == null) {
                     Set<Enum<?>> qualifiers = new HashSet<Enum<?>>();
@@ -139,9 +127,9 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
                 // add the qualifiers
 
                 // TODO Enum<?> deserialization
-                // we need to store the type of the Enum (class) so we can re-create it via reflection
-//                v.getQualifiers().add( dehydrated qualifier )
-
+                // we need to store the type of the Enum (class) so we can re-create it via
+// reflection
+// v.getQualifiers().add( dehydrated qualifier )
 
             }
         }
@@ -149,30 +137,24 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     @Override
-    public <N, T> List<T> getQField(TKey<N, T> key, Enum<?>... qualifiers) {
+    public <N, T> List<T> getPlainField(TKey<N, T> key, Enum<?>... qualifiers) {
         List<T> res = new ArrayList<T>();
-        BasicDBObject data = (BasicDBObject) object.get(fieldName(key.getFullName()));
+        BasicDBObject data = (BasicDBObject)object.get(fieldName(key.getFullName()));
         if (data == null) {
             data = new BasicDBObject();
             object.put(fieldName(key.getFullName()), data);
         }
 
-        for(Enum<?> qualifier : qualifiers) {
-            T value = (T) data.get(qualifier.name());
+        for (Enum<?> qualifier : qualifiers) {
+            T value = (T)data.get(qualifier.name());
             res.add(value);
         }
         return res;
     }
 
     @Override
-    public <N, T> T getFirstQField(TKey<N, T> key, Enum<?>... qualifiers) {
-        return getQField(key, qualifiers).get(0);
-    }
-
-    @Override
-    public <N, T> List<T> getPlainField(TKey<N, T> key) {
-        // TODO
-        return null;
+    public <N, T> T getFirstField(TKey<N, T> key, Enum<?>... qualifiers) {
+        return getPlainField(key, qualifiers).get(0);
     }
 
     @Override
@@ -180,8 +162,6 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         // TODO
         return null;
     }
-
-
 
     private String fieldName(String name) {
         return name.replaceAll(".", "_");
