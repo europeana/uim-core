@@ -61,7 +61,7 @@ public interface ExecutionContext {
 
     /**
      * @param plugin
-     * @return a working director, which is specific for this execution
+     * @return a working directory, which is specific for this execution
      */
     public File getWorkingDirectory(IngestionPlugin plugin);
 
