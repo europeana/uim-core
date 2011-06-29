@@ -478,7 +478,7 @@ public class UIMStore implements Action {
         storage.checkpoint();
     }
 
-    @SuppressWarnings("unused")
+    //@SuppressWarnings("unused")
     private void setFieldValues(String[] split) {
         String[] arguments = split[1].split("\\|");
         this.argument0 = null;

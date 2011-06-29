@@ -71,6 +71,13 @@ public interface ExecutionContext {
      *         workflow is over (if not overridden by configuration)
      */
     public File getTmpDirectory(IngestionPlugin plugin);
+    
+    /**
+     * Transforms file related properties into the actual file references. 
+     * @param fileReference
+     * @return a reference to the resource to access, null if not successful
+     */
+    public File getFileResource(String fileReference);
 
     /**
      * @param <NS>
