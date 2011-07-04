@@ -20,11 +20,21 @@
  */
 package eu.europeana.uim.gui.cp.client.europeanawidgets;
 
+import java.util.Comparator;
+
 import javax.xml.bind.Binder;
 
+import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
@@ -35,6 +45,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.HasData;
 
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.SugarCrmRecord;
@@ -87,7 +98,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 */
 	@Override
 	public Widget onInitialize() {
-		   // Create a CellTable.
+		// Create a CellTable.
 
 	    // Set a key provider that provides a unique key for each contact. If key is
 	    // used to identify contacts when fields (such as the name and address)
@@ -111,17 +122,18 @@ public class ImportResourcesWidget extends IngestionWidget {
 	        DefaultSelectionEventManager.<SugarCrmRecord> createCheckboxManager());
 
 	    // Initialize the columns.
-	    //initTableColumns(selectionModel, sortHandler);
+	    initTableColumns(selectionModel, sortHandler);
 
 	    // Add the CellList to the adapter in the database.
-	    //ContactDatabase.get().addDataDisplay(cellTable);
-
+	    dataProvider.addDataDisplay(cellTable);
+	    
 	    // Create the UiBinder.
-	    //Binder uiBinder = GWT.create(Binder.class);
-	    //Widget widget = uiBinder.createAndBindUi(this);
+	    
+	    UiBinder uiBinder = GWT.create(UiBinder.class);
+	    Widget widget = (Widget) uiBinder.createAndBindUi(this);
 
-	    //return widget;
-	    return null;
+	    return widget;
+
 	}
 
 	/* (non-Javadoc)
@@ -132,5 +144,54 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 
 	}
+	
+	
+	  /**
+	   * Add the columns to the table.
+	   */
+	  private void initTableColumns(
+	      final SelectionModel<SugarCrmRecord> selectionModel,
+	      ListHandler<SugarCrmRecord> sortHandler) {
+	    // Checkbox column. This table will uses a checkbox column for selection.
+	    // Alternatively, you can call cellTable.setSelectionEnabled(true) to enable
+	    // mouse selection.
+	    Column<SugarCrmRecord, Boolean> checkColumn = new Column<SugarCrmRecord, Boolean>(
+	        new CheckboxCell(true, false)) {
+	      @Override
+	      public Boolean getValue(SugarCrmRecord object) {
+	        // Get the value from the selection model.
+	        return selectionModel.isSelected(object);
+	      }
+	    };
+	    cellTable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+	    cellTable.setColumnWidth(checkColumn, 40, Unit.PX);
+
+	    // First name.
+	    Column<SugarCrmRecord, String> firstNameColumn = new Column<SugarCrmRecord, String>(
+	        new TextCell()) {
+	      @Override
+	      public String getValue(SugarCrmRecord object) {
+	        return object.getItemValue(RetrievableField.ID);
+	      }
+	    };
+	    firstNameColumn.setSortable(true);
+	    
+	    sortHandler.setComparator(firstNameColumn, new Comparator<SugarCrmRecord>() {
+	      public int compare(SugarCrmRecord o1, SugarCrmRecord o2) {
+	        return o1.getItemValue(RetrievableField.ID).compareTo(o2.getItemValue(RetrievableField.ID));
+	      }
+	    });
+	    cellTable.addColumn(firstNameColumn, "ID");
+	    firstNameColumn.setFieldUpdater(new FieldUpdater<SugarCrmRecord, String>() {
+	      public void update(int index, SugarCrmRecord object, String value) {
+
+	    	  dataProvider.refresh();
+	      }
+	    });
+	    cellTable.setColumnWidth(firstNameColumn, 20, Unit.PCT);
+
+	  }
+
+	
 
 }
