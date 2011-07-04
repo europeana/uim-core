@@ -54,4 +54,18 @@ public interface RepositoryServiceAsync {
      * @param async
      */
     void getCollectionTotal(Long collection, AsyncCallback<Integer> async);
+
+    /**
+     * @param provider
+     * @param async
+     *            true, if update of provider was successfull
+     */
+    void updateProvider(ProviderDTO provider, AsyncCallback<Boolean> async);
+
+    /**
+     * @param collection
+     * @param async
+     *            true, if update of collectiono was successfull
+     */
+    void updateCollection(CollectionDTO collection, AsyncCallback<Boolean> async);
 }

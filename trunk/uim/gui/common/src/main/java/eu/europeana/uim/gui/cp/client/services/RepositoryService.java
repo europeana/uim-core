@@ -46,4 +46,16 @@ public interface RepositoryService extends RemoteService {
      * @return number of metadata records in the provided collection
      */
     Integer getCollectionTotal(Long collection);
+
+    /**
+     * @param provider
+     * @return true, if update of provider was successfull
+     */
+    Boolean updateProvider(ProviderDTO provider);
+
+    /**
+     * @param collection
+     * @return true, if update of collectiono was successfull
+     */
+    Boolean updateCollection(CollectionDTO collection);
 }

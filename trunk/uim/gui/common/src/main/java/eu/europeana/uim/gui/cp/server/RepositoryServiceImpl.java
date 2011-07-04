@@ -50,12 +50,12 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     add("Workflow Blacklist");
                 }
             };
-            
+
             LinkedHashMap<String, List<String>> globalResources = getEngine().getRegistry().getResourceEngine().getGlobalResources(
                     blackListKey);
             List<String> blacklist = globalResources.get(blackListKey.get(0));
-            Set<String> blackSet = blacklist != null && blacklist.size() > 0
-                    ? new HashSet<String>(blacklist) : null;
+            Set<String> blackSet = blacklist != null && blacklist.size() > 0 ? new HashSet<String>(
+                    blacklist) : null;
             for (Workflow w : workflows) {
                 if (blackSet != null && blackSet.contains(w.getIdentifier())) {
                     continue;
@@ -67,7 +67,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             Collections.sort(res, new Comparator<WorkflowDTO>() {
                 @Override
                 public int compare(WorkflowDTO o1, WorkflowDTO o2) {
-                    return o1.getName().compareTo(o2.getName());
+                    String name1 = o1.getName() != null ? o1.getName() : "";
+                    String name2 = o2.getName() != null ? o2.getName() : "";
+                    return name1.compareTo(name2);
                 }
             });
         }
@@ -89,7 +91,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 Collections.sort(res, new Comparator<ProviderDTO>() {
                     @Override
                     public int compare(ProviderDTO o1, ProviderDTO o2) {
-                        return o1.getName().compareTo(o2.getName());
+                        String name1 = o1.getName() != null ? o1.getName() : "";
+                        String name2 = o2.getName() != null ? o2.getName() : "";
+                        return name1.compareTo(name2);
                     }
                 });
             }
@@ -120,7 +124,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             Collections.sort(res, new Comparator<CollectionDTO>() {
                 @Override
                 public int compare(CollectionDTO o1, CollectionDTO o2) {
-                    return o1.getName().compareTo(o2.getName());
+                    String name1 = o1.getName() != null ? o1.getName() : "";
+                    String name2 = o2.getName() != null ? o2.getName() : "";
+                    return name1.compareTo(name2);
                 }
             });
         } catch (StorageEngineException e) {
@@ -171,5 +177,70 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
          * wss.failures()); res.add(ss); }
          */
         return res;
+    }
+
+    @Override
+    public Boolean updateProvider(ProviderDTO provider) {
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+
+        Provider<Long> prov;
+        try {
+            if (provider.getId() == null) {
+                prov = storage.createProvider();
+            } else {
+                prov = storage.getProvider(provider.getId());
+            }
+        } catch (StorageEngineException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        prov.setMnemonic(provider.getMnemonic());
+        prov.setName(provider.getName());
+        prov.setOaiBaseUrl(provider.getOaiBaseUrl());
+        prov.setOaiMetadataPrefix(provider.getOaiMetadataPrefix());
+
+        try {
+            storage.updateProvider(prov);
+        } catch (StorageEngineException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public Boolean updateCollection(CollectionDTO collection) {
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+
+        Collection<Long> coll;
+        try {
+            if (collection.getId() == null) {
+                Provider<Long> prov = storage.getProvider(collection.getProvider().getId());
+                coll = storage.createCollection(prov);
+            } else {
+                coll = storage.getCollection(collection.getId());
+            }
+        } catch (StorageEngineException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        coll.setMnemonic(collection.getMnemonic());
+        coll.setName(collection.getName());
+        coll.setLanguage(collection.getLanguage());
+        coll.setOaiBaseUrl(collection.getOaiBaseUrl(false));
+        coll.setOaiMetadataPrefix(collection.getOaiMetadataPrefix(false));
+        coll.setOaiSet(collection.getOaiSet());
+
+        try {
+            storage.updateCollection(coll);
+        } catch (StorageEngineException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

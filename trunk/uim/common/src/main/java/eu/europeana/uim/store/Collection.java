@@ -3,7 +3,6 @@ package eu.europeana.uim.store;
 import java.util.Date;
 import java.util.Map;
 
-
 /*
  provider    // ref to Provider obj
  name_code   // ingestion internal shorthand for Aggregator
@@ -60,7 +59,7 @@ public interface Collection<I> extends UimDataSet<I> {
     void setLanguage(String language);
 
     /**
-     * @param fallback 
+     * @param fallback
      * @return base url to retrieve the collections data
      */
     String getOaiBaseUrl(boolean fallback);
@@ -83,7 +82,7 @@ public interface Collection<I> extends UimDataSet<I> {
     void setOaiSet(String set);
 
     /**
-     * @param fallback 
+     * @param fallback
      * @return a prefix for the metadata retrieved from this oai
      */
     String getOaiMetadataPrefix(boolean fallback);
@@ -117,25 +116,25 @@ public interface Collection<I> extends UimDataSet<I> {
      *            date of last synchronization of all record in this collection
      */
     void setLastSynchronized(Date date);
-    
-    
-    /** string key,value pairs for arbitraty information on colleciton level
+
+    /**
+     * string key,value pairs for arbitraty information on colleciton level
+     * 
      * @param key
      * @param value
      */
     void putValue(String key, String value);
-    
-    
-    /** retrieve the stirng value for the specific key
+
+    /**
+     * retrieve the stirng value for the specific key
+     * 
      * @param key
      * @return the string value or null
      */
     String getValue(String key);
-    
-    
+
     /**
      * @return the values map
      */
     Map<String, String> values();
-
 }

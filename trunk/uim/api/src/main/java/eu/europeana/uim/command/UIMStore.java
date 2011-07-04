@@ -54,6 +54,8 @@ public class UIMStore implements Action {
         updateCollection(
                          "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"),
 
+        setMacsIndex("Sets the given path as base directory for the MACS index!"),
+
         addBlacklistWorkflow(
                              "Puts the given workflow onto the blacklist (stored in resource engine)"),
 
@@ -143,6 +145,9 @@ public class UIMStore implements Action {
             case updateCollection:
                 updateCollection(storage, out);
                 break;
+            case setMacsIndex:
+                setMacsIndex(resource, argument0);
+                break;
             case addBlacklistWorkflow:
                 addBlacklistWorkflow(resource, argument0);
                 break;
@@ -177,6 +182,26 @@ public class UIMStore implements Action {
         }
 
         return null;
+    }
+
+    /**
+     * key for macs index path in resource engine
+     */
+    public static List<String> macsKey = new ArrayList<String>() {
+                                           {
+                                               add("MACS Indexpath");
+                                           }
+                                       };
+
+    private void setMacsIndex(ResourceEngine resource, String macsIndexPath) {
+        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(macsKey);
+        List<String> macsList = resources.get(macsKey.get(0));
+        macsList.clear();
+        if (macsIndexPath != null && macsIndexPath.length() > 0 &&
+            new File(macsIndexPath).isDirectory()) {
+            macsList.add(macsIndexPath);
+        }
+        resource.setGlobalResources(resources);
     }
 
     /**
@@ -478,7 +503,7 @@ public class UIMStore implements Action {
         storage.checkpoint();
     }
 
-    //@SuppressWarnings("unused")
+    // @SuppressWarnings("unused")
     private void setFieldValues(String[] split) {
         String[] arguments = split[1].split("\\|");
         this.argument0 = null;

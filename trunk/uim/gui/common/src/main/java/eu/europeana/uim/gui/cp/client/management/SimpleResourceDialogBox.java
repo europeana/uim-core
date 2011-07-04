@@ -46,7 +46,7 @@ public class SimpleResourceDialogBox extends DialogBox {
         key.setSpacing(4);
         key.setWidth("100%");
         Label keyLabel = new Label("Resource Key");
-        keyLabel.setWidth("100%");
+        keyLabel.setWidth("100px");
         key.add(keyLabel);
         key.setCellHorizontalAlignment(keyLabel, HasHorizontalAlignment.ALIGN_LEFT);
         Label keyValue = new Label(parameter.getKey());
@@ -59,7 +59,7 @@ public class SimpleResourceDialogBox extends DialogBox {
         values.setSpacing(4);
         values.setWidth("100%");
         Label valueLabel = new Label("Resource Values");
-        valueLabel.setWidth("100%");
+        valueLabel.setWidth("100px");
         values.add(valueLabel);
         values.setCellHorizontalAlignment(valueLabel, HasHorizontalAlignment.ALIGN_LEFT);
 
