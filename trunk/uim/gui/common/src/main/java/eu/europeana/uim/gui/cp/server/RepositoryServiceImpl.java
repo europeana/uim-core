@@ -118,6 +118,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 collDTO.setLanguage(col.getLanguage());
                 collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
                 collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
+                collDTO.setOaiSet(col.getOaiSet());
                 res.add(collDTO);
             }
 
