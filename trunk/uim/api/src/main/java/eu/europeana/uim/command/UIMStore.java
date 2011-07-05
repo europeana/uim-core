@@ -194,15 +194,16 @@ public class UIMStore implements Action {
                                        };
 
     private void setMacsIndex(ResourceEngine resource, String macsIndexPath) {
-        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(macsKey);
-        List<String> macsList = resources.get(macsKey.get(0));
-        macsList.clear();
+        LinkedHashMap<String, List<String>> resources = new LinkedHashMap<String, List<String>>();
+        List<String> macsList = null;
         if (macsIndexPath != null &&
             macsIndexPath.length() > 0 &&
             new File(macsIndexPath.startsWith("file://") ? macsIndexPath.substring(7)
                     : macsIndexPath).isDirectory()) {
+            macsList = new ArrayList<String>();
             macsList.add(macsIndexPath);
         }
+        resources.put(macsKey.get(0), macsList);
         resource.setGlobalResources(resources);
     }
 
