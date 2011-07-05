@@ -54,8 +54,6 @@ public class UIMStore implements Action {
         updateCollection(
                          "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"),
 
-        setMacsIndex("Sets the given path as base directory for the MACS index!"),
-
         addBlacklistWorkflow(
                              "Puts the given workflow onto the blacklist (stored in resource engine)"),
 
@@ -145,9 +143,6 @@ public class UIMStore implements Action {
             case updateCollection:
                 updateCollection(storage, out);
                 break;
-            case setMacsIndex:
-                setMacsIndex(resource, argument0);
-                break;
             case addBlacklistWorkflow:
                 addBlacklistWorkflow(resource, argument0);
                 break;
@@ -182,29 +177,6 @@ public class UIMStore implements Action {
         }
 
         return null;
-    }
-
-    /**
-     * key for macs index path in resource engine
-     */
-    public static List<String> macsKey = new ArrayList<String>() {
-                                           {
-                                               add("MACS Indexpath");
-                                           }
-                                       };
-
-    private void setMacsIndex(ResourceEngine resource, String macsIndexPath) {
-        LinkedHashMap<String, List<String>> resources = new LinkedHashMap<String, List<String>>();
-        List<String> macsList = null;
-        if (macsIndexPath != null &&
-            macsIndexPath.length() > 0 &&
-            new File(macsIndexPath.startsWith("file://") ? macsIndexPath.substring(7)
-                    : macsIndexPath).isDirectory()) {
-            macsList = new ArrayList<String>();
-            macsList.add(macsIndexPath);
-        }
-        resources.put(macsKey.get(0), macsList);
-        resource.setGlobalResources(resources);
     }
 
     /**
@@ -262,9 +234,6 @@ public class UIMStore implements Action {
 
         LinkedHashMap<String, List<String>> blackWorkflow = resource.getGlobalResources(blackListKey);
         out.println("Blacklisted Workflows are:" + blackWorkflow.toString() + "\n");
-
-        LinkedHashMap<String, List<String>> macsIndex = resource.getGlobalResources(macsKey);
-        out.println("MACS Index:" + macsIndex.toString() + "\n");
     }
 
     /**
