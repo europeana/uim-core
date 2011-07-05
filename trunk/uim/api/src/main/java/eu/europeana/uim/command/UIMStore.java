@@ -257,8 +257,11 @@ public class UIMStore implements Action {
                         resources.toString() + "\n");
         }
 
-        LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
-        out.println("Blacklisted Workflows are:" + resources.toString() + "\n");
+        LinkedHashMap<String, List<String>> blackWorkflow = resource.getGlobalResources(blackListKey);
+        out.println("Blacklisted Workflows are:" + blackWorkflow.toString() + "\n");
+        
+        LinkedHashMap<String, List<String>> macsIndex = resource.getGlobalResources(macsKey);
+        out.println("MACS Index:" + macsIndex.toString() + "\n");
     }
 
     /**
