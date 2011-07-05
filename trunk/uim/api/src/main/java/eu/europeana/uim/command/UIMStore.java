@@ -197,8 +197,10 @@ public class UIMStore implements Action {
         LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(macsKey);
         List<String> macsList = resources.get(macsKey.get(0));
         macsList.clear();
-        if (macsIndexPath != null && macsIndexPath.length() > 0 &&
-            new File(macsIndexPath).isDirectory()) {
+        if (macsIndexPath != null &&
+            macsIndexPath.length() > 0 &&
+            new File(macsIndexPath.startsWith("file://") ? macsIndexPath.substring(7)
+                    : macsIndexPath).isDirectory()) {
             macsList.add(macsIndexPath);
         }
         resource.setGlobalResources(resources);
@@ -259,7 +261,7 @@ public class UIMStore implements Action {
 
         LinkedHashMap<String, List<String>> blackWorkflow = resource.getGlobalResources(blackListKey);
         out.println("Blacklisted Workflows are:" + blackWorkflow.toString() + "\n");
-        
+
         LinkedHashMap<String, List<String>> macsIndex = resource.getGlobalResources(macsKey);
         out.println("MACS Index:" + macsIndex.toString() + "\n");
     }
