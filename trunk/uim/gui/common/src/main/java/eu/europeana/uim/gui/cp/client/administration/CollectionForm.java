@@ -55,7 +55,7 @@ public class CollectionForm extends Composite {
     public CollectionForm(final RepositoryServiceAsync repositoryService,
                           final UpdateListener listener) {
         initWidget(uiBinder.createAndBindUi(this));
-        
+
         commitButton.setEnabled(false);
 
         commitButton.addClickHandler(new ClickHandler() {
@@ -114,5 +114,8 @@ public class CollectionForm extends Composite {
         oaiMetadataPrefixBox.setText(collection != null ? collection.getOaiMetadataPrefix(false)
                 : "");
         oaiSetBox.setText(collection != null ? collection.getOaiSet() : "");
+        if (collection != null && collection.getId() != null) {
+            mnemonicBox.setEnabled(false);
+        }
     }
 }

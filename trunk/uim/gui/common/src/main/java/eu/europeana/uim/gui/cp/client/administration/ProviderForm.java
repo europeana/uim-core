@@ -102,5 +102,8 @@ public class ProviderForm extends Composite {
         nameBox.setText(provider != null ? provider.getName() : "");
         oaiBaseUrlBox.setText(provider != null ? provider.getOaiBaseUrl() : "");
         oaiMetadataPrefixBox.setText(provider != null ? provider.getOaiMetadataPrefix() : "");
+        if (provider != null && provider.getId() != null) {
+            mnemonicBox.setEnabled(false);
+        }
     }
 }
