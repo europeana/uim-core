@@ -108,7 +108,7 @@ public abstract class TDatabaseLogEntry<T> implements LogEntry<Long, T> {
     }
 
     /**
-     * @param pluginName
+     * @param module
      *            name of plugin
      */
     public void setModule(String module) {
