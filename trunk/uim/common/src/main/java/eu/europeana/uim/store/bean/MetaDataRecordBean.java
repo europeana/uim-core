@@ -2,6 +2,7 @@ package eu.europeana.uim.store.bean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -147,6 +148,6 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      * @return available keys
      */
     public Set<TKey<?, ?>> getAvailableKeys() {
-        return fields.keySet();
+        return Collections.unmodifiableSet(new HashSet<TKey<?,?>>(fields.keySet()));
     }
 }
