@@ -88,6 +88,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                         w, c);
             }
             ae.getMonitor().addListener(monitor);
+            ae.setName(executionName);
             populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
             return execution;
