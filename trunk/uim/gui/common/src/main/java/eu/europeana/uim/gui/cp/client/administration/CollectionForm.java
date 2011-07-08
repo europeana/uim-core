@@ -116,6 +116,8 @@ public class CollectionForm extends Composite {
         oaiSetBox.setText(collection != null ? collection.getOaiSet() : "");
         if (collection != null && collection.getId() != null) {
             mnemonicBox.setEnabled(false);
+        } else {
+            mnemonicBox.setEnabled(true);
         }
     }
 }

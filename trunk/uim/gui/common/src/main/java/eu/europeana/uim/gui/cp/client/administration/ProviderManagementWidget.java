@@ -26,7 +26,8 @@ import eu.europeana.uim.gui.cp.shared.ProviderDTO;
  * @since Apr 27, 2011
  */
 public class ProviderManagementWidget extends IngestionWidget {
-    private static final String NEW_PROVIDER = "New Provider";
+    private static final String NEW_PROVIDER   = "New Provider";
+    private static final String NEW_COLLECTION = "New Collection";
 
     /**
      * The UiBinder interface used by this example.
@@ -79,7 +80,7 @@ public class ProviderManagementWidget extends IngestionWidget {
             }
         });
         providerForm.setProvider(new ProviderDTO());
-        
+
         collectionForm = new CollectionForm(repositoryService, new UpdateListener() {
             @Override
             public void updated(DataSourceDTO dataSource) {
@@ -161,7 +162,7 @@ public class ProviderManagementWidget extends IngestionWidget {
                         collections.clear();
                         collectionBox.clear();
                         collections.addAll(result);
-                        collectionBox.addItem("New Collection");
+                        collectionBox.addItem(NEW_COLLECTION);
                         for (CollectionDTO collection : collections) {
                             collectionBox.addItem(collection.getName());
                         }
