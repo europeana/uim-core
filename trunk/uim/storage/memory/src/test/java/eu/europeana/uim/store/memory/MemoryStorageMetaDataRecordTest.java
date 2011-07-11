@@ -42,14 +42,14 @@ public class MemoryStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<
         TKey<MemoryStorageMetaDataRecordTest, String> testKey = TKey.register(
                 MemoryStorageMetaDataRecordTest.class, "test", String.class);
 
-        record.addField(testKey, "unqualified");
-        record.addField(testKey, "english", Language.ENGLISH);
-        record.addField(testKey, "french", Language.FRENCH);
+        record.addValue(testKey, "unqualified");
+        record.addValue(testKey, "english", Language.ENGLISH);
+        record.addValue(testKey, "french", Language.FRENCH);
 
-        Assert.assertEquals("unqualified", record.getFirstField(testKey));
-        List<QualifiedValue<String>> values = record.getField(testKey);
+        Assert.assertEquals("unqualified", record.getFirstValue(testKey));
+        List<QualifiedValue<String>> values = record.getQualifiedValues(testKey);
         Assert.assertEquals(3, values.size());
-        List<String> frenchValues = record.getPlainField(testKey, Language.FRENCH);
+        List<String> frenchValues = record.getValues(testKey, Language.FRENCH);
         Assert.assertEquals(1, frenchValues.size());
     }
 }

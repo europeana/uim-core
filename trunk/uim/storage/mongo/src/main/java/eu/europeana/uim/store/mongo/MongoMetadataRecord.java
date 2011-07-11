@@ -86,7 +86,7 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     }
 
     @Override
-    public <N, T> void addField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         BasicDBObject qFields = (BasicDBObject)object.get(fieldName(key.getFullName()));
         if (qFields == null) {
             qFields = new BasicDBObject();

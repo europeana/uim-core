@@ -71,7 +71,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> T getFirstField(TKey<N, T> key, Enum<?>... qualifiers) {
+    public <N, T> T getFirstValue(TKey<N, T> key, Enum<?>... qualifiers) {
         T result = null;
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
@@ -86,19 +86,36 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> List<QualifiedValue<T>> getField(TKey<N, T> key) {
-        List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();
+    public <N, T> QualifiedValue<T> getFirstQualifiedValue(TKey<N, T> key, Enum<?>... qualifiers) {
+        QualifiedValue<T> result = null;
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                result.add((QualifiedValue<T>)value);
+                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                    result = (QualifiedValue<T>)value;
+                    break;
+                }
             }
         }
         return result;
     }
 
     @Override
-    public <N, T> List<T> getPlainField(TKey<N, T> key, Enum<?>... qualifiers) {
+    public <N, T> List<QualifiedValue<T>> getQualifiedValues(TKey<N, T> key, Enum<?>... qualifiers) {
+        List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();
+        List<QualifiedValue<?>> values = fields.get(key);
+        if (values != null && values.size() > 0) {
+            for (QualifiedValue<?> value : values) {
+                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                    result.add((QualifiedValue<T>)value);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public <N, T> List<T> getValues(TKey<N, T> key, Enum<?>... qualifiers) {
         List<T> result = new ArrayList<T>();
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
@@ -112,7 +129,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> void addField(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         if (value == null) { throw new IllegalArgumentException(
                 "Argument 'value' should not be null!"); }
 
@@ -133,7 +150,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> List<QualifiedValue<T>> deleteField(TKey<N, T> key) {
+    public <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key) {
         List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();
         List<QualifiedValue<?>> values = fields.remove(key);
         if (values != null && values.size() > 0) {
@@ -148,6 +165,6 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      * @return available keys
      */
     public Set<TKey<?, ?>> getAvailableKeys() {
-        return Collections.unmodifiableSet(new HashSet<TKey<?,?>>(fields.keySet()));
+        return Collections.unmodifiableSet(new HashSet<TKey<?, ?>>(fields.keySet()));
     }
 }

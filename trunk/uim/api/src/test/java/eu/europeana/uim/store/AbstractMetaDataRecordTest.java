@@ -46,12 +46,12 @@ public abstract class AbstractMetaDataRecordTest<I> {
         MetaDataRecord<I> record = engine.createMetaDataRecord(request.getCollection(), null);
 
         // no value for this field exists, therefore the first field is null
-        assertNull(record.getFirstField(MDRFieldRegistry.rawformat));
+        assertNull(record.getFirstValue(MDRFieldRegistry.rawformat));
 
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getField(MDRFieldRegistry.rawformat));
+        assertNotNull(record.getQualifiedValues(MDRFieldRegistry.rawformat));
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getPlainField(MDRFieldRegistry.rawformat, TestEnum.EN));
+        assertNotNull(record.getValues(MDRFieldRegistry.rawformat, TestEnum.EN));
     }
 
     /**

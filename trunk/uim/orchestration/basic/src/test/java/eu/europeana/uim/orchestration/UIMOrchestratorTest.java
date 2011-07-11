@@ -285,7 +285,7 @@ public class UIMOrchestratorTest {
 
         for (int i = 0; i < count; i++) {
             MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0, "abcd" + i);
-            record0.addField(MDRFieldRegistry.rawrecord, "title " + i);
+            record0.addValue(MDRFieldRegistry.rawrecord, "title " + i);
             engine.updateMetaDataRecord(record0);
             engine.addRequestRecord(request0, record0);
         }

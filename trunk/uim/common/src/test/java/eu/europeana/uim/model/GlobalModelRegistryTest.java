@@ -30,12 +30,12 @@ public class GlobalModelRegistryTest {
         MetaDataRecord<Long> record = new MetaDataRecordBean<Long>(1L, null);
 
         Concept proxy = new ConceptBean("urn:proxy/123456789");
-        record.addField(GlobalModelRegistry.CONCEPT, proxy);
+        record.addValue(GlobalModelRegistry.CONCEPT, proxy);
 
-        List<QualifiedValue<Concept>> list = record.getField(GlobalModelRegistry.CONCEPT);
+        List<QualifiedValue<Concept>> list = record.getQualifiedValues(GlobalModelRegistry.CONCEPT);
         assertEquals(1, list.size());
 
-        Concept mProxy = record.getFirstField(GlobalModelRegistry.CONCEPT);
+        Concept mProxy = record.getFirstValue(GlobalModelRegistry.CONCEPT);
         assertEquals(mProxy, proxy);
         assertSame(mProxy, proxy);
         assertEquals(mProxy.getIdentifier(), proxy.getIdentifier());
@@ -48,7 +48,7 @@ public class GlobalModelRegistryTest {
         MetaDataRecord<Long> record = new MetaDataRecordBean<Long>(1L, null);
 
         Concept proxy = new ConceptBean("urn:proxy/123456789");
-        record.addField(GlobalModelRegistry.CONCEPT, proxy);
+        record.addValue(GlobalModelRegistry.CONCEPT, proxy);
 
         Agent aCreator = new ConceptBean("urn:agent/musem/a");
         Agent bCreator = new ConceptBean("urn:agent/aggregator/b");
@@ -58,33 +58,33 @@ public class GlobalModelRegistryTest {
 
         Agent xCreator = new ConceptBean("urn:agent/aggregator/x");
 
-        record.addField(GlobalModelRegistry.AGENT, aCreator, ConceptLevel.AGGREGATION,
+        record.addValue(GlobalModelRegistry.AGENT, aCreator, ConceptLevel.AGGREGATION,
                 AgentRelation.CREATOR);
-        record.addField(GlobalModelRegistry.AGENT, xCreator, ConceptLevel.AGGREGATION,
+        record.addValue(GlobalModelRegistry.AGENT, xCreator, ConceptLevel.AGGREGATION,
                 AgentRelation.MANUFACTURER);
-        record.addField(GlobalModelRegistry.AGENT, bCreator, ConceptLevel.PROXY,
+        record.addValue(GlobalModelRegistry.AGENT, bCreator, ConceptLevel.PROXY,
                 AgentRelation.CREATOR);
-        record.addField(GlobalModelRegistry.AGENT, p1Creator, ConceptLevel.OBJECT,
+        record.addValue(GlobalModelRegistry.AGENT, p1Creator, ConceptLevel.OBJECT,
                 AgentRelation.CREATOR);
-        record.addField(GlobalModelRegistry.AGENT, p2Creator, ConceptLevel.OBJECT,
+        record.addValue(GlobalModelRegistry.AGENT, p2Creator, ConceptLevel.OBJECT,
                 AgentRelation.CREATOR);
-        record.addField(GlobalModelRegistry.AGENT, p3Creator, ConceptLevel.OBJECT,
+        record.addValue(GlobalModelRegistry.AGENT, p3Creator, ConceptLevel.OBJECT,
                 AgentRelation.CONTRIBUTOR);
 
         // retrieve all agents at once
-        List<QualifiedValue<Agent>> alist = record.getField(GlobalModelRegistry.AGENT);
+        List<QualifiedValue<Agent>> alist = record.getQualifiedValues(GlobalModelRegistry.AGENT);
         assertEquals(6, alist.size());
 
         // retrieve all creators at once - one agent is a manufacturer
-        List<Agent> clist = record.getPlainField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR);
+        List<Agent> clist = record.getValues(GlobalModelRegistry.AGENT, AgentRelation.CREATOR);
         assertEquals(4, clist.size());
 
         // retrieve all object related agents
-        List<Agent> plist = record.getPlainField(GlobalModelRegistry.AGENT, ConceptLevel.OBJECT);
+        List<Agent> plist = record.getValues(GlobalModelRegistry.AGENT, ConceptLevel.OBJECT);
         assertEquals(3, plist.size());
 
         // retrieve all object related creators
-        List<Agent> pclist = record.getPlainField(GlobalModelRegistry.AGENT, AgentRelation.CREATOR,
+        List<Agent> pclist = record.getValues(GlobalModelRegistry.AGENT, AgentRelation.CREATOR,
                 ConceptLevel.OBJECT);
         assertEquals(2, pclist.size());
     }
