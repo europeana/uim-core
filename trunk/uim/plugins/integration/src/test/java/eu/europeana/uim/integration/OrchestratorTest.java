@@ -97,7 +97,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
 
         for (int i = 0; i < 999; i++) {
             MetaDataRecord<Long> record = storage.createMetaDataRecord(c, "id=" + i);
-            storage.updateMetaDataRecord(c, record);
+            storage.updateMetaDataRecord(record);
             storage.addRequestRecord(r, record);
         }
 
