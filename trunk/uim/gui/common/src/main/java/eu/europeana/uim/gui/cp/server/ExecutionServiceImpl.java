@@ -88,7 +88,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                         w, c);
             }
             ae.getMonitor().addListener(monitor);
-            ae.setName(executionName);
+            if (executionName != null) {
+                ae.setName(executionName);
+            }
             populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
             return execution;
@@ -121,34 +123,34 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     @Override
     public ExecutionDTO startProvider(String workflow, Long provider, String executionName,
             Set<ParameterDTO> parameters) {
-//        try {
-//            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-//            Provider<Long> p = storage.getProvider(provider);
-//            if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
-//            eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
-            ExecutionDTO execution = new ExecutionDTO();
-//            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
+// try {
+// StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+// Provider<Long> p = storage.getProvider(provider);
+// if (p == null) { throw new RuntimeException("Error: cannot find provider " + provider); }
+// eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
+        ExecutionDTO execution = new ExecutionDTO();
+// GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
-//FIXME            
-//            ActiveExecution<Long> ae;
-//            if (parameters != null) {
-//                Properties properties = prepareProperties(parameters);
-//                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-//                        w, p, properties);
-//            } else {
-//                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-//                        w, p);
-//            }
-//            ae.setName(executionName);
+// FIXME
+// ActiveExecution<Long> ae;
+// if (parameters != null) {
+// Properties properties = prepareProperties(parameters);
+// ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+// w, p, properties);
+// } else {
+// ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+// w, p);
+// }
+// ae.setName(executionName);
 //
-//            ae.getMonitor().addListener(monitor);
+// ae.getMonitor().addListener(monitor);
 //
-//            populateWrappedExecutionDTO(execution, ae, w, p, executionName);
-            return execution;
-//        } catch (StorageEngineException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
+// populateWrappedExecutionDTO(execution, ae, w, p, executionName);
+        return execution;
+// } catch (StorageEngineException e) {
+// e.printStackTrace();
+// }
+// return null;
     }
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
