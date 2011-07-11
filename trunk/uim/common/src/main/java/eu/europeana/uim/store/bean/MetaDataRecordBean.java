@@ -11,6 +11,7 @@ import java.util.Set;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 
 /**
  * In-memory implemenation of {@link MetaDataRecord} that uses Long as ID. It is supposed to be the
@@ -28,13 +29,19 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     /**
      * the collection that is responsible for this record
      */
-    private Collection<I>                                collection;
+    private Collection<I> collection;
 
     /**
      * holds for each key a list of known qualified values
      */
     private HashMap<TKey<?, ?>, List<QualifiedValue<?>>> fields = new HashMap<TKey<?, ?>, List<QualifiedValue<?>>>();
 
+    /**
+     * Maintain index in order to retain ordering.
+     * null: not calculated yet
+     */
+    private transient Integer nextOrderIndex = null;
+    
     /**
      * Creates a new instance of this class.
      */
@@ -145,10 +152,37 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             values = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
             fields.put(key, values);
         }
-
-        values.add(new QualifiedValue<T>(value, quals));
+        if (nextOrderIndex == null) {
+        	nextOrderIndex = calculateNextOrderIndex();
+        }
+        values.add(new QualifiedValue<T>(value, quals, nextOrderIndex++));
     }
 
+    private int calculateNextOrderIndex() {
+    	int nextOrderIndex = 0;
+    	for (List<QualifiedValue<?>> vals : fields.values()) {
+      	for (QualifiedValue<?> val : vals) {
+      		if (val.getOrderIndex() >= nextOrderIndex) {
+      			nextOrderIndex = val.getOrderIndex() + 1;
+      		}
+      	}
+    	}
+    	return nextOrderIndex;
+    }
+    
+    public <N, T> void setValue(TKey<N, T> key, List<QualifiedValue<T>> values) {
+    	List<QualifiedValue<?>> oldValues = fields.get(key);
+    	if (oldValues != null) {
+    		throw new IllegalArgumentException("setValue should only be called be called once per tkey"); 
+    	}
+    	if (nextOrderIndex != null) {
+    		throw new IllegalArgumentException("setValue should not be called after addValue"); 
+    	}
+    	List<QualifiedValue<?>> sortedValues = new ArrayList<QualifiedValue<?>>(values);
+    	Collections.sort(sortedValues);
+    	fields.put(key, sortedValues);
+    }
+    
     @Override
     public <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key) {
         List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();

@@ -82,7 +82,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return the list of values qualified with the given qualifier
      */
     <N, T> List<T> getValues(TKey<N, T> key, Enum<?>... qualifiers);
-
+    
     /**
      * Adds value to the list of values under the specified key and optional qualifiers.
      * 
@@ -122,7 +122,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @author Markus Muhr (markus.muhr@kb.nl)
      * @since Mar 21, 2011
      */
-    public class QualifiedValue<T> {
+    public class QualifiedValue<T> implements Comparable<QualifiedValue<?>> {
         /**
          * generic value
          */
@@ -133,16 +133,24 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
         private final Set<Enum<?>> qualifiers;
 
         /**
+         * Index of the value within a single record.
+         */
+        private final int orderIndex;
+        
+        /**
          * Creates a new instance of this class.
          * 
          * @param value
          *            generic value
          * @param qualifiers
          *            how the given value has been qualified
+         * @param orderIndex 
+         *            order of the value within the record
          */
-        public QualifiedValue(T value, Set<Enum<?>> qualifiers) {
+        public QualifiedValue(T value, Set<Enum<?>> qualifiers, int orderIndex) {
             this.value = value;
             this.qualifiers = qualifiers;
+						this.orderIndex = orderIndex;
         }
 
         /**
@@ -158,5 +166,24 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
         public Set<Enum<?>> getQualifiers() {
             return qualifiers;
         }
+
+        /**
+				 * Returns the index.
+				 * @return the index
+				 */
+				public int getOrderIndex() {
+					return orderIndex;
+				}
+				
+				@SuppressWarnings({ "rawtypes", "unchecked" })
+				@Override
+				public int compareTo(QualifiedValue<?> other) {
+					if (orderIndex < other.orderIndex) return -1;
+					if (orderIndex > other.orderIndex) return 1;
+					if (value instanceof Comparable<?>) {
+						return ((Comparable)value).compareTo(other);
+					}
+					return 0;
+				}
     }
 }
