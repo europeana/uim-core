@@ -56,7 +56,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
 
     private Map<String, Long>                        mdrIdentifier       = new HashMap<String, Long>();
 
-    private TLongObjectHashMap<List<Long>>                         metarequest         = new TLongObjectHashMap<List<Long>>();
+    private TLongObjectHashMap<List<Long>>           metarequest         = new TLongObjectHashMap<List<Long>>();
     private TLongLongHashMap                         metacollection      = new TLongLongHashMap();
     private TLongLongHashMap                         metaprovider        = new TLongLongHashMap();
     private TLongObjectHashMap<MetaDataRecord<Long>> metadatas           = new TLongObjectHashMap<MetaDataRecord<Long>>();
@@ -120,7 +120,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public MetaDataRecord<Long> getMetaDataRecord(Long id) {
         return metadatas.get(id);
     }
-    
+
     @Override
     public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> ids) {
         List<MetaDataRecord<Long>> records = new ArrayList<MetaDataRecord<Long>>();
@@ -303,17 +303,16 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public void updateMetaDataRecord(Collection<Long> collection, MetaDataRecord<Long> record) {
+    public void updateMetaDataRecord(MetaDataRecord<Long> record) {
         synchronized (metadatas) {
             metadatas.put(record.getId(), record);
-            metacollection.put(record.getId(), ((MetaDataRecordBean<Long>)record).getCollection().getId());
-            metaprovider.put(record.getId(), ((MetaDataRecordBean<Long>)record).getCollection().getProvider().getId());
+            metacollection.put(record.getId(),
+                    ((MetaDataRecordBean<Long>)record).getCollection().getId());
+            metaprovider.put(record.getId(),
+                    ((MetaDataRecordBean<Long>)record).getCollection().getProvider().getId());
         }
     }
 
-
-    
-    
     @Override
     public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
             throws StorageEngineException {
@@ -323,9 +322,9 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
         metarequest.get(record.getId()).add(request.getId());
     }
 
-
     @Override
-    public List<Request<Long>> getRequests(MetaDataRecord<Long> record) throws StorageEngineException {
+    public List<Request<Long>> getRequests(MetaDataRecord<Long> record)
+            throws StorageEngineException {
         List<Request<Long>> result = new ArrayList<Request<Long>>();
         if (metarequest.contains(record.getId())) {
             List<Long> list = metarequest.get(record.getId());
@@ -434,8 +433,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public Long[] getAllIds() {
         return ArrayUtils.toObject(metadatas.keys());
     }
-    
-    
+
     @Override
     public int getTotalByRequest(Request<Long> request) {
         int result = 0;

@@ -49,9 +49,9 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     @Override
     public void command(String command) {
     }
-    
+
     @Override
-    public void completed(ExecutionContext context){
+    public void completed(ExecutionContext context) {
     }
 
     @Override
@@ -130,10 +130,10 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     public Request<Long> getRequest(Long id) throws StorageEngineException {
         return null;
     }
-    
+
     @Override
     public List<Request<Long>> getRequests(MetaDataRecord<Long> mdr) throws StorageEngineException {
-         return null;
+        return null;
     }
 
     @Override
@@ -141,7 +141,6 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
         return new ArrayList<Request<Long>>();
     }
 
-    
     @Override
     public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
             throws StorageEngineException {
@@ -154,7 +153,7 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     }
 
     @Override
-    public void updateMetaDataRecord(Collection<Long> collection, MetaDataRecord<Long> record) throws StorageEngineException {
+    public void updateMetaDataRecord(MetaDataRecord<Long> record) throws StorageEngineException {
 
     }
 
@@ -182,7 +181,7 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     public MetaDataRecord<Long> getMetaDataRecord(Long id) {
         return null;
     }
-    
+
     @Override
     public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> id) {
         return null;
@@ -197,7 +196,6 @@ public abstract class StorageEngineAdapter implements StorageEngine<Long> {
     public Long[] getByCollection(Collection<Long> collection) {
         return new Long[0];
     }
-    
 
     @Override
     public Long[] getByProvider(Provider<Long> provider, boolean recursive) {

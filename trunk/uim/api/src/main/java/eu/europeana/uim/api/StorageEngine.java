@@ -77,7 +77,7 @@ public interface StorageEngine<I> {
     /**
      * @return number of hold entries
      */
-    //long size();
+    // long size();
 
     /**
      * @return newly created provider
@@ -215,21 +215,22 @@ public interface StorageEngine<I> {
 
     /**
      * Adds the given record request relation.
-     *
-     * @param request 
+     * 
+     * @param request
      * @param record
      * @throws StorageEngineException
      */
-    void addRequestRecord(Request<I> request, MetaDataRecord<I> record) throws StorageEngineException;
+    void addRequestRecord(Request<I> request, MetaDataRecord<I> record)
+            throws StorageEngineException;
 
     /**
      * Stores the given record and its updated values.
      * 
-     * @param collection 
+     * @param collection
      * @param record
      * @throws StorageEngineException
      */
-    void updateMetaDataRecord(Collection<I> collection, MetaDataRecord<I> record) throws StorageEngineException;
+    void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
 
     /**
      * @param dataSet
@@ -237,7 +238,8 @@ public interface StorageEngine<I> {
      * @return newly created execution for the given data set and workflow
      * @throws StorageEngineException
      */
-    Execution<I> createExecution(UimDataSet<I> dataSet, String workflow) throws StorageEngineException;
+    Execution<I> createExecution(UimDataSet<I> dataSet, String workflow)
+            throws StorageEngineException;
 
     /**
      * Stores the given execution and its updated values.
@@ -284,12 +286,12 @@ public interface StorageEngine<I> {
      */
     I[] getByRequest(Request<I> request) throws StorageEngineException;
 
-//    /**
-//     * @param request
-//     * @return IDs for records for this request
-//     * @throws StorageEngineException
-//     */
-//    BlockingQueue<I[]> getBatchesByRequest(Request<I> request) throws StorageEngineException;
+// /**
+// * @param request
+// * @return IDs for records for this request
+// * @throws StorageEngineException
+// */
+// BlockingQueue<I[]> getBatchesByRequest(Request<I> request) throws StorageEngineException;
 
     /**
      * @param collection
@@ -298,13 +300,13 @@ public interface StorageEngine<I> {
      */
     I[] getByCollection(Collection<I> collection) throws StorageEngineException;
 
-//    /**
-//     * @param collection
-//     * @return IDs for records for this collection
-//     * @throws StorageEngineException
-//     */
-//    BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection)
-//            throws StorageEngineException;
+// /**
+// * @param collection
+// * @return IDs for records for this collection
+// * @throws StorageEngineException
+// */
+// BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection)
+// throws StorageEngineException;
 
     /**
      * @param provider
@@ -314,14 +316,14 @@ public interface StorageEngine<I> {
      */
     I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
 
-//    /**
-//     * @param provider
-//     * @param recursive
-//     * @return IDs for records for this provider
-//     * @throws StorageEngineException
-//     */
-//    BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive)
-//            throws StorageEngineException;
+// /**
+// * @param provider
+// * @param recursive
+// * @return IDs for records for this provider
+// * @throws StorageEngineException
+// */
+// BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive)
+// throws StorageEngineException;
 
     /**
      * @return IDs for all known records
@@ -356,44 +358,47 @@ public interface StorageEngine<I> {
      * @throws StorageEngineException
      */
     int getTotalForAllIds() throws StorageEngineException;
-    
+
     // potentially simplified storage engine
-//    String getIdentifier();
-//    public void setConfiguration(Map<String, String> config);
-//    public Map<String, String> getConfiguration();
-//    void initialize();
-//    void shutdown();
-//    void checkpoint();
-//    void command(String command);
-//    void completed(ExecutionContext context);
-//    EngineStatus getStatus();
+// String getIdentifier();
+// public void setConfiguration(Map<String, String> config);
+// public Map<String, String> getConfiguration();
+// void initialize();
+// void shutdown();
+// void checkpoint();
+// void command(String command);
+// void completed(ExecutionContext context);
+// EngineStatus getStatus();
 //
-//    Provider<I> createProvider(String mnemonic) throws StorageEngineException;
-//    void updateProvider(Provider<I> provider) throws StorageEngineException;
-//    Provider<I> getProvider(I id) throws StorageEngineException;
-//    Provider<I> findProvider(String mnemonic) throws StorageEngineException;
-//    List<Provider<I>> getProviders() throws StorageEngineException;
+// Provider<I> createProvider(String mnemonic) throws StorageEngineException;
+// void updateProvider(Provider<I> provider) throws StorageEngineException;
+// Provider<I> getProvider(I id) throws StorageEngineException;
+// Provider<I> findProvider(String mnemonic) throws StorageEngineException;
+// List<Provider<I>> getProviders() throws StorageEngineException;
 //
-//    Collection<I> createCollection(Provider<I> provider, String mnemonic) throws StorageEngineException;
-//    void updateCollection(Collection<I> collection) throws StorageEngineException;
-//    Collection<I> getCollection(I id) throws StorageEngineException;
-//    Collection<I> findCollection(String mnemonic) throws StorageEngineException;
-//    List<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException;
+// Collection<I> createCollection(Provider<I> provider, String mnemonic) throws
+// StorageEngineException;
+// void updateCollection(Collection<I> collection) throws StorageEngineException;
+// Collection<I> getCollection(I id) throws StorageEngineException;
+// Collection<I> findCollection(String mnemonic) throws StorageEngineException;
+// List<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException;
 //
-//    Request<I> createRequest(Collection<I> collection, Date date) throws StorageEngineException;
-//    void updateRequest(Request<I> request) throws StorageEngineException;
-//    Request<I> getRequest(I id) throws StorageEngineException;
-//    List<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
+// Request<I> createRequest(Collection<I> collection, Date date) throws StorageEngineException;
+// void updateRequest(Request<I> request) throws StorageEngineException;
+// Request<I> getRequest(I id) throws StorageEngineException;
+// List<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
 //
-//    Execution<I> createExecution(DataSet<I> dataSet, String workflow) throws StorageEngineException;
-//    void updateExecution(Execution<I> execution) throws StorageEngineException;
-//    Execution<I> getExecution(I id) throws StorageEngineException;
-//    List<Execution<I>> getExecutions() throws StorageEngineException;
-//    
-//    MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws StorageEngineException;
-//    void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
-//    MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
-//    List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException;
-//    List<MetaDataRecord<I>> getMetaDataRecords(Request<I> request, int start, int limit) throws StorageEngineException;
-//    int getMetaDataRecordNumberByRequest(Request<I> request) throws StorageEngineException;
+// Execution<I> createExecution(DataSet<I> dataSet, String workflow) throws StorageEngineException;
+// void updateExecution(Execution<I> execution) throws StorageEngineException;
+// Execution<I> getExecution(I id) throws StorageEngineException;
+// List<Execution<I>> getExecutions() throws StorageEngineException;
+//
+// MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws
+// StorageEngineException;
+// void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
+// MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
+// List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException;
+// List<MetaDataRecord<I>> getMetaDataRecords(Request<I> request, int start, int limit) throws
+// StorageEngineException;
+// int getMetaDataRecordNumberByRequest(Request<I> request) throws StorageEngineException;
 }
