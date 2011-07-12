@@ -108,6 +108,15 @@ public class MongoLoggingEngine<T> implements LoggingEngine<Long, T> {
         }
         return res;
     }
+    
+    public List<LogEntry<Long, String[]>> getExecutionLog(Long executionID) {
+        List<LogEntry<Long, String[]>> res = new ArrayList<LogEntry<Long, String[]>>();
+        DBCursor entries = logEntries.find(new BasicDBObject("executionId", executionID));
+        for (DBObject entry : entries) {
+            res.add(new MongoLogEntry((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), new String[]{(String) entry.get("message")}, (String) entry.get("pluginIdentifier")));
+        }
+        return res;
+    }
 
     @Override
     public void logStructured(IngestionPlugin plugin, Execution execution, MetaDataRecord mdr, String scope, Level level, T payload) {
@@ -137,6 +146,17 @@ public class MongoLoggingEngine<T> implements LoggingEngine<Long, T> {
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution execution) {
         List<LogEntry<Long, T>> res = new ArrayList<LogEntry<Long, T>>();
         DBCursor entries = logEntries.find(new BasicDBObject("executionId", execution.getId()));
+        for (DBObject entry : entries) {
+            T hydrated = serializer.parse((DBObject)entry.get("message"));
+            //FIXME
+//            res.add(new MongoLogEntry((Date) entry.get("date"), (Long) entry.get("executionId"), Level.valueOf((String) entry.get("level")), (Long) entry.get("mdrId"), hydrated, (String) entry.get("pluginIdentifier")));
+        }
+        return res;
+    }
+    
+    public List<LogEntry<Long, T>> getStructuredExecutionLog(Long executionID) {
+        List<LogEntry<Long, T>> res = new ArrayList<LogEntry<Long, T>>();
+        DBCursor entries = logEntries.find(new BasicDBObject("executionId", executionID));
         for (DBObject entry : entries) {
             T hydrated = serializer.parse((DBObject)entry.get("message"));
             //FIXME
