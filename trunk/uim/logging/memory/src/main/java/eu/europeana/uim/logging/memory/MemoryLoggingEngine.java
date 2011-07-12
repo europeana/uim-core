@@ -27,9 +27,9 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 22, 2011
  */
 public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
-    private Map<Execution<?>, List<LogEntry<I, String[]>>> executionLogs           = new HashMap<Execution<?>, List<LogEntry<I, String[]>>>();
-    private Map<Execution<?>, List<LogEntry<I, T>>>        structuredExecutionLogs = new HashMap<Execution<?>, List<LogEntry<I, T>>>();
-    private Map<IngestionPlugin, List<Long>>               durations               = new HashMap<IngestionPlugin, List<Long>>();
+    private Map<I, List<LogEntry<I, String[]>>> executionLogs           = new HashMap<I, List<LogEntry<I, String[]>>>();
+    private Map<I, List<LogEntry<I, T>>>        structuredExecutionLogs = new HashMap<I, List<LogEntry<I, T>>>();
+    private Map<IngestionPlugin, List<Long>>    durations               = new HashMap<IngestionPlugin, List<Long>>();
 
     @Override
     public String getIdentifier() {
@@ -37,12 +37,12 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     }
 
     @Override
-    public void log(String module, Execution<I> execution, 
-            String scope, Level level, String... message) {
+    public void log(String module, Execution<I> execution, String scope, Level level,
+            String... message) {
         List<LogEntry<I, String[]>> logs = executionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(execution, logs);
+            executionLogs.put(execution.getId(), logs);
         }
         logs.add(new MemoryLogEntry<I, String[]>(module, execution, scope, level, new Date(),
                 message));
@@ -54,7 +54,7 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
         List<LogEntry<I, String[]>> logs = executionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(execution, logs);
+            executionLogs.put(execution.getId(), logs);
         }
         logs.add(new MemoryLogEntry<I, String[]>(plugin, execution, mdr, scope, level, new Date(),
                 message));
@@ -66,19 +66,29 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
         List<LogEntry<I, T>> logs = structuredExecutionLogs.get(execution);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, T>>();
-            structuredExecutionLogs.put(execution, logs);
+            structuredExecutionLogs.put(execution.getId(), logs);
         }
         logs.add(new MemoryLogEntry<I, T>(plugin, execution, mdr, scope, level, new Date(), payload));
     }
 
     @Override
     public List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution) {
-        return executionLogs.get(execution);
+        return executionLogs.get(execution.getId());
+    }
+
+    @Override
+    public List<LogEntry<I, String[]>> getExecutionLog(I executionID) {
+        return executionLogs.get(executionID);
     }
 
     @Override
     public List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution) {
-        return structuredExecutionLogs.get(execution);
+        return structuredExecutionLogs.get(execution.getId());
+    }
+
+    @Override
+    public List<LogEntry<I, T>> getStructuredExecutionLog(I executionID) {
+        return structuredExecutionLogs.get(executionID);
     }
 
     private List<Long> getDurations(IngestionPlugin plugin) {
@@ -117,4 +127,5 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
         }
         return sum / d.size();
     }
+
 }
