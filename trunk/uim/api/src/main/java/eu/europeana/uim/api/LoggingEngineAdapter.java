@@ -39,6 +39,11 @@ public abstract class LoggingEngineAdapter<I, T> implements LoggingEngine<I, T> 
     }
 
     @Override
+    public List<LogEntry<I, String[]>> getExecutionLog(I executionID) {
+        return null;
+    }
+    
+    @Override
     public void logStructured(IngestionPlugin plugin, Execution<I> execution,
             MetaDataRecord<I> mdr, String scope, Level level, T payload) {
     }
@@ -48,6 +53,11 @@ public abstract class LoggingEngineAdapter<I, T> implements LoggingEngine<I, T> 
         return null;
     }
 
+    @Override
+    public List<LogEntry<I, T>> getStructuredExecutionLog(I executionID) {
+        return null;
+    }
+    
     @Override
     public void logDuration(IngestionPlugin plugin, Long duration, int count) {
         //

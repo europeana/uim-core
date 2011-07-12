@@ -80,6 +80,15 @@ public interface LoggingEngine<I, T> {
      * @return a list of LogEntry-s
      */
     List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution);
+    
+    /**
+     * Retrieves simple log entries for one execution identified by the ID
+     * @param executionID 
+     *            the execution
+     * @return a list of LogEntry-s
+     */
+    List<LogEntry<I, String[]>> getExecutionLog(I executionID);
+    
 
     /**
      * Logs a structured message, to be used for advanced log analysis
@@ -108,6 +117,15 @@ public interface LoggingEngine<I, T> {
      * @return a list of LogEntry-s
      */
     List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution);
+    
+    /**
+     * Retrieves structured log entries for one execution from the ID
+     * @param executionID 
+     *            the executionID
+     * @return a list of LogEntry-s
+     */
+    List<LogEntry<I, T>> getStructuredExecutionLog(I executionID);
+    
 
     /**
      * Logs a processing duration for a given count of items
