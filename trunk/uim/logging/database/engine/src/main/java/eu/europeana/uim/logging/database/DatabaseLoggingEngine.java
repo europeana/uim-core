@@ -115,20 +115,33 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
 
     @Override
     public List<LogEntry<Long, String[]>> getExecutionLog(Execution<Long> execution) {
+       return getExecutionLog(execution.getId());
+    }
+    
+ 
+    @Override
+    public List<LogEntry<Long, String[]>> getExecutionLog(Long executionID) {
         List<TStringDatabaseLogEntry> entries = storage.getStringHome().findByExecution(
-                execution.getId());
+                executionID);
         List<LogEntry<Long, String[]>> results = new ArrayList<LogEntry<Long, String[]>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             results.add((TStringDatabaseLogEntry)entry);
         }
         return results;
     }
+    
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public List<LogEntry<Long, T>> getStructuredExecutionLog(Execution<Long> execution) {
+      return getStructuredExecutionLog(execution.getId());
+    }
+    
+
+    @Override
+    public List<LogEntry<Long, T>> getStructuredExecutionLog(Long executionID) {
         List<TObjectDatabaseLogEntry> entries = storage.getObjectHome().findByExecution(
-                execution.getId());
+                executionID);
         List<LogEntry<Long, T>> results = new ArrayList<LogEntry<Long, T>>();
         for (TDatabaseLogEntry<?> entry : entries) {
             results.add((LogEntry<Long, T>)entry);
@@ -171,4 +184,7 @@ public class DatabaseLoggingEngine<T extends Serializable> implements LoggingEng
         average /= entries.size();
         return average;
     }
+
+ 
+
 }
