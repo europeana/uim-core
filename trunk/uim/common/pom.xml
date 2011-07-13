@@ -41,7 +41,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-                        <!-- eu.europeana.uim.*, -->
 						<Import-Package>!com.sun.msv.*,
 							!org.relaxng.*,
 							javax.xml.*,
