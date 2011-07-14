@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import eu.europeana.uim.api.CorruptedMetadataRecordException;
 import eu.europeana.uim.api.IngestionPluginFailedException;
@@ -27,6 +28,8 @@ import eu.europeana.uim.workflow.TaskStatus;
  * @since Nov 29, 2010
  */
 public class TaskExecutor extends ThreadPoolExecutor {
+    private static Logger log       = Logger.getLogger(TaskExecutor.class.getName());
+
     private boolean       isPaused;
 
     private ReentrantLock pauseLock = new ReentrantLock();
@@ -105,7 +108,9 @@ public class TaskExecutor extends ThreadPoolExecutor {
                                                                 t.getMessage());
                     }
                 }
-
+                log.log(java.util.logging.Level.SEVERE,
+                        "Task failed on record " + metaDataRecord.getId() + " in plugin " +
+                                task.getStep().getIdentifier(), t);
             } else if (!task.isSuccessfulProcessing()) {
                 if (task.isMandatory()) {
                     success = false;
