@@ -39,10 +39,18 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     @Override
     public void log(String module, Execution<I> execution, String scope, Level level,
             String... message) {
-        List<LogEntry<I, String[]>> logs = executionLogs.get(execution.getId());
+        
+        //allow execution to be null (thanks, integration test)
+        //HashMap allows null as keys.
+        
+        I executionID=null;
+        if (execution!=null) {
+            executionID=execution.getId();
+        }
+        List<LogEntry<I, String[]>> logs = executionLogs.get(executionID);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(execution.getId(), logs);
+            executionLogs.put(executionID, logs);
         }
         logs.add(new MemoryLogEntry<I, String[]>(module, execution, scope, level, new Date(),
                 message));
@@ -51,10 +59,16 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     @Override
     public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
             String scope, Level level, String... message) {
-        List<LogEntry<I, String[]>> logs = executionLogs.get(execution.getId());
+        
+        I executionID=null;
+        if (execution!=null) {
+            executionID=execution.getId();
+        }
+        
+        List<LogEntry<I, String[]>> logs = executionLogs.get(executionID);
         if (logs == null) {
             logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(execution.getId(), logs);
+            executionLogs.put(executionID, logs);
         }
         logs.add(new MemoryLogEntry<I, String[]>(plugin, execution, mdr, scope, level, new Date(),
                 message));
