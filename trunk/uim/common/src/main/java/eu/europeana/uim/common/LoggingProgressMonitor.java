@@ -54,7 +54,7 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
 			double persec = getWorked() * 1000.0 / period;
 			
 			String st = getSubtask() != null ?  "(" + getSubtask() + ")" : "";
-			log.log(level, String.format("%d units of worked. So far %d done in %.3f sec <" + st + ">. Average %.3f/sec", logfrq, getWorked(), period / 1000.0, persec));
+			log.log(level, String.format("%d units worked. So far %d done in %.3f sec <" + st + ">. Average %.3f/sec", logfrq, getWorked(), period / 1000.0, persec));
 		}
 	}
 
@@ -67,14 +67,14 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
 	@Override
 	public void subTask(String subtask) {
 		super.subTask(subtask);
-		log.log(level, String.format("%d units of worked. Start subtask: <" + subtask +">", getWorked()));
+		log.log(level, String.format("%d units worked. Start subtask: <" + subtask +">", getWorked()));
 	}
 
 	@Override
 	public void setCancelled(boolean canceled) {
 		super.setCancelled(canceled);
 
-		log.log(level, String.format("%d units of worked. CANCEL: <" + canceled +">", getWorked()));
+		log.log(level, String.format("%d units done. CANCEL: <" + canceled +">", getWorked()));
 	}
 
 
