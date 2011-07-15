@@ -12,6 +12,7 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngine.Level;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.workflow.Task;
@@ -47,7 +48,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
     public TaskExecutor(int corePoolSize, int maxPoolSize, BlockingQueue<Runnable> queue,
                         String name) {
         super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue,
-                new TaskExecutorThreadFactory(name, name));
+                new SimpleThreadFactory(name, name));
 
         prestartCoreThread();
     }

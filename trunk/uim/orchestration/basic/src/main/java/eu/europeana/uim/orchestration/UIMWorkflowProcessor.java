@@ -16,11 +16,10 @@ import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
-import eu.europeana.uim.orchestration.processing.TaskExecutorThread;
-import eu.europeana.uim.orchestration.processing.TaskExecutorThreadFactory;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
@@ -36,9 +35,9 @@ import eu.europeana.uim.workflow.WorkflowStart;
 public class UIMWorkflowProcessor implements Runnable {
     private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
-    private TaskExecutorThreadFactory                                 factory          = new TaskExecutorThreadFactory(
+    private SimpleThreadFactory                                       factory          = new SimpleThreadFactory(
                                                                                                "processor");
-    private TaskExecutorThread                                        dispatcherThread;
+    private Thread                                                    dispatcher;
 
     private final Registry                                            registry;
 
@@ -157,7 +156,7 @@ public class UIMWorkflowProcessor implements Runnable {
 
                                     while (task != null) {
                                         isbusy |= true; // well there is something todo
-                                        
+
                                         task.setStep(thisStep, mandatory);
                                         task.setSavepoint(savepoint);
                                         task.setOnSuccess(thisSuccess);
@@ -171,7 +170,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                         }
                                         if (!executor.isShutdown()) {
                                             executor.execute(task);
-                                            
+
                                             // if this is the first step,
                                             // then we have just now scheduled a
                                             // newly created task from the start plugin.
@@ -180,8 +179,9 @@ public class UIMWorkflowProcessor implements Runnable {
                                             }
 
                                             if (execution.getThrowable() != null) {
-                                                //log.log(Level.WARNING, "Failed execution.", execution.getThrowable());
-                                                
+                                                // log.log(Level.WARNING, "Failed execution.",
+// execution.getThrowable());
+
                                                 execution.setThrowable(task.getThrowable());
                                                 complete(execution, true);
                                                 break;
@@ -281,8 +281,7 @@ public class UIMWorkflowProcessor implements Runnable {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void complete(ActiveExecution execution, boolean cancel)
-            throws StorageEngineException {
+    private void complete(ActiveExecution execution, boolean cancel) throws StorageEngineException {
         try {
             execution.getWorkflow().getStart().completed(execution);
         } catch (Throwable t) {
@@ -417,8 +416,8 @@ public class UIMWorkflowProcessor implements Runnable {
      * Starts up the thread for dispatching.
      */
     public void startup() {
-        dispatcherThread = (TaskExecutorThread)factory.newThread(this);
-        dispatcherThread.start();
+        dispatcher = factory.newThread(this);
+        dispatcher.start();
     }
 
     /**
@@ -426,7 +425,7 @@ public class UIMWorkflowProcessor implements Runnable {
      */
     public void shutdown() {
         running = false;
-        dispatcherThread = null;
+        dispatcher = null;
     }
 
     /**
@@ -434,7 +433,7 @@ public class UIMWorkflowProcessor implements Runnable {
      */
     public void pause() {
         running = false;
-        dispatcherThread = null;
+        dispatcher = null;
     }
 
     /**
@@ -442,8 +441,8 @@ public class UIMWorkflowProcessor implements Runnable {
      */
     public void resume() {
         running = true;
-        dispatcherThread = (TaskExecutorThread)factory.newThread(this);
-        dispatcherThread.start();
+        dispatcher = factory.newThread(this);
+        dispatcher.start();
     }
 
     /**
