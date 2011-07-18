@@ -1,5 +1,5 @@
 /* Solr32Initializer.java - created on Jun 24, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.solr32;
+package eu.europeana.uim.solr3;
 
 import java.io.File;
 import java.net.URL;
@@ -19,8 +19,8 @@ import eu.europeana.uim.common.BlockingInitializer;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jun 24, 2011
  */
-public class Solr32Initializer extends BlockingInitializer {
-    private static final Logger log = Logger.getLogger(Solr32Initializer.class.getName());
+public class Solr3Initializer extends BlockingInitializer {
+    private static final Logger log = Logger.getLogger(Solr3Initializer.class.getName());
 
     private SolrServer          server;
     private CoreContainer       container;
@@ -34,7 +34,7 @@ public class Solr32Initializer extends BlockingInitializer {
      * @param url
      * @param core
      */
-    public Solr32Initializer(String url, String core) {
+    public Solr3Initializer(String url, String core) {
         this.url = url;
         this.core = core;
     }
