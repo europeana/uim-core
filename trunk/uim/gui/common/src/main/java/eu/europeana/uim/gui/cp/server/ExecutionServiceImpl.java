@@ -79,16 +79,31 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     @Override
     public List<ExecutionDTO> getPastExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-            for (Execution<Long> execution : storage.getAllExecutions()) {
-                if (!execution.isActive()) {
-                    r.add(getWrappedExecutionDTO(execution.getId(), execution));
-                }
+
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+        } else {
+            List<Execution<Long>> executions = null;
+            try {
+                executions = storage.getAllExecutions();
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "Could not query past execution!", t);
             }
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+
+            if (executions != null) {
+                for (Execution<Long> execution : executions) {
+                    if (!execution.isActive()) {
+                        ExecutionDTO wrappedExecutionDTO = getWrappedExecutionDTO(
+                                execution.getId(), execution);
+                        r.add(wrappedExecutionDTO);
+                    }
+                }
+            } else {
+                log.log(Level.WARNING, "Past executions are null!");
+            }
         }
+
         return r;
     }
 
