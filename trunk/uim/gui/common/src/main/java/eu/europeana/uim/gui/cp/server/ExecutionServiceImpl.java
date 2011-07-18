@@ -83,25 +83,30 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
-        } else {
-            List<Execution<Long>> executions = null;
-            try {
-                executions = storage.getAllExecutions();
-            } catch (Throwable t) {
-                log.log(Level.SEVERE, "Could not query past execution!", t);
-            }
+            return r;
+        }
 
-            if (executions != null) {
-                for (Execution<Long> execution : executions) {
-                    if (!execution.isActive()) {
-                        ExecutionDTO wrappedExecutionDTO = getWrappedExecutionDTO(
-                                execution.getId(), execution);
-                        r.add(wrappedExecutionDTO);
+        List<Execution<Long>> executions = null;
+        try {
+            executions = storage.getAllExecutions();
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Could not query past execution!", t);
+        }
+
+        if (executions != null) {
+            for (Execution<Long> execution : executions) {
+                if (!execution.isActive()) {
+                    try {
+                        ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
+                        r.add(exec);
+                    } catch (Throwable t) {
+                        log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
+                        wrappedExecutionDTOs.remove(execution.getId());
                     }
                 }
-            } else {
-                log.log(Level.WARNING, "Past executions are null!");
             }
+        } else {
+            log.log(Level.WARNING, "Past executions are null!");
         }
 
         return r;
@@ -110,36 +115,44 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     @Override
     public ExecutionDTO startCollection(String workflow, Long collection, String executionName,
             Set<ParameterDTO> parameters) {
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-            Collection<Long> c = storage.getCollection(collection);
-            if (c == null) { throw new RuntimeException("Error: cannot find collection " +
-                                                        collection); }
-            eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
-            ExecutionDTO execution = new ExecutionDTO();
-
-            GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
-
-            ActiveExecution<Long> ae;
-            if (parameters != null) {
-                Properties properties = prepareProperties(parameters);
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-                        w, c, properties);
-            } else {
-                ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-                        w, c);
-            }
-            ae.getMonitor().addListener(monitor);
-            if (executionName != null) {
-                ae.setName(executionName);
-            }
-            populateWrappedExecutionDTO(execution, ae, w, c, executionName);
-
-            return execution;
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return null;
         }
-        return null;
+
+        Collection<Long> c = null;
+        try {
+            c = storage.getCollection(collection);
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Could not query collection!", t);
+        }
+        if (c == null) {
+            log.log(Level.WARNING, "Collection are null!");
+            return null;
+        }
+
+        eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
+        ExecutionDTO execution = new ExecutionDTO();
+
+        GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
+
+        ActiveExecution<Long> ae;
+        if (parameters != null) {
+            Properties properties = prepareProperties(parameters);
+            ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                    w, c, properties);
+        } else {
+            ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+                    w, c);
+        }
+        ae.getMonitor().addListener(monitor);
+        if (executionName != null) {
+            ae.setName(executionName);
+        }
+        populateWrappedExecutionDTO(execution, ae, w, c, executionName);
+
+        return execution;
     }
 
     private Properties prepareProperties(Set<ParameterDTO> parameters) {
@@ -292,8 +305,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     private eu.europeana.uim.workflow.Workflow getWorkflow(String identifier) {
         eu.europeana.uim.workflow.Workflow workflow = getEngine().getRegistry().getWorkflow(
                 identifier);
-        if (workflow == null) { throw new RuntimeException("Error: cannot find workflow " +
-                                                           workflow); }
+        if (workflow == null) {
+            log.log(Level.WARNING, "There is not workflow '" + identifier + "'!");
+        }
         return workflow;
     }
 
