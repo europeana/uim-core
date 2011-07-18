@@ -40,6 +40,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -79,6 +80,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  @UiField(provided = true)
 	  SimplePager pager;
   
+	  @UiField(provided = true)
+	  Button button;
 	    /**
 	     * The key provider that provides the unique ID of a contact.
 	     */
@@ -110,6 +113,10 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 */
 	@Override
 	public Widget onInitialize() {
+		
+		button = new Button();
+		button.setText("Text");
+		button.setTitle("Title");
 		// Create a CellTable.
 
 	    // Set a key provider that provides a unique key for each contact. If key is

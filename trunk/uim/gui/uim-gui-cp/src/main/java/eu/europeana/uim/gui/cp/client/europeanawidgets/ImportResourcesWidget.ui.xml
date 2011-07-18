@@ -32,5 +32,9 @@
         </td>
       </tr>
     </table>
+    <br></br>
+    
+    <g:Button ui:field='button' />
+    
   </g:HTMLPanel>
 </ui:UiBinder>
