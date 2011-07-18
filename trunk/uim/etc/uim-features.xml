@@ -36,13 +36,15 @@
     
     <feature name="uim-europeana-workflows-plugins" version="1.3.0.SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-plugin-linkchecker/1.3.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-plugin-solr32/1.3.0-SNAPSHOT</bundle>        
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-solr3/1.3.0-SNAPSHOT</bundle>        
         <bundle>mvn:eu.europeana/europeana-uim-plugin-solrosgi/1.3.0-SNAPSHOT</bundle>
     </feature>   
     
     <feature name="uim-europeana-complete" version="1.3.0.SNAPSHOT">
         <feature version="2.0.0.RELEASE">spring-ws</feature>
         <feature version="1.6.2">spring-quartz</feature>
+        <feature version="1.2.1">spring-dm</feature>
+        <feature version="2.2.0">war</feature>
         <feature version="1.3.0-SNAPSHOT">uim-core-dev</feature>
         <feature version="1.3.0-SNAPSHOT">uim-integration-plugins</feature>  
         <feature version="1.3.0-SNAPSHOT">uim-europeana-workflows-plugins</feature>
