@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -29,6 +32,8 @@ import eu.europeana.uim.store.UimDataSet;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         ExecutionService {
+    private final static Logger log = Logger.getLogger(AbstractIngestionPlugin.class.getName());
+
     /**
      * Creates a new instance of this class.
      */
@@ -41,11 +46,33 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
-        java.util.Collection<ActiveExecution<?>> activeExecutions = getEngine().getRegistry().getOrchestrator().getActiveExecutions();
-        for (ActiveExecution<?> execution : activeExecutions) {
-            ExecutionDTO exec = getWrappedExecutionDTO((Long)execution.getId(), execution);
-            r.add(exec);
+
+        java.util.Collection<ActiveExecution<?>> activeExecutions = null;
+        try {
+            activeExecutions = getEngine().getRegistry().getOrchestrator().getActiveExecutions();
+        } catch (Throwable t) {
+            log.log(Level.SEVERE, "Could not query active execution!", t);
         }
+
+        if (activeExecutions != null) {
+            for (ActiveExecution<?> execution : activeExecutions) {
+                if (execution != null && execution.getId() != null) {
+                    try {
+                        ExecutionDTO exec = getWrappedExecutionDTO((Long)execution.getId(),
+                                execution);
+                        r.add(exec);
+                    } catch (Throwable t) {
+                        log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
+                        wrappedExecutionDTOs.remove(execution.getId());
+                    }
+                } else {
+                    log.log(Level.WARNING, "An active execution or its identifier is null!");
+                }
+            }
+        } else {
+            log.log(Level.WARNING, "Active executions are null!");
+        }
+
         return r;
     }
 
