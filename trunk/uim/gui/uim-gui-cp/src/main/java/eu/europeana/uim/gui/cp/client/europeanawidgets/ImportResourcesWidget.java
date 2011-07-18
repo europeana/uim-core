@@ -22,13 +22,14 @@ package eu.europeana.uim.gui.cp.client.europeanawidgets;
 
 import java.util.Comparator;
 
-import javax.xml.bind.Binder;
+
 
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -45,11 +46,11 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.HasData;
-
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.SugarCrmRecord;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.data.RetrievableField;
+import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
+import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
+import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+
 
 
 /**
@@ -60,11 +61,17 @@ import eu.europeana.uim.sugarcrmclient.plugin.objects.data.RetrievableField;
  */
 public class ImportResourcesWidget extends IngestionWidget {
 
+    private final RepositoryServiceAsync repositoryService;
+    private final ResourceServiceAsync   resourceService;
+	
+    interface Binder extends UiBinder<Widget, ImportResourcesWidget> {
+    }
+	
 	 /**
 	   * The main CellTable.
 	   */
 	  @UiField(provided = true)
-	  CellTable<SugarCrmRecord> cellTable;
+	  CellTable<SugarCRMInfo> cellTable;
 	
 	  /**
 	   * The pager used to change the range of data.
@@ -75,23 +82,28 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    /**
 	     * The key provider that provides the unique ID of a contact.
 	     */
-	    public static final ProvidesKey<SugarCrmRecord> KEY_PROVIDER = new ProvidesKey<SugarCrmRecord>() {
-	      public Object getKey(SugarCrmRecord item) {
-	        return item == null ? null : item.getItemValue(RetrievableField.ID);
+	    public static final ProvidesKey<SugarCRMInfo> KEY_PROVIDER = new ProvidesKey<SugarCRMInfo>() {
+	      public Object getKey(SugarCRMInfo item) {
+	        return item == null ? null : item.getSugarCrmId();
 	      }
 	    };
 	  
-	    private ListDataProvider<SugarCrmRecord> dataProvider = new ListDataProvider<SugarCrmRecord>();
+	    private ListDataProvider<SugarCRMInfo> dataProvider = new ListDataProvider<SugarCRMInfo>();
 	    
 	    
-	/**
-	 * @param name
-	 * @param description
-	 */
-	public ImportResourcesWidget(String name, String description) {
-		super(name, description);
+	    
+		/**
+		 * @param name
+		 * @param description
+		 */
+		public ImportResourcesWidget(RepositoryServiceAsync repositoryService,
+	            ResourceServiceAsync resourceService) {
+	        super("Import Resources", "This view allows to import resources into UIM.");
+	        this.repositoryService = repositoryService;
+	        this.resourceService = resourceService;
 
-	}
+		}
+
 
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.gui.cp.client.IngestionWidget#onInitialize()
@@ -104,11 +116,11 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    // used to identify contacts when fields (such as the name and address)
 	    // change.
 		
-	    cellTable = new CellTable<SugarCrmRecord>(KEY_PROVIDER);
+	    cellTable = new CellTable<SugarCRMInfo>(KEY_PROVIDER);
 	    cellTable.setWidth("100%", true);
 
 	    // Attach a column sort handler to the ListDataProvider to sort the list.
-	    ListHandler<SugarCrmRecord> sortHandler = new ListHandler<SugarCrmRecord>(dataProvider.getList());
+	    ListHandler<SugarCRMInfo> sortHandler = new ListHandler<SugarCRMInfo>(dataProvider.getList());
 	    cellTable.addColumnSortHandler(sortHandler);
 
 	    // Create a Pager to control the table.
@@ -117,9 +129,9 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    pager.setDisplay(cellTable);
 
 	    // Add a selection model so we can select cells.
-	    final SelectionModel<SugarCrmRecord> selectionModel = new MultiSelectionModel<SugarCrmRecord>(KEY_PROVIDER);
+	    final SelectionModel<SugarCRMInfo> selectionModel = new MultiSelectionModel<SugarCRMInfo>(KEY_PROVIDER);
 	    cellTable.setSelectionModel(selectionModel,
-	        DefaultSelectionEventManager.<SugarCrmRecord> createCheckboxManager());
+	        DefaultSelectionEventManager.<SugarCRMInfo> createCheckboxManager());
 
 	    // Initialize the columns.
 	    initTableColumns(selectionModel, sortHandler);
@@ -129,7 +141,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    
 	    // Create the UiBinder.
 	    
-	    UiBinder uiBinder = GWT.create(UiBinder.class);
+	    Binder uiBinder = GWT.create(Binder.class);
 	    Widget widget = (Widget) uiBinder.createAndBindUi(this);
 
 	    return widget;
@@ -140,8 +152,19 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 * @see eu.europeana.uim.gui.cp.client.IngestionWidget#asyncOnInitialize(com.google.gwt.user.client.rpc.AsyncCallback)
 	 */
 	@Override
-	protected void asyncOnInitialize(AsyncCallback<Widget> callback) {
+	protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
 
+        GWT.runAsync(ImportResourcesWidget.class,new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable caught) {
+                callback.onFailure(caught);
+            }
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess(onInitialize());
+            }
+        });
 
 	}
 	
@@ -150,15 +173,15 @@ public class ImportResourcesWidget extends IngestionWidget {
 	   * Add the columns to the table.
 	   */
 	  private void initTableColumns(
-	      final SelectionModel<SugarCrmRecord> selectionModel,
-	      ListHandler<SugarCrmRecord> sortHandler) {
+	      final SelectionModel<SugarCRMInfo> selectionModel,
+	      ListHandler<SugarCRMInfo> sortHandler) {
 	    // Checkbox column. This table will uses a checkbox column for selection.
 	    // Alternatively, you can call cellTable.setSelectionEnabled(true) to enable
 	    // mouse selection.
-	    Column<SugarCrmRecord, Boolean> checkColumn = new Column<SugarCrmRecord, Boolean>(
+	    Column<SugarCRMInfo, Boolean> checkColumn = new Column<SugarCRMInfo, Boolean>(
 	        new CheckboxCell(true, false)) {
 	      @Override
-	      public Boolean getValue(SugarCrmRecord object) {
+	      public Boolean getValue(SugarCRMInfo object) {
 	        // Get the value from the selection model.
 	        return selectionModel.isSelected(object);
 	      }
@@ -167,23 +190,23 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    cellTable.setColumnWidth(checkColumn, 40, Unit.PX);
 
 	    // First name.
-	    Column<SugarCrmRecord, String> firstNameColumn = new Column<SugarCrmRecord, String>(
+	    Column<SugarCRMInfo, String> firstNameColumn = new Column<SugarCRMInfo, String>(
 	        new TextCell()) {
 	      @Override
-	      public String getValue(SugarCrmRecord object) {
-	        return object.getItemValue(RetrievableField.ID);
+	      public String getValue(SugarCRMInfo object) {
+	        return object.getSugarCrmId();
 	      }
 	    };
 	    firstNameColumn.setSortable(true);
 	    
-	    sortHandler.setComparator(firstNameColumn, new Comparator<SugarCrmRecord>() {
-	      public int compare(SugarCrmRecord o1, SugarCrmRecord o2) {
-	        return o1.getItemValue(RetrievableField.ID).compareTo(o2.getItemValue(RetrievableField.ID));
+	    sortHandler.setComparator(firstNameColumn, new Comparator<SugarCRMInfo>() {
+	      public int compare(SugarCRMInfo o1, SugarCRMInfo o2) {
+	        return o1.getSugarCrmId().compareTo(o2.getSugarCrmId());
 	      }
 	    });
 	    cellTable.addColumn(firstNameColumn, "ID");
-	    firstNameColumn.setFieldUpdater(new FieldUpdater<SugarCrmRecord, String>() {
-	      public void update(int index, SugarCrmRecord object, String value) {
+	    firstNameColumn.setFieldUpdater(new FieldUpdater<SugarCRMInfo, String>() {
+	      public void update(int index, SugarCRMInfo object, String value) {
 
 	    	  dataProvider.refresh();
 	      }

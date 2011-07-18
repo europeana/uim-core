@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.prefetch.RunAsyncCode;
 
+import eu.europeana.uim.gui.cp.client.europeanawidgets.ImportResourcesWidget;
 import eu.europeana.uim.gui.cp.client.management.IngestionTriggerWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.monitoring.IngestionDetailWidget;
@@ -39,16 +40,21 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
         final ResourceServiceAsync resourceService = (ResourceServiceAsync)GWT.create(ResourceService.class);
         final ExecutionServiceAsync executionService = (ExecutionServiceAsync)GWT.create(ExecutionService.class);
 
+
         treeModel.addMenuEntry("Monitoring", new IngestionDetailWidget(executionService),
                 RunAsyncCode.runAsyncCode(IngestionDetailWidget.class));
         treeModel.addMenuEntry("Monitoring", new IngestionHistoryWidget(executionService),
                 RunAsyncCode.runAsyncCode(IngestionHistoryWidget.class));
 
         treeModel.addMenuEntry("Managing", new IngestionTriggerWidget(repositoryService,
-                resourceService, executionService),
-                RunAsyncCode.runAsyncCode(IngestionTriggerWidget.class));
+                resourceService, executionService),RunAsyncCode.runAsyncCode(IngestionTriggerWidget.class));
         treeModel.addMenuEntry("Managing", new ResourceManagementWidget(repositoryService,
                 resourceService), RunAsyncCode.runAsyncCode(ResourceManagementWidget.class));
-        treeModel.addMenuEntry("Importing", new ResourceManagementWidget(repositoryService,
-                resourceService), RunAsyncCode.runAsyncCode(ResourceManagementWidget.class));}
+        
+
+        treeModel.addMenuEntry("Importing", new ImportResourcesWidget(repositoryService,
+                resourceService), RunAsyncCode.runAsyncCode(ImportResourcesWidget.class));
+        /*
+                */}
+                
 }
