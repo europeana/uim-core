@@ -18,23 +18,26 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.gui.cp.client.europeanawidgets;
+package eu.europeana.uim.gui.cp.client.services;
+
+import java.util.List;
+
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
+import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
+import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
- * @author georgiosmarkakis
- *
+ * 
+ * @author Georgios Markakis
  */
-public abstract class SugarCRMInfo implements Comparable<SugarCRMInfo> {
 
-	private String sugarCrmId;
+@RemoteServiceRelativePath("integration")
+public interface IntegrationSeviceProxy extends RemoteService{
 
-	public void setSugarCrmId(String sugarCrmId) {
-		this.sugarCrmId = sugarCrmId;
-	}
-
-	public String getSugarCrmId() {
-		return sugarCrmId;
-	}
 	
+	public ImportResultDTO processSelectedRecord(SugarCRMRecordDTO record);
 	
+	public List<SugarCRMRecordDTO> executeSugarCRMQuery(String query);
 }

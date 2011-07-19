@@ -20,6 +20,10 @@
         <servlet-name>fileUploadService</servlet-name>
         <servlet-class>eu.europeana.uim.gui.cp.server.FileUploadService</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>integrationService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.IntegrationSeviceProxyImpl</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>repositoryService</servlet-name>
@@ -36,6 +40,10 @@
     <servlet-mapping>
         <servlet-name>fileUploadService</servlet-name>
         <url-pattern>/EuropeanaIngestionControlPanel/fileupload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>integrationService</servlet-name>
+        <url-pattern>/EuropeanaIngestionControlPanel/integration</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serve -->

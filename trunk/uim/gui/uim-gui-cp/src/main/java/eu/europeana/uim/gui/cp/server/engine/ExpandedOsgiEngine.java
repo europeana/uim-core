@@ -1,0 +1,92 @@
+/*
+ * Copyright 2007 EDL FOUNDATION
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they
+ * will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * you may not use this work except in compliance with the
+ * Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in
+ * writing, software distributed under the Licence is
+ * distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ * See the Licence for the specific language governing
+ * permissions and limitations under the Licence.
+ */
+package eu.europeana.uim.gui.cp.server.engine;
+
+import java.util.logging.Logger;
+
+import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
+import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
+
+/**
+ * 
+ * @author Georgios Markakis
+ */
+public class ExpandedOsgiEngine extends OsgiEngine {
+
+    private static Logger log = Logger.getLogger(ExpandedOsgiEngine.class.getName());
+	
+	    private static ExpandedOsgiEngine instance;
+	
+	    private final RepoxUIMService repoxService;
+	    
+	    private final SugarCRMService sugarCrmService;
+
+	    /**
+	     * Creates a new instance of this class.
+	     * 
+	     * @param registry
+	     */
+	    public ExpandedOsgiEngine(Registry registry,RepoxUIMService repoxService,SugarCRMService sugarCrmService) {
+	    	super(registry);
+	       this.repoxService = repoxService;
+	       this.sugarCrmService = sugarCrmService;
+	    }
+
+		/**
+		 * @return the repoxService
+		 */
+		public RepoxUIMService getRepoxService() {
+			return repoxService;
+		}
+
+		/**
+		 * @return the sugarCrmService
+		 */
+		public SugarCRMService getSugarCrmService() {
+			return sugarCrmService;
+		}
+		
+		
+	    /**
+	     * @return singleton instance of engine.
+	     */
+	    public static ExpandedOsgiEngine getInstance() {
+	        if (instance == null) {
+	            // we are not started in an osgi container,
+	            // we need to create the Embedded engine.
+	            log.warning("No real/osgi engine set - creating a reflection based engine.");
+	            //instance = new ReflectionEngine();
+	        }
+	        return instance;
+	    }
+
+	    /**
+	     * @param newInstance
+	     *            sets an engine instance to be used througout the application
+	     */
+	    protected static void setEngine(ExpandedOsgiEngine newInstance) {
+	        instance = newInstance;
+	    }
+
+
+
+}

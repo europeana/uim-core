@@ -54,7 +54,7 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
 
         treeModel.addMenuEntry("Importing", new ImportResourcesWidget(repositoryService,
                 resourceService), RunAsyncCode.runAsyncCode(ImportResourcesWidget.class));
-        /*
-                */}
+ 
+    }
                 
 }
