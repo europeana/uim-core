@@ -51,9 +51,8 @@ public class DatabaseEntityTest {
      * Tests string message type log entry.
      */
     @Test
-    public void testLogEntity() {
+    public void testLogEntry() {
         Date date = new Date();
-
         TLogEntry entry = new TLogEntry(Level.WARNING, "module", date, "a", "b", "c");
 
         logHome.insert(entry);
@@ -62,10 +61,10 @@ public class DatabaseEntityTest {
         TLogEntry storedEntry = logHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
-        
+
         assertEquals("module", storedEntry.getModule());
         assertEquals(entry.getModule(), storedEntry.getModule());
-        
+
         assertEquals(Level.WARNING, storedEntry.getLevel());
         assertEquals(entry.getLevel(), storedEntry.getLevel());
 
@@ -74,28 +73,143 @@ public class DatabaseEntityTest {
         assertEquals("b", storedEntry.getMessages()[1]);
         assertEquals("c", storedEntry.getMessages()[2]);
         assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
-        
+
         assertNull(storedEntry.getExecution());
         assertNull(storedEntry.getMetaDataRecord());
 
+        storedEntry.setModule("MODULE");
+        storedEntry.setMessage(new String[] {});
 
+        logHome.update(storedEntry);
+        storedEntry = logHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("MODULE", storedEntry.getModule());
+        assertEquals(3, storedEntry.getMessages().length);
+    }
+    
+    
+
+    /**
+     * Tests string message type log entry.
+     */
+    @Test
+    public void testLogEntryFailed() {
+        Date date = new Date();
+        TLogEntryFailed entry = new TLogEntryFailed(1L, Level.WARNING, "module", "stacktrace", date, 2L, "a", "b", "c");
+
+        logFailedHome.insert(entry);
+        Long oid = entry.getOid();
+
+        TLogEntryFailed storedEntry = logFailedHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("module", storedEntry.getModule());
+        assertEquals(entry.getModule(), storedEntry.getModule());
+
+        assertEquals(Level.WARNING, storedEntry.getLevel());
+        assertEquals(entry.getLevel(), storedEntry.getLevel());
+
+        assertEquals("stacktrace", storedEntry.getStacktrace());
+        assertEquals(entry.getStacktrace(), storedEntry.getStacktrace());
+
+        assertEquals(3, storedEntry.getMessages().length);
+        assertEquals("a", storedEntry.getMessages()[0]);
+        assertEquals("b", storedEntry.getMessages()[1]);
+        assertEquals("c", storedEntry.getMessages()[2]);
+        assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
+
+        assertNotNull(storedEntry.getExecution());
+        assertNotNull(storedEntry.getMetaDataRecord());
+
+        storedEntry.setModule("MODULE");
+        storedEntry.setMessage(new String[] {});
+
+        logFailedHome.update(storedEntry);
+        storedEntry = logFailedHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("MODULE", storedEntry.getModule());
+        assertEquals(3, storedEntry.getMessages().length);
     }
 
+
+    
+
+    /**
+     * Tests string message type log entry.
+     */
+    @Test
+    public void testLogEntryLink() {
+        Date date = new Date();
+        TLogEntryLink entry = new TLogEntryLink(1L, "module", 2L, "link", date, 200, "a", "b", "c");
+
+        logLinkHome.insert(entry);
+        Long oid = entry.getOid();
+
+        TLogEntryLink storedEntry = logLinkHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("module", storedEntry.getModule());
+        assertEquals(entry.getModule(), storedEntry.getModule());
+
+        assertEquals("link", storedEntry.getLink());
+        assertEquals(entry.getLink(), storedEntry.getLink());
+
+        assertEquals(3, storedEntry.getMessages().length);
+        assertEquals("a", storedEntry.getMessages()[0]);
+        assertEquals("b", storedEntry.getMessages()[1]);
+        assertEquals("c", storedEntry.getMessages()[2]);
+        assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
+
+        assertEquals(200, storedEntry.getStatus());
+        assertEquals(entry.getStatus(), storedEntry.getStatus());
+
+        assertNotNull(storedEntry.getExecution());
+        assertNotNull(storedEntry.getMetaDataRecord());
+
+        storedEntry.setModule("MODULE");
+        storedEntry.setMessage(new String[] {});
+
+        logLinkHome.update(storedEntry);
+        storedEntry = logLinkHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("MODULE", storedEntry.getModule());
+        assertEquals(3, storedEntry.getMessages().length);
+    }
+
+    
     /**
      * Tests duration entry.
      */
     @Test
     public void testDurationDatabaseEntity() {
-        TLogEntryDuration durEntry = new TLogEntryDuration();
-        durEntry.setModule("TEST-PLUGIN");
-        durEntry.setDuration(10l);
+        Date date = new Date();
+        TLogEntryDuration entry = new TLogEntryDuration(1L, "module", date, 5L);
 
-        logDurationHome.insert(durEntry);
-        long oid = durEntry.getOid();
+        logDurationHome.insert(entry);
+        long oid = entry.getOid();
 
-        TLogEntryDuration sdurEntry = logDurationHome.findByOid(oid);
-        assertNotNull(sdurEntry);
-        assertEquals(durEntry.getModule(), sdurEntry.getModule());
-        assertEquals(durEntry.getDuration(), sdurEntry.getDuration());
+        TLogEntryDuration storedEntry = logDurationHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getModule(), storedEntry.getModule());
+        assertEquals(entry.getDate(), storedEntry.getDate());
+        assertEquals(entry.getDuration(), storedEntry.getDuration());
+        assertEquals("module", storedEntry.getModule());
+
+        storedEntry.setModule("MODULE");
+
+        logDurationHome.update(storedEntry);
+        storedEntry = logDurationHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("MODULE", storedEntry.getModule());
     }
 }

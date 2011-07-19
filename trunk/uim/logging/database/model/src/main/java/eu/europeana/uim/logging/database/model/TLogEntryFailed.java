@@ -91,9 +91,20 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     @Transient
     private String[] messages;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public TLogEntryFailed() {
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param level
+     * @param module
+     * @param stacktrace
+     * @param date
+     * @param messages
+     */
     public TLogEntryFailed(Level level, String module, String stacktrace, Date date,
                            String... messages) {
         super();
@@ -105,6 +116,15 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         setMessage(messages);
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param level
+     * @param module
+     * @param stacktrace
+     * @param date
+     * @param mdr
+     * @param messages
+     */
     public TLogEntryFailed(Level level, String module, String stacktrace, Date date, Long mdr,
                            String... messages) {
         super();
@@ -116,6 +136,15 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         setMessage(messages);
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param execution
+     * @param level
+     * @param module
+     * @param stacktrace
+     * @param date
+     * @param messages
+     */
     public TLogEntryFailed(Long execution, Level level, String module, String stacktrace,
                            Date date, String... messages) {
         super();
@@ -128,6 +157,16 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         setMessage(messages);
     }
 
+    /**
+     * Creates a new instance of this class.
+     * @param execution
+     * @param level
+     * @param module
+     * @param stacktrace
+     * @param date
+     * @param mdr
+     * @param messages
+     */
     public TLogEntryFailed(Long execution, Level level, String module, String stacktrace,
                            Date date, Long mdr, String... messages) {
         super();
@@ -148,6 +187,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         return oid;
     }
 
+    @Override
     public Level getLevel() {
         return level;
     }
@@ -160,6 +200,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.level = level;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
@@ -172,6 +213,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.date = date;
     }
 
+    @Override
     public Long getExecution() {
         return execution;
     }
@@ -184,6 +226,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.execution = execution;
     }
 
+    @Override
     public String getModule() {
         return module;
     }
@@ -196,10 +239,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.module = module;
     }
 
-    /**
-     * Returns the stacktrace.
-     * @return the stacktrace
-     */
+    @Override
     public String getStacktrace() {
         return stacktrace;
     }
@@ -212,6 +252,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.stacktrace = stacktrace;
     }
 
+    @Override
     public Long getMetaDataRecord() {
         return metaDataRecord;
     }
@@ -224,6 +265,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
         this.metaDataRecord = metaDataRecord;
     }
 
+    @Override
     public String[] getMessages() {
         if (messages == null) {
             List<String> msgs = new ArrayList<String>();

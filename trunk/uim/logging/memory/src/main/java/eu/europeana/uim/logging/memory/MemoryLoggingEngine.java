@@ -2,6 +2,7 @@
 package eu.europeana.uim.logging.memory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void log(Level level, String modul, String... message) {
-        entries.add(new LogEntry(level, modul, message));
+        entries.add(new LogEntry(level, modul, new Date(), message));
         if (entries.size() > maxentries) {
             entries.removeFirst();
         }
@@ -61,7 +62,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void log(Execution<I> execution, Level level, String modul, String... message) {
-        entries.add(new LogEntry(execution, level, modul, message));
+        entries.add(new LogEntry(execution, level, modul, new Date(), message));
         if (entries.size() > maxentries) {
             entries.removeFirst();
         }
@@ -74,7 +75,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void logFailed(Level level, String modul, Throwable t, String... message) {
-        failed.add(new FailedEntry(level, modul, t, message));
+        failed.add(new FailedEntry(level, modul, t, new Date(), message));
         if (failed.size() > maxentries) {
             failed.removeFirst();
         }
@@ -89,7 +90,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable t,
             MetaDataRecord<I> mdr, String... message) {
-        failed.add(new FailedEntry(execution, level, modul, t, mdr, message));
+        failed.add(new FailedEntry(execution, level, modul, t, mdr, new Date(), message));
         if (failed.size() > maxentries) {
             failed.removeFirst();
         }
@@ -104,7 +105,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
             String... message) {
-        failed.add(new FailedEntry(execution, level, modul, throwable, message));
+        failed.add(new FailedEntry(execution, level, modul, throwable, new Date(), message));
         if (failed.size() > maxentries) {
             failed.removeFirst();
         }
@@ -118,7 +119,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void logLink(String modul, String link, int status, String... message) {
-        linklogs.add(new LinkEntry(modul, link, status, message));
+        linklogs.add(new LinkEntry(modul, link, status, new Date(), message));
         if (entries.size() > maxentries) {
             entries.removeFirst();
         }
@@ -127,7 +128,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     @Override
     public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
             int status, String... message) {
-        linklogs.add(new LinkEntry(execution, modul, mdr, link, status, message));
+        linklogs.add(new LinkEntry(execution, modul, mdr, link, new Date(), status, message));
         if (entries.size() > maxentries) {
             entries.removeFirst();
         }
@@ -167,41 +168,41 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(
-            Execution<I> execution) {
+    public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(Execution<I> execution) {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(
-            Execution<I> execution) {
+    public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(Execution<I> execution) {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
-    
-    
     private class LogEntry implements LoggingEngine.LogEntry<I> {
         private final Level        level;
         private final String       module;
+        private final Date         date;
         private final String[]     message;
 
         private final Execution<I> execution;
 
-        public LogEntry(Level level, String module, String[] message) {
+        public LogEntry(Level level, String module, Date date, String[] message) {
             super();
             this.level = level;
             this.module = module;
+            this.date = date;
             this.message = message;
             this.execution = null;
         }
 
-        public LogEntry(Execution<I> execution, Level level, String module, String[] message) {
+        public LogEntry(Execution<I> execution, Level level, String module, Date date,
+                        String[] message) {
             super();
             this.execution = execution;
             this.level = level;
             this.module = module;
+            this.date = date;
             this.message = message;
         }
 
@@ -216,47 +217,62 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
+        public Date getDate() {
+            return date;
+        }
+
+        @Override
         public String[] getMessages() {
             return message;
         }
+
+        @Override
+        public I getExecution() {
+            return execution.getId();
+        }
+
     }
 
     private class FailedEntry implements LoggingEngine.LogEntryFailed<I> {
         private final Level             level;
         private final String            module;
         private final MetaDataRecord<I> mdr;
+        private final Date              date;
         private final String[]          message;
         private final Execution<I>      execution;
         private final Throwable         throwable;
 
-        public FailedEntry(Level level, String module, Throwable throwable, String[] message) {
+        public FailedEntry(Level level, String module, Throwable throwable,  Date date, String[] message) {
             super();
             this.level = level;
             this.module = module;
             this.mdr = null;
+            this.date = date;
             this.execution = null;
             this.throwable = throwable;
             this.message = message;
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           String[] message) {
+                Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
             this.module = module;
+            this.date = date;
             this.throwable = throwable;
             this.mdr = null;
             this.message = message;
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           MetaDataRecord<I> mdr, String[] message) {
+                           MetaDataRecord<I> mdr,  Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
             this.module = module;
             this.throwable = throwable;
+            this.date = date;
             this.mdr = mdr;
             this.message = message;
         }
@@ -277,6 +293,12 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
+        public Date getDate() {
+            return date;
+        }
+
+
+        @Override
         public String[] getMessages() {
             return message;
         }
@@ -294,28 +316,35 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class LinkEntry implements LogEntryLink<I> {
-        private String            module;
-        private String            link;
-        private int               status;
-        private String[]          message;
+        private final String            module;
+        private final String            link;
+        private final Date              date;
+        private final int               status;
+        private final String[]          message;
 
-        private MetaDataRecord<I> mdr;
-        private Execution<I>      execution;
+        private final MetaDataRecord<I> mdr;
+        private final Execution<I>      execution;
 
-        public LinkEntry(String modul, String link, int status, String[] message) {
+        public LinkEntry(String module, String link, int status,  Date date, String[] message) {
             super();
+            this.module = module;
             this.link = link;
+            this.date = date;
             this.status = status;
             this.message = message;
+            
+            this.mdr = null;
+            this.execution = null;
         }
 
         public LinkEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String link,
-                         int status, String[] message) {
+                Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
             this.link = link;
             this.mdr = mdr;
+            this.date = date;
             this.status = status;
             this.message = message;
         }
@@ -334,6 +363,11 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         public int getStatus() {
             return status;
         }
+        @Override
+        public Date getDate() {
+            return date;
+        }
+
 
         @Override
         public String[] getMessages() {

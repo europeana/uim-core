@@ -1,5 +1,7 @@
 package eu.europeana.uim.logging.database.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,21 +34,42 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
     private String module;
 
     @Column
+    private Date     date;
+
+    @Column
     private Long   duration;
 
+    /**
+     * Creates a new instance of this class.
+     */
     public TLogEntryDuration() {
     }
 
-    public TLogEntryDuration(String module, Long duration) {
+    /**
+     * Creates a new instance of this class.
+     * @param module
+     * @param date 
+     * @param duration
+     */
+    public TLogEntryDuration(String module, Date date, Long duration) {
         super();
         this.module = module;
+        this.date = date;
         this.duration = duration;
     }
 
-    public TLogEntryDuration(Long execution, String module, Long duration) {
+    /**
+     * Creates a new instance of this class.
+     * @param execution
+     * @param module
+     * @param date 
+     * @param duration
+     */
+    public TLogEntryDuration(Long execution, String module, Date date, Long duration) {
         super();
         this.execution = execution;
         this.module = module;
+        this.date = date;
         this.duration = duration;
     }
 
@@ -57,9 +80,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
         return oid;
     }
 
-    /**
-     * @return name of plugin
-     */
+    @Override
     public String getModule() {
         return module;
     }
@@ -71,10 +92,21 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
     public void setModule(String module) {
         this.module = module;
     }
+    
+    @Override
+    public Date getDate() {
+        return date;
+    }
 
     /**
-     * @return duration
+     * Sets the date to the given value.
+     * @param date the date to set
      */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
     public Long getDuration() {
         return duration;
     }
@@ -87,10 +119,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
         this.duration = duration;
     }
 
-    /**
-     * Returns the execution.
-     * @return the execution
-     */
+    @Override
     public Long getExecution() {
         return execution;
     }

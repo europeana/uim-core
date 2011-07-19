@@ -1,5 +1,6 @@
 package eu.europeana.uim.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -299,36 +300,146 @@ public interface LoggingEngine<I> {
      */
     List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
     
+    /**
+     * @param <I>
+     * 
+     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+     * @since Jul 19, 2011
+     */
     public interface LogEntry<I> {
+        /**
+         * @return the log level
+         */
         Level getLevel();
+        
+        /**
+         * @return teh module of occurence
+         */
         String getModule();
+        
+        /**
+         * @return the timeo f occurence
+         */
+        Date getDate();
+        /**
+         * @return the messages
+         */
         String[] getMessages();
+
+        /**
+         * @return the execution identifier
+         */
+        I getExecution();
     }
     
+    
+    
+    /**
+     * @param <I>
+     * 
+     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+     * @since Jul 19, 2011
+     */
     public interface LogEntryDuration<I> {
+        /**
+         * @return the module
+         */
         String getModule();
+        
+        /**
+         * @return the date/time of occurrence
+         */
+        Date getDate();
+        /**
+         * @return the duration in milliseconds
+         */
         Long getDuration();
 
+        /**
+         * @return the execution identifier
+         */
         I getExecution();
     }
     
+    /**
+     * @param <I>
+     * 
+     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+     * @since Jul 19, 2011
+     */
     public interface LogEntryFailed<I> {
+        /**
+         * @return the log level
+         */
         Level getLevel();
+        
+        /**
+         * @return the module
+         */
         String getModule();
+        
+        /**
+         * @return the date of occurrence
+         */
+        Date getDate();
+        /**
+         * @return the stacktrace of a possible throwable
+         */
         String getStacktrace();
+        
+        /**
+         * @return the messages
+         */
         String[] getMessages();
         
+        /**
+         * @return the execution identifier
+         */
         I getExecution();
+        
+        
+        /**
+         * @return the meta data record identifier
+         */
         I getMetaDataRecord();
     }
     
+    /**
+     * @param <I>
+     * 
+     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+     * @since Jul 19, 2011
+     */
     public interface LogEntryLink<I> {
+        /**
+         * @return the module
+         */
         String getModule();
+        
+        /**
+         * @return the link
+         */
         String getLink();
+        /**
+         * @return the time of occurrence/test
+         */
+        Date getDate();
+        /**
+         * @return the http status
+         */
         int getStatus();
+        /**
+         * @return the messages
+         */
         String[] getMessages();
         
+        /**
+         * @return the execution identifier
+         */
         I getExecution();
+        /**
+         * @return the meta data record identifier
+         */
         I getMetaDataRecord();
     }
     

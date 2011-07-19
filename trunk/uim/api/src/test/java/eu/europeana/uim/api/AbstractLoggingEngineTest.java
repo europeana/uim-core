@@ -75,8 +75,8 @@ public abstract class AbstractLoggingEngineTest {
      * Tests functionality of logging engine implementation based on JPA.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void testLoggingFailed() {
-        @SuppressWarnings("unchecked")
         Execution<Long> execution = mock(Execution.class);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
@@ -105,8 +105,8 @@ public abstract class AbstractLoggingEngineTest {
      * Tests functionality of logging engine implementation based on JPA.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void testLoggingLink() {
-        @SuppressWarnings("unchecked")
         Execution<Long> execution = mock(Execution.class);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);

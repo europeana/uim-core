@@ -30,25 +30,25 @@ import eu.europeana.uim.api.LoggingEngine.LogEntry;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
 public class TLogEntry implements LogEntry<Long> {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
-    private Long   oid;
+    private Long     oid;
 
     @Column
-    private String module;
+    private String   module;
 
     @Column
-    private Long   execution;
+    private Long     execution;
 
     @Column
-    private Long   metaDataRecord;
+    private Long     metaDataRecord;
 
     @Column
-    private Level  level;
+    private Level    level;
 
     @Column
-    private Date   date;
+    private Date     date;
 
     @Column
     private String   message0;
@@ -82,30 +82,57 @@ public class TLogEntry implements LogEntry<Long> {
 
     @Transient
     private String[] messages;
-    
+
+    /**
+     * Creates a new instance of this class. Necessary default empty constructor
+     */
     public TLogEntry() {
     }
-    
+
+    /**
+     * Creates a new instance of this class with main fields
+     * 
+     * @param level
+     *            the level of the log messages
+     * @param module
+     *            the module in which the message was issued
+     * @param date
+     *            the time when the log entry was created
+     * @param messages
+     *            a list of messages
+     */
     public TLogEntry(Level level, String module, Date date, String... messages) {
         super();
         this.level = level;
         this.module = module;
         this.date = date;
-        
+
         setMessage(messages);
     }
 
-
+    /**
+     * Creates a new instance of this class with main fields and execution information.
+     * 
+     * @param execution
+     *            the execution in which the log message occured
+     * @param level
+     *            the level of the log message
+     * @param module
+     *            the modlue in which the message was issued
+     * @param date
+     *            the time when the log message was created
+     * @param messages
+     *            the list of messages
+     */
     public TLogEntry(Long execution, Level level, String module, Date date, String... messages) {
         super();
         this.execution = execution;
         this.level = level;
         this.module = module;
         this.date = date;
-        
+
         setMessage(messages);
     }
-
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -115,7 +142,7 @@ public class TLogEntry implements LogEntry<Long> {
         return oid;
     }
 
-    
+    @Override
     public Level getLevel() {
         return level;
     }
@@ -128,6 +155,7 @@ public class TLogEntry implements LogEntry<Long> {
         this.level = level;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
@@ -140,6 +168,7 @@ public class TLogEntry implements LogEntry<Long> {
         this.date = date;
     }
 
+    @Override
     public Long getExecution() {
         return execution;
     }
@@ -152,6 +181,7 @@ public class TLogEntry implements LogEntry<Long> {
         this.execution = execution;
     }
 
+    @Override
     public String getModule() {
         return module;
     }
@@ -165,7 +195,7 @@ public class TLogEntry implements LogEntry<Long> {
     }
 
     /**
-     * @return
+     * @return the metadata record id
      */
     public Long getMetaDataRecord() {
         return metaDataRecord;
@@ -179,6 +209,7 @@ public class TLogEntry implements LogEntry<Long> {
         this.metaDataRecord = metaDataRecord;
     }
 
+    @Override
     public String[] getMessages() {
         if (messages == null) {
             List<String> msgs = new ArrayList<String>();
@@ -217,8 +248,7 @@ public class TLogEntry implements LogEntry<Long> {
         }
         return messages;
     }
-    
-    
+
     /**
      * @param messages
      *            string messages, note that only maximum 10 messages are supported by this entry

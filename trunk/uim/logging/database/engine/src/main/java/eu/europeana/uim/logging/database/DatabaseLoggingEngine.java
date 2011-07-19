@@ -159,7 +159,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
 
     @Override
     public void logDuration(Execution<Long> execution, String modul, Long duration) {
-        TLogEntryDuration entry = new TLogEntryDuration(modul, duration);
+        TLogEntryDuration entry = new TLogEntryDuration(modul, new Date(), duration);
         storage.getLogDurationHome().insert(entry);
     }
 

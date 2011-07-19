@@ -92,11 +92,22 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     private String[] messages;
     
     
+    /**
+     * Creates a new instance of this class.
+     */
     public TLogEntryLink() {
     }
 
 
-    public TLogEntryLink(String module, String link, Date date, int status, String[] messages) {
+    /**
+     * Creates a new instance of this class.
+     * @param module
+     * @param link
+     * @param date
+     * @param status
+     * @param messages
+     */
+    public TLogEntryLink(String module, String link, Date date, int status, String... messages) {
         super();
         this.module = module;
         this.link = link;
@@ -106,7 +117,17 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
 
-    public TLogEntryLink(Long execution, String module, Long mdr, String link, Date date, int status, String[] messages) {
+    /**
+     * Creates a new instance of this class.
+     * @param execution
+     * @param module
+     * @param mdr
+     * @param link
+     * @param date
+     * @param status
+     * @param messages
+     */
+    public TLogEntryLink(Long execution, String module, Long mdr, String link, Date date, int status, String... messages) {
         super();
         this.execution = execution;
         this.status = status;
@@ -128,10 +149,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
 
-    /**
-     * Returns the status.
-     * @return the status
-     */
+    @Override
     public int getStatus() {
         return status;
     }
@@ -147,7 +165,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
 
-
+    @Override
     public Date getDate() {
         return date;
     }
@@ -160,6 +178,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
         this.date = date;
     }
 
+    @Override
     public Long getExecution() {
         return execution;
     }
@@ -172,6 +191,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
         this.execution = execution;
     }
 
+    @Override
     public String getModule() {
         return module;
     }
@@ -184,6 +204,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
         this.module = module;
     }
 
+    @Override
     public Long getMetaDataRecord() {
         return metaDataRecord;
     }
@@ -196,12 +217,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
         this.metaDataRecord = metaDataRecord;
     }
 
-    
-    
-    /**
-     * Returns the link.
-     * @return the link
-     */
+    @Override
     public String getLink() {
         return link;
     }
@@ -216,6 +232,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
 
+    @Override
     public String[] getMessages() {
         if (messages == null) {
             List<String> msgs = new ArrayList<String>();
