@@ -26,7 +26,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * 
  * @author Georgios Markakis
  */
-public abstract class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMRecordDTO> {
+public class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMRecordDTO> {
 
 	private String sugarCrmId;
 
@@ -36,6 +36,12 @@ public abstract class SugarCRMRecordDTO implements IsSerializable,Comparable<Sug
 
 	public String getSugarCrmId() {
 		return sugarCrmId;
+	}
+
+	@Override
+	public int compareTo(SugarCRMRecordDTO arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

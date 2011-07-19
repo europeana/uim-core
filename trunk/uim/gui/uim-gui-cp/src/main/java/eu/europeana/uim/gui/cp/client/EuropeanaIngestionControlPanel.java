@@ -11,6 +11,8 @@ import eu.europeana.uim.gui.cp.client.monitoring.IngestionDetailWidget;
 import eu.europeana.uim.gui.cp.client.monitoring.IngestionHistoryWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionService;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
+import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
+import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceService;
@@ -39,7 +41,7 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
         final RepositoryServiceAsync repositoryService = (RepositoryServiceAsync)GWT.create(RepositoryService.class);
         final ResourceServiceAsync resourceService = (ResourceServiceAsync)GWT.create(ResourceService.class);
         final ExecutionServiceAsync executionService = (ExecutionServiceAsync)GWT.create(ExecutionService.class);
-
+        final IntegrationSeviceProxyAsync integrationService = (IntegrationSeviceProxyAsync)GWT.create(IntegrationSeviceProxy.class);
 
         treeModel.addMenuEntry("Monitoring", new IngestionDetailWidget(executionService),
                 RunAsyncCode.runAsyncCode(IngestionDetailWidget.class));
@@ -53,7 +55,7 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
         
 
         treeModel.addMenuEntry("Importing", new ImportResourcesWidget(repositoryService,
-                resourceService), RunAsyncCode.runAsyncCode(ImportResourcesWidget.class));
+                resourceService,integrationService), RunAsyncCode.runAsyncCode(ImportResourcesWidget.class));
  
     }
                 

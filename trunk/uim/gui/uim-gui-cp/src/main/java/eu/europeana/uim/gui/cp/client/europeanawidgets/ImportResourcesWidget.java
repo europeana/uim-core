@@ -49,6 +49,7 @@ import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
+import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
@@ -65,6 +66,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
     private final RepositoryServiceAsync repositoryService;
     private final ResourceServiceAsync   resourceService;
+    private final IntegrationSeviceProxyAsync integrationservice;
 	
     interface Binder extends UiBinder<Widget, ImportResourcesWidget> {
     }
@@ -101,13 +103,13 @@ public class ImportResourcesWidget extends IngestionWidget {
 		 * @param description
 		 */
 		public ImportResourcesWidget(RepositoryServiceAsync repositoryService,
-	            ResourceServiceAsync resourceService) {
+	            ResourceServiceAsync resourceService,
+	            IntegrationSeviceProxyAsync integrationservice) {
 	        super("Import Resources", "This view allows to import resources into UIM.");
 	        this.repositoryService = repositoryService;
 	        this.resourceService = resourceService;
+	        this.integrationservice = integrationservice;
 	        
-
-
 		}
 
 

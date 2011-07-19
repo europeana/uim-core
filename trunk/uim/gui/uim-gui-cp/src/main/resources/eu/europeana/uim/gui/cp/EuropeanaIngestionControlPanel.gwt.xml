@@ -7,8 +7,8 @@
 
     <!-- Specify the paths for translatable code -->
     <source path='client' />
-    <source path='client/europeanawidgets' />
     <source path='shared' />
+
 
     <stylesheet src="EuropeanaIngestionControlPanel.css" />
 </module>
