@@ -34,7 +34,6 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 
     private static Logger log = Logger.getLogger(ExpandedOsgiEngine.class.getName());
 	
-	    private static ExpandedOsgiEngine instance;
 	
 	    private final RepoxUIMService repoxService;
 	    
@@ -70,13 +69,8 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 	     * @return singleton instance of engine.
 	     */
 	    public static ExpandedOsgiEngine getInstance() {
-	        if (instance == null) {
-	            // we are not started in an osgi container,
-	            // we need to create the Embedded engine.
-	            log.warning("No real/osgi engine set - creating a reflection based engine.");
-	            //instance = new ReflectionEngine();
-	        }
-	        return instance;
+			
+	    	return (ExpandedOsgiEngine) Engine.getInstance();
 	    }
 
 	    /**
@@ -84,7 +78,7 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 	     *            sets an engine instance to be used througout the application
 	     */
 	    protected static void setEngine(ExpandedOsgiEngine newInstance) {
-	        instance = newInstance;
+	    	Engine.setEngine(newInstance);
 	    }
 
 

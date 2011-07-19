@@ -100,7 +100,7 @@
                     </supportedProjectTypes>
                     <instructions>
                         <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
-                        <Bundle-Activator>eu.europeana.uim.gui.cp.server.engine.OsgiEngineActivator</Bundle-Activator>
+                        <Bundle-Activator>eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngineActivator</Bundle-Activator>
                         <Embed-Directory>WEB-INF/lib</Embed-Directory>
                         <Embed-Dependency>
                             europeana-uim-gui-common,gwt-servlet,gwt-incubator,commons-fileupload
