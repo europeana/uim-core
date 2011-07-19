@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>europeana-uim-plugin-solr3</artifactId>
-    <name>Unified Ingestion Manager: Solr Commons Plugin</name>
+    <name>Unified Ingestion Manager: Solr 3.x Commons Plugin</name>
     <packaging>bundle</packaging>
 
     <build>
