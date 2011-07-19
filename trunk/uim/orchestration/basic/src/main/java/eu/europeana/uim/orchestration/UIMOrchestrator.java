@@ -50,9 +50,10 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      * @param registry
      * @param processor
      */
-    public UIMOrchestrator(Registry registry, UIMWorkflowProcessor<I> processor) {
+    @SuppressWarnings({ "unchecked", "rawtypes", "cast" })
+    public UIMOrchestrator(Registry registry, UIMWorkflowProcessor processor) {
         this.registry = registry;
-        this.processor = processor;
+        this.processor = (UIMWorkflowProcessor<I>)processor;
 
         processor.startup();
     }
