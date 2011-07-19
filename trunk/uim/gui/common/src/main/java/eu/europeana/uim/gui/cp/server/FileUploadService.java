@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +27,8 @@ import eu.europeana.uim.gui.cp.server.engine.Engine;
  * @since May 10, 2011
  */
 public class FileUploadService extends HttpServlet {
+    private final static Logger log = Logger.getLogger(FileUploadService.class.getName());
+    
     private final Engine engine;
 
     /**
@@ -38,8 +42,12 @@ public class FileUploadService extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ResourceEngine resourceEngine = engine.getRegistry().getResourceEngine();
-        ServletFileUpload upload = new ServletFileUpload();
+        if (resourceEngine == null) {
+            log.log(Level.SEVERE, "Resource engine is null!");
+            return;
+        }
 
+        ServletFileUpload upload = new ServletFileUpload();
         try {
             FileItemIterator iter = upload.getItemIterator(request);
 

@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.StorageEngine;
@@ -33,7 +32,7 @@ import eu.europeana.uim.store.UimDataSet;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         ExecutionService {
-    private final static Logger log = Logger.getLogger(AbstractIngestionPlugin.class.getName());
+    private final static Logger log = Logger.getLogger(ExecutionServiceImpl.class.getName());
 
     /**
      * Creates a new instance of this class.

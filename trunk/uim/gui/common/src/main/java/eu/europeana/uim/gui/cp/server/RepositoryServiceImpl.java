@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -31,6 +33,8 @@ import eu.europeana.uim.workflow.Workflow;
 @SuppressWarnings({ "unchecked" })
 public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         RepositoryService {
+    private final static Logger log = Logger.getLogger(RepositoryServiceImpl.class.getName());
+
     /**
      * Creates a new instance of this class.
      */
@@ -72,6 +76,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     return name1.compareTo(name2);
                 }
             });
+        } else {
+            log.log(Level.WARNING, "Workflows are null!");
         }
         return res;
     }
@@ -79,60 +85,94 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public List<ProviderDTO> getProviders() {
         List<ProviderDTO> res = new ArrayList<ProviderDTO>();
+
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return res;
+        }
+
+        List<Provider<Long>> providers = null;
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-            List<Provider<Long>> providers = storage.getAllProviders();
-            if (providers != null) {
-                for (Provider<Long> p : providers) {
+            providers = storage.getAllProviders();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve providers!", t);
+        }
+
+        if (providers != null) {
+            for (Provider<Long> p : providers) {
+                try {
                     ProviderDTO provider = getWrappedProviderDTO(p.getId());
                     res.add(provider);
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Error in copy data to DTO of provider!", t);
+                    wrappedProviderDTOs.remove(p.getId());
                 }
-
-                Collections.sort(res, new Comparator<ProviderDTO>() {
-                    @Override
-                    public int compare(ProviderDTO o1, ProviderDTO o2) {
-                        String name1 = o1.getName() != null ? o1.getName() : "";
-                        String name2 = o2.getName() != null ? o2.getName() : "";
-                        return name1.compareTo(name2);
-                    }
-                });
             }
-        } catch (StorageEngineException e) {
-            throw new RuntimeException(e);
+
+            Collections.sort(res, new Comparator<ProviderDTO>() {
+                @Override
+                public int compare(ProviderDTO o1, ProviderDTO o2) {
+                    String name1 = o1.getName() != null ? o1.getName() : "";
+                    String name2 = o2.getName() != null ? o2.getName() : "";
+                    return name1.compareTo(name2);
+                }
+            });
         }
+
         return res;
     }
 
     @Override
     public List<CollectionDTO> getCollections(Long provider) {
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
+
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return res;
+        }
+
+        Provider<Long> p = null;
         try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-            Provider<Long> p = storage.getProvider(provider);
-            List<Collection<Long>> cols = storage.getCollections(p);
-            for (Collection<Long> col : cols) {
-                CollectionDTO collDTO = new CollectionDTO(col.getId());
-                collDTO.setName(col.getName());
-                collDTO.setMnemonic(col.getMnemonic());
-                collDTO.setProvider(getWrappedProviderDTO(provider));
-                collDTO.setLanguage(col.getLanguage());
-                collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
-                collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
-                collDTO.setOaiSet(col.getOaiSet());
-                res.add(collDTO);
+            p = storage.getProvider(provider);
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
+        }
+
+        if (p != null) {
+            List<Collection<Long>> cols = null;
+            try {
+                cols = storage.getCollections(p);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Could not retrieve collections for provider '" + provider +
+                                       "'!", t);
             }
 
-            Collections.sort(res, new Comparator<CollectionDTO>() {
-                @Override
-                public int compare(CollectionDTO o1, CollectionDTO o2) {
-                    String name1 = o1.getName() != null ? o1.getName() : "";
-                    String name2 = o2.getName() != null ? o2.getName() : "";
-                    return name1.compareTo(name2);
+            if (cols != null) {
+                for (Collection<Long> col : cols) {
+                    CollectionDTO collDTO = new CollectionDTO(col.getId());
+                    collDTO.setName(col.getName());
+                    collDTO.setMnemonic(col.getMnemonic());
+                    collDTO.setProvider(getWrappedProviderDTO(provider));
+                    collDTO.setLanguage(col.getLanguage());
+                    collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
+                    collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
+                    collDTO.setOaiSet(col.getOaiSet());
+                    res.add(collDTO);
                 }
-            });
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+
+                Collections.sort(res, new Comparator<CollectionDTO>() {
+                    @Override
+                    public int compare(CollectionDTO o1, CollectionDTO o2) {
+                        String name1 = o1.getName() != null ? o1.getName() : "";
+                        String name2 = o2.getName() != null ? o2.getName() : "";
+                        return name1.compareTo(name2);
+                    }
+                });
+            }
         }
+
         return res;
     }
 
@@ -157,13 +197,20 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Integer getCollectionTotal(Long collection) {
-        try {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-            return storage.getTotalByCollection(storage.getCollection(collection));
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return 0;
         }
-        return 0;
+
+        int num = 0;
+        try {
+            num = storage.getTotalByCollection(storage.getCollection(collection));
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not get number of records for collection '" + collection +
+                                   "'!", t);
+        }
+        return num;
     }
 
     @Override
@@ -183,6 +230,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public Boolean updateProvider(ProviderDTO provider) {
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return false;
+        }
 
         Provider<Long> prov;
         try {
@@ -191,8 +242,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             } else {
                 prov = storage.getProvider(provider.getId());
             }
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
             return false;
         }
 
@@ -203,8 +254,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         try {
             storage.updateProvider(prov);
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not update provider '" + provider + "'!", t);
             return false;
         }
 
@@ -214,6 +265,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public Boolean updateCollection(CollectionDTO collection) {
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return false;
+        }
 
         Collection<Long> coll;
         try {
@@ -223,8 +278,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             } else {
                 coll = storage.getCollection(collection.getId());
             }
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
             return false;
         }
 
@@ -237,8 +292,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         try {
             storage.updateCollection(coll);
-        } catch (StorageEngineException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not update collection '" + collection + "'!", t);
             return false;
         }
 

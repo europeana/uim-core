@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.ResourceService;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.store.Collection;
@@ -28,6 +29,8 @@ import eu.europeana.uim.workflow.WorkflowStart;
 @SuppressWarnings({ "unchecked" })
 public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implements
         ResourceService {
+    private final static Logger log = Logger.getLogger(ResourceServiceImpl.class.getName());
+
     /**
      * Creates a new instance of this class.
      */
@@ -40,7 +43,10 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
         if (workflow != null) {
             Workflow w = getEngine().getRegistry().getWorkflow(workflow);
-            if (w == null) { throw new RuntimeException("Error: cannot find workflow " + workflow); }
+            if (w == null) {
+                log.log(Level.WARNING, "Workflows are null!");
+                return res;
+            }
 
             List<String> params = new ArrayList<String>();
             WorkflowStart start = w.getStart();
@@ -50,6 +56,11 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             ResourceEngine resource = getEngine().getRegistry().getResourceEngine();
+            if (resource == null) {
+                log.log(Level.SEVERE, "Resource engine is null!");
+                return res;
+            }
+
             LinkedHashMap<String, List<String>> globalResources = resource.getGlobalResources(params);
 
             LinkedHashMap<String, List<String>> workflowResources = resource.getWorkflowResources(
@@ -63,40 +74,42 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             if (provider != null) {
-                Provider<Long> prov;
+                Provider<Long> prov = null;
                 try {
                     prov = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
-                } catch (StorageEngineException e) {
-                    throw new RuntimeException("Could not lookup provider for id '" + provider +
-                                               "'!", e);
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
                 }
 
-                LinkedHashMap<String, List<String>> providerResources = resource.getProviderResources(
-                        prov, params);
-                if (providerResources != null && providerResources.size() > 0) {
-                    for (Entry<String, List<String>> entry : providerResources.entrySet()) {
-                        if (entry.getValue() != null) {
-                            globalResources.put(entry.getKey(), entry.getValue());
+                if (prov != null) {
+                    LinkedHashMap<String, List<String>> providerResources = resource.getProviderResources(
+                            prov, params);
+                    if (providerResources != null && providerResources.size() > 0) {
+                        for (Entry<String, List<String>> entry : providerResources.entrySet()) {
+                            if (entry.getValue() != null) {
+                                globalResources.put(entry.getKey(), entry.getValue());
+                            }
                         }
                     }
                 }
             }
 
             if (collection != null) {
-                Collection<Long> coll;
+                Collection<Long> coll = null;
                 try {
                     coll = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
-                } catch (StorageEngineException e) {
-                    throw new RuntimeException("Could not lookup collection for id '" + collection +
-                                               "'!", e);
+                } catch (Throwable t) {
+                    log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
                 }
 
-                LinkedHashMap<String, List<String>> collectionResources = resource.getCollectionResources(
-                        coll, params);
-                if (collectionResources != null && collectionResources.size() > 0) {
-                    for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
-                        if (entry.getValue() != null) {
-                            globalResources.put(entry.getKey(), entry.getValue());
+                if (coll != null) {
+                    LinkedHashMap<String, List<String>> collectionResources = resource.getCollectionResources(
+                            coll, params);
+                    if (collectionResources != null && collectionResources.size() > 0) {
+                        for (Entry<String, List<String>> entry : collectionResources.entrySet()) {
+                            if (entry.getValue() != null) {
+                                globalResources.put(entry.getKey(), entry.getValue());
+                            }
                         }
                     }
                 }
@@ -122,29 +135,42 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
         values.put(parameter.getKey(),
                 parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
+
         ResourceEngine resource = getEngine().getRegistry().getResourceEngine();
+        if (resource == null) {
+            log.log(Level.SEVERE, "Resource engine is null!");
+            return res;
+        }
 
         if (collection == null && provider == null && workflow != null) {
             Workflow wf = getEngine().getRegistry().getWorkflow(workflow);
-            resource.setWorkflowResources(wf, values);
+            if (wf == null) {
+                log.log(Level.WARNING, "Workflows are null!");
+            } else {
+                resource.setWorkflowResources(wf, values);
+            }
         } else if (collection == null && provider != null && workflow != null) {
-            Provider<Long> prov;
+            Provider<Long> prov = null;
             try {
                 prov = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
-            } catch (StorageEngineException e) {
-                throw new RuntimeException("Could not lookup provider for id '" + provider + "'!",
-                        e);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
             }
-            resource.setProviderResources(prov, values);
+
+            if (prov != null) {
+                resource.setProviderResources(prov, values);
+            }
         } else if (collection != null && provider != null && workflow != null) {
-            Collection<Long> coll;
+            Collection<Long> coll = null;
             try {
                 coll = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
-            } catch (StorageEngineException e) {
-                throw new RuntimeException("Could not lookup collection for id '" + collection +
-                                           "'!", e);
+            } catch (Throwable t) {
+                log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
             }
-            resource.setCollectionResources(coll, values);
+
+            if (coll != null) {
+                resource.setCollectionResources(coll, values);
+            }
         } else {
             res = false;
         }
