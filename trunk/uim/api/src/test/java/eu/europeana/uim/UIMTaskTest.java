@@ -3,7 +3,6 @@ package eu.europeana.uim;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 import java.util.LinkedList;
@@ -61,11 +60,9 @@ public class UIMTaskTest {
 
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         task.setStep(plugin, false);
-
-        try {
-            task.run();
-            fail("There is an exception in the process method - task must fail");
-        } catch (UnsupportedOperationException t) {
-        }
+        task.run();
+        
+        task.setOnFailure(new LinkedList<Task<Long>>());
+        task.setOnSuccess(new LinkedList<Task<Long>>());
     }
 }
