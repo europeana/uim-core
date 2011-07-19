@@ -1,16 +1,19 @@
 package eu.europeana.uim.logging.database.model;
 
-import java.util.Date;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import org.junit.Assert;
+import java.util.Date;
+import java.util.logging.Level;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import eu.europeana.uim.api.LoggingEngine;
 
 /**
  * Tests JPA entities used as persistent objects.
@@ -22,80 +25,60 @@ import eu.europeana.uim.api.LoggingEngine;
 @ContextConfiguration(locations = { "/test-context.xml", "/test-beans.xml" })
 public class DatabaseEntityTest {
     @Autowired
-    private TStringDatabaseLogEntryHome stringHome;
+    private TLogEntryHome         logHome;
 
     @Autowired
-    private TObjectDatabaseLogEntryHome objectHome;
+    private TLogEntryFailedHome   logFailedHome;
 
     @Autowired
-    private TDurationDatabaseEntryHome  durationHome;
+    private TLogEntryLinkHome     logLinkHome;
+
+    @Autowired
+    private TLogEntryDurationHome logDurationHome;
 
     /**
      * Truncates all tables.
      */
     @Before
     public void setup() {
-        stringHome.truncate();
-        objectHome.truncate();
-        durationHome.truncate();
+        logHome.truncate();
+        logFailedHome.truncate();
+        logLinkHome.truncate();
+        logDurationHome.truncate();
     }
 
     /**
      * Tests string message type log entry.
      */
     @Test
-    public void testStringDatabaseEntity() {
+    public void testLogEntity() {
         Date date = new Date();
 
-        TStringDatabaseLogEntry stringEntry = new TStringDatabaseLogEntry();
-        stringEntry.setExecutionId(1l);
-        stringEntry.setDate(date);
-        stringEntry.setMessage(new String[] { "TEST-LOG" });
-        stringEntry.setMetaDataRecordId(2l);
-        stringEntry.setModule("TEST-PLUGIN");
-        stringEntry.setLevel(LoggingEngine.Level.WARNING);
+        TLogEntry entry = new TLogEntry(Level.WARNING, "module", date, "a", "b", "c");
 
-        stringHome.insert(stringEntry);
-        Long oid = stringEntry.getOid();
+        logHome.insert(entry);
+        Long oid = entry.getOid();
 
-        TStringDatabaseLogEntry storedStringEntry = stringHome.findByOid(oid);
-        Assert.assertNotNull(storedStringEntry);
-        Assert.assertEquals(stringEntry.getExecutionId(), storedStringEntry.getExecutionId());
-        Assert.assertEquals(stringEntry.getDate(), storedStringEntry.getDate());
-        Assert.assertArrayEquals(stringEntry.getMessage(), storedStringEntry.getMessage());
-        Assert.assertEquals(stringEntry.getMetaDataRecordId(),
-                storedStringEntry.getMetaDataRecordId());
-        Assert.assertEquals(stringEntry.getModule(), storedStringEntry.getModule());
-        Assert.assertEquals(stringEntry.getLevel(), storedStringEntry.getLevel());
-    }
+        TLogEntry storedEntry = logHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+        
+        assertEquals("module", storedEntry.getModule());
+        assertEquals(entry.getModule(), storedEntry.getModule());
+        
+        assertEquals(Level.WARNING, storedEntry.getLevel());
+        assertEquals(entry.getLevel(), storedEntry.getLevel());
 
-    /**
-     * Tests object message type log entry.
-     */
-    @SuppressWarnings({ "unchecked", "cast" })
-    @Test
-    public void testObjectDatabaseEntity() {
-        Date date = new Date();
+        assertEquals(3, storedEntry.getMessages().length);
+        assertEquals("a", storedEntry.getMessages()[0]);
+        assertEquals("b", storedEntry.getMessages()[1]);
+        assertEquals("c", storedEntry.getMessages()[2]);
+        assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
+        
+        assertNull(storedEntry.getExecution());
+        assertNull(storedEntry.getMetaDataRecord());
 
-        TObjectDatabaseLogEntry<String> entry = new TObjectDatabaseLogEntry<String>();
-        entry.setExecutionId(1l);
-        entry.setDate(date);
-        entry.setMessage("TEST-LOG");
-        entry.setMetaDataRecordId(2l);
-        entry.setModule("TEST-PLUGIN");
-        entry.setLevel(LoggingEngine.Level.WARNING);
 
-        objectHome.insert(entry);
-        long oid = entry.getOid();
-
-        TObjectDatabaseLogEntry<String> sentry = (TObjectDatabaseLogEntry<String>)objectHome.findByOid(oid);
-        Assert.assertNotNull(sentry);
-        Assert.assertEquals(entry.getExecutionId(), sentry.getExecutionId());
-        Assert.assertEquals(entry.getDate(), sentry.getDate());
-        Assert.assertEquals(entry.getMessage(), sentry.getMessage());
-        Assert.assertEquals(entry.getMetaDataRecordId(), sentry.getMetaDataRecordId());
-        Assert.assertEquals(entry.getModule(), sentry.getModule());
-        Assert.assertEquals(entry.getLevel(), sentry.getLevel());
     }
 
     /**
@@ -103,16 +86,16 @@ public class DatabaseEntityTest {
      */
     @Test
     public void testDurationDatabaseEntity() {
-        TDurationDatabaseEntry durEntry = new TDurationDatabaseEntry();
+        TLogEntryDuration durEntry = new TLogEntryDuration();
         durEntry.setModule("TEST-PLUGIN");
         durEntry.setDuration(10l);
 
-        durationHome.insert(durEntry);
+        logDurationHome.insert(durEntry);
         long oid = durEntry.getOid();
 
-        TDurationDatabaseEntry sdurEntry = durationHome.findByOid(oid);
-        Assert.assertNotNull(sdurEntry);
-        Assert.assertEquals(durEntry.getModule(), sdurEntry.getModule());
-        Assert.assertEquals(durEntry.getDuration(), sdurEntry.getDuration());
+        TLogEntryDuration sdurEntry = logDurationHome.findByOid(oid);
+        assertNotNull(sdurEntry);
+        assertEquals(durEntry.getModule(), sdurEntry.getModule());
+        assertEquals(durEntry.getDuration(), sdurEntry.getDuration());
     }
 }

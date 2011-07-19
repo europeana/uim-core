@@ -109,29 +109,29 @@ public interface Registry {
      * @param loggingEngine
      *            add logger to registration
      */
-    void addLoggingEngine(LoggingEngine<?, ?> loggingEngine);
+    void addLoggingEngine(LoggingEngine<?> loggingEngine);
 
     /**
      * @param loggingEngine
      *            remove logger to registration
      */
-    void removeLoggingEngine(LoggingEngine<?, ?> loggingEngine);
+    void removeLoggingEngine(LoggingEngine<?> loggingEngine);
 
     /**
      * @return loggers
      */
-    List<LoggingEngine<?, ?>> getLoggingEngines();
+    List<LoggingEngine<?>> getLoggingEngines();
 
     /**
      * @return default logger
      */
-    LoggingEngine<?, ?> getLoggingEngine();
+    LoggingEngine<?> getLoggingEngine();
 
     /**
      * @param identifier
      * @return logger for the given identifier or null
      */
-    LoggingEngine<?, ?> getLoggingEngine(String identifier);
+    LoggingEngine<?> getLoggingEngine(String identifier);
 
     /**
      * @param resourceEngine
@@ -164,19 +164,19 @@ public interface Registry {
     /**
      * @return registered orchestrator
      */
-    Orchestrator getOrchestrator();
+    Orchestrator<?> getOrchestrator();
 
     /**
      * Registers the given orchestrator.
      * 
      * @param orchestrator
      */
-    void setOrchestrator(Orchestrator orchestrator);
+    void setOrchestrator(Orchestrator<?> orchestrator);
 
     /**
      * Unregisters the given orchestrator.
      * 
      * @param orchestrator
      */
-    void unsetOrchestrator(Orchestrator orchestrator);
+    void unsetOrchestrator(Orchestrator<?> orchestrator);
 }

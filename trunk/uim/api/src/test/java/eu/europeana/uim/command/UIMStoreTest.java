@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import org.apache.felix.service.command.CommandSession;
 import org.junit.Test;
@@ -28,6 +28,9 @@ import eu.europeana.uim.store.bean.ProviderBean;
  */
 public class UIMStoreTest {
 
+    /**
+     * @throws Exception
+     */
     @Test
     public void testListProvider() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -35,13 +38,14 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
 
-        ProviderBean<Long> provider = new ProviderBean<Long>(1L);
+        final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
         
-        StorageEngine storage = mock(StorageEngine.class);
+        @SuppressWarnings("unchecked")
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(Arrays.asList(provider));
+        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>(){{add(provider);}});
 
         registry.addStorageEngine(storage);
 
@@ -58,6 +62,9 @@ public class UIMStoreTest {
     }
     
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testListCollection() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -65,18 +72,19 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
 
-        ProviderBean<Long> provider = new ProviderBean<Long>(1L);
+        final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
         
-        CollectionBean<Long> collection = new CollectionBean<Long>(1L, provider);
+        final CollectionBean<Long> collection = new CollectionBean<Long>(1L, provider);
         collection.setMnemonic("mnemonic");
         collection.setName("name");
         
-        StorageEngine storage = mock(StorageEngine.class);
+        @SuppressWarnings("unchecked")
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(Arrays.asList(provider));
-        when(storage.getCollections(provider)).thenReturn(Arrays.asList(collection));
+        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>(){{add(provider);}});
+        when(storage.getCollections(provider)).thenReturn(new ArrayList<Collection<Long>>(){{add(collection);}});
 
         registry.addStorageEngine(storage);
 
@@ -94,6 +102,9 @@ public class UIMStoreTest {
 
     
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testCreateProvider() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -103,7 +114,8 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
         
-        StorageEngine storage = mock(StorageEngine.class);
+        @SuppressWarnings("unchecked")
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.createProvider()).thenReturn(provider);
 
@@ -127,6 +139,9 @@ public class UIMStoreTest {
     }
     
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testUpdateProvider() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -136,7 +151,8 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
         
-        StorageEngine storage = mock(StorageEngine.class);
+        @SuppressWarnings("unchecked")
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findProvider((String)any())).thenReturn(provider);
 
@@ -160,20 +176,24 @@ public class UIMStoreTest {
     }
     
     
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
     @Test
     public void testCreateCollection() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        ProviderBean<Long> provider = new ProviderBean<Long>(1L);
-        Collection collection = new CollectionBean<Long>(1L, provider);
+        Provider<Long> provider = new ProviderBean<Long>(1L);
+        Collection<Long> collection = new CollectionBean<Long>(1L, provider);
 
         UIMRegistry registry = new UIMRegistry();
         
-        StorageEngine storage = mock(StorageEngine.class);
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findProvider((String)any())).thenReturn(provider);
-        when(storage.createCollection((Provider)any())).thenReturn(collection);
+        when(storage.createCollection((Provider<Long>)any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
         
@@ -197,16 +217,20 @@ public class UIMStoreTest {
     
     
 
+    /**
+     * @throws Exception
+     */
     @Test
     public void testUpdateCollection() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        Collection collection = new CollectionBean<Long>(1L, null);
+        Collection<Long> collection = new CollectionBean<Long>(1L, null);
 
         UIMRegistry registry = new UIMRegistry();
         
-        StorageEngine storage = mock(StorageEngine.class);
+        @SuppressWarnings("unchecked")
+        StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findCollection((String)any())).thenReturn(collection);
 

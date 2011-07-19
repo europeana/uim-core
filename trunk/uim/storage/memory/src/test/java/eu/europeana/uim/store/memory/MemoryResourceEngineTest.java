@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import eu.europeana.uim.api.AbstractResourceEngineTest;
 import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.store.AbstractResourceEngineTest;
 
 /**
  * Implementation of test cases for memory based resource engine.

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.ExecutionService;
@@ -47,9 +48,10 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public List<ExecutionDTO> getActiveExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
-        java.util.Collection<ActiveExecution<?>> activeExecutions = null;
+        java.util.Collection<ActiveExecution<Long>> activeExecutions = null;
         try {
-            activeExecutions = getEngine().getRegistry().getOrchestrator().getActiveExecutions();
+            Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+            activeExecutions = orchestrator.getActiveExecutions();
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Could not query active execution!", t);
         }
@@ -120,6 +122,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             log.log(Level.SEVERE, "Storage connection is null!");
             return null;
         }
+        Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
 
         Collection<Long> c = null;
         try {
@@ -140,11 +143,10 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         ActiveExecution<Long> ae;
         if (parameters != null) {
             Properties properties = prepareProperties(parameters);
-            ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+            ae = orchestrator.executeWorkflow(
                     w, c, properties);
         } else {
-            ae = (ActiveExecution<Long>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
-                    w, c);
+            ae = orchestrator.executeWorkflow(w, c);
         }
         ae.getMonitor().addListener(monitor);
         if (executionName != null) {
@@ -240,12 +242,18 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     @Override
     public ExecutionDTO getExecution(Long id) {
+        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return null;
+        }
+        Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+
         ExecutionDTO exec = null;
-        ActiveExecution<?> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(id);
+        ActiveExecution<?> ae = orchestrator.getActiveExecution(id);
         if (ae != null) {
             exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
         } else {
-            StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
             Execution<Long> execution;
             try {
                 execution = storage.getExecution(id);
@@ -313,10 +321,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     @Override
     public Boolean pauseExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+        Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
                 execution);
         if (ae != null) {
-            getEngine().getRegistry().getOrchestrator().pause(ae);
+            orchestrator.pause(ae);
             return ae.isPaused();
         } else {
             return false;
@@ -325,10 +335,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     @Override
     public Boolean resumeExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+        Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
                 execution);
         if (ae != null) {
-            getEngine().getRegistry().getOrchestrator().resume(ae);
+            orchestrator.resume(ae);
             return !ae.isPaused();
         } else {
             return false;
@@ -337,10 +349,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     @Override
     public Boolean cancelExecution(Long execution) {
-        ActiveExecution<Long> ae = getEngine().getRegistry().getOrchestrator().getActiveExecution(
+        Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
                 execution);
         if (ae != null) {
-            getEngine().getRegistry().getOrchestrator().cancel(ae);
+            orchestrator.cancel(ae);
             return ae.isCanceled();
         } else {
             return false;

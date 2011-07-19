@@ -121,7 +121,7 @@ public class ReflectionEngine extends Engine {
         for (String name : logging) {
             try {
                 Class<?> clazz = Class.forName(name);
-                LoggingEngine<?, ?> logging = (LoggingEngine<?, ?>)clazz.newInstance();
+                LoggingEngine<?> logging = (LoggingEngine<?>)clazz.newInstance();
                 registry.addLoggingEngine(logging);
 
             } catch (Throwable e) {

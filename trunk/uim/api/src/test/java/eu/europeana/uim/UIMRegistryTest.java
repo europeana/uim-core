@@ -55,6 +55,7 @@ public class UIMRegistryTest {
     /**
      * Tests registration of a {@link StorageEngine}.
      */
+    @SuppressWarnings("rawtypes")
     @Test
     public void testStorageEngine() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
@@ -171,7 +172,7 @@ public class UIMRegistryTest {
     public void testGetterSetterCheckToSucceed() {
         assertNull(registry.getOrchestrator());
 
-        Orchestrator orchestrator = mock(Orchestrator.class);
+        Orchestrator<?> orchestrator = mock(Orchestrator.class);
         registry.setOrchestrator(orchestrator);
         assertNotNull(registry.getOrchestrator());
 

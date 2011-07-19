@@ -127,6 +127,7 @@ public interface IngestionPlugin {
      * Initialization method for an execution context. The context holds the properties specific for
      * this execution.
      * 
+     * @param <I> 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
      *            processing call. This context can change for each call, so references to it have
@@ -135,12 +136,13 @@ public interface IngestionPlugin {
      *             is thrown if the intiliazation fails and so the plugin is not ready to take
      *             records for this {@link ExecutionContext}
      */
-    void initialize(ExecutionContext context) throws IngestionPluginFailedException;
+    <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException;
 
     /**
      * Finalization method (tear down) for an execution. At the end of each execution this method is
      * called to allow the plugin to clean up memory or external resources.
      * 
+     * @param <I> 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
      *            processing call. This context can change for each call, so references to it have
@@ -150,7 +152,7 @@ public interface IngestionPlugin {
      *             resources, so that executing it in a new {@link ExecutionContext} will most
      *             likely fail
      */
-    void completed(ExecutionContext context) throws IngestionPluginFailedException;
+    <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException;
 
     /**
      * Process a single meta data record within a given execution context. It returns true, if
@@ -159,6 +161,7 @@ public interface IngestionPlugin {
      * nor is the plugin itself damaged, so that the record can further processed and this plugin
      * can take other records as well. Furthermore, additional information can be logged (
      * {@link LoggingEngine}).
+     * @param <I> 
      * 
      * @param mdr
      *            the {@link MetaDataRecord} to process
@@ -175,6 +178,6 @@ public interface IngestionPlugin {
      *             that further processing of this specific {@link MetaDataRecord} does not make
      *             sense any longer
      */
-    boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
+    <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException;
 }

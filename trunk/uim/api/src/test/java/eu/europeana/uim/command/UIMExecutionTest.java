@@ -24,6 +24,9 @@ import eu.europeana.uim.api.Orchestrator;
 public class UIMExecutionTest {
 
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testListRegistry() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -31,7 +34,7 @@ public class UIMExecutionTest {
 
         UIMRegistry registry = new UIMRegistry();
         
-        Orchestrator orchestrator = mock(Orchestrator.class);
+        Orchestrator<?> orchestrator = mock(Orchestrator.class);
         registry.setOrchestrator(orchestrator);
         
         LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();

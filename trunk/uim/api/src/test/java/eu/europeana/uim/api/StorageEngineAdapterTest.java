@@ -21,8 +21,7 @@ public class StorageEngineAdapterTest {
      */
     @Test
     public void testStorageAdapterNoop() throws StorageEngineException {
-        StorageEngine<Long> engine = new StorageEngineAdapter() {
-        };
+        StorageEngine<Long> engine = new StorageEngineAdapter<Long>() {};
 
         assertNull(engine.createProvider());
         assertNull(engine.createCollection(null));

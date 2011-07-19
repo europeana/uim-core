@@ -58,6 +58,7 @@ public interface WorkflowStart {
     /**
      * Create a runnable which is executed within a thread pool. The runnable is then scheduled and
      * executed in another thread
+     * @param <I> 
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -69,12 +70,13 @@ public interface WorkflowStart {
      * @throws WorkflowStartFailedException
      *             is thrown if the creation of the task loader failed
      */
-    TaskCreator createLoader(ExecutionContext context, StorageEngine<?> storage)
+    <I> TaskCreator<I> createLoader(ExecutionContext<I> context, StorageEngine<I> storage)
             throws WorkflowStartFailedException;
 
     /**
      * Check wheter there is more work to do or not. Finished means, that no new tasks can be
      * created.
+     * @param <I> 
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -84,11 +86,12 @@ public interface WorkflowStart {
      *            reference to storage
      * @return true iff no more tasks can be created.
      */
-    boolean isFinished(ExecutionContext context, StorageEngine<?> storage);
+    <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage);
 
     /**
      * Workflow start specific initialization with storage engine so that mdr's can be read from the
      * engine.
+     * @param <I> 
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -100,12 +103,13 @@ public interface WorkflowStart {
      *             is thrown if the intiliazation fails and so the workflow is not ready to create a
      *             task loader
      */
-    void initialize(ExecutionContext context, StorageEngine<?> storage)
+    <I> void initialize(ExecutionContext<I> context, StorageEngine<I> storage)
             throws WorkflowStartFailedException;
 
     /**
      * Finalization method (tear down) for an execution. At the end of each execution this method is
      * called to allow the plugin to clean up memory or external resources.
+     * @param <I> 
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -116,13 +120,14 @@ public interface WorkflowStart {
      *             resources, so that executing it in a new {@link ExecutionContext} will most
      *             likely fail
      */
-    void completed(ExecutionContext context) throws WorkflowStartFailedException;
+    <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException;
 
     /**
      * Get the number of total records, if it is known upfront. If not, returns -1.
+     * @param <I> 
      * 
      * @param context
      * @return the total number of records to process.
      */
-    public int getTotalSize(ExecutionContext context);
+    <I> int getTotalSize(ExecutionContext<I> context);
 }

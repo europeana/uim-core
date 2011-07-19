@@ -16,7 +16,6 @@ public class SyserrWorkflow extends AbstractWorkflow {
      * @param batchSize
      * @param randsleep
      */
-    @SuppressWarnings("rawtypes")
     public SyserrWorkflow(int batchSize, boolean randsleep) {
         super("Error Console Reporting Workflow",
                 "Simple workflow which uses a SyserrPlugins to fail all records");

@@ -1,4 +1,4 @@
-package eu.europeana.uim.store;
+package eu.europeana.uim.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,6 +18,11 @@ import org.junit.Test;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.Request;
 
 /**
  * Abstract, base class for all {@link StorageEngine} implementations. It tests creation, update and

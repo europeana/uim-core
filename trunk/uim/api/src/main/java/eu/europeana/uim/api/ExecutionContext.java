@@ -12,16 +12,18 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Context of a running execution holding execution dependent variables for the plugins etc.
+
+ * @param <I> 
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-public interface ExecutionContext {
+public interface ExecutionContext<I> {
     /**
      * @return execution for which this context is for
      */
-    Execution<?> getExecution();
+    Execution<I> getExecution();
 
     /**
      * @return workflow running in the holding execution
@@ -42,7 +44,7 @@ public interface ExecutionContext {
     /**
      * @return DataSet for this execution (provider, collection, ...)
      */
-    UimDataSet<?> getDataSet();
+    UimDataSet<I> getDataSet();
 
     /**
      * @return progress monitor
@@ -52,7 +54,7 @@ public interface ExecutionContext {
     /**
      * @return logging engine
      */
-    LoggingEngine<?, ?> getLoggingEngine();
+    LoggingEngine<I> getLoggingEngine();
 
     /**
      * @return the execution specific properties

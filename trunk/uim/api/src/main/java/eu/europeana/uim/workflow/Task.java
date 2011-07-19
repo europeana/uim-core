@@ -14,40 +14,38 @@ import eu.europeana.uim.store.MetaDataRecord;
  * Generic task to processed by the workflow pipeline. It extends Runnable to provide getter and
  * setter for all kinds of additional information.
  * 
+ * @param <I>
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class Task implements Runnable {
-    private TaskStatus             status    = TaskStatus.NEW;
-    private Throwable              throwable;
+public class Task<I> implements Runnable {
+    private TaskStatus                status    = TaskStatus.NEW;
+    private Throwable                 throwable;
 
-    private Queue<Task>            success   = null;
-    private Queue<Task>            failure   = null;
+    private Queue<Task<I>>            success   = null;
+    private Queue<Task<I>>            failure   = null;
 
-    private Set<Task>              assigned  = null;
+    private Set<Task<I>>              assigned  = null;
 
-    private boolean                savepoint = false;
-    private boolean                mandatory = false;
-    private IngestionPlugin        step;
+    private boolean                   savepoint = false;
+    private boolean                   mandatory = false;
+    private IngestionPlugin           step;
 
-    @SuppressWarnings("rawtypes")
-    private final MetaDataRecord   record;
-    @SuppressWarnings("rawtypes")
-    private final StorageEngine    engine;
-    private final ExecutionContext context;
-    private boolean                successfulProcessing;
+    private final MetaDataRecord<I>   record;
+    private final StorageEngine<I>    engine;
+    private final ExecutionContext<I> context;
+    private boolean                   successfulProcessing;
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param <I>
      * 
      * @param record
      * @param engine
      * @param context
      */
-    public <I> Task(MetaDataRecord<I> record, StorageEngine<I> engine, ExecutionContext context) {
+    public Task(MetaDataRecord<I> record, StorageEngine<I> engine, ExecutionContext<I> context) {
         super();
         this.record = record;
         this.engine = engine;
@@ -108,7 +106,6 @@ public class Task implements Runnable {
      * 
      * @throws StorageEngineException
      */
-    @SuppressWarnings("unchecked")
     public void save() throws StorageEngineException {
         engine.updateMetaDataRecord(record);
     }
@@ -137,14 +134,14 @@ public class Task implements Runnable {
      * @param success
      *            queue with successful handled tasks
      */
-    public void setOnSuccess(Queue<Task> success) {
+    public void setOnSuccess(Queue<Task<I>> success) {
         this.success = success;
     }
 
     /**
      * @return queue with successful handled tasks
      */
-    public Queue<Task> getOnSuccess() {
+    public Queue<Task<I>> getOnSuccess() {
         return success;
     }
 
@@ -152,14 +149,14 @@ public class Task implements Runnable {
      * @param failure
      *            queue with failed tasks (but not fatal ones for the whole workflow)
      */
-    public void setOnFailure(Queue<Task> failure) {
+    public void setOnFailure(Queue<Task<I>> failure) {
         this.failure = failure;
     }
 
     /**
      * @return queue with failed tasks (but not fatal ones for the whole workflow)
      */
-    public Queue<Task> getOnFailure() {
+    public Queue<Task<I>> getOnFailure() {
         return failure;
     }
 
@@ -199,21 +196,21 @@ public class Task implements Runnable {
     /**
      * @return record that is processed
      */
-    public MetaDataRecord<?> getMetaDataRecord() {
+    public MetaDataRecord<I> getMetaDataRecord() {
         return record;
     }
 
     /**
      * @return execution context
      */
-    public ExecutionContext getExecutionContext() {
+    public ExecutionContext<I> getExecutionContext() {
         return context;
     }
 
     /**
      * @return set of assigned tasks
      */
-    public Set<Task> getAssigned() {
+    public Set<Task<I>> getAssigned() {
         return assigned;
     }
 
@@ -221,7 +218,7 @@ public class Task implements Runnable {
      * @param assigned
      *            set of assigned tasks
      */
-    public void setAssigned(Set<Task> assigned) {
+    public void setAssigned(Set<Task<I>> assigned) {
         this.assigned = assigned;
     }
 }

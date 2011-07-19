@@ -23,6 +23,9 @@ import eu.europeana.uim.UIMRegistry;
 public class UIMInfoTest {
 
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testListRegistry() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

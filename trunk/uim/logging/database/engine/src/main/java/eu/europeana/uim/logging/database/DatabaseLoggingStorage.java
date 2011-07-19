@@ -3,9 +3,10 @@ package eu.europeana.uim.logging.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import eu.europeana.uim.logging.database.model.TDurationDatabaseEntryHome;
-import eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntryHome;
-import eu.europeana.uim.logging.database.model.TStringDatabaseLogEntryHome;
+import eu.europeana.uim.logging.database.model.TLogEntryDurationHome;
+import eu.europeana.uim.logging.database.model.TLogEntryFailedHome;
+import eu.europeana.uim.logging.database.model.TLogEntryHome;
+import eu.europeana.uim.logging.database.model.TLogEntryLinkHome;
 
 /**
  * 
@@ -15,13 +16,16 @@ import eu.europeana.uim.logging.database.model.TStringDatabaseLogEntryHome;
  */
 public class DatabaseLoggingStorage {
     @Autowired
-    private TStringDatabaseLogEntryHome stringHome;
+    private TLogEntryHome logHome;
 
     @Autowired
-    private TObjectDatabaseLogEntryHome objectHome;
+    private TLogEntryFailedHome logFailedHome;
 
     @Autowired
-    private TDurationDatabaseEntryHome  durationHome;
+    private TLogEntryLinkHome logLinkHome;
+
+    @Autowired
+    private TLogEntryDurationHome  logDurationHome;
 
     /**
      * Creates a new instance of this class.
@@ -30,44 +34,68 @@ public class DatabaseLoggingStorage {
     }
 
     /**
-     * @return the dao for database log entries
+     * Returns the logHome.
+     * @return the logHome
      */
-    public TStringDatabaseLogEntryHome getStringHome() {
-        return stringHome;
+    public TLogEntryHome getLogHome() {
+        return logHome;
     }
 
     /**
-     * @param stringHome
+     * Sets the logHome to the given value.
+     * @param logHome the logHome to set
      */
-    public void setStringHome(TStringDatabaseLogEntryHome stringHome) {
-        this.stringHome = stringHome;
+    public void setLogHome(TLogEntryHome logHome) {
+        this.logHome = logHome;
     }
 
     /**
-     * @return log entry home
+     * Returns the logFailedHome.
+     * @return the logFailedHome
      */
-    public TObjectDatabaseLogEntryHome getObjectHome() {
-        return objectHome;
+    public TLogEntryFailedHome getLogFailedHome() {
+        return logFailedHome;
     }
 
     /**
-     * @param objectHome
+     * Sets the logFailedHome to the given value.
+     * @param logFailedHome the logFailedHome to set
      */
-    public void setObjectHome(TObjectDatabaseLogEntryHome objectHome) {
-        this.objectHome = objectHome;
+    public void setLogFailedHome(TLogEntryFailedHome logFailedHome) {
+        this.logFailedHome = logFailedHome;
     }
 
     /**
-     * @return duration home
+     * Returns the logLinkHome.
+     * @return the logLinkHome
      */
-    public TDurationDatabaseEntryHome getDurationHome() {
-        return durationHome;
+    public TLogEntryLinkHome getLogLinkHome() {
+        return logLinkHome;
     }
 
     /**
-     * @param durationHome
+     * Sets the logLinkHome to the given value.
+     * @param logLinkHome the logLinkHome to set
      */
-    public void setDurationHome(TDurationDatabaseEntryHome durationHome) {
-        this.durationHome = durationHome;
+    public void setLogLinkHome(TLogEntryLinkHome logLinkHome) {
+        this.logLinkHome = logLinkHome;
     }
+
+    /**
+     * Returns the logDurationHome.
+     * @return the logDurationHome
+     */
+    public TLogEntryDurationHome getLogDurationHome() {
+        return logDurationHome;
+    }
+
+    /**
+     * Sets the logDurationHome to the given value.
+     * @param logDurationHome the logDurationHome to set
+     */
+    public void setLogDurationHome(TLogEntryDurationHome logDurationHome) {
+        this.logDurationHome = logDurationHome;
+    }
+
+
 }

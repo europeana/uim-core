@@ -27,34 +27,32 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * Loads batches from the storage and pulls them into as tasks.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
- * @param <I>
- *            The identifier type
  * @since Feb 14, 2011
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
-public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
-    private static final Logger                   log           = Logger.getLogger(BatchWorkflowStart.class.getName());
+public class BatchWorkflowStart extends AbstractWorkflowStart {
+    private static final Logger                   log                  = Logger.getLogger(BatchWorkflowStart.class.getName());
 
     /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_HEAD  = "batch.subset.head";
+    public static final String                    BATCH_SUBSET_HEAD    = "batch.subset.head";
 
     /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_SHUFFLE  = "batch.subset.shuffle";
+    public static final String                    BATCH_SUBSET_SHUFFLE = "batch.subset.shuffle";
 
     /** String BATCH_SHUFFLE */
-    public static final String                    BATCH_SHUFFLE = "batch.shuffle";
+    public static final String                    BATCH_SHUFFLE        = "batch.shuffle";
 
     /**
      * Key to retrieve own data from context.
      */
-    private static TKey<BatchWorkflowStart, Data> DATA_KEY      = TKey.register(
-                                                                        BatchWorkflowStart.class,
-                                                                        "data", Data.class);
+    @SuppressWarnings("rawtypes")
+    private static TKey<BatchWorkflowStart, Data> DATA_KEY             = TKey.register(
+                                                                               BatchWorkflowStart.class,
+                                                                               "data", Data.class);
 
     /**
      * default batch size
      */
-    public static int                             BATCH_SIZE    = 250;
+    public static int                             BATCH_SIZE           = 250;
 
     /**
      * Creates a new instance of this class.
@@ -80,55 +78,48 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
         return Arrays.asList(BATCH_SUBSET_HEAD, BATCH_SUBSET_SHUFFLE, BATCH_SHUFFLE);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void initialize(ExecutionContext context, StorageEngine<?> storage)
+    public <I> void initialize(ExecutionContext<I> context, StorageEngine<I> storage)
             throws WorkflowStartFailedException {
         try {
             long start = System.currentTimeMillis();
             I[] records = null;
-            
 
-            UimDataSet dataSet = context.getDataSet();
-//            if (dataSet instanceof Provider) {
-//                try {
-//                    records = ((StorageEngine<I>)storage).getByProvider((Provider)dataSet, false);
-//                } catch (StorageEngineException e) {
-//                    throw new WorkflowStartFailedException("Provider '" + dataSet.getId() +
-//                                                           "' could not be retrieved!", e);
-//                }
-//            } else 
-//                
+            UimDataSet<I> dataSet = context.getDataSet();
             if (dataSet instanceof Collection) {
                 try {
-                    records = ((StorageEngine<I>)storage).getByCollection((Collection)dataSet);
+                    records = storage.getByCollection((Collection<I>)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Collection '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof Request) {
                 try {
-                    records = ((StorageEngine<I>)storage).getByRequest((Request)dataSet);
+                    records = storage.getByRequest((Request<I>)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Request '" + dataSet.getId() +
                                                "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof MetaDataRecord) {
-                records = (I[])Array.newInstance(((MetaDataRecord)dataSet).getId().getClass(), 1);
-                records[0] = (I)((MetaDataRecord)dataSet).getId();
+                MetaDataRecord<I> record = (MetaDataRecord<I>)dataSet;
+                    records = (I[])Array.newInstance(record.getId().getClass(), 1);
+                    records[0] = record.getId();
             } else {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
             }
 
             // this is for testing to allow injection of a data object
-            Data data = context.getValue(DATA_KEY);
+            Data<?> data = context.getValue(DATA_KEY);
             if (data == null) {
-                data = new Data();
+                data = new Data<I>();
                 context.putValue(DATA_KEY, data);
             }
 
-            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(BATCH_SHUFFLE, "false"));
-            
+            boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_SHUFFLE, "false"));
+
             if (shuffle) {
                 List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
@@ -136,10 +127,10 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                
-                log.info(String.format("Loaded %d records in %.3f sec created shuffled.", ids.length,
-                        (System.currentTimeMillis() - start) / 1000.0));
-                
+
+                log.info(String.format("Loaded %d records in %.3f sec created shuffled.",
+                        ids.length, (System.currentTimeMillis() - start) / 1000.0));
+
             } else if (context.getProperties().getProperty(BATCH_SUBSET_HEAD) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
@@ -148,11 +139,13 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                
-                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" + subset, ids.length,
+
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" +
+                                       subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else if (context.getProperties().getProperty(BATCH_SUBSET_SHUFFLE) != null) {
-                int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_SHUFFLE));
+                int subset = Integer.parseInt(context.getProperties().getProperty(
+                        BATCH_SUBSET_SHUFFLE));
 
                 List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
@@ -161,8 +154,9 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
-                
-                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" + subset, ids.length,
+
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" +
+                                       subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else {
                 addArray(context, records);
@@ -177,7 +171,8 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
         }
     }
 
-    private void addArray(ExecutionContext context, Object[] ids) {
+    @SuppressWarnings("unchecked")
+    private <I> void addArray(ExecutionContext<I> context, Object[] ids) {
         if (ids.length > BATCH_SIZE) {
             int batches = (int)Math.ceil(1.0 * ids.length / BATCH_SIZE);
             for (int i = 0; i < batches; i++) {
@@ -204,20 +199,22 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
     }
 
     @Override
-    public TaskCreator createLoader(final ExecutionContext context, final StorageEngine storage) {
-        if (!isFinished(context, storage)) { return new TaskCreator() {
+    public <I> TaskCreator<I> createLoader(final ExecutionContext<I> context,
+            final StorageEngine<I> storage) {
+        if (!isFinished(context, storage)) { return new TaskCreator<I>() {
+            @SuppressWarnings("unchecked")
             @Override
             public void run() {
                 try {
                     I[] poll = (I[])context.getValue(DATA_KEY).batches.poll(500,
                             TimeUnit.MILLISECONDS);
                     if (poll != null) {
-                        List<MetaDataRecord> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
-                        MetaDataRecord[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
+                        List<MetaDataRecord<I>> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
+                        MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
 
                         for (int i = 0; i < mdrs.length; i++) {
-                            MetaDataRecord mdr = mdrs[i];
-                            Task task = new Task(mdr, storage, context);
+                            MetaDataRecord<I> mdr = mdrs[i];
+                            Task<I> task = new Task<I>(mdr, storage, context);
                             synchronized (getQueue()) {
                                 getQueue().offer(task);
                             }
@@ -235,8 +232,9 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
     }
 
     @Override
-    public int getTotalSize(ExecutionContext context) {
-        Data value = context.getValue(DATA_KEY);
+    public <I> int getTotalSize(ExecutionContext<I> context) {
+        @SuppressWarnings("unchecked")
+        Data<I> value = context.getValue(DATA_KEY);
         if (value != null) {
             return context.getValue(DATA_KEY).total;
         } else {
@@ -245,25 +243,32 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart {
     }
 
     @Override
-    public boolean isFinished(ExecutionContext context, StorageEngine<?> storage) {
-        Data value = context.getValue(DATA_KEY);
+    public <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage) {
+        @SuppressWarnings("unchecked")
+        Data<I> value = context.getValue(DATA_KEY);
         return value.initialized && value.batches.isEmpty();
+    }
+
+    @Override
+    public <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException {
+        context.getValue(DATA_KEY).batches.clear();
     }
 
     /**
      * container for runtime information.
+     * @param <T> 
      * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Feb 28, 2011
      */
-    final static class Data<I> implements Serializable {
+    protected final static class Data<T> implements Serializable {
+        /** total records */
         public int                total       = 0;
+        /** initialized yes/no */
         public boolean            initialized = false;
-        public BlockingQueue<I[]> batches     = new LinkedBlockingQueue<I[]>();
+
+        /** batches */
+        public BlockingQueue<T[]> batches     = new LinkedBlockingQueue<T[]>();
     }
 
-    @Override
-    public void completed(ExecutionContext context) throws WorkflowStartFailedException {
-        context.getValue(DATA_KEY).batches.clear();
-    }
 }

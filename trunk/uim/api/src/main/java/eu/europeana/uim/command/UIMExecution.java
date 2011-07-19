@@ -38,25 +38,46 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMExecution implements Action {
     private static final Logger log = Logger.getLogger(UIMExecution.class.getName());
 
+    /** The oprations enum
+     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+     * @since Jul 17, 2011
+     */
     protected enum Operation {
-        list, start, pause, resume, cancel, status, help
+        /** Operation start */
+        list, 
+        /** Operation start */
+        start, 
+        /** Operation start */
+        pause, 
+        /** Operation start */
+        resume, 
+        /** Operation start */
+        cancel, 
+        /** Operation start */
+        status, 
+        /** Operation start */
+        help
     }
 
     private final Registry          registry;
 
     private static final DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
+    /** UIMExecution operation */
     @Option(name = "-o", aliases = { "--operation" }, required = false)
-    protected Operation               operation;
+    protected Operation             operation;
 
+    /** argument 0 */
     @Argument(index = 0)
-    protected String                  argument0;
+    protected String                argument0;
 
+    /** argument 1 */
     @Argument(index = 1)
-    protected String                  argument1;
+    protected String                argument1;
 
+    /** argument 2 */
     @Argument(index = 2)
-    protected String                  argument2;
+    protected String                argument2;
 
     /**
      * Creates a new instance of this class.
@@ -120,7 +141,6 @@ public class UIMExecution implements Action {
         }
     }
 
-
     private void pause(PrintStream out) {
         ActiveExecution<?> execution = getOrListExecution(out, "pause");
         if (execution != null) {
@@ -153,7 +173,7 @@ public class UIMExecution implements Action {
     }
 
     private ActiveExecution<?> getOrListExecution(PrintStream out, String command) {
-        if (argument0 == null) {
+        if (argument0 == null || argument0.length() == 0) {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
@@ -161,15 +181,17 @@ public class UIMExecution implements Action {
                         e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
-        }
-        ActiveExecution<?> execution = null;
-        for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
-            if (e.getId().equals(Long.parseLong(argument0))) {
-                execution = e;
-                break;
+            return null;
+        } else {
+            ActiveExecution<?> execution = null;
+            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
+                if (e.getId().equals(Long.parseLong(argument0))) {
+                    execution = e;
+                    break;
+                }
             }
+            return execution;
         }
-        return execution;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -253,9 +275,10 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getStartTime()) + ", active=" + e.isActive() + ", paused=" + e.isPaused() + 
-                                ", cancelled=" + e.getMonitor().isCancelled(),
-                        e.getId(), e.getWorkflow().getName(), e.getDataSet()));
+                                df.format(e.getStartTime()) + ", active=" + e.isActive() +
+                                ", paused=" + e.isPaused() + ", cancelled=" +
+                                e.getMonitor().isCancelled(), e.getId(), e.getWorkflow().getName(),
+                        e.getDataSet()));
             }
         }
     }

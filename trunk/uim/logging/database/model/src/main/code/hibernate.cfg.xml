@@ -25,9 +25,9 @@
         
         <mapping resource="eu/europeana/uim/logging/database/model/Queries.xml" /> 
 
-        <mapping class="eu.europeana.uim.logging.database.model.TDatabaseLogEntry"/>
-        <mapping class="eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry"/>
-        <mapping class="eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry"/>
-        <mapping class="eu.europeana.uim.logging.database.model.TDurationDatabaseEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntry"/>
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntryLink"/>
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntryFailed"/>
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntryDuration"/>
     </session-factory>
 </hibernate-configuration>

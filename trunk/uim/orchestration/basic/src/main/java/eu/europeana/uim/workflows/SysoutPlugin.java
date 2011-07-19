@@ -55,7 +55,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
+    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Object identifier = mdr.getId();
         Data data = context.getValue(DATA_KEY);
@@ -77,7 +77,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public void initialize(ExecutionContext context) {
+    public <I> void initialize(ExecutionContext<I> context) {
         Data data = new Data();
         context.putValue(DATA_KEY, data);
 
@@ -86,7 +86,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public void completed(ExecutionContext context) {
+    public <I> void completed(ExecutionContext<I> context) {
     }
 
     @Override

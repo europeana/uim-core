@@ -67,7 +67,7 @@ public interface StorageEngine<I> {
      *            processing call. This context can change for each call, so references to it have
      *            to be handled carefully.
      */
-    void completed(ExecutionContext context);
+    void completed(ExecutionContext<I> context);
 
     /**
      * @return status of the engine (starting, ...)

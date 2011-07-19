@@ -1,4 +1,4 @@
-package eu.europeana.uim.store;
+package eu.europeana.uim.api;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -10,6 +10,10 @@ import org.junit.Test;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.Request;
 
 /**
  * Base, abstract class to test {@link MetaDataRecord} implementations.

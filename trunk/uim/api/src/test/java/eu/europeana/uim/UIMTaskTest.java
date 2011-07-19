@@ -1,24 +1,18 @@
 /* UIMTaskTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.Test;
 
-import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineAdapter;
-import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskStatus;
 
@@ -34,10 +28,10 @@ public class UIMTaskTest {
      */
     @Test
     public void testTaskSetup() {
-        StorageEngine<?> engine = new StorageEngineAdapter() {
+        StorageEngine<Long> engine = new StorageEngineAdapter<Long>() {
         };
 
-        Task task = new Task(null, engine, null);
+        Task<Long> task = new Task<Long>(null, engine, null);
 
         assertNull(task.getStep());
         assertNull(task.getMetaDataRecord());
@@ -47,8 +41,8 @@ public class UIMTaskTest {
 
         assertEquals(TaskStatus.NEW, task.getStatus());
 
-        task.setOnFailure(new LinkedList<Task>());
-        task.setOnSuccess(new LinkedList<Task>());
+        task.setOnFailure(new LinkedList<Task<Long>>());
+        task.setOnSuccess(new LinkedList<Task<Long>>());
         task.setThrowable(new Exception());
 
         assertNotNull(task.getOnFailure());
@@ -61,82 +55,12 @@ public class UIMTaskTest {
      */
     @Test
     public void testTaskWorkflow() {
-        Task task = new Task(null, null, null);
+        Task<Long> task = new Task<Long>(null, null, null);
 
         assertEquals(TaskStatus.NEW, task.getStatus());
 
-        task.setStep(new IngestionPlugin() {
-            @Override
-            public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context) {
-                throw new UnsupportedOperationException("Sorry, not implemented.");
-            }
-
-            @Override
-            public String getIdentifier() {
-                return getClass().getSimpleName();
-            }
-            
-            @Override
-            public String getName() {
-                return "Anonymous Plugin";
-            }
-
-            @Override
-            public String getDescription() {
-                return "Anonymous implementation of IngestionPlugin!";
-            }
-
-            @Override
-            public TKey<?, ?>[] getInputFields() {
-                return new TKey[0];
-            }
-
-            @Override
-            public TKey<?, ?>[] getOptionalFields() {
-                return new TKey[0];
-            }
-
-            @Override
-            public TKey<?, ?>[] getOutputFields() {
-                return new TKey[0];
-            }
-
-            @Override
-            public int getPreferredThreadCount() {
-                return 1;
-            }
-
-            @Override
-            public int getMaximumThreadCount() {
-                return 1;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public List<String> getParameters() {
-                return Collections.EMPTY_LIST;
-            }
-
-            @Override
-            public void initialize(ExecutionContext context) throws IngestionPluginFailedException {
-                // nothing to do
-            }
-
-            @Override
-            public void completed(ExecutionContext context) throws IngestionPluginFailedException {
-                // nothing to do
-            }
-
-            @Override
-            public void initialize() {
-                // nothing to do
-            }
-
-            @Override
-            public void shutdown() {
-                // nothing to do
-            }
-        }, false);
+        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        task.setStep(plugin, false);
 
         try {
             task.run();

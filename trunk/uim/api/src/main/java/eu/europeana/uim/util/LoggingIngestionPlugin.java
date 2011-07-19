@@ -65,7 +65,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context)
+    public <I>  boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA_KEY);
 
@@ -81,7 +81,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public void initialize(ExecutionContext context) throws IngestionPluginFailedException {
+    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
         Data data = new Data();
 
         Properties properties = context.getProperties();
@@ -96,7 +96,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public void completed(ExecutionContext context) throws IngestionPluginFailedException {
+    public <I>  void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
         // nothing to do
     }
 

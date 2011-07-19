@@ -30,7 +30,6 @@ public class SysoutWorkflow extends AbstractWorkflow {
      * @param randsleep
      * @param savepoint
      */
-    @SuppressWarnings("rawtypes")
     public SysoutWorkflow(int batchSize, boolean randsleep, boolean savepoint) {
         super("Console Reporting Workflow",
                 "Simple workflow which uses sysout and logging plugins to report to the console about processing!");

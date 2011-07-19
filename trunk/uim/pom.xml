@@ -146,6 +146,12 @@
 				<version>1.4</version>
 			</dependency>
 
+            <dependency>
+                <groupId>commons-math</groupId>
+                <artifactId>commons-math</artifactId>
+                <version>1.2</version>
+            </dependency>
+
 
 			<!-- common things -->
 			<dependency>

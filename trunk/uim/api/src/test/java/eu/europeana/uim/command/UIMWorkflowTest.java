@@ -19,6 +19,9 @@ import eu.europeana.uim.UIMRegistry;
 public class UIMWorkflowTest {
 
     
+    /**
+     * @throws Exception
+     */
     @Test
     public void testListWorkflows() throws Exception {
         UIMRegistry registry = new UIMRegistry();

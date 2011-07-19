@@ -4,24 +4,27 @@
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="eu.europeana.uim.logging.database">
 
-    <query name="eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry.findByExecution">
-        SELECT s
-        FROM TStringDatabaseLogEntry s
-        WHERE s.executionId = :executionId
+    <query name="eu.europeana.uim.logging.database.model.TLogEntry.findByExecution">
+        FROM TLogEntry s
+        WHERE s.execution = :executionId
         <query-param name="executionId" type="java.lang.Long" />
     </query>
 
-    <query name="eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry.findByExecution">
-        SELECT o
-        FROM TObjectDatabaseLogEntry o
-        WHERE o.executionId = :executionId
+    <query name="eu.europeana.uim.logging.database.model.TLogEntryFailed.findByExecution">
+        FROM TLogEntryFailed s
+        WHERE s.execution = :executionId
         <query-param name="executionId" type="java.lang.Long" />
     </query>
 
-    <query name="eu.europeana.uim.logging.database.model.TDurationDatabaseEntry.findByPlugin">
-        SELECT d
-        FROM TDurationDatabaseEntry d
-        WHERE d.module = :module
+    <query name="eu.europeana.uim.logging.database.model.TLogEntryLink.findByExecution">
+        FROM TLogEntryLink s
+        WHERE s.execution = :executionId
+        <query-param name="executionId" type="java.lang.Long" />
+    </query>
+
+    <query name="eu.europeana.uim.logging.database.model.TLogEntryDuration.findByPlugin">
+        FROM TLogEntryDuration s
+        WHERE s.module = :module
         <query-param name="module" type="java.lang.String" />
     </query>
 

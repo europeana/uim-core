@@ -1,35 +1,44 @@
+/* MemoryLoggingEngine.java - created on Jul 17, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.logging.memory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
 import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LogEntry;
 import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.api.LoggingEngineAdapter;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * Simplistic implementation of the logging service. In this implementation we do not care to keep
- * track of the MDRs responsible for a duration. This feature would be useful in order to see
- * exactly what MDR is causing what delay.
+ * memory based logging engine.
  * 
  * @param <I>
- *            generic identifier
- * @param <T>
- *            generic message
  * 
- * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
- * @author Markus Muhr (markus.muhr@kb.nl)
- * @since Mar 22, 2011
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since Jul 17, 2011
  */
-public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
-    private Map<I, List<LogEntry<I, String[]>>> executionLogs           = new HashMap<I, List<LogEntry<I, String[]>>>();
-    private Map<I, List<LogEntry<I, T>>>        structuredExecutionLogs = new HashMap<I, List<LogEntry<I, T>>>();
-    private Map<IngestionPlugin, List<Long>>    durations               = new HashMap<IngestionPlugin, List<Long>>();
+public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
+
+    private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
+    private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
+    private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
+
+    private Map<String, SummaryStatistics> durations  = new HashMap<String, SummaryStatistics>();
+
+    private int                            maxentries = 100000;
+
+    /**
+     * Creates a new instance of this class.
+     */
+    public MemoryLoggingEngine() {
+    }
 
     @Override
     public String getIdentifier() {
@@ -37,109 +46,310 @@ public class MemoryLoggingEngine<I, T> implements LoggingEngine<I, T> {
     }
 
     @Override
-    public void log(String module, Execution<I> execution, String scope, Level level,
+    public void log(Level level, String modul, String... message) {
+        entries.add(new LogEntry(level, modul, message));
+        if (entries.size() > maxentries) {
+            entries.removeFirst();
+        }
+    }
+
+    @Override
+    public void log(Level level, IngestionPlugin plugin, String... message) {
+        //
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public void log(Execution<I> execution, Level level, String modul, String... message) {
+        entries.add(new LogEntry(execution, level, modul, message));
+        if (entries.size() > maxentries) {
+            entries.removeFirst();
+        }
+    }
+
+    @Override
+    public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message) {
+        log(execution, level, plugin.getIdentifier(), message);
+    }
+
+    @Override
+    public void logFailed(Level level, String modul, Throwable t, String... message) {
+        failed.add(new FailedEntry(level, modul, t, message));
+        if (failed.size() > maxentries) {
+            failed.removeFirst();
+        }
+    }
+
+    @Override
+    public void logFailed(Level level, IngestionPlugin plugin, Throwable throwable,
             String... message) {
-        
-        //allow execution to be null (thanks, integration test)
-        //HashMap allows null as keys.
-        
-        I executionID=null;
-        if (execution!=null) {
-            executionID=execution.getId();
-        }
-        List<LogEntry<I, String[]>> logs = executionLogs.get(executionID);
-        if (logs == null) {
-            logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(executionID, logs);
-        }
-        logs.add(new MemoryLogEntry<I, String[]>(module, execution, scope, level, new Date(),
-                message));
+        logFailed(level, plugin.getIdentifier(), throwable, message);
     }
 
     @Override
-    public void log(IngestionPlugin plugin, Execution<I> execution, MetaDataRecord<I> mdr,
-            String scope, Level level, String... message) {
-        
-        I executionID=null;
-        if (execution!=null) {
-            executionID=execution.getId();
-        }
-        
-        List<LogEntry<I, String[]>> logs = executionLogs.get(executionID);
-        if (logs == null) {
-            logs = new ArrayList<LogEntry<I, String[]>>();
-            executionLogs.put(executionID, logs);
-        }
-        logs.add(new MemoryLogEntry<I, String[]>(plugin, execution, mdr, scope, level, new Date(),
-                message));
-    }
-
-    @Override
-    public void logStructured(IngestionPlugin plugin, Execution<I> execution,
-            MetaDataRecord<I> mdr, String scope, Level level, T payload) {
-        List<LogEntry<I, T>> logs = structuredExecutionLogs.get(execution);
-        if (logs == null) {
-            logs = new ArrayList<LogEntry<I, T>>();
-            structuredExecutionLogs.put(execution.getId(), logs);
-        }
-        logs.add(new MemoryLogEntry<I, T>(plugin, execution, mdr, scope, level, new Date(), payload));
-    }
-
-    @Override
-    public List<LogEntry<I, String[]>> getExecutionLog(Execution<I> execution) {
-        return executionLogs.get(execution.getId());
-    }
-
-    @Override
-    public List<LogEntry<I, String[]>> getExecutionLog(I executionID) {
-        return executionLogs.get(executionID);
-    }
-
-    @Override
-    public List<LogEntry<I, T>> getStructuredExecutionLog(Execution<I> execution) {
-        return structuredExecutionLogs.get(execution.getId());
-    }
-
-    @Override
-    public List<LogEntry<I, T>> getStructuredExecutionLog(I executionID) {
-        return structuredExecutionLogs.get(executionID);
-    }
-
-    private List<Long> getDurations(IngestionPlugin plugin) {
-        List<Long> d = durations.get(plugin);
-        if (d == null) {
-            d = new ArrayList<Long>();
-            durations.put(plugin, d);
-        }
-        return d;
-    }
-
-    @Override
-    public void logDurationDetailed(IngestionPlugin plugin, Long duration, I... mdrs) {
-        List<Long> d = getDurations(plugin);
-        // don't show this to hardcore statisticians
-        for (int i = 0; i < mdrs.length; i++) {
-            d.add(duration / mdrs.length);
+    public void logFailed(Execution<I> execution, Level level, String modul, Throwable t,
+            MetaDataRecord<I> mdr, String... message) {
+        failed.add(new FailedEntry(execution, level, modul, t, mdr, message));
+        if (failed.size() > maxentries) {
+            failed.removeFirst();
         }
     }
 
     @Override
-    public void logDuration(IngestionPlugin plugin, Long duration, int count) {
-        List<Long> d = getDurations(plugin);
-        // don't show this to hardcore statisticians
-        for (int i = 0; i < count; i++) {
-            d.add(duration / count);
+    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin, Throwable t,
+            MetaDataRecord<I> mdr, String... message) {
+        logFailed(execution, level, plugin.getIdentifier(), t, mdr, message);
+    }
+
+    @Override
+    public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
+            String... message) {
+        failed.add(new FailedEntry(execution, level, modul, throwable, message));
+        if (failed.size() > maxentries) {
+            failed.removeFirst();
         }
     }
 
     @Override
-    public Long getAverageDuration(IngestionPlugin plugin) {
-        long sum = 0l;
-        List<Long> d = getDurations(plugin);
-        for (Long l : d) {
-            sum += l;
+    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
+            Throwable throwable, String... message) {
+        logFailed(execution, level, plugin.getIdentifier(), throwable, message);
+    }
+
+    @Override
+    public void logLink(String modul, String link, int status, String... message) {
+        linklogs.add(new LinkEntry(modul, link, status, message));
+        if (entries.size() > maxentries) {
+            entries.removeFirst();
         }
-        return sum / d.size();
+    }
+
+    @Override
+    public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
+            int status, String... message) {
+        linklogs.add(new LinkEntry(execution, modul, mdr, link, status, message));
+        if (entries.size() > maxentries) {
+            entries.removeFirst();
+        }
+    }
+
+    @Override
+    public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
+            String link, int status, String... message) {
+        logLink(execution, plugin.getIdentifier(), mdr, link, status, message);
+    }
+
+    @Override
+    public void logDuration(Execution<I> execution, String module, Long duration) {
+        if (!durations.containsKey(module)) {
+            durations.put(module, new SummaryStatistics());
+        }
+
+        SummaryStatistics statistics = durations.get(module);
+        double value = duration * 1.0;
+        statistics.addValue(value);
+    }
+
+    @Override
+    public void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration) {
+        logDuration(execution, plugin.getIdentifier(), duration);
+    }
+
+    @Override
+    public List<LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
+        List<LoggingEngine.LogEntry<I>> result = new ArrayList<LoggingEngine.LogEntry<I>>();
+        for (LogEntry entry : entries) {
+            if (entry.execution.equals(execution)) {
+                result.add(entry);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(
+            Execution<I> execution) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(
+            Execution<I> execution) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    
+    
+    private class LogEntry implements LoggingEngine.LogEntry<I> {
+        private final Level        level;
+        private final String       module;
+        private final String[]     message;
+
+        private final Execution<I> execution;
+
+        public LogEntry(Level level, String module, String[] message) {
+            super();
+            this.level = level;
+            this.module = module;
+            this.message = message;
+            this.execution = null;
+        }
+
+        public LogEntry(Execution<I> execution, Level level, String module, String[] message) {
+            super();
+            this.execution = execution;
+            this.level = level;
+            this.module = module;
+            this.message = message;
+        }
+
+        @Override
+        public Level getLevel() {
+            return level;
+        }
+
+        @Override
+        public String getModule() {
+            return module;
+        }
+
+        @Override
+        public String[] getMessages() {
+            return message;
+        }
+    }
+
+    private class FailedEntry implements LoggingEngine.LogEntryFailed<I> {
+        private final Level             level;
+        private final String            module;
+        private final MetaDataRecord<I> mdr;
+        private final String[]          message;
+        private final Execution<I>      execution;
+        private final Throwable         throwable;
+
+        public FailedEntry(Level level, String module, Throwable throwable, String[] message) {
+            super();
+            this.level = level;
+            this.module = module;
+            this.mdr = null;
+            this.execution = null;
+            this.throwable = throwable;
+            this.message = message;
+        }
+
+        public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
+                           String[] message) {
+            super();
+            this.execution = execution;
+            this.level = level;
+            this.module = module;
+            this.throwable = throwable;
+            this.mdr = null;
+            this.message = message;
+        }
+
+        public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
+                           MetaDataRecord<I> mdr, String[] message) {
+            super();
+            this.execution = execution;
+            this.level = level;
+            this.module = module;
+            this.throwable = throwable;
+            this.mdr = mdr;
+            this.message = message;
+        }
+
+        @Override
+        public Level getLevel() {
+            return level;
+        }
+
+        @Override
+        public String getModule() {
+            return module;
+        }
+
+        @Override
+        public String getStacktrace() {
+            return LoggingEngineAdapter.getStackTrace(throwable);
+        }
+
+        @Override
+        public String[] getMessages() {
+            return message;
+        }
+
+        @Override
+        public I getExecution() {
+            return execution != null ? execution.getId() : null;
+        }
+
+        @Override
+        public I getMetaDataRecord() {
+            return mdr != null ? mdr.getId() : null;
+        }
+
+    }
+
+    private class LinkEntry implements LogEntryLink<I> {
+        private String            module;
+        private String            link;
+        private int               status;
+        private String[]          message;
+
+        private MetaDataRecord<I> mdr;
+        private Execution<I>      execution;
+
+        public LinkEntry(String modul, String link, int status, String[] message) {
+            super();
+            this.link = link;
+            this.status = status;
+            this.message = message;
+        }
+
+        public LinkEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String link,
+                         int status, String[] message) {
+            super();
+            this.execution = execution;
+            this.module = module;
+            this.link = link;
+            this.mdr = mdr;
+            this.status = status;
+            this.message = message;
+        }
+
+        @Override
+        public String getModule() {
+            return module;
+        }
+
+        @Override
+        public String getLink() {
+            return link;
+        }
+
+        @Override
+        public int getStatus() {
+            return status;
+        }
+
+        @Override
+        public String[] getMessages() {
+            return message;
+        }
+
+        @Override
+        public I getExecution() {
+            return execution != null ? execution.getId() : null;
+        }
+
+        @Override
+        public I getMetaDataRecord() {
+            return mdr != null ? mdr.getId() : null;
+        }
+
     }
 
 }

@@ -6,6 +6,8 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
 
+import java.util.logging.Level;
+
 import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
@@ -15,7 +17,6 @@ import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.LoggingEngine.Level;
 import eu.europeana.uim.api.Registry;
 
 /**
@@ -59,12 +60,12 @@ public class LoggingTest extends AbstractIntegrationTest {
     public void testLogging() throws Exception {
         Registry registry = getOsgiService(Registry.class);
 
-        LoggingEngine<?, ?> logging = null;
+        LoggingEngine<?> logging = null;
         while (logging == null) {
             logging = registry.getLoggingEngine();
             Thread.sleep(500);
         }
 
-        logging.log("module", null, "test", Level.INFO, "tst tst");
+        logging.log(null, Level.INFO, "module", null, "test", "tst tst");
     }
 }

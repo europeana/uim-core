@@ -49,28 +49,28 @@ public class LegalWorkflowStart implements WorkflowStart {
     }
 
     @Override
-    public TaskCreator createLoader(ExecutionContext context, StorageEngine<?> storage)
+    public <I> TaskCreator<I> createLoader(ExecutionContext<I> context, StorageEngine<I> storage)
             throws WorkflowStartFailedException {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public boolean isFinished(ExecutionContext context, StorageEngine<?> storage) {
+    public <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage) {
          return false;
     }
 
     @Override
-    public void initialize(ExecutionContext context, StorageEngine<?> storage)
+    public <I> void initialize(ExecutionContext<I> context, StorageEngine<I> storage)
             throws WorkflowStartFailedException {
     }
 
     @Override
-    public void completed(ExecutionContext context) throws WorkflowStartFailedException {
+    public <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException {
     }
 
     @Override
-    public int getTotalSize(ExecutionContext context) {
+    public <I> int getTotalSize(ExecutionContext<I> context) {
          return 0;
     }
 

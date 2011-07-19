@@ -18,7 +18,7 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * 
  * @since Mar 21, 2011
  */
-public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
+public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
 
     /**
      * @return storage engine for this execution
@@ -66,19 +66,19 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext {
      * @param name
      * @return success queue for the given plugin
      */
-    Queue<Task> getSuccess(String name);
+    Queue<Task<I>> getSuccess(String name);
 
     /**
      * @param name
      * @return failures queue for the given plugin
      */
-    Queue<Task> getFailure(String name);
+    Queue<Task<I>> getFailure(String name);
 
     /**
      * @param name
      * @return set of tasks assigned to this execution
      */
-    Set<Task> getAssigned(String name);
+    Set<Task<I>> getAssigned(String name);
 
     /**
      * @param count

@@ -1,5 +1,5 @@
 /* AbstractResourceEngineTest.java - created on May 9, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.store;
+package eu.europeana.uim.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,6 +19,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.workflow.Workflow;

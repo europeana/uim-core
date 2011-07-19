@@ -20,7 +20,6 @@ public class MixedWorkflow extends AbstractWorkflow {
      * @param batchSize
      * @param randsleep
      */
-    @SuppressWarnings("rawtypes")
     public MixedWorkflow(int batchSize, boolean randsleep) {
         super("Reporting Workflow",
                 "Simple workflow which uses several SysoutPlugins to report to the console about processing");

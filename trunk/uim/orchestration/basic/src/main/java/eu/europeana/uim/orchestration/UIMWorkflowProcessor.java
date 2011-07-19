@@ -13,14 +13,12 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
-import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
 import eu.europeana.uim.workflow.TaskStatus;
@@ -29,10 +27,12 @@ import eu.europeana.uim.workflow.WorkflowStart;
 /**
  * Processes a UIM workflow as a runnable.
  * 
+ * @param <I>
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class UIMWorkflowProcessor implements Runnable {
+public class UIMWorkflowProcessor<I> implements Runnable {
     private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
     private SimpleThreadFactory                                       factory          = new SimpleThreadFactory(
@@ -43,13 +43,13 @@ public class UIMWorkflowProcessor implements Runnable {
 
     private boolean                                                   running          = false;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED        = TKey.register(
                                                                                                UIMWorkflowProcessor.class,
                                                                                                "creators",
                                                                                                (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
 
-    private List<ActiveExecution<?>>                                  executions       = new ArrayList<ActiveExecution<?>>();
+    private List<ActiveExecution<I>>                                  executions       = new ArrayList<ActiveExecution<I>>();
 
     private int                                                       maxTotalProgress = 5000;
 
@@ -64,9 +64,10 @@ public class UIMWorkflowProcessor implements Runnable {
         this.registry = registry;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void run() {
-        List<ActiveExecution<?>> active = new ArrayList<ActiveExecution<?>>();
+        List<ActiveExecution<I>> active = new ArrayList<ActiveExecution<I>>();
 
         running = true;
         while (running) {
@@ -84,9 +85,9 @@ public class UIMWorkflowProcessor implements Runnable {
 
             try {
 
-                Iterator<ActiveExecution<?>> activeIterator = active.iterator();
+                Iterator<ActiveExecution<I>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
-                    ActiveExecution<?> execution = activeIterator.next();
+                    ActiveExecution<I> execution = activeIterator.next();
 
                     try {
                         // we ask the workflow start if we have more to do
@@ -124,13 +125,13 @@ public class UIMWorkflowProcessor implements Runnable {
                                 for (int i = steps.length - 1; i >= 0; i--) {
                                     IngestionPlugin thisStep = steps[i];
 
-                                    Queue<Task> prevSuccess = i > 0
+                                    Queue<Task<I>> prevSuccess = i > 0
                                             ? execution.getSuccess(steps[i - 1].getIdentifier())
                                             : execution.getSuccess(start.getIdentifier());
 
-                                    Queue<Task> thisSuccess = execution.getSuccess(thisStep.getIdentifier());
-                                    Queue<Task> thisFailure = execution.getFailure(thisStep.getIdentifier());
-                                    Set<Task> thisAssigned = execution.getAssigned(thisStep.getIdentifier());
+                                    Queue<Task<I>> thisSuccess = execution.getSuccess(thisStep.getIdentifier());
+                                    Queue<Task<I>> thisFailure = execution.getFailure(thisStep.getIdentifier());
+                                    Set<Task<I>> thisAssigned = execution.getAssigned(thisStep.getIdentifier());
 
                                     boolean savepoint = execution.getWorkflow().isSavepoint(
                                             thisStep.getIdentifier());
@@ -149,7 +150,7 @@ public class UIMWorkflowProcessor implements Runnable {
                                     TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(
                                             thisStep.getIdentifier());
 
-                                    Task task = null;
+                                    Task<I> task = null;
                                     synchronized (prevSuccess) {
                                         task = prevSuccess.poll();
                                     }
@@ -226,9 +227,9 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    private void finishTasksLastSuccess(ActiveExecution<?> execution, Queue<Task> thisSuccess) {
+    private void finishTasksLastSuccess(ActiveExecution<I> execution, Queue<Task<I>> thisSuccess) {
         // save and clean final
-        Task task = null;
+        Task<I> task = null;
         synchronized (thisSuccess) {
             task = thisSuccess.poll();
         }
@@ -242,7 +243,8 @@ public class UIMWorkflowProcessor implements Runnable {
         }
     }
 
-    private boolean ensureTasksInProgress(ActiveExecution<?> execution, WorkflowStart start,
+    @SuppressWarnings({ "rawtypes"})
+    private boolean ensureTasksInProgress(ActiveExecution<I> execution, WorkflowStart start,
             int execProgress, int totalProgress) throws StorageEngineException {
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
@@ -264,7 +266,7 @@ public class UIMWorkflowProcessor implements Runnable {
             if (activeCreators < 3) {
                 log.fine("Less than 3 outstanding batches: <" + execution.getId() +
                          ">  execution/total progress:" + execProgress + "/" + totalProgress);
-                TaskCreator createLoader = start.createLoader(execution,
+                TaskCreator<I> createLoader = start.createLoader(execution,
                         execution.getStorageEngine());
                 if (createLoader != null) {
                     createLoader.setQueue(execution.getSuccess(start.getIdentifier()));
@@ -317,8 +319,8 @@ public class UIMWorkflowProcessor implements Runnable {
         } finally {
             execution.getStorageEngine().completed(execution);
             if (registry.getLoggingEngine() != null)
-                registry.getLoggingEngine().log("UIMOrchestrator", execution, "finish",
-                        LoggingEngine.Level.INFO, "Finished:" + execution.getName());
+                registry.getLoggingEngine().log(execution, Level.INFO, "UIMOrchestrator", "finish",
+                        "Finished:" + execution.getName());
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {
@@ -334,14 +336,14 @@ public class UIMWorkflowProcessor implements Runnable {
      * @param execution
      * @throws StorageEngineException
      */
-    public void schedule(final ActiveExecution<Task> execution) throws StorageEngineException {
+    public void schedule(final ActiveExecution<I> execution) throws StorageEngineException {
         if (execution.getWorkflow().getSteps().isEmpty())
             throw new IllegalStateException("Empty workflow not allowed: " +
                                             execution.getWorkflow().getClass().getName());
 
         // init in separate thread, so that we are not blocking here.
         new Thread(new Runnable() {
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings({"rawtypes" })
             @Override
             public void run() {
                 try {
@@ -380,8 +382,7 @@ public class UIMWorkflowProcessor implements Runnable {
                         execution.setThrowable(t);
                         execution.setActive(false);
                         execution.setEndTime(new Date());
-                        execution.getStorageEngine().updateExecution(
-                                (Execution<Task>)execution.getExecution());
+                        execution.getStorageEngine().updateExecution(execution.getExecution());
                     } catch (StorageEngineException e) {
                         log.log(Level.SEVERE, "Failed to persist failed execution.", e);
                     } finally {
@@ -397,8 +398,8 @@ public class UIMWorkflowProcessor implements Runnable {
     /**
      * @return scheduled executions
      */
-    public synchronized List<ActiveExecution<?>> getExecutions() {
-        ArrayList<ActiveExecution<?>> result = new ArrayList<ActiveExecution<?>>();
+    public synchronized List<ActiveExecution<I>> getExecutions() {
+        ArrayList<ActiveExecution<I>> result = new ArrayList<ActiveExecution<I>>();
         synchronized (executions) {
             result.addAll(executions);
         }

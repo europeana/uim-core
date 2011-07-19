@@ -3,8 +3,8 @@ package eu.europeana.uim.store.memory;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import eu.europeana.uim.api.AbstractStorageEngineTest;
 import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.store.AbstractStorageEngineTest;
 
 /**
  * Storage tests using memory implementation of it.

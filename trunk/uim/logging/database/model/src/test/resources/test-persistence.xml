@@ -8,10 +8,10 @@
         
 		<mapping-file>eu/europeana/uim/logging/database/model/Queries.xml</mapping-file>
         
-        <class>eu.europeana.uim.logging.database.model.TDatabaseLogEntry</class>
-        <class>eu.europeana.uim.logging.database.model.TObjectDatabaseLogEntry</class>
-        <class>eu.europeana.uim.logging.database.model.TStringDatabaseLogEntry</class>
-        <class>eu.europeana.uim.logging.database.model.TDurationDatabaseEntry</class>
+        <class>eu.europeana.uim.logging.database.model.TLogEntry</class>
+        <class>eu.europeana.uim.logging.database.model.TLogEntryFailed</class>
+        <class>eu.europeana.uim.logging.database.model.TLogEntryLink</class>
+        <class>eu.europeana.uim.logging.database.model.TLogEntryDuration</class>
         
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

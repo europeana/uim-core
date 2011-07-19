@@ -77,17 +77,17 @@ public class LegalIngestionPlugin implements IngestionPlugin {
     }
 
     @Override
-    public void initialize(ExecutionContext context) throws IngestionPluginFailedException {
+    public <I>void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public void completed(ExecutionContext context) throws IngestionPluginFailedException {
+    public <I>void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public boolean processRecord(MetaDataRecord<?> mdr, ExecutionContext context) {
+    public <I>boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context) {
         return true;
 
     }

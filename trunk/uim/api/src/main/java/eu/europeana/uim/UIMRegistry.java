@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.api.LoggingEngineAdapter;
 import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
@@ -26,24 +27,24 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
-    private static Logger                    log            = Logger.getLogger(UIMRegistry.class.getName());
+    private static Logger                 log            = Logger.getLogger(UIMRegistry.class.getName());
 
-    private String                           configuredStorageEngine;
-    private StorageEngine<?>                 activeStorage  = null;
-    private Map<String, StorageEngine<?>>    storages       = new HashMap<String, StorageEngine<?>>();
+    private String                        configuredStorageEngine;
+    private StorageEngine<?>              activeStorage  = null;
+    private Map<String, StorageEngine<?>> storages       = new HashMap<String, StorageEngine<?>>();
 
-    private String                           configuredLoggingEngine;
-    private LoggingEngine<?, ?>              activeLogging  = null;
-    private Map<String, LoggingEngine<?, ?>> loggers        = new HashMap<String, LoggingEngine<?, ?>>();
+    private String                        configuredLoggingEngine;
+    private LoggingEngine<?>              activeLogging  = null;
+    private Map<String, LoggingEngine<?>> loggers        = new HashMap<String, LoggingEngine<?>>();
 
-    private String                           configuredResourceEngine;
+    private String                        configuredResourceEngine;
     private ResourceEngine                activeResource = null;
     private Map<String, ResourceEngine>   resources      = new HashMap<String, ResourceEngine>();
 
-    private Map<String, IngestionPlugin>     plugins        = new HashMap<String, IngestionPlugin>();
-    private Map<String, Workflow>            workflows      = new HashMap<String, Workflow>();
+    private Map<String, IngestionPlugin>  plugins        = new HashMap<String, IngestionPlugin>();
+    private Map<String, Workflow>         workflows      = new HashMap<String, Workflow>();
 
-    private Orchestrator                     orchestrator   = null;
+    private Orchestrator<?>               orchestrator   = null;
 
     /**
      * Creates a new instance of this class.
@@ -125,7 +126,8 @@ public class UIMRegistry implements Registry {
             nonStaticMembers.append(currentField.getName() + " ");
         }
         if (nonStaticMembers.length() > 0)
-            throw new IllegalArgumentException(plugin.getIdentifier() + " has non-static member(s): " +
+            throw new IllegalArgumentException(plugin.getIdentifier() +
+                                               " has non-static member(s): " +
                                                nonStaticMembers.toString());
     }
 
@@ -227,7 +229,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addLoggingEngine(LoggingEngine<?, ?> logging) {
+    public void addLoggingEngine(LoggingEngine<?> logging) {
         if (logging != null) {
             log.info("Added logging engine:" + logging.getIdentifier());
             if (!loggers.containsKey(logging.getIdentifier())) {
@@ -244,10 +246,10 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeLoggingEngine(LoggingEngine<?, ?> logging) {
+    public void removeLoggingEngine(LoggingEngine<?> logging) {
         if (logging != null) {
 
-            LoggingEngine<?, ?> remove = loggers.remove(logging.getIdentifier());
+            LoggingEngine<?> remove = loggers.remove(logging.getIdentifier());
             if (activeLogging == remove) {
                 activeLogging = null;
             }
@@ -256,15 +258,15 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public List<LoggingEngine<?, ?>> getLoggingEngines() {
-        List<LoggingEngine<?, ?>> res = new ArrayList<LoggingEngine<?, ?>>();
+    public List<LoggingEngine<?>> getLoggingEngines() {
+        List<LoggingEngine<?>> res = new ArrayList<LoggingEngine<?>>();
         res.addAll(loggers.values());
         return res;
     }
 
     @Override
-    public LoggingEngine<?, ?> getLoggingEngine() {
-        if (loggers == null || loggers.isEmpty()) return null;
+    public LoggingEngine<?> getLoggingEngine() {
+        if (loggers == null || loggers.isEmpty()) return LoggingEngineAdapter.LONG;
 
         if (activeLogging == null) {
             if (getLoggingEngine(configuredLoggingEngine) != null) {
@@ -277,12 +279,12 @@ public class UIMRegistry implements Registry {
         return activeLogging;
     }
 
-    LoggingEngine<?, ?> getActiveLoggingEngine() {
+    LoggingEngine<?> getActiveLoggingEngine() {
         return activeLogging;
     }
 
     @Override
-    public LoggingEngine<?, ?> getLoggingEngine(String identifier) {
+    public LoggingEngine<?> getLoggingEngine(String identifier) {
         if (identifier == null || loggers == null || loggers.isEmpty()) return null;
         return loggers.get(identifier);
     }
@@ -350,17 +352,17 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public Orchestrator getOrchestrator() {
+    public Orchestrator<?> getOrchestrator() {
         return orchestrator;
     }
 
     @Override
-    public void setOrchestrator(Orchestrator orchestrator) {
+    public void setOrchestrator(Orchestrator<?> orchestrator) {
         this.orchestrator = orchestrator;
     }
 
     @Override
-    public void unsetOrchestrator(Orchestrator orchestrator) {
+    public void unsetOrchestrator(Orchestrator<?> orchestrator) {
         this.orchestrator = null;
     }
 
@@ -377,8 +379,8 @@ public class UIMRegistry implements Registry {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
-                builder.append(plugin.getIdentifier()).append("|").append(plugin.getName()).append(": [").append(plugin.getDescription()).append(
-                        "]");
+                builder.append(plugin.getIdentifier()).append("|").append(plugin.getName()).append(
+                        ": [").append(plugin.getDescription()).append("]");
             }
         }
 
@@ -416,7 +418,7 @@ public class UIMRegistry implements Registry {
                 builder.append(storage.getConfiguration().toString());
             }
         }
-        
+
         builder.append("\nRegistered resource engines:");
         builder.append("\n--------------------------------------");
         if (resources.isEmpty()) {
@@ -438,13 +440,12 @@ public class UIMRegistry implements Registry {
             }
         }
 
-
         builder.append("\nRegistered logging:");
         builder.append("\n--------------------------------------");
         if (loggers.isEmpty()) {
             builder.append("\n\tNo logging.");
         } else {
-            for (LoggingEngine<?, ?> loggingEngine : loggers.values()) {
+            for (LoggingEngine<?> loggingEngine : loggers.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\t");
                 }

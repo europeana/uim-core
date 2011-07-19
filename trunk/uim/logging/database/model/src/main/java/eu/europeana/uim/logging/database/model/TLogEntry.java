@@ -1,25 +1,55 @@
-/* StringDatabaseLogEntry.java - created on Apr 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.logging.database.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import eu.europeana.uim.api.LoggingEngine.LogEntry;
+
 /**
- * Implementation of log entries for messages of simple Strings.
+ * Implementation of simple log entry using JPA to persist the logging information to a data base.
  * 
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @since Apr 4, 2011
+ * @since Mar 31, 2011
  */
 @Entity
-@Table(name = "uim_stringlogentry")
-@DiscriminatorValue("string")
-public class TStringDatabaseLogEntry extends TDatabaseLogEntry<String[]> {
+@Table(name = "uim_logentry")
+@Inheritance(strategy = InheritanceType.JOINED)
+@SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
+public class TLogEntry implements LogEntry<Long> {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
+    private Long   oid;
+
+    @Column
+    private String module;
+
+    @Column
+    private Long   execution;
+
+    @Column
+    private Long   metaDataRecord;
+
+    @Column
+    private Level  level;
+
+    @Column
+    private Date   date;
+
     @Column
     private String   message0;
 
@@ -52,9 +82,104 @@ public class TStringDatabaseLogEntry extends TDatabaseLogEntry<String[]> {
 
     @Transient
     private String[] messages;
+    
+    public TLogEntry() {
+    }
+    
+    public TLogEntry(Level level, String module, Date date, String... messages) {
+        super();
+        this.level = level;
+        this.module = module;
+        this.date = date;
+        
+        setMessage(messages);
+    }
 
-    @Override
-    public String[] getMessage() {
+
+    public TLogEntry(Long execution, Level level, String module, Date date, String... messages) {
+        super();
+        this.execution = execution;
+        this.level = level;
+        this.module = module;
+        this.date = date;
+        
+        setMessage(messages);
+    }
+
+
+    /**
+     * @return unique identifier used as primary key on database (is automatically set when
+     *         persisted)
+     */
+    public Long getOid() {
+        return oid;
+    }
+
+    
+    public Level getLevel() {
+        return level;
+    }
+
+    /**
+     * @param level
+     *            level of logging
+     */
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date
+     *            date of creation
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Long getExecution() {
+        return execution;
+    }
+
+    /**
+     * @param execution
+     *            for which execution
+     */
+    public void setExecution(Long execution) {
+        this.execution = execution;
+    }
+
+    public String getModule() {
+        return module;
+    }
+
+    /**
+     * @param module
+     *            name of plugin
+     */
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    /**
+     * @return
+     */
+    public Long getMetaDataRecord() {
+        return metaDataRecord;
+    }
+
+    /**
+     * @param metaDataRecord
+     *            metadata record ID
+     */
+    public void setMetaDataRecord(Long metaDataRecord) {
+        this.metaDataRecord = metaDataRecord;
+    }
+
+    public String[] getMessages() {
         if (messages == null) {
             List<String> msgs = new ArrayList<String>();
             if (message0 != null) {
@@ -92,12 +217,13 @@ public class TStringDatabaseLogEntry extends TDatabaseLogEntry<String[]> {
         }
         return messages;
     }
-
+    
+    
     /**
      * @param messages
      *            string messages, note that only maximum 10 messages are supported by this entry
      */
-    public void setMessage(String[] messages) {
+    protected void setMessage(String[] messages) {
         this.messages = messages;
         if (messages.length > 0) {
             message0 = messages[0];

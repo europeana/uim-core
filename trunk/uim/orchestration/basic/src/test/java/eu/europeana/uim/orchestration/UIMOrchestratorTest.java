@@ -47,7 +47,7 @@ public class UIMOrchestratorTest {
 
     private StorageEngine<Long> engine;
     private ResourceEngine      resource;
-    private UIMOrchestrator     orchestrator;
+    private UIMOrchestrator<Long>    orchestrator;
 
     /**
      * Sets up the orchistrator with a registry and a in memory storage engine.
@@ -67,8 +67,8 @@ public class UIMOrchestratorTest {
             registry.addResourceEngine(resource);
             registry.setConfiguredResourceEngine(MemoryResourceEngine.class.getSimpleName());
 
-            UIMWorkflowProcessor processor = new UIMWorkflowProcessor(registry);
-            orchestrator = new UIMOrchestrator(registry, processor);
+            UIMWorkflowProcessor<Long> processor = new UIMWorkflowProcessor<Long>(registry);
+            orchestrator = new UIMOrchestrator<Long>(registry, processor);
         }
     }
 
@@ -89,7 +89,7 @@ public class UIMOrchestratorTest {
 
         Workflow w = new SysoutWorkflow(7, true, false);
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
         execution0.waitUntilFinished();
 
@@ -117,7 +117,7 @@ public class UIMOrchestratorTest {
 
         Workflow w = new SyserrWorkflow(7, true);
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
         execution0.waitUntilFinished();
 
@@ -144,7 +144,7 @@ public class UIMOrchestratorTest {
 
         Workflow w = new MixedWorkflow(7, true);
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
         execution0.waitUntilFinished();
 
@@ -175,7 +175,7 @@ public class UIMOrchestratorTest {
         Properties properties = new Properties();
         properties.setProperty("syserr.fullfailure", "true");
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w,
                 request, properties);
         execution0.waitUntilFinished();
 
@@ -210,7 +210,7 @@ public class UIMOrchestratorTest {
         resources.put("sysout.random.sleep", list);
         resource.setGlobalResources(resources);
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
         execution0.waitUntilFinished();
         Assert.assertEquals("true", execution0.getProperties().get("sysout.random.sleep"));
@@ -218,21 +218,21 @@ public class UIMOrchestratorTest {
         list.set(0, "false");
         resource.setWorkflowResources(w, resources);
 
-        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0 = orchestrator.executeWorkflow(w, request);
         execution0.waitUntilFinished();
         Assert.assertEquals("false", execution0.getProperties().get("sysout.random.sleep"));
 
         list.set(0, "true");
         resource.setProviderResources(request.getCollection().getProvider(), resources);
 
-        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0 = orchestrator.executeWorkflow(w, request);
         execution0.waitUntilFinished();
         Assert.assertEquals("true", execution0.getProperties().get("sysout.random.sleep"));
 
         list.set(0, "false");
         resource.setCollectionResources(request.getCollection(), resources);
 
-        execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w, request);
+        execution0 = orchestrator.executeWorkflow(w, request);
         execution0.waitUntilFinished();
         Assert.assertEquals("false", execution0.getProperties().get("sysout.random.sleep"));
 
@@ -255,8 +255,7 @@ public class UIMOrchestratorTest {
 
         Workflow w = new SysoutWorkflow(7, true, true);
 
-        ActiveExecution<Long> execution0 = (ActiveExecution<Long>)orchestrator.executeWorkflow(w,
-                request);
+        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
         execution0.waitUntilFinished();
 
         // each delivered metadata record is saved once per plugin (only one plugin in the

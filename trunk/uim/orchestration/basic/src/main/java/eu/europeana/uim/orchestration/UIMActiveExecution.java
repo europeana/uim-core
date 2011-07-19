@@ -54,15 +54,15 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public static String                      KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
     private static Logger                     log                                = Logger.getLogger(UIMActiveExecution.class.getName());
 
-    private HashMap<String, LinkedList<Task>> success                            = new LinkedHashMap<String, LinkedList<Task>>();
-    private HashMap<String, LinkedList<Task>> failure                            = new LinkedHashMap<String, LinkedList<Task>>();
-    private HashMap<String, HashSet<Task>>    assigned                           = new LinkedHashMap<String, HashSet<Task>>();
+    private HashMap<String, LinkedList<Task<I>>> success                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
+    private HashMap<String, LinkedList<Task<I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
+    private HashMap<String, HashSet<Task<I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<I>>>();
 
     private HashMap<TKey<?, ?>, Object>       values                             = new HashMap<TKey<?, ?>, Object>();
 
     private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<I, ?>         loggingEngine;
-    private final ResourceEngine           resourceEngine;
+    private final LoggingEngine<I>            loggingEngine;
+    private final ResourceEngine              resourceEngine;
 
     private final Execution<I>                execution;
     private final Workflow                    workflow;
@@ -89,7 +89,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * @param monitor
      */
     public UIMActiveExecution(Execution<I> execution, Workflow workflow,
-                              StorageEngine<I> storageEngine, LoggingEngine<I, ?> loggingEngine,
+                              StorageEngine<I> storageEngine, LoggingEngine<I> loggingEngine,
                               ResourceEngine resourceEngine, Properties properties,
                               RevisableProgressMonitor monitor) {
         this.execution = execution;
@@ -101,14 +101,14 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         this.monitor = monitor;
 
         WorkflowStart start = workflow.getStart();
-        success.put(start.getIdentifier(), new LinkedList<Task>());
-        failure.put(start.getIdentifier(), new LinkedList<Task>());
-        assigned.put(start.getIdentifier(), new HashSet<Task>());
+        success.put(start.getIdentifier(), new LinkedList<Task<I>>());
+        failure.put(start.getIdentifier(), new LinkedList<Task<I>>());
+        assigned.put(start.getIdentifier(), new HashSet<Task<I>>());
 
         for (IngestionPlugin step : workflow.getSteps()) {
-            success.put(step.getIdentifier(), new LinkedList<Task>());
-            failure.put(step.getIdentifier(), new LinkedList<Task>());
-            assigned.put(step.getIdentifier(), new HashSet<Task>());
+            success.put(step.getIdentifier(), new LinkedList<Task<I>>());
+            failure.put(step.getIdentifier(), new LinkedList<Task<I>>());
+            assigned.put(step.getIdentifier(), new HashSet<Task<I>>());
         }
     }
 
@@ -123,7 +123,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public LoggingEngine<I, ?> getLoggingEngine() {
+    public LoggingEngine<I> getLoggingEngine() {
         return loggingEngine;
     }
 
@@ -278,17 +278,17 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public Queue<Task> getSuccess(String identifier) {
+    public Queue<Task<I>> getSuccess(String identifier) {
         return success.get(identifier);
     }
 
     @Override
-    public Queue<Task> getFailure(String identifier) {
+    public Queue<Task<I>> getFailure(String identifier) {
         return failure.get(identifier);
     }
 
     @Override
-    public Set<Task> getAssigned(String identifier) {
+    public Set<Task<I>> getAssigned(String identifier) {
         return assigned.get(identifier);
     }
 
@@ -311,11 +311,11 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     private int getProgressSize(String name) {
         int size = 0;
-        LinkedList<Task> list = success.get(name);
+        LinkedList<Task<I>> list = success.get(name);
         synchronized (list) {
             size += list.size();
 
-            HashSet<Task> set = assigned.get(name);
+            HashSet<Task<I>> set = assigned.get(name);
             size += set.size();
         }
         return size;
@@ -325,7 +325,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public int getFailureSize() {
         // count elements in failure queues
         int size = 0;
-        for (LinkedList<Task> tasks : failure.values()) {
+        for (LinkedList<Task<I>> tasks : failure.values()) {
             size += tasks.size();
         }
         return size;
@@ -361,7 +361,6 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                     builder.append(", ");
                 }
 
-                
                 log.info(scheduled + " scheduled, " + totalProgress + " in progress:" +
                          builder.toString());
             }
@@ -372,7 +371,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
             MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
 
             long mb = 1024 * 1024;
-            log.info(String.format("Memory status: %d MB UsedHeap, %d MB MaxHeap, %d MB NonHeap, %d MB MaxNonHeap",heapMemoryUsage.getUsed()/mb, heapMemoryUsage.getMax()/mb, nonHeapMemoryUsage.getUsed()/mb, nonHeapMemoryUsage.getMax()/mb));
+            log.info(String.format(
+                    "Memory status: %d MB UsedHeap, %d MB MaxHeap, %d MB NonHeap, %d MB MaxNonHeap",
+                    heapMemoryUsage.getUsed() / mb, heapMemoryUsage.getMax() / mb,
+                    nonHeapMemoryUsage.getUsed() / mb, nonHeapMemoryUsage.getMax() / mb));
         }
     }
 
@@ -396,15 +398,15 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());
 
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
-        
+
         // we cannot guarantee this when something goes terribly wrong.
         processed |= getThrowable() != null;
-        
+
         boolean empty = getProgressSize() == 0;
 
-        
-//        System.out.println(String.format("s=%d, p=%d, f=%d, c=%d, t=" + (getThrowable() != null ? getThrowable().getMessage() : ""), getScheduledSize(),
-//        getProgressSize(), getFailureSize(), getCompletedSize()));
+// System.out.println(String.format("s=%d, p=%d, f=%d, c=%d, t=" + (getThrowable() != null ?
+// getThrowable().getMessage() : ""), getScheduledSize(),
+// getProgressSize(), getFailureSize(), getCompletedSize()));
         return (finished || cancelled) && processed && empty;
     }
 
@@ -419,8 +421,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public WorkflowStepStatus getStepStatus(IngestionPlugin step) {
-        Queue<Task> success = getSuccess(step.getIdentifier());
-        Queue<Task> failure = getFailure(step.getIdentifier());
+        Queue<Task<I>> success = getSuccess(step.getIdentifier());
+        Queue<Task<I>> failure = getFailure(step.getIdentifier());
 
         int successSize = 0;
         synchronized (success) {
@@ -431,7 +433,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         Map<MetaDataRecord<?>, Throwable> exceptions = new HashMap<MetaDataRecord<?>, Throwable>();
         synchronized (failure) {
             failureSize = failure.size();
-            for (Task task : failure) {
+            for (Task<I> task : failure) {
                 exceptions.put(task.getMetaDataRecord(), task.getThrowable());
             }
         }
@@ -475,8 +477,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         } catch (InterruptedException e) {
         }
 
-//        System.out.println("Finished:" + getCompletedSize());
-//        System.out.println("Failed:" + getFailureSize());
+// System.out.println("Finished:" + getCompletedSize());
+// System.out.println("Failed:" + getFailureSize());
     }
 
     @Override
@@ -522,14 +524,13 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public File getFileResource(String fileReference) {
-      if (fileReference==null||fileReference.isEmpty()) {
-          return null;
-      }
-      
-      File resourceFile=new File(getResourceEngine().getResourceDirectory().getAbsolutePath()+File.separator+fileReference);
-      return resourceFile;
+        if (fileReference == null || fileReference.isEmpty()) { return null; }
+
+        File resourceFile = new File(getResourceEngine().getResourceDirectory().getAbsolutePath() +
+                                     File.separator + fileReference);
+        return resourceFile;
     }
-    
+
     @Override
     public synchronized void cleanup() {
         if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
@@ -545,5 +546,4 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         }
     }
 
- 
 }
