@@ -53,7 +53,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     private String   stacktrace;
 
     @Column
-    private Level    level;
+    private String   level;
 
     @Column
     private Date     date;
@@ -99,6 +99,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param level
      * @param module
      * @param stacktrace
@@ -108,7 +109,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     public TLogEntryFailed(Level level, String module, String stacktrace, Date date,
                            String... messages) {
         super();
-        this.level = level;
+        this.level = level.getName();
         this.stacktrace = stacktrace;
         this.module = module;
         this.date = date;
@@ -118,6 +119,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param level
      * @param module
      * @param stacktrace
@@ -128,7 +130,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     public TLogEntryFailed(Level level, String module, String stacktrace, Date date, Long mdr,
                            String... messages) {
         super();
-        this.level = level;
+        this.level = level.getName();
         this.stacktrace = stacktrace;
         this.module = module;
         this.date = date;
@@ -138,6 +140,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param execution
      * @param level
      * @param module
@@ -149,7 +152,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
                            Date date, String... messages) {
         super();
         this.execution = execution;
-        this.level = level;
+        this.level = level.getName();
         this.module = module;
         this.stacktrace = stacktrace;
         this.date = date;
@@ -159,6 +162,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param execution
      * @param level
      * @param module
@@ -171,7 +175,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
                            Date date, Long mdr, String... messages) {
         super();
         this.execution = execution;
-        this.level = level;
+        this.level = level.getName();
         this.module = module;
         this.stacktrace = stacktrace;
         this.date = date;
@@ -189,7 +193,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     @Override
     public Level getLevel() {
-        return level;
+        return Level.parse(level);
     }
 
     /**
@@ -197,7 +201,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      *            level of logging
      */
     public void setLevel(Level level) {
-        this.level = level;
+        this.level = level.getName();
     }
 
     @Override
@@ -246,7 +250,9 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
 
     /**
      * Sets the stacktrace to the given value.
-     * @param stacktrace the stacktrace to set
+     * 
+     * @param stacktrace
+     *            the stacktrace to set
      */
     public void setStacktrace(String stacktrace) {
         this.stacktrace = stacktrace;

@@ -45,7 +45,7 @@ public class TLogEntry implements LogEntry<Long> {
     private Long     metaDataRecord;
 
     @Column
-    private Level    level;
+    private String   level;
 
     @Column
     private Date     date;
@@ -103,7 +103,7 @@ public class TLogEntry implements LogEntry<Long> {
      */
     public TLogEntry(Level level, String module, Date date, String... messages) {
         super();
-        this.level = level;
+        this.level = level.getName();
         this.module = module;
         this.date = date;
 
@@ -127,7 +127,7 @@ public class TLogEntry implements LogEntry<Long> {
     public TLogEntry(Long execution, Level level, String module, Date date, String... messages) {
         super();
         this.execution = execution;
-        this.level = level;
+        this.level = level.getName();
         this.module = module;
         this.date = date;
 
@@ -144,7 +144,7 @@ public class TLogEntry implements LogEntry<Long> {
 
     @Override
     public Level getLevel() {
-        return level;
+        return Level.parse(level);
     }
 
     /**
@@ -152,7 +152,7 @@ public class TLogEntry implements LogEntry<Long> {
      *            level of logging
      */
     public void setLevel(Level level) {
-        this.level = level;
+        this.level = level.getName();
     }
 
     @Override
