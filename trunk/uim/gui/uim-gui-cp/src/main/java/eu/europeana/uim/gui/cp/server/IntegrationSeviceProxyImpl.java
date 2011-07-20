@@ -20,11 +20,22 @@
  */
 package eu.europeana.uim.gui.cp.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
+import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
+import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.SugarCrmRecord;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.DatasetStates;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.RetrievableField;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.UpdatableField;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.CustomSugarCrmQuery;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SimpleSugarCrmQuery;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SugarCrmQuery;
+import eu.europeana.uim.sugarcrmclient.ws.exceptions.QueryResultException;
 
 /**
  * @author georgiosmarkakis
@@ -43,6 +54,9 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	@Override
 	public ImportResultDTO processSelectedRecord(SugarCRMRecordDTO record) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		return null;
 	}
 
@@ -51,8 +65,86 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	 */
 	@Override
 	public List<SugarCRMRecordDTO> executeSugarCRMQuery(String query) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		ArrayList<SugarCRMRecordDTO> guiobjs = new ArrayList<SugarCRMRecordDTO>();
+		
+		ExpandedOsgiEngine engine =  getEngine();
+		SugarCRMService sugService = engine.getSugarCrmService();
+		
+		//CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
+		SimpleSugarCrmQuery queryObj = new  SimpleSugarCrmQuery(DatasetStates.MAPPING_AND_NORMALIZATION);
+		
+		
+		try {
+			ArrayList<SugarCrmRecord> results =  (ArrayList<SugarCrmRecord>) sugService.retrieveRecords(queryObj);
+			guiobjs =  (ArrayList<SugarCRMRecordDTO>) convertJIBXObj2GuiObj(results);
+			results = null;
+		} catch (QueryResultException e) {
+
+			e.printStackTrace();
+		}
+		
+		
+		return guiobjs;
+	}
+	
+	
+	
+	
+	/**
+	 * @param toconvert
+	 * @return
+	 */
+	private List<SugarCRMRecordDTO> convertJIBXObj2GuiObj(ArrayList<SugarCrmRecord> toconvert){
+		ArrayList<SugarCRMRecordDTO> converted = new  ArrayList<SugarCRMRecordDTO>();
+		
+		for (SugarCrmRecord originalrecord: toconvert){
+			SugarCRMRecordDTO guirecord = new SugarCRMRecordDTO();
+			
+			guirecord.setId(originalrecord.getItemValue(RetrievableField.ID));
+			guirecord.setAccess_to_content_checker(originalrecord.getItemValue(RetrievableField.ACCESS_TO_CONTENT_CHECKER));
+			guirecord.setActual_ingestion_date_(originalrecord.getItemValue(RetrievableField.DATE_OF_REPLICATION));
+			guirecord.setAssigned_user_id(originalrecord.getItemValue(RetrievableField.ASSIGNED_USER_ID));
+			guirecord.setAssigned_user_name(originalrecord.getItemValue(RetrievableField.ASSIGNED_USER_NAME));
+			guirecord.setCampaign_name(originalrecord.getItemValue(RetrievableField.CAMPAIGN_NAME));
+			guirecord.setCountry_c(originalrecord.getItemValue(RetrievableField.COUNTRY));
+			guirecord.setCreated_by(originalrecord.getItemValue(RetrievableField.CREATED_BY_USER));
+			guirecord.setDataset_country(originalrecord.getItemValue(RetrievableField.DATASET_COUNTRY));
+			guirecord.setDate_entered(originalrecord.getItemValue(RetrievableField.DATE_ENTERED));
+			guirecord.setDate_modified(originalrecord.getItemValue(RetrievableField.DATE_MODIFIED));
+			guirecord.setDeleted(originalrecord.getItemValue(RetrievableField.DELETED));
+			guirecord.setDescription(originalrecord.getItemValue(RetrievableField.DESCRIPTION));
+			guirecord.setEnabled_c(originalrecord.getItemValue(RetrievableField.ENABLED));
+			guirecord.setExpected_ingestion_date(originalrecord.getItemValue(RetrievableField.EXPECTED_INGESTION_DATE));
+			guirecord.setHarvest_url(originalrecord.getItemValue(RetrievableField.HARVEST_URL));
+			guirecord.setIdentifier(originalrecord.getItemValue(RetrievableField.IDENTIFIER));
+			guirecord.setIngested_image_c(originalrecord.getItemValue(UpdatableField.INGESTED_IMAGE));
+			guirecord.setIngested_sound_c(originalrecord.getItemValue(UpdatableField.INGESTED_SOUND));
+			guirecord.setIngested_text_c(originalrecord.getItemValue(UpdatableField.INGESTED_TEXT));
+			guirecord.setIngested_total_c(originalrecord.getItemValue(UpdatableField.TOTAL_INGESTED));
+			guirecord.setIngested_video_c(originalrecord.getItemValue(UpdatableField.INGESTED_VIDEO));
+			guirecord.setModified_by_user(originalrecord.getItemValue(RetrievableField.MODIFIED_BY_USER));
+			guirecord.setName(originalrecord.getItemValue(RetrievableField.NAME));
+			guirecord.setName_acronym_c(originalrecord.getItemValue(RetrievableField.ACRONYM));
+			guirecord.setNext_step(originalrecord.getItemValue(UpdatableField.NEXT_STEP));
+			guirecord.setNotes(originalrecord.getItemValue(RetrievableField.NOTES));
+			guirecord.setOrganization_name(originalrecord.getItemValue(RetrievableField.ORGANIZATION_NAME));
+			guirecord.setPlanned_image_c(originalrecord.getItemValue(RetrievableField.PLANNED_IMAGE));
+			guirecord.setPlanned_sound_c(originalrecord.getItemValue(RetrievableField.PLANNED_SOUND));
+			guirecord.setPlanned_text_c(originalrecord.getItemValue(RetrievableField.PLANNED_TEXT));
+			guirecord.setPlanned_total_c(originalrecord.getItemValue(RetrievableField.PLANNED_TOTAL));
+			guirecord.setPlanned_video_c(originalrecord.getItemValue(RetrievableField.PLANNED_VIDEO));
+			guirecord.setSetspec_c(originalrecord.getItemValue(RetrievableField.SETSPEC));
+			guirecord.setStatus(originalrecord.getItemValue(UpdatableField.STATUS));
+			guirecord.setType(originalrecord.getItemValue(UpdatableField.TYPE));
+			
+			
+			converted.add(guirecord);
+		}
+		
+		
+		return converted;
+		
 	}
 
 }

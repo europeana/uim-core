@@ -54,6 +54,23 @@ public class ExpandedOsgiEngineActivator implements BundleActivator {
             }
             Thread.sleep(1000);
         }
+        
+        while (sugarCrmService == null && wait++ < 10) {
+            ServiceReference sugarCrmRef = bundleContext.getServiceReference("eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService");
+            if (sugarCrmRef != null) {
+            	sugarCrmService = (SugarCRMService)bundleContext.getService(sugarCrmRef);
+            }
+            Thread.sleep(1000);
+        }
+        
+        
+        while (repoxService == null && wait++ < 10) {
+            ServiceReference repoxRef = bundleContext.getServiceReference("eu.europeana.uim.repoxclient.plugin.RepoxUIMService");
+            if (repoxRef != null) {
+            	repoxService = (RepoxUIMService)bundleContext.getService(repoxRef);
+            }
+            Thread.sleep(1000);
+        }
 
         expengine = new ExpandedOsgiEngine(registry,repoxService,sugarCrmService);
         ExpandedOsgiEngine.setEngine(expengine);

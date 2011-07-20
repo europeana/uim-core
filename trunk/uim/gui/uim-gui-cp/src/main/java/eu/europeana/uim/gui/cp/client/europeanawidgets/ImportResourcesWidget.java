@@ -21,6 +21,7 @@
 package eu.europeana.uim.gui.cp.client.europeanawidgets;
 
 import java.util.Comparator;
+import java.util.List;
 
 
 
@@ -31,6 +32,8 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -39,8 +42,10 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -52,6 +57,7 @@ import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 
@@ -84,13 +90,21 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  SimplePager pager;
   
 	  @UiField(provided = true)
-	  Button button;
+	  Button searchButton;
+	  
+	  @UiField(provided = true)
+	  TextBox searchField;
+	  
+	  @UiField(provided = true)
+	  Button importButton;
+	  
+	  
 	    /**
 	     * The key provider that provides the unique ID of a contact.
 	     */
 	    public static final ProvidesKey<SugarCRMRecordDTO> KEY_PROVIDER = new ProvidesKey<SugarCRMRecordDTO>() {
 	      public Object getKey(SugarCRMRecordDTO item) {
-	        return item == null ? null : item.getSugarCrmId();
+	        return item == null ? null : item.getId();
 	      }
 	    };
 	  
@@ -119,11 +133,31 @@ public class ImportResourcesWidget extends IngestionWidget {
 	@Override
 	public Widget onInitialize() {
 		
-		button = new Button();
-		button.setText("Import Selected");
-		button.setTitle("Populate UIM and Repox with Data from SugarCrm");
+		searchButton = new Button();
+		
+		searchButton.addClickHandler( new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				performSearch();
+			}
+	          });
+		
+		
+		searchButton.setText("Search SugarCRM");
+		searchButton.setTitle("Search SugarCRM for Records");
+		
+		
+		searchField = new TextBox();
+		
+		
+		importButton = new Button();
+		importButton.setText("Import Selected");
+		importButton.setTitle("Populate UIM and Repox with Data from SugarCrm");
 		// Create a CellTable.
 
+		
+		//
+		
 	    // Set a key provider that provides a unique key for each contact. If key is
 	    // used to identify contacts when fields (such as the name and address)
 	    // change.
@@ -181,12 +215,39 @@ public class ImportResourcesWidget extends IngestionWidget {
 	}
 	
 	
+	private void performSearch(){
+		String query = generateQuery(); 
+		integrationservice.executeSugarCRMQuery(query, new AsyncCallback<List<SugarCRMRecordDTO>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(List<SugarCRMRecordDTO> searchresults) {
+            	dataProvider.setList(searchresults);
+
+            }
+        });
+	}
+	
+	
+	private String generateQuery(){
+		String query = "contacts.first_name LIKE '%M%'"; 
+		
+		return query;
+		
+	}
+	
+	
 	  /**
 	   * Add the columns to the table.
 	   */
 	  private void initTableColumns(
 	      final SelectionModel<SugarCRMRecordDTO> selectionModel,
 	      ListHandler<SugarCRMRecordDTO> sortHandler) {
+		  
+		  
 	    // Checkbox column. This table will uses a checkbox column for selection.
 	    // Alternatively, you can call cellTable.setSelectionEnabled(true) to enable
 	    // mouse selection.
@@ -201,29 +262,206 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    cellTable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
 	    cellTable.setColumnWidth(checkColumn, 40, Unit.PX);
 
-	    // First name.
-	    Column<SugarCRMRecordDTO, String> firstNameColumn = new Column<SugarCRMRecordDTO, String>(
+	    // ID column
+	    Column<SugarCRMRecordDTO, String> idColumn = new Column<SugarCRMRecordDTO, String>(
 	        new TextCell()) {
 	      @Override
 	      public String getValue(SugarCRMRecordDTO object) {
-	        return object.getSugarCrmId();
+	        return object.getId();
 	      }
 	    };
-	    firstNameColumn.setSortable(true);
+	    idColumn.setSortable(true);
 	    
-	    sortHandler.setComparator(firstNameColumn, new Comparator<SugarCRMRecordDTO>() {
+	    sortHandler.setComparator(idColumn, new Comparator<SugarCRMRecordDTO>() {
 	      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
-	        return o1.getSugarCrmId().compareTo(o2.getSugarCrmId());
+	        return o1.getId().compareTo(o2.getId());
 	      }
 	    });
-	    cellTable.addColumn(firstNameColumn, "ID");
-	    firstNameColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+	    cellTable.addColumn(idColumn, "ID");
+	    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 	      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 	    	  dataProvider.refresh();
 	      }
 	    });
-	    cellTable.setColumnWidth(firstNameColumn, 20, Unit.PCT);
+	    cellTable.setColumnWidth(idColumn, 20, Unit.PCT);
+	    
+	    
+	    // Colection name Name Column
+	    Column<SugarCRMRecordDTO, String> collectionColumn = new Column<SugarCRMRecordDTO, String>(
+		        new TextCell()) {
+		      @Override
+		      public String getValue(SugarCRMRecordDTO object) {
+		        return object.getName();
+		      }
+		    };
+		    collectionColumn.setSortable(true);
+		    
+		    sortHandler.setComparator(collectionColumn, new Comparator<SugarCRMRecordDTO>() {
+		      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+		        return o1.getName().compareTo(o2.getName());
+		      }
+		    });
+		    cellTable.addColumn(collectionColumn, "Collection Identifier");
+		    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+		      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+		    	  dataProvider.refresh();
+		      }
+		    });
+		    cellTable.setColumnWidth(collectionColumn, 20, Unit.PCT);
+	    
+	    
+	    // Organization Name Column
+		    Column<SugarCRMRecordDTO, String> organizationColumn = new Column<SugarCRMRecordDTO, String>(
+			        new TextCell()) {
+			      @Override
+			      public String getValue(SugarCRMRecordDTO object) {
+			        return object.getOrganization_name();
+			      }
+			    };
+			    collectionColumn.setSortable(true);
+			    
+			    sortHandler.setComparator(organizationColumn, new Comparator<SugarCRMRecordDTO>() {
+			      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+			        return o1.getOrganization_name().compareTo(o2.getOrganization_name());
+			      }
+			    });
+			    cellTable.addColumn(organizationColumn, "Organization Name");
+			    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+			      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+			    	  dataProvider.refresh();
+			      }
+			    });
+			    cellTable.setColumnWidth(organizationColumn, 20, Unit.PCT);
+			    
+	    // Country Column
+	    
+			    Column<SugarCRMRecordDTO, String> countryColumn = new Column<SugarCRMRecordDTO, String>(
+				        new TextCell()) {
+				      @Override
+				      public String getValue(SugarCRMRecordDTO object) {
+				        return object.getCountry_c();
+				      }
+				    };
+				    countryColumn.setSortable(true);
+				    
+				    sortHandler.setComparator(countryColumn, new Comparator<SugarCRMRecordDTO>() {
+				      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+				        return o1.getCountry_c().compareTo(o2.getCountry_c());
+				      }
+				    });
+				    cellTable.addColumn(countryColumn, "Country");
+				    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+				      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+				    	  dataProvider.refresh();
+				      }
+				    });
+				    cellTable.setColumnWidth(countryColumn, 20, Unit.PCT);
+			    
+	                // Status Column
+				    Column<SugarCRMRecordDTO, String> statusColumn = new Column<SugarCRMRecordDTO, String>(
+					        new TextCell()) {
+					      @Override
+					      public String getValue(SugarCRMRecordDTO object) {
+					        return object.getStatus();
+					      }
+					    };
+					    statusColumn.setSortable(true);
+					    
+					    sortHandler.setComparator(statusColumn, new Comparator<SugarCRMRecordDTO>() {
+					      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+					        return o1.getStatus().compareTo(o2.getStatus());
+					      }
+					    });
+					    cellTable.addColumn(statusColumn, "Status");
+					    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+					      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+					    	  dataProvider.refresh();
+					      }
+					    });
+					    cellTable.setColumnWidth(statusColumn, 20, Unit.PCT);
+
+					    
+					    // Amount Column
+	    
+					    Column<SugarCRMRecordDTO, String> amountColumn = new Column<SugarCRMRecordDTO, String>(
+						        new TextCell()) {
+						      @Override
+						      public String getValue(SugarCRMRecordDTO object) {
+						        return object.getIngested_total_c();
+						      }
+						    };
+						    amountColumn.setSortable(true);
+						    
+						    sortHandler.setComparator(amountColumn, new Comparator<SugarCRMRecordDTO>() {
+						      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+						        return o1.getIngested_total_c().compareTo(o2.getIngested_total_c());
+						      }
+						    });
+						    cellTable.addColumn(amountColumn, "Amount of Ingested Objects");
+						    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+						      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+						    	  dataProvider.refresh();
+						      }
+						    });
+						    cellTable.setColumnWidth(amountColumn, 20, Unit.PCT);
+
+						    // Ingestion Date Column
+						    Column<SugarCRMRecordDTO, String> ingestionDateColumn = new Column<SugarCRMRecordDTO, String>(
+							        new TextCell()) {
+							      @Override
+							      public String getValue(SugarCRMRecordDTO object) {
+							        return object.getExpected_ingestion_date();
+							      }
+							    };
+							    ingestionDateColumn.setSortable(true);
+							    
+							    sortHandler.setComparator(ingestionDateColumn, new Comparator<SugarCRMRecordDTO>() {
+							      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+							        return o1.getExpected_ingestion_date().compareTo(o2.getExpected_ingestion_date());
+							      }
+							    });
+							    cellTable.addColumn(ingestionDateColumn, "Planned Ingestion Date");
+							    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+							      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+							    	  dataProvider.refresh();
+							      }
+							    });
+							    cellTable.setColumnWidth(ingestionDateColumn, 20, Unit.PCT);
+	    
+	    
+							    // User Column
+							    
+							    Column<SugarCRMRecordDTO, String> userColumn = new Column<SugarCRMRecordDTO, String>(
+								        new TextCell()) {
+								      @Override
+								      public String getValue(SugarCRMRecordDTO object) {
+								        return object.getAssigned_user_name();
+								      }
+								    };
+								    userColumn.setSortable(true);
+								    
+								    sortHandler.setComparator(userColumn, new Comparator<SugarCRMRecordDTO>() {
+								      public int compare(SugarCRMRecordDTO o1, SugarCRMRecordDTO o2) {
+								    	  
+								        return o1.getAssigned_user_name().compareTo(o2.getAssigned_user_name());
+								      }
+								    });
+								    
+								    cellTable.addColumn(userColumn, "SugarCRM User");
+								    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+								      public void update(int index, SugarCRMRecordDTO object, String value) {
+
+								    	  dataProvider.refresh();
+								      }
+								    });
+								    cellTable.setColumnWidth(userColumn, 20, Unit.PCT);
 
 	  }
 
