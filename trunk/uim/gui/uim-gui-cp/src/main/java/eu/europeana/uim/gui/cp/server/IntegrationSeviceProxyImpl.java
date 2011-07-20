@@ -23,10 +23,17 @@ package eu.europeana.uim.gui.cp.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
+import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
+import eu.europeana.uim.repoxclient.rest.exceptions.AggregatorOperationException;
+import eu.europeana.uim.repoxclient.rest.exceptions.DataSourceOperationException;
+import eu.europeana.uim.repoxclient.rest.exceptions.ProviderOperationException;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.SugarCrmRecord;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.data.DatasetStates;
@@ -38,7 +45,7 @@ import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SugarCrmQuery;
 import eu.europeana.uim.sugarcrmclient.ws.exceptions.QueryResultException;
 
 /**
- * @author georgiosmarkakis
+ * @author Georgios Markakis
  *
  */
 public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServlet implements IntegrationSeviceProxy {
@@ -53,11 +60,66 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	 */
 	@Override
 	public ImportResultDTO processSelectedRecord(SugarCRMRecordDTO record) {
-		// TODO Auto-generated method stub
+
+		ExpandedOsgiEngine engine =  getEngine();
+		SugarCRMService sugService = engine.getSugarCrmService();
 		
+		RepoxUIMService repoxService = engine.getRepoxService();
+
+		ImportResultDTO result = new ImportResultDTO();
+		result.setResult("ok");
 		
+		String id = record.getId();
 		
-		return null;
+		try {
+			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
+			Provider prov = sugService.createProviderFromRecord(originalRec);
+			Collection coll = sugService.createCollectionFromRecord(originalRec, prov);
+			
+			if(prov.isAggregator()){
+				if(repoxService.aggregatorExists(prov)){
+					repoxService.updateAggregatorfromUIMObj(prov);
+				}
+				else
+				{
+					repoxService.createAggregatorfromUIMObj(prov,false);	
+				}
+			}
+			else{
+				if(repoxService.providerExists(prov)){
+					repoxService.updateProviderfromUIMObj(prov);
+				}
+				else
+				{
+					repoxService.createProviderfromUIMObj(prov,false);	
+				}
+			}
+			
+			repoxService.createDatasourcefromUIMObj(coll, prov);
+			
+		} catch (QueryResultException e) {			
+			result.setDescription("Import failed while accessing SugarCRM.");
+			result.setCause(e.getMessage());
+			result.setResult("fail");
+		} catch (StorageEngineException e) {
+			result.setDescription("Import failed while storing in UIM.");
+			result.setCause(e.getMessage());
+			result.setResult("fail");
+		} catch (AggregatorOperationException e) {
+			result.setDescription("Import failed while creating an Aggregator in Repox.");
+			result.setCause(e.getMessage());
+			result.setResult("fail");
+		} catch (ProviderOperationException e) {
+			result.setDescription("Import failed while creating an Provider in Repox.");
+			result.setCause(e.getMessage());
+			result.setResult("fail");
+		} catch (DataSourceOperationException e) {
+			result.setDescription("Import failed while creating a DataSource in Repox.");
+			result.setCause(e.getMessage());
+			result.setResult("fail");
+		}
+		
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -77,7 +139,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		
 		try {
 			ArrayList<SugarCrmRecord> results =  (ArrayList<SugarCrmRecord>) sugService.retrieveRecords(queryObj);
-			guiobjs =  (ArrayList<SugarCRMRecordDTO>) convertJIBXObj2GuiObj(results);
+			guiobjs =  (ArrayList<SugarCRMRecordDTO>) convertSugarObj2GuiObj(results);
 			results = null;
 		} catch (QueryResultException e) {
 
@@ -92,10 +154,11 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	
 	
 	/**
+	 * Converts a 
 	 * @param toconvert
 	 * @return
 	 */
-	private List<SugarCRMRecordDTO> convertJIBXObj2GuiObj(ArrayList<SugarCrmRecord> toconvert){
+	private List<SugarCRMRecordDTO> convertSugarObj2GuiObj(ArrayList<SugarCrmRecord> toconvert){
 		ArrayList<SugarCRMRecordDTO> converted = new  ArrayList<SugarCRMRecordDTO>();
 		
 		for (SugarCrmRecord originalrecord: toconvert){

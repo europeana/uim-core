@@ -18,7 +18,9 @@
 
   
   <g:HTMLPanel>
-  
+  <!-- 
+  <g:DialogBox ui:field='searchDialog' />
+   -->
   <g:TextBox ui:field='searchField' />
   <g:Button ui:field='searchButton' />
   <br></br>

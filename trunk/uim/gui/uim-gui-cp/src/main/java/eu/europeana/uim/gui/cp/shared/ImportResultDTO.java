@@ -23,9 +23,65 @@ package eu.europeana.uim.gui.cp.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
- * @author georgiosmarkakis
- *
+ * ImportResultDTO represents a client side (translatable to javascript)
+ * object in GWT.It represents and contains information about an
+ * import session.
+ * 
+ * @author Georgios Markakis
  */
 public class ImportResultDTO implements IsSerializable{
 
+	private String result;
+	private String error;
+	private String description;
+	private String cause;	
+	
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(String result) {
+		this.result = result;
+	}
+	/**
+	 * @return the result
+	 */
+	public String getResult() {
+		return result;
+	}
+	/**
+	 * @param error the error to set
+	 */
+	public void setError(String error) {
+		this.error = error;
+	}
+	/**
+	 * @return the error
+	 */
+	public String getError() {
+		return error;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param cause the cause to set
+	 */
+	public void setCause(String cause) {
+		this.cause = cause;
+	}
+	/**
+	 * @return the cause
+	 */
+	public String getCause() {
+		return cause;
+	}
 }

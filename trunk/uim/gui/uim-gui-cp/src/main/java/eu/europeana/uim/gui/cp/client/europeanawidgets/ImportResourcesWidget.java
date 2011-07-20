@@ -34,6 +34,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -45,7 +46,11 @@ import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -98,6 +103,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  @UiField(provided = true)
 	  Button importButton;
 	  
+	  //@UiField(provided = true)
+	  DialogBox searchDialog;
 	  
 	    /**
 	     * The key provider that provides the unique ID of a contact.
@@ -133,31 +140,32 @@ public class ImportResourcesWidget extends IngestionWidget {
 	@Override
 	public Widget onInitialize() {
 		
+		searchDialog = createDialogBox();
+		
+		
 		searchButton = new Button();
+		searchButton.setText("Search SugarCRM");
+		searchButton.setTitle("Search SugarCRM for Records");
 		
 		searchButton.addClickHandler( new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				searchDialog.center();
 				performSearch();
 			}
 	          });
-		
-		
-		searchButton.setText("Search SugarCRM");
-		searchButton.setTitle("Search SugarCRM for Records");
-		
-		
+				
 		searchField = new TextBox();
 		
 		
 		importButton = new Button();
 		importButton.setText("Import Selected");
 		importButton.setTitle("Populate UIM and Repox with Data from SugarCrm");
+		
+		
+		
 		// Create a CellTable.
 
-		
-		//
-		
 	    // Set a key provider that provides a unique key for each contact. If key is
 	    // used to identify contacts when fields (such as the name and address)
 	    // change.
@@ -221,11 +229,13 @@ public class ImportResourcesWidget extends IngestionWidget {
             @Override
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
+                searchDialog.hide();
             }
 
             @Override
             public void onSuccess(List<SugarCRMRecordDTO> searchresults) {
             	dataProvider.setList(searchresults);
+            	searchDialog.hide();
 
             }
         });
@@ -466,5 +476,41 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  }
 
 	
+	  
+	  /**
+	   * Create the dialog box for this example.
+	   *
+	   * @return the new dialog box
+	   */
+	  private DialogBox createDialogBox() {
+	    // Create a dialog box and set the caption text
+	    final DialogBox dialogBox = new DialogBox();
+	    dialogBox.ensureDebugId("cwDialogBox");
+	    dialogBox.setText("Searching for SugarCRM entries");
+
+	    dialogBox.setModal(true);
+	    dialogBox.setSize("200", "100");
+	    
+	    // Create a table to layout the content
+	    VerticalPanel dialogContents = new VerticalPanel();
+	    dialogContents.setSpacing(4);
+	    dialogBox.setWidget(dialogContents);
+
+	    // Add some text to the top of the dialog
+	    HTML details = new HTML("");
+	    dialogContents.add(details);
+	    dialogContents.setCellHorizontalAlignment(
+	        details, HasHorizontalAlignment.ALIGN_CENTER);
+
+	    // Add an image to the dialog
+	    //Image image = new Image(Showcase.images.jimmy());
+	    //dialogContents.add(image);
+	    //dialogContents.setCellHorizontalAlignment(
+	    //    image, HasHorizontalAlignment.ALIGN_CENTER);
+
+	    
+	    // Return the dialog box
+	    return dialogBox;
+	  }
 
 }

@@ -23,6 +23,8 @@ package eu.europeana.uim.gui.cp.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
+ * SugarCRMRecordDTO represents a client side (translatable to javascript)
+ * object in GWT. It represents and contains information about a SugarCRM record.
  * 
  * @author Georgios Markakis
  */
