@@ -17,17 +17,17 @@ import eu.europeana.uim.store.Provider;
  * @since Mar 22, 2011
  */
 public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I> {
-    private Provider<I> provider;
+    private Provider<I>         provider;
 
-    private String      language;
+    private String              language;
 
-    private String      oaiBaseUrl;
-    private String      oaiMetadataPrefix;
-    private String      oaiSet;
+    private String              oaiBaseUrl;
+    private String              oaiMetadataPrefix;
+    private String              oaiSet;
 
-    private Date        lastModified;
-    private Date        lastSynchronized;
-    
+    private Date                lastModified;
+    private Date                lastSynchronized;
+
     private Map<String, String> values = new HashMap<String, String>();
 
     /**
@@ -72,11 +72,9 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     @Override
     public String getOaiBaseUrl(boolean fallback) {
-        if (oaiBaseUrl != null) { return oaiBaseUrl; }
-        
-        if (fallback) {
-        return provider.getOaiBaseUrl();
-        }
+        if (oaiBaseUrl != null && oaiBaseUrl.trim().length() > 0) { return oaiBaseUrl; }
+
+        if (fallback) { return provider.getOaiBaseUrl(); }
         return null;
     }
 
@@ -101,10 +99,9 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     @Override
     public String getOaiMetadataPrefix(boolean fallback) {
-        if (oaiMetadataPrefix != null) { return oaiMetadataPrefix; }
-        if (fallback) {
-        return provider.getOaiMetadataPrefix();
-        }
+        if (oaiMetadataPrefix != null && oaiMetadataPrefix.trim().length() > 0) { return oaiMetadataPrefix; }
+        
+        if (fallback) { return provider.getOaiMetadataPrefix(); }
         return null;
     }
 
@@ -132,7 +129,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     public void setLastSynchronized(Date lastSynchronized) {
         this.lastSynchronized = lastSynchronized;
     }
-    
+
     @Override
     public void putValue(String key, String value) {
         values.put(key, value);
@@ -143,25 +140,24 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         return values.get(key);
     }
 
-    
-    
     @Override
     public Map<String, String> values() {
-         return values;
+        return values;
     }
 
     @Override
     public String toString() {
         String string = super.toString();
-        
+
         string += "@" + getLanguage();
         String oai = getOaiBaseUrl(true);
         if (oai != null) {
             string += " OAI:[";
             string += oai + "?verb={x}";
-            
+
             string += getOaiSet() != null ? "&set=" + getOaiSet() : "";
-            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix=" + getOaiMetadataPrefix(true) : "";
+            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix=" +
+                                                           getOaiMetadataPrefix(true) : "";
             string += "]";
         }
         return string;
