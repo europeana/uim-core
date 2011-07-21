@@ -86,13 +86,13 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 				}
 			}
 			else{
-				if(repoxService.providerExists(prov)){
-					repoxService.updateProviderfromUIMObj(prov);
-				}
-				else
-				{
-					repoxService.createProviderfromUIMObj(prov,false);	
-				}
+				//if(repoxService.providerExists(prov)){
+				//	repoxService.updateProviderfromUIMObj(prov);
+				//}
+				//else
+				//{
+				 repoxService.createProviderfromUIMObj(prov,false);	
+				//}
 			}
 			
 			repoxService.createDatasourcefromUIMObj(coll, prov);
