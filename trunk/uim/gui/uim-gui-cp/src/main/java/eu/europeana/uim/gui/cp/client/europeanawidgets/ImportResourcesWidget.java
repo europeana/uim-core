@@ -20,6 +20,7 @@
  */
 package eu.europeana.uim.gui.cp.client.europeanawidgets;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -62,6 +63,7 @@ import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
@@ -103,8 +105,12 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  @UiField(provided = true)
 	  Button importButton;
 	  
-	  //@UiField(provided = true)
+
 	  DialogBox searchDialog;
+	  
+	  DialogBox importDialog;
+	  
+	  
 	  
 	    /**
 	     * The key provider that provides the unique ID of a contact.
@@ -156,9 +162,16 @@ public class ImportResourcesWidget extends IngestionWidget {
 	          });
 				
 		searchField = new TextBox();
-		
+		searchField.setName("Search term");
 		
 		importButton = new Button();
+		importButton.addClickHandler( new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				performImport();
+			}
+	          });
+		
 		importButton.setText("Import Selected");
 		importButton.setTitle("Populate UIM and Repox with Data from SugarCrm");
 		
@@ -223,6 +236,61 @@ public class ImportResourcesWidget extends IngestionWidget {
 	}
 	
 	
+	
+	
+	
+	/*
+	 * Private Methods
+	 */
+	
+	
+	/**
+	 * 
+	 */
+	private void performImport(){
+		
+		List<SugarCRMRecordDTO> selList = new ArrayList<SugarCRMRecordDTO>();
+		List<SugarCRMRecordDTO> currList = dataProvider.getList();
+		
+		
+		SelectionModel<? super SugarCRMRecordDTO> model = cellTable.getSelectionModel();
+		
+		for(SugarCRMRecordDTO record:currList ){
+			if(model.isSelected(record)){
+				selList.add(record);
+			}
+		}
+		
+		if (!selList.isEmpty()){
+			
+			for(SugarCRMRecordDTO record : selList){
+				integrationservice.processSelectedRecord(record, new AsyncCallback<ImportResultDTO>() {
+		            @Override
+		            public void onFailure(Throwable throwable) {
+		                throwable.printStackTrace();
+		                //searchDialog.hide();
+		            }
+
+		            @Override
+		            public void onSuccess(ImportResultDTO searchresults) {
+		            	//dataProvider.setList(searchresults);
+		            	//searchDialog.hide();
+
+		            }
+		        });
+			}
+			
+			
+		}
+		
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 */
 	private void performSearch(){
 		String query = generateQuery(); 
 		integrationservice.executeSugarCRMQuery(query, new AsyncCallback<List<SugarCRMRecordDTO>>() {
@@ -240,6 +308,9 @@ public class ImportResourcesWidget extends IngestionWidget {
             }
         });
 	}
+	
+	
+	
 	
 	
 	private String generateQuery(){
@@ -273,6 +344,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    cellTable.setColumnWidth(checkColumn, 40, Unit.PX);
 
 	    // ID column
+	    /*
 	    Column<SugarCRMRecordDTO, String> idColumn = new Column<SugarCRMRecordDTO, String>(
 	        new TextCell()) {
 	      @Override
@@ -295,7 +367,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	      }
 	    });
 	    cellTable.setColumnWidth(idColumn, 20, Unit.PCT);
-	    
+	    */
 	    
 	    // Colection name Name Column
 	    Column<SugarCRMRecordDTO, String> collectionColumn = new Column<SugarCRMRecordDTO, String>(
@@ -313,7 +385,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		      }
 		    });
 		    cellTable.addColumn(collectionColumn, "Collection Identifier");
-		    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+		    collectionColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 		      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 		    	  dataProvider.refresh();
@@ -338,7 +410,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 			      }
 			    });
 			    cellTable.addColumn(organizationColumn, "Organization Name");
-			    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+			    organizationColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 			      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 			    	  dataProvider.refresh();
@@ -363,7 +435,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 				      }
 				    });
 				    cellTable.addColumn(countryColumn, "Country");
-				    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+				    countryColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 				      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 				    	  dataProvider.refresh();
@@ -387,7 +459,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 					      }
 					    });
 					    cellTable.addColumn(statusColumn, "Status");
-					    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+					    statusColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 					    	  dataProvider.refresh();
@@ -413,7 +485,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 						      }
 						    });
 						    cellTable.addColumn(amountColumn, "Amount of Ingested Objects");
-						    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+						    amountColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 						      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 						    	  dataProvider.refresh();
@@ -437,7 +509,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 							      }
 							    });
 							    cellTable.addColumn(ingestionDateColumn, "Planned Ingestion Date");
-							    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+							    ingestionDateColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 							      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 							    	  dataProvider.refresh();
@@ -465,7 +537,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								    });
 								    
 								    cellTable.addColumn(userColumn, "SugarCRM User");
-								    idColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+								    userColumn.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 								      public void update(int index, SugarCRMRecordDTO object, String value) {
 
 								    	  dataProvider.refresh();
@@ -489,7 +561,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    dialogBox.setText("Searching for SugarCRM entries");
 
 	    dialogBox.setModal(true);
-	    dialogBox.setSize("200", "100");
+	    //dialogBox.setSize("200", "100");
 	    
 	    // Create a table to layout the content
 	    VerticalPanel dialogContents = new VerticalPanel();
