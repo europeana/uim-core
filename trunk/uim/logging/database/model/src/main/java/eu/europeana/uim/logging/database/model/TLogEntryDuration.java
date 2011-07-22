@@ -34,7 +34,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
     private String module;
 
     @Column
-    private Date     date;
+    private Date   date;
 
     @Column
     private Long   duration;
@@ -47,8 +47,9 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param module
-     * @param date 
+     * @param date
      * @param duration
      */
     public TLogEntryDuration(String module, Date date, Long duration) {
@@ -60,9 +61,10 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
 
     /**
      * Creates a new instance of this class.
+     * 
      * @param execution
      * @param module
-     * @param date 
+     * @param date
      * @param duration
      */
     public TLogEntryDuration(Long execution, String module, Date date, Long duration) {
@@ -92,7 +94,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
     public void setModule(String module) {
         this.module = module;
     }
-    
+
     @Override
     public Date getDate() {
         return date;
@@ -100,7 +102,9 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
 
     /**
      * Sets the date to the given value.
-     * @param date the date to set
+     * 
+     * @param date
+     *            the date to set
      */
     public void setDate(Date date) {
         this.date = date;
@@ -126,11 +130,12 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
 
     /**
      * Sets the execution to the given value.
-     * @param execution the execution to set
+     * 
+     * @param execution
+     *            the execution to set
      */
     public void setExecution(Long execution) {
         this.execution = execution;
     }
-    
-    
+
 }

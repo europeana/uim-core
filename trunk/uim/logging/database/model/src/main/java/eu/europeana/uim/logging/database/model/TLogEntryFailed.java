@@ -49,7 +49,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     @Column
     private Long     metaDataRecord;
 
-    @Column
+    @Column(length = 4000)
     private String   stacktrace;
 
     @Column
@@ -58,34 +58,34 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     @Column
     private Date     date;
 
-    @Column
+    @Column(length = 4000)
     private String   message0;
 
-    @Column
+    @Column(length = 4000)
     private String   message1;
 
-    @Column
+    @Column(length = 4000)
     private String   message2;
 
-    @Column
+    @Column(length = 4000)
     private String   message3;
 
-    @Column
+    @Column(length = 4000)
     private String   message4;
 
-    @Column
+    @Column(length = 4000)
     private String   message5;
 
-    @Column
+    @Column(length = 4000)
     private String   message6;
 
-    @Column
+    @Column(length = 4000)
     private String   message7;
 
-    @Column
+    @Column(length = 4000)
     private String   message8;
 
-    @Column
+    @Column(length = 4000)
     private String   message9;
 
     @Transient
