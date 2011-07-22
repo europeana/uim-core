@@ -170,7 +170,14 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                             thisAssigned.add(task);
                                         }
                                         if (!executor.isShutdown()) {
-                                            executor.execute(task);
+                                            try {
+                                                executor.execute(task);
+                                            } catch (Throwable t) {
+                                                // if something goes wrong here
+                                                // we have a serios problem and
+                                                // should not continue the execution.
+                                                execution.setThrowable(t);
+                                            }
 
                                             // if this is the first step,
                                             // then we have just now scheduled a
@@ -180,9 +187,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                             }
 
                                             if (execution.getThrowable() != null) {
-                                                // log.log(Level.WARNING, "Failed execution.",
-// execution.getThrowable());
-
                                                 execution.setThrowable(task.getThrowable());
                                                 complete(execution, true);
                                                 break;
@@ -204,6 +208,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                             }
                         }
                     } catch (Throwable exc) {
+
                         log.log(Level.WARNING, "Exception in workflow execution", exc);
                     }
                 } // end synchronized execution
@@ -243,7 +248,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         }
     }
 
-    @SuppressWarnings({ "rawtypes"})
+    @SuppressWarnings({ "rawtypes" })
     private boolean ensureTasksInProgress(ActiveExecution<I> execution, WorkflowStart start,
             int execProgress, int totalProgress) throws StorageEngineException {
         // how many creators do we have
@@ -305,6 +310,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             } else {
                 execution.setCanceled(false);
             }
+            
             execution.setSuccessCount(execution.getCompletedSize());
             execution.setFailureCount(execution.getFailureSize());
             execution.setProcessedCount(execution.getScheduledSize());
@@ -343,7 +349,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
         // init in separate thread, so that we are not blocking here.
         new Thread(new Runnable() {
-            @SuppressWarnings({"rawtypes" })
+            @SuppressWarnings({ "rawtypes" })
             @Override
             public void run() {
                 try {
