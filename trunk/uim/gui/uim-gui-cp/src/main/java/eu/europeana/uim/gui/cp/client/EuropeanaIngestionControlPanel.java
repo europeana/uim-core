@@ -22,6 +22,7 @@ import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
  * Entry point classes define <code>onModuleLoad()</code>.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
+ * @author Georgios Markakis (gwarkx@hotmail.com)
  * @since Apr 26, 2011
  */
 public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPanel implements

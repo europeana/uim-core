@@ -84,16 +84,16 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			
 			Collection coll = sugService.createCollectionFromRecord(originalRec, prov);
 			
-			if(repoxService.aggregatorExists(aggr)){
-				repoxService.createAggregatorfromUIMObj(prov,false);
+			if(!repoxService.aggregatorExists(aggr)){
+				repoxService.createAggregatorfromUIMObj(aggr,false);
 			}
 			
-			if(repoxService.providerExists(prov)){
-				repoxService.updateProviderfromUIMObj(prov);
+			if(!repoxService.providerExists(prov)){
+				repoxService.createProviderfromUIMObj(prov,false);	
 			}
 			else
 			{
-			 repoxService.createProviderfromUIMObj(prov,false);	
+				repoxService.updateProviderfromUIMObj(prov);
 			}
 			
 			

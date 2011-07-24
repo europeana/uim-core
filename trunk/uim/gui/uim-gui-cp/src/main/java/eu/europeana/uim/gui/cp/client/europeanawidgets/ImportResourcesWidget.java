@@ -48,6 +48,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TextBox;
@@ -110,6 +113,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  
 	  DialogBox importDialog;
 	  
+	  FlexTable impResultsTable; 
 	  
 	  
 	    /**
@@ -145,9 +149,21 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 */
 	@Override
 	public Widget onInitialize() {
+		impResultsTable = new FlexTable();
+	    FlexCellFormatter cellFormatter = impResultsTable.getFlexCellFormatter();
+	    impResultsTable.addStyleName("cw-FlexTable");
+	    impResultsTable.setWidth("32em");
+	    impResultsTable.setCellSpacing(5);
+	    impResultsTable.setCellPadding(3);
+
+	    // Add some text
+	    cellFormatter.setHorizontalAlignment(
+	        0, 1, HasHorizontalAlignment.ALIGN_LEFT);
+	    impResultsTable.setHTML(0, 0,"Items Imported");
+	    cellFormatter.setColSpan(0, 0, 2);
 		
 		searchDialog = createDialogBox();
-		
+		importDialog = createImportDialog();
 		
 		searchButton = new Button();
 		searchButton.setText("Search SugarCRM");
@@ -168,6 +184,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		importButton.addClickHandler( new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				importDialog.center();
 				performImport();
 			}
 	          });
@@ -273,8 +290,12 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 		            @Override
 		            public void onSuccess(ImportResultDTO searchresults) {
-		            	//dataProvider.setList(searchresults);
-		            	//searchDialog.hide();
+
+		                int numRows = impResultsTable.getRowCount();
+
+		                impResultsTable.setWidget(numRows, 0,new HTML(searchresults.getResult()));
+		                impResultsTable.setWidget(numRows, 1,new HTML(searchresults.getDescription()));
+		                impResultsTable.setWidget(numRows, 2,new HTML(searchresults.getCause()));
 
 		            }
 		        });
@@ -573,16 +594,40 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    dialogContents.add(details);
 	    dialogContents.setCellHorizontalAlignment(
 	        details, HasHorizontalAlignment.ALIGN_CENTER);
-
-	    // Add an image to the dialog
-	    //Image image = new Image(Showcase.images.jimmy());
-	    //dialogContents.add(image);
-	    //dialogContents.setCellHorizontalAlignment(
-	    //    image, HasHorizontalAlignment.ALIGN_CENTER);
-
 	    
 	    // Return the dialog box
 	    return dialogBox;
 	  }
 
+	  private DialogBox createImportDialog(){
+		    // Create a dialog box and set the caption text
+		    final DialogBox dialogBox = new DialogBox();
+		    dialogBox.ensureDebugId("impDialogBox");
+		    dialogBox.setText("Importing to UIM & Repox");
+		    dialogBox.setModal(true);
+		    
+		    Button closeButton = new Button();
+		    closeButton.setText("Close");
+
+			
+		    closeButton.addClickHandler( new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					dialogBox.hide();
+				}
+				});
+		    
+		    // Create a table to layout the content
+		    VerticalPanel dialogContents = new VerticalPanel();
+		    dialogContents.setSpacing(4);
+		    dialogBox.setWidget(dialogContents);
+		    
+		    dialogContents.add(impResultsTable);
+		    dialogContents.add(closeButton);
+		    HTML details = new HTML("ImportStatus");
+
+		    dialogContents.setCellHorizontalAlignment(
+			        details, HasHorizontalAlignment.ALIGN_CENTER);
+		    return dialogBox;
+	  }
 }
