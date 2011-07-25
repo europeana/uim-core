@@ -48,6 +48,7 @@
         <feature version="1.3.0-SNAPSHOT">uim-core-dev</feature>
         <feature version="1.3.0-SNAPSHOT">uim-integration-plugins</feature>  
         <feature version="1.3.0-SNAPSHOT">uim-europeana-workflows-plugins</feature>
+        <feature version="1.3.0-SNAPSHOT">uim-europeana-workflows</feature>
         <feature version="1.3.0-SNAPSHOT">uim-europeana-gui</feature>         
     </feature>   
     
