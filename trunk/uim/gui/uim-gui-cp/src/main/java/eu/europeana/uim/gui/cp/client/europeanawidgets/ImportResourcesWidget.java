@@ -61,6 +61,8 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.widgetideas.client.ProgressBar;
+
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
@@ -115,6 +117,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  
 	  FlexTable impResultsTable; 
 	  
+	  ProgressBar progressBar;
 	  
 	    /**
 	     * The key provider that provides the unique ID of a contact.
@@ -159,7 +162,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    // Add some text
 	    cellFormatter.setHorizontalAlignment(
 	        0, 1, HasHorizontalAlignment.ALIGN_LEFT);
-	    impResultsTable.setHTML(0, 0,"Items Imported");
+	    
 	    cellFormatter.setColSpan(0, 0, 2);
 		
 		searchDialog = createDialogBox();
@@ -285,7 +288,11 @@ public class ImportResourcesWidget extends IngestionWidget {
 		            @Override
 		            public void onFailure(Throwable throwable) {
 		                throwable.printStackTrace();
-		                //searchDialog.hide();
+		                int numRows = impResultsTable.getRowCount();
+		                
+		                impResultsTable.setWidget(numRows, 0,new HTML("failed"));
+		                impResultsTable.setWidget(numRows, 1,new HTML("A system exception has occured"));
+		                impResultsTable.setWidget(numRows, 2,new HTML(throwable.getCause().getMessage()));
 		            }
 
 		            @Override
@@ -293,6 +300,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 		                int numRows = impResultsTable.getRowCount();
 
+		                progressBar.setProgress(numRows);
+		                
 		                impResultsTable.setWidget(numRows, 0,new HTML(searchresults.getResult()));
 		                impResultsTable.setWidget(numRows, 1,new HTML(searchresults.getDescription()));
 		                impResultsTable.setWidget(numRows, 2,new HTML(searchresults.getCause()));
@@ -412,7 +421,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		    	  dataProvider.refresh();
 		      }
 		    });
-		    cellTable.setColumnWidth(collectionColumn, 20, Unit.PCT);
+		    cellTable.setColumnWidth(collectionColumn, 40, Unit.PCT);
 	    
 	    
 	    // Organization Name Column
@@ -462,7 +471,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 				    	  dataProvider.refresh();
 				      }
 				    });
-				    cellTable.setColumnWidth(countryColumn, 20, Unit.PCT);
+				    cellTable.setColumnWidth(countryColumn,5, Unit.PCT);
 			    
 	                // Status Column
 				    Column<SugarCRMRecordDTO, String> statusColumn = new Column<SugarCRMRecordDTO, String>(
@@ -602,9 +611,13 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  private DialogBox createImportDialog(){
 		    // Create a dialog box and set the caption text
 		    final DialogBox dialogBox = new DialogBox();
+		    progressBar = new ProgressBar(0,100);
+		    progressBar.setWidth("100%");
+		    
 		    dialogBox.ensureDebugId("impDialogBox");
 		    dialogBox.setText("Importing to UIM & Repox");
 		    dialogBox.setModal(true);
+		   
 		    
 		    Button closeButton = new Button();
 		    closeButton.setText("Close");
@@ -614,6 +627,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 				@Override
 				public void onClick(ClickEvent event) {
 					dialogBox.hide();
+					progressBar.setProgress(0);
+					impResultsTable.removeAllRows();
 				}
 				});
 		    
@@ -622,6 +637,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		    dialogContents.setSpacing(4);
 		    dialogBox.setWidget(dialogContents);
 		    
+		    dialogContents.add(progressBar);
 		    dialogContents.add(impResultsTable);
 		    dialogContents.add(closeButton);
 		    HTML details = new HTML("ImportStatus");

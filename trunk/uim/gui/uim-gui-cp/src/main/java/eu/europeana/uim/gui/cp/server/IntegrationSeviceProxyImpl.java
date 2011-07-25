@@ -75,18 +75,16 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
 			Provider prov = sugService.createProviderFromRecord(originalRec);
 			
-			if (prov.getRelatedOut().isEmpty()){
-				throw new RuntimeException("Related out information in Providershould not be empty");
+			String aggrID = prov.getValue("repoxCountry").toLowerCase();
+			
+			if(!repoxService.aggregatorExists(aggrID)){
+				repoxService.createAggregator(aggrID);
 			}
-			
-			Provider aggr = (Provider) prov.getRelatedOut().toArray()[0];
-			
+
 			
 			Collection coll = sugService.createCollectionFromRecord(originalRec, prov);
 			
-			if(!repoxService.aggregatorExists(aggr)){
-				repoxService.createAggregatorfromUIMObj(aggr,false);
-			}
+
 			
 			if(!repoxService.providerExists(prov)){
 				repoxService.createProviderfromUIMObj(prov,false);	
