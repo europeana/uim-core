@@ -19,7 +19,6 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 21, 2011
  */
 public interface LoggingEngine<I> {
-
     /**
      * Gets the identifier of this LoggingEngine implementation
      * 
@@ -437,5 +436,4 @@ public interface LoggingEngine<I> {
          */
         I getMetaDataRecord();
     }
-
 }
