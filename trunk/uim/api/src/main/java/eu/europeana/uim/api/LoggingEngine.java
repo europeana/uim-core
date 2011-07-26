@@ -8,8 +8,7 @@ import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * Service for the reporting of the processing, to be used by the orchestrator and
- * plugins
+ * Service for the reporting of the processing, to be used by the orchestrator and plugins
  * 
  * @param <I>
  *            generic identifier
@@ -30,8 +29,9 @@ public interface LoggingEngine<I> {
 
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param level
      *            the level of the message
@@ -42,8 +42,9 @@ public interface LoggingEngine<I> {
 
     /**
      * Logs a message
-     * @param plugin 
-     *              the module which logs this messages
+     * 
+     * @param plugin
+     *            the module which logs this messages
      * 
      * @param level
      *            the level of the message
@@ -52,11 +53,11 @@ public interface LoggingEngine<I> {
      */
     void log(Level level, IngestionPlugin plugin, String... message);
 
-    
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param execution
      *            the execution during which this log was issues
@@ -65,8 +66,7 @@ public interface LoggingEngine<I> {
      * @param message
      *            message strings
      */
-    void log(Execution<I> execution, Level level, String modul, 
-             String... message);
+    void log(Execution<I> execution, Level level, String modul, String... message);
 
     /**
      * Logs a message
@@ -80,29 +80,25 @@ public interface LoggingEngine<I> {
      * @param message
      *            message strings
      */
-    void log(Execution<I> execution, Level level, IngestionPlugin plugin, 
-            String... message);
-
-
+    void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message);
 
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
      *            the level of the message
-     * @param throwable 
+     * @param throwable
      *            the throwable causing the error
      * @param message
      *            message strings
      */
     void logFailed(Level level, String modul, Throwable throwable, String... message);
 
-
-
     /**
      * Logs a message
      * 
@@ -110,166 +106,165 @@ public interface LoggingEngine<I> {
      *            the execution during which this log was issues
      * @param level
      *            the level of the message
-     * @param plugin 
+     * @param plugin
      *            the plugin where the error occured
-     * @param throwable 
+     * @param throwable
      *            the throwable causing the error
      * @param message
      *            message strings
      */
     void logFailed(Level level, IngestionPlugin plugin, Throwable throwable, String... message);
 
-
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
      *            the level of the message
-     * @param throwable 
+     * @param throwable
      *            the throwable causing the error
      * @param message
      *            message strings
      */
-    void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable, 
-             String... message);
-
-
-    /**
-     * Logs a message
-     * @param modul 
-     *              the module which logs this messages
-     * 
-     * @param execution
-     *            the execution during which this log was issues
-     * @param level
-     *            the level of the message
-     * @param throwable 
-     *            the throwable causing the error
-     * @param mdr 
-     *            the identifier of the metadata record this link belongs to
-     * @param message
-     *            message strings
-     */
-    void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable, 
-            MetaDataRecord<I> mdr, String... message);
-
-
-    /**
-     * Logs a message
-     * 
-     * @param plugin
-     *            the plugin reporting the log
-     * @param execution
-     *            the execution during which this log was issues
-     * @param level
-     *            the level of the message
-     * @param throwable 
-     *            the throwable causing the error
-     * @param mdr 
-     *            the identifier of the metadata record this link belongs to
-     * @param message
-     *            message strings
-     */
-    void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin, Throwable throwable, 
+    void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
             String... message);
 
     /**
      * Logs a message
      * 
+     * @param modul
+     *            the module which logs this messages
+     * 
+     * @param execution
+     *            the execution during which this log was issues
+     * @param level
+     *            the level of the message
+     * @param throwable
+     *            the throwable causing the error
+     * @param mdr
+     *            the identifier of the metadata record this link belongs to
+     * @param message
+     *            message strings
+     */
+    void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
+            MetaDataRecord<I> mdr, String... message);
+
+    /**
+     * Logs a message
+     * 
      * @param plugin
      *            the plugin reporting the log
      * @param execution
      *            the execution during which this log was issues
      * @param level
      *            the level of the message
-     * @param throwable 
+     * @param throwable
      *            the throwable causing the error
-     * @param mdr 
+     * @param mdr
      *            the identifier of the metadata record this link belongs to
      * @param message
      *            message strings
      */
-    void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin, Throwable throwable, 
-            MetaDataRecord<I> mdr, String... message);
-
+    void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
+            Throwable throwable, String... message);
 
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param plugin
+     *            the plugin reporting the log
+     * @param execution
+     *            the execution during which this log was issues
+     * @param level
+     *            the level of the message
+     * @param throwable
+     *            the throwable causing the error
+     * @param mdr
+     *            the identifier of the metadata record this link belongs to
+     * @param message
+     *            message strings
+     */
+    void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
+            Throwable throwable, MetaDataRecord<I> mdr, String... message);
+
+    /**
+     * Logs a message
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param level
      *            the level of the message
      * @param link
-     *            the plain url  
-     * @param status 
+     *            the plain url
+     * @param status
      *            the http status code
      * @param message
      *            message strings
      */
     void logLink(String modul, String link, int status, String... message);
 
-
     /**
      * Logs a message
-     * @param modul 
-     *              the module which logs this messages
+     * 
+     * @param modul
+     *            the module which logs this messages
      * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
      *            the level of the message
-     * @param mdr 
+     * @param mdr
      *            the identifier of the metadata record this link belongs to
      * @param link
-     *            the plain url  
-     * @param status 
+     *            the plain url
+     * @param status
      *            the http status code
      * @param message
      *            message strings
      */
-    void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,  
-             int status, String... message);
+    void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
+            int status, String... message);
 
     /**
      * Logs a message
      * 
      * @param execution
      *            the execution during which this log was issues
-     * @param plugin 
-     *              the module which logs this messages
-     * @param mdr 
+     * @param plugin
+     *            the module which logs this messages
+     * @param mdr
      *            the identifier of the metadata record this link belongs to
      * @param link
-     *            the plain url  
-     * @param status 
+     *            the plain url
+     * @param status
      *            the http status code
      * @param message
      *            message strings
      */
-    void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr, String link,  
-             int status, String... message);
-
+    void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
+            String link, int status, String... message);
 
     /**
      * Logs a processing duration for a given count of items
-     * @param execution 
+     * 
+     * @param execution
      *            the execution in which this duration is logged
      * @param module
      *            the module
      * @param duration
      *            duration in ms
      */
-    void logDuration(Execution<I>  execution, String module, Long duration);
+    void logDuration(Execution<I> execution, String module, Long duration);
 
-    
     /**
      * Logs a processing duration for a given count of items
-     * @param execution 
+     * 
+     * @param execution
      *            the execution in which this duration is logged
      * @param plugin
      *            the plugin
@@ -278,8 +273,6 @@ public interface LoggingEngine<I> {
      */
     void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration);
 
-    
-    
     /**
      * @param execution
      * @return the list of failed log entries for the execution
@@ -292,14 +285,12 @@ public interface LoggingEngine<I> {
      */
     List<LogEntryFailed<I>> getFailedLogs(Execution<I> execution);
 
-    
-    
     /**
      * @param execution
      * @return the list of failed log entries for the execution
      */
     List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
-    
+
     /**
      * @param <I>
      * 
@@ -311,16 +302,17 @@ public interface LoggingEngine<I> {
          * @return the log level
          */
         Level getLevel();
-        
+
         /**
          * @return teh module of occurence
          */
         String getModule();
-        
+
         /**
          * @return the timeo f occurence
          */
         Date getDate();
+
         /**
          * @return the messages
          */
@@ -331,9 +323,7 @@ public interface LoggingEngine<I> {
          */
         I getExecution();
     }
-    
-    
-    
+
     /**
      * @param <I>
      * 
@@ -345,11 +335,12 @@ public interface LoggingEngine<I> {
          * @return the module
          */
         String getModule();
-        
+
         /**
          * @return the date/time of occurrence
          */
         Date getDate();
+
         /**
          * @return the duration in milliseconds
          */
@@ -360,7 +351,7 @@ public interface LoggingEngine<I> {
          */
         I getExecution();
     }
-    
+
     /**
      * @param <I>
      * 
@@ -372,38 +363,38 @@ public interface LoggingEngine<I> {
          * @return the log level
          */
         Level getLevel();
-        
+
         /**
          * @return the module
          */
         String getModule();
-        
+
         /**
          * @return the date of occurrence
          */
         Date getDate();
+
         /**
          * @return the stacktrace of a possible throwable
          */
         String getStacktrace();
-        
+
         /**
          * @return the messages
          */
         String[] getMessages();
-        
+
         /**
          * @return the execution identifier
          */
         I getExecution();
-        
-        
+
         /**
          * @return the meta data record identifier
          */
         I getMetaDataRecord();
     }
-    
+
     /**
      * @param <I>
      * 
@@ -415,32 +406,36 @@ public interface LoggingEngine<I> {
          * @return the module
          */
         String getModule();
-        
+
         /**
          * @return the link
          */
         String getLink();
+
         /**
          * @return the time of occurrence/test
          */
         Date getDate();
+
         /**
          * @return the http status
          */
         int getStatus();
+
         /**
          * @return the messages
          */
         String[] getMessages();
-        
+
         /**
          * @return the execution identifier
          */
         I getExecution();
+
         /**
          * @return the meta data record identifier
          */
         I getMetaDataRecord();
     }
-    
+
 }
