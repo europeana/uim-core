@@ -134,7 +134,7 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr32</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr32</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr3</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr3</developerConnection>
     </scm>
 </project>
