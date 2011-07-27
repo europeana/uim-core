@@ -796,6 +796,7 @@ public class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMReco
 	public String getType() {
 		return type;
 	}
-	
-	
+
+
+
 }
