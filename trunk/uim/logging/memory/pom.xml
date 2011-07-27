@@ -21,6 +21,37 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Import-Package>
+                            !junit.framework,
+                            !org.mortbay.*,
+                            !javax.portlet.*,
+                            !org.apache.log.*,
+                            eu.europeana.uim.common,
+                            javax.xml.*,
+                            javax.naming.*,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.apache.commons.io,
+                            org.apache.commons.math,
+                            !*</Import-Package>
+                        <Export-Package>
+                            eu.europeana.uim.logging.memory,
+                            eu.europeana.uim.logging.memory.*
+                        </Export-Package>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
+                        <Embed-StripVersion>true</Embed-StripVersion>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
                         <Embed-Dependency>commons-math</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
                     </instructions>
@@ -30,11 +61,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>commons-math</groupId>
-            <artifactId>commons-math</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>

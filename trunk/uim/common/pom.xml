@@ -59,8 +59,10 @@
 							org.apache.commons.lang.*;version="2.4",
 							org.apache.commons.io;version="2.0",
 							org.apache.commons.io.*;version="2.0",
+                            org.apache.commons.math;version="1.2",
+                            org.apache.commons.math.*;version="1.2",
 							gnu.trove.*,</Export-Package>
-						<Embed-Dependency>commons-lang,commons-io,wstx-asl,geronimo-stax-api_1.0_spec,trove4j</Embed-Dependency>
+						<Embed-Dependency>commons-lang,commons-io,commons-math,wstx-asl,geronimo-stax-api_1.0_spec,trove4j</Embed-Dependency>
 						<Embed-StripVersion>true</Embed-StripVersion>
 					</instructions>
 				</configuration>
@@ -107,6 +109,11 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-math</groupId>
+            <artifactId>commons-math</artifactId>
         </dependency>
 
 	    <!-- Stax -->
