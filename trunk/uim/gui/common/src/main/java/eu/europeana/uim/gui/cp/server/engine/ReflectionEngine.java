@@ -20,6 +20,7 @@ import eu.europeana.uim.workflow.Workflow;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since May 11, 2011
  */
+@SuppressWarnings("rawtypes")
 public class ReflectionEngine extends Engine {
     private Registry        registry;
     private Orchestrator    ochestrator;
@@ -71,13 +72,13 @@ public class ReflectionEngine extends Engine {
             SampleProperties sample = new SampleProperties();
             sample.loadSampleData(registry.getStorageEngine());
 
-//            Collection coll = registry.getStorage().getAllCollections().iterator().next();
-//            System.out.println(coll.getName());
-//            Request req = registry.getStorage().createRequest(coll, new Date());
-//            for (int i = 0; i < 10000; i++) {
-//                MetaDataRecord mdr = registry.getStorage().createMetaDataRecord(req, "Record " + i);
-//                registry.getStorage().updateMetaDataRecord(mdr);
-//            }
+// Collection coll = registry.getStorage().getAllCollections().iterator().next();
+// System.out.println(coll.getName());
+// Request req = registry.getStorage().createRequest(coll, new Date());
+// for (int i = 0; i < 10000; i++) {
+// MetaDataRecord mdr = registry.getStorage().createMetaDataRecord(req, "Record " + i);
+// registry.getStorage().updateMetaDataRecord(mdr);
+// }
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -111,7 +112,6 @@ public class ReflectionEngine extends Engine {
                     registry.addPlugin(plugin);
                 }
             } catch (Throwable e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -125,7 +125,6 @@ public class ReflectionEngine extends Engine {
                 registry.addLoggingEngine(logging);
 
             } catch (Throwable e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -135,11 +134,9 @@ public class ReflectionEngine extends Engine {
         for (String name : storage) {
             try {
                 Class<?> clazz = Class.forName(name);
-                @SuppressWarnings("rawtypes")
                 StorageEngine storage = (StorageEngine)clazz.newInstance();
                 registry.addStorageEngine(storage);
             } catch (Throwable e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -153,7 +150,6 @@ public class ReflectionEngine extends Engine {
                 ResourceEngine resource = (ResourceEngine)clazz.newInstance();
                 registry.addResourceEngine(resource);
             } catch (Throwable e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
