@@ -122,6 +122,8 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		return result;
 	}
 
+	
+	
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#executeSugarCRMQuery(java.lang.String)
 	 */
