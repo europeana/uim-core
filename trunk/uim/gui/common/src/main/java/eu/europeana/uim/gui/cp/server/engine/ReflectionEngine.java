@@ -101,7 +101,6 @@ public class ReflectionEngine extends Engine {
         for (String name : plugins) {
             try {
                 Class<?> clazz = Class.forName(name);
-
                 try {
                     IngestionPlugin plugin = (IngestionPlugin)clazz.getConstructor(Registry.class).newInstance(
                             registry);
@@ -123,7 +122,6 @@ public class ReflectionEngine extends Engine {
                 Class<?> clazz = Class.forName(name);
                 LoggingEngine<?> logging = (LoggingEngine<?>)clazz.newInstance();
                 registry.addLoggingEngine(logging);
-
             } catch (Throwable e) {
                 e.printStackTrace();
             }
