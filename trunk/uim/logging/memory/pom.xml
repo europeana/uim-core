@@ -29,11 +29,15 @@
     </build>
 
     <dependencies>
+
         <dependency>
             <groupId>commons-math</groupId>
             <artifactId>commons-math</artifactId>
+            <version>1.2</version>
         </dependency>
 
+        
+        
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
