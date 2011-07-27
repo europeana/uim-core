@@ -18,15 +18,15 @@ import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * memory based logging engine.
+ * Memory based logging engine.
  * 
  * @param <I>
+ *            generic ID type
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 17, 2011
  */
 public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
-
     private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
     private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
     private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
@@ -242,7 +242,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         private final Execution<I>      execution;
         private final Throwable         throwable;
 
-        public FailedEntry(Level level, String module, Throwable throwable,  Date date, String[] message) {
+        public FailedEntry(Level level, String module, Throwable throwable, Date date,
+                           String[] message) {
             super();
             this.level = level;
             this.module = module;
@@ -254,7 +255,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                Date date, String[] message) {
+                           Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -266,7 +267,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           MetaDataRecord<I> mdr,  Date date, String[] message) {
+                           MetaDataRecord<I> mdr, Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -297,7 +298,6 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             return date;
         }
 
-
         @Override
         public String[] getMessages() {
             return message;
@@ -325,20 +325,20 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         private final MetaDataRecord<I> mdr;
         private final Execution<I>      execution;
 
-        public LinkEntry(String module, String link, int status,  Date date, String[] message) {
+        public LinkEntry(String module, String link, int status, Date date, String[] message) {
             super();
             this.module = module;
             this.link = link;
             this.date = date;
             this.status = status;
             this.message = message;
-            
+
             this.mdr = null;
             this.execution = null;
         }
 
         public LinkEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String link,
-                Date date, int status, String[] message) {
+                         Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
@@ -363,11 +363,11 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         public int getStatus() {
             return status;
         }
+
         @Override
         public Date getDate() {
             return date;
         }
-
 
         @Override
         public String[] getMessages() {
@@ -383,7 +383,5 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         public I getMetaDataRecord() {
             return mdr != null ? mdr.getId() : null;
         }
-
     }
-
 }
