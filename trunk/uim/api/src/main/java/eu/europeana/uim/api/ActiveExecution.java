@@ -19,17 +19,17 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * @since Mar 21, 2011
  */
 public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
-
     /**
      * @return storage engine for this execution
      */
     StorageEngine<I> getStorageEngine();
-   
+
     /**
      * @return resource engine for this execution
      */
 
     ResourceEngine getResourceEngine();
+
     /**
      * @param paused
      *            Should the execution be paused?
@@ -40,7 +40,6 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
      * @return Is the execution be paused?
      */
     boolean isPaused();
-
 
     /**
      * @param initialized
@@ -60,7 +59,6 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
      * @return Is the execution finished?
      */
     boolean isFinished();
-
 
     /**
      * @param name
@@ -146,8 +144,7 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
      *            increment next work
      */
     void incrementScheduled(int work);
-   
-    
+
     /**
      * Clean up the temporary files created during the execution, if configured in that way
      */
