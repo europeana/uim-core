@@ -95,7 +95,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public void completed(ExecutionContext context) {
+    public void completed(ExecutionContext<Long> context) {
     }
 
     @Override
