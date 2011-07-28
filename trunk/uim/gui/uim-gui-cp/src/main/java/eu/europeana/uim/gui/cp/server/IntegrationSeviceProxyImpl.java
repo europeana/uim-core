@@ -23,6 +23,8 @@ package eu.europeana.uim.gui.cp.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
@@ -45,8 +47,9 @@ import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SugarCrmQuery;
 import eu.europeana.uim.sugarcrmclient.ws.exceptions.QueryResultException;
 
 /**
+ * 
+ * 
  * @author Georgios Markakis
- *
  */
 public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServlet implements IntegrationSeviceProxy {
 
@@ -80,7 +83,6 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			if(!repoxService.aggregatorExists(aggrID)){
 				repoxService.createAggregator(aggrID);
 			}
-
 			
 			Collection coll = sugService.createCollectionFromRecord(originalRec, prov);
 			
@@ -146,6 +148,9 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		} catch (QueryResultException e) {
 
 			e.printStackTrace();
+		} catch (StorageEngineException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		
@@ -156,15 +161,34 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	
 	
 	/**
-	 * Converts a 
-	 * @param toconvert
-	 * @return
+	 * Converts a SugarCRM object (query result) into an object suitable for GWT visualization purposes.
+	 * 
+	 * @param toconvert a  SugarCRM query result object
+	 * @return a GWT object
+	 * @throws StorageEngineException 
 	 */
-	private List<SugarCRMRecordDTO> convertSugarObj2GuiObj(ArrayList<SugarCrmRecord> toconvert){
+	private List<SugarCRMRecordDTO> convertSugarObj2GuiObj(ArrayList<SugarCrmRecord> toconvert) throws StorageEngineException{
 		ArrayList<SugarCRMRecordDTO> converted = new  ArrayList<SugarCRMRecordDTO>();
+		
+		ExpandedOsgiEngine engine =  getEngine();
+		
+		StorageEngine<?> resengine = engine.getRegistry().getStorageEngine();
+		
+		
 		
 		for (SugarCrmRecord originalrecord: toconvert){
 			SugarCRMRecordDTO guirecord = new SugarCRMRecordDTO();
+			
+			
+			Collection colexists = resengine.findCollection(originalrecord.getItemValue(RetrievableField.NAME).split("_")[0]);
+
+			if (colexists == null){
+				guirecord.setImportedIMG("images/no.png");
+			}
+			else{
+				guirecord.setImportedIMG("images/ok.png");
+			}
+			
 			
 			guirecord.setId(originalrecord.getItemValue(RetrievableField.ID));
 			guirecord.setAccess_to_content_checker(originalrecord.getItemValue(RetrievableField.ACCESS_TO_CONTENT_CHECKER));

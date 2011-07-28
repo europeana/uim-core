@@ -27,6 +27,7 @@ import java.util.List;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
@@ -46,13 +47,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -163,7 +169,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 		cellFormatter.setColSpan(0, 0, 2);
 
-		searchDialog = createDialogBox();
+		searchDialog = createSearchDialogBox();
 		importDialog = createImportDialog();
 
 		searchButton = new Button();
@@ -300,7 +306,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								impResultsTable.setWidget(numRows, 1, new HTML(
 										"A system exception has occured"));
 								impResultsTable.setWidget(numRows, 2, new HTML(
-										throwable.getCause().getMessage()));
+										throwable.getCause().getStackTrace().toString()));
 							}
 
 							@Override
@@ -380,7 +386,40 @@ public class ImportResourcesWidget extends IngestionWidget {
 				SafeHtmlUtils.fromSafeConstant("<br/>"));
 		cellTable.setColumnWidth(checkColumn, 40, Unit.PX);
 
-		// Colection name Name Column
+		
+		// IsImported column
+		Column<SugarCRMRecordDTO, String> isImportedColumn = new Column<SugarCRMRecordDTO, String>(
+				new ImageCell()) {
+			@Override
+			public String getValue(SugarCRMRecordDTO object) {
+				return object.getImportedIMG();
+			}
+		};
+		isImportedColumn.setSortable(true);
+
+		sortHandler.setComparator(isImportedColumn,
+				new Comparator<SugarCRMRecordDTO>() {
+					public int compare(SugarCRMRecordDTO o1,
+							SugarCRMRecordDTO o2) {
+						return o1.getImportedIMG().compareTo(
+								o2.getImportedIMG());
+					}
+				});
+		cellTable.addColumn(isImportedColumn, "Imported");
+		isImportedColumn
+				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
+					public void update(int index, SugarCRMRecordDTO object,
+							String value) {
+
+						dataProvider.refresh();
+					}
+				});
+		cellTable.setColumnWidth(isImportedColumn, 7, Unit.PCT);
+		
+		
+		
+		
+		// Collection Name Column
 		Column<SugarCRMRecordDTO, Anchor> collectionColumn = new Column<SugarCRMRecordDTO, Anchor>(
 				new AnchorCell()) {
 			@Override
@@ -415,6 +454,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 				});
 		cellTable.setColumnWidth(collectionColumn, 40, Unit.PCT);
 
+		
+		
 		// Organization Name Column
 		Column<SugarCRMRecordDTO, String> organizationColumn = new Column<SugarCRMRecordDTO, String>(
 				new TextCell()) {
@@ -599,24 +640,26 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 * 
 	 * @return the new dialog box
 	 */
-	private DialogBox createDialogBox() {
+	private DialogBox createSearchDialogBox() {
 		// Create a dialog box and set the caption text
 		final DialogBox dialogBox = new DialogBox();
 		dialogBox.ensureDebugId("cwDialogBox");
 		dialogBox.setText("Searching for SugarCRM entries");
 
 		dialogBox.setModal(true);
-		// dialogBox.setSize("200", "100");
+
 
 		// Create a table to layout the content
 		VerticalPanel dialogContents = new VerticalPanel();
 		dialogContents.setSpacing(4);
 		dialogBox.setWidget(dialogContents);
 
+		Image activity = new Image("images/network.gif");
+		
 		// Add some text to the top of the dialog
-		HTML details = new HTML("");
-		dialogContents.add(details);
-		dialogContents.setCellHorizontalAlignment(details,
+
+		dialogContents.add(activity);
+		dialogContents.setCellHorizontalAlignment(activity,
 				HasHorizontalAlignment.ALIGN_CENTER);
 
 		// Return the dialog box
@@ -659,4 +702,53 @@ public class ImportResourcesWidget extends IngestionWidget {
 				HasHorizontalAlignment.ALIGN_CENTER);
 		return dialogBox;
 	}
+	
+	
+	
+	/**
+	   * Create a form that contains undisclosed advanced options.
+	   */
+	  private Widget createAdvancedForm() {
+	    // Create a table to layout the form options
+	    FlexTable layout = new FlexTable();
+	    layout.setCellSpacing(6);
+	    layout.setWidth("300px");
+	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
+
+	    // Add a title to the form
+	    layout.setHTML(0, 0, "SugarCRM Search Criteria");
+	    cellFormatter.setColSpan(0, 0, 2);
+	    cellFormatter.setHorizontalAlignment(
+	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+
+	    // Add some standard form options
+	    layout.setHTML(1, 0, "Field1");
+	    layout.setWidget(1, 1, new TextBox());
+	    layout.setHTML(2, 0, "Field2");
+	    layout.setWidget(2, 1, new TextBox());
+
+	    // Create some advanced options
+	    HorizontalPanel advancedPanel = new HorizontalPanel();
+	 
+	    Grid advancedOptions = new Grid(2, 2);
+	    advancedOptions.setCellSpacing(6);
+	    advancedOptions.setHTML(0, 0, "ASDF");
+	    advancedOptions.setWidget(0, 1, new TextBox());
+	    advancedOptions.setHTML(1, 0, "XXXX");
+	    advancedOptions.setWidget(1, 1, advancedPanel);
+
+	    // Add advanced options to form in a disclosure panel
+	    DisclosurePanel advancedDisclosure = new DisclosurePanel("Advanced Options");
+	    advancedDisclosure.setAnimationEnabled(true);
+	    advancedDisclosure.ensureDebugId("cwDisclosurePanel");
+	    advancedDisclosure.setContent(advancedOptions);
+	    layout.setWidget(3, 0, advancedDisclosure);
+	    cellFormatter.setColSpan(3, 0, 2);
+
+	    // Wrap the contents in a DecoratorPanel
+	    DecoratorPanel decPanel = new DecoratorPanel();
+	    decPanel.setWidget(layout);
+	    return decPanel;
+	  }
+	
 }

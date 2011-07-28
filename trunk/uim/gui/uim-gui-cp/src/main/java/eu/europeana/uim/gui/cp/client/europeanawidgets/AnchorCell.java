@@ -26,8 +26,13 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Hyperlink;
 
+
+
 /**
- * @author georgiosmarkakis
+ * Abstract Cell GWT implementation that allows the use of  
+ * external hyperlinks within Cells.
+ * 
+ * @author Georgios Markakis
  *
  */
 public class AnchorCell extends AbstractCell<Anchor>

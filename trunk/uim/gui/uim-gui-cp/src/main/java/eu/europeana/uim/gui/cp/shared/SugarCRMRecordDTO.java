@@ -32,6 +32,7 @@ public class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMReco
 
 
 	private String id;
+	private String importedIMG;
 	private String name;
 	private String date_entered;
 	private String date_modified;
@@ -73,7 +74,7 @@ public class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMReco
 	
 	@Override
 	public int compareTo(SugarCRMRecordDTO arg0) {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 
@@ -796,6 +797,36 @@ public class SugarCRMRecordDTO implements IsSerializable,Comparable<SugarCRMReco
 	public String getType() {
 		return type;
 	}
+
+
+
+
+	/**
+	 * @param importedIMG the importedIMG to set
+	 */
+	public void setImportedIMG(String importedIMG) {
+		this.importedIMG = importedIMG;
+	}
+
+
+
+
+	/**
+	 * @return the importedIMG
+	 */
+	public String getImportedIMG() {
+		return importedIMG;
+	}
+
+
+
+
+
+
+
+
+
+
 
 
 
