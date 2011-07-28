@@ -64,7 +64,4 @@ public abstract class AbstractIngestionPlugin implements IngestionPlugin {
         } else if (!getIdentifier().equals(other.getIdentifier())) return false;
         return true;
     }
-    
-    
-    
 }

@@ -12,8 +12,8 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Context of a running execution holding execution dependent variables for the plugins etc.
-
- * @param <I> 
+ * 
+ * @param <I>
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
@@ -73,9 +73,10 @@ public interface ExecutionContext<I> {
      *         workflow is over (if not overridden by configuration)
      */
     public File getTmpDirectory(IngestionPlugin plugin);
-    
+
     /**
-     * Transforms file related properties into the actual file references. 
+     * Transforms file related properties into the actual file references.
+     * 
      * @param fileReference
      * @return a reference to the resource to access, null if not successful
      */

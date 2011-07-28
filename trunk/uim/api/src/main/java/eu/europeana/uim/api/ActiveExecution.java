@@ -27,7 +27,6 @@ public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
     /**
      * @return resource engine for this execution
      */
-
     ResourceEngine getResourceEngine();
 
     /**
