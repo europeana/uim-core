@@ -79,6 +79,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     @Override
     public List<ExecutionDTO> getPastExecutions() {
+        return getPastExecutions(null);
+    }
+
+    @Override
+    public List<ExecutionDTO> getPastExecutions(List<String> workflows) {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
@@ -99,7 +104,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 if (!execution.isActive()) {
                     try {
                         ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
-                        r.add(exec);
+                        if (workflows == null || workflows.contains(exec.getWorkflow())) {
+                            r.add(exec);
+                        }
                     } catch (Throwable t) {
                         log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
                         wrappedExecutionDTOs.remove(execution.getId());
@@ -142,8 +149,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         ActiveExecution<Long> ae;
         if (parameters != null) {
             Properties properties = prepareProperties(parameters);
-            ae = orchestrator.executeWorkflow(
-                    w, c, properties);
+            ae = orchestrator.executeWorkflow(w, c, properties);
         } else {
             ae = orchestrator.executeWorkflow(w, c);
         }
@@ -322,8 +328,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean pauseExecution(Long execution) {
         Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
-                execution);
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.pause(ae);
             return ae.isPaused();
@@ -336,8 +341,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean resumeExecution(Long execution) {
         Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
-                execution);
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.resume(ae);
             return !ae.isPaused();
@@ -350,8 +354,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean cancelExecution(Long execution) {
         Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Long> ae = orchestrator.getActiveExecution(
-                execution);
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.cancel(ae);
             return ae.isCanceled();

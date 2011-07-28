@@ -69,6 +69,13 @@ public interface ExecutionServiceAsync {
      * @param async
      */
     void getPastExecutions(AsyncCallback<List<ExecutionDTO>> async);
+    
+    /**
+     * Returns list of completed executions for a list of workflows
+     * @param workflows the list of workflows, null means all.
+     * @param async
+     */
+    void getPastExecutions(List<String> workflows,AsyncCallback<List<ExecutionDTO>> async);
 
     /**
      * Pause the given execution (if it is paused or not running, nothing happens and false is

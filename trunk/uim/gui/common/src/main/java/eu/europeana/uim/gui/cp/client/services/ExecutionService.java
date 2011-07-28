@@ -65,6 +65,12 @@ public interface ExecutionService extends RemoteService {
      * @return list of completed executions
      */
     List<ExecutionDTO> getPastExecutions();
+    
+    /**
+     * @param executions the list of workflows to be considered. Null means all.
+     * @return list of completed executions from a list of specific workflows
+     */
+    List<ExecutionDTO> getPastExecutions(List<String> executions);
 
     /**
      * Pause the given execution (if it is paused or not running, nothing happens and false is
