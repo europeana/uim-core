@@ -29,7 +29,7 @@
 		<module>logging/memory</module>
 
 		<!-- the standard orchestration implementation module -->
-<!-- 		<module>orchestration/basic</module> -->
+		<module>orchestration/basic</module>
 
 		<!-- a dummy plugin for testing -->
 		<!-- <module>plugins/dummy</module> -->
