@@ -1,6 +1,7 @@
 package eu.europeana.uim.store;
 
 import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -133,4 +134,26 @@ public interface Execution<I> extends UimEntity<I> {
      *            amount of scheduled ones
      */
     void setProcessedCount(int number);
+    
+    /**
+     * string key,value pairs for arbitraty information on colleciton level
+     * 
+     * @param key
+     * @param value
+     */
+    void putValue(String key, String value);
+
+    /**
+     * retrieve the stirng value for the specific key
+     * 
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(String key);
+
+    /**
+     * @return the values map
+     */
+    Map<String, String> values();
+    
 }

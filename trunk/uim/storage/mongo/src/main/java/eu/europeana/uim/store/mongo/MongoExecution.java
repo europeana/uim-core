@@ -1,6 +1,8 @@
 package eu.europeana.uim.store.mongo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
@@ -21,6 +23,8 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     private int           success;
     private int           failure;
     private int           processed;
+
+    private Map<String, String> values = new HashMap<String, String>();
 
     @Reference
     private UimDataSet<Long> dataSet;
@@ -128,5 +132,23 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     @Override
     public void setProcessedCount(int number) {
         this.processed = number;
+    }
+    
+
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+
+    
+    
+    @Override
+    public Map<String, String> values() {
+         return values;
     }
 }

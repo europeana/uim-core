@@ -247,6 +247,22 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         execution.setProcessedCount(number);
     }
 
+    
+    @Override
+    public void putValue(String key, String value) {
+        execution.putValue(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return execution.getValue(key);
+    }
+
+    @Override
+    public Map<String, String> values() {
+        return execution.values();
+    }
+
     @Override
     public void setPaused(boolean paused) {
         this.paused = paused;
