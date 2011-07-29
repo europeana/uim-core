@@ -1,6 +1,7 @@
 package eu.europeana.uim.gui.cp.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +84,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     @Override
-    public List<ExecutionDTO> getPastExecutions(List<String> workflows) {
+    public List<ExecutionDTO> getPastExecutions(String[] workflows) {
+        List<String> workflowsList=null;
+        if (workflows!=null) {
+            workflowsList=Arrays.asList(workflows);
+        }
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
@@ -104,7 +109,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 if (!execution.isActive()) {
                     try {
                         ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
-                        if (workflows == null || workflows.contains(exec.getWorkflow())) {
+                        if (workflows == null || workflowsList.contains(exec.getWorkflow())) {
                             r.add(exec);
                         }
                     } catch (Throwable t) {
