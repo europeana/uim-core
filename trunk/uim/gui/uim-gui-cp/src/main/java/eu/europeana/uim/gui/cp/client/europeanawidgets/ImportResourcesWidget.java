@@ -163,7 +163,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		
 		searchPanel = new VerticalPanel();
 		searchPanel.setSpacing(8);
-		searchPanel.setWidth("100%");
+		searchPanel.setWidth("32em");
 		searchPanel.add(createAdvancedForm());
 		
 		impResultsTable = new FlexTable();
@@ -715,45 +715,71 @@ public class ImportResourcesWidget extends IngestionWidget {
 	
 	
 	
-	/**
+	  /**
 	   * Create a form that contains undisclosed advanced options.
 	   */
 	  private Widget createAdvancedForm() {
 	    // Create a table to layout the form options
 	    FlexTable layout = new FlexTable();
 	    layout.setCellSpacing(6);
-	    layout.setWidth("100%");
+	    layout.setWidth("500px");
 	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
 
 	    // Add a title to the form
-	    layout.setHTML(0, 0, "SugarCRM Search Criteria");
+	    layout.setHTML(0, 2, "<b>Search Criteria</b>");
 	    cellFormatter.setColSpan(0, 0, 2);
 	    cellFormatter.setHorizontalAlignment(
 	        0, 0, HasHorizontalAlignment.ALIGN_CENTER);
 
 	    // Add some standard form options
-	    layout.setHTML(1, 0, "Field1");
+
+	    TextBox dsnameSearchField = new TextBox();	    
+	    TextBox identifierSearchField = new TextBox();
+	    TextBox organizationSearchField = new TextBox();
+	    TextBox acronymSearchField = new TextBox();
+	    TextBox typeSearchField = new TextBox();
+	    TextBox statusSearchField = new TextBox();
+	    TextBox enabledSearchField = new TextBox();
+	    TextBox ingestionDateSearchField = new TextBox();
+	    TextBox amountSearchField = new TextBox();
+	    TextBox userSearchField = new TextBox();
+	    TextBox countrySearchField = new TextBox();
+	    
+	    layout.setHTML(1, 0, "DataSet Name:");
 	    layout.setWidget(1, 1, new TextBox());
-	    layout.setHTML(2, 0, "Field2");
+	    
+	    layout.setHTML(1, 2, "Identifier:");
+	    layout.setWidget(1, 3, new TextBox());
+	    
+	    layout.setHTML(1, 4, "Organization:");
+	    layout.setWidget(1, 5, new TextBox());
+
+	    layout.setHTML(2, 0, "Acronym:");
 	    layout.setWidget(2, 1, new TextBox());
+	    
+	    layout.setHTML(2, 2, "Type:");
+	    layout.setWidget(2, 3, new TextBox());
+	    
+	    layout.setHTML(2, 4, "Status:");
+	    layout.setWidget(2, 5, new TextBox());
+	    
+	    
+	    layout.setHTML(3, 0, "Enabled:");
+	    layout.setWidget(3, 1, new TextBox());
+	    
+	    layout.setHTML(3, 2, "Expected Ingestion Date:");
+	    layout.setWidget(3, 3, new TextBox());
+	    
+	    layout.setHTML(3, 4, "Amount:");
+	    layout.setWidget(3, 5, new TextBox());
 
-	    // Create some advanced options
-	    HorizontalPanel advancedPanel = new HorizontalPanel();
-	 
-	    Grid advancedOptions = new Grid(2, 2);
-	    advancedOptions.setCellSpacing(6);
-	    advancedOptions.setHTML(0, 0, "ASDF");
-	    advancedOptions.setWidget(0, 1, new TextBox());
-	    advancedOptions.setHTML(1, 0, "XXXX");
-	    advancedOptions.setWidget(1, 1, advancedPanel);
+	    layout.setHTML(4, 0, "Assigned User:");
+	    layout.setWidget(4, 1, new TextBox());
+	    
+	    layout.setHTML(4, 2, "DataSet Country:");
+	    layout.setWidget(4, 3, new TextBox());
+ 
 
-	    // Add advanced options to form in a disclosure panel
-	    DisclosurePanel advancedDisclosure = new DisclosurePanel("Advanced Options");
-	    advancedDisclosure.setAnimationEnabled(true);
-	    advancedDisclosure.ensureDebugId("cwDisclosurePanel");
-	    advancedDisclosure.setContent(advancedOptions);
-	    layout.setWidget(3, 0, advancedDisclosure);
-	    cellFormatter.setColSpan(3, 0, 2);
 
 	    // Wrap the contents in a DecoratorPanel
 	    DecoratorPanel decPanel = new DecoratorPanel();
