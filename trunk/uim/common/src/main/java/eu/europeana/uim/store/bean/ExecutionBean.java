@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.UimDataSet;
 
@@ -172,6 +173,16 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
         return values.get(key);
     }
 
+	@Override
+	public void putValue(ControlledVocabularyKeyValue key, String value) {
+		putValue(key.toString(),value);
+		
+	}
+
+	@Override
+	public String getValue(ControlledVocabularyKeyValue key) {
+		return getValue(key.toString());
+	}
     
     
     @Override

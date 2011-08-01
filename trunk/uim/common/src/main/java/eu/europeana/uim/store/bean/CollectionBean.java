@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 
 /**
@@ -145,6 +146,19 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         return values;
     }
 
+    
+	@Override
+	public void putValue(ControlledVocabularyKeyValue key, String value) {
+		putValue(key.toString(),value);
+		
+	}
+
+	@Override
+	public String getValue(ControlledVocabularyKeyValue key) {
+		return getValue(key.toString());
+	}
+    
+    
     @Override
     public String toString() {
         String string = super.toString();
@@ -162,4 +176,6 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         }
         return string;
     }
+
+
 }

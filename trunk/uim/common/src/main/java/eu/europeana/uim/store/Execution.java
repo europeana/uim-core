@@ -136,7 +136,7 @@ public interface Execution<I> extends UimEntity<I> {
     void setProcessedCount(int number);
     
     /**
-     * string key,value pairs for arbitraty information on colleciton level
+     * string key,value pairs for arbitrary information on execution level
      * 
      * @param key
      * @param value
@@ -144,13 +144,29 @@ public interface Execution<I> extends UimEntity<I> {
     void putValue(String key, String value);
 
     /**
-     * retrieve the stirng value for the specific key
+     * retrieve the string value for the specific key
      * 
      * @param key
      * @return the string value or null
      */
     String getValue(String key);
 
+    /**
+     * string key,value pairs for arbitrary information on execution level
+     * 
+     * @param key
+     * @param value
+     */
+    void putValue(ControlledVocabularyKeyValue key, String value);
+
+    /**
+     * retrieve the string value for the specific key
+     * 
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(ControlledVocabularyKeyValue key);
+    
     /**
      * @return the values map
      */

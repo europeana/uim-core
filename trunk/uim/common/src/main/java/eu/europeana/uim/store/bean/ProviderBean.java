@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 
 /**
@@ -107,7 +108,16 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
         return values.get(key);
     }
 
-    
+	@Override
+	public void putValue(ControlledVocabularyKeyValue key, String value) {
+		putValue(key.toString(),value);
+		
+	}
+
+	@Override
+	public String getValue(ControlledVocabularyKeyValue key) {
+		return getValue(key.toString());
+	}
     
     @Override
     public Map<String, String> values() {

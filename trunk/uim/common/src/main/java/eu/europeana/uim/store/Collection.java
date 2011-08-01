@@ -134,6 +134,22 @@ public interface Collection<I> extends UimDataSet<I> {
     String getValue(String key);
 
     /**
+     * string key,value pairs for arbitraty information on colleciton level
+     * 
+     * @param key
+     * @param value
+     */
+    void putValue(ControlledVocabularyKeyValue key, String value);
+
+    /**
+     * retrieve the stirng value for the specific key
+     * 
+     * @param key
+     * @return the string value or null
+     */
+    String getValue(ControlledVocabularyKeyValue key);
+    
+    /**
      * @return the values map
      */
     Map<String, String> values();
