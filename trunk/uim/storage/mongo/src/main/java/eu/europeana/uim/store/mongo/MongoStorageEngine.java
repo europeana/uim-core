@@ -338,7 +338,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     public Execution createExecution(UimDataSet entity, String workflow) throws StorageEngineException {
         MongoExecution me = new MongoExecution(executionIdCounter.getAndIncrement());
         me.setDataSet(entity);
-        me.setWorkflowName(workflow);
+        me.setWorkflow(workflow);
         ds.save(me);
         return me;
     }

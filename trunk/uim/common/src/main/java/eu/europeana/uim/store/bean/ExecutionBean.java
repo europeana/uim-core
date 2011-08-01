@@ -62,12 +62,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     }
 
     @Override
-    public String getWorkflowName() {
+    public String getWorkflow() {
         return workflowIdentifier;
     }
 
     @Override
-    public void setWorkflowName(String identifier) {
+    public void setWorkflow(String identifier) {
         this.workflowIdentifier = identifier;
     }
 

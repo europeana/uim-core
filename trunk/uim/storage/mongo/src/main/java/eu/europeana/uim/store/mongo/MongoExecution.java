@@ -85,12 +85,12 @@ public class MongoExecution extends AbstractMongoEntity<Long> implements Executi
     }
 
     @Override
-    public String getWorkflowName() {
+    public String getWorkflow() {
         return workflowIdentifier;
     }
 
     @Override
-    public void setWorkflowName(String workflow) {
+    public void setWorkflow(String workflow) {
         this.workflowIdentifier = workflow;
     }
 

@@ -19,6 +19,7 @@ import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
+import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
 import eu.europeana.uim.workflow.TaskStatus;
@@ -269,7 +270,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         if (!execution.getMonitor().isCancelled() &&
             !start.isFinished(execution, execution.getStorageEngine())) {
             if (activeCreators < 3) {
-                log.fine("Less than 3 outstanding batches: <" + execution.getId() +
+                log.fine("Less than 3 outstanding batches: <" + execution.getExecution().getId() +
                          ">  execution/total progress:" + execProgress + "/" + totalProgress);
                 TaskCreator<I> createLoader = start.createLoader(execution,
                         execution.getStorageEngine());
@@ -303,18 +304,20 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         }
 
         synchronized (execution) {
-            execution.setActive(false);
-            execution.setEndTime(new Date());
+            Execution executionBean = execution.getExecution();
+
+            executionBean.setActive(false);
+            executionBean.setEndTime(new Date());
             if (cancel) {
-                execution.setCanceled(true);
+                executionBean.setCanceled(true);
             } else {
-                execution.setCanceled(false);
+                executionBean.setCanceled(false);
             }
             
-            execution.setSuccessCount(execution.getCompletedSize());
-            execution.setFailureCount(execution.getFailureSize());
-            execution.setProcessedCount(execution.getScheduledSize());
-            execution.getStorageEngine().updateExecution(execution.getExecution());
+            executionBean.setSuccessCount(execution.getCompletedSize());
+            executionBean.setFailureCount(execution.getFailureSize());
+            executionBean.setProcessedCount(execution.getScheduledSize());
+            execution.getStorageEngine().updateExecution(executionBean);
         }
 
         try {
@@ -325,8 +328,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         } finally {
             execution.getStorageEngine().completed(execution);
             if (registry.getLoggingEngine() != null)
-                registry.getLoggingEngine().log(execution, Level.INFO, "UIMOrchestrator", "finish",
-                        "Finished:" + execution.getName());
+                registry.getLoggingEngine().log(execution.getExecution(), Level.INFO, "UIMOrchestrator", "finish",
+                        "Finished:" + execution.getExecution().getName());
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {
@@ -386,8 +389,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     try {
 
                         execution.setThrowable(t);
-                        execution.setActive(false);
-                        execution.setEndTime(new Date());
+                        execution.getExecution().setActive(false);
+                        execution.getExecution().setEndTime(new Date());
                         execution.getStorageEngine().updateExecution(execution.getExecution());
                     } catch (StorageEngineException e) {
                         log.log(Level.SEVERE, "Failed to persist failed execution.", e);
@@ -398,7 +401,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     }
                 }
             }
-        }, "Initializer" + execution.getId() + ": " + execution.getWorkflowName()).start();
+        }, "Initializer" + execution.getExecution().getId() + ": " + execution.getWorkflow()).start();
     }
 
     /**

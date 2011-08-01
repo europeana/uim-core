@@ -21,11 +21,11 @@ public class ExecutionBeanTest {
     public void testExecutionSetterGetter() {
         Execution<Long> bean = new ExecutionBean<Long>(1L);
         bean.setName("name");
-        bean.setWorkflowName("workflow");
+        bean.setWorkflow("workflow");
         
         assertEquals(new Long(1), bean.getId());
         assertEquals("name", bean.getName());
-        assertEquals("workflow", bean.getWorkflowName());
+        assertEquals("workflow", bean.getWorkflow());
         
         assertFalse(bean.isCanceled());
         assertFalse(bean.isActive());

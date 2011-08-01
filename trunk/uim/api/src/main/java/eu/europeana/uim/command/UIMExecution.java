@@ -177,7 +177,7 @@ public class UIMExecution implements Action {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
-                out.println(String.format("Execution %d: Workflow %s, data set %s", e.getId(),
+                out.println(String.format("Execution %d: Workflow %s, data set %s", e.getExecution().getId(),
                         e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
@@ -185,7 +185,7 @@ public class UIMExecution implements Action {
         } else {
             ActiveExecution<?> execution = null;
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
-                if (e.getId().equals(Long.parseLong(argument0))) {
+                if (e.getExecution().getId().equals(Long.parseLong(argument0))) {
                     execution = e;
                     break;
                 }
@@ -275,9 +275,9 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getStartTime()) + ", active=" + e.isActive() +
+                                df.format(e.getExecution().getStartTime()) + ", active=" + e.getExecution().isActive() +
                                 ", paused=" + e.isPaused() + ", cancelled=" +
-                                e.getMonitor().isCancelled(), e.getId(), e.getWorkflow().getName(),
+                                e.getMonitor().isCancelled(), e.getExecution().getId(), e.getWorkflow().getName(),
                         e.getDataSet()));
             }
         }

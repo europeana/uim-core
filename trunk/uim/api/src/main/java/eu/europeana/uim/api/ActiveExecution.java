@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
@@ -18,7 +17,7 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * 
  * @since Mar 21, 2011
  */
-public interface ActiveExecution<I> extends Execution<I>, ExecutionContext<I> {
+public interface ActiveExecution<I> extends ExecutionContext<I> {
     /**
      * @return storage engine for this execution
      */

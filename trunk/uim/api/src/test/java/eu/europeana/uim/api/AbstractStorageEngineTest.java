@@ -468,12 +468,12 @@ public abstract class AbstractStorageEngineTest<I> {
 
         Execution<I> execution4 = engine.getExecution(execution1.getId());
         assertNotNull(execution4.getDataSet());
-        assertEquals("collection", execution4.getWorkflowName());
+        assertEquals("collection", execution4.getWorkflow());
         assertEquals(execution4.getDataSet().getId(), collection0.getId());
 
         Execution<I> execution5 = engine.getExecution(execution2.getId());
         assertNotNull(execution5.getDataSet());
-        assertEquals("request", execution5.getWorkflowName());
+        assertEquals("request", execution5.getWorkflow());
         assertEquals(execution5.getDataSet().getId(), request0.getId());
     }
 

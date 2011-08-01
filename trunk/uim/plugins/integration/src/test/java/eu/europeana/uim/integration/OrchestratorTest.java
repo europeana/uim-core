@@ -125,7 +125,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
         Thread.sleep(1000);
         assertEquals("Zombie execution", 0, o.getActiveExecutions().size());
 
-        Execution<Long> e = storage.getExecution(execution.getId());
+        Execution<Long> e = storage.getExecution(execution.getExecution().getId());
         assertFalse("Status of execution not correctly saved when it is finished", e.isActive());
     }
 }

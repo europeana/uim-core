@@ -116,7 +116,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 processor.schedule(activeExecution);
 
                 if (loggingEngine != null)
-                    loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start", "Started:" + activeExecution.getName());
+                    loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start", "Started:" + activeExecution.getExecution().getName());
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
@@ -215,7 +215,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
     @Override
     public ActiveExecution<I> getActiveExecution(I id) {
         for (ActiveExecution<I> ae : processor.getExecutions()) {
-            if (ae.getId().equals(id)) { return ae; }
+            if (ae.getExecution().getId().equals(id)) { return ae; }
         }
         return null;
     }

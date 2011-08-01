@@ -339,7 +339,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public Execution<Long> createExecution(UimDataSet<Long> entity, String workflow) {
         ExecutionBean<Long> execution = new ExecutionBean<Long>(executionId.getAndIncrement());
         execution.setDataSet(entity);
-        execution.setWorkflowName(workflow);
+        execution.setWorkflow(workflow);
         return execution;
     }
 

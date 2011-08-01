@@ -29,13 +29,13 @@ public interface Execution<I> extends UimEntity<I> {
     /**
      * @return name of the underlying workflow
      */
-    String getWorkflowName();
+    String getWorkflow();
 
     /**
-     * @param name
-     *            name of the underlying workflow
+     * @param identifier
+     *            identifier of the underlying workflow
      */
-    void setWorkflowName(String name);
+    void setWorkflow(String identifier);
 
     /**
      * @return data set object on which the execution works

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -138,58 +137,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public I getId() {
-        return execution.getId();
-    }
-
-    @Override
-    public boolean isActive() {
-        return execution.isActive();
-    }
-
-    @Override
-    public void setActive(boolean active) {
-        execution.setActive(active);
-    }
-
-    @Override
-    public Date getStartTime() {
-        return execution.getStartTime();
-    }
-
-    @Override
-    public void setStartTime(Date start) {
-        execution.setStartTime(start);
-    }
-
-    @Override
-    public Date getEndTime() {
-        return execution.getEndTime();
-    }
-
-    @Override
-    public void setEndTime(Date end) {
-        execution.setEndTime(end);
-    }
-
-    @Override
-    public String getName() {
-        return execution.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        execution.setName(name);
-    }
-
-    @Override
-    public boolean isCanceled() {
-        return execution.isCanceled();
-    }
-
-    @Override
-    public void setCanceled(boolean canceled) {
-        execution.setCanceled(canceled);
+    public Workflow getWorkflow() {
+        return workflow;
     }
 
     @Override
@@ -197,71 +146,12 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         return execution.getDataSet();
     }
 
-    @Override
-    public void setDataSet(UimDataSet<I> entity) {
-        execution.setDataSet(entity);
-    }
-
-    @Override
-    public String getWorkflowName() {
-        return execution.getWorkflowName();
-    }
-
-    @Override
-    public void setWorkflowName(String name) {
-        execution.setWorkflowName(name);
-    }
 
     @Override
     public RevisableProgressMonitor getMonitor() {
         return monitor;
     }
 
-    @Override
-    public int getSuccessCount() {
-        return execution.getSuccessCount();
-    }
-
-    @Override
-    public void setSuccessCount(int number) {
-        execution.setSuccessCount(number);
-    }
-
-    @Override
-    public int getFailureCount() {
-        return execution.getFailureCount();
-    }
-
-    @Override
-    public void setFailureCount(int number) {
-        execution.setFailureCount(number);
-    }
-
-    @Override
-    public int getProcessedCount() {
-        return execution.getProcessedCount();
-    }
-
-    @Override
-    public void setProcessedCount(int number) {
-        execution.setProcessedCount(number);
-    }
-
-    
-    @Override
-    public void putValue(String key, String value) {
-        execution.putValue(key, value);
-    }
-
-    @Override
-    public String getValue(String key) {
-        return execution.getValue(key);
-    }
-
-    @Override
-    public Map<String, String> values() {
-        return execution.values();
-    }
 
     @Override
     public void setPaused(boolean paused) {
@@ -316,10 +206,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public int getProgressSize() {
         int size = 0;
-        WorkflowStart start = getWorkflow().getStart();
+        WorkflowStart start = workflow.getStart();
         size += getProgressSize(start.getIdentifier());
 
-        for (IngestionPlugin step : getWorkflow().getSteps()) {
+        for (IngestionPlugin step : workflow.getSteps()) {
             size += getProgressSize(step.getIdentifier());
         }
         return size;
@@ -360,7 +250,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 int totalProgress = 0;
                 StringBuilder builder = new StringBuilder();
 
-                WorkflowStart start = getWorkflow().getStart();
+                WorkflowStart start = workflow.getStart();
                 int startSize = getProgressSize(start.getIdentifier());
                 totalProgress += startSize;
                 builder.append(start.getIdentifier());
@@ -368,7 +258,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 builder.append(startSize);
                 builder.append(", ");
 
-                for (IngestionPlugin step : getWorkflow().getSteps()) {
+                for (IngestionPlugin step : workflow.getSteps()) {
                     int stepSize = getProgressSize(step.getIdentifier());
                     totalProgress += stepSize;
                     builder.append(step.getIdentifier());
@@ -401,7 +291,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public int getTotalSize() {
-        return getWorkflow().getStart().getTotalSize(this);
+        return workflow.getStart().getTotalSize(this);
     }
 
     @Override
@@ -411,7 +301,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
         boolean cancelled = getMonitor().isCancelled();
 
-        boolean finished = getWorkflow().getStart().isFinished(this, getStorageEngine());
+        boolean finished = workflow.getStart().isFinished(this, getStorageEngine());
 
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
 
@@ -429,7 +319,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public List<WorkflowStepStatus> getStepStatus() {
         List<WorkflowStepStatus> status = new ArrayList<WorkflowStepStatus>();
-        for (IngestionPlugin step : getWorkflow().getSteps()) {
+        for (IngestionPlugin step : workflow.getSteps()) {
             status.add(getStepStatus(step));
         }
         return status;
@@ -459,10 +349,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         return status;
     }
 
-    @Override
-    public Workflow getWorkflow() {
-        return workflow;
-    }
+//    @Override
+//    public Workflow getWorkflow() {
+//        return workflow;
+//    }
 
     @Override
     public void waitUntilFinished() {

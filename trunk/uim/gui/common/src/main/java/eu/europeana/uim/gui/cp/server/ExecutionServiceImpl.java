@@ -3,6 +3,7 @@ package eu.europeana.uim.gui.cp.server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,6 +23,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Orchestration service implementation.
@@ -43,6 +45,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     private Map<Long, ExecutionDTO> wrappedExecutionDTOs = new HashMap<Long, ExecutionDTO>();
+    private Map<String, String>     workflowNames        = new HashMap<String, String>();
 
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
@@ -57,15 +60,16 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         }
 
         if (activeExecutions != null) {
-            for (ActiveExecution<?> execution : activeExecutions) {
-                if (execution != null && execution.getId() != null) {
+            for (ActiveExecution<Long> execution : activeExecutions) {
+                if (execution != null && execution.getExecution().getId() != null) {
+                    Execution<Long> executionBean = execution.getExecution();
                     try {
-                        ExecutionDTO exec = getWrappedExecutionDTO((Long)execution.getId(),
-                                execution);
+                        ExecutionDTO exec = getWrappedExecutionDTO(executionBean.getId(),
+                                executionBean);
                         r.add(exec);
                     } catch (Throwable t) {
                         log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                        wrappedExecutionDTOs.remove(execution.getId());
+                        wrappedExecutionDTOs.remove(executionBean.getId());
                     }
                 } else {
                     log.log(Level.WARNING, "An active execution or its identifier is null!");
@@ -83,13 +87,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return getPastExecutions(null);
     }
 
-    @SuppressWarnings("null")
     @Override
     public List<ExecutionDTO> getPastExecutions(String[] workflows) {
-        List<String> workflowsList = null;
+        Set<String> filter = new HashSet<String>();
         if (workflows != null) {
-            workflowsList = Arrays.asList(workflows);
+            filter.addAll(Arrays.asList(workflows));
         }
+
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
         StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
@@ -109,8 +113,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             for (Execution<Long> execution : executions) {
                 if (!execution.isActive()) {
                     try {
-                        ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
-                        if (workflows == null || workflowsList.contains(exec.getWorkflow())) {
+                        if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
+
+                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
                             r.add(exec);
                         }
                     } catch (Throwable t) {
@@ -161,7 +166,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         }
         ae.getMonitor().addListener(monitor);
         if (executionName != null) {
-            ae.setName(executionName);
+            ae.getExecution().setName(executionName);
         }
         populateWrappedExecutionDTO(execution, ae, w, c, executionName);
 
@@ -223,14 +228,16 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Long> ae,
             eu.europeana.uim.workflow.Workflow w, UimDataSet<Long> dataset, String executionName) {
-        execution.setId(ae.getId());
+        execution.setId(ae.getExecution().getId());
         execution.setName(executionName);
-        execution.setWorkflow(w.getName());
+
+        execution.setWorkflow(getWorkflowName(ae.getExecution().getWorkflow()));
+
         execution.setCompleted(ae.getCompletedSize());
         execution.setFailure(ae.getFailureSize());
         execution.setScheduled(ae.getScheduledSize());
-        execution.setCanceled(ae.isCanceled());
-        execution.setStartTime(ae.getStartTime());
+        execution.setCanceled(ae.getExecution().isCanceled());
+        execution.setStartTime(ae.getExecution().getStartTime());
         execution.setDataSet(dataset.toString());
         if (dataset instanceof Collection) {
             execution.setDataSet(((Collection)dataset).getName());
@@ -248,7 +255,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
         execution.setProgress(progress);
 
-        wrappedExecutionDTOs.put(ae.getId(), execution);
+        wrappedExecutionDTOs.put(ae.getExecution().getId(), execution);
     }
 
     @Override
@@ -261,9 +268,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
 
         ExecutionDTO exec = null;
-        ActiveExecution<?> ae = orchestrator.getActiveExecution(id);
+        ActiveExecution<Long> ae = orchestrator.getActiveExecution(id);
         if (ae != null) {
-            exec = getWrappedExecutionDTO((Long)ae.getId(), ae);
+            exec = getWrappedExecutionDTO(ae.getExecution().getId(), ae.getExecution());
         } else {
             Execution<Long> execution;
             try {
@@ -276,7 +283,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return exec;
     }
 
-    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution e) {
+    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution<Long> e) {
         ExecutionDTO wrapped = wrappedExecutionDTOs.get(execution);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
@@ -289,8 +296,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             } else {
                 wrapped.setDataSet(e.getDataSet().toString());
             }
+
             wrapped.setName(e.getName());
-            wrapped.setWorkflow(e.getWorkflowName());
+
+            wrapped.setWorkflow(getWorkflowName(e.getWorkflow()));
+            
             wrapped.setProgress(new ProgressDTO());
             wrappedExecutionDTOs.put(execution, wrapped);
         }
@@ -363,9 +373,25 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         ActiveExecution<Long> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.cancel(ae);
-            return ae.isCanceled();
+            return ae.getExecution().isCanceled();
         } else {
             return false;
         }
+    }
+
+    private String getWorkflowName(String workflow) {
+        synchronized (workflowNames) {
+            if (workflowNames.isEmpty()) {
+                List<Workflow> workflows = getEngine().getRegistry().getWorkflows();
+                for (Workflow wf : workflows) {
+                    workflowNames.put(wf.getIdentifier(), wf.getName());
+                }
+            }
+        }
+        
+        if (workflowNames.containsKey(workflow)) {
+            return workflowNames.get(workflow);
+        }
+        return workflow;
     }
 }
