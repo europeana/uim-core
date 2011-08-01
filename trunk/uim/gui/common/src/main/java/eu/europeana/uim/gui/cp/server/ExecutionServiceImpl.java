@@ -83,11 +83,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return getPastExecutions(null);
     }
 
+    @SuppressWarnings("null")
     @Override
     public List<ExecutionDTO> getPastExecutions(String[] workflows) {
-        List<String> workflowsList=null;
-        if (workflows!=null) {
-            workflowsList=Arrays.asList(workflows);
+        List<String> workflowsList = null;
+        if (workflows != null) {
+            workflowsList = Arrays.asList(workflows);
         }
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
