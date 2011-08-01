@@ -16,7 +16,7 @@
   
   <g:HTMLPanel>
 
-  <g:TextBox ui:field='searchField' />
+  <g:VerticalPanel ui:field='searchPanel' />
   <g:Button ui:field='searchButton' />
   <br></br>
   

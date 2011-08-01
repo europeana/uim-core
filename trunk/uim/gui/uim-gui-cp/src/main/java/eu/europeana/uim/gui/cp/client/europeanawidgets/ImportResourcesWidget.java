@@ -109,7 +109,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	Button searchButton;
 
 	@UiField(provided = true)
-	TextBox searchField;
+	VerticalPanel searchPanel;
 
 	@UiField(provided = true)
 	Button importButton;
@@ -122,6 +122,9 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	ProgressBar progressBar;
 
+	
+	
+	
 	/**
 	 * The key provider that provides the unique ID of a contact.
 	 */
@@ -131,6 +134,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 		}
 	};
 
+	
+	
 	private ListDataProvider<SugarCRMRecordDTO> dataProvider = new ListDataProvider<SugarCRMRecordDTO>();
 
 	/**
@@ -155,6 +160,12 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 */
 	@Override
 	public Widget onInitialize() {
+		
+		searchPanel = new VerticalPanel();
+		searchPanel.setSpacing(8);
+		searchPanel.setWidth("100%");
+		searchPanel.add(createAdvancedForm());
+		
 		impResultsTable = new FlexTable();
 		FlexCellFormatter cellFormatter = impResultsTable
 				.getFlexCellFormatter();
@@ -184,8 +195,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 			}
 		});
 
-		searchField = new TextBox();
-		searchField.setName("Search term");
+
 
 		importButton = new Button();
 		importButton.addClickHandler(new ClickHandler() {
@@ -712,7 +722,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    // Create a table to layout the form options
 	    FlexTable layout = new FlexTable();
 	    layout.setCellSpacing(6);
-	    layout.setWidth("300px");
+	    layout.setWidth("100%");
 	    FlexCellFormatter cellFormatter = layout.getFlexCellFormatter();
 
 	    // Add a title to the form
