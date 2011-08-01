@@ -18,6 +18,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.TaskCreator;
@@ -84,11 +85,13 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
             throws WorkflowStartFailedException {
         try {
             long start = System.currentTimeMillis();
+            Collection<I> coll = null;
             I[] records = null;
 
             UimDataSet<I> dataSet = context.getDataSet();
             if (dataSet instanceof Collection) {
                 try {
+                    coll = (Collection<I>)dataSet;
                     records = storage.getByCollection((Collection<I>)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Collection '" + dataSet.getId() +
@@ -96,6 +99,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 }
             } else if (dataSet instanceof Request) {
                 try {
+                    coll = ((Request<I>)dataSet).getCollection();
                     records = storage.getByRequest((Request<I>)dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Request '" + dataSet.getId() +
@@ -103,8 +107,9 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 }
             } else if (dataSet instanceof MetaDataRecord) {
                 MetaDataRecord<I> record = (MetaDataRecord<I>)dataSet;
-                    records = (I[])Array.newInstance(record.getId().getClass(), 1);
-                    records[0] = record.getId();
+                records = (I[])Array.newInstance(record.getId().getClass(), 1);
+                records[0] = record.getId();
+                coll = record.getCollection();
             } else {
                 throw new WorkflowStartFailedException("Unsupported dataset <" +
                                                        context.getDataSet() + ">");
@@ -166,6 +171,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                         (System.currentTimeMillis() - start) / 1000.0));
             }
 
+            data.collection = coll;
             data.initialized = true;
         } finally {
         }
@@ -202,18 +208,23 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     public <I> TaskCreator<I> createLoader(final ExecutionContext<I> context,
             final StorageEngine<I> storage) {
         if (!isFinished(context, storage)) { return new TaskCreator<I>() {
-            @SuppressWarnings("unchecked")
+            @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public void run() {
                 try {
-                    I[] poll = (I[])context.getValue(DATA_KEY).batches.poll(500,
-                            TimeUnit.MILLISECONDS);
+                    Data container = context.getValue(DATA_KEY);
+                    I[] poll = (I[])container.batches.poll(500, TimeUnit.MILLISECONDS);
                     if (poll != null) {
                         List<MetaDataRecord<I>> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
                         MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord<I> mdr = mdrs[i];
+
+                            if (mdr instanceof MetaDataRecordBean) {
+                                ((MetaDataRecordBean)mdr).setCollection(container.collection);
+                            }
+
                             Task<I> task = new Task<I>(mdr, storage, context);
                             synchronized (getQueue()) {
                                 getQueue().offer(task);
@@ -256,7 +267,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
     /**
      * container for runtime information.
-     * @param <T> 
+     * 
+     * @param <T>
      * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Feb 28, 2011
@@ -269,6 +281,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
         /** batches */
         public BlockingQueue<T[]> batches     = new LinkedBlockingQueue<T[]>();
-    }
 
+        /** collection */
+        public Collection<?>      collection  = null;
+    }
 }
