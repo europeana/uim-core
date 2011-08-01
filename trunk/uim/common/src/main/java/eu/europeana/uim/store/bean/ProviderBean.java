@@ -110,13 +110,13 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
 
 	@Override
 	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.toString(),value);
+		putValue(key.getFieldId(),value);
 		
 	}
 
 	@Override
 	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.toString());
+		return getValue(key.getFieldId());
 	}
     
     @Override

@@ -34,4 +34,5 @@ package eu.europeana.uim.store;
  */
 public interface ControlledVocabularyKeyValue {
 
+	public String getFieldId();
 }

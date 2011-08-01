@@ -149,13 +149,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     
 	@Override
 	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.toString(),value);
+		putValue(key.getFieldId(),value);
 		
 	}
 
 	@Override
 	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.toString());
+		return getValue(key.getFieldId());
 	}
     
     

@@ -175,13 +175,13 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
 
 	@Override
 	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.toString(),value);
+		putValue(key.getFieldId(),value);
 		
 	}
 
 	@Override
 	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.toString());
+		return getValue(key.getFieldId());
 	}
     
     
