@@ -55,7 +55,14 @@ public class ProviderForm extends Composite {
         commitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                provider.setMnemonic(mnemonicBox.getText());
+                String mnemonic = mnemonicBox.getText();
+                mnemonic = mnemonic.trim();
+                if (!mnemonic.matches("[\\w|\\d|-]*")) {
+                    Window.alert("The mnemonic '" + mnemonic + "' is not valid, please use letters, number and '-'!");
+                    return;
+                }
+                
+                provider.setMnemonic(mnemonic);
                 provider.setName(nameBox.getText());
                 provider.setOaiBaseUrl(oaiBaseUrlBox.getText());
                 provider.setOaiMetadataPrefix(oaiMetadataPrefixBox.getText());

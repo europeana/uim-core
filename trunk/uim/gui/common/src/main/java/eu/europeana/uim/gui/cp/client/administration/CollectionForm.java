@@ -61,7 +61,14 @@ public class CollectionForm extends Composite {
         commitButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                collection.setMnemonic(mnemonicBox.getText());
+                String mnemonic = mnemonicBox.getText();
+                mnemonic = mnemonic.trim();
+                if (!mnemonic.matches("[\\w|\\d|-]*")) {
+                    Window.alert("The mnemonic '" + mnemonic + "' is not valid, please use letters, number and '-'!");
+                    return;
+                }
+                
+                collection.setMnemonic(mnemonic);
                 collection.setName(nameBox.getText());
                 collection.setLanguage(languageBox.getText());
                 collection.setOaiBaseUrl(oaiBaseUrlBox.getText());
