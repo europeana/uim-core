@@ -67,7 +67,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                     Execution<Long> executionBean = execution.getExecution();
                     try {
                         ExecutionDTO exec = getWrappedExecutionDTO(executionBean.getId(),
-                                executionBean);
+                                executionBean, execution);
                         r.add(exec);
                     } catch (Throwable t) {
                         log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
@@ -116,7 +116,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 if (!execution.isActive()) {
                     try {
                         if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
-                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
+                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution, null);
                             r.add(exec);
                         }
                     } catch (Throwable t) {
@@ -279,12 +279,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         ExecutionDTO exec = null;
         ActiveExecution<Long> ae = orchestrator.getActiveExecution(id);
         if (ae != null) {
-            exec = getWrappedExecutionDTO(ae.getExecution().getId(), ae.getExecution());
+            exec = getWrappedExecutionDTO(ae.getExecution().getId(), ae.getExecution(), ae);
         } else {
             Execution<Long> execution;
             try {
                 execution = storage.getExecution(id);
-                exec = getWrappedExecutionDTO(execution.getId(), execution);
+                exec = getWrappedExecutionDTO(execution.getId(), execution, null);
             } catch (StorageEngineException e) {
                 e.printStackTrace();
             }
@@ -292,7 +292,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return exec;
     }
 
-    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution<Long> e) {
+    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution<Long> e, ActiveExecution<Long> ae) {
         ExecutionDTO wrapped = wrappedExecutionDTOs.get(execution);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
@@ -319,8 +319,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setEndTime(e.getEndTime());
         }
         wrapped.setCanceled(e.isCanceled());
-        if (e.isActive() && e instanceof ActiveExecution) {
-            ActiveExecution ae = (ActiveExecution)e;
+        if (e.isActive() && ae != null) {
             wrapped.setScheduled(ae.getScheduledSize());
             wrapped.setCompleted(ae.getCompletedSize());
             wrapped.setFailure(ae.getFailureSize());

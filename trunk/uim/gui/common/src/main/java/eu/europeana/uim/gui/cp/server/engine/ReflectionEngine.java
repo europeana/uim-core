@@ -65,6 +65,17 @@ public class ReflectionEngine extends Engine {
         setupWorkflows();
 
         setupSampleData();
+//        try {
+//        StorageEngine<?> storageEngine = registry.getStorageEngine();
+//        List<?> colls = storageEngine.getAllCollections();
+//        
+//        MetaDataRecord<?> mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test1");
+//        storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
+//        mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test2");
+//        storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
+//        } catch (Exception e) {
+//            
+//        }
     }
 
     private void setupSampleData() {
