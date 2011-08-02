@@ -69,6 +69,7 @@ import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
+import eu.europeana.uim.gui.cp.client.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
@@ -303,20 +304,32 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 		if (!selList.isEmpty()) {
 
+
+			progressBar.setMaxProgress(selList.size());
+			progressBar.setProgress(0);
+			
 			for (SugarCRMRecordDTO record : selList) {
+				
+
+				
 				integrationservice.processSelectedRecord(record,
 						new AsyncCallback<ImportResultDTO>() {
+					
+					  
 							@Override
 							public void onFailure(Throwable throwable) {
 								throwable.printStackTrace();
 								int numRows = impResultsTable.getRowCount();
+								
 
-								impResultsTable.setWidget(numRows, 0, new HTML(
-										"failed"));
+								impResultsTable.setWidget(numRows, 0, new Image(
+										EuropeanaClientConstants.ERRORIMAGELOC));
 								impResultsTable.setWidget(numRows, 1, new HTML(
 										"A system exception has occured"));
 								impResultsTable.setWidget(numRows, 2, new HTML(
 										throwable.getCause().getStackTrace().toString()));
+								
+								progressBar.setProgress(impResultsTable.getRowCount());
 							}
 
 							@Override
@@ -326,12 +339,14 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 								progressBar.setProgress(numRows);
 
-								impResultsTable.setWidget(numRows, 0, new HTML(
+								impResultsTable.setWidget(numRows, 0, new Image(
 										searchresults.getResult()));
 								impResultsTable.setWidget(numRows, 1, new HTML(
 										searchresults.getDescription()));
 								impResultsTable.setWidget(numRows, 2, new HTML(
 										searchresults.getCause()));
+								
+								progressBar.setProgress(impResultsTable.getRowCount());
 
 							}
 						});

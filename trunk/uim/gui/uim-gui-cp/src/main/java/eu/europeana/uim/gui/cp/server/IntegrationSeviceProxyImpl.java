@@ -26,6 +26,7 @@ import java.util.List;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.gui.cp.client.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
@@ -70,7 +71,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		RepoxUIMService repoxService = engine.getRepoxService();
 
 		ImportResultDTO result = new ImportResultDTO();
-		result.setResult("ok");
+		result.setResult(EuropeanaClientConstants.SUCCESSIMAGELOC);
 		
 		String id = record.getId();
 		
@@ -97,28 +98,35 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			}
 			
 			
-			repoxService.createDatasourcefromUIMObj(coll, prov);
+			if(!repoxService.datasourceExists(coll)){
+				repoxService.createDatasourcefromUIMObj(coll, prov);
+			}
+			else
+			{
+				repoxService.updateDatasourcefromUIMObj(coll);
+			}
+			
 			
 		} catch (QueryResultException e) {			
 			result.setDescription("Import failed while accessing SugarCRM.");
 			result.setCause(e.getMessage());
-			result.setResult("fail");
+			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (StorageEngineException e) {
 			result.setDescription("Import failed while storing in UIM.");
 			result.setCause(e.getMessage());
-			result.setResult("fail");
+			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (AggregatorOperationException e) {
 			result.setDescription("Import failed while creating an Aggregator in Repox.");
 			result.setCause(e.getMessage());
-			result.setResult("fail");
+			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (ProviderOperationException e) {
 			result.setDescription("Import failed while creating an Provider in Repox.");
 			result.setCause(e.getMessage());
-			result.setResult("fail");
+			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (DataSourceOperationException e) {
 			result.setDescription("Import failed while creating a DataSource in Repox.");
 			result.setCause(e.getMessage());
-			result.setResult("fail");
+			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		}
 		
 		return result;
@@ -183,10 +191,10 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			Collection colexists = resengine.findCollection(originalrecord.getItemValue(RetrievableField.NAME).split("_")[0]);
 
 			if (colexists == null){
-				guirecord.setImportedIMG("images/no.png");
+				guirecord.setImportedIMG(EuropeanaClientConstants.ERRORIMAGELOC);
 			}
 			else{
-				guirecord.setImportedIMG("images/ok.png");
+				guirecord.setImportedIMG(EuropeanaClientConstants.SUCCESSIMAGELOC);
 			}
 			
 			

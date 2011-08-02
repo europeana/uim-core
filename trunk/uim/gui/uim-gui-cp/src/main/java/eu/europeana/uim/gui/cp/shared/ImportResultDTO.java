@@ -32,7 +32,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class ImportResultDTO implements IsSerializable{
 
 	private String result;
-	private String error;
+	private String collectionName;
 	private String description;
 	private String cause;	
 	
@@ -42,46 +42,56 @@ public class ImportResultDTO implements IsSerializable{
 	public void setResult(String result) {
 		this.result = result;
 	}
+
 	/**
 	 * @return the result
 	 */
 	public String getResult() {
 		return result;
 	}
-	/**
-	 * @param error the error to set
-	 */
-	public void setError(String error) {
-		this.error = error;
-	}
-	/**
-	 * @return the error
-	 */
-	public String getError() {
-		return error;
-	}
+
 	/**
 	 * @param description the description to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
 	/**
 	 * @return the description
 	 */
 	public String getDescription() {
 		return description;
 	}
+	
+	
 	/**
 	 * @param cause the cause to set
 	 */
 	public void setCause(String cause) {
 		this.cause = cause;
 	}
+	
+	
 	/**
 	 * @return the cause
 	 */
 	public String getCause() {
 		return cause;
+	}
+
+	/**
+	 * @param collectionName the collectionName to set
+	 */
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+
+	/**
+	 * @return the collectionName
+	 */
+	public String getCollectionName() {
+		return collectionName;
 	}
 }
