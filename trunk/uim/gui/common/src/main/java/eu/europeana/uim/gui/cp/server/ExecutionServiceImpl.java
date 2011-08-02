@@ -2,6 +2,8 @@ package eu.europeana.uim.gui.cp.server;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -124,6 +126,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                     }
                 }
             }
+            
+            Collections.sort(r, new Comparator<ExecutionDTO>() {
+                public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                    return o2.getStartTime().compareTo(o1.getStartTime());
+                }
+                
+            });
         } else {
             log.log(Level.WARNING, "Past executions are null!");
         }

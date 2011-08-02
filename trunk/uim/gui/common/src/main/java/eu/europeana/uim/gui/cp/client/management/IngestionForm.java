@@ -180,7 +180,7 @@ public class IngestionForm extends Composite {
             autoText = workflow.getIdentifier() +
                        "/" +
                        (collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)
-                               ? provider.toString() : collection.toString());
+                               ? provider.getMnemonic() : collection.getMnemonic());
             nameBox.setText(autoText);
         }
         checkCommit();
