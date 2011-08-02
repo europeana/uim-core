@@ -116,7 +116,6 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 if (!execution.isActive()) {
                     try {
                         if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
-
                             ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution);
                             r.add(exec);
                         }
@@ -126,12 +125,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                     }
                 }
             }
-            
+
             Collections.sort(r, new Comparator<ExecutionDTO>() {
+                @Override
                 public int compare(ExecutionDTO o1, ExecutionDTO o2) {
                     return o2.getStartTime().compareTo(o1.getStartTime());
                 }
-                
+
             });
         } else {
             log.log(Level.WARNING, "Past executions are null!");
@@ -309,7 +309,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setName(e.getName());
 
             wrapped.setWorkflow(getWorkflowName(e.getWorkflow()));
-            
+
             wrapped.setProgress(new ProgressDTO());
             wrappedExecutionDTOs.put(execution, wrapped);
         }
@@ -397,10 +397,8 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 }
             }
         }
-        
-        if (workflowNames.containsKey(workflow)) {
-            return workflowNames.get(workflow);
-        }
+
+        if (workflowNames.containsKey(workflow)) { return workflowNames.get(workflow); }
         return workflow;
     }
 }
