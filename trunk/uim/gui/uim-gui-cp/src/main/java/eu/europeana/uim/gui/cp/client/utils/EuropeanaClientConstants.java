@@ -31,7 +31,10 @@ public class EuropeanaClientConstants {
 
 	public final static String ERRORIMAGELOC = "images/no.png" ;
 	public final static String SUCCESSIMAGELOC = "images/ok.png" ;
-
+	public final static String QUERYIMAGELOC = "images/ok.png;"; 
+	public final static String SEARCHDIALOGMSG = "Searching for SugarCRM entries"; 
+	
+	
 	//Search labels declarations
 	public final static String DSNAMESEARCHLABEL = "DataSet Name:" ;
 	public final static String IDSEARCHLABEL = "Identifier:" ;
@@ -46,6 +49,12 @@ public class EuropeanaClientConstants {
 	public final static String USERSEARCHLABEL = "User:" ;
 	
 
+	public final static String SEARCHBUTTONLABEL = "Search" ;
+	public final static String SEARCHBUTTONTITLE = "Search SugarCRM for Records" ;	
+	
+	public final static String IMPORTBUTTONLABEL = "Import Selected" ;
+	public final static String IMPORTBUTTONTITLE = "Populate UIM and Repox with Data from SugarCrm" ;
+	
 	//Misc
 	public final static String UIMSTATELABEL = "State:" ;
 }

@@ -31,6 +31,7 @@ import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -188,8 +189,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 		importDialog = createImportDialog();
 
 		searchButton = new Button();
-		searchButton.setText("Search SugarCRM");
-		searchButton.setTitle("Search SugarCRM for Records");
+		searchButton.setText(EuropeanaClientConstants.SEARCHBUTTONLABEL);
+		searchButton.setTitle(EuropeanaClientConstants.SEARCHBUTTONTITLE);
 
 		searchButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -210,8 +211,8 @@ public class ImportResourcesWidget extends IngestionWidget {
 			}
 		});
 
-		importButton.setText("Import Selected");
-		importButton.setTitle("Populate UIM and Repox with Data from SugarCrm");
+		importButton.setText(EuropeanaClientConstants.IMPORTBUTTONLABEL);
+		importButton.setTitle(EuropeanaClientConstants.IMPORTBUTTONTITLE);
 
 		// Create a CellTable.
 
@@ -388,26 +389,27 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 * @return
 	 */
 	private String generateQuery() {
-		String query = "contacts.first_name LIKE '%M%'";
+
 
 		StringBuffer querybuffer = new StringBuffer();
 		
-		String dsname = DOM.getElementById("dsnameSearchField").getInnerText();
-		String identifier = DOM.getElementById("identifierSearchField").getInnerText();
-		String organization = DOM.getElementById("organizationSearchField").getInnerText();
-		String acronym = DOM.getElementById("acronymSearchField").getInnerText();
-		String type = DOM.getElementById("typeSearchField").getInnerText();
-		String status = DOM.getElementById("statusSearchField").getInnerText();
-		String enabled = DOM.getElementById("enabledSearchField").getInnerText();
-		String ingestionDate = DOM.getElementById("ingestionDateSearchField").getInnerText();
-		String amount = DOM.getElementById("amountSearchField").getInnerText();
-		String user = DOM.getElementById("userSearchField").getInnerText();
-		String country = DOM.getElementById("countrySearchField").getInnerText();
+		
+		String dsname = DOM.getElementById("dsnameSearchField").<InputElement>cast().getValue();
+		String identifier = DOM.getElementById("identifierSearchField").getNodeValue();
+		String organization = DOM.getElementById("organizationSearchField").getNodeValue();
+		String acronym = DOM.getElementById("acronymSearchField").getNodeValue();
+		String type = DOM.getElementById("typeSearchField").getNodeValue();
+		String status = DOM.getElementById("statusSearchField").getNodeValue();
+		String enabled = DOM.getElementById("enabledSearchField").getNodeValue();
+		String ingestionDate = DOM.getElementById("ingestionDateSearchField").getNodeValue();
+		String amount = DOM.getElementById("amountSearchField").getNodeValue();
+		String user = DOM.getElementById("userSearchField").getNodeValue();
+		String country = DOM.getElementById("countrySearchField").getNodeValue();
 
 		ArrayList<StringBuffer> fieldinventory = new ArrayList<StringBuffer>();
 		
 		
-        if(!"".equals(dsname)){
+        if(dsname != null){
         	StringBuffer queryitem = new StringBuffer();
         	queryitem.append("opportunities.first_name LIKE '");
         	queryitem.append(dsname);
@@ -783,17 +785,14 @@ public class ImportResourcesWidget extends IngestionWidget {
 		// Create a dialog box and set the caption text
 		final DialogBox dialogBox = new DialogBox();
 		dialogBox.ensureDebugId("cwDialogBox");
-		dialogBox.setText("Searching for SugarCRM entries");
-
+		dialogBox.setText(EuropeanaClientConstants.SEARCHDIALOGMSG);
 		dialogBox.setModal(true);
-
 
 		// Create a table to layout the content
 		VerticalPanel dialogContents = new VerticalPanel();
-		dialogContents.setSpacing(4);
+		dialogContents.setSpacing(0);
 		dialogBox.setWidget(dialogContents);
-
-		Image activity = new Image("images/network.gif");
+		Image activity = new Image(EuropeanaClientConstants.QUERYIMAGELOC);
 		
 		// Add some text to the top of the dialog
 
