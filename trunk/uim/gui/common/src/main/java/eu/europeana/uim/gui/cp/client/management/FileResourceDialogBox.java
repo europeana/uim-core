@@ -146,7 +146,7 @@ public class FileResourceDialogBox extends DialogBox {
         form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
             @Override
             public void onSubmitComplete(SubmitCompleteEvent event) {
-                Window.alert(event.getResults());
+//                Window.alert(event.getResults());
                 updateFileNames();
             }
         });
