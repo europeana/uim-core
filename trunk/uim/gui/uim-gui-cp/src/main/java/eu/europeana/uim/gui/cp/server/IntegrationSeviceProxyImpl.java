@@ -26,8 +26,8 @@ import java.util.List;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.gui.cp.client.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
+import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
@@ -59,6 +59,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	 */
 	private static final long serialVersionUID = 1L;
 
+	
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#processSelectedRecord(eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO)
 	 */
@@ -145,8 +146,8 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		ExpandedOsgiEngine engine =  getEngine();
 		SugarCRMService sugService = engine.getSugarCrmService();
 		
-		//CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
-		SimpleSugarCrmQuery queryObj = new  SimpleSugarCrmQuery(DatasetStates.MAPPING_AND_NORMALIZATION);
+		CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
+		//SimpleSugarCrmQuery queryObj = new  SimpleSugarCrmQuery(DatasetStates.MAPPING_AND_NORMALIZATION);
 		
 		
 		try {

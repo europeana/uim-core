@@ -43,6 +43,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -69,12 +70,12 @@ import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
-import eu.europeana.uim.gui.cp.client.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
@@ -122,6 +123,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	FlexTable impResultsTable;
 
 	ProgressBar progressBar;
+	
 
 	
 	
@@ -154,6 +156,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -380,10 +383,121 @@ public class ImportResourcesWidget extends IngestionWidget {
 				});
 	}
 
+	
+	/**
+	 * @return
+	 */
 	private String generateQuery() {
 		String query = "contacts.first_name LIKE '%M%'";
 
-		return query;
+		StringBuffer querybuffer = new StringBuffer();
+		
+		String dsname = DOM.getElementById("dsnameSearchField").getInnerText();
+		String identifier = DOM.getElementById("identifierSearchField").getInnerText();
+		String organization = DOM.getElementById("organizationSearchField").getInnerText();
+		String acronym = DOM.getElementById("acronymSearchField").getInnerText();
+		String type = DOM.getElementById("typeSearchField").getInnerText();
+		String status = DOM.getElementById("statusSearchField").getInnerText();
+		String enabled = DOM.getElementById("enabledSearchField").getInnerText();
+		String ingestionDate = DOM.getElementById("ingestionDateSearchField").getInnerText();
+		String amount = DOM.getElementById("amountSearchField").getInnerText();
+		String user = DOM.getElementById("userSearchField").getInnerText();
+		String country = DOM.getElementById("countrySearchField").getInnerText();
+
+		ArrayList<StringBuffer> fieldinventory = new ArrayList<StringBuffer>();
+		
+		
+        if(!"".equals(dsname)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append(dsname);
+        	queryitem.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(identifier)){
+        	StringBuffer queryitem = new StringBuffer();
+			queryitem.append("opportunities.first_name LIKE '");
+			queryitem.append(identifier);
+			queryitem.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(organization)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append(organization);
+        	queryitem.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(acronym)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append(acronym);
+        	queryitem.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(type)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append(type);
+        	queryitem.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(status)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.sales_stage LIKE '");
+        	querybuffer.append(status);
+        	querybuffer.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(enabled)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.first_name LIKE '");
+        	querybuffer.append(enabled);
+        	querybuffer.append("%'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(ingestionDate)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.first_name LIKE '");
+        	querybuffer.append(ingestionDate);
+        	querybuffer.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(amount)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.first_name LIKE '%");
+        	querybuffer.append(amount);
+        	querybuffer.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(user)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.first_name LIKE '%");
+        	querybuffer.append(user);
+        	querybuffer.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		else if(!"".equals(country)){
+        	StringBuffer queryitem = new StringBuffer();
+        	querybuffer.append("opportunities.first_name LIKE '%");
+        	querybuffer.append(country);
+        	querybuffer.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		
+        for(int i=0;i<fieldinventory.size();i++){
+        	if(i==0){
+        		querybuffer.append(fieldinventory.get(i));
+        		
+        	}
+        	else{
+        		querybuffer.append(" AND ");
+        		querybuffer.append(fieldinventory.get(i));
+        	}
+        }
+        
+        
+		return querybuffer.toString();
 
 	}
 
@@ -430,7 +544,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								o2.getImportedIMG());
 					}
 				});
-		cellTable.addColumn(isImportedColumn, "Imported");
+		cellTable.addColumn(isImportedColumn, EuropeanaClientConstants.UIMSTATELABEL);
 		isImportedColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -468,7 +582,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 						return o1.getName().compareTo(o2.getName());
 					}
 				});
-		cellTable.addColumn(collectionColumn, "Collection Identifier");
+		cellTable.addColumn(collectionColumn, EuropeanaClientConstants.DSNAMESEARCHLABEL);
 		collectionColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, Anchor>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -499,7 +613,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								o2.getOrganization_name());
 					}
 				});
-		cellTable.addColumn(organizationColumn, "Organization Name");
+		cellTable.addColumn(organizationColumn,EuropeanaClientConstants.ORGANIZATIONSEARCHLABEL);
 		organizationColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -528,7 +642,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 						return o1.getCountry_c().compareTo(o2.getCountry_c());
 					}
 				});
-		cellTable.addColumn(countryColumn, "Country");
+		cellTable.addColumn(countryColumn,EuropeanaClientConstants.COUNTRYSEARCHLABEL);
 		countryColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -556,7 +670,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 						return o1.getStatus().compareTo(o2.getStatus());
 					}
 				});
-		cellTable.addColumn(statusColumn, "Status");
+		cellTable.addColumn(statusColumn,EuropeanaClientConstants.STATUSSEARCHLABEL);
 		statusColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -586,7 +700,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								o2.getIngested_total_c());
 					}
 				});
-		cellTable.addColumn(amountColumn, "Amount of Ingested Objects");
+		cellTable.addColumn(amountColumn,EuropeanaClientConstants.AMOUNTSEARCHLABEL);
 		amountColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -615,7 +729,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								o2.getExpected_ingestion_date());
 					}
 				});
-		cellTable.addColumn(ingestionDateColumn, "Planned Ingestion Date");
+		cellTable.addColumn(ingestionDateColumn,EuropeanaClientConstants.INGESTDATESEARCHLABEL);
 		ingestionDateColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -647,7 +761,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 					}
 				});
 
-		cellTable.addColumn(userColumn, "SugarCRM User");
+		cellTable.addColumn(userColumn,EuropeanaClientConstants.USERSEARCHLABEL);
 		userColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
 					public void update(int index, SugarCRMRecordDTO object,
@@ -748,52 +862,76 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	    // Add some standard form options
 
-	    TextBox dsnameSearchField = new TextBox();	    
+	    TextBox dsnameSearchField = new TextBox();	
+	    setDOMID(dsnameSearchField,"dsnameSearchField");
+	    
 	    TextBox identifierSearchField = new TextBox();
+	    setDOMID(identifierSearchField,"identifierSearchField");
+	    
 	    TextBox organizationSearchField = new TextBox();
+	    setDOMID(organizationSearchField,"organizationSearchField");
+	    
 	    TextBox acronymSearchField = new TextBox();
+	    setDOMID(acronymSearchField,"acronymSearchField");
+	    
 	    TextBox typeSearchField = new TextBox();
+	    setDOMID(typeSearchField,"typeSearchField");
+	    
 	    TextBox statusSearchField = new TextBox();
+	    setDOMID(statusSearchField,"statusSearchField");
+	    
 	    TextBox enabledSearchField = new TextBox();
+	    setDOMID(enabledSearchField,"enabledSearchField");
+	    
 	    TextBox ingestionDateSearchField = new TextBox();
+	    setDOMID(ingestionDateSearchField,"ingestionDateSearchField");
+	    
 	    TextBox amountSearchField = new TextBox();
+	    setDOMID(amountSearchField,"amountSearchField");
+	    
 	    TextBox userSearchField = new TextBox();
+	    setDOMID(userSearchField,"userSearchField");
+
 	    TextBox countrySearchField = new TextBox();
-	    
-	    layout.setHTML(1, 0, "DataSet Name:");
-	    layout.setWidget(1, 1, new TextBox());
-	    
-	    layout.setHTML(1, 2, "Identifier:");
-	    layout.setWidget(1, 3, new TextBox());
-	    
-	    layout.setHTML(1, 4, "Organization:");
-	    layout.setWidget(1, 5, new TextBox());
+	    setDOMID(countrySearchField,"countrySearchField");
 
-	    layout.setHTML(2, 0, "Acronym:");
-	    layout.setWidget(2, 1, new TextBox());
-	    
-	    layout.setHTML(2, 2, "Type:");
-	    layout.setWidget(2, 3, new TextBox());
-	    
-	    layout.setHTML(2, 4, "Status:");
-	    layout.setWidget(2, 5, new TextBox());
 	    
 	    
-	    layout.setHTML(3, 0, "Enabled:");
-	    layout.setWidget(3, 1, new TextBox());
+	    layout.setHTML(1, 0, EuropeanaClientConstants.DSNAMESEARCHLABEL);
+	    layout.setWidget(1, 1, dsnameSearchField);
 	    
-	    layout.setHTML(3, 2, "Expected Ingestion Date:");
-	    layout.setWidget(3, 3, new TextBox());
+	    layout.setHTML(1, 2, EuropeanaClientConstants.IDSEARCHLABEL);
+	    layout.setWidget(1, 3,identifierSearchField);
 	    
-	    layout.setHTML(3, 4, "Amount:");
-	    layout.setWidget(3, 5, new TextBox());
+	    layout.setHTML(1, 4, EuropeanaClientConstants.ORGANIZATIONSEARCHLABEL);
+	    layout.setWidget(1, 5, organizationSearchField);
 
-	    layout.setHTML(4, 0, "Assigned User:");
-	    layout.setWidget(4, 1, new TextBox());
+	    layout.setHTML(2, 0, EuropeanaClientConstants.ACRONYMSEARCHLABEL);
+	    layout.setWidget(2, 1, acronymSearchField);
 	    
-	    layout.setHTML(4, 2, "DataSet Country:");
-	    layout.setWidget(4, 3, new TextBox());
+	    layout.setHTML(2, 2, EuropeanaClientConstants.TYPESEARCHLABEL);
+	    layout.setWidget(2, 3, typeSearchField);
+	    
+	    layout.setHTML(2, 4, EuropeanaClientConstants.STATUSSEARCHLABEL);
+	    layout.setWidget(2, 5, statusSearchField);
+	    
+	    
+	    layout.setHTML(3, 0, EuropeanaClientConstants.ENABLEDSEARCHLABEL);
+	    layout.setWidget(3, 1, enabledSearchField);
+	    
+	    layout.setHTML(3, 2, EuropeanaClientConstants.INGESTDATESEARCHLABEL);
+	    layout.setWidget(3, 3, ingestionDateSearchField);
+	    
+	    layout.setHTML(3, 4, EuropeanaClientConstants.AMOUNTSEARCHLABEL);
+	    layout.setWidget(3, 5, amountSearchField);
+
+	    layout.setHTML(4, 0, EuropeanaClientConstants.USERSEARCHLABEL);
+	    layout.setWidget(4, 1, userSearchField);
+	    
+	    layout.setHTML(4, 2, EuropeanaClientConstants.COUNTRYSEARCHLABEL);
+	    layout.setWidget(4, 3, countrySearchField);
  
+
 
 
 	    // Wrap the contents in a DecoratorPanel
@@ -801,5 +939,11 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    decPanel.setWidget(layout);
 	    return decPanel;
 	  }
+	  
+	  
+	  private void setDOMID(Widget widg,String id){
+		    DOM.setElementProperty(widg.getElement(),"id", id);
+	  }
+	  
 	
 }

@@ -18,7 +18,9 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.gui.cp.client;
+package eu.europeana.uim.gui.cp.client.utils;
+
+
 
 /**
  * 
@@ -30,5 +32,20 @@ public class EuropeanaClientConstants {
 	public final static String ERRORIMAGELOC = "images/no.png" ;
 	public final static String SUCCESSIMAGELOC = "images/ok.png" ;
 
+	//Search labels declarations
+	public final static String DSNAMESEARCHLABEL = "DataSet Name:" ;
+	public final static String IDSEARCHLABEL = "Identifier:" ;
+	public final static String ORGANIZATIONSEARCHLABEL = "Organization:" ;	
+	public final static String ACRONYMSEARCHLABEL = "Acronym:" ;	
+	public final static String TYPESEARCHLABEL = "Type:" ;
+	public final static String STATUSSEARCHLABEL = "SugarCRM Status:" ;
+	public final static String ENABLEDSEARCHLABEL = "Enabled:" ;
+	public final static String INGESTDATESEARCHLABEL = "Expected Ingestion Date:" ;
+	public final static String AMOUNTSEARCHLABEL = "Amount of ingested items:" ;
+	public final static String COUNTRYSEARCHLABEL = "Country:" ;
+	public final static String USERSEARCHLABEL = "User:" ;
 	
+
+	//Misc
+	public final static String UIMSTATELABEL = "State:" ;
 }
