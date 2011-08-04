@@ -395,95 +395,105 @@ public class ImportResourcesWidget extends IngestionWidget {
 		
 		
 		String dsname = DOM.getElementById("dsnameSearchField").<InputElement>cast().getValue();
-		String identifier = DOM.getElementById("identifierSearchField").getNodeValue();
-		String organization = DOM.getElementById("organizationSearchField").getNodeValue();
-		String acronym = DOM.getElementById("acronymSearchField").getNodeValue();
-		String type = DOM.getElementById("typeSearchField").getNodeValue();
-		String status = DOM.getElementById("statusSearchField").getNodeValue();
-		String enabled = DOM.getElementById("enabledSearchField").getNodeValue();
-		String ingestionDate = DOM.getElementById("ingestionDateSearchField").getNodeValue();
-		String amount = DOM.getElementById("amountSearchField").getNodeValue();
-		String user = DOM.getElementById("userSearchField").getNodeValue();
-		String country = DOM.getElementById("countrySearchField").getNodeValue();
+		String identifier = DOM.getElementById("identifierSearchField").<InputElement>cast().getValue();
+		String organization = DOM.getElementById("organizationSearchField").<InputElement>cast().getValue();
+		String acronym = DOM.getElementById("acronymSearchField").<InputElement>cast().getValue();
+		String type = DOM.getElementById("typeSearchField").<InputElement>cast().getValue();
+		String status = DOM.getElementById("statusSearchField").<InputElement>cast().getValue();
+		String enabled = DOM.getElementById("enabledSearchField").<InputElement>cast().getValue();
+		String ingestionDate = DOM.getElementById("ingestionDateSearchField").<InputElement>cast().getValue();
+		String amount = DOM.getElementById("amountSearchField").<InputElement>cast().getValue();
+		String user = DOM.getElementById("userSearchField").<InputElement>cast().getValue();
+		String country = DOM.getElementById("countrySearchField").<InputElement>cast().getValue();
 
 		ArrayList<StringBuffer> fieldinventory = new ArrayList<StringBuffer>();
 		
 		
-        if(dsname != null){
+        if(!"".equals(dsname)){
         	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append("opportunities.name LIKE '");
         	queryitem.append(dsname);
-        	queryitem.append("%'");
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(identifier)){
+		
+        if(!"".equals(identifier)){
         	StringBuffer queryitem = new StringBuffer();
-			queryitem.append("opportunities.first_name LIKE '");
+			queryitem.append("opportunities.name_id_c LIKE '");
 			queryitem.append(identifier);
-			queryitem.append("%'");
+			queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(organization)){
+	    
+        if(!"".equals(organization)){
         	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append("opportunities.account_name LIKE '");
         	queryitem.append(organization);
-        	queryitem.append("%'");
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(acronym)){
+		
+        if(!"".equals(acronym)){
         	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append("opportunities.name_acronym_c LIKE '");
         	queryitem.append(acronym);
-        	queryitem.append("%'");
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(type)){
+        
+		if(!"".equals(type)){
         	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.first_name LIKE '");
+        	queryitem.append("opportunities.opportunity_type LIKE '");
         	queryitem.append(type);
-        	queryitem.append("%'");
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(status)){
+		
+		if(!"".equals(status)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.sales_stage LIKE '");
-        	querybuffer.append(status);
-        	querybuffer.append("%'");
+        	queryitem.append("opportunities.sales_stage LIKE '");
+        	queryitem.append(status);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(enabled)){
+		
+		if(!"".equals(enabled)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.first_name LIKE '");
-        	querybuffer.append(enabled);
-        	querybuffer.append("%'");
+        	queryitem.append("opportunities.enabled_c LIKE '");
+        	queryitem.append(enabled);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(ingestionDate)){
+		
+		if(!"".equals(ingestionDate)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.first_name LIKE '");
-        	querybuffer.append(ingestionDate);
-        	querybuffer.append("'");
+        	queryitem.append("opportunities.date_closed LIKE '");
+        	queryitem.append(ingestionDate);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(amount)){
+		
+		if(!"".equals(amount)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.first_name LIKE '%");
-        	querybuffer.append(amount);
-        	querybuffer.append("'");
+        	queryitem.append("opportunities.amount LIKE '");
+        	queryitem.append(amount);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(user)){
+		
+		if(!"".equals(user)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.first_name LIKE '%");
-        	querybuffer.append(user);
-        	querybuffer.append("'");
+        	queryitem.append("opportunities.created_by LIKE '");
+        	queryitem.append(user);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
-		else if(!"".equals(country)){
+		
+		if(!"".equals(country)){
         	StringBuffer queryitem = new StringBuffer();
-        	querybuffer.append("opportunities.first_name LIKE '%");
-        	querybuffer.append(country);
-        	querybuffer.append("'");
+        	queryitem.append("opportunities.country_c LIKE '");
+        	queryitem.append(country);
+        	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
 		

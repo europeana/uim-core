@@ -147,6 +147,10 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		SugarCRMService sugService = engine.getSugarCrmService();
 		
 		CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
+		queryObj.setMaxResults(100);
+		queryObj.setOffset(0);
+		queryObj.setOrderBy(RetrievableField.ID);
+
 		//SimpleSugarCrmQuery queryObj = new  SimpleSugarCrmQuery(DatasetStates.MAPPING_AND_NORMALIZATION);
 		
 		
