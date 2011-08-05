@@ -17,7 +17,6 @@
   <g:HTMLPanel>
 
   <g:VerticalPanel ui:field='searchPanel' />
-  <g:Button ui:field='searchButton' />
   <br></br>
   
     <table cellspacing='0' cellpadding='0' style='width:100%;'>

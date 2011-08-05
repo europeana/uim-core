@@ -60,6 +60,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -108,7 +109,6 @@ public class ImportResourcesWidget extends IngestionWidget {
 	@UiField(provided = true)
 	SimplePager pager;
 
-	@UiField(provided = true)
 	Button searchButton;
 
 	@UiField(provided = true)
@@ -188,17 +188,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		searchDialog = createSearchDialogBox();
 		importDialog = createImportDialog();
 
-		searchButton = new Button();
-		searchButton.setText(EuropeanaClientConstants.SEARCHBUTTONLABEL);
-		searchButton.setTitle(EuropeanaClientConstants.SEARCHBUTTONTITLE);
 
-		searchButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				searchDialog.center();
-				performSearch();
-			}
-		});
 
 
 
@@ -395,16 +385,17 @@ public class ImportResourcesWidget extends IngestionWidget {
 		
 		
 		String dsname = DOM.getElementById("dsnameSearchField").<InputElement>cast().getValue();
-		String identifier = DOM.getElementById("identifierSearchField").<InputElement>cast().getValue();
-		String organization = DOM.getElementById("organizationSearchField").<InputElement>cast().getValue();
-		String acronym = DOM.getElementById("acronymSearchField").<InputElement>cast().getValue();
 		String type = DOM.getElementById("typeSearchField").<InputElement>cast().getValue();
 		String status = DOM.getElementById("statusSearchField").<InputElement>cast().getValue();
-		String enabled = DOM.getElementById("enabledSearchField").<InputElement>cast().getValue();
-		String ingestionDate = DOM.getElementById("ingestionDateSearchField").<InputElement>cast().getValue();
 		String amount = DOM.getElementById("amountSearchField").<InputElement>cast().getValue();
-		String user = DOM.getElementById("userSearchField").<InputElement>cast().getValue();
-		String country = DOM.getElementById("countrySearchField").<InputElement>cast().getValue();
+		
+		//String identifier = DOM.getElementById("identifierSearchField").<InputElement>cast().getValue();
+		//String organization = DOM.getElementById("organizationSearchField").<InputElement>cast().getValue();
+		//String acronym = DOM.getElementById("acronymSearchField").<InputElement>cast().getValue();
+		//String enabled = DOM.getElementById("enabledSearchField").<InputElement>cast().getValue();
+		//String ingestionDate = DOM.getElementById("ingestionDateSearchField").<InputElement>cast().getValue();
+		//String user = DOM.getElementById("userSearchField").<InputElement>cast().getValue();
+		//String country = DOM.getElementById("countrySearchField").<InputElement>cast().getValue();
 
 		ArrayList<StringBuffer> fieldinventory = new ArrayList<StringBuffer>();
 		
@@ -417,30 +408,7 @@ public class ImportResourcesWidget extends IngestionWidget {
         	fieldinventory.add(queryitem);
 		}
 		
-        if(!"".equals(identifier)){
-        	StringBuffer queryitem = new StringBuffer();
-			queryitem.append("opportunities.name_id_c LIKE '");
-			queryitem.append(identifier);
-			queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-	    
-        if(!"".equals(organization)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.account_name LIKE '");
-        	queryitem.append(organization);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-        if(!"".equals(acronym)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.name_acronym_c LIKE '");
-        	queryitem.append(acronym);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-        
+
 		if(!"".equals(type)){
         	StringBuffer queryitem = new StringBuffer();
         	queryitem.append("opportunities.opportunity_type LIKE '");
@@ -457,6 +425,16 @@ public class ImportResourcesWidget extends IngestionWidget {
         	fieldinventory.add(queryitem);
 		}
 		
+		
+		if(!"".equals(amount)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.amount LIKE '");
+        	queryitem.append(amount);
+        	queryitem.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		
+        /*
 		if(!"".equals(enabled)){
         	StringBuffer queryitem = new StringBuffer();
         	queryitem.append("opportunities.enabled_c LIKE '");
@@ -469,14 +447,6 @@ public class ImportResourcesWidget extends IngestionWidget {
         	StringBuffer queryitem = new StringBuffer();
         	queryitem.append("opportunities.date_closed LIKE '");
         	queryitem.append(ingestionDate);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-		if(!"".equals(amount)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.amount LIKE '");
-        	queryitem.append(amount);
         	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
@@ -496,6 +466,32 @@ public class ImportResourcesWidget extends IngestionWidget {
         	queryitem.append("'");
         	fieldinventory.add(queryitem);
 		}
+
+        if(!"".equals(identifier)){
+        	StringBuffer queryitem = new StringBuffer();
+			queryitem.append("opportunities.name_id_c LIKE '");
+			queryitem.append(identifier);
+			queryitem.append("'");
+        	fieldinventory.add(queryitem);
+		}
+
+        if(!"".equals(organization)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.account_name LIKE '");
+        	queryitem.append(organization);
+        	queryitem.append("'");
+        	fieldinventory.add(queryitem);
+		}
+		
+        if(!"".equals(acronym)){
+        	StringBuffer queryitem = new StringBuffer();
+        	queryitem.append("opportunities.name_acronym_c LIKE '");
+        	queryitem.append(acronym);
+        	queryitem.append("'");
+        	fieldinventory.add(queryitem);
+		}
+        * 
+        */
 		
         for(int i=0;i<fieldinventory.size();i++){
         	if(i==0){
@@ -873,75 +869,50 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	    TextBox dsnameSearchField = new TextBox();	
 	    setDOMID(dsnameSearchField,"dsnameSearchField");
+
 	    
-	    TextBox identifierSearchField = new TextBox();
-	    setDOMID(identifierSearchField,"identifierSearchField");
-	    
-	    TextBox organizationSearchField = new TextBox();
-	    setDOMID(organizationSearchField,"organizationSearchField");
-	    
-	    TextBox acronymSearchField = new TextBox();
-	    setDOMID(acronymSearchField,"acronymSearchField");
-	    
-	    TextBox typeSearchField = new TextBox();
+
+	    final ListBox typeSearchField = new ListBox(false);
+	    typeSearchField.addItem("Update", "Update");
+	    typeSearchField.addItem("New Dataset", "New%Dataset");
 	    setDOMID(typeSearchField,"typeSearchField");
+	    
+	    //TextBox typeSearchField = new TextBox();
+
 	    
 	    TextBox statusSearchField = new TextBox();
 	    setDOMID(statusSearchField,"statusSearchField");
 	    
-	    TextBox enabledSearchField = new TextBox();
-	    setDOMID(enabledSearchField,"enabledSearchField");
-	    
-	    TextBox ingestionDateSearchField = new TextBox();
-	    setDOMID(ingestionDateSearchField,"ingestionDateSearchField");
-	    
 	    TextBox amountSearchField = new TextBox();
 	    setDOMID(amountSearchField,"amountSearchField");
 	    
-	    TextBox userSearchField = new TextBox();
-	    setDOMID(userSearchField,"userSearchField");
+		searchButton = new Button();
+		searchButton.setText(EuropeanaClientConstants.SEARCHBUTTONLABEL);
+		searchButton.setTitle(EuropeanaClientConstants.SEARCHBUTTONTITLE);
 
-	    TextBox countrySearchField = new TextBox();
-	    setDOMID(countrySearchField,"countrySearchField");
-
+		searchButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				searchDialog.center();
+				performSearch();
+			}
+		});
 	    
 	    
 	    layout.setHTML(1, 0, EuropeanaClientConstants.DSNAMESEARCHLABEL);
 	    layout.setWidget(1, 1, dsnameSearchField);
 	    
-	    layout.setHTML(1, 2, EuropeanaClientConstants.IDSEARCHLABEL);
-	    layout.setWidget(1, 3,identifierSearchField);
+	    layout.setHTML(1, 2, EuropeanaClientConstants.TYPESEARCHLABEL);
+	    layout.setWidget(1, 3, typeSearchField);
 	    
-	    layout.setHTML(1, 4, EuropeanaClientConstants.ORGANIZATIONSEARCHLABEL);
-	    layout.setWidget(1, 5, organizationSearchField);
-
-	    layout.setHTML(2, 0, EuropeanaClientConstants.ACRONYMSEARCHLABEL);
-	    layout.setWidget(2, 1, acronymSearchField);
+	    layout.setHTML(1, 4, EuropeanaClientConstants.STATUSSEARCHLABEL);
+	    layout.setWidget(1, 5, statusSearchField);
 	    
-	    layout.setHTML(2, 2, EuropeanaClientConstants.TYPESEARCHLABEL);
-	    layout.setWidget(2, 3, typeSearchField);
+	    layout.setHTML(2, 0, EuropeanaClientConstants.AMOUNTSEARCHLABEL);
+	    layout.setWidget(2, 1, amountSearchField);
+	 
+	    layout.setWidget(3, 0, searchButton);
 	    
-	    layout.setHTML(2, 4, EuropeanaClientConstants.STATUSSEARCHLABEL);
-	    layout.setWidget(2, 5, statusSearchField);
-	    
-	    
-	    layout.setHTML(3, 0, EuropeanaClientConstants.ENABLEDSEARCHLABEL);
-	    layout.setWidget(3, 1, enabledSearchField);
-	    
-	    layout.setHTML(3, 2, EuropeanaClientConstants.INGESTDATESEARCHLABEL);
-	    layout.setWidget(3, 3, ingestionDateSearchField);
-	    
-	    layout.setHTML(3, 4, EuropeanaClientConstants.AMOUNTSEARCHLABEL);
-	    layout.setWidget(3, 5, amountSearchField);
-
-	    layout.setHTML(4, 0, EuropeanaClientConstants.USERSEARCHLABEL);
-	    layout.setWidget(4, 1, userSearchField);
-	    
-	    layout.setHTML(4, 2, EuropeanaClientConstants.COUNTRYSEARCHLABEL);
-	    layout.setWidget(4, 3, countrySearchField);
- 
-
-
 
 	    // Wrap the contents in a DecoratorPanel
 	    DecoratorPanel decPanel = new DecoratorPanel();
