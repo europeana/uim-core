@@ -25,14 +25,7 @@
         <argument ref="registry"/>
         <argument ref="uimWorkflowProcessor" />
     </bean>
-
     <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.api.Orchestrator" />
-
-    <bean id="sw" class="eu.europeana.uim.workflows.SysoutWorkflow">
-        <argument ref="registry" />
-    </bean>
-
-    <service id="sysoutWorkflow" ref="sw" interface="eu.europeana.uim.workflow.Workflow"/>
 
 
 </blueprint>
