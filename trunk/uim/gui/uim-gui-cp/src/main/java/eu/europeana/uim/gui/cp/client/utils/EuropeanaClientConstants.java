@@ -31,7 +31,7 @@ public class EuropeanaClientConstants {
 
 	public final static String ERRORIMAGELOC = "images/no.png" ;
 	public final static String SUCCESSIMAGELOC = "images/ok.png" ;
-	public final static String QUERYIMAGELOC = "images/ok.png;"; 
+	public final static String QUERYIMAGELOC = "images/network.gif"; 
 	public final static String SEARCHDIALOGMSG = "Searching for SugarCRM entries"; 
 	
 	

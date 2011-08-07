@@ -78,6 +78,7 @@ import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
+import eu.europeana.uim.gui.cp.client.utils.RecordStates;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
@@ -870,18 +871,36 @@ public class ImportResourcesWidget extends IngestionWidget {
 	    TextBox dsnameSearchField = new TextBox();	
 	    setDOMID(dsnameSearchField,"dsnameSearchField");
 
-	    
 
+	    final ListBox statusSearchField = new ListBox(false);
+	    statusSearchField.addItem("--", "");	    
+	    statusSearchField.addItem(RecordStates.OAI_PMH_TESTING.getDescription(),
+	    		RecordStates.OAI_PMH_TESTING.getSysId());
+	    statusSearchField.addItem(RecordStates.OAI_PMH_SENT_TO_ORG.getDescription(),
+	    		RecordStates.OAI_PMH_SENT_TO_ORG.getSysId());
+	    statusSearchField.addItem(RecordStates.READY_FOR_HARVESTING.getDescription(), 
+	    		RecordStates.READY_FOR_HARVESTING.getSysId());
+	    statusSearchField.addItem(RecordStates.MAPPING_AND_NORMALIZATION.getDescription(), 
+	    		RecordStates.MAPPING_AND_NORMALIZATION.getSysId());
+	    statusSearchField.addItem(RecordStates.READY_FOR_REPLICATION.getDescription(), 
+	    		RecordStates.READY_FOR_REPLICATION.getSysId());
+	    statusSearchField.addItem(RecordStates.ONGOING_SCHEDULED_UPDATES.getDescription(), 
+	    		RecordStates.ONGOING_SCHEDULED_UPDATES.getSysId());
+	    statusSearchField.addItem(RecordStates.INGESTION_COMPLETE.getDescription(), 
+	    		RecordStates.INGESTION_COMPLETE.getSysId());
+	    statusSearchField.addItem(RecordStates.DISABLED_AND_REPLACED.getDescription(), 
+	    		RecordStates.DISABLED_AND_REPLACED.getSysId());
+	    statusSearchField.addItem(RecordStates.HARVESTING_PENDING.getDescription(), 
+	    		RecordStates.HARVESTING_PENDING.getSysId());
+	    setDOMID(statusSearchField,"statusSearchField");
+
+	    
 	    final ListBox typeSearchField = new ListBox(false);
+	    typeSearchField.addItem("--", "");	    
 	    typeSearchField.addItem("Update", "Update");
 	    typeSearchField.addItem("New Dataset", "New%Dataset");
 	    setDOMID(typeSearchField,"typeSearchField");
 	    
-	    //TextBox typeSearchField = new TextBox();
-
-	    
-	    TextBox statusSearchField = new TextBox();
-	    setDOMID(statusSearchField,"statusSearchField");
 	    
 	    TextBox amountSearchField = new TextBox();
 	    setDOMID(amountSearchField,"amountSearchField");
