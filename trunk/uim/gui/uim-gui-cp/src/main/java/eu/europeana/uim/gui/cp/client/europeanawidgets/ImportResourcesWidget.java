@@ -337,8 +337,10 @@ public class ImportResourcesWidget extends IngestionWidget {
 								impResultsTable.setWidget(numRows, 0, new Image(
 										searchresults.getResult()));
 								impResultsTable.setWidget(numRows, 1, new HTML(
-										searchresults.getDescription()));
+										searchresults.getCollectionName()));
 								impResultsTable.setWidget(numRows, 2, new HTML(
+										searchresults.getDescription()));
+								impResultsTable.setWidget(numRows, 3, new HTML(
 										searchresults.getCause()));
 								
 								progressBar.setProgress(impResultsTable.getRowCount());

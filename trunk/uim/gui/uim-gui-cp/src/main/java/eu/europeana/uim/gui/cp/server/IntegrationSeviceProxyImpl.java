@@ -74,6 +74,8 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		ImportResultDTO result = new ImportResultDTO();
 		result.setResult(EuropeanaClientConstants.SUCCESSIMAGELOC);
 		
+		result.setCollectionName(record.getName());
+		
 		String id = record.getId();
 		
 		try {
