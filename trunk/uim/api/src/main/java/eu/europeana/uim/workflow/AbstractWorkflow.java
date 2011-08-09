@@ -65,7 +65,7 @@ public abstract class AbstractWorkflow implements Workflow {
     public String getIdentifier() {
         return getClass().getSimpleName();
     }
-    
+
     @Override
     public String getName() {
         return this.name;
@@ -79,6 +79,14 @@ public abstract class AbstractWorkflow implements Workflow {
     @Override
     public List<IngestionPlugin> getSteps() {
         return this.steps;
+    }
+
+    @Override
+    public IngestionPlugin getStep(String identifier) {
+        for (IngestionPlugin plugin : steps) {
+            if (plugin.getIdentifier().equals(identifier)) { return plugin; }
+        }
+        return null;
     }
 
     @Override

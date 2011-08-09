@@ -41,6 +41,12 @@ public interface Workflow {
     List<IngestionPlugin> getSteps();
 
     /**
+     * @param identifier 
+     * @return plugin with the given identifier or null if not in wf.
+     */
+    IngestionPlugin getStep(String identifier);
+
+    /**
      * @param pluginIdentifier
      * @return Is this a save point plugin?
      */
