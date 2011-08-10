@@ -18,27 +18,37 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.gui.cp.client.services;
+package eu.europeana.uim.gui.cp.shared;
 
-import java.util.List;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-
-import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
-import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
-import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * 
  * 
  * @author Georgios Markakis
  */
-public interface IntegrationSeviceProxyAsync {
+public class HarvestingStatusDTO implements IsSerializable {
 
-	public void processSelectedRecord(SugarCRMRecordDTO record, AsyncCallback<ImportResultDTO> async);
+	public static enum STATUS{
+		NOT_HARVESTED,
+		HARVESTED,
+		FAILED
+	}
 	
-	public void executeSugarCRMQuery(String query, AsyncCallback<List<SugarCRMRecordDTO>> async);
+	private STATUS status;
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(STATUS status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public STATUS getStatus() {
+		return status;
+	} 
 	
-	public void retrieveIntegrationInfo(IntegrationStatusDTO.TYPE type,String ID, AsyncCallback<List<IntegrationStatusDTO>> async);
 }

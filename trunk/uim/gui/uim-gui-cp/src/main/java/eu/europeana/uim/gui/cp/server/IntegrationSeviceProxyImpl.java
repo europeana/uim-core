@@ -30,6 +30,8 @@ import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
+import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
+import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.repoxclient.rest.exceptions.AggregatorOperationException;
@@ -152,9 +154,6 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		queryObj.setMaxResults(100);
 		queryObj.setOffset(0);
 		queryObj.setOrderBy(RetrievableField.ID);
-
-		//SimpleSugarCrmQuery queryObj = new  SimpleSugarCrmQuery(DatasetStates.MAPPING_AND_NORMALIZATION);
-		
 		
 		try {
 			ArrayList<SugarCrmRecord> results =  (ArrayList<SugarCrmRecord>) sugService.retrieveRecords(queryObj);
@@ -170,6 +169,14 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		
 		
 		return guiobjs;
+	}
+	
+	
+	
+	@Override
+	public IntegrationStatusDTO retrieveIntegrationInfo(TYPE type, String ID) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
@@ -250,5 +257,9 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		return converted;
 		
 	}
+
+
+
+
 
 }

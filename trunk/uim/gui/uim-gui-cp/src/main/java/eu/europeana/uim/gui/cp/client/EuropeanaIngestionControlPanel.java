@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.prefetch.RunAsyncCode;
 
+import eu.europeana.uim.gui.cp.client.europeanawidgets.ExpandedResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.europeanawidgets.ImportResourcesWidget;
 import eu.europeana.uim.gui.cp.client.management.IngestionTriggerWidget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
@@ -36,6 +37,9 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
     protected IngestionCustomization getDynamics() {
         return new EuropeanaCustomization();
     }
+    
+    
+    
 
     @Override
     protected void addMenuEntries(SidebarMenu treeModel) {
@@ -51,8 +55,8 @@ public class EuropeanaIngestionControlPanel extends AbstractIngestionControlPane
 
         treeModel.addMenuEntry("Managing", new IngestionTriggerWidget(repositoryService,
                 resourceService, executionService),RunAsyncCode.runAsyncCode(IngestionTriggerWidget.class));
-        treeModel.addMenuEntry("Managing", new ResourceManagementWidget(repositoryService,
-                resourceService), RunAsyncCode.runAsyncCode(ResourceManagementWidget.class));
+        treeModel.addMenuEntry("Managing", new ExpandedResourceManagementWidget(repositoryService,
+                resourceService,integrationService), RunAsyncCode.runAsyncCode(ExpandedResourceManagementWidget.class));
         
 
         treeModel.addMenuEntry("Importing", new ImportResourcesWidget(repositoryService,
