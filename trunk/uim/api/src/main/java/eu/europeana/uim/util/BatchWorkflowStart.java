@@ -140,7 +140,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
                 List<I> allids = Arrays.asList(records);
-                allids = allids.subList(0, subset);
+                allids = allids.subList(0, Math.min(subset, allids.size() -1));
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
@@ -155,7 +155,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
 
-                allids = allids.subList(0, subset);
+                allids = allids.subList(0, Math.min(subset, allids.size() -1));
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
