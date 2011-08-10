@@ -52,10 +52,10 @@ public class ResourceManagementWidget extends IngestionWidget {
     private final ResourceServiceAsync   resourceService;
     
     @UiField(provided=true)
-    CellBrowser                          cellBrowser;
+    public CellBrowser                          cellBrowser;
 
     @UiField(provided = true)
-    CellTable<ParameterDTO>              cellTable;
+    public CellTable<ParameterDTO>              cellTable;
 
     private ProviderDTO                  provider;
     private CollectionDTO                collection;
@@ -129,12 +129,25 @@ public class ResourceManagementWidget extends IngestionWidget {
 
         initTableColumns(selectionModelTable, sortHandler);
         
-        Binder uiBinder = GWT.create(Binder.class);
-        Widget widget = uiBinder.createAndBindUi(this);
-
+        Widget widget = postInitialize();
+        
         return widget;
     }
 
+    
+    /**
+     * This method provides extra functionality for components that are meant to extend this one
+     * 
+     */
+    public Widget postInitialize(){
+        
+        Binder uiBinder = GWT.create(Binder.class);
+        Widget widget = uiBinder.createAndBindUi(this);
+        
+        return widget;
+    }
+    
+    
     /**
      * Retrieve parameters for given settings.
      */
@@ -276,4 +289,105 @@ public class ResourceManagementWidget extends IngestionWidget {
                     });
         }
     }
+    
+    
+    
+    /*
+     * Getters & Setters
+     */
+    
+    /**
+     * @return
+     */
+    public ProviderDTO getProvider(){
+    	return this.provider;
+    }
+    
+    /**
+     * @param provider
+     */
+    public void setProvider(ProviderDTO provider){
+    	this.provider = provider;
+    }
+    
+    /**
+     * @return
+     */
+    public CollectionDTO getCollection(){
+    	return this.collection;
+    }
+    
+    /**
+     * @param collection
+     */
+    public void setCollection(CollectionDTO collection){
+    	this.collection = collection;
+    }
+    
+    /**
+     * @return
+     */
+    public WorkflowDTO getWorkflow(){
+    	return this.workflow;
+    }
+    
+    /**
+     * @param workflow
+     */
+    public void setWorkflow(WorkflowDTO workflow){
+    	this.workflow = workflow;
+    }
+
+	/**
+	 * @return the cellBrowser
+	 */
+	public CellBrowser getCellBrowser() {
+		return cellBrowser;
+	}
+
+	/**
+	 * @param cellBrowser the cellBrowser to set
+	 */
+	public void setCellBrowser(CellBrowser cellBrowser) {
+		this.cellBrowser = cellBrowser;
+	}
+
+	/**
+	 * @return the cellTable
+	 */
+	public CellTable<ParameterDTO> getCellTable() {
+		return cellTable;
+	}
+
+	/**
+	 * @param cellTable the cellTable to set
+	 */
+	public void setCellTable(CellTable<ParameterDTO> cellTable) {
+		this.cellTable = cellTable;
+	}
+
+	/**
+	 * @return the repositoryService
+	 */
+	public RepositoryServiceAsync getRepositoryService() {
+		return repositoryService;
+	}
+
+	/**
+	 * @return the resourceService
+	 */
+	public ResourceServiceAsync getResourceService() {
+		return resourceService;
+	}
+
+	/**
+	 * @return the activeParameters
+	 */
+	public List<ParameterDTO> getActiveParameters() {
+		return activeParameters;
+	}
+    
+    
+    
+    
 }
