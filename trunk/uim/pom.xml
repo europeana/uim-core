@@ -95,19 +95,19 @@
 			<!-- this is required for the integration tests to work without explicitely 
 				specifying versions -->
 			<!-- see http://wiki.ops4j.org/display/paxexam/Pax+Exam+-+Tutorial+1 -->
-			<plugin>
-				<groupId>org.apache.servicemix.tooling</groupId>
-				<artifactId>depends-maven-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>generate-depends-file</id>
-						<goals>
-							<goal>generate-depends-file</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.servicemix.tooling</groupId> -->
+<!-- 				<artifactId>depends-maven-plugin</artifactId> -->
+<!-- 				<version>1.2</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>generate-depends-file</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>generate-depends-file</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 		</plugins>
 	</build>
 
