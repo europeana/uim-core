@@ -28,34 +28,34 @@
 			</plugin>
 			
 			<!-- Fetch shared test resources -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>unpack-test-resources</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>europeana-uim-common</artifactId>
-									<classifier>tests</classifier>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}/unpacked-test-resources
-							</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<includes>*.xml</includes>
-							<excludes>**/pom.xml,META-INF/**,OSGI-INF/**</excludes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>unpack-test-resources</id> -->
+<!-- 						<phase>generate-sources</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>unpack</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<artifactItems> -->
+<!-- 								<artifactItem> -->
+<!-- 									<groupId>${project.groupId}</groupId> -->
+<!-- 									<artifactId>europeana-uim-common</artifactId> -->
+<!-- 									<classifier>tests</classifier> -->
+<!-- 								</artifactItem> -->
+<!-- 							</artifactItems> -->
+<!-- 							<outputDirectory>${project.build.directory}/unpacked-test-resources -->
+<!-- 							</outputDirectory> -->
+<!-- 							<overWriteReleases>true</overWriteReleases> -->
+<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
+<!-- 							<includes>*.xml</includes> -->
+<!-- 							<excludes>**/pom.xml,META-INF/**,OSGI-INF/**</excludes> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 		</plugins>
 		<testResources>
 			<testResource>
