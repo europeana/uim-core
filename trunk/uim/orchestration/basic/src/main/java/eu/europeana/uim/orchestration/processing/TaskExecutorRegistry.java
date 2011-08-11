@@ -6,7 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import eu.europeana.uim.api.ActiveExecution;
 
 /**
  * Registration for task executors to keep track of them implemented as singleton.
@@ -51,12 +54,27 @@ public class TaskExecutorRegistry {
         }
     }
 
-    /**
+    /** execute the given task on the named executor. This method
+     * checks if the executor is still alive and if not the executor is 
+     * restarted (recreated)
+     * 
+     * @param <I>
+     * @param execution
      * @param name
-     * @return executor registered under the given name or null
+     * @param task
      */
-    public TaskExecutor getExecutor(String name) {
-        return executors.get(name);
+    public <I> void execute(ActiveExecution<I> execution, String name, Runnable task) {
+        TaskExecutor executor = executors.get(name);
+        try {
+            executor.execute(task);
+        } catch (IllegalThreadStateException t) {
+            log.log(Level.SEVERE, "Thread pool <" + name + "> is for execution " +execution.getExecution().getId() + " is dead. Starting a new pool.");
+            executor.shutdownNow();
+            
+            initialize(name, executor.getCorePoolSize(), executor.getMaximumPoolSize());
+            executor = executors.get(name);
+            executor.execute(task);
+        }
     }
 
     /**

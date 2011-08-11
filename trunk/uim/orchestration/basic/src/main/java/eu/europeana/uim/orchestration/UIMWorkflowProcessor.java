@@ -17,7 +17,6 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.orchestration.processing.TaskExecutor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.workflow.Task;
@@ -89,28 +88,37 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                 Iterator<ActiveExecution<I>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
                     ActiveExecution<I> execution = activeIterator.next();
+                    if (execution.isPaused()) {
+                        // did somebody cancel the paused job
+                        if (execution.getMonitor().isCancelled()) {
+                            complete(execution, true);
+                        }
+                        continue;
+                    } else if (execution.getMonitor().isCancelled()) {
+                        complete(execution, true);
+                        continue;
+                    }
 
                     try {
-                        // we ask the workflow start if we have more to do
-                        WorkflowStart start = execution.getWorkflow().getStart();
-
-                        if (execution.isInitialized() && !execution.isPaused()) {
+                        // start working after the execution is initailized
+                        if (execution.isInitialized()) {
+                            // we ask the workflow start if we have more to do
+                            WorkflowStart start = execution.getWorkflow().getStart();
                             boolean newtasks = false;
                             int execProgress = execution.getProgressSize();
+
                             if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
                                 newtasks = ensureTasksInProgress(execution, start, execProgress,
                                         totalProgress);
                             }
+
+                            // we need to wait until nothing is in progress before
+                            // we acutally can cancel this execution (this way we
+                            // never leave records in the pipe
                             if (execProgress == 0 && !newtasks) {
                                 ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
                                 if (creators.isEmpty()) {
-                                    if (execution.getMonitor().isCancelled()) {
-                                        // cancelled and nothing in progress
-                                        if (execution.isFinished()) {
-                                            complete(execution, true);
-                                        }
-                                    } else if (start.isFinished(execution,
-                                            execution.getStorageEngine())) {
+                                    if (start.isFinished(execution, execution.getStorageEngine())) {
                                         // everything done no new
                                         if (execution.isFinished()) {
                                             Thread.sleep(100);
@@ -148,9 +156,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                     // get successful tasks from previous step
                                     // and schedule them into the step executor
                                     // of this step
-                                    TaskExecutor executor = TaskExecutorRegistry.getInstance().getExecutor(
-                                            thisStep.getIdentifier());
-
                                     Task<I> task = null;
                                     synchronized (prevSuccess) {
                                         task = prevSuccess.poll();
@@ -170,42 +175,34 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                         synchronized (thisAssigned) {
                                             thisAssigned.add(task);
                                         }
-                                        if (!executor.isShutdown()) {
-                                            try {
-                                                executor.execute(task);
-                                            } catch (Throwable t) {
-                                                // if something goes wrong here
-                                                // we have a serios problem and
-                                                // should not continue the execution.
-                                                execution.setThrowable(t);
-                                            }
 
-                                            // if this is the first step,
-                                            // then we have just now scheduled a
-                                            // newly created task from the start plugin.
-                                            if (i == 0) {
-                                                execution.incrementScheduled(1);
-                                            }
-
-                                            if (execution.getThrowable() != null) {
-                                                execution.setThrowable(task.getThrowable());
-                                                complete(execution, true);
-                                                break;
-                                            }
-
-                                            synchronized (prevSuccess) {
-                                                task = prevSuccess.poll();
-                                            }
+                                        try {
+                                            TaskExecutorRegistry.getInstance().execute(execution, thisStep.getIdentifier(), task);
+                                        } catch (Throwable t) {
+                                            // if something goes wrong here
+                                            // we have a serios problem and
+                                            // should not continue the execution.
+                                            execution.setThrowable(t);
                                         }
 
+                                        // if this is the first step,
+                                        // then we have just now scheduled a
+                                        // newly created task from the start plugin.
+                                        if (i == 0) {
+                                            execution.incrementScheduled(1);
+                                        }
+
+                                        if (execution.getThrowable() != null) {
+                                            execution.setThrowable(task.getThrowable());
+                                            complete(execution, true);
+                                            break;
+                                        }
+
+                                        synchronized (prevSuccess) {
+                                            task = prevSuccess.poll();
+                                        }
                                     }
                                 }
-                            }
-                        } else {
-                            // this is paused or not initialized ... are we now cancelled - if yes
-// stop
-                            if (execution.getMonitor().isCancelled()) {
-                                complete(execution, true);
                             }
                         }
                     } catch (Throwable exc) {
@@ -267,8 +264,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             }
         }
 
-        if (!execution.getMonitor().isCancelled() &&
-            !start.isFinished(execution, execution.getStorageEngine())) {
+        if (!start.isFinished(execution, execution.getStorageEngine())) {
             if (activeCreators < 3) {
                 log.fine("Less than 3 outstanding batches: <" + execution.getExecution().getId() +
                          ">  execution/total progress:" + execProgress + "/" + totalProgress);
@@ -278,7 +274,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     createLoader.setQueue(execution.getSuccess(start.getIdentifier()));
                     creators.add(createLoader);
 
-                    TaskExecutorRegistry.getInstance().getExecutor(start.getIdentifier()).execute(
+                    TaskExecutorRegistry.getInstance().execute(execution, start.getIdentifier(),
                             createLoader);
                     return true;
                 }
@@ -292,12 +288,15 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private void complete(ActiveExecution execution, boolean cancel) throws StorageEngineException {
         try {
             execution.getWorkflow().getStart().completed(execution);
+
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution.getWorkflow().getStart(), t);
         }
         for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
             try {
                 step.completed(execution);
+                // FIXME: what to do if we are cancelled and
+                // records are in the complete output pipe?
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Failed to complete:" + step, t);
             }
@@ -313,7 +312,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             } else {
                 executionBean.setCanceled(false);
             }
-            
+
             executionBean.setSuccessCount(execution.getCompletedSize());
             executionBean.setFailureCount(execution.getFailureSize());
             executionBean.setProcessedCount(execution.getScheduledSize());
@@ -328,7 +327,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         } finally {
             execution.getStorageEngine().completed(execution);
             if (registry.getLoggingEngine() != null)
-                registry.getLoggingEngine().log(execution.getExecution(), Level.INFO, "UIMOrchestrator", "finish",
+                registry.getLoggingEngine().log(execution.getExecution(), Level.INFO,
+                        "UIMOrchestrator", "finish",
                         "Finished:" + execution.getExecution().getName());
 
             log.warning("Remove Execution:" + execution.toString());
