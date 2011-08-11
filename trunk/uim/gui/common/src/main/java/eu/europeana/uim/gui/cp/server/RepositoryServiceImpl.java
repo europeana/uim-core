@@ -159,6 +159,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
+//                    collDTO.setSize(col.get)
                     res.add(collDTO);
                 }
 

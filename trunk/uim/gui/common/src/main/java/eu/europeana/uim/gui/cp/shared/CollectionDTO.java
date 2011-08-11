@@ -16,6 +16,8 @@ public class CollectionDTO extends DataSourceDTO {
     private String      oaiBaseUrl;
     private String      oaiMetadataPrefix;
     private String      oaiSet;
+    
+    private int size;
 
     /**
      * Creates a new instance of this class.
@@ -140,6 +142,24 @@ public class CollectionDTO extends DataSourceDTO {
      */
     public void setOaiMetadataPrefix(String oaiMetadataPrefix) {
         this.oaiMetadataPrefix = oaiMetadataPrefix;
+    }
+    
+    
+
+    /**
+     * Returns the size.
+     * @return the size
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Sets the size to the given value.
+     * @param size the size to set
+     */
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
