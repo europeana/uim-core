@@ -42,6 +42,18 @@ public interface Request<I> extends UimDataSet<I> {
      * @return a specific date when this request has been initiated
      */
     Date getDate();
+
+    /**
+     * @return a specific date which reflects the period of thime the
+     * request did process (null if not specified)
+     */
+    Date getDataFrom();
+
+    /**
+     * @return a specific date which reflects the period of time the
+     * request did process (same as @see getDate() in most cases)
+     */
+    Date getDataTill();
     
     
     /** string key,value pairs for arbitraty information on colleciton level

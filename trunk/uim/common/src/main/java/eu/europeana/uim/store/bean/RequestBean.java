@@ -21,9 +21,12 @@ import eu.europeana.uim.store.Request;
  */
 public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> {
 
-    private Collection<I> collection;
-    private Date          date;
-    
+    private Collection<I>       collection;
+    private Date                date;
+
+    private Date                from;
+    private Date                till;
+
     private Map<String, String> values = new HashMap<String, String>();
 
     /**
@@ -70,8 +73,48 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
     public void setDate(Date date) {
         this.date = DateUtils.truncate(date, Calendar.SECOND);
     }
-    
-    
+
+    /**
+     * Returns the from.
+     * 
+     * @return the from
+     */
+    @Override
+    public Date getDataFrom() {
+        return from;
+    }
+
+    /**
+     * Sets the from to the given value.
+     * 
+     * @param from
+     *            the from to set
+     */
+    public void setDataFrom(Date from) {
+        this.from = from;
+    }
+
+    /**
+     * Returns the till.
+     * 
+     * @return the till
+     */
+    @Override
+    public Date getDataTill() {
+        if (till == null) return getDate();
+        return till;
+    }
+
+    /**
+     * Sets the till to the given value.
+     * 
+     * @param till
+     *            the till to set
+     */
+    public void setDataTill(Date till) {
+        this.till = till;
+    }
+
     @Override
     public void putValue(String key, String value) {
         values.put(key, value);
@@ -82,11 +125,9 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
         return values.get(key);
     }
 
-    
-    
     @Override
     public Map<String, String> values() {
-         return values;
+        return values;
     }
 
     @Override
@@ -94,6 +135,4 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
         return "Request [collection=" + collection + ", date=" + date + "]";
     }
 
-    
-    
 }
