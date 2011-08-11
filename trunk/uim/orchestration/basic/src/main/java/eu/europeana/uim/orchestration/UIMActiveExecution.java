@@ -296,8 +296,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public boolean isFinished() {
-        if (!isInitialized()) return false;
         if (getThrowable() != null) return true;
+        if (!isInitialized()) return false;
 
         boolean cancelled = getMonitor().isCancelled();
 
@@ -306,7 +306,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
 
         // we cannot guarantee this when something goes terribly wrong.
-        processed |= getThrowable() != null;
+        // processed |= getThrowable() != null;
 
         boolean empty = getProgressSize() == 0;
 
