@@ -27,6 +27,8 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
     private Date                from;
     private Date                till;
 
+    private boolean             failed;
+
     private Map<String, String> values = new HashMap<String, String>();
 
     /**
@@ -90,6 +92,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
      * @param from
      *            the from to set
      */
+    @Override
     public void setDataFrom(Date from) {
         this.from = from;
     }
@@ -111,8 +114,27 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> 
      * @param till
      *            the till to set
      */
+    @Override
     public void setDataTill(Date till) {
         this.till = till;
+    }
+    
+    /**
+     * Returns the failed.
+     * @return the failed
+     */
+    @Override
+    public boolean isFailed() {
+        return failed;
+    }
+
+    /**
+     * Sets the failed to the given value.
+     * @param failed the failed to set
+     */
+    @Override
+    public void setFailed(boolean failed) {
+        this.failed = failed;
     }
 
     @Override

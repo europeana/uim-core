@@ -43,17 +43,39 @@ public interface Request<I> extends UimDataSet<I> {
      */
     Date getDate();
 
+    
+    /**
+     * @param from
+     */
+    public void setDataFrom(Date from);
+    
     /**
      * @return a specific date which reflects the period of thime the
      * request did process (null if not specified)
      */
     Date getDataFrom();
 
+    
+    /**
+     * @param till
+     */
+    public void setDataTill(Date till);
     /**
      * @return a specific date which reflects the period of time the
      * request did process (same as @see getDate() in most cases)
      */
     Date getDataTill();
+    
+    
+    /**
+     * @param failed
+     */
+    public void setFailed(boolean failed);
+    /**
+     * @return true if something went wrong during the processing so
+     * that it is unclear if "everything" is done.
+     */
+    boolean isFailed();
     
     
     /** string key,value pairs for arbitraty information on colleciton level

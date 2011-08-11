@@ -66,7 +66,7 @@ public class LegalWorkflowStart implements WorkflowStart {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException {
+    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException {
     }
 
     @Override

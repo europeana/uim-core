@@ -261,7 +261,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException {
+    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException {
         context.getValue(DATA_KEY).batches.clear();
     }
 

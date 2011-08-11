@@ -115,12 +115,14 @@ public interface WorkflowStart {
      *            holds execution depending, information the {@link ExecutionContext} for this
      *            processing call. This context can change for each call, so references to it have
      *            to be handled carefully.
+     * @param storage
+     *            reference to storage
      * @throws WorkflowStartFailedException
      *             is thrown if the tear down encountered a severe failure during deleting external
      *             resources, so that executing it in a new {@link ExecutionContext} will most
      *             likely fail
      */
-    <I> void completed(ExecutionContext<I> context) throws WorkflowStartFailedException;
+    <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException;
 
     /**
      * Get the number of total records, if it is known upfront. If not, returns -1.

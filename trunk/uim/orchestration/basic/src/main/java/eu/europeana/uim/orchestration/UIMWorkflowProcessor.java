@@ -287,7 +287,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void complete(ActiveExecution execution, boolean cancel) throws StorageEngineException {
         try {
-            execution.getWorkflow().getStart().completed(execution);
+            execution.getWorkflow().getStart().completed(execution, execution.getStorageEngine());
 
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution.getWorkflow().getStart(), t);
@@ -317,6 +317,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             executionBean.setFailureCount(execution.getFailureSize());
             executionBean.setProcessedCount(execution.getScheduledSize());
             execution.getStorageEngine().updateExecution(executionBean);
+            
+            
         }
 
         try {
