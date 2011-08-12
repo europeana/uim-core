@@ -29,6 +29,7 @@ import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
+import eu.europeana.uim.gui.cp.shared.HarvestingStatusDTO;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
@@ -173,10 +174,56 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	
 	
 	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#retrieveIntegrationInfo(eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE, java.lang.String)
+	 */
 	@Override
 	public IntegrationStatusDTO retrieveIntegrationInfo(TYPE type, String ID) {
-		// TODO Auto-generated method stub
-		return null;
+		ExpandedOsgiEngine engine =  getEngine();
+		
+		RepoxUIMService repoxService = engine.getRepoxService();
+		
+		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
+		
+		
+		switch(type){
+		
+		case COLLECTION:
+			try {
+				Collection<?> col = stengine.findCollection(ID);
+			} catch (StorageEngineException e) {
+
+			}
+		break;
+		
+		case PROVIDER:
+			
+			try {
+				stengine.findProvider(ID);
+			} catch (StorageEngineException e) {
+
+			}
+			
+		}
+		
+		
+		IntegrationStatusDTO ret = new IntegrationStatusDTO();
+		
+		String sugarCRMID = null;
+		String repoxID = null;
+		
+		
+		ret.setId(ID);
+		
+		HarvestingStatusDTO harvestingStatus = new HarvestingStatusDTO();
+		ret.setHarvestingStatus(harvestingStatus );
+		
+		ret.setSugarCRMID(sugarCRMID);
+		ret.setType(type);
+		ret.setRepoxID(repoxID);
+		//ret.s
+		
+		return ret;
 	}
 	
 	
