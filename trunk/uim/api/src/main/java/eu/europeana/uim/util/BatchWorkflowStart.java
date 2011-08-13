@@ -220,14 +220,16 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord<I> mdr = mdrs[i];
-
-                            if (mdr instanceof MetaDataRecordBean) {
-                                ((MetaDataRecordBean)mdr).setCollection(container.collection);
-                            }
-
-                            Task<I> task = new Task<I>(mdr, storage, context);
-                            synchronized (getQueue()) {
-                                getQueue().offer(task);
+                            
+                            if (mdr != null) {
+                                if (mdr instanceof MetaDataRecordBean) {
+                                    ((MetaDataRecordBean)mdr).setCollection(container.collection);
+                                }
+    
+                                Task<I> task = new Task<I>(mdr, storage, context);
+                                synchronized (getQueue()) {
+                                    getQueue().offer(task);
+                                }
                             }
                         }
                     }
