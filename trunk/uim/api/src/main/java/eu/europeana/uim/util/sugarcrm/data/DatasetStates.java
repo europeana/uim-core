@@ -9,8 +9,8 @@ package eu.europeana.uim.util.sugarcrm.data;
  */
 public interface DatasetStates {
 
-    public abstract String getSysId();
+    public String getSysId();
 
-    public abstract String getDescription();
+    public String getDescription();
 
 }
