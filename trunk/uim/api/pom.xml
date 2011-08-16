@@ -46,7 +46,7 @@
                             eu.europeana.uim.sugarcrm,
                             eu.europeana.uim.sugarcrm.model,
                             eu.europeana.uim.sugarcrm.exceptions,
-                            eu.europeana.uim.sugarcrm.polling,
+                            eu.europeana.uim.sugarcrm.polling
 						</Export-Package>
                     </instructions>
                 </configuration>
