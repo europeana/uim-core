@@ -1,87 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>eu.europeana</groupId>
-		<artifactId>europeana-uim</artifactId>
-		<version>1.3.0-SNAPSHOT</version>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
-	</parent>
+    </parent>
 
-	<artifactId>europeana-uim-plugin-basic</artifactId>
-	<name>Unified Ingestion Manager: API Standard Orchestrator</name>
-	<packaging>bundle</packaging>
+    <artifactId>europeana-uim-plugin-basic</artifactId>
+    <name>Unified Ingestion Manager: API Standard Orchestrator</name>
+    <packaging>bundle</packaging>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.1.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Import-Package>eu.europeana.uim.workflow,*</Import-Package>
-						<Export-Package>eu.europeana.uim.workflows</Export-Package>
-					</instructions>
-				</configuration>
-			</plugin>
-			
-			<!-- Fetch shared test resources -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>unpack-test-resources</id> -->
-<!-- 						<phase>generate-sources</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>unpack</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<artifactItems> -->
-<!-- 								<artifactItem> -->
-<!-- 									<groupId>${project.groupId}</groupId> -->
-<!-- 									<artifactId>europeana-uim-common</artifactId> -->
-<!-- 									<classifier>tests</classifier> -->
-<!-- 								</artifactItem> -->
-<!-- 							</artifactItems> -->
-<!-- 							<outputDirectory>${project.build.directory}/unpacked-test-resources -->
-<!-- 							</outputDirectory> -->
-<!-- 							<overWriteReleases>true</overWriteReleases> -->
-<!-- 							<overWriteSnapshots>true</overWriteSnapshots> -->
-<!-- 							<includes>*.xml</includes> -->
-<!-- 							<excludes>**/pom.xml,META-INF/**,OSGI-INF/**</excludes> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
-		</plugins>
-		<testResources>
-			<testResource>
-				<directory>${basedir}/src/test/resources</directory>
-				<includes>
-					<include>**/*.txt</include>
-					<include>**/*.xml</include>
-				</includes>
-			</testResource>
-			<testResource>
-				<directory>${project.build.directory}/unpacked-test-resources</directory>
-				<includes>
-					<include>**/*.txt</include>
-					<include>**/*.xml</include>
-				</includes>
-			</testResource>
-		</testResources>		
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>eu.europeana.uim.workflow,*</Import-Package>
+                        <Export-Package>eu.europeana.uim.workflows</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
 
-	<dependencies>
-        
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>europeana-uim-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <testResources>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>${project.build.directory}/unpacked-test-resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.osgi</groupId>
@@ -94,19 +79,19 @@
             <scope>provided</scope>
         </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>europeana-uim-storage-memory</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-storage-memory</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>eu.europeana</groupId>
-			<artifactId>europeana-uim-common</artifactId>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 </project>
