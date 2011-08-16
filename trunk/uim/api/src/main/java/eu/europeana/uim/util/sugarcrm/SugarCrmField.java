@@ -1,6 +1,5 @@
-/*
- * Copyright 2007 EDL FOUNDATION
- *
+
+ /**
  * Licensed under the EUPL, Version 1.1 or - as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -27,6 +26,13 @@ package eu.europeana.uim.util.sugarcrm;
  */
 public interface SugarCrmField {
 
+    
+	/**
+	 * @return the field id in the SugarCRM
+	 */
 	public String getFieldId();
+	/**
+	 * @return the sematinc meaning of the field
+	 */
 	public String getDescription();
 }

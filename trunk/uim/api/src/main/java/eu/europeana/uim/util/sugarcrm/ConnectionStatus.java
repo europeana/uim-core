@@ -33,18 +33,30 @@ public class ConnectionStatus {
 	
 	
 		
+	/**
+	 * @param defaultURI the URL of the service endpoint
+	 */
 	public void setDefaultURI(String defaultURI) {
 		this.defaultURI = defaultURI;
 	}
 
+	/**
+	 * @return the URL of the service endpoint
+	 */
 	public String getDefaultURI() {
 		return defaultURI;
 	}
 
+	/**
+	 * @param sessionID the current sessionid
+	 */
 	public void setSessionID(String sessionID) {
 		this.sessionID = sessionID;
 	}
 
+	/**
+	 * @return the current sessionid, null if there is no session active
+	 */
 	public String getSessionID() {
 		return sessionID;
 	}
