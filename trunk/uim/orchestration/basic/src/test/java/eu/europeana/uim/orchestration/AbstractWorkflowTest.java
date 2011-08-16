@@ -17,6 +17,7 @@ import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
@@ -108,11 +109,12 @@ public abstract class AbstractWorkflowTest {
      * @param w
      * @param count
      * @param isStored
+     * @return execution used for workflow processing
      * @throws InterruptedException
      * @throws StorageEngineException
      */
     @SuppressWarnings("unchecked")
-    protected void executeWorkflow(Workflow w, int count, boolean isStored)
+    protected Execution<Long> executeWorkflow(Workflow w, int count, boolean isStored)
             throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
@@ -121,17 +123,19 @@ public abstract class AbstractWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(count)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
-        execution0.waitUntilFinished();
+        ActiveExecution<Long> execution = orchestrator.executeWorkflow(w, request);
+        execution.waitUntilFinished();
 
         // each delivered metadata record is saved once per plugin (only one plugin in the
         // workflow) 20 plus the initial 20
         verify(engine, times(count + (isStored ? count : 0))).updateMetaDataRecord(
                 any(MetaDataRecord.class));
 
-        assertEquals(count, execution0.getCompletedSize());
-        assertEquals(0, execution0.getFailureSize());
-        assertEquals(count, execution0.getScheduledSize());
+        assertEquals(count, execution.getCompletedSize());
+        assertEquals(0, execution.getFailureSize());
+        assertEquals(count, execution.getScheduledSize());
+        
+        return execution.getExecution();
     }
 
     /**
