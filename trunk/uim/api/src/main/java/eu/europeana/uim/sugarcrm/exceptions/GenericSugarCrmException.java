@@ -27,14 +27,14 @@ package eu.europeana.uim.sugarcrm.exceptions;
  * @author Georgios Markakis
  *
  */
-public class GenericSugarCRMException extends Exception {
+public class GenericSugarCrmException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 *  The default constructor
 	 */
-	public GenericSugarCRMException() {
+	public GenericSugarCrmException() {
 	
 	}
 
@@ -42,7 +42,7 @@ public class GenericSugarCRMException extends Exception {
 	 * 
 	 * @param message
 	 */
-	public GenericSugarCRMException(String message) {
+	public GenericSugarCrmException(String message) {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
@@ -50,7 +50,7 @@ public class GenericSugarCRMException extends Exception {
 	/**
 	 * @param cause
 	 */
-	public GenericSugarCRMException(Throwable cause) {
+	public GenericSugarCrmException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
 	}
@@ -59,7 +59,7 @@ public class GenericSugarCRMException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public GenericSugarCRMException(String message, Throwable cause) {
+	public GenericSugarCrmException(String message, Throwable cause) {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}

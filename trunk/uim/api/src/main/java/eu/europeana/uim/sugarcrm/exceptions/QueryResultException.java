@@ -26,7 +26,7 @@ package eu.europeana.uim.sugarcrm.exceptions;
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */
-public class QueryResultException extends GenericSugarCRMException {
+public class QueryResultException extends GenericSugarCrmException {
 
     /**
      * Creates a new instance of this class.

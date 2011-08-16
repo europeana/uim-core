@@ -26,7 +26,7 @@ import java.util.List;
 import eu.europeana.uim.sugarcrm.SugarCrmService;
 import eu.europeana.uim.sugarcrm.SugarCrmQuery;
 import eu.europeana.uim.sugarcrm.SugarCrmRecord;
-import eu.europeana.uim.sugarcrm.exceptions.GenericSugarCRMException;
+import eu.europeana.uim.sugarcrm.exceptions.GenericSugarCrmException;
 
 /**
  * Interface declaration of a Polling listener. It implements the
@@ -52,9 +52,9 @@ public interface PollingListener {
 	 * 
 	 * @param pluginReference a reference to the SugarCRM OSGI plugin
 	 * @param retrievedRecords the input to the specified action
-	 * @throws GenericSugarCRMException
+	 * @throws GenericSugarCrmException
 	 */
 	public void performAction(SugarCrmService pluginReference, 
-			List<SugarCrmRecord> retrievedRecords) throws GenericSugarCRMException;
+			List<SugarCrmRecord> retrievedRecords) throws GenericSugarCrmException;
 
 }
