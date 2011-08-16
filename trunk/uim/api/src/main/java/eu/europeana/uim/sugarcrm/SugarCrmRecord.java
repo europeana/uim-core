@@ -37,8 +37,9 @@ public interface SugarCrmRecord {
      * Updates 
      * 
      * @param field
+     * @param value 
      */
-    public abstract void setItemValue(UpdatableField field);
+    public abstract void setItemValue(UpdatableField field, String value);
 
     /**
      * @param field
