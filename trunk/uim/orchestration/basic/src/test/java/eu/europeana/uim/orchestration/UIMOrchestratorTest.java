@@ -2,7 +2,6 @@ package eu.europeana.uim.orchestration;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -14,13 +13,9 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
@@ -28,8 +23,6 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
-import eu.europeana.uim.store.memory.MemoryResourceEngine;
-import eu.europeana.uim.store.memory.MemoryStorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflows.MixedWorkflow;
 import eu.europeana.uim.workflows.SyserrWorkflow;
@@ -42,36 +35,7 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
-public class UIMOrchestratorTest {
-    private Registry            registry;
-
-    private StorageEngine<Long> engine;
-    private ResourceEngine      resource;
-    private UIMOrchestrator<Long>    orchestrator;
-
-    /**
-     * Sets up the orchistrator with a registry and a in memory storage engine.
-     * 
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        if (orchestrator == null) {
-            registry = new UIMRegistry();
-
-            engine = spy(new MemoryStorageEngine());
-            registry.addStorageEngine(engine);
-            registry.setConfiguredStorageEngine(MemoryStorageEngine.class.getSimpleName());
-
-            resource = new MemoryResourceEngine();
-            registry.addResourceEngine(resource);
-            registry.setConfiguredResourceEngine(MemoryResourceEngine.class.getSimpleName());
-
-            UIMWorkflowProcessor<Long> processor = new UIMWorkflowProcessor<Long>(registry);
-            orchestrator = new UIMOrchestrator<Long>(registry, processor);
-        }
-    }
-
+public class UIMOrchestratorTest extends AbstractWorkflowTest {
     /**
      * Tests success of basic setup of orchestrator.o
      * 
@@ -290,5 +254,10 @@ public class UIMOrchestratorTest {
         }
 
         return request0;
+    }
+
+    @Override
+    protected void fillRecord(MetaDataRecord<Long> record, int count) {
+        record.addValue(MDRFieldRegistry.rawrecord, "title " + count);
     }
 }
