@@ -1,10 +1,7 @@
 package eu.europeana.uim.orchestration;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.util.Date;
 
@@ -108,33 +105,23 @@ public abstract class AbstractWorkflowTest {
      * 
      * @param w
      * @param count
-     * @param isStored
      * @return execution used for workflow processing
      * @throws InterruptedException
      * @throws StorageEngineException
      */
-    @SuppressWarnings("unchecked")
-    protected Execution<Long> executeWorkflow(Workflow w, int count, boolean isStored)
-            throws InterruptedException, StorageEngineException {
+    protected Execution<Long> executeWorkflow(Workflow w, int count) throws InterruptedException,
+            StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
         Request<Long> request = createTestData(count);
 
-        // creating the data calles 20 times the update method.
-        verify(engine, times(count)).updateMetaDataRecord(any(MetaDataRecord.class));
-
         ActiveExecution<Long> execution = orchestrator.executeWorkflow(w, request);
         execution.waitUntilFinished();
-
-        // each delivered metadata record is saved once per plugin (only one plugin in the
-        // workflow) 20 plus the initial 20
-        verify(engine, times(count + (isStored ? count : 0))).updateMetaDataRecord(
-                any(MetaDataRecord.class));
 
         assertEquals(count, execution.getCompletedSize());
         assertEquals(0, execution.getFailureSize());
         assertEquals(count, execution.getScheduledSize());
-        
+
         return execution.getExecution();
     }
 
