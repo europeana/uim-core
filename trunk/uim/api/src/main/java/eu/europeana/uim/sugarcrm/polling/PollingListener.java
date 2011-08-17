@@ -23,18 +23,17 @@ package eu.europeana.uim.sugarcrm.polling;
 
 import java.util.List;
 
-import eu.europeana.uim.sugarcrm.SugarCrmService;
 import eu.europeana.uim.sugarcrm.SugarCrmQuery;
 import eu.europeana.uim.sugarcrm.SugarCrmRecord;
+import eu.europeana.uim.sugarcrm.SugarCrmService;
 import eu.europeana.uim.sugarcrm.exceptions.GenericSugarCrmException;
 
 /**
  * Interface declaration of a Polling listener. It implements the
- * Command Pattern in {@link PollingBean} class. Any Class implementing
+ * Command Pattern in PollingBean class. Any Class implementing
  * this interface can be added as a PollingBean listener. 
  * 
  * @author Georgios Markakis
- * @see PollingBean
  */
 public interface PollingListener {
 	
