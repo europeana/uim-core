@@ -17,7 +17,6 @@ import org.apache.karaf.testing.Helper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
@@ -59,8 +58,8 @@ public class OrchestratorTest extends AbstractIntegrationTest {
                 // rhaa
                 // systemProperty("integrationDir").value(System.getProperty("integrationDir")),
 
-                 PaxRunnerOptions.vmOption(
-                 "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
+//                 PaxRunnerOptions.vmOption(
+//                 "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
