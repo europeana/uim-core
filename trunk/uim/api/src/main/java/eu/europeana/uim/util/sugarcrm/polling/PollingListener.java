@@ -29,11 +29,10 @@ import eu.europeana.uim.util.sugarcrm.exceptions.GenericSugarCRMException;
 
 /**
  * Interface declaration of a Polling listener. It implements the
- * Command Pattern in {@link PollingBean} class. Any Class implementing
+ * Command Pattern in PollingBean class. Any Class implementing
  * this interface can be added as a PollingBean listener. 
  * 
  * @author Georgios Markakis
- * @see PollingBean
  */
 public interface PollingListener {
 	
