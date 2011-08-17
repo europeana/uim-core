@@ -12,6 +12,13 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
 public class SyserrWorkflow extends AbstractWorkflow {
     /**
      * Creates a new instance of this class.
+     */
+    public SyserrWorkflow() {
+        this(250, true);
+    }
+    
+    /**
+     * Creates a new instance of this class.
      * 
      * @param batchSize
      * @param randsleep

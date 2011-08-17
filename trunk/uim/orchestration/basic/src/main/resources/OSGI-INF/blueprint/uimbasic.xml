@@ -24,27 +24,23 @@
     </bean>
     <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.api.Orchestrator" />
 
-<!--     <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin"> -->
-<!--     </bean> -->
-<!--     <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.api.IngestionPlugin" /> -->
+    <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin">
+    </bean>
+    <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.api.IngestionPlugin" />
 
-<!--     <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin"> -->
-<!--         <property name="baseDir" value="${thumbBaseDir}" /> -->
-<!--     </bean> -->
-<!--     <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.api.IngestionPlugin" /> -->
+    <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin">
+    </bean>
+    <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.api.IngestionPlugin" />
 
-<!--     <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow"> -->
-<!--         <argument ref="registry" /> -->
-<!--     </bean> -->
-<!--     <service id="mixedWorkflow" ref="lcw" interface="eu.europeana.uim.workflow.Workflow" /> -->
+    <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow">
+    </bean>
+    <service id="mixedWorkflow" ref="mw" interface="eu.europeana.uim.workflow.Workflow" />
 
-<!--     <bean id="ew" class="eu.europeana.uim.workflows.SyserrWorkflow"> -->
-<!--         <argument ref="registry" /> -->
-<!--     </bean> -->
-<!--     <service id="syserrWorkflow" ref="ew" interface="eu.europeana.uim.workflow.Workflow" /> -->
+    <bean id="ew" class="eu.europeana.uim.workflows.SyserrWorkflow">
+    </bean>
+    <service id="syserrWorkflow" ref="ew" interface="eu.europeana.uim.workflow.Workflow" />
 
-<!--     <bean id="ow" class="eu.europeana.uim.workflows.SysoutWorkflow"> -->
-<!--         <argument ref="registry" /> -->
-<!--     </bean> -->
-<!--     <service id="sysoutWorkflow" ref="ow" interface="eu.europeana.uim.workflow.Workflow" /> -->
+    <bean id="ow" class="eu.europeana.uim.workflows.SysoutWorkflow">
+    </bean>
+    <service id="sysoutWorkflow" ref="ow" interface="eu.europeana.uim.workflow.Workflow" />
 </blueprint>

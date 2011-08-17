@@ -16,6 +16,13 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
 public class MixedWorkflow extends AbstractWorkflow {
     /**
      * Creates a new instance of this class.
+     */
+    public MixedWorkflow() {
+        this(250, true);
+    }
+
+    /**
+     * Creates a new instance of this class.
      * 
      * @param batchSize
      * @param randsleep

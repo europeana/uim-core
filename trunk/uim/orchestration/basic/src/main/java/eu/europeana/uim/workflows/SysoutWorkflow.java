@@ -1,6 +1,5 @@
 package eu.europeana.uim.workflows;
 
-import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.util.BatchWorkflowStart;
 import eu.europeana.uim.util.LoggingIngestionPlugin;
 import eu.europeana.uim.workflow.AbstractWorkflow;
@@ -16,10 +15,8 @@ public class SysoutWorkflow extends AbstractWorkflow {
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param registry
      */
-    public SysoutWorkflow(Registry registry) {
+    public SysoutWorkflow() {
         this(50, false, false);
     }
 
@@ -34,10 +31,10 @@ public class SysoutWorkflow extends AbstractWorkflow {
         super("Console Reporting Workflow",
                 "Simple workflow which uses sysout and logging plugins to report to the console about processing!");
         setStart(new BatchWorkflowStart());
-        
+
         SysoutPlugin step = new SysoutPlugin();
         addStep(step);
-        
+
         LoggingIngestionPlugin log = new LoggingIngestionPlugin();
         addStep(log);
 
