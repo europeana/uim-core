@@ -27,6 +27,7 @@
                             !javax.portlet.*,
                             !org.apache.log.*,
                             eu.europeana.uim.common,
+                            eu.europeana.uim.api,
                             javax.xml.*,
                             javax.naming.*,
                             org.w3c.dom,
@@ -40,7 +41,7 @@
                             eu.europeana.uim.logging.memory.*
                         </Export-Package>
                         <Embed-Transitive>true</Embed-Transitive>
-                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
+                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|!europeana-uim-api|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
                     </instructions>
                 </configuration>

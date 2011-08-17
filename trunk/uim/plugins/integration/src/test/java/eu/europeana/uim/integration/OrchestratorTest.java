@@ -10,6 +10,8 @@ import static org.ops4j.pax.exam.OptionUtils.combine;
 
 import java.util.Date;
 
+import junit.framework.Assert;
+
 import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
@@ -83,6 +85,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
             storage = (StorageEngine<Long>)registry.getStorageEngine();
             Thread.sleep(500);
         }
+        Assert.assertNotNull(storage);
 
         Provider<Long> p = new ProviderBean<Long>(1L);
         Collection<Long> c = new CollectionBean<Long>(2L, p);
@@ -108,12 +111,14 @@ public class OrchestratorTest extends AbstractIntegrationTest {
         // run the workflow
 
         // Initialize workflow
+        System.out.println("WORKFLOWS " + registry.getWorkflows());
         Workflow workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
         int wait = 0;
         while (workflow == null && wait++ < 10) {
             workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
             Thread.sleep(1000);
         }
+        Assert.assertNotNull(workflow);
 
         ActiveExecution<Long> execution = (ActiveExecution<Long>)o.executeWorkflow(workflow, c);
         execution.getMonitor().addListener(monitor);
