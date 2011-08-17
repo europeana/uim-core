@@ -73,7 +73,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
     /**
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes", "cast" })
     @Test
     public void processSampleData() throws Exception {
         Registry registry = getOsgiService(Registry.class);

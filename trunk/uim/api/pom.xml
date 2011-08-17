@@ -42,7 +42,7 @@
                             eu.europeana.uim.api,
                             eu.europeana.uim.command,
                             eu.europeana.uim.workflow,
-                            eu.europeana.uim,
+                            eu.europeana.uim.util,
                             eu.europeana.uim.sugarcrm,
                             eu.europeana.uim.sugarcrm.model,
                             eu.europeana.uim.sugarcrm.exceptions,
