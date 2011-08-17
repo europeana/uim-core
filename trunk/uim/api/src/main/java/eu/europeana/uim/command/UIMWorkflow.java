@@ -22,15 +22,24 @@ import eu.europeana.uim.workflow.WorkflowStart;
  */
 @Command(name = "uim", scope = "workflow")
 public class UIMWorkflow implements Action {
-
     /**
+     * Available operations
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @since Aug 17, 2011
      */
     protected enum Operation {
+        /**
+         * listing workflows
+         */
         listWorkflows
     }
 
-    private Registry  registry;
+    private Registry    registry;
 
+    /** 
+     * what operation? only listing workflows right now
+     */
     @Option(name = "-o", aliases = { "--operation" }, required = false)
     protected Operation operation;
 
@@ -85,7 +94,7 @@ public class UIMWorkflow implements Action {
     }
 
     /**
-     * @return the registry
+     * @return registry
      */
     public Registry getRegistry() {
         return registry;

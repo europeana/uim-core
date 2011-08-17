@@ -35,7 +35,7 @@ import eu.europeana.uim.workflow.Workflow;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({ "all" })
 @Command(name = "uim", scope = "store")
 public class UIMStore implements Action {
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
