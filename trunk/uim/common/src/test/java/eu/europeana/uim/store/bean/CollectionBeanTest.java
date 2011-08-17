@@ -15,7 +15,9 @@ import eu.europeana.uim.store.Provider;
  * @since Jun 19, 2011
  */
 public class CollectionBeanTest {
-
+    /**
+     * 
+     */
     @Test
     public void testCollectionSetterGetter() {
         Provider<Long> provider = new ProviderBean<Long>(1L);
@@ -48,7 +50,9 @@ public class CollectionBeanTest {
         assertEquals("cmeta", bean.getOaiMetadataPrefix(true));
     }
 
-
+    /**
+     * 
+     */
     @Test
     public void testProviderValues() {
         CollectionBean<Long> bean = new CollectionBean<Long>(1L, null);
@@ -60,5 +64,4 @@ public class CollectionBeanTest {
         assertEquals(1, bean.values().size());
         assertEquals("a", bean.getValue("a"));
     }
-
 }

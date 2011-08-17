@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 
 /**
@@ -18,7 +17,9 @@ import eu.europeana.uim.store.Request;
  * @since Jun 19, 2011
  */
 public class RequestBeanTest {
-
+    /**
+     * 
+     */
     @Test
     public void testRequestSetterGetter() {
         Request<Long> bean = new RequestBean<Long>(1L, null, new Date(0));
@@ -27,13 +28,16 @@ public class RequestBeanTest {
         assertEquals(new Date(0), bean.getDate());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testRequestValues() {
         Request<Long> bean = new RequestBean<Long>(1L, null, new Date());
         bean.putValue("a", null);
         assertEquals(1, bean.values().size());
         assertNull(bean.getValue("a"));
-        
+
         bean.putValue("a", "a");
         assertEquals(1, bean.values().size());
         assertEquals("a", bean.getValue("a"));

@@ -16,7 +16,9 @@ import eu.europeana.uim.store.Execution;
  * @since Jun 19, 2011
  */
 public class ExecutionBeanTest {
-
+    /**
+     * 
+     */
     @Test
     public void testExecutionSetterGetter() {
         Execution<Long> bean = new ExecutionBean<Long>(1L);
@@ -45,8 +47,5 @@ public class ExecutionBeanTest {
         assertEquals(1, bean.getSuccessCount());
         assertEquals(2, bean.getProcessedCount());
         assertEquals(3, bean.getFailureCount());
-        
-        
     }
-
 }

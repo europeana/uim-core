@@ -15,7 +15,9 @@ import eu.europeana.uim.store.Provider;
  * @since Jun 19, 2011
  */
 public class ProviderBeanTest {
-
+    /**
+     * 
+     */
     @Test
     public void testProviderSetterGetter() {
         Provider<Long> bean = new ProviderBean<Long>(1L);
@@ -32,6 +34,9 @@ public class ProviderBeanTest {
         assertEquals("Pmeta", bean.getOaiMetadataPrefix());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testProviderValues() {
         Provider<Long> bean = new ProviderBean<Long>(1L);
