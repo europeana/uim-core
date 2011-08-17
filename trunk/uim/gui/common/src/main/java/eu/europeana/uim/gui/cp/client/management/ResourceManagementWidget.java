@@ -50,12 +50,14 @@ public class ResourceManagementWidget extends IngestionWidget {
 
     private final RepositoryServiceAsync repositoryService;
     private final ResourceServiceAsync   resourceService;
-    
-    @UiField(provided=true)
-    public CellBrowser                          cellBrowser;
 
+    /** CellBrowser cellBrowser */
     @UiField(provided = true)
-    public CellTable<ParameterDTO>              cellTable;
+    public CellBrowser                   cellBrowser;
+
+    /** CellTable<ParameterDTO> cellTable */
+    @UiField(provided = true)
+    public CellTable<ParameterDTO>       cellTable;
 
     private ProviderDTO                  provider;
     private CollectionDTO                collection;
@@ -109,7 +111,7 @@ public class ResourceManagementWidget extends IngestionWidget {
         cellBrowser.setAnimationEnabled(true);
         // cellBrowser.setSize("300px", "350px");
         cellBrowser.setSize("100%", "100%");
-        
+
         cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
@@ -128,26 +130,23 @@ public class ResourceManagementWidget extends IngestionWidget {
                 DefaultSelectionEventManager.<ParameterDTO> createCheckboxManager());
 
         initTableColumns(selectionModelTable, sortHandler);
-        
+
         Widget widget = postInitialize();
-        
+
         return widget;
     }
 
-    
     /**
      * This method provides extra functionality for components that are meant to extend this one
      * 
+     * @return widget
      */
-    public Widget postInitialize(){
-        
+    public Widget postInitialize() {
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
-        
         return widget;
     }
-    
-    
+
     /**
      * Retrieve parameters for given settings.
      */
@@ -272,7 +271,8 @@ public class ResourceManagementWidget extends IngestionWidget {
         public void changed(ParameterDTO parameter) {
             resourceService.setParameters(parameter, provider != null ? provider.getId() : null,
                     collection != null ? collection.getId() : null,
-                    workflow != null ? workflow.getIdentifier() : null, new AsyncCallback<Boolean>() {
+                    workflow != null ? workflow.getIdentifier() : null,
+                    new AsyncCallback<Boolean>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             throwable.printStackTrace();
@@ -289,105 +289,102 @@ public class ResourceManagementWidget extends IngestionWidget {
                     });
         }
     }
-    
-    
-    
+
     /*
      * Getters & Setters
      */
-    
+
     /**
-     * @return
+     * @return provider
      */
-    public ProviderDTO getProvider(){
-    	return this.provider;
+    public ProviderDTO getProvider() {
+        return this.provider;
     }
-    
+
     /**
      * @param provider
      */
-    public void setProvider(ProviderDTO provider){
-    	this.provider = provider;
+    public void setProvider(ProviderDTO provider) {
+        this.provider = provider;
     }
-    
+
     /**
-     * @return
+     * @return collection
      */
-    public CollectionDTO getCollection(){
-    	return this.collection;
+    public CollectionDTO getCollection() {
+        return this.collection;
     }
-    
+
     /**
      * @param collection
      */
-    public void setCollection(CollectionDTO collection){
-    	this.collection = collection;
+    public void setCollection(CollectionDTO collection) {
+        this.collection = collection;
     }
-    
+
     /**
-     * @return
+     * @return workflow
      */
-    public WorkflowDTO getWorkflow(){
-    	return this.workflow;
+    public WorkflowDTO getWorkflow() {
+        return this.workflow;
     }
-    
+
     /**
      * @param workflow
      */
-    public void setWorkflow(WorkflowDTO workflow){
-    	this.workflow = workflow;
+    public void setWorkflow(WorkflowDTO workflow) {
+        this.workflow = workflow;
     }
 
-	/**
-	 * @return the cellBrowser
-	 */
-	public CellBrowser getCellBrowser() {
-		return cellBrowser;
-	}
+    /**
+     * @return the cellBrowser
+     */
+    public CellBrowser getCellBrowser() {
+        return cellBrowser;
+    }
 
-	/**
-	 * @param cellBrowser the cellBrowser to set
-	 */
-	public void setCellBrowser(CellBrowser cellBrowser) {
-		this.cellBrowser = cellBrowser;
-	}
+    /**
+     * @param cellBrowser
+     *            the cellBrowser to set
+     */
+    public void setCellBrowser(CellBrowser cellBrowser) {
+        this.cellBrowser = cellBrowser;
+    }
 
-	/**
-	 * @return the cellTable
-	 */
-	public CellTable<ParameterDTO> getCellTable() {
-		return cellTable;
-	}
+    /**
+     * @return the cellTable
+     */
+    public CellTable<ParameterDTO> getCellTable() {
+        return cellTable;
+    }
 
-	/**
-	 * @param cellTable the cellTable to set
-	 */
-	public void setCellTable(CellTable<ParameterDTO> cellTable) {
-		this.cellTable = cellTable;
-	}
+    /**
+     * @param cellTable
+     *            the cellTable to set
+     */
+    public void setCellTable(CellTable<ParameterDTO> cellTable) {
+        this.cellTable = cellTable;
+    }
 
-	/**
-	 * @return the repositoryService
-	 */
-	public RepositoryServiceAsync getRepositoryService() {
-		return repositoryService;
-	}
+    /**
+     * @return the repositoryService
+     */
+    public RepositoryServiceAsync getRepositoryService() {
+        return repositoryService;
+    }
 
-	/**
-	 * @return the resourceService
-	 */
-	public ResourceServiceAsync getResourceService() {
-		return resourceService;
-	}
+    /**
+     * @return the resourceService
+     */
+    public ResourceServiceAsync getResourceService() {
+        return resourceService;
+    }
 
-	/**
-	 * @return the activeParameters
-	 */
-	public List<ParameterDTO> getActiveParameters() {
-		return activeParameters;
-	}
-    
-    
-    
-    
+    /**
+     * @return the activeParameters
+     */
+    public List<ParameterDTO> getActiveParameters() {
+        return activeParameters;
+    }
+
 }
