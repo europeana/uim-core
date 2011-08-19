@@ -27,14 +27,15 @@
                             !javax.portlet.*,
                             !org.apache.log.*,
                             eu.europeana.uim.common,
-                            javax.xml.*,
                             javax.naming.*,
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
                             org.apache.commons.io,
-                            !*</Import-Package>
+                            !*
+                        </Import-Package>
                         <Export-Package>
+                            javax.servlet.*,
                             eu.europeana.uim.solr3,
                             eu.europeana.uim.solr3.*,
                             org.apache.lucene.*,
