@@ -35,7 +35,7 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
-public class UIMOrchestratorTest extends AbstractWorkflowTest {
+public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     /**
      * Tests success of basic setup of orchestrator.o
      * 
