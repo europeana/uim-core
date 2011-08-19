@@ -36,6 +36,7 @@
                         </Import-Package>
                         <Export-Package>
                             javax.servlet.*,
+                            org.apache.commons.csv.*,
                             eu.europeana.uim.solr3,
                             eu.europeana.uim.solr3.*,
                             org.apache.lucene.*,
