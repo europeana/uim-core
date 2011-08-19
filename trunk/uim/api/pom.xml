@@ -86,7 +86,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- Karaf Shell, for OSGi shell commands -->
         <dependency>
             <groupId>org.apache.karaf.shell</groupId>
