@@ -24,6 +24,7 @@
                         <Import-Package>
                             eu.europeana.uim.common,
                             javax.naming.*,
+                            javax.xml.*,
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
