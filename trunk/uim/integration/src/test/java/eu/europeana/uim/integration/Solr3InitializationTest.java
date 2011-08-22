@@ -35,7 +35,7 @@ public class Solr3InitializationTest extends AbstractIntegrationTest {
      */
     @Configuration
     public static Option[] configuration() throws Exception {
-        boolean debug = true;
+        boolean debug = false;
         Option[] options = combine(
                 Helper.getDefaultOptions(
                         systemProperty("karaf.name").value("junit"),
