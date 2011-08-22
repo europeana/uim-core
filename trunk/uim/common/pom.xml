@@ -41,29 +41,25 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>!com.sun.msv.*,
-							!org.relaxng.*,
-							javax.xml.*,
+						<DynamicImport-Package>*</DynamicImport-Package>
+						<Import-Package>
+						    javax.xml,
 							org.w3c.dom, 
 							org.xml.sax, 
 							org.xml.sax.ext, 
 							org.xml.sax.helpers
                         </Import-Package>
-						<DynamicImport-Package>*</DynamicImport-Package>
 						<Export-Package>
                             eu.europeana.uim.common,
-                            eu.europeana.uim.common.parse,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
-							org.apache.commons.lang;version="2.4",
 							org.apache.commons.lang.*;version="2.4",
-							org.apache.commons.io;version="2.0",
 							org.apache.commons.io.*;version="2.0",
-                            org.apache.commons.math;version="1.2",
                             org.apache.commons.math.*;version="1.2",
-							gnu.trove.*,
+							gnu.trove.*;version="2.0.2",
+							javax.xml.stream.*
                         </Export-Package>
-						<Embed-Dependency>commons-lang,commons-io,commons-math,wstx-asl,geronimo-stax-api_1.0_spec,trove4j</Embed-Dependency>
+						<Embed-Dependency>commons-lang,commons-io,commons-math,geronimo-stax-api_1.0_spec,trove4j</Embed-Dependency>
 						<Embed-StripVersion>true</Embed-StripVersion>
 					</instructions>
 				</configuration>
@@ -118,18 +114,6 @@
         </dependency>
 
 	    <!-- Stax -->
-<!-- 	    <dependency> -->
-<!-- 	    	<groupId>org.codehaus.woodstox</groupId> -->
-<!-- 			<artifactId>wstx-asl</artifactId> -->
-<!-- 	      	<version>3.2.9</version> -->
-<!-- 	      	<exclusions> -->
-<!-- 	      		<exclusion> -->
-<!-- 	      			<groupId>stax</groupId> -->
-<!-- 	      			<artifactId>stax-api</artifactId> -->
-<!-- 	      		</exclusion> -->
-<!-- 	      	</exclusions> -->
-<!-- 	    </dependency> -->
-		    
 	    <dependency>
 	      <groupId>org.apache.geronimo.specs</groupId>
 	      <artifactId>geronimo-stax-api_1.0_spec</artifactId>

@@ -22,11 +22,10 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.common.*,
-                            eu.europeana.uim.store.*,
-                            org.apache.commons.lang.*,
-                            org.apache.commons.logging,
-                            org.apache.commons.logging.impl,
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
+                            org.apache.commons.lang,
                             org.apache.felix.gogo.commands,
                             org.apache.felix.service.command,
                             org.osgi.framework,

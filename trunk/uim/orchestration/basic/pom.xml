@@ -22,7 +22,17 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Import-Package>eu.europeana.uim.workflow,*</Import-Package>
+                        <Import-Package>
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.workflow,
+                            eu.europeana.uim.util,
+                            org.apache.commons.io,
+                            org.osgi.framework,
+                            org.osgi.service.blueprint,
+                        </Import-Package>
                         <Export-Package>eu.europeana.uim.workflows</Export-Package>
                     </instructions>
                 </configuration>
@@ -66,18 +76,7 @@
             <artifactId>europeana-uim-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
+        
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>

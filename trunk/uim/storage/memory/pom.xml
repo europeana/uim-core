@@ -20,11 +20,15 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>eu.europeana.uim.store.*,
-							gnu.trove.*,
-							*</Import-Package>
+						<Import-Package>
+							eu.europeana.uim.store,
+	                        eu.europeana.uim.store.bean,
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.workflow,
+                            org.apache.commons.lang,
+                            gnu.trove,
+                        </Import-Package>
 						<Export-Package>
-							eu.europeana.uim.store.memory
 						</Export-Package>
 					</instructions>
 				</configuration>
@@ -33,12 +37,6 @@
 	</build>
 
 	<dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>europeana-uim-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>

@@ -8,7 +8,6 @@
 	</parent>
 
 	<artifactId>europeana-uim-plugin-integration</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
 
 	<name>Unified Ingestion Manager: Integration Tests</name>
 
