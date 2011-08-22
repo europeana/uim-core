@@ -10,7 +10,7 @@
         <version>1.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>europeana-uim-gui-cp</artifactId>
+    <artifactId>europeana-uim-gui-controlpanel</artifactId>
     <packaging>war</packaging>
     <name>Unified Ingestion Manager: Europeana Ingestion Control Panel GUI (GWT)</name>
 
