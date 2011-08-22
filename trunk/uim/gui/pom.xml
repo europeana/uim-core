@@ -20,8 +20,6 @@
     <modules>
         <module>common</module>
         <module>uim-gui-cp</module>
-        <module>uim-gui-gwt</module>
-        <module>uim-gui-tel</module>
     </modules>
 
     <build>
