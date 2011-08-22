@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.common.parse.RecordMap;
-
 /** Simple class which provides static date manipulation and parsing
  * functionalities not covered by @see {@link org.apache.commons.lang.time.DateUtils}. 
  * 
@@ -17,7 +15,7 @@ import eu.europeana.uim.common.parse.RecordMap;
  */
 public class DateUtils {
     
-    private static final Logger log = Logger.getLogger(RecordMap.class.getName());
+    private static final Logger log = Logger.getLogger(DateUtils.class.getName());
 
     private static final DateFormat dfFull = new SimpleDateFormat("yyyy-MM-dd");
 
