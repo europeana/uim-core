@@ -88,11 +88,26 @@
 			<artifactId>europeana-uim-storage-memory</artifactId>
 			<version>${parent.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>eu.europeana</groupId>
-			<artifactId>europeana-uim-logging-memory</artifactId>
-			<version>${parent.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-logging-memory</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-logging-database</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-plugin-solr14</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-plugin-solr3</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
 	</dependencies>
 
 	<scm>

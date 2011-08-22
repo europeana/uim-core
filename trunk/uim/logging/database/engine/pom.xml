@@ -22,16 +22,18 @@
 				<configuration>
 					<instructions>
 						<Import-Package>
-							eu.europeana.uim.*,
-                            org.osgi.framework.*,
-                            org.osgi.service.*,
-							javax.sql.*,
-							javax.naming.*,
-							javax.management.*,
-							!*
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.common,
+                            org.osgi.framework,
+                            org.osgi.service.blueprint,
+                            org.osgi.service.cm,
+                            javax.sql.*,
+                            javax.naming.*,
+                            javax.management.*,
+                            !*
                         </Import-Package>
 						<Export-Package>
-							eu.europeana.uim.logging.database
                         </Export-Package>
 						<Embed-Dependency>
 							*;scope=compile|runtime;inline=false;

@@ -6,8 +6,6 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
 
-import java.util.logging.Level;
-
 import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
@@ -16,8 +14,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.solr14.Solr14Initializer;
 
 /**
  * Integration test for UIM commands<br/>
@@ -27,7 +24,7 @@ import eu.europeana.uim.api.Registry;
  * @author Manuel Bernhardt
  */
 @RunWith(JUnit4TestRunner.class)
-public class LoggingTest extends AbstractIntegrationTest {
+public class Solr14InitializationTest extends AbstractIntegrationTest {
 
     /**
      * @return setup configuration
@@ -45,6 +42,7 @@ public class LoggingTest extends AbstractIntegrationTest {
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-plugin-solr14").versionAsInProject(),
 
                 felix(),
 
@@ -58,14 +56,7 @@ public class LoggingTest extends AbstractIntegrationTest {
      */
     @Test
     public void testLogging() throws Exception {
-        Registry registry = getOsgiService(Registry.class);
-
-        LoggingEngine<?> logging = null;
-        while (logging == null) {
-            logging = registry.getLoggingEngine();
-            Thread.sleep(500);
-        }
-
-        logging.log(null, Level.INFO, "module", null, "test", "tst tst");
+        Solr14Initializer init = new Solr14Initializer("file:///data", "ignore");
+        init.initialize(Solr14Initializer.class.getClassLoader());
     }
 }

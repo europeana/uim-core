@@ -21,24 +21,19 @@
 				<configuration>
 					<instructions>
                         <Import-Package>
-                            !junit.framework,
-                            !org.mortbay.*,
-                            !javax.portlet.*,
-                            !org.apache.log.*,
                             eu.europeana.uim.common,
-                            javax.xml.*,
                             javax.naming.*,
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
                             !*</Import-Package>
 						<Export-Package>
-						    eu.europeana.uim.solr14.*,
-                            org.apache.lucene.*,
-                            org.apache.solr.*
+						    eu.europeana.uim.solr14,
+                            org.apache.lucene.*;version=2.9.3,
+                            org.apache.solr.*;version=1.4.1
 						</Export-Package>
+                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|trove4j|commons-math</Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
-                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|trove4j</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
 					</instructions>
 				</configuration>
@@ -120,12 +115,6 @@
             </exclusions>
         </dependency>
             
-        <dependency>
-          <groupId>org.apache.geronimo.specs</groupId>
-          <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-          <version>1.0.1</version>
-        </dependency>   
-
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>

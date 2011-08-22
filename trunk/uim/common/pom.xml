@@ -56,10 +56,9 @@
 							org.apache.commons.lang.*;version="2.4",
 							org.apache.commons.io.*;version="2.0",
                             org.apache.commons.math.*;version="1.2",
-							gnu.trove.*;version="2.0.2",
-							javax.xml.stream.*
+							gnu.trove.*;version="2.0.2"
                         </Export-Package>
-						<Embed-Dependency>commons-lang,commons-io,commons-math,geronimo-stax-api_1.0_spec,trove4j</Embed-Dependency>
+						<Embed-Dependency>commons-lang,commons-io,commons-math,trove4j</Embed-Dependency>
 						<Embed-StripVersion>true</Embed-StripVersion>
 					</instructions>
 				</configuration>
@@ -113,13 +112,6 @@
             <artifactId>commons-math</artifactId>
         </dependency>
 
-	    <!-- Stax -->
-	    <dependency>
-	      <groupId>org.apache.geronimo.specs</groupId>
-	      <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-	      <version>1.0.1</version>
-	    </dependency>   
-    
 		<dependency>
 			<groupId>net.sf.trove4j</groupId>
 			<artifactId>trove4j</artifactId>
