@@ -71,7 +71,7 @@ public class Solr14Initializer extends BlockingInitializer {
             log.log(Level.SEVERE, "Failed to initialize repository at <" + url + ">", t);
             status = STATUS_FAILED;
 
-            throw new RuntimeException("Failed to setup core <" + core + "> at <" + url + ">");
+            throw new RuntimeException("Failed to setup core <" + core + "> at <" + url + ">", t);
         }
     }
 }

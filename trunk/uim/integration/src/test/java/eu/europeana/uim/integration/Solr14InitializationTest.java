@@ -6,11 +6,14 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
 
+import java.io.FileNotFoundException;
+
 import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
@@ -32,7 +35,8 @@ public class Solr14InitializationTest extends AbstractIntegrationTest {
      */
     @Configuration
     public static Option[] configuration() throws Exception {
-        return combine(
+        boolean debug = false;
+        Option[] options = combine(
                 Helper.getDefaultOptions(
                         systemProperty("karaf.name").value("junit"),
                         systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
@@ -47,16 +51,29 @@ public class Solr14InitializationTest extends AbstractIntegrationTest {
                 felix(),
 
                 waitForFrameworkStartup());
+
+        // add std debug config if we want do debugging
+        if (debug) {
+            options = combine(
+                    options,
+                    PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"));
+        }
+        return options;
     }
 
     /**
      * Tests logging.
      * 
-     * @throws Exception
+     * @throws Throwable
      */
     @Test
-    public void testLogging() throws Exception {
-        Solr14Initializer init = new Solr14Initializer("file:///data", "ignore");
-        init.initialize(Solr14Initializer.class.getClassLoader());
+    public void testSolrSetup() throws Throwable {
+        try {
+            Solr14Initializer init = new Solr14Initializer("file:///data", "ignore");
+            init.initialize(Solr14Initializer.class.getClassLoader());
+        } catch (Throwable t) {
+            if (!(t.getCause().getCause() instanceof FileNotFoundException)) { throw t; }
+
+        }
     }
 }
