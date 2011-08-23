@@ -1,7 +1,7 @@
 package eu.europeana.uim.util;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -21,17 +21,34 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Feb 25, 2011
  */
 public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
-    private static final Logger                       log      = Logger.getLogger(LoggingIngestionPlugin.class.getName());
+    /** property name to define logging stepsie */
+    public static final String                        LOGGING_STEPSIZE = "logging.stepsize";
 
-    private static TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(
-                                                                       LoggingIngestionPlugin.class,
-                                                                       "data", Data.class);
+    /** property name to define logging detail level */
+    public static final String                        LOGGING_LEVEL    = "logging.level";
+
+    /**
+     * parameters to be set for logging plugin
+     */
+    private static final List<String>                 PARAMETER        = new ArrayList<String>() {
+                                                                           {
+                                                                               add(LOGGING_STEPSIZE);
+                                                                               add(LOGGING_STEPSIZE);
+                                                                           }
+                                                                       };
+
+    private static final Logger                       log              = Logger.getLogger(LoggingIngestionPlugin.class.getName());
+
+    private static TKey<LoggingIngestionPlugin, Data> DATA_KEY         = TKey.register(
+                                                                               LoggingIngestionPlugin.class,
+                                                                               "data", Data.class);
 
     /**
      * Creates a new instance of this class.
      */
     public LoggingIngestionPlugin() {
-        super("Identifier Logging", "Loggs the identifiers of MDRs according the specififed level in the execution (default INFO)");
+        super("Identifier Logging",
+                "Loggs the identifiers of MDRs according the specififed level in the execution (default INFO)");
     }
 
     @Override
@@ -61,11 +78,11 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
 
     @Override
     public List<String> getParameters() {
-        return Arrays.asList("logging.stepsize", "logging.level");
+        return PARAMETER;
     }
 
     @Override
-    public <I>  boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
+    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA_KEY);
 
@@ -96,7 +113,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I>  void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
         // nothing to do
     }
 
