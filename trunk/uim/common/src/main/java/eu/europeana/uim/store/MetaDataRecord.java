@@ -168,22 +168,39 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
         }
 
         /**
-				 * Returns the index.
-				 * @return the index
-				 */
-				public int getOrderIndex() {
-					return orderIndex;
-				}
+         * @param <A> The qualifier class to get
+         * @param qualifierType The qualifier class to get
+         * @return the qualifier value, null if the qualifier is not present
+         */
+        @SuppressWarnings("unchecked")
+		public <A extends Enum<?>> A getQualifier(Class<A> qualifierType) {
+        	if(qualifiers==null)
+        		return null;
+        	for(Enum<?> qualifier: qualifiers) {
+        		if(qualifier.getClass().equals(qualifierType)) 
+        			return (A) qualifier;
+        	}
+        	return null;
+        }
+        
+        /**
+		 * Returns the index.
+		 * @return the index
+		 */
+		public int getOrderIndex() {
+			return orderIndex;
+		}
+		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+		public int compareTo(QualifiedValue<?> other) {
+			if (orderIndex < other.orderIndex) return -1;
+			if (orderIndex > other.orderIndex) return 1;
+			if (value instanceof Comparable<?>) {
+				return ((Comparable)value).compareTo(other);
+			}
+			return 0;
+		}
 				
-				@SuppressWarnings({ "rawtypes", "unchecked" })
-				@Override
-				public int compareTo(QualifiedValue<?> other) {
-					if (orderIndex < other.orderIndex) return -1;
-					if (orderIndex > other.orderIndex) return 1;
-					if (value instanceof Comparable<?>) {
-						return ((Comparable)value).compareTo(other);
-					}
-					return 0;
-				}
     }
 }
