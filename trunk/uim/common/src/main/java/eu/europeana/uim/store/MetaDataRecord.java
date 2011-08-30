@@ -82,7 +82,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return the list of values qualified with the given qualifier
      */
     <N, T> List<T> getValues(TKey<N, T> key, Enum<?>... qualifiers);
-    
+
     /**
      * Adds value to the list of values under the specified key and optional qualifiers.
      * 
@@ -131,12 +131,11 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
          * how the given value has been qualified
          */
         private final Set<Enum<?>> qualifiers;
-
         /**
-         * Index of the value within a single record.
+         * index of the value within a single record
          */
-        private final int orderIndex;
-        
+        private final int          orderIndex;
+
         /**
          * Creates a new instance of this class.
          * 
@@ -144,13 +143,13 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
          *            generic value
          * @param qualifiers
          *            how the given value has been qualified
-         * @param orderIndex 
+         * @param orderIndex
          *            order of the value within the record
          */
         public QualifiedValue(T value, Set<Enum<?>> qualifiers, int orderIndex) {
             this.value = value;
             this.qualifiers = qualifiers;
-						this.orderIndex = orderIndex;
+            this.orderIndex = orderIndex;
         }
 
         /**
@@ -168,39 +167,35 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
         }
 
         /**
-         * @param <A> The qualifier class to get
-         * @param qualifierType The qualifier class to get
+         * @param <A>
+         *            The qualifier class to get
+         * @param qualifierType
+         *            The qualifier class to get
          * @return the qualifier value, null if the qualifier is not present
          */
         @SuppressWarnings("unchecked")
-		public <A extends Enum<?>> A getQualifier(Class<A> qualifierType) {
-        	if(qualifiers==null)
-        		return null;
-        	for(Enum<?> qualifier: qualifiers) {
-        		if(qualifier.getClass().equals(qualifierType)) 
-        			return (A) qualifier;
-        	}
-        	return null;
+        public <A extends Enum<?>> A getQualifier(Class<A> qualifierType) {
+            if (qualifiers == null) return null;
+            for (Enum<?> qualifier : qualifiers) {
+                if (qualifier.getClass().equals(qualifierType)) return (A)qualifier;
+            }
+            return null;
         }
-        
+
         /**
-		 * Returns the index.
-		 * @return the index
-		 */
-		public int getOrderIndex() {
-			return orderIndex;
-		}
-		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		@Override
-		public int compareTo(QualifiedValue<?> other) {
-			if (orderIndex < other.orderIndex) return -1;
-			if (orderIndex > other.orderIndex) return 1;
-			if (value instanceof Comparable<?>) {
-				return ((Comparable)value).compareTo(other);
-			}
-			return 0;
-		}
-				
+         * @return order index
+         */
+        public int getOrderIndex() {
+            return orderIndex;
+        }
+
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @Override
+        public int compareTo(QualifiedValue<?> other) {
+            if (orderIndex < other.orderIndex) return -1;
+            if (orderIndex > other.orderIndex) return 1;
+            if (value instanceof Comparable<?>) { return ((Comparable)value).compareTo(other); }
+            return 0;
+        }
     }
 }
