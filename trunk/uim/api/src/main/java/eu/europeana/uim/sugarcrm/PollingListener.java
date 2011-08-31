@@ -19,14 +19,10 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.europeana.uim.sugarcrm.polling;
+package eu.europeana.uim.sugarcrm;
 
 import java.util.List;
 
-import eu.europeana.uim.sugarcrm.SugarCrmQuery;
-import eu.europeana.uim.sugarcrm.SugarCrmRecord;
-import eu.europeana.uim.sugarcrm.SugarCrmService;
-import eu.europeana.uim.sugarcrm.exceptions.GenericSugarCrmException;
 
 /**
  * Interface declaration of a Polling listener. It implements the

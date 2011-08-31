@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.sugarcrm.exceptions;
+package eu.europeana.uim.sugarcrm;
 
 /**
  *  A generic Class representing an unclassified

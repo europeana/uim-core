@@ -19,24 +19,21 @@
  * permissions and limitations under the Licence.
  */
 
-package eu.europeana.uim.sugarcrm.model;
+package eu.europeana.uim.sugarcrm;
 
 /**
- * Marker interface for enums representing different stages of progress for a record in the data source
+ * Exception thrown during logout from the SugarCRM server
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */
-public interface DatasetStates {
+public class LoginFailureException extends GenericSugarCrmException {
 
     /**
-     * @return the value representing the status in SugarCRM
+     * Creates a new instance of this class.
+     * @param generateMessageFromObject
      */
-    public String getSysId();
-
-    /**
-     * @return the description about the semantic meaning of the state
-     */
-    public String getDescription();
+    public LoginFailureException(Object generateMessageFromObject) {
+    }
 
 }

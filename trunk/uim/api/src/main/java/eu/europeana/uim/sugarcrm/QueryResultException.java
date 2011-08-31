@@ -18,16 +18,21 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-
-package eu.europeana.uim.sugarcrm.model;
-
+package eu.europeana.uim.sugarcrm;
 
 /**
- * Marker interface for all retrievable fields
+ * Exception thrwon during a query against the SugarCRM
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */
-public interface RetrievableField extends SugarCrmField {
+public class QueryResultException extends GenericSugarCrmException {
+
+    /**
+     * Creates a new instance of this class.
+     * @param string
+     */
+    public QueryResultException(String string) {
+    }
 
 }

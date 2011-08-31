@@ -1,5 +1,6 @@
-
- /**
+/*
+ * Copyright 2007 EDL FOUNDATION
+ *
  * Licensed under the EUPL, Version 1.1 or - as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -17,22 +18,22 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.sugarcrm.model;
+
+package eu.europeana.uim.sugarcrm;
 
 /**
- * Interface declaration of a SugarCRM field
+ * Exception thrown when there is a error during retrieval or storage of a file attachment 
  * 
- * @author Georgios Markakis
+ * @author Rene Wiermer (rene.wiermer@kb.nl)
+ * @date Aug 12, 2011
  */
-public interface SugarCrmField {
+public class FileAttachmentException extends GenericSugarCrmException{
 
-    
-	/**
-	 * @return the field id in the SugarCRM
-	 */
-	public String getFieldId();
-	/**
-	 * @return the sematinc meaning of the field
-	 */
-	public String getDescription();
+    /**
+     * Creates a new instance of this class.
+     * @param generateMessageFromObject
+     */
+    public FileAttachmentException(Object generateMessageFromObject) {
+    }
+
 }

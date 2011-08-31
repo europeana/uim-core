@@ -25,12 +25,8 @@ import java.util.List;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.sugarcrm.exceptions.FileAttachmentException;
-import eu.europeana.uim.sugarcrm.exceptions.LoginFailureException;
-import eu.europeana.uim.sugarcrm.exceptions.QueryResultException;
 import eu.europeana.uim.sugarcrm.model.DatasetStates;
 import eu.europeana.uim.sugarcrm.model.UpdatableField;
-import eu.europeana.uim.sugarcrm.polling.PollingListener;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
