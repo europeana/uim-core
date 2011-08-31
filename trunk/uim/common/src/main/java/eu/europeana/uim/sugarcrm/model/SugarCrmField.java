@@ -27,12 +27,18 @@ package eu.europeana.uim.sugarcrm.model;
 public interface SugarCrmField {
 
     
+    /**
+     * @return the field id in the SugarCRM
+     */
+    public String getFieldId();
+    
+    /**
+     * @return the qualified field id in the SugarCRM
+     */
+    public String getQualifiedFieldId();
+    
 	/**
-	 * @return the field id in the SugarCRM
-	 */
-	public String getFieldId();
-	/**
-	 * @return the sematinc meaning of the field
+	 * @return the semantic meaning of the field
 	 */
 	public String getDescription();
 }
