@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
@@ -307,9 +308,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             }
 
             wrapped.setName(e.getName());
-
             wrapped.setWorkflow(getWorkflowName(e.getWorkflow()));
-
             wrapped.setProgress(new ProgressDTO());
             wrappedExecutionDTOs.put(execution, wrapped);
         }
@@ -319,11 +318,18 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setEndTime(e.getEndTime());
         }
         wrapped.setCanceled(e.isCanceled());
+        
+        
         if (e.isActive() && ae != null) {
             wrapped.setScheduled(ae.getScheduledSize());
             wrapped.setCompleted(ae.getCompletedSize());
             wrapped.setFailure(ae.getFailureSize());
             wrapped.setPaused(ae.isPaused());
+            
+            Set<Entry<String,String>> entrySet = ae.getExecution().values().entrySet();
+            for (Entry<String, String> entry : entrySet) {
+                wrapped.setValue(entry.getKey(), entry.getValue());
+            }
 
             ProgressDTO progress = wrapped.getProgress();
             progress.setWork(ae.getTotalSize());
@@ -331,10 +337,16 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             progress.setTask(ae.getMonitor().getTask());
             progress.setSubtask(ae.getMonitor().getSubtask());
             progress.setDone(!e.isActive());
+            
         } else if (!e.isActive()) {
             wrapped.setScheduled(e.getProcessedCount());
             wrapped.setCompleted(e.getSuccessCount());
             wrapped.setFailure(e.getFailureCount());
+            
+            Set<Entry<String,String>> entrySet = e.values().entrySet();
+            for (Entry<String, String> entry : entrySet) {
+                wrapped.setValue(entry.getKey(), entry.getValue());
+            }
         }
         return wrapped;
     }
