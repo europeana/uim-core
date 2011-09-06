@@ -40,15 +40,15 @@ import eu.europeana.uim.repoxclient.rest.exceptions.DataSourceOperationException
 import eu.europeana.uim.repoxclient.rest.exceptions.ProviderOperationException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.SugarCrmRecord;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.data.DatasetStates;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.data.RetrievableField;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.data.UpdatableField;
+import eu.europeana.uim.sugarcrm.SugarCrmService;
+import eu.europeana.uim.sugarcrm.SugarCrmRecord;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaDatasetStates;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaRetrievableField;
+import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaUpdatableField;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.CustomSugarCrmQuery;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SimpleSugarCrmQuery;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SugarCrmQuery;
-import eu.europeana.uim.sugarcrmclient.ws.exceptions.QueryResultException;
+import eu.europeana.uim.sugarcrm.SugarCrmQuery;
+import eu.europeana.uim.sugarcrm.QueryResultException;
 
 /**
  * 
@@ -70,7 +70,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	public ImportResultDTO processSelectedRecord(SugarCRMRecordDTO record) {
 
 		ExpandedOsgiEngine engine =  getEngine();
-		SugarCRMService sugService = engine.getSugarCrmService();
+		SugarCrmService sugService = engine.getSugarCrmService();
 		
 		RepoxUIMService repoxService = engine.getRepoxService();
 
@@ -83,7 +83,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		
 		try {
 			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
-			Provider prov = sugService.createProviderFromRecord(originalRec);
+			Provider prov = sugService.updateProviderFromRecord(originalRec);
 			
 			String aggrID = prov.getValue("repoxCountry").toLowerCase();
 			
@@ -91,7 +91,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 				repoxService.createAggregator(aggrID);
 			}
 			
-			Collection coll = sugService.createCollectionFromRecord(originalRec, prov);
+			Collection coll = sugService.updateCollectionFromRecord(originalRec, prov);
 			
 
 			
@@ -149,12 +149,12 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		ArrayList<SugarCRMRecordDTO> guiobjs = new ArrayList<SugarCRMRecordDTO>();
 		
 		ExpandedOsgiEngine engine =  getEngine();
-		SugarCRMService sugService = engine.getSugarCrmService();
+		SugarCrmService sugService = engine.getSugarCrmService();
 		
 		CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
 		queryObj.setMaxResults(100);
 		queryObj.setOffset(0);
-		queryObj.setOrderBy(RetrievableField.ID);
+		queryObj.setOrderBy(EuropeanaRetrievableField.ID);
 		
 		try {
 			ArrayList<SugarCrmRecord> results =  (ArrayList<SugarCrmRecord>) sugService.retrieveRecords(queryObj);
@@ -249,7 +249,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			SugarCRMRecordDTO guirecord = new SugarCRMRecordDTO();
 			
 			
-			Collection colexists = resengine.findCollection(originalrecord.getItemValue(RetrievableField.NAME).split("_")[0]);
+			Collection colexists = resengine.findCollection(originalrecord.getItemValue(EuropeanaRetrievableField.NAME).split("_")[0]);
 
 			if (colexists == null){
 				guirecord.setImportedIMG(EuropeanaClientConstants.ERRORIMAGELOC);
@@ -259,42 +259,42 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			}
 			
 			
-			guirecord.setId(originalrecord.getItemValue(RetrievableField.ID));
-			guirecord.setAccess_to_content_checker(originalrecord.getItemValue(RetrievableField.ACCESS_TO_CONTENT_CHECKER));
-			guirecord.setActual_ingestion_date_(originalrecord.getItemValue(RetrievableField.DATE_OF_REPLICATION));
-			guirecord.setAssigned_user_id(originalrecord.getItemValue(RetrievableField.ASSIGNED_USER_ID));
-			guirecord.setAssigned_user_name(originalrecord.getItemValue(RetrievableField.ASSIGNED_USER_NAME));
-			guirecord.setCampaign_name(originalrecord.getItemValue(RetrievableField.CAMPAIGN_NAME));
-			guirecord.setCountry_c(originalrecord.getItemValue(RetrievableField.COUNTRY));
-			guirecord.setCreated_by(originalrecord.getItemValue(RetrievableField.CREATED_BY_USER));
-			guirecord.setDataset_country(originalrecord.getItemValue(RetrievableField.DATASET_COUNTRY));
-			guirecord.setDate_entered(originalrecord.getItemValue(RetrievableField.DATE_ENTERED));
-			guirecord.setDate_modified(originalrecord.getItemValue(RetrievableField.DATE_MODIFIED));
-			guirecord.setDeleted(originalrecord.getItemValue(RetrievableField.DELETED));
-			guirecord.setDescription(originalrecord.getItemValue(RetrievableField.DESCRIPTION));
-			guirecord.setEnabled_c(originalrecord.getItemValue(RetrievableField.ENABLED));
-			guirecord.setExpected_ingestion_date(originalrecord.getItemValue(RetrievableField.EXPECTED_INGESTION_DATE));
-			guirecord.setHarvest_url(originalrecord.getItemValue(RetrievableField.HARVEST_URL));
-			guirecord.setIdentifier(originalrecord.getItemValue(RetrievableField.IDENTIFIER));
-			guirecord.setIngested_image_c(originalrecord.getItemValue(UpdatableField.INGESTED_IMAGE));
-			guirecord.setIngested_sound_c(originalrecord.getItemValue(UpdatableField.INGESTED_SOUND));
-			guirecord.setIngested_text_c(originalrecord.getItemValue(UpdatableField.INGESTED_TEXT));
-			guirecord.setIngested_total_c(originalrecord.getItemValue(UpdatableField.TOTAL_INGESTED));
-			guirecord.setIngested_video_c(originalrecord.getItemValue(UpdatableField.INGESTED_VIDEO));
-			guirecord.setModified_by_user(originalrecord.getItemValue(RetrievableField.MODIFIED_BY_USER));
-			guirecord.setName(originalrecord.getItemValue(RetrievableField.NAME));
-			guirecord.setName_acronym_c(originalrecord.getItemValue(RetrievableField.ACRONYM));
-			guirecord.setNext_step(originalrecord.getItemValue(UpdatableField.NEXT_STEP));
-			guirecord.setNotes(originalrecord.getItemValue(RetrievableField.NOTES));
-			guirecord.setOrganization_name(originalrecord.getItemValue(RetrievableField.ORGANIZATION_NAME));
-			guirecord.setPlanned_image_c(originalrecord.getItemValue(RetrievableField.PLANNED_IMAGE));
-			guirecord.setPlanned_sound_c(originalrecord.getItemValue(RetrievableField.PLANNED_SOUND));
-			guirecord.setPlanned_text_c(originalrecord.getItemValue(RetrievableField.PLANNED_TEXT));
-			guirecord.setPlanned_total_c(originalrecord.getItemValue(RetrievableField.PLANNED_TOTAL));
-			guirecord.setPlanned_video_c(originalrecord.getItemValue(RetrievableField.PLANNED_VIDEO));
-			guirecord.setSetspec_c(originalrecord.getItemValue(RetrievableField.SETSPEC));
-			guirecord.setStatus(originalrecord.getItemValue(UpdatableField.STATUS));
-			guirecord.setType(originalrecord.getItemValue(UpdatableField.TYPE));
+			guirecord.setId(originalrecord.getItemValue(EuropeanaRetrievableField.ID));
+			guirecord.setAccess_to_content_checker(originalrecord.getItemValue(EuropeanaRetrievableField.ACCESS_TO_CONTENT_CHECKER));
+			guirecord.setActual_ingestion_date_(originalrecord.getItemValue(EuropeanaRetrievableField.DATE_OF_REPLICATION));
+			guirecord.setAssigned_user_id(originalrecord.getItemValue(EuropeanaRetrievableField.ASSIGNED_USER_ID));
+			guirecord.setAssigned_user_name(originalrecord.getItemValue(EuropeanaRetrievableField.ASSIGNED_USER_NAME));
+			guirecord.setCampaign_name(originalrecord.getItemValue(EuropeanaRetrievableField.CAMPAIGN_NAME));
+			guirecord.setCountry_c(originalrecord.getItemValue(EuropeanaRetrievableField.COUNTRY));
+			guirecord.setCreated_by(originalrecord.getItemValue(EuropeanaRetrievableField.CREATED_BY_USER));
+			guirecord.setDataset_country(originalrecord.getItemValue(EuropeanaRetrievableField.DATASET_COUNTRY));
+			guirecord.setDate_entered(originalrecord.getItemValue(EuropeanaRetrievableField.DATE_ENTERED));
+			guirecord.setDate_modified(originalrecord.getItemValue(EuropeanaRetrievableField.DATE_MODIFIED));
+			guirecord.setDeleted(originalrecord.getItemValue(EuropeanaRetrievableField.DELETED));
+			guirecord.setDescription(originalrecord.getItemValue(EuropeanaRetrievableField.DESCRIPTION));
+			guirecord.setEnabled_c(originalrecord.getItemValue(EuropeanaRetrievableField.ENABLED));
+			guirecord.setExpected_ingestion_date(originalrecord.getItemValue(EuropeanaRetrievableField.EXPECTED_INGESTION_DATE));
+			guirecord.setHarvest_url(originalrecord.getItemValue(EuropeanaRetrievableField.HARVEST_URL));
+			guirecord.setIdentifier(originalrecord.getItemValue(EuropeanaRetrievableField.IDENTIFIER));
+			guirecord.setIngested_image_c(originalrecord.getItemValue(EuropeanaUpdatableField.INGESTED_IMAGE));
+			guirecord.setIngested_sound_c(originalrecord.getItemValue(EuropeanaUpdatableField.INGESTED_SOUND));
+			guirecord.setIngested_text_c(originalrecord.getItemValue(EuropeanaUpdatableField.INGESTED_TEXT));
+			guirecord.setIngested_total_c(originalrecord.getItemValue(EuropeanaUpdatableField.TOTAL_INGESTED));
+			guirecord.setIngested_video_c(originalrecord.getItemValue(EuropeanaUpdatableField.INGESTED_VIDEO));
+			guirecord.setModified_by_user(originalrecord.getItemValue(EuropeanaRetrievableField.MODIFIED_BY_USER));
+			guirecord.setName(originalrecord.getItemValue(EuropeanaRetrievableField.NAME));
+			guirecord.setName_acronym_c(originalrecord.getItemValue(EuropeanaRetrievableField.ACRONYM));
+			guirecord.setNext_step(originalrecord.getItemValue(EuropeanaUpdatableField.NEXT_STEP));
+			guirecord.setNotes(originalrecord.getItemValue(EuropeanaRetrievableField.NOTES));
+			guirecord.setOrganization_name(originalrecord.getItemValue(EuropeanaRetrievableField.ORGANIZATION_NAME));
+			guirecord.setPlanned_image_c(originalrecord.getItemValue(EuropeanaRetrievableField.PLANNED_IMAGE));
+			guirecord.setPlanned_sound_c(originalrecord.getItemValue(EuropeanaRetrievableField.PLANNED_SOUND));
+			guirecord.setPlanned_text_c(originalrecord.getItemValue(EuropeanaRetrievableField.PLANNED_TEXT));
+			guirecord.setPlanned_total_c(originalrecord.getItemValue(EuropeanaRetrievableField.PLANNED_TOTAL));
+			guirecord.setPlanned_video_c(originalrecord.getItemValue(EuropeanaRetrievableField.PLANNED_VIDEO));
+			guirecord.setSetspec_c(originalrecord.getItemValue(EuropeanaRetrievableField.SETSPEC));
+			guirecord.setStatus(originalrecord.getItemValue(EuropeanaUpdatableField.STATUS));
+			guirecord.setType(originalrecord.getItemValue(EuropeanaUpdatableField.TYPE));
 			
 			
 			converted.add(guirecord);

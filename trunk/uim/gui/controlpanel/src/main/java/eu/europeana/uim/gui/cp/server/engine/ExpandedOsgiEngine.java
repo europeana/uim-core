@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
-import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
+import eu.europeana.uim.sugarcrm.SugarCrmService;
 
 /**
  * 
@@ -37,14 +37,14 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 	
 	    private final RepoxUIMService repoxService;
 	    
-	    private final SugarCRMService sugarCrmService;
+	    private final SugarCrmService sugarCrmService;
 
 	    /**
 	     * Creates a new instance of this class.
 	     * 
 	     * @param registry
 	     */
-	    public ExpandedOsgiEngine(Registry registry,RepoxUIMService repoxService,SugarCRMService sugarCrmService) {
+	    public ExpandedOsgiEngine(Registry registry,RepoxUIMService repoxService,SugarCrmService sugarCrmService) {
 	    	super(registry);
 	       this.repoxService = repoxService;
 	       this.sugarCrmService = sugarCrmService;
@@ -60,7 +60,7 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 		/**
 		 * @return the sugarCrmService
 		 */
-		public SugarCRMService getSugarCrmService() {
+		public SugarCrmService getSugarCrmService() {
 			return sugarCrmService;
 		}
 		

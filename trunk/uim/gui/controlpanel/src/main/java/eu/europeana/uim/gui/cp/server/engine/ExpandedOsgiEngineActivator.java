@@ -26,7 +26,8 @@ import org.osgi.framework.ServiceReference;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
-import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
+import eu.europeana.uim.sugarcrm.SugarCrmService;
+//import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
 
 /**
  * @author georgiosmarkakis
@@ -44,7 +45,7 @@ public class ExpandedOsgiEngineActivator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
         Registry registry = null;
         RepoxUIMService repoxService = null;
-        SugarCRMService sugarCrmService = null;
+        SugarCrmService sugarCrmService = null;
 
         int wait = 0;
         while (registry == null && wait++ < 10) {
@@ -58,7 +59,7 @@ public class ExpandedOsgiEngineActivator implements BundleActivator {
         while (sugarCrmService == null && wait++ < 10) {
             ServiceReference sugarCrmRef = bundleContext.getServiceReference("eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService");
             if (sugarCrmRef != null) {
-            	sugarCrmService = (SugarCRMService)bundleContext.getService(sugarCrmRef);
+            	sugarCrmService = (SugarCrmService)bundleContext.getService(sugarCrmRef);
             }
             Thread.sleep(1000);
         }
