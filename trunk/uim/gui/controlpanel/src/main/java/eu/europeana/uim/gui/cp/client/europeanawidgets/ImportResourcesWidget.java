@@ -189,10 +189,6 @@ public class ImportResourcesWidget extends IngestionWidget {
 		searchDialog = createSearchDialogBox();
 		importDialog = createImportDialog();
 
-
-
-
-
 		importButton = new Button();
 		importButton.addClickHandler(new ClickHandler() {
 			@Override

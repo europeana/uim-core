@@ -57,7 +57,7 @@ public class ExpandedOsgiEngineActivator implements BundleActivator {
         }
         
         while (sugarCrmService == null && wait++ < 10) {
-            ServiceReference sugarCrmRef = bundleContext.getServiceReference("eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService");
+            ServiceReference sugarCrmRef = bundleContext.getServiceReference("eu.europeana.uim.sugarcrm.SugarCrmService");
             if (sugarCrmRef != null) {
             	sugarCrmService = (SugarCrmService)bundleContext.getService(sugarCrmRef);
             }
