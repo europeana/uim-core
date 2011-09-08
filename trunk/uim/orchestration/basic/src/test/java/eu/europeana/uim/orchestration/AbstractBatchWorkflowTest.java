@@ -3,6 +3,7 @@ package eu.europeana.uim.orchestration;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
+import java.util.Properties;
 
 import eu.europeana.uim.api.ActiveExecution;
 import eu.europeana.uim.api.StorageEngineException;
@@ -67,6 +68,38 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
         Request<Long> request = createTestData(count);
 
         ActiveExecution<Long> execution = orchestrator.executeWorkflow(w, request);
+        execution.waitUntilFinished();
+
+        assertEquals(count, execution.getCompletedSize());
+        assertEquals(0, execution.getFailureSize());
+        assertEquals(count, execution.getScheduledSize());
+
+        return execution.getExecution();
+    }
+
+    /**
+     * Executes the given workflow while creating a given amount of records and a boolean flag to
+     * signal if the records are stored again.
+     * 
+     * @param w
+     * @param count
+     * @param properties
+     * @return execution used for workflow processing
+     * @throws InterruptedException
+     * @throws StorageEngineException
+     */
+    protected Execution<Long> executeWorkflow(Workflow w, int count, Properties properties)
+            throws InterruptedException, StorageEngineException {
+        assertEquals(0, orchestrator.getActiveExecutions().size());
+
+        Request<Long> request = createTestData(count);
+
+        ActiveExecution<Long> execution;
+        if (properties != null) {
+            execution = orchestrator.executeWorkflow(w, request, properties);
+        } else {
+            execution = orchestrator.executeWorkflow(w, request);
+        }
         execution.waitUntilFinished();
 
         assertEquals(count, execution.getCompletedSize());
