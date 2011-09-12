@@ -20,22 +20,23 @@
  */
 package eu.europeana.uim.gui.cp.client.utils;
 
-
-
 /**
- * 
+ * String constants for GUI labels.
  * 
  * @author Georgios Markakis
  */
+
 public class EuropeanaClientConstants {
 
+	public final static String PANELLABEL = "Import Resources" ;
+	public final static String PANELDESCRIPTION = "This view allows to import resources into UIM." ;
+	
 	public final static String ERRORIMAGELOC = "images/no.png" ;
 	public final static String SUCCESSIMAGELOC = "images/ok.png" ;
 	public final static String QUERYIMAGELOC = "images/network.gif"; 
 	public final static String SEARCHDIALOGMSG = "Searching for SugarCRM entries"; 
 	
-	
-	//Search labels declarations
+	//Search related labels
 	public final static String DSNAMESEARCHLABEL = "DataSet Name:" ;
 	public final static String IDSEARCHLABEL = "Identifier:" ;
 	public final static String ORGANIZATIONSEARCHLABEL = "Organization:" ;	
@@ -47,11 +48,11 @@ public class EuropeanaClientConstants {
 	public final static String AMOUNTSEARCHLABEL = "Amount of ingested items:" ;
 	public final static String COUNTRYSEARCHLABEL = "Country:" ;
 	public final static String USERSEARCHLABEL = "User:" ;
-	
-
 	public final static String SEARCHBUTTONLABEL = "Search" ;
 	public final static String SEARCHBUTTONTITLE = "Search SugarCRM for Records" ;	
 	
+	//Import related labels
+	public final static String IMPORTMENULABEL = "Importing to UIM & Repox" ;
 	public final static String IMPORTBUTTONLABEL = "Import Selected" ;
 	public final static String IMPORTBUTTONTITLE = "Populate UIM and Repox with Data from SugarCrm" ;
 	

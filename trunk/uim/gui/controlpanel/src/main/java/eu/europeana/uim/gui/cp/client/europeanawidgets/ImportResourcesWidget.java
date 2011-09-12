@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.cell.client.CheckboxCell;
-import com.google.gwt.cell.client.EditTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.TextCell;
@@ -35,7 +34,6 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -45,23 +43,18 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,14 +66,12 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
-import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.utils.RecordStates;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
-import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
@@ -126,7 +117,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	ProgressBar progressBar;
 	
-
+	private ListDataProvider<SugarCRMRecordDTO> dataProvider = new ListDataProvider<SugarCRMRecordDTO>();
 	
 	
 	
@@ -141,23 +132,28 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	
 	
-	private ListDataProvider<SugarCRMRecordDTO> dataProvider = new ListDataProvider<SugarCRMRecordDTO>();
 
+
+	
 	/**
-	 * @param name
-	 * @param description
+	 * Constructor
+	 * 
+	 * @param repositoryService
+	 * @param resourceService
+	 * @param integrationservice
 	 */
 	public ImportResourcesWidget(RepositoryServiceAsync repositoryService,
 			ResourceServiceAsync resourceService,
 			IntegrationSeviceProxyAsync integrationservice) {
-		super("Import Resources",
-				"This view allows to import resources into UIM.");
+		super(EuropeanaClientConstants.PANELLABEL,
+				EuropeanaClientConstants.PANELDESCRIPTION);
 		this.repositoryService = repositoryService;
 		this.resourceService = resourceService;
 		this.integrationservice = integrationservice;
 
 	}
 
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -179,6 +175,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		impResultsTable.setWidth("32em");
 		impResultsTable.setCellSpacing(5);
 		impResultsTable.setCellPadding(3);
+
 
 		// Add some text
 		cellFormatter.setHorizontalAlignment(0, 1,
@@ -276,8 +273,10 @@ public class ImportResourcesWidget extends IngestionWidget {
 	 * Private Methods
 	 */
 
+	
+	
 	/**
-	 * 
+	 * Performs an asynchronous import request.
 	 */
 	private void performImport() {
 
@@ -352,7 +351,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 	
 	
 	/**
-	 * 
+	 * Performs an asynchronous search in SugarCRM.
 	 */
 	private void performSearch() {
 		String query = generateQuery();
@@ -374,8 +373,11 @@ public class ImportResourcesWidget extends IngestionWidget {
 	}
 
 	
+	
 	/**
-	 * @return
+	 * Generates a query from existing GUI fields.
+	 * 
+	 * @return the query String
 	 */
 	private String generateQuery() {
 
@@ -503,11 +505,14 @@ public class ImportResourcesWidget extends IngestionWidget {
         	}
         }
         
-        
 		return querybuffer.toString();
 
 	}
 
+	
+	
+	
+	
 	/**
 	 * Add the columns to the table.
 	 */
@@ -610,6 +615,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 				return object.getOrganization_name();
 			}
 		};
+		
 		collectionColumn.setSortable(true);
 
 		sortHandler.setComparator(organizationColumn,
@@ -620,6 +626,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 								o2.getOrganization_name());
 					}
 				});
+		
 		cellTable.addColumn(organizationColumn,EuropeanaClientConstants.ORGANIZATIONSEARCHLABEL);
 		organizationColumn
 				.setFieldUpdater(new FieldUpdater<SugarCRMRecordDTO, String>() {
@@ -781,6 +788,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 	}
 
+	
 	/**
 	 * Create the dialog box for this example.
 	 * 
@@ -809,6 +817,14 @@ public class ImportResourcesWidget extends IngestionWidget {
 		return dialogBox;
 	}
 
+	
+	
+	
+	
+	/**
+	 * Creates an import dialog
+	 * @return
+	 */
 	private DialogBox createImportDialog() {
 		// Create a dialog box and set the caption text
 		final DialogBox dialogBox = new DialogBox();
@@ -816,7 +832,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 		progressBar.setWidth("100%");
 
 		dialogBox.ensureDebugId("impDialogBox");
-		dialogBox.setText("Importing to UIM & Repox");
+		dialogBox.setText(EuropeanaClientConstants.IMPORTMENULABEL);
 		dialogBox.setModal(true);
 
 		Button closeButton = new Button();
@@ -833,11 +849,22 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 		// Create a table to layout the content
 		VerticalPanel dialogContents = new VerticalPanel();
+		
+		
+		
 		dialogContents.setSpacing(4);
 		dialogBox.setWidget(dialogContents);
-
 		dialogContents.add(progressBar);
-		dialogContents.add(impResultsTable);
+		
+		ScrollPanel scrollPanel = new ScrollPanel();
+		
+		scrollPanel.setWidth("600px");
+		scrollPanel.setHeight("500px");
+		
+		scrollPanel.add(impResultsTable);
+		
+		dialogContents.add(scrollPanel);
+		
 		dialogContents.add(closeButton);
 		HTML details = new HTML("ImportStatus");
 
