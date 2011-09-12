@@ -27,6 +27,7 @@ import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.sugarcrm.SugarCrmService;
 
 /**
+ * Expanded version of the OsgiEngine giving access to SugarCRM and Repox services
  * 
  * @author Georgios Markakis
  */
@@ -75,7 +76,7 @@ public class ExpandedOsgiEngine extends OsgiEngine {
 
 	    /**
 	     * @param newInstance
-	     *            sets an engine instance to be used througout the application
+	     *            sets an engine instance to be used throughout the application
 	     */
 	    protected static void setEngine(ExpandedOsgiEngine newInstance) {
 	    	Engine.setEngine(newInstance);

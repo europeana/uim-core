@@ -23,15 +23,15 @@ package eu.europeana.uim.gui.cp.server.engine;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.sugarcrm.SugarCrmService;
-//import eu.europeana.uim.sugarcrmclient.plugin.SugarCRMService;
+
 
 /**
- * @author georgiosmarkakis
- *
+ * Expanded Bundle Activator with support for SugarCrmService & RepoxUIMService
+ * 
+ * @author Georgios Markakis
  */
 public class ExpandedOsgiEngineActivator implements BundleActivator {
 

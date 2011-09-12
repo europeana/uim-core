@@ -23,7 +23,7 @@ package eu.europeana.uim.gui.cp.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
- * 
+ * Client Side object for Harvesting Status Information
  * 
  * @author Georgios Markakis
  */

@@ -23,6 +23,7 @@ package eu.europeana.uim.gui.cp.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
+ * Client Side Object for representing Client status information
  * 
  * @author Georgios Markakis
  */
@@ -55,7 +56,7 @@ public class IntegrationStatusDTO implements IsSerializable {
 	}
 
 	/**
-	 * @return the id
+	 * @return the id 
 	 */
 	public String getId() {
 		return id;

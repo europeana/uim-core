@@ -30,7 +30,7 @@ import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
- * 
+ * Remote Integration Service Interface (Async)
  * 
  * @author Georgios Markakis
  */
@@ -40,5 +40,5 @@ public interface IntegrationSeviceProxyAsync {
 	
 	public void executeSugarCRMQuery(String query, AsyncCallback<List<SugarCRMRecordDTO>> async);
 	
-	public void retrieveIntegrationInfo(IntegrationStatusDTO.TYPE type,String ID, AsyncCallback<List<IntegrationStatusDTO>> async);
+	public void retrieveIntegrationInfo(Long provider, Long collection, AsyncCallback<IntegrationStatusDTO> async);
 }

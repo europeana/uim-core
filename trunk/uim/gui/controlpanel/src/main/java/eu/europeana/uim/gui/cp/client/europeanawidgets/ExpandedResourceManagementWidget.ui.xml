@@ -44,7 +44,7 @@
                         </g:center>
                         <g:south size="250">
                             <g:ScrollPanel>
-
+                                <g:FlexTable ui:field="integrationTable" addStyleNames="{style.cellTable}" />
                             </g:ScrollPanel>
                         </g:south>
                     </g:SplitLayoutPanel>

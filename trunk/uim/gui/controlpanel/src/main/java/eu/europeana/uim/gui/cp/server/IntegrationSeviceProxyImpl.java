@@ -174,60 +174,6 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	
 	
 	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#retrieveIntegrationInfo(eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE, java.lang.String)
-	 */
-	@Override
-	public IntegrationStatusDTO retrieveIntegrationInfo(TYPE type, String ID) {
-		ExpandedOsgiEngine engine =  getEngine();
-		
-		RepoxUIMService repoxService = engine.getRepoxService();
-		
-		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
-		
-		
-		switch(type){
-		
-		case COLLECTION:
-			try {
-				Collection<?> col = stengine.findCollection(ID);
-			} catch (StorageEngineException e) {
-
-			}
-		break;
-		
-		case PROVIDER:
-			
-			try {
-				stengine.findProvider(ID);
-			} catch (StorageEngineException e) {
-
-			}
-			
-		}
-		
-		
-		IntegrationStatusDTO ret = new IntegrationStatusDTO();
-		
-		String sugarCRMID = null;
-		String repoxID = null;
-		
-		
-		ret.setId(ID);
-		
-		HarvestingStatusDTO harvestingStatus = new HarvestingStatusDTO();
-		ret.setHarvestingStatus(harvestingStatus );
-		
-		ret.setSugarCRMID(sugarCRMID);
-		ret.setType(type);
-		ret.setRepoxID(repoxID);
-		//ret.s
-		
-		return ret;
-	}
-	
-	
-	
 	
 	/**
 	 * Converts a SugarCRM object (query result) into an object suitable for GWT visualization purposes.
@@ -304,6 +250,79 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		return converted;
 		
 	}
+
+
+
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#retrieveIntegrationInfo(java.lang.Long, java.lang.Long)
+	 */
+	@Override
+	public IntegrationStatusDTO retrieveIntegrationInfo(Long provider,Long collection) {
+		ExpandedOsgiEngine engine =  getEngine();
+		
+		RepoxUIMService repoxService = engine.getRepoxService();
+		
+		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
+		
+		IntegrationStatusDTO ret = new IntegrationStatusDTO();
+		
+		
+		ret.setRepoxID(provider.toString());
+		ret.setSugarCRMID(collection.toString());
+		
+		
+		return ret;
+		
+
+		
+		
+		/*
+
+		
+		switch(type){
+		
+		case COLLECTION:
+			try {
+
+				Collection<?> col = stengine.findCollection(ID);
+			} catch (StorageEngineException e) {
+
+			}
+		break;
+		
+		case PROVIDER:
+			
+			try {
+				stengine.findProvider(ID);
+			} catch (StorageEngineException e) {
+
+			}
+			
+		}
+		
+		
+		IntegrationStatusDTO ret = new IntegrationStatusDTO();
+		
+		String sugarCRMID = null;
+		String repoxID = null;
+		
+		
+		ret.setId(ID);
+		
+		HarvestingStatusDTO harvestingStatus = new HarvestingStatusDTO();
+		ret.setHarvestingStatus(harvestingStatus );
+		
+		ret.setSugarCRMID(sugarCRMID);
+		ret.setType(type);
+		ret.setRepoxID(repoxID);
+		//ret.s
+		
+		return ret;		 
+		 * 
+		 */
+		
+	}
+
 
 
 

@@ -30,6 +30,7 @@ import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
+ * Remote Integration Service Interface
  * 
  * @author Georgios Markakis
  */
@@ -42,5 +43,5 @@ public interface IntegrationSeviceProxy extends RemoteService{
 	
 	public List<SugarCRMRecordDTO> executeSugarCRMQuery(String query);
 	
-	public IntegrationStatusDTO retrieveIntegrationInfo(IntegrationStatusDTO.TYPE type,String ID);
+	public IntegrationStatusDTO retrieveIntegrationInfo(Long provider, Long collection);
 }

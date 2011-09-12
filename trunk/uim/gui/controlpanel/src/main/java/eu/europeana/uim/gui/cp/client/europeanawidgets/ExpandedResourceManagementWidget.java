@@ -25,18 +25,20 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellBrowser;
-import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 
 
 /**
+ * An extended version of the ResourceMangementWidgets
  * 
  * @author Georgios Markakis
  */
@@ -44,7 +46,24 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 	private final IntegrationSeviceProxyAsync integrationservice;
 
+	@UiField(provided = true)
+	FlexTable integrationTable;
 	
+
+	/**
+     * The UiBinder interface used by this example.
+     */
+    interface Binder extends UiBinder<Widget, ExpandedResourceManagementWidget> {
+    }
+	
+    
+	/**
+	 * Constructor
+	 * 
+	 * @param repositoryService
+	 * @param resourceService
+	 * @param integrationservice
+	 */
 	public ExpandedResourceManagementWidget(
 			RepositoryServiceAsync repositoryService,
 			ResourceServiceAsync resourceService,
@@ -54,17 +73,12 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	
 	}
 	
-    /**
-     * The UiBinder interface used by this example.
-     */
-    interface Binder extends UiBinder<Widget, ExpandedResourceManagementWidget> {
-    }
-	
-    
+
     
 	@Override
     public Widget postInitialize(){
-        
+		integrationTable = new FlexTable();
+		
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
         
@@ -95,6 +109,31 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
                         cellTable.setHeight((30 + 20 * parameters.size()) + "px");
                     }
                 });
+        
+        
+        integrationservice.retrieveIntegrationInfo(getProvider() != null ? getProvider().getId() : null,
+        getCollection() != null ? getCollection().getId() : null,
+            new AsyncCallback<IntegrationStatusDTO>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(IntegrationStatusDTO status) {
+            	integrationTable.clear();
+
+            	integrationTable.setWidget(0, 1, new HTML(status.getInfo()));
+            	integrationTable.setWidget(0, 2, new HTML(status.getId()));
+            	integrationTable.setWidget(0, 3, new HTML(status.getRepoxID()));
+            	integrationTable.setWidget(0, 4, new HTML(status.getSugarCRMID()));
+            	
+            	
+            }
+        }		
+        
+        );
+        
     }
 	
 	
@@ -114,4 +153,21 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
         });
     }
 
+    
+    /**
+	 * @return the integrationTable
+	 */
+	public FlexTable getIntegrationTable() {
+		return integrationTable;
+	}
+
+
+
+	/**
+	 * @param integrationTable the integrationTable to set
+	 */
+	public void setIntegrationTable(FlexTable integrationTable) {
+		this.integrationTable = integrationTable;
+	}
+    
 }
