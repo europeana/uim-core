@@ -43,5 +43,5 @@ public interface IntegrationSeviceProxy extends RemoteService{
 	
 	public List<SugarCRMRecordDTO> executeSugarCRMQuery(String query);
 	
-	public IntegrationStatusDTO retrieveIntegrationInfo(Long provider, Long collection);
+	public IntegrationStatusDTO retrieveIntegrationInfo(String provider, String collection);
 }

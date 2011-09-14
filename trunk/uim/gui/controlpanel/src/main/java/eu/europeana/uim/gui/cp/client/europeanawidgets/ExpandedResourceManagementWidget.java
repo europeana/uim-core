@@ -111,8 +111,8 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
                 });
         
         
-        integrationservice.retrieveIntegrationInfo(getProvider() != null ? getProvider().getId() : null,
-        getCollection() != null ? getCollection().getId() : null,
+        integrationservice.retrieveIntegrationInfo(getProvider() != null ? getProvider().getMnemonic() : null,
+        getCollection() != null ? getCollection().getMnemonic() : null,
             new AsyncCallback<IntegrationStatusDTO>() {
             @Override
             public void onFailure(Throwable throwable) {

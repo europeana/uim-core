@@ -257,7 +257,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 	 * @see eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy#retrieveIntegrationInfo(java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public IntegrationStatusDTO retrieveIntegrationInfo(Long provider,Long collection) {
+	public IntegrationStatusDTO retrieveIntegrationInfo(String provider,String collection) {
 		ExpandedOsgiEngine engine =  getEngine();
 		
 		RepoxUIMService repoxService = engine.getRepoxService();

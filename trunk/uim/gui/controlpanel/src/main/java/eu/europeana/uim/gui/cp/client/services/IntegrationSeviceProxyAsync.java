@@ -40,5 +40,7 @@ public interface IntegrationSeviceProxyAsync {
 	
 	public void executeSugarCRMQuery(String query, AsyncCallback<List<SugarCRMRecordDTO>> async);
 	
-	public void retrieveIntegrationInfo(Long provider, Long collection, AsyncCallback<IntegrationStatusDTO> async);
+	public void retrieveIntegrationInfo(String provider, String collection, AsyncCallback<IntegrationStatusDTO> async);
+
+
 }
