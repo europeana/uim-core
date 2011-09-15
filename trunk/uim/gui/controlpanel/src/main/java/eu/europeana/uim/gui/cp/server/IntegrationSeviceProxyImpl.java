@@ -267,6 +267,18 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		IntegrationStatusDTO ret = new IntegrationStatusDTO();
 		
 		
+		if(provider != null){
+			try {
+
+				Collection<?> col = stengine.findCollection(collection);
+			} catch (StorageEngineException e) {
+
+			}	
+		}
+		
+		
+		
+		
 		ret.setRepoxID(provider.toString());
 		ret.setSugarCRMID(collection.toString());
 		
