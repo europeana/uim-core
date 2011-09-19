@@ -1,6 +1,7 @@
 /* ArrayUtils.java - created on Mar 20, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.common;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +94,29 @@ public class ArrayUtils {
             int start = i * batchsize;
 
             Integer[] batch = new Integer[end - start];
+            System.arraycopy(data, start, batch, 0, end - start);
+            result.add(batch);
+        }
+        return result;
+    }
+
+    /** 
+     * Split arrays into a list of smaller arrays
+     * @param <T> 
+     * @param data the array to be splitted
+     * @param batchsize the default size of the batch
+     * @return a list of arrays
+     */
+    public  static <T> List<T[]> batches(T[] data, int batchsize) {
+        ArrayList<T[]> result = new ArrayList<T[]>();
+
+        int batches = (int)Math.ceil(1.0 * data.length / batchsize);
+        for (int i = 0; i < batches; i++) {
+            int end = Math.min(data.length, (i + 1) * batchsize);
+            int start = i * batchsize;
+
+            @SuppressWarnings("unchecked")
+            T[] batch = (T[])Array.newInstance(data[0].getClass(), end-start);
             System.arraycopy(data, start, batch, 0, end - start);
             result.add(batch);
         }
