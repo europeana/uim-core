@@ -30,9 +30,14 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class HarvestingStatusDTO implements IsSerializable {
 
 	public static enum STATUS{
-		NOT_HARVESTED,
-		HARVESTED,
-		FAILED
+		RUNNING,
+		ERROR,
+		OK,
+		WARNING,
+		CANCELLED,
+		UNDEFINED,
+		SYSTEM_ERROR
+		
 	}
 	
 	private STATUS status;

@@ -123,10 +123,38 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
             public void onSuccess(IntegrationStatusDTO status) {
             	integrationTable.clear();
 
-            	integrationTable.setWidget(0, 1, new HTML(status.getInfo()));
-            	integrationTable.setWidget(0, 2, new HTML(status.getId()));
-            	integrationTable.setWidget(0, 3, new HTML(status.getRepoxID()));
-            	integrationTable.setWidget(0, 4, new HTML(status.getSugarCRMID()));
+            	
+            	integrationTable.setWidget(0, 0, new HTML("Type:"));
+            	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
+            	
+            	integrationTable.setWidget(1, 0, new HTML("Name:"));          	
+            	integrationTable.setWidget(1, 1, new HTML(status.getInfo()));
+            	
+            	integrationTable.setWidget(2, 0, new HTML("Identifier:"));
+            	integrationTable.setWidget(2, 1, new HTML(status.getId()));
+            	
+            	integrationTable.setWidget(3, 0, new HTML("SugarCRM ID:"));
+            	
+            	if(status.getSugarCRMID() == null){
+            		integrationTable.setWidget(3, 1, new HTML("Not represented in SUgarCRM")); 
+            	}
+            	else{
+                	integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
+            	}
+
+            	
+            	integrationTable.setWidget(4, 0, new HTML("Repox ID:"));
+            	
+            	if(status.getRepoxID() == null){
+            		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
+            	}
+            	else{
+            		integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
+            	}
+            	
+            	
+
+
             	
             	
             }

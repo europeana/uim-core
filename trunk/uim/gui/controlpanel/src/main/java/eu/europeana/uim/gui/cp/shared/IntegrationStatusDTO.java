@@ -31,7 +31,8 @@ public class IntegrationStatusDTO implements IsSerializable {
 
 	public static enum TYPE{
 		PROVIDER,
-		COLLECTION
+		COLLECTION,
+		UNIDENTIFIED
 	}
 	
 

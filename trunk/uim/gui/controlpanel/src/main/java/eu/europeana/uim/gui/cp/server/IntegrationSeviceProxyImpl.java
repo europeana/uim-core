@@ -30,13 +30,16 @@ import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxy;
 import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.server.engine.ExpandedOsgiEngine;
 import eu.europeana.uim.gui.cp.shared.HarvestingStatusDTO;
+import eu.europeana.uim.gui.cp.shared.HarvestingStatusDTO.STATUS;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
+import eu.europeana.uim.repoxclient.jibxbindings.Success;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.repoxclient.rest.exceptions.AggregatorOperationException;
 import eu.europeana.uim.repoxclient.rest.exceptions.DataSourceOperationException;
+import eu.europeana.uim.repoxclient.rest.exceptions.HarvestingOperationException;
 import eu.europeana.uim.repoxclient.rest.exceptions.ProviderOperationException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -267,20 +270,109 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		IntegrationStatusDTO ret = new IntegrationStatusDTO();
 		
 		
-		if(provider != null){
-			try {
+		if(provider == null && collection == null ){
+			
 
-				Collection<?> col = stengine.findCollection(collection);
-			} catch (StorageEngineException e) {
+			ret.setType(TYPE.UNIDENTIFIED);
+			
+		}
+		else{
+				
+			if(provider != null && collection == null){
+				try {
 
-			}	
+					Provider<?> prov = stengine.findProvider(provider);
+					ret.setType(TYPE.PROVIDER);
+					ret.setId(provider);
+					ret.setSugarCRMID(prov.getValue("sugarCRMID"));
+					ret.setRepoxID(prov.getValue("repoxID"));
+					ret.setInfo(prov.getName());
+				
+				
+				} catch (StorageEngineException e) {
+
+					ret.setType(TYPE.UNIDENTIFIED);
+					return ret;
+				}	
+			}
+			else if (provider != null && collection != null){
+				try {
+
+
+					Collection<?> col = stengine.findCollection(collection);
+					ret.setType(TYPE.COLLECTION);
+					ret.setId(collection);				
+					ret.setSugarCRMID(col.getValue("sugarCRMID"));
+					ret.setRepoxID(col.getValue("repoxID"));
+					ret.setInfo(col.getName());
+					ret.setHarvestingStatus(null);
+					
+					if(col.getValue("repoxID") != null){
+						try {
+							Success result = repoxService.getHarvestingStatus(col);
+							
+							String status = result.getSuccess();
+
+							HarvestingStatusDTO statusobj = new HarvestingStatusDTO();
+							
+							
+							if("OK".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.OK);
+							}
+							else if("CANCELLED".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.CANCELLED);
+							}
+							else if("ERROR".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.ERROR);
+							}
+							else if("RUNNING".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.RUNNING);
+							}
+							else if("undefined".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.UNDEFINED);
+							}
+							else if("WARNING".equals(status)){
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.WARNING);
+							}
+							
+							
+							ret.setHarvestingStatus(statusobj);
+							
+							
+						} catch (HarvestingOperationException e) {
+
+							HarvestingStatusDTO status = new HarvestingStatusDTO() ;
+							
+							status.setStatus(HarvestingStatusDTO.STATUS.SYSTEM_ERROR);
+							
+							ret.setHarvestingStatus(status);
+						}
+					}
+					
+					
+					
+					} catch (StorageEngineException e) {
+
+						ret.setType(TYPE.UNIDENTIFIED);
+						return ret;
+					}	
+				
+				
+			}
+			
+			
+			
 		}
 		
 		
 		
+
 		
-		ret.setRepoxID(provider.toString());
-		ret.setSugarCRMID(collection.toString());
+		
+		
+		
+		ret.setRepoxID(provider);
+		ret.setSugarCRMID(collection);
 		
 		
 		return ret;
