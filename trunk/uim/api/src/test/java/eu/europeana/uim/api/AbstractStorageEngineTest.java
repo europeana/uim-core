@@ -15,8 +15,6 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
@@ -35,7 +33,10 @@ import eu.europeana.uim.store.Request;
  * @since Mar 22, 2011
  */
 public abstract class AbstractStorageEngineTest<I> {
-    StorageEngine<I> engine = null;
+    /**
+     * engine instance configured in setup up and used throughout tests
+     */
+    protected StorageEngine<I> engine = null;
 
     private enum TestEnum {
         EN;
@@ -523,16 +524,14 @@ public abstract class AbstractStorageEngineTest<I> {
 
         MetaDataRecord<I> record3 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record3.getFirstValue(MDRFieldRegistry.rawrecord));
-        assertEquals("title 03",
-                record3.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
+        assertEquals("title 03", record3.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
 
         assertEquals(3, record3.getQualifiedValues(MDRFieldRegistry.rawrecord).size());
         engine.checkpoint();
 
         MetaDataRecord<I> record4 = engine.getMetaDataRecord(record0.getId());
         assertEquals("title 01", record4.getFirstValue(MDRFieldRegistry.rawrecord));
-        assertEquals("title 03",
-                record4.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
+        assertEquals("title 03", record4.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
         assertEquals(request0.getCollection().getId(), record4.getCollection().getId());
 
         assertEquals(2, engine.getTotalByRequest(request0));
