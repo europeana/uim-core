@@ -108,9 +108,11 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            the runtime type of the values for this field
      * @param key
      *            typed key which holds namespace, name and type information
+     * @param qualifiers
+     *            optional qualifiers, if true only matching values will be removed
      * @return values that have just been removed as list of qualified values
      */
-    <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key);
+    <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key, Enum<?>... qualifiers);
 
     /**
      * Small class holding information of values with qualification (might be null, if there are

@@ -193,14 +193,38 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key) {
+    public <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key, Enum<?>... qualifiers) {
         List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();
+        
         List<QualifiedValue<?>> values = fields.remove(key);
         if (values != null && values.size() > 0) {
+            List<QualifiedValue<?>> leftValues = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
+            
             for (QualifiedValue<?> value : values) {
-                result.add((QualifiedValue<T>)value);
+                if (qualifiers != null && qualifiers.length > 0) {
+                    boolean removed = true;
+                    
+                    for (Enum<?> qualifier : qualifiers)  {
+                        if(!value.getQualifiers().contains(qualifier)) {
+                            removed = false;
+                        }
+                    }
+                    
+                    if (removed) {
+                        result.add((QualifiedValue<T>)value);
+                    } else {
+                        leftValues.add(value);
+                    }
+                } else {
+                    result.add((QualifiedValue<T>)value);
+                }
+            }
+            
+            if (leftValues.size() > 0) {
+                fields.put(key, leftValues);
             }
         }
+        
         return result;
     }
 
