@@ -27,6 +27,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
+import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
@@ -42,5 +43,6 @@ public interface IntegrationSeviceProxyAsync {
 	
 	public void retrieveIntegrationInfo(String provider, String collection, AsyncCallback<IntegrationStatusDTO> async);
 
+	public void performRepoxRemoteOperation(String operationType, String repoxResourceID, AsyncCallback<RepoxExecutionStatusDTO> async);
 
 }

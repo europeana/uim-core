@@ -27,6 +27,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
+import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 
 /**
@@ -44,4 +45,8 @@ public interface IntegrationSeviceProxy extends RemoteService{
 	public List<SugarCRMRecordDTO> executeSugarCRMQuery(String query);
 	
 	public IntegrationStatusDTO retrieveIntegrationInfo(String provider, String collection);
+	
+	public RepoxExecutionStatusDTO performRepoxRemoteOperation(String operationType, String repoxResourceID);
+	
+	
 }

@@ -34,6 +34,7 @@ import eu.europeana.uim.gui.cp.shared.HarvestingStatusDTO.STATUS;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
+import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 import eu.europeana.uim.repoxclient.jibxbindings.Success;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
@@ -85,26 +86,32 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		String id = record.getId();
 		
 		try {
+			
+			// Retrieve the original SugarCRM record for a collection entry
 			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
+			
+			// Create the UIM provider object by information provided by this record
 			Provider prov = sugService.updateProviderFromRecord(originalRec);
 			
+			// Get the current coutry for the given provider
 			String aggrID = prov.getValue("repoxCountry").toLowerCase();
 			
+			// Create a dummy aggregator that uses the country prefix as an ID
 			if(!repoxService.aggregatorExists(aggrID)){
 				repoxService.createAggregator(aggrID);
 			}
 			
-			Collection coll = sugService.updateCollectionFromRecord(originalRec, prov);
-			
-
-			
+			// Create a REPOX provider from an already existing UIM provider
 			if(!repoxService.providerExists(prov)){
 				repoxService.createProviderfromUIMObj(prov,false);	
 			}
 			else
 			{
+		    // Or update an already existing REPOX provider from an (updated) existing UIM provider
 				repoxService.updateProviderfromUIMObj(prov);
 			}
+			
+			Collection coll = sugService.updateCollectionFromRecord(originalRec, prov);
 			
 			
 			if(!repoxService.datasourceExists(coll)){
@@ -363,13 +370,7 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 			
 			
 		}
-		
-		
-		
 
-		
-		
-		
 		
 		ret.setRepoxID(provider);
 		ret.setSugarCRMID(collection);
@@ -377,54 +378,27 @@ public class IntegrationSeviceProxyImpl extends IntegrationServicesProviderServl
 		
 		return ret;
 		
+	}
 
+
+
+	@Override
+	public RepoxExecutionStatusDTO performRepoxRemoteOperation(String operationType, String repoxResourceID) {
 		
+		ExpandedOsgiEngine engine =  getEngine();
+		
+		RepoxUIMService repoxService = engine.getRepoxService();
+		
+		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
 		
 		/*
 
-		
-		switch(type){
-		
-		case COLLECTION:
-			try {
-
-				Collection<?> col = stengine.findCollection(ID);
-			} catch (StorageEngineException e) {
-
-			}
-		break;
-		
-		case PROVIDER:
-			
-			try {
-				stengine.findProvider(ID);
-			} catch (StorageEngineException e) {
-
-			}
-			
-		}
-		
-		
-		IntegrationStatusDTO ret = new IntegrationStatusDTO();
-		
-		String sugarCRMID = null;
-		String repoxID = null;
-		
-		
-		ret.setId(ID);
-		
-		HarvestingStatusDTO harvestingStatus = new HarvestingStatusDTO();
-		ret.setHarvestingStatus(harvestingStatus );
-		
-		ret.setSugarCRMID(sugarCRMID);
-		ret.setType(type);
-		ret.setRepoxID(repoxID);
-		//ret.s
-		
-		return ret;		 
+		repoxService.getHarvestLog(col);
+		repoxService.initiateHarvestingfromUIMObj(col, ingestionDate);
 		 * 
 		 */
 		
+		return null;
 	}
 
 

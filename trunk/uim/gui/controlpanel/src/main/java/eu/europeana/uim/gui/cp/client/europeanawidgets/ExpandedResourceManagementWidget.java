@@ -23,17 +23,22 @@ package eu.europeana.uim.gui.cp.client.europeanawidgets;
 import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
+import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 
 
@@ -123,6 +128,10 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
             public void onSuccess(IntegrationStatusDTO status) {
             	integrationTable.clear();
 
+
+				if(!status.getType().equals(TYPE.UNIDENTIFIED)){
+            		
+
             	
             	integrationTable.setWidget(0, 0, new HTML("Type:"));
             	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
@@ -136,7 +145,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
             	integrationTable.setWidget(3, 0, new HTML("SugarCRM ID:"));
             	
             	if(status.getSugarCRMID() == null){
-            		integrationTable.setWidget(3, 1, new HTML("Not represented in SUgarCRM")); 
+            		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
             	}
             	else{
                 	integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
@@ -151,6 +160,45 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
             	else{
             		integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
             	}
+            	
+            	  if(status.getType().equals(TYPE.COLLECTION)){
+                  	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
+                  	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().toString()));
+                  	
+          		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));
+                  	
+          		    ListBox listBox = new ListBox(false);
+					listBox.addItem("Initiate Harvesting (Complete)");
+					listBox.addItem("Initiate Harvesting (Incremental)");                 	
+					listBox.addItem("View Harvest Log:");    
+					listBox.addItem("Download Harvested Metadata");   
+          		    
+					Button actionButton = new Button("Perform Operation");
+					actionButton.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							
+							AsyncCallback<IntegrationStatusDTO> async = null;
+							integrationservice.retrieveIntegrationInfo("asda", "collection", async);
+
+						}
+					});
+					
+					
+					
+                  	integrationTable.setWidget(7, 0, new HTML("Permitted operations:"));
+                  	integrationTable.setWidget(7, 1, listBox);
+                  	integrationTable.setWidget(7, 2, actionButton);
+                  	
+
+            	  }
+            	
+            	
+            	
+            	}
+            	
+            	
+            	
             	
             	
 
