@@ -13,6 +13,8 @@ public class ProviderDTO extends DataSourceDTO {
     private String oaiBaseUrl;
     private String oaiMetadataPrefix;
 
+    private String country;
+
     /**
      * Creates a new instance of this class.
      */
@@ -85,6 +87,20 @@ public class ProviderDTO extends DataSourceDTO {
      */
     public void setMnemonic(String mnemonic) {
         this.mnemonic = mnemonic;
+    }
+
+    /**
+     * @return country
+     */
+    public String getCountry() {
+        return country;
+    }
+
+    /**
+     * @param country
+     */
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override

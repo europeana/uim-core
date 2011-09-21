@@ -40,6 +40,8 @@ public class CollectionForm extends Composite {
     @UiField
     TextBox               oaiSetBox;
     @UiField
+    TextBox               countryBox;
+    @UiField
     Button                commitButton;
     @UiField
     Button                cancelButton;
@@ -64,10 +66,11 @@ public class CollectionForm extends Composite {
                 String mnemonic = mnemonicBox.getText();
                 mnemonic = mnemonic.trim();
                 if (!mnemonic.matches("[\\w|\\d|-]*")) {
-                    Window.alert("The mnemonic '" + mnemonic + "' is not valid, please use letters, number and '-'!");
+                    Window.alert("The mnemonic '" + mnemonic +
+                                 "' is not valid, please use letters, number and '-'!");
                     return;
                 }
-                
+
                 collection.setMnemonic(mnemonic);
                 collection.setName(nameBox.getText());
                 collection.setLanguage(languageBox.getText());
@@ -126,5 +129,6 @@ public class CollectionForm extends Composite {
         } else {
             mnemonicBox.setEnabled(true);
         }
+        countryBox.setText(collection != null ? collection.getCountry() : "");
     }
 }

@@ -36,6 +36,8 @@ public class ProviderForm extends Composite {
     @UiField
     TextBox             oaiMetadataPrefixBox;
     @UiField
+    TextBox             countryBox;
+    @UiField
     Button              commitButton;
     @UiField
     Button              cancelButton;
@@ -58,10 +60,11 @@ public class ProviderForm extends Composite {
                 String mnemonic = mnemonicBox.getText();
                 mnemonic = mnemonic.trim();
                 if (!mnemonic.matches("[\\w|\\d|-]*")) {
-                    Window.alert("The mnemonic '" + mnemonic + "' is not valid, please use letters, number and '-'!");
+                    Window.alert("The mnemonic '" + mnemonic +
+                                 "' is not valid, please use letters, number and '-'!");
                     return;
                 }
-                
+
                 provider.setMnemonic(mnemonic);
                 provider.setName(nameBox.getText());
                 provider.setOaiBaseUrl(oaiBaseUrlBox.getText());
@@ -114,5 +117,6 @@ public class ProviderForm extends Composite {
         } else {
             mnemonicBox.setEnabled(true);
         }
+        countryBox.setText(provider != null ? provider.getCountry() : "");
     }
 }

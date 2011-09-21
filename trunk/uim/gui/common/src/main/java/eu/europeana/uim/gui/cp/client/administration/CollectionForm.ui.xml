@@ -83,6 +83,14 @@
                 </td>
             </tr>
             <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='country'>Country</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='countryBox' />
+                </td>
+            </tr>
+            <tr>
                 <td colspan='2' align='center'>
                     <g:Button ui:field='commitButton'>
                         <ui:msg key='executionFormCommitButton'>Commit</ui:msg>
