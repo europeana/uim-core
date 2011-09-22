@@ -21,6 +21,7 @@ import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.StandardControlledVocabulary;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -159,7 +160,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
-                    collDTO.setCountry(col.getValue("country"));
+                    collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
 //                    collDTO.setSize(col.get)
                     res.add(collDTO);
                 }
@@ -189,7 +190,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 wrapped.setMnemonic(p.getMnemonic());
                 wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
                 wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
-                wrapped.setCountry(p.getValue("country"));
+                wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
                 wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
                 e.printStackTrace();
