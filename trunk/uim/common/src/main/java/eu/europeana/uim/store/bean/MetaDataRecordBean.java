@@ -140,9 +140,9 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
         Set<Enum<?>> quals = new HashSet<Enum<?>>();
         for (Enum<?> qualifier : qualifiers) {
-            if (qualifier == null) { throw new IllegalArgumentException(
-                    "Argument 'qualifiers' should not have null entries!"); }
-            quals.add(qualifier);
+            if (qualifier != null) { 
+                quals.add(qualifier);
+            }
         }
 
         List<QualifiedValue<?>> values = fields.get(key);
