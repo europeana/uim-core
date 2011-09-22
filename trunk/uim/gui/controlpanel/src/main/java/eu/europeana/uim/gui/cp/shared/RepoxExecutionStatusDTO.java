@@ -23,9 +23,41 @@ package eu.europeana.uim.gui.cp.shared;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
- * @author georgiosmarkakis
- *
+ * Represents and contains information about a Repox execution Session.
+ * @author Georgios Markakis
  */
 public class RepoxExecutionStatusDTO implements IsSerializable {
+	
+	 private String operationMessage;
+
+	 private String logMessage;
+
+	/**
+	 * @param operationMessage the operationMessage to set
+	 */
+	public void setOperationMessage(String operationMessage) {
+		this.operationMessage = operationMessage;
+	}
+
+	/**
+	 * @return the operationMessage
+	 */
+	public String getOperationMessage() {
+		return operationMessage;
+	}
+
+	/**
+	 * @param logMessage the logMessage to set
+	 */
+	public void setLogMessage(String logMessage) {
+		this.logMessage = logMessage;
+	}
+
+	/**
+	 * @return the logMessage
+	 */
+	public String getLogMessage() {
+		return logMessage;
+	}
 
 }

@@ -444,10 +444,13 @@ public class IntegrationSeviceProxyImpl extends
 
 		case VIEW_HARVEST_LOG:
 			 try {
-				String log = repoxService.getHarvestLog(coll);
+				 String log = repoxService.getHarvestLog(coll);
+				 result.setOperationMessage("Successfully Fetched Latest Harvest Log for Current Collection"); 
+				 result.setLogMessage(log);
 			} catch (HarvestingOperationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				result.setOperationMessage("Error fetching Harvest Log!"); 
+				result.setLogMessage(e.getMessage());
 			}
 			break;
 
@@ -455,9 +458,11 @@ public class IntegrationSeviceProxyImpl extends
 
 			try {
 				repoxService.initiateHarvestingfromUIMObj(coll);
+				result.setOperationMessage("Successfully Fetched Latest Harvest Log for Current Collection"); 
+				result.setLogMessage("Harvesting initiated.");
 			} catch (HarvestingOperationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				result.setOperationMessage("Error initiating a harvesting process for the current collection!"); 
+				result.setLogMessage(e.getMessage());
 			}
 			
 			break;
@@ -465,24 +470,22 @@ public class IntegrationSeviceProxyImpl extends
 		case SCHEDULE_HARVESTING:
 
 			DateTime ingestionDate = new DateTime();
-			//ingestionDate.
+
 			
 			try {
 				repoxService.initiateHarvestingfromUIMObj(coll, ingestionDate );
+				result.setOperationMessage("Successfully Performed Scheduling for given dataset "); 
+				result.setLogMessage("Harvesting Date: " + ingestionDate.toString());
 			} catch (HarvestingOperationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				result.setOperationMessage("Scheduling failed for given dataset "); 
+				result.setLogMessage(e.getMessage());
 			}
 			break;
 
 		}
 
-		/*
-		 * 
-		 * repoxService.initiateHarvestingfromUIMObj(col, ingestionDate);
-		 */
 
-		return null;
+		return result;
 	}
 
 }

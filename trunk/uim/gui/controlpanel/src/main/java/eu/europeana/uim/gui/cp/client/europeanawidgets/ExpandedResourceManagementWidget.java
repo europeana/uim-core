@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -262,8 +263,14 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 					@Override
 					public void onFailure(Throwable caught) {
-
 						operationDialog.clear();
+						
+						VerticalPanel vp = new VerticalPanel();
+						vp.add(new HTML("<verbatim>"+caught.getMessage()+"</verbatim>"));
+						vp.add(createOperationsCloseButton());
+						operationDialog.setText("An Unclassified Exception Occured (send this to you know whom)");
+						operationDialog.setWidget(vp);
+
 					}
 
 					@Override
@@ -271,6 +278,12 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 						operationDialog.clear();
 						
+						VerticalPanel vp = new VerticalPanel();
+						vp.add(new HTML("<verbatim>"+result.getLogMessage()+"</verbatim>"));
+						vp.add(createOperationsCloseButton());
+						operationDialog.setWidget(vp);
+						operationDialog.setText(result.getOperationMessage());
+
 					}	
 				});
 				}
@@ -287,27 +300,40 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	 * @return the new dialog box
 	 */
 	private DialogBox createOperationsDialogBox() {
-		// Create a dialog box and set the caption text
 		final DialogBox dialogBox = new DialogBox();
-		dialogBox.ensureDebugId("cwDialogBox");
-		dialogBox.setText(EuropeanaClientConstants.SEARCHDIALOGMSG);
-		dialogBox.setModal(true);
 
+		dialogBox.setModal(true);
+		
 		// Create a table to layout the content
 		VerticalPanel dialogContents = new VerticalPanel();
 		dialogContents.setSpacing(0);
 		dialogBox.setWidget(dialogContents);
-		Image activity = new Image(EuropeanaClientConstants.QUERYIMAGELOC);
-		
-		// Add some text to the top of the dialog
 
-		dialogContents.add(activity);
-		dialogContents.setCellHorizontalAlignment(activity,
-				HasHorizontalAlignment.ALIGN_CENTER);
 
-		// Return the dialog box
 		return dialogBox;
 	}
+	
+	
+	
+	private Button createOperationsCloseButton(){
+		
+		Button closebutton = new Button("Close");
+		
+
+		closebutton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				operationDialog.hide();
+				
+			}
+			
+		});
+		
+		return closebutton;
+	}
+	
+	
 	
 	
 	
