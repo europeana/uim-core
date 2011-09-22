@@ -92,6 +92,21 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
     public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String link, int status, String... message) {
     }
+    
+    @Override
+    public void logField(String modul, String field, String qualifier, int status,
+            String... message) {
+    }
+
+    @Override
+    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
+            String qualifier, int status, String... message) {
+    }
+
+    @Override
+    public void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
+            String field, String qualifier, int status, String... message) {
+    }
 
     @Override
     public void logDuration(Execution<I> execution, String module, Long duration) {

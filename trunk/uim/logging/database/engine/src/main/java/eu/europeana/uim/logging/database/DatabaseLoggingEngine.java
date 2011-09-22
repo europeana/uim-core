@@ -16,6 +16,7 @@ import eu.europeana.uim.common.BlockingInitializer;
 import eu.europeana.uim.logging.database.model.TLogEntry;
 import eu.europeana.uim.logging.database.model.TLogEntryDuration;
 import eu.europeana.uim.logging.database.model.TLogEntryFailed;
+import eu.europeana.uim.logging.database.model.TLogEntryField;
 import eu.europeana.uim.logging.database.model.TLogEntryLink;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -157,6 +158,29 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, messages);
     }
 
+
+    @Override
+    public void logField(String modul, String field, String qualifier, int status, String... messages) {
+        TLogEntryField entry = new TLogEntryField(modul, field, qualifier, new Date(), status, messages);
+        storage.getLogFieldHome().insert(entry);
+    }
+
+    @Override
+    public void logField(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr, String field, String qualifier, int status,
+            String... messages) {
+        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr.getId(), field, qualifier, new Date(),
+                status, messages);
+        storage.getLogFieldHome().insert(entry);
+    }
+
+    @Override
+    public void logField(Execution<Long> execution, IngestionPlugin plugin, MetaDataRecord<Long> mdr, String field, String qualifier,
+            int status, String... messages) {
+        logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, messages);
+    }
+
+
+    
     @Override
     public void logDuration(Execution<Long> execution, String modul, Long duration) {
         TLogEntryDuration entry = new TLogEntryDuration(modul, new Date(), duration);

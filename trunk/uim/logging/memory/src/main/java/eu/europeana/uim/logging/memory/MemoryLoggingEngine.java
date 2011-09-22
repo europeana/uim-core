@@ -30,6 +30,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
     private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
     private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
+    private LinkedList<FieldEntry>          fieldlogs   = new LinkedList<FieldEntry>();
 
     private Map<String, SummaryStatistics> durations  = new HashMap<String, SummaryStatistics>();
 
@@ -120,8 +121,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     @Override
     public void logLink(String modul, String link, int status, String... message) {
         linklogs.add(new LinkEntry(modul, link, status, new Date(), message));
-        if (entries.size() > maxentries) {
-            entries.removeFirst();
+        if (linklogs.size() > maxentries) {
+            linklogs.removeFirst();
         }
     }
 
@@ -129,8 +130,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
             int status, String... message) {
         linklogs.add(new LinkEntry(execution, modul, mdr, link, new Date(), status, message));
-        if (entries.size() > maxentries) {
-            entries.removeFirst();
+        if (linklogs.size() > maxentries) {
+            linklogs.removeFirst();
         }
     }
 
@@ -138,6 +139,29 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String link, int status, String... message) {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, message);
+    }
+
+    @Override
+    public void logField(String modul, String field, String qualifier, int status, String... message) {
+        fieldlogs.add(new FieldEntry(modul, field, qualifier, status, new Date(), message));
+        if (fieldlogs.size() > maxentries) {
+            fieldlogs.removeFirst();
+        }
+    }
+
+    @Override
+    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field, String qualifier,
+            int status, String... message) {
+        fieldlogs.add(new FieldEntry(execution, modul, mdr, field, qualifier, new Date(), status, message));
+        if (fieldlogs.size() > maxentries) {
+            entries.removeFirst();
+        }
+    }
+
+    @Override
+    public void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
+            String field, String qualifier, int status, String... message) {
+        logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, message);
     }
 
     @Override
@@ -357,6 +381,86 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         @Override
         public String getLink() {
             return link;
+        }
+
+        @Override
+        public int getStatus() {
+            return status;
+        }
+
+        @Override
+        public Date getDate() {
+            return date;
+        }
+
+        @Override
+        public String[] getMessages() {
+            return message;
+        }
+
+        @Override
+        public I getExecution() {
+            return execution != null ? execution.getId() : null;
+        }
+
+        @Override
+        public I getMetaDataRecord() {
+            return mdr != null ? mdr.getId() : null;
+        }
+    }
+    
+    
+
+    private class FieldEntry implements LogEntryField<I> {
+        private final String            module;
+        private final String            field;
+        private final String            qualifier;
+        private final Date              date;
+        private final int               status;
+        private final String[]          message;
+
+        private final MetaDataRecord<I> mdr;
+        private final Execution<I>      execution;
+
+        public FieldEntry(String module, String field, String qualifier, int status, Date date, String[] message) {
+            super();
+            this.module = module;
+            this.field = field;
+            this.qualifier = qualifier;
+            this.date = date;
+            this.status = status;
+            this.message = message;
+
+            this.mdr = null;
+            this.execution = null;
+        }
+
+        public FieldEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String field, String qualifier,
+                         Date date, int status, String[] message) {
+            super();
+            this.execution = execution;
+            this.module = module;
+            this.field = field;
+            this.qualifier = qualifier;
+            this.mdr = mdr;
+            this.date = date;
+            this.status = status;
+            this.message = message;
+        }
+
+        @Override
+        public String getModule() {
+            return module;
+        }
+
+        @Override
+        public String getField() {
+            return field;
+        }
+
+        @Override
+        public String getQualifier() {
+            return qualifier;
         }
 
         @Override

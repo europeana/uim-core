@@ -7,6 +7,7 @@ import eu.europeana.uim.logging.database.model.TLogEntryDurationHome;
 import eu.europeana.uim.logging.database.model.TLogEntryFailedHome;
 import eu.europeana.uim.logging.database.model.TLogEntryHome;
 import eu.europeana.uim.logging.database.model.TLogEntryLinkHome;
+import eu.europeana.uim.logging.database.model.TLogEntryFieldHome;
 
 /**
  * 
@@ -23,6 +24,9 @@ public class DatabaseLoggingStorage {
 
     @Autowired
     private TLogEntryLinkHome logLinkHome;
+
+    @Autowired
+    private TLogEntryFieldHome logFieldHome;
 
     @Autowired
     private TLogEntryDurationHome  logDurationHome;
@@ -71,6 +75,14 @@ public class DatabaseLoggingStorage {
      */
     public TLogEntryLinkHome getLogLinkHome() {
         return logLinkHome;
+    }
+
+    /**
+     * Returns the logLinkHome.
+     * @return the logLinkHome
+     */
+    public TLogEntryFieldHome getLogFieldHome() {
+        return logFieldHome;
     }
 
     /**

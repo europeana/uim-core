@@ -27,6 +27,7 @@
 
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntry"/>
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryLink"/>
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntryField"/>
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryFailed"/>
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryDuration"/>
     </session-factory>

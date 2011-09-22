@@ -14,5 +14,6 @@
     <bean id="logEntryHome" class="eu.europeana.uim.logging.database.model.TLogEntryHome" />
     <bean id="logEntryFailedHome" class="eu.europeana.uim.logging.database.model.TLogEntryFailedHome" />
     <bean id="logEntryLinkHome" class="eu.europeana.uim.logging.database.model.TLogEntryLinkHome" />
+    <bean id="logEntryFieldHome" class="eu.europeana.uim.logging.database.model.TLogEntryFieldHome" />
     <bean id="logEntryDurationHome" class="eu.europeana.uim.logging.database.model.TLogEntryDurationHome" />
 </beans>
