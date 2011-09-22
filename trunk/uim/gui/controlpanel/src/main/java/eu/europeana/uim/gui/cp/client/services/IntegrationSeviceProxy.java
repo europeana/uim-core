@@ -25,6 +25,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import eu.europeana.uim.gui.cp.client.utils.RepoxOperationType;
 import eu.europeana.uim.gui.cp.shared.ImportResultDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
@@ -46,7 +47,7 @@ public interface IntegrationSeviceProxy extends RemoteService{
 	
 	public IntegrationStatusDTO retrieveIntegrationInfo(String provider, String collection);
 	
-	public RepoxExecutionStatusDTO performRepoxRemoteOperation(String operationType, String repoxResourceID);
+	public RepoxExecutionStatusDTO performRepoxRemoteOperation(RepoxOperationType operationType, String repoxResourceID);
 	
 	
 }

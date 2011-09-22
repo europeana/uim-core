@@ -122,7 +122,8 @@
                             org.xml.sax.helpers,
                             javax.xml.parsers,
                             javax.servlet,
-                            javax.servlet.http
+                            javax.servlet.http,
+                            org.joda.time
                         </Import-Package>
 
                         <!-- OSGi spec config option -->

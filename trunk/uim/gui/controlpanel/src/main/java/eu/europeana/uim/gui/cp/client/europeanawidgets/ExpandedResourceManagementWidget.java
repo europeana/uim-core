@@ -29,17 +29,24 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
+import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
+import eu.europeana.uim.gui.cp.client.utils.RepoxOperationType;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
+import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 
 
 /**
@@ -52,7 +59,12 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	private final IntegrationSeviceProxyAsync integrationservice;
 
 	@UiField(provided = true)
-	FlexTable integrationTable;
+	public FlexTable integrationTable;
+	
+	public DialogBox operationDialog;
+	
+	public ListBox operationsListBox;
+	
 	
 
 	/**
@@ -82,7 +94,14 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     
 	@Override
     public Widget postInitialize(){
+		
 		integrationTable = new FlexTable();
+		operationDialog = createOperationsDialogBox();
+		operationsListBox = new ListBox(false);
+		
+		operationsListBox.addItem(RepoxOperationType.INITIATE_COMPLETE_HARVESTING.getDescription());                	
+  		operationsListBox.addItem(RepoxOperationType.VIEW_HARVEST_LOG.getDescription());    
+  	    operationsListBox.addItem(RepoxOperationType.SCHEDULE_HARVESTING.getDescription());   
 		
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
@@ -119,98 +138,178 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
         integrationservice.retrieveIntegrationInfo(getProvider() != null ? getProvider().getMnemonic() : null,
         getCollection() != null ? getCollection().getMnemonic() : null,
             new AsyncCallback<IntegrationStatusDTO>() {
+        	
             @Override
             public void onFailure(Throwable throwable) {
+            	
+            	integrationTable.setWidget(0, 0, new HTML("An unknown exception has occured:"));
+            	integrationTable.setWidget(0, 1, new HTML(throwable.getMessage()));
                 throwable.printStackTrace();
             }
 
             @Override
             public void onSuccess(IntegrationStatusDTO status) {
-            	integrationTable.clear();
 
+            	generateIntergationInfoPanel(status);
 
-				if(!status.getType().equals(TYPE.UNIDENTIFIED)){
-            		
-
-            	
-            	integrationTable.setWidget(0, 0, new HTML("Type:"));
-            	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
-            	
-            	integrationTable.setWidget(1, 0, new HTML("Name:"));          	
-            	integrationTable.setWidget(1, 1, new HTML(status.getInfo()));
-            	
-            	integrationTable.setWidget(2, 0, new HTML("Identifier:"));
-            	integrationTable.setWidget(2, 1, new HTML(status.getId()));
-            	
-            	integrationTable.setWidget(3, 0, new HTML("SugarCRM ID:"));
-            	
-            	if(status.getSugarCRMID() == null){
-            		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
-            	}
-            	else{
-                	integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
-            	}
-
-            	
-            	integrationTable.setWidget(4, 0, new HTML("Repox ID:"));
-            	
-            	if(status.getRepoxID() == null){
-            		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
-            	}
-            	else{
-            		integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
-            	}
-            	
-            	  if(status.getType().equals(TYPE.COLLECTION)){
-                  	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
-                  	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().toString()));
-                  	
-          		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));
-                  	
-          		    ListBox listBox = new ListBox(false);
-					listBox.addItem("Initiate Harvesting (Complete)");
-					listBox.addItem("Initiate Harvesting (Incremental)");                 	
-					listBox.addItem("View Harvest Log:");    
-					listBox.addItem("Download Harvested Metadata");   
-          		    
-					Button actionButton = new Button("Perform Operation");
-					actionButton.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							
-							AsyncCallback<IntegrationStatusDTO> async = null;
-							integrationservice.retrieveIntegrationInfo("asda", "collection", async);
-
-						}
-					});
-					
-					
-					
-                  	integrationTable.setWidget(7, 0, new HTML("Permitted operations:"));
-                  	integrationTable.setWidget(7, 1, listBox);
-                  	integrationTable.setWidget(7, 2, actionButton);
-                  	
-
-            	  }
-            	
-            	
-            	
-            	}
-            	
-            	
-            	
-            	
-            	
-
-
-            	
-            	
             }
         }		
         
         );
         
     }
+	
+	
+	
+	//Private Methods
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param status
+	 */
+	private void generateIntergationInfoPanel(IntegrationStatusDTO status){
+    	integrationTable.clear();
+
+
+		if(!status.getType().equals(TYPE.UNIDENTIFIED)){
+    		            	
+    	integrationTable.setWidget(0, 0, new HTML("Type:"));
+    	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
+    	
+    	integrationTable.setWidget(1, 0, new HTML("Name:"));          	
+    	integrationTable.setWidget(1, 1, new HTML(status.getInfo()));
+    	
+    	integrationTable.setWidget(2, 0, new HTML("Identifier:"));
+    	integrationTable.setWidget(2, 1, new HTML(status.getId()));
+    	
+    	integrationTable.setWidget(3, 0, new HTML("SugarCRM ID:"));
+    	
+    	if(status.getSugarCRMID() == null){
+    		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
+    	}
+    	else{
+        	integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
+    	}
+
+    	
+    	integrationTable.setWidget(4, 0, new HTML("Repox ID:"));
+    	
+    	if(status.getRepoxID() == null){
+    		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
+    	}
+    	else{
+    		integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
+    	}
+    	
+    	  if(status.getType().equals(TYPE.COLLECTION)){
+          	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
+          	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().toString()));
+          	
+  		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));
+          	
+
+  		    	
+          	integrationTable.setWidget(7, 0, new HTML("Permitted operations:"));
+          	integrationTable.setWidget(7, 1, operationsListBox);
+          	integrationTable.setWidget(7, 2, generateRepoxCommandButton());
+          	
+    	  }
+	
+    	}
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	private Button generateRepoxCommandButton(){
+		Button actionButton = new Button("Execute");
+		actionButton.addClickHandler(new ClickHandler() {
+		 
+		
+			
+			@Override
+			public void onClick(ClickEvent event) {
+
+				operationDialog.center();
+				
+				int index = operationsListBox.getSelectedIndex();
+				
+				String value = operationsListBox.getValue(index);
+				
+				RepoxOperationType optype = null;
+				
+				if (value.equals(RepoxOperationType.INITIATE_COMPLETE_HARVESTING.getDescription())){
+					optype = RepoxOperationType.INITIATE_COMPLETE_HARVESTING;
+				}
+				else if(value.equals(RepoxOperationType.SCHEDULE_HARVESTING.getDescription())){
+					optype = RepoxOperationType.SCHEDULE_HARVESTING;
+				}
+				else if(value.equals(RepoxOperationType.VIEW_HARVEST_LOG.getDescription())){
+					optype = RepoxOperationType.VIEW_HARVEST_LOG;
+				}
+				
+				
+				if(optype != null){
+				integrationservice.performRepoxRemoteOperation(optype, getCollection().getMnemonic(), new AsyncCallback<RepoxExecutionStatusDTO>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+
+						operationDialog.clear();
+					}
+
+					@Override
+					public void onSuccess(RepoxExecutionStatusDTO result) {
+
+						operationDialog.clear();
+						
+					}	
+				});
+				}
+			}
+		});
+		
+		return actionButton;
+	}
+	
+	
+	/**
+	 * Create the dialog box for this example.
+	 * 
+	 * @return the new dialog box
+	 */
+	private DialogBox createOperationsDialogBox() {
+		// Create a dialog box and set the caption text
+		final DialogBox dialogBox = new DialogBox();
+		dialogBox.ensureDebugId("cwDialogBox");
+		dialogBox.setText(EuropeanaClientConstants.SEARCHDIALOGMSG);
+		dialogBox.setModal(true);
+
+		// Create a table to layout the content
+		VerticalPanel dialogContents = new VerticalPanel();
+		dialogContents.setSpacing(0);
+		dialogBox.setWidget(dialogContents);
+		Image activity = new Image(EuropeanaClientConstants.QUERYIMAGELOC);
+		
+		// Add some text to the top of the dialog
+
+		dialogContents.add(activity);
+		dialogContents.setCellHorizontalAlignment(activity,
+				HasHorizontalAlignment.ALIGN_CENTER);
+
+		// Return the dialog box
+		return dialogBox;
+	}
+	
+	
 	
 	
 	
