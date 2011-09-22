@@ -159,6 +159,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
+                    collDTO.setCountry(col.getValue("country"));
 //                    collDTO.setSize(col.get)
                     res.add(collDTO);
                 }
@@ -188,6 +189,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 wrapped.setMnemonic(p.getMnemonic());
                 wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
                 wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
+                wrapped.setCountry(p.getValue("country"));
                 wrappedProviderDTOs.put(provider, wrapped);
             } catch (StorageEngineException e) {
                 e.printStackTrace();
