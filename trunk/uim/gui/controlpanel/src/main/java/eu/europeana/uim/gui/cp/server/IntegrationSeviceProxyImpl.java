@@ -91,7 +91,10 @@ public class IntegrationSeviceProxyImpl extends
 
 		ImportResultDTO result = new ImportResultDTO();
 		result.setResult(EuropeanaClientConstants.SUCCESSIMAGELOC);
+		
 
+		
+		
 		result.setCollectionName(record.getName());
 
 		String id = record.getId();
@@ -127,8 +130,10 @@ public class IntegrationSeviceProxyImpl extends
 
 			if (!repoxService.datasourceExists(coll)) {
 				repoxService.createDatasourcefromUIMObj(coll, prov);
+				result.setDescription("Datasource Created Successfully.");
 			} else {
 				repoxService.updateDatasourcefromUIMObj(coll);
+				result.setDescription("Datasource Updated Successfully.");
 			}
 
 		} catch (QueryResultException e) {
@@ -144,7 +149,7 @@ public class IntegrationSeviceProxyImpl extends
 			result.setCause(e.getMessage());
 			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (ProviderOperationException e) {
-			result.setDescription("Import failed while creating an Provider in Repox.");
+			result.setDescription("Import failed while creating a Provider in Repox.");
 			result.setCause(e.getMessage());
 			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
 		} catch (DataSourceOperationException e) {

@@ -300,6 +300,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 
 			progressBar.setMaxProgress(selList.size());
 			progressBar.setProgress(0);
+			impResultsTable.removeAllRows();
 			
 			for (SugarCRMRecordDTO record : selList) {
 				
@@ -582,7 +583,7 @@ public class ImportResourcesWidget extends IngestionWidget {
 				Anchor hyper = new Anchor();
 				hyper.setName(object.getName());
 				hyper.setText(object.getName());
-				hyper.setHref("http://localhost:8080/sugarcrm/index.php?module=Opportunities&action=DetailView&record="+object.getId());
+				hyper.setHref("http://10.101.28.29:8080/sugarcrm/index.php?module=Opportunities&action=DetailView&record="+object.getId());
 				hyper.setTarget("TOP");
 				
 				return hyper;

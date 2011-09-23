@@ -185,28 +185,30 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     	integrationTable.setWidget(2, 0, new HTML("Identifier:"));
     	integrationTable.setWidget(2, 1, new HTML(status.getId()));
     	
-    	integrationTable.setWidget(3, 0, new HTML("SugarCRM ID:"));
+    	integrationTable.setWidget(3, 0, new HTML("SugarCRM Status:"));
     	
     	if(status.getSugarCRMID() == null){
     		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
     	}
     	else{
-        	integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
+    		integrationTable.setWidget(3, 1, new HTML("OK"));    
+        	//integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
     	}
 
     	
-    	integrationTable.setWidget(4, 0, new HTML("Repox ID:"));
+    	integrationTable.setWidget(4, 0, new HTML("Repox Status:"));
     	
     	if(status.getRepoxID() == null){
     		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
     	}
     	else{
-    		integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
+    		integrationTable.setWidget(4, 1, new HTML("OK"));  
+    		//integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
     	}
     	
     	  if(status.getType().equals(TYPE.COLLECTION)){
           	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
-          	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().toString()));
+          	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().getDescription()));
           	
   		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));
           	
