@@ -15,7 +15,7 @@
     <name>Unified Ingestion Manager: Base GWT Module Ingestion Control Panel GUI</name>
 
     <properties>
-        <gwtVersion>2.2.0</gwtVersion>
+        <gwtVersion>2.4.0</gwtVersion>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 

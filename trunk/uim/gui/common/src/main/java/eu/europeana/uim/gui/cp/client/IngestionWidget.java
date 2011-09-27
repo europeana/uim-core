@@ -6,7 +6,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.LazyPanel;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public abstract class IngestionWidget extends LazyPanel implements
+public abstract class IngestionWidget extends SimpleLayoutPanel implements
         HasValueChangeHandlers<String> {
     /**
      * Generic callback used for asynchronously loaded data.
@@ -51,12 +51,12 @@ public abstract class IngestionWidget extends LazyPanel implements
     /**
      * The name of the example.
      */
-    private final String               name;
+    private final String        name;
 
     /**
      * A description of the example.
      */
-    private final String               description;
+    private final String        description;
 
     /**
      * The view that holds the name, description, and example.
@@ -66,12 +66,12 @@ public abstract class IngestionWidget extends LazyPanel implements
     /**
      * Whether the demo widget has been initialized.
      */
-    private boolean                    widgetInitialized;
+    private boolean             widgetInitialized;
 
     /**
      * Whether the demo widget is (asynchronously) initializing.
      */
-    private boolean                    widgetInitializing;
+    private boolean             widgetInitializing;
 
     /**
      * Construct a {@link IngestionWidget}.
@@ -91,9 +91,17 @@ public abstract class IngestionWidget extends LazyPanel implements
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
-    @Override
+    /**
+     * Ensures that the widget has been created by calling {@link #createWidget} if
+     * {@link #getWidget} returns <code>null</code>. Typically it is not necessary to call this
+     * directly, as it is called as a side effect of a <code>setVisible(true)</code> call.
+     */
     public void ensureWidget() {
-        super.ensureWidget();
+        Widget widget = getWidget();
+        if (widget == null) {
+            widget = createWidget();
+            setWidget(widget);
+        }
         ensureWidgetInitialized();
     }
 
@@ -144,9 +152,8 @@ public abstract class IngestionWidget extends LazyPanel implements
     protected abstract void asyncOnInitialize(final AsyncCallback<Widget> callback);
 
     /**
-     * Initialize this widget by creating the elements that should be added to the page.
+     * @return Initialize this widget by creating the elements that should be added to the page.
      */
-    @Override
     protected final Widget createWidget() {
         view = new IngestionWidgetView(hasMargins());
         view.setName(getName());
@@ -182,10 +189,18 @@ public abstract class IngestionWidget extends LazyPanel implements
 
                 Widget widget = result;
                 if (widget != null) {
-                    view.setExample(widget);
+                    view.setContent(widget);
                 }
                 onInitializeComplete();
             }
         });
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            ensureWidget();
+        }
+        super.setVisible(visible);
     }
 }

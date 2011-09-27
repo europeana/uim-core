@@ -5,8 +5,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -15,21 +15,20 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class IngestionWidgetView extends Composite {
-    interface IngestionCockpitWidgetViewUiBinder extends
-            UiBinder<Widget, IngestionWidgetView> {
+public class IngestionWidgetView extends ResizeComposite {
+    interface IngestionCockpitWidgetViewUiBinder extends UiBinder<Widget, IngestionWidgetView> {
     }
 
     private static IngestionCockpitWidgetViewUiBinder uiBinder = GWT.create(IngestionCockpitWidgetViewUiBinder.class);
-
+    
+    @UiField
+    Element                                           nameElem;
+    
     @UiField
     Element                                           descElem;
 
     @UiField
-    SimplePanel                                       examplePanel;
-
-    @UiField
-    Element                                           nameElem;
+    SimpleLayoutPanel                                 contentPanel;
 
     /**
      * Creates a new instance of this class.
@@ -39,9 +38,16 @@ public class IngestionWidgetView extends Composite {
     public IngestionWidgetView(boolean useMargins) {
         initWidget(uiBinder.createAndBindUi(this));
         if (useMargins) {
-            examplePanel.getElement().getStyle().setMarginLeft(10.0, Unit.PX);
-            examplePanel.getElement().getStyle().setMarginRight(10.0, Unit.PX);
+            contentPanel.getElement().getStyle().setMarginLeft(10.0, Unit.PX);
+            contentPanel.getElement().getStyle().setMarginRight(10.0, Unit.PX);
         }
+    }
+    
+    /**
+     * @param text
+     */
+    public void setName(String text) {
+        nameElem.setInnerText(text);
     }
 
     /**
@@ -54,14 +60,7 @@ public class IngestionWidgetView extends Composite {
     /**
      * @param widget
      */
-    public void setExample(Widget widget) {
-        examplePanel.setWidget(widget);
-    }
-
-    /**
-     * @param text
-     */
-    public void setName(String text) {
-        nameElem.setInnerText(text);
+    public void setContent(Widget widget) {
+        contentPanel.setWidget(widget);
     }
 }

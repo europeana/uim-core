@@ -101,7 +101,11 @@
         }
         
         .contentPanel {
-        	padding: 10px 0px;
+        	padding: 10px 0px;            
+        	height: 100%;
+            min-height: 500px;    
+            width: 100%;
+            min-width: 500px;
         }
         
         .linkTable {
@@ -167,7 +171,7 @@
                             <g:FlowPanel ui:field='contentButtons' styleName='{style.contentButtons}' />
                         </g:north>
                         <g:center>
-                            <g:ScrollPanel ui:field='contentPanel' addStyleNames='{style.contentPanel}' />
+                            <g:SimpleLayoutPanel ui:field='contentPanel' addStyleNames='{style.contentPanel}' />
                         </g:center>
                     </g:DockLayoutPanel>
                 </g:center>

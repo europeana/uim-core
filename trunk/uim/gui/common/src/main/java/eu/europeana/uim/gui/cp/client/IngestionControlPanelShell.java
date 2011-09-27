@@ -2,19 +2,17 @@
 package eu.europeana.uim.gui.cp.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.TreeViewModel;
 
@@ -24,7 +22,7 @@ import com.google.gwt.view.client.TreeViewModel;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 27, 2011
  */
-public class IngestionControlPanelShell extends Composite {
+public class IngestionControlPanelShell extends ResizeComposite {
     interface IngestionCockpitUiBinder extends UiBinder<Widget, IngestionControlPanelShell> {
     }
 
@@ -53,7 +51,7 @@ public class IngestionControlPanelShell extends Composite {
         Anchor[] links();
     }
 
-    private static IngestionCockpitUiBinder uiBinder      = GWT.create(IngestionCockpitUiBinder.class);
+    private static IngestionCockpitUiBinder uiBinder = GWT.create(IngestionCockpitUiBinder.class);
 
     /**
      * main title of the application
@@ -89,17 +87,12 @@ public class IngestionControlPanelShell extends Composite {
      * The panel that holds the content.
      */
     @UiField
-    SimplePanel                             contentPanel;
+    SimpleLayoutPanel                       contentPanel;
 
     /**
      * The current {@link IngestionWidget} being displayed.
      */
     private IngestionWidget                 content;
-
-    /**
-     * The widget that holds CSS or source code for an example.
-     */
-    private HTML                            contentSource = new HTML();
 
     /**
      * Construct the {@link IngestionControlPanelShell}.
@@ -115,11 +108,6 @@ public class IngestionControlPanelShell extends Composite {
         mainMenu.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
         initWidget(uiBinder.createAndBindUi(this));
-        contentSource.getElement().getStyle().setBackgroundColor("#eee");
-        contentSource.getElement().getStyle().setMarginLeft(10.0, Unit.PX);
-        contentSource.getElement().getStyle().setMarginRight(10.0, Unit.PX);
-        contentSource.getElement().getStyle().setProperty("border", "1px solid #c3c3c3");
-        contentSource.getElement().getStyle().setProperty("padding", "10px 2px");
 
         linkTable.setCellPadding(0);
         linkTable.setCellSpacing(0);
@@ -131,7 +119,7 @@ public class IngestionControlPanelShell extends Composite {
                 linkTable.setHTML(0, columnCounter++, "&nbsp;|&nbsp;");
             }
         }
-        
+
         mainTitle.setText(customs.mainTitle());
         subTitle.setText(customs.subTitle());
         if (customs.logo() != null) {
@@ -140,7 +128,7 @@ public class IngestionControlPanelShell extends Composite {
     }
 
     /**
-     * Get the main menu used to select examples.
+     * Get the main menu used to select ingestion control views.
      * 
      * @return the main menu
      */
@@ -156,20 +144,22 @@ public class IngestionControlPanelShell extends Composite {
      */
     public void setContent(final IngestionWidget content) {
         this.content = content;
+        
         if (content == null) {
             contentPanel.setWidget(null);
             return;
         }
 
-        // Show the widget.
-        showExample();
+        showContent();
     }
 
     /**
-     * Show a example.
+     * Show a content widget.
      */
-    private void showExample() {
+    private void showContent() {
         if (content == null) { return; }
+//        content.ensureWidget();
+//        contentPanel.setWidget(content.getWidget());
         contentPanel.setWidget(content);
     }
 }

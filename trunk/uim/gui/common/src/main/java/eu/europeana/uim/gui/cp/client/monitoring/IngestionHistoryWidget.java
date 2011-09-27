@@ -131,7 +131,6 @@ public class IngestionHistoryWidget extends IngestionWidget {
     @Override
     protected void asyncOnInitialize(final AsyncCallback<Widget> callback) {
         GWT.runAsync(IngestionHistoryWidget.class, new RunAsyncCallback() {
-
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);
