@@ -81,7 +81,7 @@ import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
  * @author Georgios Markakis
  * 
  */
-public class ImportResourcesWidget extends IngestionWidget {
+public class ImportResourcesWidget extends IngestionWidget{
 
 	private final RepositoryServiceAsync repositoryService;
 	private final ResourceServiceAsync resourceService;
@@ -974,13 +974,11 @@ public class ImportResourcesWidget extends IngestionWidget {
 		    DOM.setElementProperty(widg.getElement(),"id", id);
 	  }
 
-
-
-	@Override
-	public void fireEvent(GwtEvent<?> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+		@Override
+		public void fireEvent(GwtEvent<?> arg0) {
+			// TODO Auto-generated method stub
+			
+		}
 	  
 	
 }
