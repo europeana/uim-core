@@ -34,6 +34,7 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -972,6 +973,14 @@ public class ImportResourcesWidget extends IngestionWidget {
 	  private void setDOMID(Widget widg,String id){
 		    DOM.setElementProperty(widg.getElement(),"id", id);
 	  }
+
+
+
+	@Override
+	public void fireEvent(GwtEvent<?> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 	  
 	
 }
