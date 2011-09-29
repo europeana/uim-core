@@ -15,7 +15,14 @@
     <name>Unified Ingestion Manager: Europeana Ingestion Control Panel GUI (GWT)</name>
 
     <properties>
-        <gwtVersion>2.2.0</gwtVersion>
+        <gwtVersion>2.3.0</gwtVersion>
+        <!-- GWT needs at least java 1.6 -->
+        <maven.compiler.source>1.6</maven.compiler.source> 
+        <maven.compiler.target>1.6</maven.compiler.target>
+
+        <!-- Don't let your Mac use a crazy non-standard encoding -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 
@@ -28,13 +35,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.2.0</version>
+                <version>2.3.0</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <!-- <goal>i18n</goal> -->
                         </goals>
                     </execution>
                 </executions>
