@@ -1,5 +1,5 @@
 /* TitleType.java - created on Mar 18, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model;
+package org.theeuropeanlibrary.qualifier;
 
 /**
  * This represents the information about the status of a link at the time of last check

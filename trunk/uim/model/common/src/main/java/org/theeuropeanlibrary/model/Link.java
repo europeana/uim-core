@@ -3,6 +3,8 @@ package org.theeuropeanlibrary.model;
 
 import java.util.Date;
 
+import org.theeuropeanlibrary.qualifier.LinkStatus;
+
 /**
  * Defining a URL link to an image, digital object, online catalog, etc. The
  * type of link (image, digital object, online catalog) is defined externally to

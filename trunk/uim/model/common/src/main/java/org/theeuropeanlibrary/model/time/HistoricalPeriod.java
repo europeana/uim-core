@@ -7,7 +7,7 @@ import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.theeuropeanlibrary.model.FieldId;
 import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.geographic.NamedPlace;
+import org.theeuropeanlibrary.model.spatial.NamedPlace;
 
 /**
  * An historical period, characterized by a name and a geographic and temporal scope

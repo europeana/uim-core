@@ -1,5 +1,5 @@
 /* SpatialEntity.java - created on 22 de Mar de 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model.geographic;
+package org.theeuropeanlibrary.model.spatial;
 
 import java.util.ArrayList;
 import java.util.List;

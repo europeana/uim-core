@@ -46,6 +46,19 @@ public class Meeting extends Organization {
      *            name of the meeting
      * @param date
      *            When the meeting was held
+     */
+    public Meeting(String meetingName, Instant date) {
+        super(meetingName);
+        this.date = date;
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param meetingName
+     *            name of the meeting
+     * @param date
+     *            When the meeting was held
      * @param identifiers
      */
     public Meeting(String meetingName, Instant date, List<Identifier> identifiers) {

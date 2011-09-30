@@ -1,5 +1,5 @@
 /* Person.java - created on Mar 18, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model.geographic;
+package org.theeuropeanlibrary.model.spatial;
 
 import java.util.ArrayList;
 import java.util.List;

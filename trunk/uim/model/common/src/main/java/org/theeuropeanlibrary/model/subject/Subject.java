@@ -2,7 +2,7 @@
 package org.theeuropeanlibrary.model.subject;
 
 import org.theeuropeanlibrary.model.FieldId;
-import org.theeuropeanlibrary.model.geographic.SpatialEntity;
+import org.theeuropeanlibrary.model.spatial.SpatialEntity;
 import org.theeuropeanlibrary.model.time.Temporal;
 
 /**

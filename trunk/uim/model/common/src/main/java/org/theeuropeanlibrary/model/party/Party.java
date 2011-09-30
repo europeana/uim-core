@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.theeuropeanlibrary.model.FieldId;
 import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.geographic.SpatialEntity;
+import org.theeuropeanlibrary.model.spatial.SpatialEntity;
 import org.theeuropeanlibrary.model.subject.Subject;
 
 /**
@@ -135,6 +135,24 @@ public class Party {
         this.subject = subject;
     }
 
+
+    /**
+     * Returns the location.
+     * @return Where the party is located, or the geographical scope of its operation.
+     */
+    public SpatialEntity getLocation() {
+        return location;
+    }
+
+    /**
+     * Sets the location to the given value.
+     * @param location Where the party is located, or the geographical scope of its operation.
+     */
+    public void setLocation(SpatialEntity location) {
+        this.location = location;
+    }
+    
+    
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -171,23 +189,6 @@ public class Party {
     public String toString() {
         return getDisplay();
     }
-
-	/**
-	 * Returns the location.
-	 * @return Where the party is located, or the geographical scope of its operation.
-	 */
-	public SpatialEntity getLocation() {
-		return location;
-	}
-
-	/**
-	 * Sets the location to the given value.
-	 * @param location Where the party is located, or the geographical scope of its operation.
-	 */
-	public void setLocation(SpatialEntity location) {
-		this.location = location;
-	}
-    
     
     
 }

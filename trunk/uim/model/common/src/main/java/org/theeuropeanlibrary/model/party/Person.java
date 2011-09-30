@@ -225,19 +225,18 @@ public class Person extends Party {
      *         available in this form in the object)
      */
     public String getFullNameInverted() {
-        String ret = "";
-        if (partyName != null)
-            ret = partyName;
-        else {
-            if (surname != null) ret = surname;
-            if (firstNames != null) {
-                if (ret.isEmpty())
-                    ret = firstNames;
-                else
-                    ret += ", " + firstNames;
+        if (firstNames == null && surname == null) {
+            return partyName;
+        } else {
+            if (firstNames == null) { 
+                return surname;
+            } else {
+                if (surname != null) {
+                    return surname.trim() + " " + firstNames.trim() ;
+                }
+                return firstNames;
             }
         }
-        return ret;
     }
 
     /**
@@ -245,19 +244,18 @@ public class Person extends Party {
      *         available in this form in the object)
      */
     public String getFullName() {
-        String ret = "";
-        if (partyName != null)
-            ret = partyName;
-        else {
-            if (firstNames != null) ret = firstNames;
-            if (surname != null) {
-                if (ret.isEmpty())
-                    ret = surname;
-                else
-                    ret += "  " + surname;
+        if (firstNames == null && surname == null) {
+            return partyName;
+        } else {
+            if (firstNames == null) { 
+                return surname;
+            } else {
+                if (surname != null) {
+                    return firstNames.trim() + " " + surname.trim() ;
+                }
+                return firstNames;
             }
         }
-        return ret;
     }
 
     /**
