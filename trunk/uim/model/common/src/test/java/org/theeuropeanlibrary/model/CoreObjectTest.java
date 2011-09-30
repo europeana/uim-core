@@ -125,10 +125,10 @@ public class CoreObjectTest {
         assertNotNull(identifier.getIdentifier());
         assertEquals("main", identifier.getIdentifier());
         assertNotNull(identifier.getScope());
-        assertEquals("main", identifier.getScope());
+        assertEquals("scope", identifier.getScope());
         
-        assertEquals(new Identifier("main"), identifier);
-        assertEquals(new Identifier("main").hashCode(), identifier.hashCode());
+        assertEquals(new Identifier("main", "scope"), identifier);
+        assertEquals(new Identifier("main", "scope").hashCode(), identifier.hashCode());
     }
     
     
