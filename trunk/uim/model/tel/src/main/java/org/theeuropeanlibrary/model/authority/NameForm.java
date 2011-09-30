@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.model.authority;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.theeuropeanlibrary.model.FieldId;
 
 /**
@@ -90,4 +91,32 @@ public abstract class NameForm<T> {
     public void setSources(Set<String> sources) {
         this.sources = sources;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((nameForm == null) ? 0 : nameForm.hashCode());
+        result = prime * result + ((sources == null) ? 0 : sources.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        NameForm other = (NameForm)obj;
+        if (nameForm == null) {
+            if (other.nameForm != null) return false;
+        } else if (!nameForm.equals(other.nameForm)) return false;
+        if (sources == null) {
+            if (other.sources != null) return false;
+        } else if (!CollectionUtils.isEqualCollection(sources, other.sources)) return false;
+        return true;
+    }
+    
+    
+    
+    
 }
