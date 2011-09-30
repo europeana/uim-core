@@ -92,7 +92,7 @@ public class Period extends Temporal {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + ((end == null) ? 0 : end.hashCode());
         result = prime * result + ((start == null) ? 0 : start.hashCode());
         return result;
@@ -101,7 +101,7 @@ public class Period extends Temporal {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null) return false;
+        if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Period other = (Period)obj;
         if (end == null) {
@@ -112,6 +112,7 @@ public class Period extends Temporal {
         } else if (!start.equals(other.start)) return false;
         return true;
     }
+    
     
     
 }

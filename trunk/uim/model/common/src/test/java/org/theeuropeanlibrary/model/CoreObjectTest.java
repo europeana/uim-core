@@ -22,6 +22,9 @@ import org.theeuropeanlibrary.qualifier.LinkStatus;
 public class CoreObjectTest {
 
     
+    /**
+     * 
+     */
     @Test
     public void testTitleSimple() {
         Title title = new Title();
@@ -67,6 +70,9 @@ public class CoreObjectTest {
     }
 
     
+    /**
+     * 
+     */
     @Test
     public void testText() {
         Text text = new Text();
@@ -84,6 +90,9 @@ public class CoreObjectTest {
         assertEquals(new Text("main").hashCode(), text.hashCode());
     }
     
+    /**
+     * 
+     */
     @Test
     public void testNumberingSimple() {
         Numbering title = new Numbering();
@@ -113,6 +122,9 @@ public class CoreObjectTest {
     }
 
     
+    /**
+     * 
+     */
     @Test
     public void testLink() {
         Link link = new Link();
@@ -141,6 +153,9 @@ public class CoreObjectTest {
     
 
     
+    /**
+     * 
+     */
     @Test
     public void testIdentifierSimple() {
         Identifier identifier = new Identifier();

@@ -89,7 +89,7 @@ public class Occurrences<T> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Occurrences other = (Occurrences)obj;
+        Occurrences<?> other = (Occurrences<?>)obj;
         if (count != other.count) return false;
         if (value == null) {
             if (other.value != null) return false;

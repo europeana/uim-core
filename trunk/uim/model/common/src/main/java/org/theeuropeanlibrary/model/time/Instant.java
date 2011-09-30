@@ -88,22 +88,22 @@ public class Instant extends Temporal {
             yearText = yearText.replaceAll("\\p{Punct}", "u");
             yearText = yearText.replaceFirst("^[^\\d]+(\\d+)", "$1");
 
-            if (yearText.equals("uuuu")) {
+            if (yearText.equals("u") || yearText.equals("uuuu")) {
                 time = null;
                 granularity = InstantGranularity.UNKNOWN;
             } else if (yearText.endsWith("uuu")) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0, 1)) * 1000);
+                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0,  yearText.length() - 3)) * 1000);
                 time = cal.getTime();
                 granularity = InstantGranularity.MILLENNIUM;
             } else if (yearText.endsWith("uu")) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0, 2)) * 100);
+                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0, yearText.length() - 2)) * 100);
                 time = cal.getTime();
                 granularity = InstantGranularity.CENTURY;
             } else if (yearText.endsWith("u")) {
                 Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0, 3)) * 10);
+                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0,  yearText.length() - 1)) * 10);
                 time = cal.getTime();
                 granularity = InstantGranularity.DECADE;
             } else {
@@ -130,6 +130,22 @@ public class Instant extends Temporal {
         cal.set(Calendar.YEAR, year);
         time = cal.getTime();
         granularity = InstantGranularity.YEAR;
+        uncertain = false;
+        normalizeTime();
+    }
+
+
+    /**
+     * Creates a new instance of this class from a single year.
+     * 
+     * @param year
+     * @param granularity 
+     */
+    public Instant(int year, InstantGranularity granularity) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        time = cal.getTime();
+        this.granularity = granularity;
         uncertain = false;
         normalizeTime();
     }
@@ -209,7 +225,7 @@ public class Instant extends Temporal {
         cal.set(Calendar.MINUTE, minute);
         cal.set(Calendar.MILLISECOND, miliseconds);
         time = cal.getTime();
-        granularity = InstantGranularity.MILISECOND;
+        granularity = InstantGranularity.MILLISECOND;
         uncertain = false;
         normalizeTime();
     }
@@ -335,7 +351,7 @@ public class Instant extends Temporal {
                     ret = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
                     break;
                 }
-                case MILISECOND: {
+                case MILLISECOND: {
                     ret = new SimpleDateFormat("yyyy-MM-dd HH:mm:SSS").format(time);
                     break;
                 }
@@ -353,16 +369,6 @@ public class Instant extends Temporal {
         }
         if (uncertain) ret += "?";
         return ret;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((granularity == null) ? 0 : granularity.hashCode());
-        result = prime * result + ((time == null) ? 0 : time.hashCode());
-        result = prime * result + (uncertain ? 1231 : 1237);
-        return result;
     }
 
     /**
@@ -437,7 +443,7 @@ public class Instant extends Temporal {
                 cal.set(Calendar.MILLISECOND, 0);
                 break;
             }
-            case MILISECOND:
+            case MILLISECOND:
             case UNKNOWN: {
                 break;
             }
@@ -459,20 +465,29 @@ public class Instant extends Temporal {
         return calendar.get(calendarField);
     }
 
-    /**
-     *
-     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((granularity == null) ? 0 : granularity.hashCode());
+        result = prime * result + ((time == null) ? 0 : time.hashCode());
+        result = prime * result + (uncertain ? 1231 : 1237);
+        return result;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null) return false;
+        if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Instant other = (Instant)obj;
         if (granularity != other.granularity) return false;
-        if (uncertain != other.uncertain) return false;
         if (time == null) {
             if (other.time != null) return false;
         } else if (!time.equals(other.time)) return false;
+        if (uncertain != other.uncertain) return false;
         return true;
     }
+
+
 }

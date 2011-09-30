@@ -27,6 +27,9 @@ import org.theeuropeanlibrary.qualifier.PartyIdentifierType;
  */
 public class PartyObjectTest {
 
+    /**
+     * 
+     */
     @Test
     public void testPartySimple() {
         Party party = new Party();
@@ -80,6 +83,9 @@ public class PartyObjectTest {
     }
 
     
+    /**
+     * 
+     */
     @Test
     public void testFamilySimple() {
         Family party = new Family();
@@ -135,6 +141,9 @@ public class PartyObjectTest {
 
     
     
+    /**
+     * 
+     */
     @Test
     public void testOrganizationSimple() {
         Organization title = new Organization();
@@ -184,6 +193,9 @@ public class PartyObjectTest {
     }
 
     
+    /**
+     * 
+     */
     @Test
     public void testMeetingSimple() {
         Meeting title = new Meeting();
@@ -236,6 +248,9 @@ public class PartyObjectTest {
 
     
 
+    /**
+     * 
+     */
     @Test
     public void testPersonSimple() {
         Person person = new Person();

@@ -48,7 +48,7 @@ public enum InstantGranularity {
     /**
      * The date is significant from millenium to the milisecond Ex: "2010-08-02 12.30.30:999"
      */
-    MILISECOND,
+    MILLISECOND,
     /**
      * The date is unknown. None of the parts of the date are significant. Ex: when in MARC data we
      * find "?"

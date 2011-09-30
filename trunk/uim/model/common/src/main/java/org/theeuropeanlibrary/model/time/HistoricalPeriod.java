@@ -2,6 +2,7 @@
 package org.theeuropeanlibrary.model.time;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -63,9 +64,26 @@ public class HistoricalPeriod extends Temporal {
         this.temporalScope = temporalScope;
         this.geographicScope = geographicScope;
         if(identifiers==null)
-        	this.identifiers = new ArrayList<Identifier>(3);
+            this.identifiers = new ArrayList<Identifier>(3);
         else
-        	this.identifiers = identifiers;
+            this.identifiers = identifiers;
+    }
+    
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param name
+     *            The name of the historical period
+     * @param temporalScope
+     *            The temporal scope of the period
+     * @param geographicScope
+     *            The geographic scope of the period
+     * @param identifiers
+     *            Identifiers of the historical period in external data sets
+     */
+    public HistoricalPeriod(String name, Temporal temporalScope, NamedPlace geographicScope,
+                            Identifier... identifiers) {
+        this(name, temporalScope, geographicScope, Arrays.asList(identifiers));
     }
 
     /**

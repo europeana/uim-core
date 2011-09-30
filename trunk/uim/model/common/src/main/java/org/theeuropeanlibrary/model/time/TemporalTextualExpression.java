@@ -2,6 +2,7 @@
 package org.theeuropeanlibrary.model.time;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -52,6 +53,16 @@ public class TemporalTextualExpression extends Temporal {
             this.identifiers = new ArrayList<Identifier>(1);
         else
             this.identifiers = identifiers;
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param text
+     * @param identifiers 
+     */
+    public TemporalTextualExpression(String text, Identifier... identifiers) {
+        this(text, Arrays.asList(identifiers));
     }
 
     /**

@@ -2,6 +2,7 @@
 package org.theeuropeanlibrary.model.time;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -9,7 +10,9 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.theeuropeanlibrary.model.Identifier;
 import org.theeuropeanlibrary.model.spatial.NamedPlace;
+import org.theeuropeanlibrary.model.subject.Subject;
 
 /**
  * 
@@ -37,6 +40,42 @@ public class TimeObjectTest {
     }
 
     /**
+     * Tests the conversion of Instant
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testInstantParse() throws IOException {
+        Instant enc = new Instant(2010);
+
+        assertEquals(new Instant("2010"), enc);
+        assertEquals(new Instant("2010").hashCode(), enc.hashCode());
+        
+        
+        enc = new Instant(2000, InstantGranularity.MILLENNIUM);
+
+        assertEquals(new Instant("2uuu"), enc);
+        assertEquals(new Instant("2???").hashCode(), enc.hashCode());
+
+        assertEquals(new Instant("?").getGranularity(), InstantGranularity.UNKNOWN);
+        assertEquals(new Instant("19?").getGranularity(), InstantGranularity.DECADE);
+        assertEquals(new Instant("19u?").getGranularity(), InstantGranularity.CENTURY);
+        assertEquals(new Instant("1uuu").getGranularity(), InstantGranularity.MILLENNIUM);
+        
+        assertEquals(new Instant(2010,10,1).getGranularity(), InstantGranularity.DAY);
+        assertEquals(new Instant(2010,10,1, 1, 1).getGranularity(), InstantGranularity.MINUTE);
+        assertEquals(new Instant(2010,10,1, 1, 1, 1).getGranularity(), InstantGranularity.MILLISECOND);
+        
+        enc.setSubject(new Subject());
+        assertFalse(new Instant("2uuu").equals(enc));
+        Instant enc2 = new Instant("2uuu");
+        enc2.setSubject(new Subject());
+        assertEquals(enc2, enc);
+    }
+
+    
+    
+    /**
      * Tests the conversion of Period
      * 
      * @throws IOException
@@ -59,11 +98,12 @@ public class TimeObjectTest {
      */
     @Test
     public void testTemporalTextualExpression() throws IOException {
-        TemporalTextualExpression enc = new TemporalTextualExpression("20th century");
+        TemporalTextualExpression enc = new TemporalTextualExpression("20th century", new Identifier("a"));
         Assert.assertEquals("20th century", enc.getText());
 
-        assertEquals(new TemporalTextualExpression("20th century"), enc);
-        assertEquals(new TemporalTextualExpression("20th century").hashCode(), enc.hashCode());
+        assertFalse(new TemporalTextualExpression("20th century").equals(enc));
+        assertEquals(new TemporalTextualExpression("20th century", new Identifier("a")), enc);
+        assertEquals(new TemporalTextualExpression("20th century", new Identifier("a")).hashCode(), enc.hashCode());
     }
 
     /**
