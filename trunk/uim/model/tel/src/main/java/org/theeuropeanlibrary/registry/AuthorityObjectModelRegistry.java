@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.theeuropeanlibrary.model.authority.Occurrences;
-import org.theeuropeanlibrary.model.authority.OrganizationNameForm;
-import org.theeuropeanlibrary.model.authority.PersonNameForm;
-import org.theeuropeanlibrary.model.authority.UpdateFromDataSource;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
-import org.theeuropeanlibrary.qualifier.AuthorityIdentifierType;
-import org.theeuropeanlibrary.qualifier.AuthorityLinkTarget;
-import org.theeuropeanlibrary.qualifier.DisambiguationDataType;
-import org.theeuropeanlibrary.qualifier.NameFormRelation;
+import org.theeuropeanlibrary.model.tel.authority.Occurrences;
+import org.theeuropeanlibrary.model.tel.authority.OrganizationNameForm;
+import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
+import org.theeuropeanlibrary.model.tel.authority.UpdateFromDataSource;
+import org.theeuropeanlibrary.model.tel.qualifier.AuthorityIdentifierType;
+import org.theeuropeanlibrary.model.tel.qualifier.AuthorityLinkTarget;
+import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
+import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
 
 import eu.europeana.uim.common.TKey;
 
