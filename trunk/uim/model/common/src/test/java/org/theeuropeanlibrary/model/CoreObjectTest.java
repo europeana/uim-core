@@ -11,7 +11,12 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.qualifier.LinkStatus;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.Link;
+import org.theeuropeanlibrary.model.common.Numbering;
+import org.theeuropeanlibrary.model.common.Text;
+import org.theeuropeanlibrary.model.common.Title;
+import org.theeuropeanlibrary.model.common.qualifier.LinkStatus;
 
 /**
  * 

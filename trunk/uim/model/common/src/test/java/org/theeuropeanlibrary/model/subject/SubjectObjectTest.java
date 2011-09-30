@@ -10,8 +10,10 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.qualifier.KnowledgeOrganizationSystem;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
+import org.theeuropeanlibrary.model.common.subject.TitleSubject;
+import org.theeuropeanlibrary.model.common.subject.Topic;
 
 /**
  * 

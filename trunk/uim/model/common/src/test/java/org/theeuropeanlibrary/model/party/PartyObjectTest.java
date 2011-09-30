@@ -12,12 +12,17 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.spatial.SpatialEntity;
-import org.theeuropeanlibrary.model.subject.Subject;
-import org.theeuropeanlibrary.model.time.Instant;
-import org.theeuropeanlibrary.model.time.Period;
-import org.theeuropeanlibrary.qualifier.PartyIdentifierType;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.party.Family;
+import org.theeuropeanlibrary.model.common.party.Meeting;
+import org.theeuropeanlibrary.model.common.party.Organization;
+import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.party.Person;
+import org.theeuropeanlibrary.model.common.qualifier.PartyIdentifierType;
+import org.theeuropeanlibrary.model.common.spatial.SpatialEntity;
+import org.theeuropeanlibrary.model.common.subject.Subject;
+import org.theeuropeanlibrary.model.common.time.Instant;
+import org.theeuropeanlibrary.model.common.time.Period;
 
 /**
  * 

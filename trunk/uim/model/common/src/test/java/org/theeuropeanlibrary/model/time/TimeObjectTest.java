@@ -10,9 +10,14 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.spatial.NamedPlace;
-import org.theeuropeanlibrary.model.subject.Subject;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.spatial.NamedPlace;
+import org.theeuropeanlibrary.model.common.subject.Subject;
+import org.theeuropeanlibrary.model.common.time.HistoricalPeriod;
+import org.theeuropeanlibrary.model.common.time.Instant;
+import org.theeuropeanlibrary.model.common.time.InstantGranularity;
+import org.theeuropeanlibrary.model.common.time.Period;
+import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 
 /**
  * 

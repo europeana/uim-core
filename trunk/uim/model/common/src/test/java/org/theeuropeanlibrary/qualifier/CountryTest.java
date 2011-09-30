@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 
 /**
  * Tests the Country enumareation

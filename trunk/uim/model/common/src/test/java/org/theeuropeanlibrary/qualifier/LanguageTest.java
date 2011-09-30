@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.qualifier.Language;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
 
 /**
  * Tests the Language enumareation

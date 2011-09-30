@@ -8,8 +8,12 @@ import java.io.IOException;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.qualifier.SpatialIdentifierType;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
+import org.theeuropeanlibrary.model.common.spatial.BoundingBoxReferencedPlace;
+import org.theeuropeanlibrary.model.common.spatial.GeoReferencedPlace;
+import org.theeuropeanlibrary.model.common.spatial.NamedPlace;
+import org.theeuropeanlibrary.model.common.spatial.SpatialEntity;
 
 /**
  * 
