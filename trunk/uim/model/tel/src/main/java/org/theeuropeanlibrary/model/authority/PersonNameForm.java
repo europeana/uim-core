@@ -3,7 +3,7 @@ package org.theeuropeanlibrary.model.authority;
 
 import java.util.Set;
 
-import org.theeuropeanlibrary.model.party.Person;
+import org.theeuropeanlibrary.model.common.party.Person;
 
 /**
  * Name form of a person.

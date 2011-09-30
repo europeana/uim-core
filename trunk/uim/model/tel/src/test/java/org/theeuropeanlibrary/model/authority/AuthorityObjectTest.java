@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.party.Organization;
-import org.theeuropeanlibrary.model.party.Person;
+import org.theeuropeanlibrary.model.common.party.Organization;
+import org.theeuropeanlibrary.model.common.party.Person;
 
 /**
  * 

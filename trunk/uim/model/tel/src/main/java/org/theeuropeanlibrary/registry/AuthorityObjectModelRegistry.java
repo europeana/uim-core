@@ -6,15 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.Link;
 import org.theeuropeanlibrary.model.authority.Occurrences;
 import org.theeuropeanlibrary.model.authority.OrganizationNameForm;
 import org.theeuropeanlibrary.model.authority.PersonNameForm;
 import org.theeuropeanlibrary.model.authority.UpdateFromDataSource;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.Link;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.qualifier.AuthorityIdentifierType;
 import org.theeuropeanlibrary.qualifier.AuthorityLinkTarget;
-import org.theeuropeanlibrary.qualifier.Country;
 import org.theeuropeanlibrary.qualifier.DisambiguationDataType;
 import org.theeuropeanlibrary.qualifier.NameFormRelation;
 

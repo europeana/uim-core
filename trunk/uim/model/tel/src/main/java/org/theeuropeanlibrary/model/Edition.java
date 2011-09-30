@@ -1,6 +1,8 @@
 /* Edition.java - created on Mar 18, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model;
 
+import org.theeuropeanlibrary.model.common.FieldId;
+
 
 /**
  * The edition of a resource, represented as a number and/or as a textual statement (revised

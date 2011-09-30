@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.theeuropeanlibrary.model.FieldId;
+import org.theeuropeanlibrary.model.common.FieldId;
 
 /**
  * A variant form of the name of an entity (Person or Corporate), and information about where it is

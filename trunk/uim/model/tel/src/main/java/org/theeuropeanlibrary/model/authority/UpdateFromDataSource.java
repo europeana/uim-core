@@ -3,7 +3,7 @@ package org.theeuropeanlibrary.model.authority;
 
 import java.util.Date;
 
-import org.theeuropeanlibrary.model.FieldId;
+import org.theeuropeanlibrary.model.common.FieldId;
 
 /**
  * Holds the last update date at a data source

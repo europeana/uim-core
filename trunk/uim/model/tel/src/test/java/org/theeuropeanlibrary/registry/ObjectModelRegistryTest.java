@@ -6,11 +6,11 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Link;
-import org.theeuropeanlibrary.model.Title;
-import org.theeuropeanlibrary.qualifier.Language;
-import org.theeuropeanlibrary.qualifier.LinkTarget;
-import org.theeuropeanlibrary.qualifier.TitleType;
+import org.theeuropeanlibrary.model.common.Link;
+import org.theeuropeanlibrary.model.common.Title;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
+import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
+import org.theeuropeanlibrary.model.common.qualifier.TitleType;
 
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;

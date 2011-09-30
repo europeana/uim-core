@@ -1,7 +1,7 @@
 /* StringOccurrences.java - created on 12 de Jul de 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.authority;
 
-import org.theeuropeanlibrary.model.FieldId;
+import org.theeuropeanlibrary.model.common.FieldId;
 
 /**
  * Used in authority records to hold title, coauthor and publishers associated with an authority

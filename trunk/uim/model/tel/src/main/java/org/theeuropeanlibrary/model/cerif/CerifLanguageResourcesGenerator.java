@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
-import org.theeuropeanlibrary.qualifier.Language;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
 
 /**
  * 

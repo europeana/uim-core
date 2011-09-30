@@ -1,6 +1,8 @@
 /* Places.java - created on Mar 21, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model;
 
+import org.theeuropeanlibrary.model.common.FieldId;
+
 
 /**
  * A value created according to a controlled vocabulary. Meant to be used for the creation of

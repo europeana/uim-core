@@ -1,6 +1,9 @@
 /* Places.java - created on Mar 21, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model;
 
+import org.theeuropeanlibrary.model.common.FieldId;
+import org.theeuropeanlibrary.model.common.Text;
+
 
 /**
  * Any textual content, or textual description of a resource, with a label provided by TEL. The
