@@ -1,6 +1,6 @@
 package eu.europeana.model.edm;
 
-import org.theeuropeanlibrary.model.Link;
+import org.theeuropeanlibrary.model.common.Link;
 
 import eu.europeana.uim.common.TKey;
 

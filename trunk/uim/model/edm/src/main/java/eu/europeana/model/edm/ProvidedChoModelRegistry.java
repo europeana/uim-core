@@ -1,17 +1,17 @@
 package eu.europeana.model.edm;
 
-import org.theeuropeanlibrary.model.Identifier;
-import org.theeuropeanlibrary.model.Link;
-import org.theeuropeanlibrary.model.Title;
-import org.theeuropeanlibrary.model.party.Family;
-import org.theeuropeanlibrary.model.party.Meeting;
-import org.theeuropeanlibrary.model.party.Organization;
-import org.theeuropeanlibrary.model.party.Party;
-import org.theeuropeanlibrary.model.party.Person;
-import org.theeuropeanlibrary.model.subject.Topic;
-import org.theeuropeanlibrary.model.time.Instant;
-import org.theeuropeanlibrary.model.time.Period;
-import org.theeuropeanlibrary.model.time.TemporalTextualExpression;
+import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.Link;
+import org.theeuropeanlibrary.model.common.Title;
+import org.theeuropeanlibrary.model.common.party.Family;
+import org.theeuropeanlibrary.model.common.party.Meeting;
+import org.theeuropeanlibrary.model.common.party.Organization;
+import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.party.Person;
+import org.theeuropeanlibrary.model.common.subject.Topic;
+import org.theeuropeanlibrary.model.common.time.Instant;
+import org.theeuropeanlibrary.model.common.time.Period;
+import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 
 import eu.europeana.uim.common.TKey;
 
