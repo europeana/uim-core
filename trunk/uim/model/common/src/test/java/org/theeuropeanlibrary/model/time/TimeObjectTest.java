@@ -1,6 +1,8 @@
 /* TimeObjectTest.java - created on Sep 30, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.time;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -29,6 +31,9 @@ public class TimeObjectTest {
         enc.setGranularity(InstantGranularity.YEAR);
         enc.setUncertain(false);
         Assert.assertEquals("2010", simpleDateformat.format(enc.getTime()));
+
+        assertEquals(new Instant(2010), enc);
+        assertEquals(new Instant(2010).hashCode(), enc.hashCode());
     }
 
     /**
@@ -42,6 +47,9 @@ public class TimeObjectTest {
         Period enc = new Period(new Instant(2000), new Instant(2011));
         Assert.assertEquals("2000", simpleDateformat.format(enc.getStart().getTime()));
         Assert.assertEquals("2011", simpleDateformat.format(enc.getEnd().getTime()));
+
+        assertEquals(new Period(new Instant(2000), new Instant(2011)), enc);
+        assertEquals(new Period(new Instant(2000), new Instant(2011)).hashCode(), enc.hashCode());
     }
 
     /**
@@ -53,6 +61,9 @@ public class TimeObjectTest {
     public void testTemporalTextualExpression() throws IOException {
         TemporalTextualExpression enc = new TemporalTextualExpression("20th century");
         Assert.assertEquals("20th century", enc.getText());
+
+        assertEquals(new TemporalTextualExpression("20th century"), enc);
+        assertEquals(new TemporalTextualExpression("20th century").hashCode(), enc.hashCode());
     }
 
     /**
@@ -71,6 +82,11 @@ public class TimeObjectTest {
         Assert.assertEquals("Portugal", enc.getGeographicScope().getPlaceName());
         Assert.assertEquals("1974",
                 simpleDateformat.format(((Instant)enc.getTemporalScope()).getTime()));
+
+        assertEquals(new HistoricalPeriod("Revolution", new Instant(1974), new NamedPlace(
+                "Portugal"), enc.getIdentifiers()), enc);
+        assertEquals(new HistoricalPeriod("Revolution", new Instant(1974), new NamedPlace(
+                "Portugal"), enc.getIdentifiers()).hashCode(), enc.hashCode());
     }
 
 }

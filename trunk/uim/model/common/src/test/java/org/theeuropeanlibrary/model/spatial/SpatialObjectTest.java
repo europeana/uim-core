@@ -1,6 +1,8 @@
 /* SpatialObjectTest.java - created on Sep 30, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.spatial;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import junit.framework.Assert;
@@ -27,6 +29,10 @@ public class SpatialObjectTest {
     public void testNamedPlace() throws IOException {
         NamedPlace enc = new NamedPlace("revised");
         Assert.assertEquals("revised", enc.getPlaceName());
+
+        assertEquals(new NamedPlace("revised"), enc);
+        assertEquals(new NamedPlace("revised").hashCode(), enc.hashCode());
+
     }
 
     /**
@@ -40,6 +46,9 @@ public class SpatialObjectTest {
         Assert.assertEquals("revised", enc.getPlaceName());
         Assert.assertEquals(10.0, enc.getLatitude());
         Assert.assertEquals(20.0, enc.getLongitude());
+        
+        assertEquals(new GeoReferencedPlace("revised", 10.0, 20.0), enc);
+        assertEquals(new GeoReferencedPlace("revised", 10.0, 20.0).hashCode(), enc.hashCode());
     }
 
     /**
@@ -49,13 +58,15 @@ public class SpatialObjectTest {
      */
     @Test
     public void testBoundingBoxReferencedPlace() throws IOException {
-        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0,
-                4.0);
+        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0);
         Assert.assertEquals("revised", enc.getPlaceName());
         Assert.assertEquals(1.0, enc.getNorthLimit());
         Assert.assertEquals(2.0, enc.getSouthLimit());
         Assert.assertEquals(3.0, enc.getEastLimit());
         Assert.assertEquals(4.0, enc.getWestLimit());
+
+        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0), enc);
+        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0).hashCode(), enc.hashCode());
     }
 
     /**
@@ -77,5 +88,7 @@ public class SpatialObjectTest {
             Assert.assertEquals(SpatialIdentifierType.values()[i],
                     SpatialIdentifierType.valueOf(enc.getIdentifiers().get(i).getScope()));
         }
+        
+        
     }
 }

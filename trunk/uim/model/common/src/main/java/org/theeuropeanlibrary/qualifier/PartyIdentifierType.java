@@ -17,5 +17,7 @@ public enum PartyIdentifierType {
     /** International Standard Name Identifier */
     ISNI,
     /** URL for the homepage of the party */
-    URL;
+    URL,
+    /** MACS the party */
+    MACS;
 }

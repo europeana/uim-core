@@ -53,6 +53,23 @@ public class TitleSubject extends Subject {
         }
     }
 
+
+    /**
+     * Creates a new instance of this class.
+     * @param miscellaneousInformation 
+     * 
+     * @param identifiers
+     *            Identifiers of the topic in external data sets
+     */
+    public TitleSubject(String miscellaneousInformation, List<Identifier> identifiers) {
+        this.miscellaneousInformation = miscellaneousInformation;
+        if (identifiers == null) {
+            this.identifiers = new ArrayList<Identifier>(0);
+        } else {
+            this.identifiers = identifiers;
+        }
+    }
+
     /**
      * @return Title dates (typically the date of publication)
      */
