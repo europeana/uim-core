@@ -7,9 +7,6 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.Edition;
-import org.theeuropeanlibrary.model.Facet;
-import org.theeuropeanlibrary.model.LabeledText;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Numbering;
@@ -34,6 +31,9 @@ import org.theeuropeanlibrary.model.common.time.Instant;
 import org.theeuropeanlibrary.model.common.time.InstantGranularity;
 import org.theeuropeanlibrary.model.common.time.Period;
 import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
+import org.theeuropeanlibrary.model.tel.Edition;
+import org.theeuropeanlibrary.model.tel.Facet;
+import org.theeuropeanlibrary.model.tel.LabeledText;
 
 /**
  * Tests the conversion of a compreensive metadata record

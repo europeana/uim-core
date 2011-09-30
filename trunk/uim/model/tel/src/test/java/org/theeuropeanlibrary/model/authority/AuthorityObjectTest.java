@@ -9,6 +9,9 @@ import java.util.Set;
 import org.junit.Test;
 import org.theeuropeanlibrary.model.common.party.Organization;
 import org.theeuropeanlibrary.model.common.party.Person;
+import org.theeuropeanlibrary.model.tel.authority.Occurrences;
+import org.theeuropeanlibrary.model.tel.authority.OrganizationNameForm;
+import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
 
 /**
  * 
