@@ -6,96 +6,15 @@
         <artifactId>europeana-uim</artifactId>
         <version>1.3.0-SNAPSHOT</version>
     </parent>
-	<packaging>bundle</packaging>
 
 	<artifactId>europeana-uim-model-edm</artifactId>
-	<name>Unified Ingestion Manager: EDM Model</name>
+	<name>Unified Ingestion Manager: EDM Internal Model</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-				<configuration>
-					<target>1.6</target>
-					<source>1.6</source>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<tagBase>https://europeanalabs.eu/svn/europeana/releases</tagBase>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.1.0</version>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<DynamicImport-Package>*</DynamicImport-Package>
-						<Import-Package>
-						    javax.xml,
-							org.w3c.dom, 
-							org.xml.sax, 
-							org.xml.sax.ext, 
-							org.xml.sax.helpers
-                        </Import-Package>
-						<Export-Package>
-                            eu.europeana.uim.common,
-                            eu.europeana.uim.store,
-                            eu.europeana.uim.store.bean,
-                            eu.europeana.uim.sugarcrm.model,
-							org.apache.commons.lang.*;version="2.4",
-							org.apache.commons.io.*;version="2.0",
-                            org.apache.commons.math.*;version="1.2",
-							gnu.trove.*;version="2.0.2"
-                        </Export-Package>
-						<Embed-Dependency>commons-lang,commons-io,commons-math,trove4j</Embed-Dependency>
-						<Embed-StripVersion>true</Embed-StripVersion>
-					</instructions>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/*.txt</include>
-					<include>**/*.xml</include>
-				</includes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**/*.txt</include>
-					<include>**/*.xml</include>
-				</includes>
-			</testResource>
-		</testResources>
-	</build>
+	<build/>
 
 	<dependencies>
         <dependency>
@@ -103,27 +22,6 @@
             <artifactId>europeana-uim-model-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>commons-math</groupId>
-            <artifactId>commons-math</artifactId>
-        </dependency>
-
-		<dependency>
-			<groupId>net.sf.trove4j</groupId>
-			<artifactId>trove4j</artifactId>
-			<version>2.0.2</version>
-		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
