@@ -1,5 +1,5 @@
 /* ConverterTest.java - created on Mar 22, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.registry;
+package org.theeuropeanlibrary.model;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -42,7 +42,7 @@ import org.theeuropeanlibrary.qualifier.KnowledgeOrganizationSystem;
  * @since Apr 18, 2011
  */
 @SuppressWarnings("unused")
-public class ObjectModelTest {
+public class ExtendedObjectTest {
 
     /**
      * Tests the conversion of Language

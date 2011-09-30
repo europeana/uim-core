@@ -18,9 +18,12 @@ import org.theeuropeanlibrary.model.party.Person;
  */
 public class AuthorityObjectTest {
 
+    /**
+     * 
+     */
     @Test
     public void testOccurences() {
-        Occurrences enc = new Occurrences<String>("a", 4);
+        Occurrences<String> enc = new Occurrences<String>("a", 4);
         assertEquals(enc.getValue(), "a");
         assertEquals(enc.getCount(), 4);
         
@@ -28,6 +31,9 @@ public class AuthorityObjectTest {
         assertEquals(new Occurrences<String>("a", 4).hashCode(), enc.hashCode());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testOrganizationNameForm() {
         Set<String> sources = new HashSet<String>(){{add("a");add("b");}};
@@ -39,6 +45,9 @@ public class AuthorityObjectTest {
         assertEquals(new OrganizationNameForm(new Organization("test"), sources).hashCode(), enc.hashCode());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testPersonNameForm() {
         Set<String> sources = new HashSet<String>(){{add("a");add("b");}};
