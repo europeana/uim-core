@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.registry;
+package org.theeuropeanlibrary.model.tel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -43,10 +43,6 @@ import org.theeuropeanlibrary.model.common.time.HistoricalPeriod;
 import org.theeuropeanlibrary.model.common.time.Instant;
 import org.theeuropeanlibrary.model.common.time.Period;
 import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
-import org.theeuropeanlibrary.model.tel.Edition;
-import org.theeuropeanlibrary.model.tel.Facet;
-import org.theeuropeanlibrary.model.tel.LabeledText;
-import org.theeuropeanlibrary.model.tel.Metadata;
 import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;

@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.registry;
+package org.theeuropeanlibrary.model.tel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
