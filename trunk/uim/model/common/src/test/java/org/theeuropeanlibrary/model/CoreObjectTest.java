@@ -5,7 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.util.Date;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.theeuropeanlibrary.qualifier.LinkStatus;
@@ -20,7 +23,7 @@ public class CoreObjectTest {
 
     
     @Test
-    public void testTitle() {
+    public void testTitleSimple() {
         Title title = new Title();
         assertNull(title.getTitle());
         assertNull(title.getSubTitle());
@@ -47,6 +50,23 @@ public class CoreObjectTest {
     }
     
     
+    /**
+     * Tests the conversion of Title
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testTitle() throws IOException {
+        Title mainTitle = new Title("title", "subtitle");
+        Assert.assertEquals("title", mainTitle.getTitle());
+        Assert.assertEquals("subtitle", mainTitle.getSubTitle());
+
+        Title uniformTitle = new Title("title uniform", null);
+        Assert.assertEquals("title uniform", uniformTitle.getTitle());
+        Assert.assertNull(uniformTitle.getSubTitle());
+    }
+
+    
     @Test
     public void testText() {
         Text text = new Text();
@@ -65,7 +85,7 @@ public class CoreObjectTest {
     }
     
     @Test
-    public void testNumbering() {
+    public void testNumberingSimple() {
         Numbering title = new Numbering();
         assertNotNull(title.getNumber());
         
@@ -81,6 +101,16 @@ public class CoreObjectTest {
         assertEquals(new Numbering(4).hashCode(), title.hashCode());
     }
     
+    /**
+     * Tests the conversion of Numbering
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testNumbering() throws IOException {
+        Numbering enc = new Numbering(10);
+        Assert.assertEquals(10, enc.getNumber());
+    }
 
     
     @Test
@@ -112,7 +142,7 @@ public class CoreObjectTest {
 
     
     @Test
-    public void testIdentifier() {
+    public void testIdentifierSimple() {
         Identifier identifier = new Identifier();
         assertNull(identifier.getScope());
         assertNull(identifier.getIdentifier());
@@ -134,5 +164,22 @@ public class CoreObjectTest {
         assertEquals(identifier, Identifier.decodeIdentifier(encodedForm));
     }
     
+    
+    /**
+     * Tests the conversion of Identifier
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testIdentifier() throws IOException {
+        Identifier isbn = new Identifier("9828237260", null);
+        Assert.assertEquals("9828237260", isbn.getIdentifier());
+        Assert.assertNull(isbn.getScope());
+
+        Identifier depositNumber = new Identifier("7260", "NL");
+        Assert.assertEquals("7260", depositNumber.getIdentifier());
+        Assert.assertEquals("NL", depositNumber.getScope());
+    }
+
     
 }

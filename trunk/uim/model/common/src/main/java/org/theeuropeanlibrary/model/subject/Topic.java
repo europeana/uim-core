@@ -58,6 +58,17 @@ public class Topic extends Subject {
         this.identifiers = new ArrayList<Identifier>(0);
     }
 
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param topicName
+     *            actual name of the topic
+     */
+    public Topic(String topicName) {
+        this(topicName, null, null);
+    }
+
     /**
      * Creates a new instance of this class.
      * 
@@ -78,16 +89,6 @@ public class Topic extends Subject {
         } else {
             this.identifiers = identifiers;
         }
-    }
-
-    /**
-     * Creates a new instance of this class.
-     * 
-     * @param topicName
-     *            actual name of the topic
-     */
-    public Topic(String topicName) {
-        this(topicName, null, null);
     }
 
     /**
