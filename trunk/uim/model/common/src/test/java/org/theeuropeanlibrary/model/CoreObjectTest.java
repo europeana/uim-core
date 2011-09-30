@@ -129,6 +129,9 @@ public class CoreObjectTest {
         
         assertEquals(new Identifier("main", "scope"), identifier);
         assertEquals(new Identifier("main", "scope").hashCode(), identifier.hashCode());
+        
+        String encodedForm = identifier.getStringEncodedForm();
+        assertEquals(identifier, Identifier.decodeIdentifier(encodedForm));
     }
     
     
