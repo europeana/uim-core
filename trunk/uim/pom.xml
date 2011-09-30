@@ -30,30 +30,6 @@
 
 		<!-- the standard orchestration implementation module -->
 		<module>orchestration/basic</module>
-
-		<!-- a dummy plugin for testing -->
-		<!-- <module>plugins/dummy</module> -->
-
-		<!-- the uim standard file import module -->
-		<!-- <module>plugins/fileimp</module> -->
-
-		<!-- a dummy workflow for testing -->
-		<!-- <module>workflows/dummy</module> -->
-
-		<!-- the uim integration test module -->
-		<!-- <module>plugins/integration</module> -->
-
-		<!-- GWT-based GUI -->
-		<!-- <module>gui/uim-gui-gwt</module> -->
-
-		<!-- webconsole-based GUI -->
-		<!-- <module>gui/uim-webconsole-extension</module> -->
-
-		<!-- mongodb based memory storage implementation -->
-		<!-- <module>storage/mongo</module> -->
-
-		<!-- mongodb based logging -->
-		<!-- <module>logging/mongo</module> -->
 	</modules>
 
 	<build>
@@ -153,6 +129,17 @@
 				<version>1.2</version>
 			</dependency>
 
+	        <dependency>
+	            <groupId>commons-collections</groupId>
+	            <artifactId>commons-collections</artifactId>
+	            <version>3.2.1</version>
+	        </dependency>
+
+	        <dependency>
+	            <groupId>com.google.guava</groupId>
+	            <artifactId>guava</artifactId>
+	            <version>r09</version>
+	        </dependency>
 
 			<!-- common things -->
 			<dependency>
