@@ -158,9 +158,12 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 try {
                     task.save();
                 } catch (Throwable e2) {
-                    throw new RuntimeException(
-                            "Failed to store failed record. Reason for failure:" +
-                                    e1.getMessage(), e2);
+                    if (loggingEngine != null) {
+                        loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  t, metaDataRecord,
+                                "StorageFailed",
+                                "Major error in the workflow plugin execution must be stopped!");
+                    }
+                    task.getExecutionContext().setThrowable(new IngestionPluginFailedException("Failed to save mdr.", e2));
                 }
             }
         } else {
@@ -177,9 +180,12 @@ public class TaskExecutor extends ThreadPoolExecutor {
             try {
                 task.save();
             } catch (Throwable e2) {
-                throw new RuntimeException(
-                        "Failed to store failed record. Reason for failure:" +
-                                (t != null ? t.getMessage() : ""), e2);
+                if (loggingEngine != null) {
+                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  t, metaDataRecord,
+                            "StorageFailed",
+                            "Major error in the workflow plugin execution must be stopped!");
+                }
+                task.getExecutionContext().setThrowable(new IngestionPluginFailedException("Failed to save mdr.", e2));
             }
         }
 
