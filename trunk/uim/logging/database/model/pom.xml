@@ -15,30 +15,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.theeuropeanlibrary</groupId>
-                                    <artifactId>tel-database-ftl</artifactId>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${basedir}/target/template</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>hibernate3-maven-plugin</artifactId>
                 <version>2.1</version>
@@ -69,7 +45,7 @@
                     </components>
                     <componentProperties>
                         <template>daohome.ftl</template>
-                        <templatepath>${basedir}/target/template</templatepath>
+                        <templatepath>${basedir}/src/main/code/template</templatepath>
                         <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
                         <ejb3>false</ejb3>
                         <jdk5>true</jdk5>
