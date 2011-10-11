@@ -49,6 +49,7 @@ import eu.europeana.uim.repoxclient.rest.exceptions.HarvestingOperationException
 import eu.europeana.uim.repoxclient.rest.exceptions.ProviderOperationException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.sugarcrm.LoginFailureException;
 import eu.europeana.uim.sugarcrm.SugarCrmService;
 import eu.europeana.uim.sugarcrm.SugarCrmRecord;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaDatasetStates;
@@ -60,16 +61,13 @@ import eu.europeana.uim.sugarcrm.SugarCrmQuery;
 import eu.europeana.uim.sugarcrm.QueryResultException;
 
 /**
- * 
+ * Exposes the "integration plugins" methods to the client.
  * 
  * @author Georgios Markakis
  */
 public class IntegrationSeviceProxyImpl extends
 		IntegrationServicesProviderServlet implements IntegrationSeviceProxy {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	DialogBox importDialog;
@@ -101,6 +99,8 @@ public class IntegrationSeviceProxyImpl extends
 
 		try {
 
+
+			
 			// Retrieve the original SugarCRM record for a collection entry
 			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
 
@@ -156,7 +156,7 @@ public class IntegrationSeviceProxyImpl extends
 			result.setDescription("Import failed while creating a DataSource in Repox.");
 			result.setCause(e.getMessage());
 			result.setResult(EuropeanaClientConstants.ERRORIMAGELOC);
-		}
+		} 
 
 		return result;
 	}
@@ -176,21 +176,24 @@ public class IntegrationSeviceProxyImpl extends
 		SugarCrmService sugService = engine.getSugarCrmService();
 
 		CustomSugarCrmQuery queryObj = new CustomSugarCrmQuery(query);
-		queryObj.setMaxResults(100);
+		queryObj.setMaxResults(10000000);
 		queryObj.setOffset(0);
 		queryObj.setOrderBy(EuropeanaRetrievableField.ID);
 
 		try {
+			//TODO:Parametrize this according to user credentials
+			sugService.updateSession("test", "test");
+			
 			ArrayList<SugarCrmRecord> results = (ArrayList<SugarCrmRecord>) sugService
 					.retrieveRecords(queryObj);
 			guiobjs = (ArrayList<SugarCRMRecordDTO>) convertSugarObj2GuiObj(results);
 			results = null;
 		} catch (QueryResultException e) {
-
 			e.printStackTrace();
 		} catch (StorageEngineException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (LoginFailureException e) {
+
 		}
 
 		return guiobjs;
