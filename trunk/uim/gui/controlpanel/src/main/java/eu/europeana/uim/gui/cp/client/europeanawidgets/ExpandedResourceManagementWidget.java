@@ -93,6 +93,9 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	
 
     
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget#postInitialize()
+	 */
 	@Override
     public Widget postInitialize(){
 		

@@ -84,23 +84,15 @@ public class IntegrationSeviceProxyImpl extends
 
 		ExpandedOsgiEngine engine = getEngine();
 		SugarCrmService sugService = engine.getSugarCrmService();
-
 		RepoxUIMService repoxService = engine.getRepoxService();
-
 		ImportResultDTO result = new ImportResultDTO();
-		result.setResult(EuropeanaClientConstants.SUCCESSIMAGELOC);
-		
-
-		
-		
+		result.setResult(EuropeanaClientConstants.SUCCESSIMAGELOC);		
 		result.setCollectionName(record.getName());
 
 		String id = record.getId();
 
 		try {
 
-
-			
 			// Retrieve the original SugarCRM record for a collection entry
 			SugarCrmRecord originalRec = sugService.retrieveRecord(id);
 
@@ -113,12 +105,12 @@ public class IntegrationSeviceProxyImpl extends
 
 			// Create a dummy aggregator that uses the country prefix as an ID
 			if (!repoxService.aggregatorExists(aggrID)) {
-				repoxService.createAggregator(aggrID);
+				repoxService.createAggregator(aggrID,null);
 			}
 
 			// Create a REPOX provider from an already existing UIM provider
 			if (!repoxService.providerExists(prov)) {
-				repoxService.createProviderfromUIMObj(prov, false);
+				repoxService.createProviderfromUIMObj(prov);
 			} else {
 				// Or update an already existing REPOX provider from an
 				// (updated) existing UIM provider
