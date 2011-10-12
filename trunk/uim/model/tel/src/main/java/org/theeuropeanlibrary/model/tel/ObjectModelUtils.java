@@ -303,6 +303,9 @@ public final class ObjectModelUtils {
             if (parties.length() > 0) {
                 publisher += ": " + parties;
             }
+        } else {
+            if (parties.length() > 0) 
+                publisher =  parties;
         }
         return publisher;
     }
