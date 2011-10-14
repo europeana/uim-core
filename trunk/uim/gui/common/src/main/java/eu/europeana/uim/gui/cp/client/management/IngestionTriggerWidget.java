@@ -142,7 +142,7 @@ public class IngestionTriggerWidget extends IngestionWidget {
         cellBrowser.setAnimationEnabled(true);
         cellBrowser.setSize("100%", "100%");
 
-        cellTable = new CellTable<ParameterDTO>(new SimpleKeyProvider<ParameterDTO>());
+        cellTable = new CellTable<ParameterDTO>(Integer.MAX_VALUE, new SimpleKeyProvider<ParameterDTO>());
         cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
 
