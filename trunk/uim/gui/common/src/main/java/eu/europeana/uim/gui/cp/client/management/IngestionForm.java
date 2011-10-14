@@ -177,7 +177,7 @@ public class IngestionForm extends Composite {
             nameBox.setText("");
         }
         if (nameBox.getText().length() == 0 && workflow != null) {
-            autoText = workflow.getIdentifier() +
+            autoText = workflow.getName() +
                        "/" +
                        (collection.getName().equals(TriggerTreeViewModel.ALL_COLLECTIONS)
                                ? provider.getMnemonic() : collection.getMnemonic());
