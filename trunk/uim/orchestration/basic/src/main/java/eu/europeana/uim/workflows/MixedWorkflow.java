@@ -28,7 +28,7 @@ public class MixedWorkflow extends AbstractWorkflow {
      * @param randsleep
      */
     public MixedWorkflow(int batchSize, boolean randsleep) {
-        super("Reporting Workflow",
+        super("XT: Sysout/Syserr Workflow",
                 "Simple workflow which uses several SysoutPlugins to report to the console about processing");
         setStart(new BatchWorkflowStart());
 

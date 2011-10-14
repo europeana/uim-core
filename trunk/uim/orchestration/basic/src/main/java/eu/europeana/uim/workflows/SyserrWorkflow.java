@@ -24,7 +24,7 @@ public class SyserrWorkflow extends AbstractWorkflow {
      * @param randsleep
      */
     public SyserrWorkflow(int batchSize, boolean randsleep) {
-        super("XT: Error Console Reporting Workflow",
+        super("XT: Syserr Workflow",
                 "Simple workflow which uses a SyserrPlugins to fail all records");
         setStart(new BatchWorkflowStart());
         addStep(new SyserrPlugin());

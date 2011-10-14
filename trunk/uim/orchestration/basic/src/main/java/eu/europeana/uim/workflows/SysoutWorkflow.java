@@ -28,7 +28,7 @@ public class SysoutWorkflow extends AbstractWorkflow {
      * @param savepoint
      */
     public SysoutWorkflow(int batchSize, boolean randsleep, boolean savepoint) {
-        super("XT: Console Reporting Workflow",
+        super("XT: Sysout Workflow",
                 "Simple workflow which uses sysout and logging plugins to report to the console about processing!");
         setStart(new BatchWorkflowStart());
 
