@@ -42,6 +42,7 @@ import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 import eu.europeana.uim.repoxclient.jibxbindings.Success;
+import eu.europeana.uim.repoxclient.objects.ScheduleInfo;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.repoxclient.rest.exceptions.AggregatorOperationException;
 import eu.europeana.uim.repoxclient.rest.exceptions.DataSourceOperationException;
@@ -52,12 +53,9 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.sugarcrm.LoginFailureException;
 import eu.europeana.uim.sugarcrm.SugarCrmService;
 import eu.europeana.uim.sugarcrm.SugarCrmRecord;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaDatasetStates;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaRetrievableField;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.data.EuropeanaUpdatableField;
 import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.CustomSugarCrmQuery;
-import eu.europeana.uim.sugarcrmclient.plugin.objects.queries.SimpleSugarCrmQuery;
-import eu.europeana.uim.sugarcrm.SugarCrmQuery;
 import eu.europeana.uim.sugarcrm.QueryResultException;
 
 /**
@@ -457,7 +455,7 @@ public class IntegrationSeviceProxyImpl extends
 		case INITIATE_COMPLETE_HARVESTING:
 
 			try {
-				repoxService.initiateHarvestingfromUIMObj(coll);
+				repoxService.initiateHarvestingfromUIMObj(coll,true);
 				result.setOperationMessage("Successfully Fetched Latest Harvest Log for Current Collection"); 
 				result.setLogMessage("Harvesting initiated.");
 			} catch (HarvestingOperationException e) {
@@ -473,7 +471,13 @@ public class IntegrationSeviceProxyImpl extends
 
 			
 			try {
-				repoxService.initiateHarvestingfromUIMObj(coll, ingestionDate );
+				
+				ScheduleInfo info = new ScheduleInfo();
+				
+				
+				
+				
+				repoxService.scheduleHarvestingfromUIMObj(coll, info );
 				result.setOperationMessage("Successfully Performed Scheduling for given dataset "); 
 				result.setLogMessage("Harvesting Date: " + ingestionDate.toString());
 			} catch (HarvestingOperationException e) {
