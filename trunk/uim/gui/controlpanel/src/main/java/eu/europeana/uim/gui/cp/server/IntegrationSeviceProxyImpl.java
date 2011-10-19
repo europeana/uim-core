@@ -99,7 +99,7 @@ public class IntegrationSeviceProxyImpl extends
 			Provider prov = sugService.updateProviderFromRecord(originalRec);
 
 			// Get the current coutry for the given provider
-			String aggrID = prov.getValue("repoxCountry").toLowerCase();
+			String aggrID = prov.getValue("providerCountry").toLowerCase();
 
 			// Create a dummy aggregator that uses the country prefix as an ID
 			if (!repoxService.aggregatorExists(aggrID)) {
