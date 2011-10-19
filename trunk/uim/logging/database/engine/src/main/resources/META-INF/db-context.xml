@@ -41,7 +41,11 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
+    
+    <bean id="executionLogFileWriter" class="eu.europeana.uim.logging.database.ExecutionLogFileWriter">
+       <property name="rootPath" value="${log.directory}"/>
+    </bean>
+    
 <!--     <tx:annotation-driven proxy-target-class="true"/> -->
 
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>

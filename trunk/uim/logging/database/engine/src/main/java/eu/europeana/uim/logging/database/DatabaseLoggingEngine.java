@@ -1,5 +1,7 @@
 package eu.europeana.uim.logging.database;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +31,10 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 31, 2011
  */
 public class DatabaseLoggingEngine implements LoggingEngine<Long> {
-    private static final Logger    log = Logger.getLogger(DatabaseLoggingEngine.class.getName());
+    private static final Logger          log = Logger.getLogger(DatabaseLoggingEngine.class.getName());
 
-    private DatabaseLoggingStorage storage;
+    private DatabaseLoggingStorage       storage;
+    private ExecutionLogFileWriter<Long> logFileWriter;
 
     /**
      * Creates a new instance of this class. The default constructor is used to initialize the
@@ -39,6 +42,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
      */
     public DatabaseLoggingEngine() {
         BlockingInitializer initializer = new BlockingInitializer() {
+            @SuppressWarnings("unchecked")
             @Override
             public void initializeInternal() {
                 try {
@@ -54,6 +58,8 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
                     storage = (DatabaseLoggingStorage)context.getAutowireCapableBeanFactory().autowire(
                             DatabaseLoggingStorage.class,
                             AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
+
+                    logFileWriter = (ExecutionLogFileWriter<Long>)context.getBean("executionLogFileWriter");
 
                     status = STATUS_INITIALIZED;
                 } catch (Throwable t) {
@@ -86,6 +92,14 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void log(Execution<Long> execution, Level level, String modul, String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, modul, new Date(), messages);
+        if (logFileWriter != null) {
+            for (String message : messages)
+                try {
+                    logFileWriter.log(execution, level, modul + ": " + message);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while writing log message", e);
+                }
+        }
         storage.getLogHome().insert(entry);
     }
 
@@ -94,13 +108,21 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, plugin.getIdentifier(),
                 new Date(), messages);
+        if (logFileWriter != null) {
+            for (String message : messages)
+                try {
+                    logFileWriter.log(execution, level, plugin.getName() + " Plugin: " + message);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while writing log message", e);
+                }
+        }
         storage.getLogHome().insert(entry);
     }
 
     @Override
     public void logFailed(Level level, String module, Throwable throwable, String... messages) {
-        TLogEntryFailed entry = new TLogEntryFailed(level, module, LoggingEngineAdapter.getStackTrace(throwable),
-                new Date(), messages);
+        TLogEntryFailed entry = new TLogEntryFailed(level, module,
+                LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
         storage.getLogFailedHome().insert(entry);
     }
 
@@ -115,6 +137,14 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             Throwable throwable, String... messages) {
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
+        if (logFileWriter != null) {
+            for (String message : messages)
+                try {
+                    logFileWriter.log(execution, level, modul + " FAILED: " + message);
+                } catch (IOException e) {
+                    throw new RuntimeException("Error while writing log message", e);
+                }
+        }
         storage.getLogFailedHome().insert(entry);
     }
 
@@ -127,6 +157,23 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void logFailed(Execution<Long> execution, Level level, String modul,
             Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
+
+        if (logFileWriter != null) {
+            try {
+                if (mdr != null) {
+                    logFileWriter.log(execution, Level.WARNING,
+                            "Failed messages for MetadataRecord " + mdr.getId()+"...");
+                }
+                if (throwable!=null) {
+                    logFileWriter.log(execution,Level.WARNING, "Exception: "+throwable.getMessage());
+                }
+                for (String message : messages)
+                    logFileWriter.log(execution, level, modul + " FAILED: " + message + "");
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
+        }
+        
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr.getId(), messages);
         storage.getLogFailedHome().insert(entry);
@@ -145,42 +192,42 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logLink(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr, String link, int status,
-            String... messages) {
-        TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr.getId(), link, new Date(),
-                status, messages);
+    public void logLink(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
+            String link, int status, String... messages) {
+        TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr.getId(), link,
+                new Date(), status, messages);
         storage.getLogLinkHome().insert(entry);
     }
 
     @Override
-    public void logLink(Execution<Long> execution, IngestionPlugin plugin, MetaDataRecord<Long> mdr, String link,
-            int status, String... messages) {
+    public void logLink(Execution<Long> execution, IngestionPlugin plugin,
+            MetaDataRecord<Long> mdr, String link, int status, String... messages) {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, messages);
     }
 
-
     @Override
-    public void logField(String modul, String field, String qualifier, int status, String... messages) {
-        TLogEntryField entry = new TLogEntryField(modul, field, qualifier, new Date(), status, messages);
-        storage.getLogFieldHome().insert(entry);
-    }
-
-    @Override
-    public void logField(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr, String field, String qualifier, int status,
+    public void logField(String modul, String field, String qualifier, int status,
             String... messages) {
-        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr.getId(), field, qualifier, new Date(),
-                status, messages);
+        TLogEntryField entry = new TLogEntryField(modul, field, qualifier, new Date(), status,
+                messages);
         storage.getLogFieldHome().insert(entry);
     }
 
     @Override
-    public void logField(Execution<Long> execution, IngestionPlugin plugin, MetaDataRecord<Long> mdr, String field, String qualifier,
-            int status, String... messages) {
+    public void logField(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
+            String field, String qualifier, int status, String... messages) {
+        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr.getId(), field,
+                qualifier, new Date(), status, messages);
+        storage.getLogFieldHome().insert(entry);
+    }
+
+    @Override
+    public void logField(Execution<Long> execution, IngestionPlugin plugin,
+            MetaDataRecord<Long> mdr, String field, String qualifier, int status,
+            String... messages) {
         logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, messages);
     }
 
-
-    
     @Override
     public void logDuration(Execution<Long> execution, String modul, Long duration) {
         TLogEntryDuration entry = new TLogEntryDuration(modul, new Date(), duration);
@@ -197,32 +244,35 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
         List<LoggingEngine.LogEntry<Long>> result = new ArrayList<LoggingEngine.LogEntry<Long>>();
         List<TLogEntry> entries = storage.getLogHome().findByExecution(execution.getId());
         for (TLogEntry entry : entries) {
-                result.add(entry);
+            result.add(entry);
         }
         return result;
     }
 
     @Override
-    public List<LoggingEngine.LogEntryFailed<Long>> getFailedLogs(
-            Execution<Long> execution) {
+    public List<LoggingEngine.LogEntryFailed<Long>> getFailedLogs(Execution<Long> execution) {
         List<LoggingEngine.LogEntryFailed<Long>> result = new ArrayList<LoggingEngine.LogEntryFailed<Long>>();
-        List<TLogEntryFailed> entries = storage.getLogFailedHome().findByExecution(execution.getId());
+        List<TLogEntryFailed> entries = storage.getLogFailedHome().findByExecution(
+                execution.getId());
         for (TLogEntryFailed entry : entries) {
-                result.add(entry);
+            result.add(entry);
         }
         return result;
     }
 
     @Override
-    public List<LoggingEngine.LogEntryLink<Long>> getLinkLogs(
-            Execution<Long> execution) {
+    public List<LoggingEngine.LogEntryLink<Long>> getLinkLogs(Execution<Long> execution) {
         List<LoggingEngine.LogEntryLink<Long>> result = new ArrayList<LoggingEngine.LogEntryLink<Long>>();
         List<TLogEntryLink> entries = storage.getLogLinkHome().findByExecution(execution.getId());
         for (TLogEntryLink entry : entries) {
-                result.add(entry);
+            result.add(entry);
         }
         return result;
     }
 
+    @Override
+    public String getLogFile(Execution<Long> execution) {
+        return "";
+    }
 
 }

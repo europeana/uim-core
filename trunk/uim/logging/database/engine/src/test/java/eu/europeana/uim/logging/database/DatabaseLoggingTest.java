@@ -18,7 +18,7 @@ public class DatabaseLoggingTest extends AbstractLoggingEngineTest {
     protected LoggingEngine<Long> getLoggingEngine() {
         DatabaseLoggingEngine loggingEngine = 
             new DatabaseLoggingEngine();
+        
         return loggingEngine;
     }
-
 }
