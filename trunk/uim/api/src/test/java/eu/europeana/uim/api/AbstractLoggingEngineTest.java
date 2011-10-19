@@ -60,6 +60,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingExecution() {
         @SuppressWarnings("unchecked")
         Execution<Long> execution = mock(Execution.class);
+        when(execution.getId()).thenReturn(1L);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
 
         engine.log(execution, Level.INFO, "test", "a0", "b", "c");
@@ -78,6 +79,7 @@ public abstract class AbstractLoggingEngineTest {
     @SuppressWarnings("unchecked")
     public void testLoggingFailed() {
         Execution<Long> execution = mock(Execution.class);
+        when(execution.getId()).thenReturn(1L);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
@@ -108,6 +110,7 @@ public abstract class AbstractLoggingEngineTest {
     @SuppressWarnings("unchecked")
     public void testLoggingLink() {
         Execution<Long> execution = mock(Execution.class);
+        when(execution.getId()).thenReturn(1L);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);

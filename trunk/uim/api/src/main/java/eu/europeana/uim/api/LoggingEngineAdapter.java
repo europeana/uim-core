@@ -148,4 +148,9 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         return result.toString();
     }
 
+    @Override
+    public String getLogFile(Execution<I> execution) {
+        return null;
+    }
+
 }

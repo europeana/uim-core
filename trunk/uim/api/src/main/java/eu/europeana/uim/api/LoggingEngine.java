@@ -359,6 +359,13 @@ public interface LoggingEngine<I> {
     List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
 
     /**
+     * 
+     * @param execution
+     * @return gets the execution specific log filename. 
+     */
+    String getLogFile(Execution<I> execution);
+    
+    /**
      * @param <I>
      * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
