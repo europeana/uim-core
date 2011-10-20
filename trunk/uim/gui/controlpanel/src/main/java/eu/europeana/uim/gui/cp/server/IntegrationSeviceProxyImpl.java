@@ -197,7 +197,7 @@ public class IntegrationSeviceProxyImpl extends
 	 *            a SugarCRM query result object
 	 * @return a GWT object
 	 * @throws StorageEngineException
-	 */
+	 */	
 	private List<SugarCRMRecordDTO> convertSugarObj2GuiObj(
 			ArrayList<SugarCrmRecord> toconvert) throws StorageEngineException {
 		ArrayList<SugarCRMRecordDTO> converted = new ArrayList<SugarCRMRecordDTO>();
@@ -402,8 +402,6 @@ public class IntegrationSeviceProxyImpl extends
 			}
 		}
 
-		ret.setRepoxID(provider);
-		ret.setSugarCRMID(collection);
 
 		return ret;
 
