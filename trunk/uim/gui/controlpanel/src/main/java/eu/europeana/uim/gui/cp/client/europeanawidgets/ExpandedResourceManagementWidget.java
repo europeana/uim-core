@@ -23,6 +23,7 @@ package eu.europeana.uim.gui.cp.client.europeanawidgets;
 import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
@@ -174,7 +176,13 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	 * @param status
 	 */
 	private void generateIntergationInfoPanel(IntegrationStatusDTO status){
-    	integrationTable.clear();
+
+		integrationTable.clear();
+		
+	    // Create a tab panel
+	    TabLayoutPanel tabPanel = new TabLayoutPanel(2.5, Unit.EM);
+	    tabPanel.setAnimationDuration(1000);
+	    tabPanel.getElement().getStyle().setMarginBottom(10.0, Unit.PX);
 
 
 		if(!status.getType().equals(TYPE.UNIDENTIFIED)){

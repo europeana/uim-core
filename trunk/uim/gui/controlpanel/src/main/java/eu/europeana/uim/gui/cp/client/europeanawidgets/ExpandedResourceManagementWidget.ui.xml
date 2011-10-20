@@ -1,55 +1,92 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
-    xmlns:c='urn:import:com.google.gwt.user.cellview.client' xmlns:s="urn:import:eu.europeana.uim.gui.cp.client.management">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c='urn:import:com.google.gwt.user.cellview.client'
+	xmlns:s="urn:import:eu.europeana.uim.gui.cp.client.management">
 
-    <ui:style>
-        .splitPanel {
-            height: 100%;
-            width: 100%;
-            min-width: 500px;
-            min-height: 500px;
-            border: 4px solid #d0e4f6;
-        }
-        
-        .executionFormCell {
-            padding-top: 20px;
-        }
-        
-        .cellBrowser {
-            background-color: #FFF;
-        }
-        
-        .cellTable {
-            min-width: 400px;
-            background-color: #FFF;
-        }
+	<ui:style>
+		.splitPanel {
+		height: 100%;
+		width: 100%;
+		min-width: 500px;
+		min-height: 500px;
+		border: 4px solid #d0e4f6;
+		}
+
+		.executionFormCell {
+		padding-top: 20px;
+		}
+
+		.cellBrowser {
+		background-color: #FFF;
+		}
+
+		.cellTable {
+		min-width: 400px;
+		background-color: #FFF;
+		}
     </ui:style>
 
-    <g:HTMLPanel>
-        <table cellspacing='0' cellpadding='0' style='width:100%;'>
-            <tr>
-                <td valign='top'>
-                    <g:SplitLayoutPanel addStyleNames="{style.splitPanel}">
-                        <g:west size="500">
-                            <g:LayoutPanel>
-                                <g:layer>
-                                    <c:CellBrowser ui:field="cellBrowser" addStyleNames="{style.cellBrowser}" />
-                                </g:layer>
-                            </g:LayoutPanel>
-                        </g:west>
-                        <g:center size="250">
-                            <g:ScrollPanel>
-                                <c:CellTable ui:field="cellTable" addStyleNames="{style.cellTable}" />
-                            </g:ScrollPanel>
-                        </g:center>
-                        <g:south size="250">
-                            <g:ScrollPanel>
-                                <g:FlexTable ui:field="integrationTable" addStyleNames="{style.cellTable}" />
-                            </g:ScrollPanel>
-                        </g:south>
-                    </g:SplitLayoutPanel>
-                </td>
-            </tr>
-        </table>
-    </g:HTMLPanel>
+	<g:HTMLPanel>
+		<table cellspacing='0' cellpadding='0' style='width:100%;'>
+			<tr>
+				<td valign='top'>
+					<g:SplitLayoutPanel addStyleNames="{style.splitPanel}">
+						<g:west size="500">
+							<g:LayoutPanel>
+								<g:layer>
+									<c:CellBrowser ui:field="cellBrowser"
+										addStyleNames="{style.cellBrowser}" />
+								</g:layer>
+							</g:LayoutPanel>
+						</g:west>
+						<g:center size="250">
+							<g:ScrollPanel>
+								<c:CellTable ui:field="cellTable" addStyleNames="{style.cellTable}" />
+							</g:ScrollPanel>
+						</g:center>
+						<g:south size="250">
+
+							<g:TabLayoutPanel ui:field="tabPanel" barUnit="PX" barHeight="60" width="375px"
+								height="150px">
+								<g:tab>
+									<g:header>
+										UiBinder Tab 1
+                                    </g:header>
+
+									<g:ScrollPanel>
+										<g:FlexTable ui:field="integrationTable"
+											addStyleNames="{style.cellTable}" />
+									</g:ScrollPanel>
+
+								</g:tab>
+								<g:tab>
+									<g:header>
+										UiBinder Tab 2
+                                    </g:header>
+									<g:HTML>
+										<h2>Hello tab 2</h2>
+									</g:HTML>
+								</g:tab>
+								<g:tab>
+									<g:header>
+										UiBinder Tab 3
+                                    </g:header>
+									<g:HTML>
+										<strong>
+											<i>
+												<u>Hello tab number 3</u>
+											</i>
+										</strong>
+									</g:HTML>
+								</g:tab>
+							</g:TabLayoutPanel>
+
+
+
+						</g:south>
+					</g:SplitLayoutPanel>
+				</td>
+			</tr>
+		</table>
+	</g:HTMLPanel>
 </ui:UiBinder>
