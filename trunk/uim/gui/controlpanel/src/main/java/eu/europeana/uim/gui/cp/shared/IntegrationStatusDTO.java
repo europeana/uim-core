@@ -49,6 +49,13 @@ public class IntegrationStatusDTO implements IsSerializable {
 	
 	private String info;
 
+	private String state;
+	
+	private String repoxURL;
+	
+	private String sugarURL;
+	
+	
 	/**
 	 * @param id the id to set
 	 */
@@ -131,6 +138,48 @@ public class IntegrationStatusDTO implements IsSerializable {
 	 */
 	public String getInfo() {
 		return info;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public String getState() {
+		return state;
+	}
+
+	/**
+	 * @param repoxURL the repoxURL to set
+	 */
+	public void setRepoxURL(String repoxURL) {
+		this.repoxURL = repoxURL;
+	}
+
+	/**
+	 * @return the repoxURL
+	 */
+	public String getRepoxURL() {
+		return repoxURL;
+	}
+
+	/**
+	 * @param sugarURL the sugarURL to set
+	 */
+	public void setSugarURL(String sugarURL) {
+		this.sugarURL = sugarURL;
+	}
+
+	/**
+	 * @return the sugarURL
+	 */
+	public String getSugarURL() {
+		return sugarURL;
 	}
 	
 	

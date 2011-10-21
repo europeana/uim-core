@@ -33,9 +33,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -44,7 +41,6 @@ import eu.europeana.uim.gui.cp.client.management.ResourceManagementWidget;
 import eu.europeana.uim.gui.cp.client.services.IntegrationSeviceProxyAsync;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
-import eu.europeana.uim.gui.cp.client.utils.EuropeanaClientConstants;
 import eu.europeana.uim.gui.cp.client.utils.RepoxOperationType;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO;
 import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
@@ -63,6 +59,9 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 	@UiField(provided = true)
 	public FlexTable integrationTable;
+	
+	@UiField
+	public TabLayoutPanel tabInfoSubPanel;
 	
 	public DialogBox operationDialog;
 	
@@ -100,6 +99,10 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 	 */
 	@Override
     public Widget postInitialize(){
+		
+		tabInfoSubPanel = new TabLayoutPanel(2.5, Unit.PCT);
+		tabInfoSubPanel.setAnimationDuration(1000);
+		tabInfoSubPanel.getElement().getStyle().setMarginBottom(10.0, Unit.PX);
 		
 		integrationTable = new FlexTable();
 		operationDialog = createOperationsDialogBox();
@@ -186,7 +189,9 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 
 		if(!status.getType().equals(TYPE.UNIDENTIFIED)){
-    		            	
+    		
+		tabInfoSubPanel.setVisible(true);	
+			
     	integrationTable.setWidget(0, 0, new HTML("Type:"));
     	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
     	
@@ -196,7 +201,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     	integrationTable.setWidget(2, 0, new HTML("Identifier:"));
     	integrationTable.setWidget(2, 1, new HTML(status.getId()));
     	
-    	integrationTable.setWidget(3, 0, new HTML("SugarCRM Status:"));
+    	integrationTable.setWidget(3, 0, new HTML("SugarCRM Link:"));
     	
     	if(status.getSugarCRMID() == null){
     		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
@@ -207,7 +212,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     	}
 
     	
-    	integrationTable.setWidget(4, 0, new HTML("Repox Status:"));
+    	integrationTable.setWidget(4, 0, new HTML("Repox Link:"));
     	
     	if(status.getRepoxID() == null){
     		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
@@ -217,7 +222,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     		//integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
     	}
     	
-    	  if(status.getType().equals(TYPE.COLLECTION)){
+    	  if(status.getType().equals(TYPE.COLLECTION)  ){
           	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
           	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().getDescription()));
           	
@@ -232,6 +237,9 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     	  }
 	
     	}
+		else{
+			tabInfoSubPanel.setVisible(false);	
+		}
 	}
 	
 	

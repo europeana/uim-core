@@ -46,11 +46,11 @@
 						</g:center>
 						<g:south size="250">
 
-							<g:TabLayoutPanel ui:field="tabPanel" barUnit="PX" barHeight="60" width="375px"
-								height="150px">
+							<g:TabLayoutPanel ui:field="tabInfoSubPanel" barUnit="PCT" barHeight="10" width="100%"
+								height="100%">
 								<g:tab>
 									<g:header>
-										UiBinder Tab 1
+										Resource Information
                                     </g:header>
 
 									<g:ScrollPanel>
@@ -61,15 +61,7 @@
 								</g:tab>
 								<g:tab>
 									<g:header>
-										UiBinder Tab 2
-                                    </g:header>
-									<g:HTML>
-										<h2>Hello tab 2</h2>
-									</g:HTML>
-								</g:tab>
-								<g:tab>
-									<g:header>
-										UiBinder Tab 3
+										Available Operations
                                     </g:header>
 									<g:HTML>
 										<strong>
@@ -80,8 +72,6 @@
 									</g:HTML>
 								</g:tab>
 							</g:TabLayoutPanel>
-
-
 
 						</g:south>
 					</g:SplitLayoutPanel>

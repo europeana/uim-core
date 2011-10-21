@@ -317,7 +317,7 @@ public class IntegrationSeviceProxyImpl extends
 		ExpandedOsgiEngine engine = getEngine();
 
 		RepoxUIMService repoxService = engine.getRepoxService();
-
+		
 		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
 
 		IntegrationStatusDTO ret = new IntegrationStatusDTO();
@@ -334,9 +334,16 @@ public class IntegrationSeviceProxyImpl extends
 					Provider<?> prov = stengine.findProvider(provider);
 					ret.setType(TYPE.PROVIDER);
 					ret.setId(provider);
+					ret.setInfo(prov.getName());
+					
+
+					
+					
 					ret.setSugarCRMID(prov.getValue("sugarCRMID"));
 					ret.setRepoxID(prov.getValue("repoxID"));
-					ret.setInfo(prov.getName());
+
+					
+					
 
 				} catch (StorageEngineException e) {
 
@@ -349,6 +356,9 @@ public class IntegrationSeviceProxyImpl extends
 					Collection<?> col = stengine.findCollection(collection);
 					ret.setType(TYPE.COLLECTION);
 					ret.setId(collection);
+					
+					ret.setState(col.getValue("state"));
+					
 					ret.setSugarCRMID(col.getValue("sugarCRMID"));
 					ret.setRepoxID(col.getValue("repoxID"));
 					ret.setInfo(col.getName());
@@ -471,10 +481,7 @@ public class IntegrationSeviceProxyImpl extends
 			try {
 				
 				ScheduleInfo info = new ScheduleInfo();
-				
-				
-				
-				
+
 				repoxService.scheduleHarvestingfromUIMObj(coll, info );
 				result.setOperationMessage("Successfully Performed Scheduling for given dataset "); 
 				result.setLogMessage("Harvesting Date: " + ingestionDate.toString());
