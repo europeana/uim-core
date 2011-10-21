@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.ActionCell;
 import com.google.gwt.cell.client.DateCell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
@@ -34,6 +35,7 @@ import com.google.gwt.widgetideas.client.ProgressBar;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
+import eu.europeana.uim.gui.cp.shared.ProgressDTO;
 
 /**
  * Table view showing current exectuions.
@@ -220,6 +222,7 @@ public class IngestionDetailWidget extends IngestionWidget {
         cellTable.addColumn(startTimeColumn, "Start Time");
         cellTable.setColumnWidth(startTimeColumn, 30, Unit.PCT);
 
+        
         // Progress Bar
         Column<ExecutionDTO, FlowPanel> progressColumn = new Column<ExecutionDTO, FlowPanel>(
                 new FlowPanelCell()) {
@@ -253,8 +256,27 @@ public class IngestionDetailWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(progressColumn, "Progress");
-        cellTable.setColumnWidth(progressColumn, 35, Unit.PCT);
+        cellTable.setColumnWidth(progressColumn, 30, Unit.PCT);
 
+      //Log file
+        
+        Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
+                new ActionCell<ExecutionDTO>("Log", new ActionCell.Delegate<ExecutionDTO>() {
+                    @Override
+                    public void execute(ExecutionDTO parameter) {
+                        com.google.gwt.user.client.Window.open(GWT.getModuleBaseURL() + "logfile?format=html&execution=" + parameter.getId(),"_blank",""); 
+                    }
+                })) {
+            @Override
+            public ExecutionDTO getValue(ExecutionDTO object) {
+                return object;
+            }
+        };
+        
+        
+        cellTable.addColumn(logfileColumn,"Log");
+        cellTable.setColumnWidth(logfileColumn,5,Unit.PCT);
+        
         updateActiveExecutions();
 
         Timer t = new Timer() {
