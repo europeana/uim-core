@@ -30,7 +30,6 @@ import com.google.gwt.view.client.SelectionModel;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
-import eu.europeana.uim.gui.cp.shared.ProgressDTO;
 
 /**
  * Table view showing current exectuions.
@@ -305,13 +304,15 @@ public class IngestionHistoryWidget extends IngestionWidget {
         cellTable.addColumn(scheduledColumn, "Scheduled");
         cellTable.setColumnWidth(scheduledColumn, 6, Unit.PCT);
 
-         //Log file
-        
+        // Log file
+
         Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
                 new ActionCell<ExecutionDTO>("Log", new ActionCell.Delegate<ExecutionDTO>() {
                     @Override
                     public void execute(ExecutionDTO parameter) {
-                        com.google.gwt.user.client.Window.open(GWT.getModuleBaseURL() + "logfile?format=html&execution=" + parameter.getId(),"_blank",""); 
+                        com.google.gwt.user.client.Window.open(GWT.getModuleBaseURL() +
+                                                               "logfile?format=html&execution=" +
+                                                               parameter.getId(), "_blank", "");
                     }
                 })) {
             @Override
@@ -319,11 +320,10 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 return object;
             }
         };
-        
-        
-        cellTable.addColumn(logfileColumn,"Log");
-        cellTable.setColumnWidth(logfileColumn,4,Unit.PCT);
-        
+
+        cellTable.addColumn(logfileColumn, "Log");
+        cellTable.setColumnWidth(logfileColumn, 4, Unit.PCT);
+
         updatePastExecutions();
     }
 }

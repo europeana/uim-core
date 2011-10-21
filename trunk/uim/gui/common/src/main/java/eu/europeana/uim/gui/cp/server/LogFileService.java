@@ -17,16 +17,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gwt.core.client.GWT;
-
 import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.gui.cp.server.engine.Engine;
 import eu.europeana.uim.store.bean.ExecutionBean;
 
 /**
  * Servlet to deliver the logfile for an execution. Allows a head command to skip the beginning of a
  * file
+ * 
+ * Make sure, that this service is added to your web.xml, e.g. {@code
+ * <servlet>
+ *  <servlet-name>logFileService</servlet-name>
+ *  <servlet-class>eu.europeana.uim.gui.cp.server.LogFileService</servlet-class> 
+ * </servlet>
+ * <servlet-mapping> 
+ *  <servlet-name>logFileService</servlet-name>
+ *  <url-pattern>/TelIngestionControlPanel/logfile</url-pattern> 
+ *  </servlet-mapping>
+ * }
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Oct 20, 2011
@@ -116,8 +124,6 @@ public class LogFileService extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-
-            FileReader fileReader = new FileReader(logFileHandler);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(logFileHandler));
             response.addHeader("X-Last-File-Pos-Sent", String.valueOf(logFileHandler.length()));
             // set response header
@@ -181,18 +187,16 @@ public class LogFileService extends HttpServlet {
      * @param thisLine
      */
     private void colorizedLogEntry(PrintWriter out, String thisLine) {
-        String color=null;
+        String color = null;
         if (thisLine.contains(Level.WARNING.getName())) {
             color = "#0000FF";
         } else if (thisLine.contains(Level.SEVERE.getName())) {
             color = "#FF0000";
         }
-        if (color==null) {
-            out.write("<div><code>" + thisLine +
-            "</code></div>"); 
+        if (color == null) {
+            out.write("<div><code>" + thisLine + "</code></div>");
         } else {
-        out.write("<div style=\"color:" + color + ";\"><code>" + thisLine +
-                  "</code></div>");
+            out.write("<div style=\"color:" + color + ";\"><code>" + thisLine + "</code></div>");
         }
     }
 
