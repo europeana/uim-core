@@ -1,5 +1,6 @@
 package eu.europeana.uim.orchestration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -17,6 +18,7 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.ExecutionLogFileWriter;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.Collection;
@@ -33,15 +35,15 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * for each different workflow. When a new request for workflow execution comes in, the
  * WorkflowProcessor for the Workflow is retrieved, or created if it does not exist.
  * 
- * @param <I> 
- *
+ * @param <I>
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public class UIMOrchestrator<I> implements Orchestrator<I> {
-    private static Logger              log = Logger.getLogger(UIMOrchestrator.class.getName());
+    private static Logger                 log = Logger.getLogger(UIMOrchestrator.class.getName());
 
-    private final Registry             registry;
+    private final Registry                registry;
     private final UIMWorkflowProcessor<I> processor;
 
     /**
@@ -93,36 +95,53 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public ActiveExecution<I> executeWorkflow(Workflow w, UimDataSet<I> dataset, Properties properties) {
+    public ActiveExecution<I> executeWorkflow(Workflow w, UimDataSet<I> dataset,
+            Properties properties) {
         setupProperties(w, dataset, properties);
 
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
-        monitor.beginTask(w.getName(), 1);
 
         try {
             StorageEngine<I> storageEngine = (StorageEngine<I>)registry.getStorageEngine();
             LoggingEngine<I> loggingEngine = (LoggingEngine<I>)registry.getLoggingEngine();
             ResourceEngine resourceEngine = registry.getResourceEngine();
+
+            ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
+                    resourceEngine.getWorkingDirectory().getCanonicalPath());
             
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
+            e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
+            
+            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e,
+                    loggingEngine, executionLogFileWriter);
+
+            // also add the logfile listener to the monitor to log the progres
+            monitor.addListener(loggingFacadeEngine);
+
+            monitor.beginTask(w.getName(), 1);
+
             e.setActive(true);
             e.setStartTime(new Date());
             storageEngine.updateExecution(e);
 
             try {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
-                        storageEngine, loggingEngine,
-                        resourceEngine, properties, monitor);
+                        storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
 
                 if (loggingEngine != null)
-                    loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start", "Started:" + activeExecution.getExecution().getName());
+                    loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start",
+                            "Started:" + activeExecution.getExecution().getName());
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
             }
         } catch (StorageEngineException e1) {
             log.log(Level.SEVERE, "Could not update execution details: " + e1.getMessage(), e1);
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            log.log(Level.SEVERE,
+                    "I/O error while setting up the logging engine: " + e1.getMessage(), e1);
             e1.printStackTrace();
         }
         return null;
@@ -134,17 +153,17 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
         if (resourceEngine != null) {
             Collection collection = null;
             Provider provider = null;
-            if (dataset instanceof MetaDataRecord<?>){
+            if (dataset instanceof MetaDataRecord<?>) {
                 collection = ((MetaDataRecord<?>)dataset).getCollection();
                 provider = collection.getProvider();
             } else if (dataset instanceof Request<?>) {
                 collection = ((Request<?>)dataset).getCollection();
                 provider = collection.getProvider();
-            } else if (dataset instanceof Collection<?>){
+            } else if (dataset instanceof Collection<?>) {
                 collection = ((Collection<?>)dataset);
                 provider = collection.getProvider();
             }
-            
+
             List<String> params = new ArrayList<String>();
             WorkflowStart start = w.getStart();
             params.addAll(start.getParameters());
@@ -163,9 +182,10 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                     }
                 }
             }
-            
+
             if (provider != null) {
-                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(provider, params);
+                LinkedHashMap<String, List<String>> providerResources = resourceEngine.getProviderResources(
+                        provider, params);
                 if (providerResources != null && providerResources.size() > 0) {
                     for (Entry<String, List<String>> entry : providerResources.entrySet()) {
                         if (entry.getValue() != null) {
@@ -186,7 +206,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                     }
                 }
             }
-            
+
             for (Entry<String, List<String>> entry : globalResources.entrySet()) {
                 if (!properties.containsKey(entry.getKey())) {
                     if (entry.getValue() != null) {

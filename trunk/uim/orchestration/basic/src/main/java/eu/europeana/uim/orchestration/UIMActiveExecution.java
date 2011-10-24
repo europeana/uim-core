@@ -52,7 +52,6 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     public static String                      KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
     private static Logger                     log                                = Logger.getLogger(UIMActiveExecution.class.getName());
-
     private HashMap<String, LinkedList<Task<I>>> success                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, LinkedList<Task<I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, HashSet<Task<I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<I>>>();
