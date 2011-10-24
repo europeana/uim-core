@@ -357,13 +357,6 @@ public interface LoggingEngine<I> {
      * @return the list of failed log entries for the execution
      */
     List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
-
-    /**
-     * 
-     * @param execution
-     * @return gets the execution specific log filename. 
-     */
-    String getLogFile(Execution<I> execution);
     
     /**
      * @param <I>
