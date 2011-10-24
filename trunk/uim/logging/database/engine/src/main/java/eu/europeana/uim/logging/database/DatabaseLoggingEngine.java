@@ -1,7 +1,5 @@
 package eu.europeana.uim.logging.database;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +32,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     private static final Logger          log = Logger.getLogger(DatabaseLoggingEngine.class.getName());
 
     private DatabaseLoggingStorage       storage;
-    private ExecutionLogFileWriter<Long> logFileWriter;
 
     /**
      * Creates a new instance of this class. The default constructor is used to initialize the
@@ -42,7 +39,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
      */
     public DatabaseLoggingEngine() {
         BlockingInitializer initializer = new BlockingInitializer() {
-            @SuppressWarnings("unchecked")
             @Override
             public void initializeInternal() {
                 try {
@@ -58,9 +54,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
                     storage = (DatabaseLoggingStorage)context.getAutowireCapableBeanFactory().autowire(
                             DatabaseLoggingStorage.class,
                             AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
-
-                    logFileWriter = (ExecutionLogFileWriter<Long>)context.getBean("executionLogFileWriter");
-
                     status = STATUS_INITIALIZED;
                 } catch (Throwable t) {
                     log.log(java.util.logging.Level.SEVERE,
@@ -92,14 +85,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void log(Execution<Long> execution, Level level, String modul, String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, modul, new Date(), messages);
-        if (logFileWriter != null) {
-            for (String message : messages)
-                try {
-                    logFileWriter.log(execution, level, modul + ": " + message);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
-        }
         storage.getLogHome().insert(entry);
     }
 
@@ -108,14 +93,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, plugin.getIdentifier(),
                 new Date(), messages);
-        if (logFileWriter != null) {
-            for (String message : messages)
-                try {
-                    logFileWriter.log(execution, level, plugin.getName() + " Plugin: " + message);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
-        }
         storage.getLogHome().insert(entry);
     }
 
@@ -137,14 +114,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             Throwable throwable, String... messages) {
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
-        if (logFileWriter != null) {
-            for (String message : messages)
-                try {
-                    logFileWriter.log(execution, level, modul + " FAILED: " + message);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
-        }
         storage.getLogFailedHome().insert(entry);
     }
 
@@ -157,22 +126,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void logFailed(Execution<Long> execution, Level level, String modul,
             Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
-
-        if (logFileWriter != null) {
-            try {
-                if (mdr != null) {
-                    logFileWriter.log(execution, Level.WARNING,
-                            "Failed messages for MetadataRecord " + mdr.getId()+"...");
-                }
-                if (throwable!=null) {
-                    logFileWriter.log(execution,Level.WARNING, "Exception: "+throwable.getMessage());
-                }
-                for (String message : messages)
-                    logFileWriter.log(execution, level, modul + " FAILED: " + message + "");
-            } catch (IOException e) {
-                throw new RuntimeException("Error while writing log message", e);
-            }
-        }
         
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr.getId(), messages);
@@ -268,11 +221,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             result.add(entry);
         }
         return result;
-    }
-
-    @Override
-    public String getLogFile(Execution<Long> execution) {
-        return "";
     }
 
 }
