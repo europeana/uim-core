@@ -28,6 +28,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     private int        success;
     private int        failure;
     private int        processed;
+    private String     logFile;
 
     private Map<String, String> values = new HashMap<String, String>();
 
@@ -196,4 +197,16 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
         return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
                workflowIdentifier + ", dataSet=" + dataSet + "]";
     }
+
+    @Override
+    public String getLogFile() {
+        return logFile;
+    }
+
+    @Override
+    public void setLogFile(String logfile) {
+        this.logFile=logfile;
+    }
+    
+    
 }

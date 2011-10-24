@@ -3,7 +3,6 @@ package eu.europeana.uim.store;
 import java.util.Date;
 import java.util.Map;
 
-
 /**
  * Interface for executions to retrieve information about start, end or cancellation time and the
  * data set to be worked on and the used workflow.
@@ -134,7 +133,7 @@ public interface Execution<I> extends UimEntity<I> {
      *            amount of scheduled ones
      */
     void setProcessedCount(int number);
-    
+
     /**
      * string key,value pairs for arbitrary information on execution level
      * 
@@ -166,10 +165,20 @@ public interface Execution<I> extends UimEntity<I> {
      * @return the string value or null
      */
     String getValue(ControlledVocabularyKeyValue key);
-    
+
     /**
      * @return the values map
      */
     Map<String, String> values();
-    
+
+    /**
+     * @return the path to the log file
+     */
+    String getLogFile();
+
+    /**
+     * @param logfile
+     */
+    void setLogFile(String logfile);
+
 }
