@@ -488,12 +488,4 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             return mdr != null ? mdr.getId() : null;
         }
     }
-
-
-
-    @Override
-    public String getLogFile(Execution<I> execution) {
-        //do not support writing to the log file
-        return null;
-    }
 }
