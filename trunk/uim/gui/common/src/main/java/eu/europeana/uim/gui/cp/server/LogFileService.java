@@ -18,8 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.server.engine.Engine;
-import eu.europeana.uim.store.bean.ExecutionBean;
+import eu.europeana.uim.store.Execution;
 
 /**
  * Servlet to deliver the logfile for an execution. Allows a head command to skip the beginning of a
@@ -62,8 +64,6 @@ public class LogFileService extends HttpServlet {
             return;
         }
 
-        ExecutionBean<Long> executionBean = new ExecutionBean<Long>();
-
         Long id = 0L;
         String executionParm = request.getParameter("execution");
         if (executionParm == null) {
@@ -97,19 +97,22 @@ public class LogFileService extends HttpServlet {
             htmlOutput = true;
         }
 
-        executionBean.setId(id);
         @SuppressWarnings("unchecked")
-        String logFile = loggingEngine.getLogFile(executionBean);
+        StorageEngine<Long> storageEngine = (StorageEngine<Long>)engine.getRegistry().getStorageEngine();
+        Execution<Long> execution;
+        try {
+            execution = storageEngine.getExecution(id);
+        } catch (StorageEngineException e) {
+            throw new RuntimeException("Could not retrieve execution from storage engine", e);
+        }
+        String logFile=execution.getLogFile();
         System.out.println("called!");
         if (logFile == null) {
             // the logging engine does not support logging
             // send demo data
             File tmpFile = File.createTempFile("demouim", "log");
-            writeDemoData(executionBean, tmpFile);
+            writeDemoData(execution, tmpFile);
             logFile = tmpFile.getCanonicalPath();
-// response.sendError(501, "LoggingEngine " + loggingEngine.getIdentifier() +
-// " does not support log file writing");
-// return;
         }
 
         File logFileHandler = new File(logFile);
@@ -205,7 +208,7 @@ public class LogFileService extends HttpServlet {
      * @param tmpFile
      * @throws IOException
      */
-    private void writeDemoData(ExecutionBean<Long> executionBean, File tmpFile) throws IOException {
+    private void writeDemoData(Execution<Long> executionBean, File tmpFile) throws IOException {
         FileWriter fstream = new FileWriter(tmpFile);
         BufferedWriter out = new BufferedWriter(fstream);
         out.write(new Date() + "|" + Level.SEVERE.getName() + "|Dummy log for execution " +
