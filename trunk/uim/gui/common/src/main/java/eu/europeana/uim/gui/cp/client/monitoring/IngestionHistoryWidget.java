@@ -149,6 +149,23 @@ public class IngestionHistoryWidget extends IngestionWidget {
      */
     private void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
+        // ID
+        Column<ExecutionDTO, String> idColumn = new Column<ExecutionDTO, String>(new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return object.getId().toString();
+            }
+        };
+        idColumn.setSortable(true);
+        sortHandler.setComparator(idColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        cellTable.addColumn(idColumn, "ID");
+        cellTable.setColumnWidth(idColumn, 5, Unit.PCT);
+        
         // Name
         Column<ExecutionDTO, String> nameColumn = new Column<ExecutionDTO, String>(new TextCell()) {
             @Override
@@ -248,7 +265,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
         };
         doneColumn.setSortable(false);
         cellTable.addColumn(doneColumn, "Canceled");
-        cellTable.setColumnWidth(doneColumn, 7, Unit.PCT);
+        cellTable.setColumnWidth(doneColumn, 5, Unit.PCT);
 
         // Completed
         Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(
@@ -266,7 +283,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(completedColumn, "Completed");
-        cellTable.setColumnWidth(completedColumn, 6, Unit.PCT);
+        cellTable.setColumnWidth(completedColumn, 5, Unit.PCT);
 
         // Failure
         Column<ExecutionDTO, String> failureColumn = new Column<ExecutionDTO, String>(
@@ -284,7 +301,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(failureColumn, "Failure");
-        cellTable.setColumnWidth(failureColumn, 6, Unit.PCT);
+        cellTable.setColumnWidth(failureColumn, 5, Unit.PCT);
 
         // Scheduled
         Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
@@ -302,10 +319,9 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(scheduledColumn, "Scheduled");
-        cellTable.setColumnWidth(scheduledColumn, 6, Unit.PCT);
+        cellTable.setColumnWidth(scheduledColumn, 5, Unit.PCT);
 
         // Log file
-
         Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
                 new ActionCell<ExecutionDTO>("Log", new ActionCell.Delegate<ExecutionDTO>() {
                     @Override
