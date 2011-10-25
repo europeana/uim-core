@@ -16,7 +16,7 @@
         }
         
         .value {
-        	width: 100%;
+        	width: 99%;
         }
         
         .decorator {
@@ -119,13 +119,9 @@
             </tr>
             <tr>
                 <td colspan='2' align='center'>
-                    <g:Button ui:field='pauseButton'>
-<!--                         <ui:msg key='contactDetailPauseButton'>Pause</ui:msg> -->
-                    </g:Button>
+                    <g:Button ui:field='pauseButton' />
                     &nbsp;
-                    <g:Button ui:field='cancelButton'>
-<!--                         <ui:msg key='contactDetailCancelButton'>Cancel</ui:msg> -->
-                    </g:Button>
+                    <g:Button ui:field='cancelButton' />
                 </td>
             </tr>
         </table>

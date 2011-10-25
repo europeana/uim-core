@@ -41,7 +41,7 @@
         </g:north>
 
         <g:center>
-            <g:SimpleLayoutPanel ui:field='contentPanel' />
+            <g:ScrollPanel ui:field='contentPanel' />
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder> 

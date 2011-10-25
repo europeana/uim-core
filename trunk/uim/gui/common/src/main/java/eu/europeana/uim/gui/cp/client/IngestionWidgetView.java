@@ -6,7 +6,7 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.ResizeComposite;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -28,7 +28,7 @@ public class IngestionWidgetView extends ResizeComposite {
     Element                                           descElem;
 
     @UiField
-    SimpleLayoutPanel                                 contentPanel;
+    ScrollPanel                                 contentPanel;
 
     /**
      * Creates a new instance of this class.

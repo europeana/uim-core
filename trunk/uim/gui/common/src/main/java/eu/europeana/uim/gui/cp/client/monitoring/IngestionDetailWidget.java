@@ -23,8 +23,6 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.LayoutPanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -51,15 +49,6 @@ public class IngestionDetailWidget extends IngestionWidget {
 
     private final ExecutionServiceAsync executionService;
     private final List<ExecutionDTO>    activeExecutions = new ArrayList<ExecutionDTO>();
-
-    @UiField
-    SplitLayoutPanel                    splitPanel;
-
-    @UiField
-    LayoutPanel                         leftPanel;
-
-    @UiField
-    LayoutPanel                         rightPanel;
 
     /**
      * The main CellTable.
@@ -200,7 +189,7 @@ public class IngestionDetailWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(workflowColumn, "Name");
-        cellTable.setColumnWidth(workflowColumn, 35, Unit.PCT);
+        cellTable.setColumnWidth(workflowColumn, 30, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
@@ -257,7 +246,6 @@ public class IngestionDetailWidget extends IngestionWidget {
         cellTable.setColumnWidth(progressColumn, 30, Unit.PCT);
 
         // Log file
-
         Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
                 new ActionCell<ExecutionDTO>("Log", new ActionCell.Delegate<ExecutionDTO>() {
                     @Override
@@ -274,7 +262,7 @@ public class IngestionDetailWidget extends IngestionWidget {
         };
 
         cellTable.addColumn(logfileColumn, "Log");
-        cellTable.setColumnWidth(logfileColumn, 5, Unit.PCT);
+        cellTable.setColumnWidth(logfileColumn, 10, Unit.PCT);
 
         updateActiveExecutions();
 
