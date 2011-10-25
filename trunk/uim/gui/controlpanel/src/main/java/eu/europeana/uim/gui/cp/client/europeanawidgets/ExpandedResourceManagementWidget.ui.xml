@@ -61,12 +61,12 @@
 								</g:tab>
 								<g:tab>
 									<g:header>
-										Available Operations
+										Harvesting Session Information
                                     </g:header>
 									<g:HTML>
 										<strong>
 											<i>
-												<u>Hello tab number 3</u>
+												<u>Harvesting Session Specific Constants</u>
 											</i>
 										</strong>
 									</g:HTML>

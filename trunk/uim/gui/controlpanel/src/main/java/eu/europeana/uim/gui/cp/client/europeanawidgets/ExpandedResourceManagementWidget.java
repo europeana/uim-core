@@ -104,14 +104,16 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 		tabInfoSubPanel = new TabLayoutPanel(2.5, Unit.PCT);
 		tabInfoSubPanel.setAnimationDuration(1000);
 		tabInfoSubPanel.getElement().getStyle().setMarginBottom(10.0, Unit.PX);
+		tabInfoSubPanel.setVisible(false);
 		
 		integrationTable = new FlexTable();
 		operationDialog = createOperationsDialogBox();
 		operationsListBox = new ListBox(false);
 		
-		operationsListBox.addItem(RepoxOperationType.INITIATE_COMPLETE_HARVESTING.getDescription());                	
+		operationsListBox.addItem(RepoxOperationType.INITIATE_COMPLETE_HARVESTING.getDescription());   
+		operationsListBox.addItem(RepoxOperationType.INITIATE_INCREMENTAL_HARVESTING.getDescription()); 
   		operationsListBox.addItem(RepoxOperationType.VIEW_HARVEST_LOG.getDescription());    
-  	    operationsListBox.addItem(RepoxOperationType.SCHEDULE_HARVESTING.getDescription());   
+  	    //operationsListBox.addItem(RepoxOperationType.SCHEDULE_HARVESTING.getDescription());   
 		
         Binder uiBinder = GWT.create(Binder.class);
         Widget widget = uiBinder.createAndBindUi(this);
@@ -183,16 +185,12 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
 
 		integrationTable.clear();
 		
-	    // Create a tab panel
-	    TabLayoutPanel tabPanel = new TabLayoutPanel(2.5, Unit.EM);
-	    tabPanel.setAnimationDuration(1000);
-	    tabPanel.getElement().getStyle().setMarginBottom(10.0, Unit.PX);
-
-
 		if(!status.getType().equals(TYPE.UNIDENTIFIED)){
-    		
+		
+		
 		tabInfoSubPanel.setVisible(true);	
-			
+		tabInfoSubPanel.getTabWidget(1).setVisible(false);	
+		
     	integrationTable.setWidget(0, 0, new HTML("Type:"));
     	integrationTable.setWidget(0, 1, new HTML(status.getType().toString()));
     	
@@ -211,7 +209,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     		
 			Anchor hyper = new Anchor();
 			hyper.setName("SugarCRMLink");
-			hyper.setText("SugarCRMLink");
+			hyper.setText("Click here to edit information in SugarCRM.");
 			hyper.setHref(status.getSugarURL());
 			hyper.setTarget("TOP");
 			integrationTable.setWidget(3, 1, hyper);
@@ -228,7 +226,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     		
 			Anchor hyper = new Anchor();
 			hyper.setName("RepoxLink");
-			hyper.setText("RepoxLink");
+			hyper.setText("Click here to edit REPOX configuration.");
 			hyper.setHref(status.getRepoxURL());
 			hyper.setTarget("TOP");
 			
@@ -237,7 +235,7 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     	}
     	
     	  if(status.getType().equals(TYPE.COLLECTION)  ){
-    		  
+    		tabInfoSubPanel.getTabWidget(1).setVisible(true);
           	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
           	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().getDescription()));         	
   		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));           		    	

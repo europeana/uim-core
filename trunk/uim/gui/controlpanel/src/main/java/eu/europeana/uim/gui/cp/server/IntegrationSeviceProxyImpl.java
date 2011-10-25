@@ -21,6 +21,7 @@
 package eu.europeana.uim.gui.cp.server;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -326,6 +327,8 @@ public class IntegrationSeviceProxyImpl extends
 
 		RepoxUIMService repoxService = engine.getRepoxService();
 		
+		
+		
 		if(repoxURL == null){
 		    repoxURL = repoxService.showConnectionStatus().getDefaultURI();
 		}
@@ -360,7 +363,7 @@ public class IntegrationSeviceProxyImpl extends
 					}
 					
 					if(prov.getValue("repoxID") != null){
-						ret.setRepoxURL(repoxURL.split("rest//")[0] + "/#EDIT_DP?id=" + prov.getValue("repoxID") );
+						ret.setRepoxURL(repoxURL.split("/rest")[0] + "/#EDIT_DP?id=" + prov.getValue("repoxID") );
 					}	
 					
 					
@@ -417,6 +420,20 @@ public class IntegrationSeviceProxyImpl extends
 							}
 
 							ret.setHarvestingStatus(statusobj);
+							
+							
+							//Scheduled Sessions
+							
+							HashSet<ScheduleInfo> scheduled=  (HashSet<ScheduleInfo>) repoxService.getScheduledHarvestingSessions(col);
+							
+							if(!scheduled.isEmpty()){
+								
+								for(ScheduleInfo info : scheduled){
+									//info.
+								}
+							}
+							
+							
 
 						} catch (HarvestingOperationException e) {
 
@@ -430,12 +447,12 @@ public class IntegrationSeviceProxyImpl extends
 					
 					
 					if(col.getValue("sugarCRMID") != null){
-						ret.setSugarURL(sugarCrmURL + "?module=Opportunities&action=DetailView&record=" + col.getValue("sugarCRMID") );
+						ret.setSugarURL(sugarCrmURL.split("/soap.php")[0] + "?module=Opportunities&action=DetailView&record=" + col.getValue("sugarCRMID") );
 					}
 					
 					
 					if(col.getValue("repoxID") != null){
-						ret.setRepoxURL(repoxURL + "/#VIEW_DS?id=" + col.getValue("repoxID"));
+						ret.setRepoxURL(repoxURL.split("/rest")[0] + "/#VIEW_DS?id=" + col.getValue("repoxID"));
 					}	
 					
 				} catch (StorageEngineException e) {
@@ -495,10 +512,22 @@ public class IntegrationSeviceProxyImpl extends
 			break;
 
 		case INITIATE_COMPLETE_HARVESTING:
-
 			try {
 				repoxService.initiateHarvestingfromUIMObj(coll,true);
-				result.setOperationMessage("Successfully Fetched Latest Harvest Log for Current Collection"); 
+				result.setOperationMessage("Successfully initiated FULL harvesting for " + coll.getName()); 
+				result.setLogMessage("Harvesting initiated.");
+			} catch (HarvestingOperationException e) {
+				result.setOperationMessage("Error initiating a harvesting process for the current collection!"); 
+				result.setLogMessage(e.getMessage());
+			}
+			
+			break;
+			
+			
+		case INITIATE_INCREMENTAL_HARVESTING:
+			try {
+				repoxService.initiateHarvestingfromUIMObj(coll,true);
+				result.setOperationMessage("Successfully initiated INCREMENTAL harvesting for " + coll.getName()); 
 				result.setLogMessage("Harvesting initiated.");
 			} catch (HarvestingOperationException e) {
 				result.setOperationMessage("Error initiating a harvesting process for the current collection!"); 
@@ -511,11 +540,8 @@ public class IntegrationSeviceProxyImpl extends
 
 			DateTime ingestionDate = new DateTime();
 
-			
 			try {
-				
 				ScheduleInfo info = new ScheduleInfo();
-
 				repoxService.scheduleHarvestingfromUIMObj(coll, info );
 				result.setOperationMessage("Successfully Performed Scheduling for given dataset "); 
 				result.setLogMessage("Harvesting Date: " + ingestionDate.toString());
