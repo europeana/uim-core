@@ -34,7 +34,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames='{style.decorator}'>
+    <g:HTMLPanel>
         <table cellspacing='5' cellpadding='5' style='width:100%;'>
             <tr>
                 <td colspan='2' align='center' class='{style.header}'>

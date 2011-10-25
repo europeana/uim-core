@@ -110,11 +110,11 @@ public class ResourceManagementWidget extends IngestionWidget {
         cellBrowser = new CellBrowser(browserTreeViewModel, null);
         cellBrowser.setAnimationEnabled(true);
         // cellBrowser.setSize("300px", "350px");
-        cellBrowser.setSize("100%", "100%");
+        cellBrowser.setSize("60%", "100%");
 
 
         cellTable = new CellTable<ParameterDTO>(Integer.MAX_VALUE, new SimpleKeyProvider<ParameterDTO>());
-        cellTable.setWidth("100%", true);
+        cellTable.setWidth("40%", true);
         cellTable.setHeight("30px");
 
         final ListDataProvider<ParameterDTO> dataProvider = new ListDataProvider<ParameterDTO>();
