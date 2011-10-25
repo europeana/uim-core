@@ -360,7 +360,7 @@ public class IntegrationSeviceProxyImpl extends
 					}
 					
 					if(prov.getValue("repoxID") != null){
-						ret.setRepoxURL(repoxURL.split("rest/")[0] + "/#EDIT_DP?id=" + prov.getValue("repoxID") );
+						ret.setRepoxURL(repoxURL.split("rest//")[0] + "/#EDIT_DP?id=" + prov.getValue("repoxID") );
 					}	
 					
 					
