@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -207,8 +208,14 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     		integrationTable.setWidget(3, 1, new HTML("Not represented in SugarCRM")); 
     	}
     	else{
-    		integrationTable.setWidget(3, 1, new HTML("OK"));    
-        	//integrationTable.setWidget(3, 1, new HTML(status.getSugarCRMID()));           		
+    		
+			Anchor hyper = new Anchor();
+			hyper.setName("SugarCRMLink");
+			hyper.setText("SugarCRMLink");
+			hyper.setHref(status.getSugarURL());
+			hyper.setTarget("TOP");
+			integrationTable.setWidget(3, 1, hyper);
+   		
     	}
 
     	
@@ -218,18 +225,22 @@ public class ExpandedResourceManagementWidget extends ResourceManagementWidget{
     		integrationTable.setWidget(4, 1, new HTML("Not represented in Repox")); 
     	}
     	else{
-    		integrationTable.setWidget(4, 1, new HTML("OK"));  
-    		//integrationTable.setWidget(4, 1, new HTML(status.getRepoxID()));  		
+    		
+			Anchor hyper = new Anchor();
+			hyper.setName("RepoxLink");
+			hyper.setText("RepoxLink");
+			hyper.setHref(status.getRepoxURL());
+			hyper.setTarget("TOP");
+			
+			integrationTable.setWidget(4, 1,hyper);  
+
     	}
     	
     	  if(status.getType().equals(TYPE.COLLECTION)  ){
+    		  
           	integrationTable.setWidget(5, 0, new HTML("Harvesting Status:"));
-          	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().getDescription()));
-          	
-  		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));
-          	
-
-  		    	
+          	integrationTable.setWidget(5, 1, new HTML(status.getHarvestingStatus().getStatus().getDescription()));         	
+  		    integrationTable.setWidget(6, 0, new HTML("<hr></hr>"));           		    	
           	integrationTable.setWidget(7, 0, new HTML("Permitted operations:"));
           	integrationTable.setWidget(7, 1, operationsListBox);
           	integrationTable.setWidget(7, 2, generateRepoxCommandButton());

@@ -68,7 +68,13 @@ public class IntegrationSeviceProxyImpl extends
 
 	private static final long serialVersionUID = 1L;
 
+	private String repoxURL;
+	private String sugarCrmURL;
+	
 	DialogBox importDialog;
+	
+
+	
 	
 	
 	/*
@@ -305,6 +311,8 @@ public class IntegrationSeviceProxyImpl extends
 
 	}
 
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -317,6 +325,15 @@ public class IntegrationSeviceProxyImpl extends
 		ExpandedOsgiEngine engine = getEngine();
 
 		RepoxUIMService repoxService = engine.getRepoxService();
+		
+		if(repoxURL == null){
+		    repoxURL = repoxService.showConnectionStatus().getDefaultURI();
+		}
+		
+		if(sugarCrmURL == null){
+			SugarCrmService sugService = engine.getSugarCrmService();
+			sugarCrmURL = sugService.showConnectionStatus().getDefaultURI();
+		}
 		
 		StorageEngine<?> stengine = engine.getRegistry().getStorageEngine();
 
@@ -335,16 +352,18 @@ public class IntegrationSeviceProxyImpl extends
 					ret.setType(TYPE.PROVIDER);
 					ret.setId(provider);
 					ret.setInfo(prov.getName());
-					
-
-					
-					
 					ret.setSugarCRMID(prov.getValue("sugarCRMID"));
 					ret.setRepoxID(prov.getValue("repoxID"));
-
+					
+					if(prov.getValue("sugarCRMID") != null){
+						ret.setSugarURL(sugarCrmURL.split("/soap.php")[0] + "?module=Accounts&action=DetailView&record=" + prov.getValue("sugarCRMID"));
+					}
+					
+					if(prov.getValue("repoxID") != null){
+						ret.setRepoxURL(repoxURL.split("rest/")[0] + "/#EDIT_DP?id=" + prov.getValue("repoxID") );
+					}	
 					
 					
-
 				} catch (StorageEngineException e) {
 
 					ret.setType(TYPE.UNIDENTIFIED);
@@ -360,10 +379,14 @@ public class IntegrationSeviceProxyImpl extends
 					ret.setState(col.getValue("state"));
 					
 					ret.setSugarCRMID(col.getValue("sugarCRMID"));
+					
+					
+					
 					ret.setRepoxID(col.getValue("repoxID"));
 					ret.setInfo(col.getName());
 					ret.setHarvestingStatus(null);
 
+					
 					if (col.getValue("repoxID") != null) {
 						try {
 							Success result = repoxService
@@ -404,6 +427,17 @@ public class IntegrationSeviceProxyImpl extends
 							ret.setHarvestingStatus(status);
 						}
 					}
+					
+					
+					if(col.getValue("sugarCRMID") != null){
+						ret.setSugarURL(sugarCrmURL + "?module=Opportunities&action=DetailView&record=" + col.getValue("sugarCRMID") );
+					}
+					
+					
+					if(col.getValue("repoxID") != null){
+						ret.setRepoxURL(repoxURL + "/#VIEW_DS?id=" + col.getValue("repoxID"));
+					}	
+					
 				} catch (StorageEngineException e) {
 
 					ret.setType(TYPE.UNIDENTIFIED);
