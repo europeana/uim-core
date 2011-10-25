@@ -124,7 +124,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
 //                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
 //                }
                 for (CollectionDTO collection : collections) {
-                    collectionList.add(new BrowserObject(collection.getName(), collection));
+                    collectionList.add(new BrowserObject(collection.getMnemonic() + ":" + collection.getName(), collection));
                 }
             }
         });

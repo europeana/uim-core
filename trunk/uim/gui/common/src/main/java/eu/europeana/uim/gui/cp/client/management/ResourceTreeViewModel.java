@@ -119,7 +119,7 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
                 for (CollectionDTO collection : collections) {
-                    collectionList.add(new BrowserObject(collection.getName(), collection));
+                    collectionList.add(new BrowserObject(collection.getMnemonic() + ":" + collection.getName(), collection));
                 }
             }
         });
