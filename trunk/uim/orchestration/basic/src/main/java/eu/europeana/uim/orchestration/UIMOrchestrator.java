@@ -106,12 +106,19 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             LoggingEngine<I> loggingEngine = (LoggingEngine<I>)registry.getLoggingEngine();
             ResourceEngine resourceEngine = registry.getResourceEngine();
 
+            String workingDirectory=null;
+            if (resourceEngine==null||resourceEngine.getResourceDirectory()==null) {
+                //if we don't have a ResourceEngine or a working directory, use the standard working directory
+                workingDirectory=System.getProperty("user.dir");
+            } else {
+                workingDirectory=resourceEngine.getWorkingDirectory().getCanonicalPath();
+            }
+            
             ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
-                    resourceEngine.getWorkingDirectory().getCanonicalPath());
+                   workingDirectory);
             
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
             e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-            
             LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e,
                     loggingEngine, executionLogFileWriter);
 
