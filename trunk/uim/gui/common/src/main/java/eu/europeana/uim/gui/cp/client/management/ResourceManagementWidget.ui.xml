@@ -30,7 +30,7 @@
             <tr>
                 <td valign='top'>
                     <g:SplitLayoutPanel addStyleNames="{style.splitPanel}">
-                        <g:west size="70" unit="pct">
+                        <g:west size="700">
                             <g:LayoutPanel>
                                 <g:layer>
                                     <c:CellBrowser ui:field="cellBrowser" addStyleNames="{style.cellBrowser}" />

@@ -22,7 +22,7 @@
     </ui:style>
 
     <g:SplitLayoutPanel addStyleNames="{style.splitpanel}">
-        <g:west size="70" unit="pct">
+        <g:west size="700">
             <g:ScrollPanel>
                 <c:CellTable addStyleNames='{style.cellTable}' pageSize='15' ui:field='cellTable' />
             </g:ScrollPanel>
