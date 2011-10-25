@@ -201,23 +201,23 @@ public class IngestionHistoryWidget extends IngestionWidget {
         cellTable.addColumn(datasetColumn, "Dataset");
         cellTable.setColumnWidth(datasetColumn, 15, Unit.PCT);
 
-        // Workflow
-        Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
-                new TextCell()) {
-            @Override
-            public String getValue(ExecutionDTO object) {
-                return object.getWorkflow();
-            }
-        };
-        workflowColumn.setSortable(true);
-        sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
-            @Override
-            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getWorkflow().compareTo(o2.getWorkflow());
-            }
-        });
-        cellTable.addColumn(workflowColumn, "Workflow");
-        cellTable.setColumnWidth(workflowColumn, 15, Unit.PCT);
+//        // Workflow
+//        Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
+//                new TextCell()) {
+//            @Override
+//            public String getValue(ExecutionDTO object) {
+//                return object.getWorkflow();
+//            }
+//        };
+//        workflowColumn.setSortable(true);
+//        sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
+//            @Override
+//            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+//                return o1.getWorkflow().compareTo(o2.getWorkflow());
+//            }
+//        });
+//        cellTable.addColumn(workflowColumn, "Workflow");
+//        cellTable.setColumnWidth(workflowColumn, 15, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
