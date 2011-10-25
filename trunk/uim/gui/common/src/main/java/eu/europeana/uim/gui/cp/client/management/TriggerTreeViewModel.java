@@ -30,6 +30,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
     private final MultiSelectionModel<BrowserObject> selectionModel;
     private final BrowserObjectCell                  browserObjectCell;
 
+    
     /**
      * provides keys for browser objects
      */
