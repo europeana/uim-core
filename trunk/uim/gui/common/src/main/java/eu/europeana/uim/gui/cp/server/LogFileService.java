@@ -179,7 +179,7 @@ public class LogFileService extends HttpServlet {
         if (color == null) {
             out.write("<div><code>" + reformattedStr + "</code></div>");
         } else {
-            out.write("<div style=\"color:" + reformattedStr + ";\"><code>" + thisLine + "</code></div>");
+            out.write("<div style=\"color:" + color + ";\"><code>" + reformattedStr + "</code></div>");
         }
     }
 
