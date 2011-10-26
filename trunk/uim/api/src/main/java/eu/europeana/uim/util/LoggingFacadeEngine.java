@@ -52,8 +52,8 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
             try {
                 long period = System.currentTimeMillis() - getStart();
                 double persec = getWorked() * 1000.0 / period;
-                delegateLogFileWriter.log(execution, Level.INFO, "Finished " + getWorked() +
-                                                                 String.format(" items, done in %.3f sec. Average %.3f/sec", period /1000.0, persec));
+                delegateLogFileWriter.log(execution, Level.INFO, "Done " + getWorked() +
+                                                                 String.format(" records in %.3f sec. Average %.3f/sec", period /1000.0, persec));
             } catch (IOException e) {
                 throw new RuntimeException("Could not write to logfile", e);
             }
