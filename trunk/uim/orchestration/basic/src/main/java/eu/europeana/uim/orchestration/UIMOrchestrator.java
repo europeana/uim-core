@@ -115,18 +115,17 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 workingDirectory = System.getProperty("user.dir");
             } else {
                 workingDirectory = resourceEngine.getWorkingDirectory().getCanonicalPath();
-                workingDirectory  += File.separatorChar + "logging";
+                workingDirectory += File.separatorChar + "logging";
                 if (!new File(workingDirectory).exists()) {
                     new File(workingDirectory).mkdirs();
                 }
             }
-            
 
             ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
                     workingDirectory);
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
-            
+
             LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e,
                     loggingEngine, executionLogFileWriter);
 
@@ -139,7 +138,6 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             e.setStartTime(new Date());
             storageEngine.updateExecution(e);
 
-
             try {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
@@ -147,10 +145,8 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
                 storageEngine.updateExecution(e);
-
-                if (loggingEngine != null)
-                    loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start",
-                            "Started:" + activeExecution.getExecution().getName());
+                loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator", "start",
+                        "Started:" + activeExecution.getExecution().getName());
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
