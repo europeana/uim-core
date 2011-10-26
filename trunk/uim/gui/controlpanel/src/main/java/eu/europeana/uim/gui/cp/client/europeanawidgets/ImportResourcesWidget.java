@@ -386,22 +386,10 @@ public class ImportResourcesWidget extends IngestionWidget{
 	 */
 	private String generateQuery() {
 
-
 		StringBuffer querybuffer = new StringBuffer();
-		
-		
 		String dsname = DOM.getElementById("dsnameSearchField").<InputElement>cast().getValue();
 		String type = DOM.getElementById("typeSearchField").<InputElement>cast().getValue();
 		String status = DOM.getElementById("statusSearchField").<InputElement>cast().getValue();
-		String amount = DOM.getElementById("amountSearchField").<InputElement>cast().getValue();
-		
-		//String identifier = DOM.getElementById("identifierSearchField").<InputElement>cast().getValue();
-		//String organization = DOM.getElementById("organizationSearchField").<InputElement>cast().getValue();
-		//String acronym = DOM.getElementById("acronymSearchField").<InputElement>cast().getValue();
-		//String enabled = DOM.getElementById("enabledSearchField").<InputElement>cast().getValue();
-		//String ingestionDate = DOM.getElementById("ingestionDateSearchField").<InputElement>cast().getValue();
-		//String user = DOM.getElementById("userSearchField").<InputElement>cast().getValue();
-		//String country = DOM.getElementById("countrySearchField").<InputElement>cast().getValue();
 
 		ArrayList<StringBuffer> fieldinventory = new ArrayList<StringBuffer>();
 		
@@ -431,73 +419,7 @@ public class ImportResourcesWidget extends IngestionWidget{
         	fieldinventory.add(queryitem);
 		}
 		
-		
-		if(!"".equals(amount)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.amount LIKE '");
-        	queryitem.append(amount);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-        /*
-		if(!"".equals(enabled)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.enabled_c LIKE '");
-        	queryitem.append(enabled);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-		if(!"".equals(ingestionDate)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.date_closed LIKE '");
-        	queryitem.append(ingestionDate);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-		if(!"".equals(user)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.created_by LIKE '");
-        	queryitem.append(user);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-		if(!"".equals(country)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.country_c LIKE '");
-        	queryitem.append(country);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-
-        if(!"".equals(identifier)){
-        	StringBuffer queryitem = new StringBuffer();
-			queryitem.append("opportunities.name_id_c LIKE '");
-			queryitem.append(identifier);
-			queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-
-        if(!"".equals(organization)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.account_name LIKE '");
-        	queryitem.append(organization);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-		
-        if(!"".equals(acronym)){
-        	StringBuffer queryitem = new StringBuffer();
-        	queryitem.append("opportunities.name_acronym_c LIKE '");
-        	queryitem.append(acronym);
-        	queryitem.append("'");
-        	fieldinventory.add(queryitem);
-		}
-        * 
-        */
+				
 		
         for(int i=0;i<fieldinventory.size();i++){
         	if(i==0){
@@ -931,9 +853,7 @@ public class ImportResourcesWidget extends IngestionWidget{
 	    typeSearchField.addItem("New Dataset", "New%Dataset");
 	    setDOMID(typeSearchField,"typeSearchField");
 	    
-	    
-	    TextBox amountSearchField = new TextBox();
-	    setDOMID(amountSearchField,"amountSearchField");
+	   
 	    
 		searchButton = new Button();
 		searchButton.setText(EuropeanaClientConstants.SEARCHBUTTONLABEL);
@@ -957,8 +877,7 @@ public class ImportResourcesWidget extends IngestionWidget{
 	    layout.setHTML(1, 4, EuropeanaClientConstants.STATUSSEARCHLABEL);
 	    layout.setWidget(1, 5, statusSearchField);
 	    
-	    layout.setHTML(2, 0, EuropeanaClientConstants.AMOUNTSEARCHLABEL);
-	    layout.setWidget(2, 1, amountSearchField);
+
 	 
 	    layout.setWidget(3, 0, searchButton);
 	    
