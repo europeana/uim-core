@@ -188,7 +188,7 @@ public class IngestionDetailWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(idColumn, "ID");
-        cellTable.setColumnWidth(idColumn, 8, Unit.PCT);
+        cellTable.setColumnWidth(idColumn, 16, Unit.PCT);
 
         // Name
         Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
@@ -225,7 +225,7 @@ public class IngestionDetailWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 30, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 25, Unit.PCT);
 
         // Progress Bar
         Column<ExecutionDTO, FlowPanel> progressColumn = new Column<ExecutionDTO, FlowPanel>(
