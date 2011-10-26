@@ -236,7 +236,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 12, Unit.PCT);
 
         // End Time
         Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
@@ -253,7 +253,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 10, Unit.PCT);
+        cellTable.setColumnWidth(endTimeColumn, 12, Unit.PCT);
 
         // Canceled
         Column<ExecutionDTO, Boolean> doneColumn = new Column<ExecutionDTO, Boolean>(
@@ -265,7 +265,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
         };
         doneColumn.setSortable(false);
         cellTable.addColumn(doneColumn, "C/F");
-        cellTable.setColumnWidth(doneColumn, 2, Unit.PCT);
+        cellTable.setColumnWidth(doneColumn, 4, Unit.PCT);
 
 
         // Scheduled

@@ -173,6 +173,23 @@ public class IngestionDetailWidget extends IngestionWidget {
      */
     private void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
+        // ID
+        Column<ExecutionDTO, String> idColumn = new Column<ExecutionDTO, String>(new TextCell()) {
+            @Override
+            public String getValue(ExecutionDTO object) {
+                return object.getId().toString();
+            }
+        };
+        idColumn.setSortable(true);
+        sortHandler.setComparator(idColumn, new Comparator<ExecutionDTO>() {
+            @Override
+            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        cellTable.addColumn(idColumn, "ID");
+        cellTable.setColumnWidth(idColumn, 8, Unit.PCT);
+
         // Name
         Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
