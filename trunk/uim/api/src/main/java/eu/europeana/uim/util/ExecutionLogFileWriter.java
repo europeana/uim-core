@@ -50,9 +50,7 @@ public class ExecutionLogFileWriter<I> {
      * @throws IOException
      */
     public void setRootPath(String rootPath) throws IOException {
-        System.out.println("LOADED " + rootPath);
         baseRootPath = new File(rootPath);
-        System.out.println("LOADED " + baseRootPath.getCanonicalPath());
         if (!baseRootPath.exists()) {
             if (!baseRootPath.mkdirs()) { throw new IllegalArgumentException(
                     "Could not create logging directory " + baseRootPath.getCanonicalPath()); }
@@ -68,24 +66,26 @@ public class ExecutionLogFileWriter<I> {
      *            the log message
      * @throws IOException
      */
-    public void log(final Execution<I> execution, final Level level, final String message)
-            throws IOException {
-        // synchronized (execution) {
+    public synchronized void log(final Execution<I> execution, final Level level,
+            final String message) throws IOException {
         File logFile = getLogFile(execution);
-
         // we have not configured the logging path, just ignore the log request
-        System.out.println("Logging " + execution.getId() + " ...");
         if (logFile == null) return;
-        System.out.println("Logged: " + execution.getId() + " " + message);
-        FileWriter fstream = new FileWriter(logFile, true);
-        BufferedWriter out = new BufferedWriter(fstream);
-        String cleanMessage = message.replace("\n", "\\n");
-        cleanMessage = cleanMessage.replace("|", "&179");
-        out.write(dateFormat.format(new Date()) + "|" + String.format("%1$#9s", level.getName()) +
-                  "|" + cleanMessage + "\n");
-        out.close();
-        fstream.close();
-        // }
+        FileWriter fstream = null;
+        BufferedWriter out = null;
+
+        try {
+            fstream = new FileWriter(logFile, true);
+            out = new BufferedWriter(fstream);
+            String cleanMessage = message.replace("\n", "\\n");
+            cleanMessage = cleanMessage.replace("|", "&179");
+            out.write(dateFormat.format(new Date()) + "|" +
+                      String.format("%1$#9s", level.getName()) + "|" + cleanMessage + "\n");
+        } finally {
+            if (out != null) out.close();
+            if (fstream != null) fstream.close();
+        }
+
     }
 
     /**

@@ -2,8 +2,12 @@
 package eu.europeana.uim.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.StringUtils;
 
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
@@ -42,10 +46,10 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void worked(int work) {
         super.worked(work);
-        
         if (getWorked() % 1000 == 0) {
             try {
-                delegateLogFileWriter.log(execution, Level.INFO, "Finished " + getWorked() + " items");
+                delegateLogFileWriter.log(execution, Level.INFO, "Finished " + getWorked() +
+                                                                 " items");
             } catch (IOException e) {
                 throw new RuntimeException("Could not write to logfile", e);
             }
@@ -58,12 +62,12 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
         try {
             long period = System.currentTimeMillis() - getStart();
             double persec = getWorked() * 1000.0 / period;
-            delegateLogFileWriter.log(execution, Level.INFO, String.format("%d done in %.3f sec. Average %.3f/sec", getWorked(), period / 1000.0, persec));
+            delegateLogFileWriter.log(execution, Level.INFO, String.format(
+                    "%d done in %.3f sec. Average %.3f/sec", getWorked(), period / 1000.0, persec));
         } catch (IOException e) {
             throw new RuntimeException("Could not write to logfile", e);
         }
     }
-
 
     @Override
     public String getIdentifier() {
@@ -72,23 +76,37 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
 
     @Override
     public void log(Level level, String modul, String... message) {
+        String joinedMessage = StringUtils.join(message, "\n");
+        try {
+            delegateLogFileWriter.log(execution, level, modul + " modul:" + joinedMessage);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing log message", e);
+        }
+
         delegateLoggingEngine.log(level, modul, message);
     }
 
     @Override
     public void log(Level level, IngestionPlugin plugin, String... message) {
+        String joinedMessage = StringUtils.join(message, "\n");
+        try {
+            delegateLogFileWriter.log(execution, level, joinedMessage);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing log message", e);
+        }
         delegateLoggingEngine.log(level, plugin, message);
     }
 
     @Override
     public void log(Execution<I> execution, Level level, String modul, String... message) {
         if (delegateLogFileWriter != null) {
-            for (String msg : message)
-                try {
-                    delegateLogFileWriter.log(execution, level, modul + ": " + msg);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
+
+            String joinedMessage = StringUtils.join(message, "\n");
+            try {
+                delegateLogFileWriter.log(execution, level, modul + ": " + joinedMessage);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
         }
         delegateLoggingEngine.log(execution, level, modul, message);
     }
@@ -96,25 +114,46 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message) {
         if (delegateLogFileWriter != null) {
-            for (String msg : message)
-                try {
-                    delegateLogFileWriter.log(execution, level, plugin.getName() + " Plugin: " +
-                                                                msg);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
+            String joinedMessage = StringUtils.join(message, "\n");
+            try {
+                delegateLogFileWriter.log(execution, level, plugin.getName() + " Plugin: " +
+                                                            joinedMessage);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
         }
         delegateLoggingEngine.log(execution, level, plugin, message);
     }
 
     @Override
     public void logFailed(Level level, String modul, Throwable throwable, String... message) {
+        if (delegateLogFileWriter != null) {
+            String joinedMessage = StringUtils.join(message, "\n");
+            String stackTrace = generateStacktrace(throwable);
+            try {
+                delegateLogFileWriter.log(execution, level, modul + " modul: " + joinedMessage +
+                                                            "\n" + stackTrace);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
+        }
+
         delegateLoggingEngine.logFailed(level, modul, throwable, message);
     }
 
     @Override
     public void logFailed(Level level, IngestionPlugin plugin, Throwable throwable,
             String... message) {
+        if (delegateLogFileWriter != null) {
+            String joinedMessage = StringUtils.join(message, "\n");
+            String stackTrace = generateStacktrace(throwable);
+            try {
+                delegateLogFileWriter.log(execution, level, plugin + " : " + joinedMessage + "\n" +
+                                                            stackTrace);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
+        }
         delegateLoggingEngine.logFailed(level, plugin, throwable, message);
     }
 
@@ -122,12 +161,13 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
             String... message) {
         if (delegateLogFileWriter != null) {
-            for (String msg : message)
-                try {
-                    delegateLogFileWriter.log(execution, level, modul + " FAILED: " + msg);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
+            String joinedMessage = StringUtils.join(message, "\n");
+
+            try {
+                delegateLogFileWriter.log(execution, level, modul + " FAILED: " + joinedMessage);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
         }
         delegateLoggingEngine.logFailed(execution, level, modul, throwable, message);
     }
@@ -138,16 +178,12 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
 
         if (delegateLogFileWriter != null) {
             try {
-                if (mdr != null) {
-                    delegateLogFileWriter.log(execution, Level.WARNING,
-                            "Failed messages for MetadataRecord " + mdr.getId() + "...");
-                }
-                if (throwable != null) {
-                    delegateLogFileWriter.log(execution, Level.WARNING,
-                            "Exception: " + throwable.getMessage());
-                }
-                for (String message : messages)
-                    delegateLogFileWriter.log(execution, level, modul + " FAILED: " + message + "");
+                String generateStacktrace = generateStacktrace(throwable);
+                String joinedMessage = StringUtils.join(messages, "\n");
+                delegateLogFileWriter.log(execution, level, "Failed messages for MetadataRecord " +
+                                                            mdr.getId() + ", " + modul + " FAILED: " +
+                                                            joinedMessage + "\n" +
+                                                            generateStacktrace);
             } catch (IOException e) {
                 throw new RuntimeException("Error while writing log message", e);
             }
@@ -159,38 +195,36 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
             Throwable throwable, String... message) {
-        if (delegateLogFileWriter != null) {
-            for (String msg : message)
-                try {
-                    delegateLogFileWriter.log(execution, level, plugin + " FAILED: " + msg +
-                                                                " Execption: " + throwable);
-                } catch (IOException e) {
-                    throw new RuntimeException("Error while writing log message", e);
-                }
+        if (delegateLogFileWriter != null) {          
+            try {
+                String generateStacktrace = generateStacktrace(throwable);
+                String joinedMessage = StringUtils.join(message, "\n");
+                delegateLogFileWriter.log(execution, level, plugin.getName() + " FAILED: " +
+                                                            joinedMessage + "\n" +
+                                                            generateStacktrace);
+            } catch (IOException e) {
+                throw new RuntimeException("Error while writing log message", e);
+            }
         }
         delegateLoggingEngine.logFailed(execution, level, plugin, throwable, message);
     }
 
     @Override
     public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, MetaDataRecord<I> mdr, String... messages) {
-        if (delegateLogFileWriter != null) {
+            Throwable throwable, MetaDataRecord<I> mdr, String... message) {
+        if (delegateLogFileWriter != null) {          
             try {
-                if (mdr != null) {
-                    delegateLogFileWriter.log(execution, Level.WARNING,
-                            "Failed messages for MetadataRecord " + mdr.getId() + "...");
-                }
-                if (throwable != null) {
-                    delegateLogFileWriter.log(execution, Level.WARNING,
-                            "Exception: " + throwable.getMessage());
-                }
-                for (String message : messages)
-                    delegateLogFileWriter.log(execution, level, plugin + " FAILED: " + message + "");
+                String generateStacktrace = generateStacktrace(throwable);
+                String joinedMessage = StringUtils.join(message, "\n");
+                delegateLogFileWriter.log(execution, level, "Failed messages for MetadataRecord " +
+                        mdr.getId() + ", " + plugin.getName() + " FAILED: " +
+                        joinedMessage + "\n" +
+                        generateStacktrace);
             } catch (IOException e) {
                 throw new RuntimeException("Error while writing log message", e);
             }
         }
-        delegateLoggingEngine.logFailed(execution, level, plugin, throwable, mdr, messages);
+        delegateLoggingEngine.logFailed(execution, level, plugin, throwable, mdr, message);
     }
 
     @Override
@@ -213,6 +247,7 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void logField(String modul, String field, String qualifier, int status,
             String... message) {
+
         delegateLoggingEngine.logField(modul, field, qualifier, status, message);
     }
 
@@ -253,6 +288,13 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink<I>> getLinkLogs(
             Execution<I> execution) {
         return delegateLoggingEngine.getLinkLogs(execution);
+    }
+
+    private String generateStacktrace(Throwable t) {
+        if (t == null) { return ""; }
+        StringWriter sw = new StringWriter();
+        t.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
 
 }
