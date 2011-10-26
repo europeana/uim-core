@@ -65,7 +65,6 @@ public class LoggingDatabaseTest extends AbstractIntegrationTest {
             logging = registry.getLoggingEngine();
             Thread.sleep(500);
         }
-
-        logging.log(null, Level.INFO, "module", null, "test", "tst tst");
+        logging.log( Level.INFO, "module", null, "test", "tst tst");
     }
 }
