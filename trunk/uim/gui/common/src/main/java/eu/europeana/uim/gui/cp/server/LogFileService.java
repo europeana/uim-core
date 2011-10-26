@@ -129,10 +129,13 @@ public class LogFileService extends HttpServlet {
             out = response.getWriter();
             BufferedReader bufferedReader = new BufferedReader(new FileReader(logFileHandler));
             response.addHeader("X-Last-File-Pos-Sent", String.valueOf(logFileHandler.length()));
+            if (execution.isActive()) {
+                response.addHeader("X-More-Data","true");
+            }
             // set response header
             if (htmlOutput) {
                 response.setContentType("text/html");
-                sendHtmlHeader(out);
+                sendHtmlHeader(out,execution.isActive());
             } else {
                 response.setContentType("text/plain");
             }
@@ -148,7 +151,7 @@ public class LogFileService extends HttpServlet {
             }
 
             if (htmlOutput) {
-                sendHtmlFooter(out);
+                sendHtmlFooter(out,execution.isActive());
             }
         } catch (IOException ioe) {
             response.sendError(501,
@@ -196,16 +199,28 @@ public class LogFileService extends HttpServlet {
     /**
      * @param out
      */
-    private void sendHtmlFooter(PrintWriter out) {
+    private void sendHtmlFooter(PrintWriter out,boolean moreData) {
+        if (moreData ) {
+            out.write("<img src=\".../../ajax-loader.gif\">Loading...</img>");
+        }
         out.write("</body></html>");
     }
 
     /**
      * @param out
      */
-    private void sendHtmlHeader(PrintWriter out) {
+    private void sendHtmlHeader(PrintWriter out,boolean moreData) {
         out.write("<!DOCTYPE html>  \n" + "<html lang=\"en\">  \n" + "  <head>  \n"
-                  + "    <meta charset=\"utf-8\">  \n" + "    <title>Logfile</title>  \n"
-                  + "  </head>  \n" + "  <body>  ");
+                  + "    <meta charset=\"utf-8\">  \n" + "    <title>Logfile</title>  \n");
+        if (moreData) {
+           out.write( "<meta http-equiv=\"refresh\" content=\"5\" />"); 
+        }
+        out.write("<script>function load()\n" + 
+        		"{\n" + 
+        		"window.scrollTo(0, document.body.scrollHeight);" + 
+        		"} </script>");
+        out.write ("  </head>  \n" + "  <body onload=\"load()\">  ");
+        
+        
     }
 }
