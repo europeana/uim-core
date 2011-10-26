@@ -158,31 +158,6 @@ public class LogFileService extends HttpServlet {
             if (out != null) out.close();
         }
 
-//
-// ServletFileUpload upload = new ServletFileUpload();
-// try {
-// FileItemIterator iter = upload.getItemIterator(request);
-//
-// while (iter.hasNext()) {
-// FileItemStream item = iter.next();
-// InputStream stream = item.openStream();
-//
-// FileOutputStream ofile = new FileOutputStream(new File(
-// resourceEngine.getResourceDirectory() + File.separator + item.getName()));
-//
-// // Process the input stream
-// int len;
-// byte[] buffer = new byte[8192];
-// while ((len = stream.read(buffer, 0, buffer.length)) != -1) {
-// ofile.write(buffer, 0, len);
-// }
-//
-// ofile.close();
-// stream.close();
-// }
-// } catch (Exception e) {
-// e.printStackTrace();
-// }
     }
 
     /**
