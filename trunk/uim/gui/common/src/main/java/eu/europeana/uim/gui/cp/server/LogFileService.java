@@ -196,10 +196,12 @@ public class LogFileService extends HttpServlet {
         } else if (thisLine.contains(Level.SEVERE.getName())) {
             color = "#FF0000";
         }
+        
+        String reformattedStr=thisLine.replaceAll("\\n", "\n");
         if (color == null) {
-            out.write("<div><code>" + thisLine + "</code></div>");
+            out.write("<div><code>" + reformattedStr + "</code></div>");
         } else {
-            out.write("<div style=\"color:" + color + ";\"><code>" + thisLine + "</code></div>");
+            out.write("<div style=\"color:" + reformattedStr + ";\"><code>" + thisLine + "</code></div>");
         }
     }
 
@@ -212,10 +214,6 @@ public class LogFileService extends HttpServlet {
         FileWriter fstream = new FileWriter(tmpFile);
         BufferedWriter out = new BufferedWriter(fstream);
         out.write(new Date() + "|" + Level.SEVERE.getName() + "|Dummy log for execution " +
-                  executionBean.getId() + "\n");
-        out.write(new Date() + "|" + Level.INFO.getName() + "|Dummy log for execution " +
-                  executionBean.getId() + "\n");
-        out.write(new Date() + "|" + Level.FINE.getName() + "|Dummy log for execution " +
                   executionBean.getId() + "\n");
         out.close();
     }
