@@ -159,7 +159,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                     task.save();
                 } catch (Throwable e2) {
                     if (loggingEngine != null) {
-                        loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  t, metaDataRecord,
+                        loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  e2, metaDataRecord,
                                 "StorageFailed",
                                 "Major error in the workflow plugin execution must be stopped!");
                     }
@@ -181,7 +181,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 task.save();
             } catch (Throwable e2) {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  t, metaDataRecord,
+                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  e2, metaDataRecord,
                             "StorageFailed",
                             "Major error in the workflow plugin execution must be stopped!");
                 }
