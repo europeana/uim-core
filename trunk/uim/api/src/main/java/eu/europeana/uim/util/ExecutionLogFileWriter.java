@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.europeana.uim.store.Execution;
 
 /**
@@ -77,10 +79,15 @@ public class ExecutionLogFileWriter<I> {
         try {
             fstream = new FileWriter(logFile, true);
             out = new BufferedWriter(fstream);
-            String cleanMessage = message.replace("\n", "\\n");
-            cleanMessage = cleanMessage.replace("|", "&179");
+            
+            // we do not encode somehting here to HTML
+//            String cleanMessage = message.replace("|", "&179;");
+//            cleanMessage = cleanMessage.replace("<", "&lt;");
+//            cleanMessage = cleanMessage.replace(">", "&gt;");
+            
+            String stripped = StringUtils.strip(message, " \t\n\r");
             out.write(dateFormat.format(new Date()) + "|" +
-                      String.format("%1$#9s", level.getName()) + "|" + cleanMessage + "\n");
+                      String.format("%1$#9s", level.getName()) + "|" + stripped + "\n");
         } finally {
             if (out != null) out.close();
             if (fstream != null) fstream.close();
