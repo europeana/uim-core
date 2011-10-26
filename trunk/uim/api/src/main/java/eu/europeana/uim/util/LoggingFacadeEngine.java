@@ -1,5 +1,5 @@
 /* LoggingFacadeEngine.java - created on Oct 24, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,9 +7,7 @@ import java.util.logging.Level;
 
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.common.ExecutionLogFileWriter;
 import eu.europeana.uim.common.MemoryProgressMonitor;
-import eu.europeana.uim.common.RevisingProgressMonitor;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -20,12 +18,10 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @param <I>
  * @date Oct 24, 2011
  */
-public class LoggingFacadeEngine<I> implements LoggingEngine<I>, RevisingProgressMonitor {
+public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements LoggingEngine<I> {
 
-    private int                       worked                  = 0;
     private Execution<I>              execution;
     private LoggingEngine<I>          delegateLoggingEngine;
-    private RevisingProgressMonitor   delegateProgressMonitor = new MemoryProgressMonitor();
     private ExecutionLogFileWriter<I> delegateLogFileWriter;
 
     /**
@@ -44,113 +40,34 @@ public class LoggingFacadeEngine<I> implements LoggingEngine<I>, RevisingProgres
     }
 
     @Override
-    public void beginTask(String task, int work) {
-        delegateProgressMonitor.beginTask(task, work);
-    }
-
-    @Override
     public void worked(int work) {
-        worked += work;
-        if (worked % 1000 == 0) {
+        super.worked(work);
+        
+        if (getWorked() % 1000 == 0) {
             try {
-                delegateLogFileWriter.log(execution, Level.INFO, "Finished " + worked + " items");
+                delegateLogFileWriter.log(execution, Level.INFO, "Finished " + getWorked() + " items");
             } catch (IOException e) {
                 throw new RuntimeException("Could not write to logfile", e);
             }
         }
-        delegateProgressMonitor.worked(work);
     }
 
     @Override
     public void done() {
-
+        super.done();
         try {
-            delegateLogFileWriter.log(execution, Level.INFO, "DONE");
+            long period = System.currentTimeMillis() - getStart();
+            double persec = getWorked() * 1000.0 / period;
+            delegateLogFileWriter.log(execution, Level.INFO, String.format("%d done in %.3f sec. Average %.3f/sec", getWorked(), period / 1000.0, persec));
         } catch (IOException e) {
             throw new RuntimeException("Could not write to logfile", e);
         }
-
-        delegateProgressMonitor.done();
     }
 
-    @Override
-    public void subTask(String subtask) {
-        delegateProgressMonitor.subTask(subtask);
-    }
-
-    @Override
-    public void setCancelled(boolean cancelled) {
-        delegateProgressMonitor.setCancelled(cancelled);
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return delegateProgressMonitor.isCancelled();
-    }
-
-    @Override
-    public long getStart() {
-        return delegateProgressMonitor.getStart();
-    }
-
-    @Override
-    public void setStart(long millis) {
-        delegateProgressMonitor.setStart(millis);
-    }
-
-    @Override
-    public int getWork() {
-        return delegateProgressMonitor.getWork();
-    }
-
-    @Override
-    public void setWork(int work) {
-        delegateProgressMonitor.setWork(work);
-    }
-
-    @Override
-    public int getWorked() {
-        return delegateProgressMonitor.getWorked();
-    }
-
-    @Override
-    public void setWorked(int worked) {
-        delegateProgressMonitor.setWorked(worked);
-    }
-
-    @Override
-    public String getTask() {
-        return delegateProgressMonitor.getTask();
-    }
-
-    @Override
-    public void setTask(String task) {
-        delegateProgressMonitor.setTask(task);
-    }
-
-    @Override
-    public String getSubtask() {
-        return delegateProgressMonitor.getSubtask();
-    }
-
-    @Override
-    public void setSubtask(String subtask) {
-        delegateProgressMonitor.setSubtask(subtask);
-    }
-
-    @Override
-    public void attached() {
-        delegateProgressMonitor.attached();
-    }
-
-    @Override
-    public void detached() {
-        delegateProgressMonitor.detached();
-    }
 
     @Override
     public String getIdentifier() {
-        return delegateLoggingEngine.getIdentifier() + "( wrapped in a LoggingFacadeEngine )";
+        return delegateLoggingEngine.getIdentifier();
     }
 
     @Override

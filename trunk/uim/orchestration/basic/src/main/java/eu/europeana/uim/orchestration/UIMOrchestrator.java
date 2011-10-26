@@ -1,5 +1,6 @@
 package eu.europeana.uim.orchestration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +19,6 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.ExecutionLogFileWriter;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
 import eu.europeana.uim.store.Collection;
@@ -27,6 +27,8 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.util.ExecutionLogFileWriter;
+import eu.europeana.uim.util.LoggingFacadeEngine;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStart;
 
@@ -106,19 +108,25 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             LoggingEngine<I> loggingEngine = (LoggingEngine<I>)registry.getLoggingEngine();
             ResourceEngine resourceEngine = registry.getResourceEngine();
 
-            String workingDirectory=null;
-            if (resourceEngine==null||resourceEngine.getResourceDirectory()==null) {
-                //if we don't have a ResourceEngine or a working directory, use the standard working directory
-                workingDirectory=System.getProperty("user.dir");
+            String workingDirectory = null;
+            if (resourceEngine == null || resourceEngine.getResourceDirectory() == null) {
+                // if we don't have a ResourceEngine or a working directory, use the standard
+                // working directory
+                workingDirectory = System.getProperty("user.dir");
             } else {
-                workingDirectory=resourceEngine.getWorkingDirectory().getCanonicalPath();
+                workingDirectory = resourceEngine.getWorkingDirectory().getCanonicalPath();
+                workingDirectory  += File.separatorChar + "logging";
+                if (!new File(workingDirectory).exists()) {
+                    new File(workingDirectory).mkdir();
+                }
             }
             
+
             ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
-                   workingDirectory);
-            
+                    workingDirectory);
+
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
-            e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
+            
             LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e,
                     loggingEngine, executionLogFileWriter);
 
@@ -131,10 +139,14 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             e.setStartTime(new Date());
             storageEngine.updateExecution(e);
 
+
             try {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
+
+                e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
+                storageEngine.updateExecution(e);
 
                 if (loggingEngine != null)
                     loggingEngine.log(e, Level.INFO, "UIMOrchestrator", "start",

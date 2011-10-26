@@ -1,7 +1,8 @@
 /* ExecutionLogFileWriter.java - created on Oct 19, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +12,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.europeana.uim.common.ExecutionLogFileWriter;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.bean.ExecutionBean;
 

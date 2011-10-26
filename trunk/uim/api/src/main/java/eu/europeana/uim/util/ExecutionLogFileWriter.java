@@ -1,5 +1,5 @@
 /* ExecutionLogFileWriter.java - created on Oct 19, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
