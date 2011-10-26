@@ -201,7 +201,7 @@ public class LogFileService extends HttpServlet {
      */
     private void sendHtmlFooter(PrintWriter out,boolean moreData) {
         if (moreData ) {
-            out.write("<img src=\".../../ajax-loader.gif\">Loading...</img>");
+            out.write("<img src=\"../img/ajax-loader.gif\">Loading...</img>");
         }
         out.write("</body></html>");
     }
