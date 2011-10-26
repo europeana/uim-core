@@ -164,7 +164,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(idColumn, "ID");
-        cellTable.setColumnWidth(idColumn, 5, Unit.PCT);
+        cellTable.setColumnWidth(idColumn, 8, Unit.PCT);
         
         // Name
         Column<ExecutionDTO, String> nameColumn = new Column<ExecutionDTO, String>(new TextCell()) {
@@ -236,7 +236,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 13, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 10, Unit.PCT);
 
         // End Time
         Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
@@ -253,7 +253,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 13, Unit.PCT);
+        cellTable.setColumnWidth(endTimeColumn, 10, Unit.PCT);
 
         // Canceled
         Column<ExecutionDTO, Boolean> doneColumn = new Column<ExecutionDTO, Boolean>(
@@ -264,26 +264,27 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         };
         doneColumn.setSortable(false);
-        cellTable.addColumn(doneColumn, "Canceled");
-        cellTable.setColumnWidth(doneColumn, 5, Unit.PCT);
+        cellTable.addColumn(doneColumn, "C/F");
+        cellTable.setColumnWidth(doneColumn, 2, Unit.PCT);
 
-        // Completed
-        Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(
+
+        // Scheduled
+        Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getCompleted();
+                return "" + object.getScheduled();
             }
         };
-        completedColumn.setSortable(true);
-        sortHandler.setComparator(completedColumn, new Comparator<ExecutionDTO>() {
+        scheduledColumn.setSortable(true);
+        sortHandler.setComparator(scheduledColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return new Integer(o1.getCompleted()).compareTo(o2.getCompleted());
+                return new Integer(o1.getScheduled()).compareTo(o2.getScheduled());
             }
         });
-        cellTable.addColumn(completedColumn, "Completed");
-        cellTable.setColumnWidth(completedColumn, 5, Unit.PCT);
+        cellTable.addColumn(scheduledColumn, "Scheduled");
+        cellTable.setColumnWidth(scheduledColumn, 5, Unit.PCT);
 
         // Failure
         Column<ExecutionDTO, String> failureColumn = new Column<ExecutionDTO, String>(
@@ -303,23 +304,23 @@ public class IngestionHistoryWidget extends IngestionWidget {
         cellTable.addColumn(failureColumn, "Failure");
         cellTable.setColumnWidth(failureColumn, 5, Unit.PCT);
 
-        // Scheduled
-        Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
+        // Completed
+        Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getScheduled();
+                return "" + object.getCompleted();
             }
         };
-        scheduledColumn.setSortable(true);
-        sortHandler.setComparator(scheduledColumn, new Comparator<ExecutionDTO>() {
+        completedColumn.setSortable(true);
+        sortHandler.setComparator(completedColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return new Integer(o1.getScheduled()).compareTo(o2.getScheduled());
+                return new Integer(o1.getCompleted()).compareTo(o2.getCompleted());
             }
         });
-        cellTable.addColumn(scheduledColumn, "Scheduled");
-        cellTable.setColumnWidth(scheduledColumn, 5, Unit.PCT);
+        cellTable.addColumn(completedColumn, "Completed");
+        cellTable.setColumnWidth(completedColumn, 5, Unit.PCT);
 
         // Log file
         Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
