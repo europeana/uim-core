@@ -48,7 +48,7 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void worked(int work) {
         super.worked(work);
-        if (getWorked() % 1000 == 0) {
+        if (getWorked() % 10000 == 0) {
             try {
                 long period = System.currentTimeMillis() - getStart();
                 double persec = getWorked() * 1000.0 / period;
