@@ -117,7 +117,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 workingDirectory = resourceEngine.getWorkingDirectory().getCanonicalPath();
                 workingDirectory  += File.separatorChar + "logging";
                 if (!new File(workingDirectory).exists()) {
-                    new File(workingDirectory).mkdir();
+                    new File(workingDirectory).mkdirs();
                 }
             }
             
