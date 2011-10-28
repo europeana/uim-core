@@ -175,7 +175,7 @@ public class LogFileService extends HttpServlet {
             color = "#FF0000";
         }
         
-        String reformattedStr=thisLine.replaceAll("\\n", "\n");
+        String reformattedStr=thisLine.replaceAll("\\n", "\n     ");
         if (color == null) {
             out.write("<div><code>" + reformattedStr + "</code></div>");
         } else {
