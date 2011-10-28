@@ -10,8 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.StringUtils;
-
 import eu.europeana.uim.store.Execution;
 
 /**
