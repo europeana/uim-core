@@ -143,11 +143,22 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
-
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
+                
                 storageEngine.updateExecution(e);
+                
                 loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator", "start",
                         "Started:" + activeExecution.getExecution().getName());
+                Properties execProps = activeExecution.getProperties();
+                if (execProps != null) {
+                    ArrayList<String> results=new ArrayList<String>();
+                    for (Object key : execProps.keySet()) {
+                        Object value = execProps.get(key);
+                        results.add(key+" = "+value);
+                    }              
+                    loggingFacadeEngine.log(e, Level.INFO, "Execution parametera: ",results.toArray(new String[0] ));
+                }
+                
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
