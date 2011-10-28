@@ -79,15 +79,12 @@ public class ExecutionLogFileWriter<I> {
         try {
             fstream = new FileWriter(logFile, true);
             out = new BufferedWriter(fstream);
-            
-            // we do not encode somehting here to HTML
-//            String cleanMessage = message.replace("|", "&179;");
-//            cleanMessage = cleanMessage.replace("<", "&lt;");
-//            cleanMessage = cleanMessage.replace(">", "&gt;");
-            
-            String stripped = StringUtils.strip(message, " \t\n\r");
+
+           //put a tab on the second to last line from every message
+           String cleanedMessage = message.replace("\n", "\n\t");
+
             out.write(dateFormat.format(new Date()) + "|" +
-                      String.format("%1$#9s", level.getName()) + "|" + stripped + "\n");
+                      String.format("%1$#9s", level.getName()) + "|" + cleanedMessage + "\n");
         } finally {
             if (out != null) out.close();
             if (fstream != null) fstream.close();
