@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.PartyRelation;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
@@ -22,7 +23,6 @@ import org.theeuropeanlibrary.model.common.subject.Subject;
 import org.theeuropeanlibrary.model.common.subject.TitleSubject;
 import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.common.time.Temporal;
-import org.theeuropeanlibrary.model.tel.qualifier.AuthorityIdentifierType;
 import org.theeuropeanlibrary.translation.Translations;
 
 import eu.europeana.uim.store.MetaDataRecord;
@@ -209,7 +209,7 @@ public final class ObjectModelUtils {
     public static List<Long> getAuthorityParties(Party party) {
         List<Long> result = new ArrayList<Long>();
         for (Identifier id : party.getIdentifiers()) {
-            if (id.getScope().equals(AuthorityIdentifierType.TEL_AUTHORITY.toString())) {
+            if (id.getScope().equals(KnowledgeOrganizationSystem.TEL.toString())) {
                 result.add(Long.parseLong(id.getIdentifier()));
             }
         }

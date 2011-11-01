@@ -66,11 +66,15 @@ public enum KnowledgeOrganizationSystem {
      */
     EMBNE,
     /**
-     * Id in CERIF if mapped from 
+     * Id in CERIF if mapped from
      */
     CERIF,
     /**
      * Id in used to identify clusters of manfiests
      */
-    MANIFEST_GROUP,
+    MANIFEST_GROUP, 
+    /**
+     * VIAF identifier
+     */
+    VIAF,
 }

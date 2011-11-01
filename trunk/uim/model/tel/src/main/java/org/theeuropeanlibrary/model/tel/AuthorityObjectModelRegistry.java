@@ -9,11 +9,13 @@ import java.util.Map;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
+import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.tel.authority.Occurrences;
 import org.theeuropeanlibrary.model.tel.authority.OrganizationNameForm;
 import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
 import org.theeuropeanlibrary.model.tel.authority.UpdateFromDataSource;
-import org.theeuropeanlibrary.model.tel.qualifier.AuthorityIdentifierType;
 import org.theeuropeanlibrary.model.tel.qualifier.AuthorityLinkTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
 import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
@@ -85,6 +87,14 @@ public final class AuthorityObjectModelRegistry {
                                                                                                              "link",
                                                                                                              Link.class);
 
+    /**
+     * authority topics
+     */
+    public static final TKey<AuthorityObjectModelRegistry, Topic>                TOPIC               = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "topic",
+                                                                                                             Topic.class);
+
     private static final Map<Class<?>, TKey<?, ?>>                               tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
     private static final Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>    validQualifiers     = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>();
@@ -107,12 +117,18 @@ public final class AuthorityObjectModelRegistry {
         });
         validQualifiers.put(IDENTIFIER, new ArrayList<Class<? extends Enum<?>>>() {
             {
-                add(AuthorityIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
         validQualifiers.put(LINK, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(AuthorityLinkTarget.class);
+            }
+        });
+        validQualifiers.put(TOPIC, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(Language.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
 
