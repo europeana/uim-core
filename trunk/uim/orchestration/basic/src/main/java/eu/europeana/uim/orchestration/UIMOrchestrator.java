@@ -126,14 +126,13 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
 
-            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e,
+            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w, properties,
                     loggingEngine, executionLogFileWriter);
 
             monitor.beginTask(w.getName(), 1);
 
             // also add the logfile listener to the monitor to log the progres
             monitor.addListener(loggingFacadeEngine);
-
 
             e.setActive(true);
             e.setStartTime(new Date());
