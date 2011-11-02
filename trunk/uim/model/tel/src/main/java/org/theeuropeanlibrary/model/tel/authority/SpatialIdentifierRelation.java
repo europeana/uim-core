@@ -1,5 +1,5 @@
 /* IdentifierRelation.java - created on 31 de Out de 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model.tel.spatial;
+package org.theeuropeanlibrary.model.tel.authority;
 
 /**
  * Relation between an identifier and a toponym
@@ -7,7 +7,7 @@ package org.theeuropeanlibrary.model.tel.spatial;
  * @author Nuno Freire (nfreire@gmail.com)
  * @date 31 de Out de 2011
  */
-public enum IdentifierRelation {
+public enum SpatialIdentifierRelation {
 	/** 
 	 *	The identifier identifies the toponym itself
 	 */

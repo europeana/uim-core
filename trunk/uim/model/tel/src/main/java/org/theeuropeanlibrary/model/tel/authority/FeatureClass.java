@@ -1,4 +1,4 @@
-package org.theeuropeanlibrary.model.tel.spatial;
+package org.theeuropeanlibrary.model.tel.authority;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,6 +69,20 @@ public enum FeatureClass {
 	 */
 	public static FeatureClass fromGeonamesValue(String value) {
 		return GEONAMES_CODE_MAP.get(value);
+	}
+	
+
+	/**
+	 * Creates an instance from a Geonames Feature Class Code in a URI
+	 * 
+	 * @param uri
+	 * @return FeatureClass
+	 */
+	public static FeatureClass fromGeonamesUriValue(String uri) {
+		String featCode = uri.substring(uri.lastIndexOf("#")+1);
+		if(featCode.equals("null"))
+			return null;
+		return fromGeonamesValue(featCode);
 	}
 
 }
