@@ -70,11 +70,15 @@ public enum KnowledgeOrganizationSystem {
      */
     CERIF,
     /**
-     * Id in used to identify clusters of manfiests
+     * Id in used to identify clusters of manifests
      */
     MANIFEST_GROUP, 
     /**
      * VIAF identifier
      */
     VIAF,
+    /**
+     * Geonames identifier
+     */
+    GEONAMES,
 }
