@@ -122,7 +122,4 @@ public class GeoReferencedPlace extends NamedPlace {
             return false;
         return true;
     }
-
-
-    
 }

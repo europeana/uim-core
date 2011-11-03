@@ -50,7 +50,7 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * Creates a new instance of this class.
      */
     public BoundingBoxReferencedPlace() {
-    	super();
+        super();
     }
 
     /**
@@ -215,6 +215,4 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
             return false;
         return true;
     }
-
-    
 }

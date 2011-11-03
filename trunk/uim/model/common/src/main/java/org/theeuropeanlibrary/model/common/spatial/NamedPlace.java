@@ -86,10 +86,9 @@ public class NamedPlace extends SpatialEntity {
         } else if (!placeName.equals(other.placeName)) return false;
         return true;
     }
-    
+
     @Override
     public String toString() {
-    	return placeName;
+        return placeName;
     }
- 
 }
