@@ -213,7 +213,7 @@ public class LogFileService extends HttpServlet {
         out.write("<!DOCTYPE html>  \n" + "<html lang=\"en\">  \n" + "  <head>  \n"
                   + "    <meta charset=\"utf-8\">  \n" + "    <title>Logfile</title>  \n");
         if (moreData) {
-           out.write( "<meta http-equiv=\"refresh\" content=\"5\" />"); 
+           out.write( "<meta http-equiv=\"refresh\" content=\"30\" />"); 
         }
         out.write("<script>function load()\n" + 
         		"{\n" + 
