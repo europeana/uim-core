@@ -11,12 +11,13 @@ import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
-import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.tel.authority.Coordinates;
 import org.theeuropeanlibrary.model.tel.authority.FeatureClass;
+import org.theeuropeanlibrary.model.tel.authority.NamedPlaceNameForm;
 import org.theeuropeanlibrary.model.tel.authority.Occurrences;
 import org.theeuropeanlibrary.model.tel.authority.OrganizationNameForm;
 import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
+import org.theeuropeanlibrary.model.tel.authority.TopicNameForm;
 import org.theeuropeanlibrary.model.tel.authority.UpdateFromDataSource;
 import org.theeuropeanlibrary.model.tel.qualifier.AuthorityLinkTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
@@ -50,6 +51,22 @@ public final class AuthorityObjectModelRegistry {
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "organization name form",
                                                                                                              OrganizationNameForm.class);
+
+    /**
+     * authority topics
+     */
+    public static final TKey<AuthorityObjectModelRegistry, TopicNameForm>        TOPIC_FORM          = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "topic name form",
+                                                                                                             TopicNameForm.class);
+
+    /**
+     * named form of a geographic entity
+     */
+    public static final TKey<AuthorityObjectModelRegistry, NamedPlaceNameForm>   NAMED_PLACE_FORM    = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "named place name form",
+                                                                                                             NamedPlaceNameForm.class);
 
     /**
      * Nationalities of the entity
@@ -91,21 +108,6 @@ public final class AuthorityObjectModelRegistry {
                                                                                                              "link",
                                                                                                              Link.class);
 
-    /**
-     * authority topics
-     */
-    public static final TKey<AuthorityObjectModelRegistry, Topic>                TOPIC               = TKey.register(
-                                                                                                             AuthorityObjectModelRegistry.class,
-                                                                                                             "topic",
-                                                                                                             Topic.class);
-
-    /**
-     * named form of a geographic entity
-     */
-    public static final TKey<AuthorityObjectModelRegistry, String>               STRING              = TKey.register(
-                                                                                                             AuthorityObjectModelRegistry.class,
-                                                                                                             "string",
-                                                                                                             String.class);
     /**
      * geographic feature class
      */
@@ -161,14 +163,14 @@ public final class AuthorityObjectModelRegistry {
                 add(AuthorityLinkTarget.class);
             }
         });
-        validQualifiers.put(TOPIC, new ArrayList<Class<? extends Enum<?>>>() {
+        validQualifiers.put(TOPIC_FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(KnowledgeOrganizationSystem.class);
             }
         });
 
-        validQualifiers.put(STRING, new ArrayList<Class<? extends Enum<?>>>() {
+        validQualifiers.put(NAMED_PLACE_FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(SpatialNameQualifier.class);
                 add(Language.class);
