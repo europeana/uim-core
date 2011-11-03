@@ -106,7 +106,7 @@ public abstract class NameForm<T> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        NameForm<?>other = (NameForm<?>)obj;
+        NameForm<?> other = (NameForm<?>)obj;
         if (nameForm == null) {
             if (other.nameForm != null) return false;
         } else if (!nameForm.equals(other.nameForm)) return false;
@@ -115,8 +115,4 @@ public abstract class NameForm<T> {
         } else if (!CollectionUtils.isEqualCollection(sources, other.sources)) return false;
         return true;
     }
-    
-    
-    
-    
 }

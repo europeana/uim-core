@@ -102,36 +102,34 @@ public final class AuthorityObjectModelRegistry {
     /**
      * named form of a geographic entity
      */
-    public static final TKey<AuthorityObjectModelRegistry, String>       STRING         = TKey.register(
-    		AuthorityObjectModelRegistry.class,
+    public static final TKey<AuthorityObjectModelRegistry, String>               STRING              = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
                                                                                                              "string",
                                                                                                              String.class);
     /**
      * geographic feature class
      */
-    public static final TKey<AuthorityObjectModelRegistry, FeatureClass>                 FEATURE_CLASS                = TKey.register(
-    		AuthorityObjectModelRegistry.class,
+    public static final TKey<AuthorityObjectModelRegistry, FeatureClass>         FEATURE_CLASS       = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
                                                                                                              "feature class",
                                                                                                              FeatureClass.class);
-    
-    /**
-     * For spatial records - Population 
-     */
-    public static final TKey<AuthorityObjectModelRegistry, Long>       POPULATION         = TKey.register(
-    		AuthorityObjectModelRegistry.class,
-    		"population",
-    		Long.class);
 
     /**
-     * For spatial records - A coordinate - longitude or latitude 
+     * For spatial records - Population
      */
-    public static final TKey<AuthorityObjectModelRegistry, Coordinates>       COORDINATES         = TKey.register(
-    		AuthorityObjectModelRegistry.class,
+    public static final TKey<AuthorityObjectModelRegistry, Long>                 POPULATION          = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "population",
+                                                                                                             Long.class);
+
+    /**
+     * For spatial records - A coordinate - longitude or latitude
+     */
+    public static final TKey<AuthorityObjectModelRegistry, Coordinates>          COORDINATES         = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
                                                                                                              "coordinates",
                                                                                                              Coordinates.class);
-    
-    
-    
+
     private static final Map<Class<?>, TKey<?, ?>>                               tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
     private static final Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>    validQualifiers     = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>();
@@ -154,7 +152,7 @@ public final class AuthorityObjectModelRegistry {
         });
         validQualifiers.put(IDENTIFIER, new ArrayList<Class<? extends Enum<?>>>() {
             {
-        		add(SpatialIdentifierRelation.class);
+                add(SpatialIdentifierRelation.class);
                 add(KnowledgeOrganizationSystem.class);
             }
         });
@@ -169,14 +167,13 @@ public final class AuthorityObjectModelRegistry {
                 add(KnowledgeOrganizationSystem.class);
             }
         });
-        
+
         validQualifiers.put(STRING, new ArrayList<Class<? extends Enum<?>>>() {
             {
-            	add(SpatialNameQualifier.class);
+                add(SpatialNameQualifier.class);
                 add(Language.class);
             }
         });
-        
 
         for (Field field : AuthorityObjectModelRegistry.class.getDeclaredFields()) {
             try {
