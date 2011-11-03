@@ -126,8 +126,8 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
 
-            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w, properties,
-                    loggingEngine, executionLogFileWriter);
+            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
+                    properties, loggingEngine, executionLogFileWriter);
             monitor.addListener(loggingFacadeEngine);
 
             monitor.beginTask(w.getName(), 1);
@@ -141,23 +141,23 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-                
+
                 storageEngine.updateExecution(e);
-                
-                loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator", "start",
+
+                loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator",
                         "Started:" + activeExecution.getExecution().getName());
 
                 // now handled by monitor.beginTask
-//                Properties execProps = activeExecution.getProperties();
-//                if (execProps != null) {
-//                    ArrayList<String> results=new ArrayList<String>();
-//                    for (Object key : execProps.keySet()) {
-//                        Object value = execProps.get(key);
-//                        results.add(key+" = "+value);
-//                    }              
-//                    loggingFacadeEngine.log(e, Level.INFO, "Execution parametera: ",results.toArray(new String[0] ));
-//                }
-                
+// Properties execProps = activeExecution.getProperties();
+// if (execProps != null) {
+// ArrayList<String> results=new ArrayList<String>();
+// for (Object key : execProps.keySet()) {
+// Object value = execProps.get(key);
+// results.add(key+" = "+value);
+// }
+// loggingFacadeEngine.log(e, Level.INFO, "Execution parametera: ",results.toArray(new String[0] ));
+// }
+
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
