@@ -17,12 +17,12 @@ import org.theeuropeanlibrary.model.tel.authority.FeatureClass;
 import org.theeuropeanlibrary.model.tel.authority.Occurrences;
 import org.theeuropeanlibrary.model.tel.authority.OrganizationNameForm;
 import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
-import org.theeuropeanlibrary.model.tel.authority.SpatialIdentifierRelation;
-import org.theeuropeanlibrary.model.tel.authority.SpatialNameQualifier;
 import org.theeuropeanlibrary.model.tel.authority.UpdateFromDataSource;
 import org.theeuropeanlibrary.model.tel.qualifier.AuthorityLinkTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
 import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
+import org.theeuropeanlibrary.model.tel.qualifier.SpatialIdentifierRelation;
+import org.theeuropeanlibrary.model.tel.qualifier.SpatialNameQualifier;
 
 import eu.europeana.uim.common.TKey;
 

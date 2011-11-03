@@ -1,5 +1,5 @@
 /* NameQualifier.java - created on 31 de Out de 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model.tel.authority;
+package org.theeuropeanlibrary.model.tel.qualifier;
 
 /**
  * Qualifier for toponym names
