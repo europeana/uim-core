@@ -144,7 +144,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             Collections.sort(r, new Comparator<ExecutionDTO>() {
                 @Override
                 public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                    return o2.getEndTime().compareTo(o1.getEndTime());
+                    if (o2.getEndTime() != null) {
+                        return o2.getEndTime().compareTo(o1.getEndTime());
+                    } else {
+                        return o1 == null ? 0 : -1;
+                    }
                 }
 
             });
