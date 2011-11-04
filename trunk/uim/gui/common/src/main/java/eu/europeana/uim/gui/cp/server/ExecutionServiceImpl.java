@@ -113,11 +113,25 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         }
 
         if (executions != null) {
+            HashSet<Long> active = new HashSet<Long>();
+            try {
+                Orchestrator<Long> orchestrator = (Orchestrator<Long>)getEngine().getRegistry().getOrchestrator();
+                for (ActiveExecution<Long> ae : orchestrator.getActiveExecutions()) {
+                    active.add(ae.getExecution().getId());
+                }
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "Could not query active execution!", t);
+            }
+
+            // sometimes something goes wrong and the execuiton is not updated to be
+            // inactive, even if its long gone - thats why we need to check against
+            // the current live executions.
             for (Execution<Long> execution : executions) {
-                if (!execution.isActive()) {
+                if (!active.contains(execution.getId())) {
                     try {
                         if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
-                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(), execution, null);
+                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
+                                    execution, null);
                             r.add(exec);
                         }
                     } catch (Throwable t) {
@@ -293,7 +307,8 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return exec;
     }
 
-    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution<Long> e, ActiveExecution<Long> ae) {
+    private ExecutionDTO getWrappedExecutionDTO(Long execution, Execution<Long> e,
+            ActiveExecution<Long> ae) {
         ExecutionDTO wrapped = wrappedExecutionDTOs.get(execution);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
@@ -318,15 +333,14 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setEndTime(e.getEndTime());
         }
         wrapped.setCanceled(e.isCanceled());
-        
-        
+
         if (e.isActive() && ae != null) {
             wrapped.setScheduled(ae.getScheduledSize());
             wrapped.setCompleted(ae.getCompletedSize());
             wrapped.setFailure(ae.getFailureSize());
             wrapped.setPaused(ae.isPaused());
-            
-            Set<Entry<String,String>> entrySet = ae.getExecution().values().entrySet();
+
+            Set<Entry<String, String>> entrySet = ae.getExecution().values().entrySet();
             for (Entry<String, String> entry : entrySet) {
                 wrapped.setValue(entry.getKey(), entry.getValue());
             }
@@ -337,13 +351,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             progress.setTask(ae.getMonitor().getTask());
             progress.setSubtask(ae.getMonitor().getSubtask());
             progress.setDone(!e.isActive());
-            
+
         } else if (!e.isActive()) {
             wrapped.setScheduled(e.getProcessedCount());
             wrapped.setCompleted(e.getSuccessCount());
             wrapped.setFailure(e.getFailureCount());
-            
-            Set<Entry<String,String>> entrySet = e.values().entrySet();
+
+            Set<Entry<String, String>> entrySet = e.values().entrySet();
             for (Entry<String, String> entry : entrySet) {
                 wrapped.setValue(entry.getKey(), entry.getValue());
             }
