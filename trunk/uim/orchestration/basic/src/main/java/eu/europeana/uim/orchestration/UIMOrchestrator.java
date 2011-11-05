@@ -147,10 +147,6 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
-                
-
-                loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator",
-                        "Started:" + activeExecution.getExecution().getName());
 
                 return activeExecution;
             } catch (Throwable t) {
