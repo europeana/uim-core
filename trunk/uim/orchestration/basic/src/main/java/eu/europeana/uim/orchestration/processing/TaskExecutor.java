@@ -27,7 +27,7 @@ import eu.europeana.uim.workflow.TaskStatus;
  * @since Nov 29, 2010
  */
 public class TaskExecutor extends ThreadPoolExecutor {
-    private static Logger log       = Logger.getLogger(TaskExecutor.class.getName());
+    private static Logger log = Logger.getLogger(TaskExecutor.class.getName());
 
     /**
      * Constructor creates an worker thread pool of the specified size. The given scheduler is used
@@ -40,8 +40,8 @@ public class TaskExecutor extends ThreadPoolExecutor {
      */
     public TaskExecutor(int corePoolSize, int maxPoolSize, BlockingQueue<Runnable> queue,
                         String name) {
-        super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue,
-                new SimpleThreadFactory(name, name));
+        super(corePoolSize, maxPoolSize, 10, TimeUnit.SECONDS, queue, new SimpleThreadFactory(name,
+                name));
 
         prestartCoreThread();
     }
@@ -63,14 +63,11 @@ public class TaskExecutor extends ThreadPoolExecutor {
             afterExecuteTask((Task<?>)r, t);
         }
     }
-    
 
     private <I> void beforeExecuteTask(Task<I> task) {
         task.setUp();
         task.setStatus(TaskStatus.PROCESSING);
     }
-
-
 
     private <I> void afterExecuteTask(Task<I> task, Throwable t) {
         boolean success = true;
@@ -82,27 +79,28 @@ public class TaskExecutor extends ThreadPoolExecutor {
             success = false;
             if (t instanceof CorruptedMetadataRecordException) {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t, metaDataRecord,
-                            "Taskexecution",
+                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t,
+                            metaDataRecord, "Taskexecution",
                             "Major error in the workflow the metadata record is broken!");
                 }
             } else if (t instanceof IngestionPluginFailedException) {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  t, metaDataRecord,
-                            "PluginFailed",
+                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(), t,
+                            metaDataRecord, "PluginFailed",
                             "Major error in the workflow plugin execution must be stopped!");
                 }
                 task.getExecutionContext().setThrowable(t);
 
             } else {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(),  t, metaDataRecord,
-                            "Taskexception", "An uncatched throwable occured:" + t.getMessage());
+                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t,
+                            metaDataRecord, "Taskexception",
+                            "An uncatched throwable occured:" + t.getMessage());
                 }
             }
-            log.log(java.util.logging.Level.SEVERE,
-                    "Task failed on record " + metaDataRecord + " in plugin " +
-                            task.getStep().getIdentifier(), t);
+            log.log(java.util.logging.Level.SEVERE, "Task failed on record " + metaDataRecord +
+                                                    " in plugin " + task.getStep().getIdentifier(),
+                    t);
         } else if (!task.isSuccessfulProcessing()) {
             if (task.isMandatory()) {
                 success = false;
@@ -111,20 +109,15 @@ public class TaskExecutor extends ThreadPoolExecutor {
                             execution,
                             Level.WARNING,
                             task.getStep(),
-                            t, 
+                            t,
                             metaDataRecord,
                             "Taskexecution",
                             "Task could not perform its work and since it is mandatory for the workflow, the workflow cannot continue!");
                 }
             } else {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(
-                            execution,
-                            Level.WARNING,
-                            task.getStep(),
-                            t,
-                            metaDataRecord,
-                            "Taskexecution",
+                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t,
+                            metaDataRecord, "Taskexecution",
                             "Task could not perform its work, but the processing of the meta data record can continue!");
                 }
             }
@@ -136,6 +129,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 if (task.isSavepoint()) {
                     task.save();
                 }
+                
                 synchronized (task.getOnSuccess()) {
                     task.getOnSuccess().add(task);
 
@@ -148,6 +142,12 @@ public class TaskExecutor extends ThreadPoolExecutor {
             } catch (StorageEngineException e1) {
                 task.setThrowable(e1);
                 task.setStatus(TaskStatus.FAILED);
+                if (loggingEngine != null) {
+                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(), e1,
+                            metaDataRecord, "StorageFailed",
+                            "Major error in the storage execution must be stopped!");
+                }
+                
                 synchronized (task.getOnFailure()) {
                     task.getOnFailure().add(task);
                     // within same synch block!!
@@ -155,16 +155,9 @@ public class TaskExecutor extends ThreadPoolExecutor {
                         task.getAssigned().remove(task);
                     }
                 }
-                try {
-                    task.save();
-                } catch (Throwable e2) {
-                    if (loggingEngine != null) {
-                        loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  e2, metaDataRecord,
-                                "StorageFailed",
-                                "Major error in the workflow plugin execution must be stopped!");
-                    }
-                    task.getExecutionContext().setThrowable(new IngestionPluginFailedException("Failed to save mdr.", e2));
-                }
+
+                task.getExecutionContext().setThrowable(
+                        new IngestionPluginFailedException("Failed to save mdr.", e1));
             }
         } else {
             task.setThrowable(t);
@@ -181,11 +174,12 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 task.save();
             } catch (Throwable e2) {
                 if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(),  e2, metaDataRecord,
-                            "StorageFailed",
+                    loggingEngine.logFailed(execution, Level.SEVERE, task.getStep(), e2,
+                            metaDataRecord, "StorageFailed",
                             "Major error in the workflow plugin execution must be stopped!");
                 }
-                task.getExecutionContext().setThrowable(new IngestionPluginFailedException("Failed to save mdr.", e2));
+                task.getExecutionContext().setThrowable(
+                        new IngestionPluginFailedException("Failed to save mdr.", e2));
             }
         }
 

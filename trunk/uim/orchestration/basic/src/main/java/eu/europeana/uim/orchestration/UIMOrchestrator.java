@@ -127,8 +127,9 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
             e.setActive(true);
             e.setStartTime(new Date());
+            
+            // must update to get the id filled.
             storageEngine.updateExecution(e);
-
             
             LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
                     properties, loggingEngine, executionLogFileWriter);
@@ -137,12 +138,16 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
 
             try {
+                e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
+                // must update a second time, to get the log file stored, with
+                // checkpoint to guarantee persistence.
+                storageEngine.updateExecution(e);
+                storageEngine.checkpoint();
+
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
                 
-                e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-                storageEngine.updateExecution(e);
 
                 loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator",
                         "Started:" + activeExecution.getExecution().getName());
