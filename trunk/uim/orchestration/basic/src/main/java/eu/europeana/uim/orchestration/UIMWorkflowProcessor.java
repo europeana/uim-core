@@ -97,6 +97,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     } else if (execution.getMonitor().isCancelled()) {
                         complete(execution, true);
                         continue;
+                    } else if (execution.getThrowable() != null) {
+                        complete(execution, true);
+                        continue;
                     }
 
                     try {
@@ -132,6 +135,13 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                 IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(
                                         new IngestionPlugin[0]);
                                 for (int i = steps.length - 1; i >= 0; i--) {
+                                    // early failure, if something goes wrong we
+                                    // can cancel the execution here "early"
+                                    if (execution.getThrowable() != null) {
+                                        complete(execution, true);
+                                        break;
+                                    }
+
                                     IngestionPlugin thisStep = steps[i];
 
                                     Queue<Task<I>> prevSuccess = i > 0
@@ -162,6 +172,15 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                     }
 
                                     while (task != null) {
+                                        // early failure, if something goes wrong we
+                                        // can cancel the execution here "early"
+                                        // we cannot check the task, because we do not 
+                                        // know when it's going to be executed
+                                        if (execution.getThrowable() != null) {
+                                            complete(execution, true);
+                                            break;
+                                        }
+                                        
                                         isbusy |= true; // well there is something todo
 
                                         task.setStep(thisStep, mandatory);
@@ -177,12 +196,14 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                         }
 
                                         try {
-                                            TaskExecutorRegistry.getInstance().execute(execution, thisStep.getIdentifier(), task);
+                                            TaskExecutorRegistry.getInstance().execute(execution,
+                                                    thisStep.getIdentifier(), task);
                                         } catch (Throwable t) {
                                             // if something goes wrong here
                                             // we have a serios problem and
                                             // should not continue the execution.
                                             execution.setThrowable(t);
+                                            complete(execution, true);
                                         }
 
                                         // if this is the first step,
@@ -190,12 +211,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                         // newly created task from the start plugin.
                                         if (i == 0) {
                                             execution.incrementScheduled(1);
-                                        }
-
-                                        if (execution.getThrowable() != null) {
-                                            execution.setThrowable(task.getThrowable());
-                                            complete(execution, true);
-                                            break;
                                         }
 
                                         synchronized (prevSuccess) {
@@ -316,9 +331,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             executionBean.setSuccessCount(execution.getCompletedSize());
             executionBean.setFailureCount(execution.getFailureSize());
             executionBean.setProcessedCount(execution.getScheduledSize());
+
             execution.getStorageEngine().updateExecution(executionBean);
-            
-            
+
         }
 
         try {
