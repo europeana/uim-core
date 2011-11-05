@@ -125,38 +125,27 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                     workingDirectory);
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
-
-            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
-                    properties, loggingEngine, executionLogFileWriter);
-            monitor.addListener(loggingFacadeEngine);
-
-            monitor.beginTask(w.getName(), 1);
-
             e.setActive(true);
             e.setStartTime(new Date());
             storageEngine.updateExecution(e);
+
+            
+            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
+                    properties, loggingEngine, executionLogFileWriter);
+            monitor.addListener(loggingFacadeEngine);
+            monitor.beginTask(w.getName(), 1);
+
 
             try {
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
                 processor.schedule(activeExecution);
+                
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-
                 storageEngine.updateExecution(e);
 
                 loggingFacadeEngine.log(e, Level.INFO, "UIMOrchestrator",
                         "Started:" + activeExecution.getExecution().getName());
-
-                // now handled by monitor.beginTask
-// Properties execProps = activeExecution.getProperties();
-// if (execProps != null) {
-// ArrayList<String> results=new ArrayList<String>();
-// for (Object key : execProps.keySet()) {
-// Object value = execProps.get(key);
-// results.add(key+" = "+value);
-// }
-// loggingFacadeEngine.log(e, Level.INFO, "Execution parametera: ",results.toArray(new String[0] ));
-// }
 
                 return activeExecution;
             } catch (Throwable t) {

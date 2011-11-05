@@ -249,7 +249,14 @@ public class IngestionHistoryWidget extends IngestionWidget {
         sortHandler.setComparator(endTimeColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getEndTime().compareTo(o2.getEndTime());
+                if (o1.getEndTime() != null && o2.getEndTime() != null) {
+                    return o1.getEndTime().compareTo(o2.getEndTime());
+                } else {
+                    if (o1.getEndTime() == null) { 
+                        return o2.getEndTime() == null ? 0 : -1; 
+                    }
+                    return o2.getEndTime() == null ? 1 : 0;
+                }
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
@@ -263,7 +270,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 return object.isCanceled();
             }
         };
-        doneColumn.setSortable(false);
+        doneColumn.setSortable(true);
         cellTable.addColumn(doneColumn, "C/F");
         cellTable.setColumnWidth(doneColumn, 4, Unit.PCT);
 

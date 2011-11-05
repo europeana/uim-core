@@ -351,6 +351,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         if (execution.getWorkflow().getSteps().isEmpty())
             throw new IllegalStateException("Empty workflow not allowed: " +
                                             execution.getWorkflow().getClass().getName());
+        synchronized (executions) {
+            executions.add(execution);
+        }
 
         // init in separate thread, so that we are not blocking here.
         new Thread(new Runnable() {
@@ -358,9 +361,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             @Override
             public void run() {
                 try {
-                    synchronized (executions) {
-                        executions.add(execution);
-                    }
 
                     WorkflowStart start = execution.getWorkflow().getStart();
                     start.initialize(execution, execution.getStorageEngine());

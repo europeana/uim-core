@@ -147,10 +147,10 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                     if (o2.getEndTime() != null && o1.getEndTime() != null) {
                         return o2.getEndTime().compareTo(o1.getEndTime());
                     } else {
-                        if (o2 == null) { 
-                            return o1 == null ? 0 : -1; 
+                        if (o2.getEndTime() == null) { 
+                            return o1.getEndTime() == null ? 0 : -1; 
                         }
-                        return o1 == null ? 0 : 1;
+                        return o1.getEndTime() == null ? 1 : 0;
                     }
                 }
 
