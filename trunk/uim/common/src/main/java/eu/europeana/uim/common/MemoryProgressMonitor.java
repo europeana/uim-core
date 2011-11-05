@@ -26,6 +26,8 @@ public class MemoryProgressMonitor implements RevisingProgressMonitor {
 	
 	@Override
 	public void beginTask(String task, int work) {
+	    start = System.currentTimeMillis();
+	    
 		this.task = task;
 		this.work = work;
 	}

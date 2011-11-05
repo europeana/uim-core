@@ -61,6 +61,8 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     @Override
     public void beginTask(String name, int work) {
         try {
+            super.beginTask(name, work);
+            
             delegateLogFileWriter.log(execution, Level.INFO, "Start Workflow:" + workflow.getName() + " on " + dataset.toString());
             delegateLogFileWriter.log(execution, Level.INFO, "Command:" + generateCommandLine());
         } catch (IOException e) {
