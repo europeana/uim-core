@@ -106,7 +106,6 @@ public class LogFileService extends HttpServlet {
             throw new RuntimeException("Could not retrieve execution from storage engine", e);
         }
         String logFile=execution.getLogFile();
-        System.out.println("called!");
         if (logFile == null) {
             // the logging engine does not support logging
             // send demo data
