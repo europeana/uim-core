@@ -3,17 +3,14 @@ package eu.europeana.uim.gui.cp.server;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
@@ -43,7 +40,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         super();
     }
 
-    private Map<Long, ProviderDTO> wrappedProviderDTOs = new HashMap<Long, ProviderDTO>();
+// private Map<Long, ProviderDTO> wrappedProviderDTOs = new HashMap<Long, ProviderDTO>();
 
     @Override
     public List<WorkflowDTO> getWorkflows() {
@@ -103,11 +100,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (providers != null) {
             for (Provider<Long> p : providers) {
                 try {
-                    ProviderDTO provider = getWrappedProviderDTO(p.getId());
+                    ProviderDTO provider = getWrappedProviderDTO(p);
                     res.add(provider);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Error in copy data to DTO of provider!", t);
-                    wrappedProviderDTOs.remove(p.getId());
+// wrappedProviderDTOs.remove(p.getId());
                 }
             }
 
@@ -155,13 +152,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     CollectionDTO collDTO = new CollectionDTO(col.getId());
                     collDTO.setName(col.getName());
                     collDTO.setMnemonic(col.getMnemonic());
-                    collDTO.setProvider(getWrappedProviderDTO(provider));
+                    collDTO.setProvider(getWrappedProviderDTO(p));
                     collDTO.setLanguage(col.getLanguage());
                     collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
                     collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
-//                    collDTO.setSize(col.get)
+// collDTO.setSize(col.get)
                     res.add(collDTO);
                 }
 
@@ -179,24 +176,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return res;
     }
 
-    private ProviderDTO getWrappedProviderDTO(Long provider) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
-        ProviderDTO wrapped = wrappedProviderDTOs.get(provider);
-        if (wrapped == null) {
-            try {
-                Provider<Long> p = storage.getProvider(provider);
-                wrapped = new ProviderDTO(p.getId());
-                wrapped.setName(p.getName());
-                wrapped.setMnemonic(p.getMnemonic());
-                wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
-                wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
-                wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
-                wrappedProviderDTOs.put(provider, wrapped);
-            } catch (StorageEngineException e) {
-                e.printStackTrace();
-            }
-        }
-        return wrapped;
+    private ProviderDTO getWrappedProviderDTO(Provider<Long> p) {
+            ProviderDTO wrapped = new ProviderDTO(p.getId());
+            wrapped.setName(p.getName());
+            wrapped.setMnemonic(p.getMnemonic());
+            wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
+            wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
+            wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
+            return wrapped;
     }
 
     @Override
