@@ -14,6 +14,7 @@ import org.theeuropeanlibrary.translation.Translations;
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
+ * @author Nuno Freire (nfreire@gmail.com)
  * @since Mar 18, 2011
  */
 @SuppressWarnings("all")
@@ -57,7 +58,7 @@ public enum Country implements Translatable {
 			"Russian Federation"), RW("RW", "RWA", "RW", "Rwanda"), SA("SA", "SAU", "SU", "Saudi Arabia"), SB("SB", "SLB", "BP", "Solomon Islands"), SC("SC", "SYC", "SE", "Seychelles"), SD("SD", "SDN",
 			"SJ", "Sudan"), SE("SE", "SWE", "SW", "Sweden"), SG("SG", "SGP", "SI", "Singapore"), SH("SH", "SHN", "XJ", "St. Helena"), SI("SI", "SVN", "XV", "Slovenia"), SJ("SJ", "SJM", "-SB",
 			"Svalbard & Jan Mayen Islands"), SK("SK", "SVK", "XO", "Slovakia"), SL("SL", "SLE", "SL", "Sierra Leone"), SM("SM", "SMR", "SM", "San Marino"), SN("SN", "SEN", "SG", "Senegal"), SO("SO", "SOM",
-			"SO", "Somalia"), SR("SR", "SUR", "SR", "Suriname"), ST("ST", "STP", "SF", "Sao Tome and Principe"), SV("SV", "SLV", "ES", "El Salvador"), SY("SY", "SYR", "SY", "Syrian Arab Republic"), SZ(
+			"SO", "Somalia"), SR("SR", "SUR", "SR", "Suriname"), SS("SS", "SSD", "SD", "South Sudan"), ST("ST", "STP", "SF", "Sao Tome and Principe"), SV("SV", "SLV", "ES", "El Salvador"), SY("SY", "SYR", "SY", "Syrian Arab Republic"), SZ(
 			"SZ", "SWZ", "SQ", "Swaziland"), TC("TC", "TCA", "TC", "Turks and Caicos Islands"), TD("TD", "TCD", "CD", "Chad"), TF("TF", "ATF", "", "French Southern Territories"), TG("TG", "TGO", "TG",
 			"Togo"), TH("TH", "THA", "TH", "Thailand"), TJ("TJ", "TJK", "TA", "Tajikistan"), TK("TK", "TKL", "TL", "Tokelau"), TL("TL", "TLS", "EM", "Timor-Leste"), TM("TM", "TKM", "TK", "Turkmenistan"), TN(
 			"TN", "TUN", "TI", "Tunisia"), TO("TO", "TON", "TO", "Tonga"), TR("TR", "TUR", "TU", "Turkey"), TT("TT", "TTO", "TF", "Trinidad and Tobago"), TV("TV", "TUV", "TV", "Tuvalu"), TW("TW", "TWN",
