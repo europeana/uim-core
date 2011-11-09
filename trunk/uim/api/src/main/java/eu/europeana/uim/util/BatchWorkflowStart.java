@@ -53,7 +53,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     /**
      * default batch size
      */
-    public static int                             BATCH_SIZE           = 250;
+    public static int                             BATCH_SIZE           = 1000;
 
     /**
      * Creates a new instance of this class.
