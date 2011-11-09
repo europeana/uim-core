@@ -372,7 +372,7 @@ public class Instant extends Temporal {
     }
 
     /**
-     * Normalizes the time value to the start milisecond of its period. This is essential in order
+     * Normalizes the time value to the start millisecond of its period. This is essential in order
      * to have working hashCode() and equals()
      */
     private void normalizeTime() {
@@ -381,7 +381,7 @@ public class Instant extends Temporal {
             cal.setTime(time);
             switch (granularity) {
             case MILLENNIUM: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) / 1000);
+                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
                 cal.set(Calendar.DAY_OF_MONTH, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -391,7 +391,7 @@ public class Instant extends Temporal {
                 break;
             }
             case CENTURY: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) / 100);
+                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
                 cal.set(Calendar.DAY_OF_MONTH, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -401,7 +401,7 @@ public class Instant extends Temporal {
                 break;
             }
             case DECADE: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) / 10);
+                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
                 cal.set(Calendar.DAY_OF_MONTH, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
