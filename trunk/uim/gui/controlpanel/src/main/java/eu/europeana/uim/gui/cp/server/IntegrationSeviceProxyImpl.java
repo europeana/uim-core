@@ -43,6 +43,8 @@ import eu.europeana.uim.gui.cp.shared.IntegrationStatusDTO.TYPE;
 import eu.europeana.uim.gui.cp.shared.RepoxExecutionStatusDTO;
 import eu.europeana.uim.gui.cp.shared.SugarCRMRecordDTO;
 import eu.europeana.uim.repoxclient.jibxbindings.Success;
+import eu.europeana.uim.repoxclient.objects.HarvestingState;
+import eu.europeana.uim.repoxclient.objects.RepoxHarvestingStatus;
 import eu.europeana.uim.repoxclient.objects.ScheduleInfo;
 import eu.europeana.uim.repoxclient.plugin.RepoxUIMService;
 import eu.europeana.uim.repoxclient.rest.exceptions.AggregatorOperationException;
@@ -392,32 +394,33 @@ public class IntegrationSeviceProxyImpl extends
 					
 					if (col.getValue("repoxID") != null) {
 						try {
-							Success result = repoxService
-									.getHarvestingStatus(col);
+							RepoxHarvestingStatus result = repoxService.getHarvestingStatus(col);
 
-							String status = result.getSuccess();
+							HarvestingState status = result.getStatus();
 
 							HarvestingStatusDTO statusobj = new HarvestingStatusDTO();
 
-							if ("OK".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.OK);
-							} else if ("CANCELLED".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.CANCELLED);
-							} else if ("ERROR".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.ERROR);
-							} else if ("RUNNING".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.RUNNING);
-							} else if ("undefined".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.UNDEFINED);
-							} else if ("WARNING".equals(status)) {
-								statusobj
-										.setStatus(HarvestingStatusDTO.STATUS.WARNING);
+							switch(status){
+							case OK:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.OK);
+								break;
+							case CANCELED:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.CANCELLED);
+								break;
+							case ERROR:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.ERROR);
+								break;
+							case RUNNING:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.RUNNING);
+								break;
+							case undefined:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.UNDEFINED);
+								break;
+							case WARNING:
+								statusobj.setStatus(HarvestingStatusDTO.STATUS.WARNING);
+								break;
 							}
+							
 
 							ret.setHarvestingStatus(statusobj);
 							
