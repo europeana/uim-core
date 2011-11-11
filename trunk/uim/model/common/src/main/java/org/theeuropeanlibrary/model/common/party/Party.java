@@ -41,7 +41,7 @@ public class Party {
      * Where the party is located, or the geographical scope of its operation.
      */
     @FieldId(10)
-    protected SpatialEntity          location;
+    protected SpatialEntity    location;
 
     /**
      * Creates a new instance of this class.
@@ -135,9 +135,9 @@ public class Party {
         this.subject = subject;
     }
 
-
     /**
      * Returns the location.
+     * 
      * @return Where the party is located, or the geographical scope of its operation.
      */
     public SpatialEntity getLocation() {
@@ -146,13 +146,14 @@ public class Party {
 
     /**
      * Sets the location to the given value.
-     * @param location Where the party is located, or the geographical scope of its operation.
+     * 
+     * @param location
+     *            Where the party is located, or the geographical scope of its operation.
      */
     public void setLocation(SpatialEntity location) {
         this.location = location;
     }
-    
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -177,7 +178,7 @@ public class Party {
             if (other.partyName != null) return false;
         } else if (!partyName.equals(other.partyName)) return false;
         if (subject == null) {
-        	if (other.subject != null) return false;
+            if (other.subject != null) return false;
         } else if (!subject.equals(other.subject)) return false;
         if (location == null) {
             if (other.location != null) return false;
@@ -189,6 +190,4 @@ public class Party {
     public String toString() {
         return getDisplay();
     }
-    
-    
 }
