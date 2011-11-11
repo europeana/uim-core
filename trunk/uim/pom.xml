@@ -30,6 +30,13 @@
 
 		<!-- the standard orchestration implementation module -->
 		<module>orchestration/basic</module>
+		
+		<!-- UIM Model Definitions -->
+		<module>model</module>
+
+		<!-- UIM gui common module -->
+		<module>gui/common</module>
+		
 	</modules>
 
 	<build>
