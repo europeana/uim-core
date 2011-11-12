@@ -66,6 +66,7 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
         Request<Long> request = createTestData(count);
+        afterTestData(request);
 
         ActiveExecution<Long> execution = orchestrator.executeWorkflow(w, request);
         execution.waitUntilFinished();
@@ -75,6 +76,12 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
         assertEquals(count, execution.getScheduledSize());
 
         return execution.getExecution();
+    }
+
+    /**
+     * @param request
+     */
+    protected void afterTestData(Request<Long> request) {
     }
 
     /**
