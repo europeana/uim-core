@@ -125,6 +125,9 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                     workingDirectory);
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
+            e.setName(w.getName() +
+                       "/" +
+                       (dataset instanceof Collection ? ((Collection)dataset).getMnemonic() : dataset.toString()));
             e.setActive(true);
             e.setStartTime(new Date());
             
@@ -139,10 +142,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
             try {
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-                // must update a second time, to get the log file stored, with
-                // checkpoint to guarantee persistence.
                 storageEngine.updateExecution(e);
-                storageEngine.checkpoint();
 
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
