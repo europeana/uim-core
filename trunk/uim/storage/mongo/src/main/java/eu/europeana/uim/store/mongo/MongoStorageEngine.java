@@ -90,8 +90,10 @@ public class MongoStorageEngine implements StorageEngine<Long> {
             records = db.getCollection("records");
             Morphia morphia = new Morphia();
 
+          
             // see http://code.google.com/p/morphia/issues/detail?id=208
-            morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
+          /*
+          morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
                 @Override
                 protected ClassLoader getClassLoaderForClass(String clazz, DBObject object) {
                     // we're the only ones for now using Morphia so we can be sure that in any case
@@ -99,7 +101,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
                     return MongoBundleActivator.getBundleClassLoader();
                 }
             });
-
+            */
             morphia.
                     map(MongodbCollection.class).
                     map(MongoExecution.class).

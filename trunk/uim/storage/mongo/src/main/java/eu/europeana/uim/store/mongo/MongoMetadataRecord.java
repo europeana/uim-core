@@ -88,13 +88,12 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
-    @Override
-    public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> deleteValues(
-            TKey<N, T> key) {
-        // return null;
+
+	@Override
+	public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> deleteValues(
+			TKey<N, T> key, Enum<?>... qualifiers) {
         throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-    
+	}
     
     public DBObject getObject() {
         return object;
@@ -103,6 +102,8 @@ public class MongoMetadataRecord<Long> implements MetaDataRecord<Long> {
     public void setObject(BasicDBObject object) {
         this.object = object;
     }
+
+
     
 
 //    public Long getId() {

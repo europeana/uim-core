@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 
 /**
@@ -179,4 +180,16 @@ public class MongodbCollection<T> extends AbstractMongoEntity<Long> implements C
         }
         return string;
     }
+
+	@Override
+	public void putValue(ControlledVocabularyKeyValue key, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getValue(ControlledVocabularyKeyValue key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

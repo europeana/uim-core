@@ -97,4 +97,40 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
         result = 31 * result + date.hashCode();
         return result;
     }
+
+	@Override
+	public void setDataFrom(Date from) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Date getDataFrom() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDataTill(Date till) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Date getDataTill() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFailed(boolean failed) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isFailed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

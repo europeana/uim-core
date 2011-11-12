@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
+
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 
 /**
@@ -117,4 +119,16 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
     public String toString() {
         return getName();
     }
+
+	@Override
+	public void putValue(ControlledVocabularyKeyValue key, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getValue(ControlledVocabularyKeyValue key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
