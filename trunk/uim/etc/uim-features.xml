@@ -27,7 +27,6 @@
     
     
     <feature name="uim-europeana-definitions" version="1.3.0.SNAPSHOT">
-        <bundle>mvn:eu.europeana/europeana-uim-edmcore-definitions/1.3.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-datamodel-definitions/1.3.0-SNAPSHOT</bundle> 
     </feature>
     
