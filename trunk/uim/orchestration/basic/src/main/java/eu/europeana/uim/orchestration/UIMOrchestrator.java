@@ -95,7 +95,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      *            the data set on which this Execution runs
      * @return a new ActiveExecution for this execution request
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public ActiveExecution<I> executeWorkflow(Workflow w, UimDataSet<I> dataset,
             Properties properties) {
