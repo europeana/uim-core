@@ -37,6 +37,7 @@
     </feature>
 
     <feature name="uim-europeana-workflows" version="1.3.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-workflows-startups/1.3.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-workflows-basic/1.3.0-SNAPSHOT</bundle>
     </feature>  
     
