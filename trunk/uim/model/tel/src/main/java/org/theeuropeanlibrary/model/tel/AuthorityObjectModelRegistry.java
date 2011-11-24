@@ -11,6 +11,8 @@ import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
+import org.theeuropeanlibrary.model.common.qualifier.PartyIdentifierType;
+import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
 import org.theeuropeanlibrary.model.tel.authority.Coordinates;
 import org.theeuropeanlibrary.model.tel.authority.FeatureClass;
 import org.theeuropeanlibrary.model.tel.authority.NamedPlaceNameForm;
@@ -156,6 +158,8 @@ public final class AuthorityObjectModelRegistry {
             {
                 add(SpatialIdentifierRelation.class);
                 add(KnowledgeOrganizationSystem.class);
+                add(PartyIdentifierType.class);
+                add(SpatialIdentifierType.class);
             }
         });
         validQualifiers.put(LINK, new ArrayList<Class<? extends Enum<?>>>() {
