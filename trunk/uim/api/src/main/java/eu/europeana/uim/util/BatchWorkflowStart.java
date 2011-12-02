@@ -2,15 +2,21 @@ package eu.europeana.uim.util;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.api.ExecutionContext;
+import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
@@ -31,29 +37,41 @@ import eu.europeana.uim.workflow.WorkflowStartFailedException;
  * @since Feb 14, 2011
  */
 public class BatchWorkflowStart extends AbstractWorkflowStart {
-    private static final Logger                   log                  = Logger.getLogger(BatchWorkflowStart.class.getName());
+    private static final Logger                   log                     = Logger.getLogger(BatchWorkflowStart.class.getName());
 
     /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_HEAD    = "batch.subset.head";
+    public static final String                    BATCH_SUBSET_HEAD       = "batch.subset.head";
 
     /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_SHUFFLE = "batch.subset.shuffle";
+    public static final String                    BATCH_SUBSET_SHUFFLE    = "batch.subset.shuffle";
 
     /** String BATCH_SHUFFLE */
-    public static final String                    BATCH_SHUFFLE        = "batch.shuffle";
+    public static final String                    BATCH_SHUFFLE           = "batch.shuffle";
+
+    /** BatchWorkflowStart COLLECTION_LAST_REQUEST */
+    public static final String                    COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
+
+    /** BatchWorkflowStart COLLECTION_FROM_REQUEST */
+    public static final String                    COLLECTION_FROM_REQUEST = "collection.from.requestdate";
+
+    private static final SimpleDateFormat         ISO8601DATEFORMAT       = new SimpleDateFormat(
+                                                                                  "yyyy-MM-dd");
+    private static final SimpleDateFormat         SIMPLEDATEFORMAT        = new SimpleDateFormat(
+                                                                                  "yyyy.MM.dd");
 
     /**
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
-    private static TKey<BatchWorkflowStart, Data> DATA_KEY             = TKey.register(
-                                                                               BatchWorkflowStart.class,
-                                                                               "data", Data.class);
+    private static TKey<BatchWorkflowStart, Data> DATA_KEY                = TKey.register(
+                                                                                  BatchWorkflowStart.class,
+                                                                                  "data",
+                                                                                  Data.class);
 
     /**
      * default batch size
      */
-    public static int                             BATCH_SIZE           = 1000;
+    public static int                             BATCH_SIZE              = 1000;
 
     /**
      * Creates a new instance of this class.
@@ -76,7 +94,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
     @Override
     public List<String> getParameters() {
-        return Arrays.asList(BATCH_SUBSET_HEAD, BATCH_SUBSET_SHUFFLE, BATCH_SHUFFLE);
+        return Arrays.asList(BATCH_SUBSET_HEAD, BATCH_SUBSET_SHUFFLE, BATCH_SHUFFLE,
+                COLLECTION_LAST_REQUEST, COLLECTION_FROM_REQUEST);
     }
 
     @SuppressWarnings("unchecked")
@@ -92,10 +111,87 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
             if (dataSet instanceof Collection) {
                 try {
                     coll = (Collection<I>)dataSet;
-                    records = storage.getByCollection((Collection<I>)dataSet);
+
+                    boolean lastrequest = Boolean.parseBoolean(context.getProperties().getProperty(
+                            COLLECTION_LAST_REQUEST, "false"));
+
+                    Date thisFrom = null;
+                    String propFrom = context.getProperties().getProperty(COLLECTION_FROM_REQUEST);
+                    if (propFrom != null) {
+                        try {
+                            thisFrom = ISO8601DATEFORMAT.parse(propFrom);
+                        } catch (ParseException e) {
+                            thisFrom = SIMPLEDATEFORMAT.parse(propFrom);
+                        }
+                    }
+
+                    if (lastrequest) {
+                        Request<I> request = null;
+
+                        // retrieve the "last" request
+                        List<Request<I>> requests = storage.getRequests(coll);
+                        for (Request<I> candidate : requests) {
+                            if (request == null ||
+                                request.getDataFrom().before(candidate.getDataFrom())) {
+                                request = candidate;
+                            }
+                        }
+
+                        if (request != null) {
+                            records = storage.getByRequest(request);
+
+                            log.info("Loaded request:" + request.getId());
+                            LoggingEngine<I> loggingEngine = context.getLoggingEngine();
+                            if (loggingEngine != null) {
+                                loggingEngine.log(Level.INFO, "BatchWorkflowStart",
+                                        "Processing only last request:" + request.getId());
+                            }
+                        } else {
+                            throw new WorkflowStartFailedException(
+                                    "No request found for collection <" + coll.getMnemonic() + ">");
+                        }
+
+                    } else if (thisFrom != null) {
+                        List<I> allids = new ArrayList<I>();
+
+                        // retrieve the "last" request
+                        StringBuilder logging = new StringBuilder();
+                        List<Request<I>> requests = storage.getRequests(coll);
+                        for (Request<I> candidate : requests) {
+                            if (candidate.getDataFrom().after(thisFrom)) {
+                                if (logging.length() > 0) {
+                                    logging.append(";");
+                                }
+                                logging.append(candidate.getId());
+
+                                allids.addAll(Arrays.asList(storage.getByRequest(candidate)));
+                            }
+                        }
+
+                        if (!allids.isEmpty()) {
+                            records = allids.toArray((I[])Array.newInstance(
+                                    allids.get(0).getClass(), 0));
+
+                            log.info("Loaded requests:" + logging);
+                            LoggingEngine<I> loggingEngine = context.getLoggingEngine();
+                            if (loggingEngine != null) {
+                                loggingEngine.log(Level.INFO, "BatchWorkflowStart",
+                                        "Processing requests:" + logging);
+                            }
+                        } else {
+                            throw new WorkflowStartFailedException(
+                                    "No requests found for collection <" + coll.getMnemonic() +
+                                            "> after " + thisFrom);
+                        }
+
+                    } else {
+                        records = storage.getByCollection((Collection<I>)dataSet);
+                    }
                 } catch (StorageEngineException e) {
-                    throw new RuntimeException("Collection '" + dataSet.getId() +
-                                               "' could not be retrieved!", e);
+                    throw new WorkflowStartFailedException("Collection '" + dataSet.getId() +
+                                                           "' could not be retrieved!", e);
+                } catch (ParseException e) {
+                    throw new WorkflowStartFailedException("Caused by parse exception", e);
                 }
             } else if (dataSet instanceof Request) {
                 try {
@@ -140,7 +236,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
                 List<I> allids = Arrays.asList(records);
-                allids = allids.subList(0, Math.min(subset, allids.size() -1));
+                allids = allids.subList(0, Math.min(subset, allids.size() - 1));
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
@@ -155,7 +251,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
 
-                allids = allids.subList(0, Math.min(subset, allids.size() -1));
+                allids = allids.subList(0, Math.min(subset, allids.size() - 1));
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
                 addArray(context, ids);
@@ -220,12 +316,12 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord<I> mdr = mdrs[i];
-                            
+
                             if (mdr != null) {
                                 if (mdr instanceof MetaDataRecordBean) {
                                     ((MetaDataRecordBean)mdr).setCollection(container.collection);
                                 }
-    
+
                                 Task<I> task = new Task<I>(mdr, storage, context);
                                 synchronized (getQueue()) {
                                     getQueue().offer(task);
@@ -263,7 +359,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException {
+    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage)
+            throws WorkflowStartFailedException {
         context.getValue(DATA_KEY).batches.clear();
     }
 
