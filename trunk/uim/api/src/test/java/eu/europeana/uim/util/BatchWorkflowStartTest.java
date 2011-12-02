@@ -65,7 +65,7 @@ public class BatchWorkflowStartTest {
         
         assertEquals(5, start.getPreferredThreadCount());
         assertEquals(10, start.getMaximumThreadCount());
-        assertEquals(3, start.getParameters().size());
+        assertEquals(5, start.getParameters().size());
         
         start.initialize(execution, engine);
         assertEquals(4, data.batches.size());
