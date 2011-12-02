@@ -33,5 +33,9 @@ public enum LinkTarget {
      * A link to a related resource. The kind of relation may be specified by a ResourceRelation
      * qualifier
      */
-    RELATED_RESOURCE
+    RELATED_RESOURCE,
+    /**
+     * A link to a resource to which we want give attribution
+     */
+    ATTRIBUTION
 }
