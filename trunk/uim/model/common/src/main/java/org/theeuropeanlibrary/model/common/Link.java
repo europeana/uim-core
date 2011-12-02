@@ -27,9 +27,12 @@ public class Link {
 	@FieldId(3)
 	private LinkStatus linkStatus;
 	
-	@FieldId(4)
-	private String cachedPath;
-	
+    @FieldId(4)
+    private String cachedPath;
+    
+    @FieldId(5)
+    private String anchorKey;
+    
 	/**
 	 * Creates a new instance of this class.
 	 */
@@ -37,20 +40,37 @@ public class Link {
 		super();
 	}
 
-	/**
-	 * Creates a new instance of this class.
-	 * 
-	 * @param url
-	 *            uniform resource identification to get to the actual value
-	 */
-	public Link(String url) {
-		if (url == null) {
-			throw new IllegalArgumentException(
-					"Argument 'url' should not be null!");
-		}
-		this.url = url;
-		linkStatus=LinkStatus.NOT_CHECKED;
-	}
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param url
+     *            uniform resource identification to get to the actual value
+     */
+    public Link(String url) {
+        if (url == null) {
+            throw new IllegalArgumentException(
+                    "Argument 'url' should not be null!");
+        }
+        this.url = url;
+        linkStatus=LinkStatus.NOT_CHECKED;
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param url
+     *            uniform resource identification to get to the actual value
+     * @param anchorKey 
+     */
+    public Link(String url, String anchorKey) {
+        if (url == null) {
+            throw new IllegalArgumentException(
+                    "Argument 'url' should not be null!");
+        }
+        this.url = url;
+        this.anchorKey = anchorKey;
+        linkStatus=LinkStatus.NOT_CHECKED;
+    }
 
 	/**
 	 * @return uniform resource identification to get to the actual value
@@ -117,6 +137,23 @@ public class Link {
         return cachedPath;
     }
 
+    
+    /**
+     * Returns the anchorKey.
+     * @return the anchorKey
+     */
+    public String getAnchorKey() {
+        return anchorKey;
+    }
+
+    /**
+     * Sets the anchorKey to the given value.
+     * @param anchorKey the anchorKey to set
+     */
+    public void setAnchorKey(String anchorKey) {
+        this.anchorKey = anchorKey;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -125,6 +162,7 @@ public class Link {
         result = prime * result + ((lastChecked == null) ? 0 : lastChecked.hashCode());
         result = prime * result + ((linkStatus == null) ? 0 : linkStatus.hashCode());
         result = prime * result + ((url == null) ? 0 : url.hashCode());
+        result = prime * result + ((anchorKey == null) ? 0 : anchorKey.hashCode());
         return result;
     }
 
@@ -144,6 +182,9 @@ public class Link {
         if (url == null) {
             if (other.url != null) return false;
         } else if (!url.equals(other.url)) return false;
+        if (anchorKey == null) {
+            if (other.anchorKey != null) return false;
+        } else if (!anchorKey.equals(other.anchorKey)) return false;
         return true;
     }
     
