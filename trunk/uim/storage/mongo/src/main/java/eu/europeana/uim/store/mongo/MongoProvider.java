@@ -74,16 +74,6 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
         oaiMetadataPrefix = prefix;
     }
     
-    @Override
-    public void putValue(String key, String value) {
-        values.put(key, value);
-    }
-
-    @Override
-    public String getValue(String key) {
-        return values.get(key);
-    }
-
     
     
     @Override
@@ -120,15 +110,23 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
         return getName();
     }
 
+    @Override
+    public void putValue(String key, String value) {
+        values.put(key, value);
+    }
+
+    @Override
+    public String getValue(String key) {
+        return values.get(key);
+    }
+    
 	@Override
 	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		// TODO Auto-generated method stub
-		
+		 values.put(key.getFieldId(), value);
 	}
 
 	@Override
 	public String getValue(ControlledVocabularyKeyValue key) {
-		// TODO Auto-generated method stub
-		return null;
+		return values.get(key.getFieldId());
 	}
 }

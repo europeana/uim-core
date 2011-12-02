@@ -1,8 +1,11 @@
 package eu.europeana.uim.store.mongo;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.lang.time.DateUtils;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Reference;
@@ -21,8 +24,15 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
 
     private Map<String, String> values = new HashMap<String, String>();
 
-    private Date date = new Date();
+    private Date                date;
 
+    private Date                from;
+    private Date                till;
+
+    private boolean             failed;
+    
+    
+    
     public MongoRequest() {
     }
 
@@ -51,12 +61,77 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
         this.collection = collection;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
 
+    /**
+     * @param date
+     */
     public void setDate(Date date) {
-        this.date = date;
+        this.date = DateUtils.truncate(date, Calendar.SECOND);
+    }
+
+    /**
+     * Returns the from.
+     * 
+     * @return the from
+     */
+    @Override
+    public Date getDataFrom() {
+        return from;
+    }
+
+    /**
+     * Sets the from to the given value.
+     * 
+     * @param from
+     *            the from to set
+     */
+    @Override
+    public void setDataFrom(Date from) {
+        this.from = from;
+    }
+
+    /**
+     * Returns the till.
+     * 
+     * @return the till
+     */
+    @Override
+    public Date getDataTill() {
+        if (till == null) return getDate();
+        return till;
+    }
+
+    /**
+     * Sets the till to the given value.
+     * 
+     * @param till
+     *            the till to set
+     */
+    @Override
+    public void setDataTill(Date till) {
+        this.till = till;
+    }
+    
+    /**
+     * Returns the failed.
+     * @return the failed
+     */
+    @Override
+    public boolean isFailed() {
+        return failed;
+    }
+
+    /**
+     * Sets the failed to the given value.
+     * @param failed the failed to set
+     */
+    @Override
+    public void setFailed(boolean failed) {
+        this.failed = failed;
     }
 
     @Override
@@ -69,11 +144,14 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
         return values.get(key);
     }
 
-    
-    
     @Override
     public Map<String, String> values() {
-         return values;
+        return values;
+    }
+
+    @Override
+    public String toString() {
+        return "Request [collection=" + collection + ", date=" + date + "]";
     }
 
     @Override
@@ -98,39 +176,5 @@ public class MongoRequest<T> extends AbstractMongoEntity<Long> implements Reques
         return result;
     }
 
-	@Override
-	public void setDataFrom(Date from) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public Date getDataFrom() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDataTill(Date till) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Date getDataTill() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setFailed(boolean failed) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isFailed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

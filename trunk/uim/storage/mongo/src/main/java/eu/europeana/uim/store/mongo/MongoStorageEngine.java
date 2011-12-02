@@ -294,9 +294,10 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public MetaDataRecord createMetaDataRecord(Collection request, String identifier) throws StorageEngineException {
         BasicDBObject object = new BasicDBObject();
-        MongoMetadataRecord mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
-        records.insert(mdr.getObject());
-        return mdr;
+        //MongoMetadataRecord mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
+        //records.insert(mdr.getObject());
+        //return mdr;
+		return null;
     }
 
     
@@ -333,7 +334,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 */
 
         BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, record.getId());
-        records.update(query, ((MongoMetadataRecord) record).getObject());
+        //records.update(query, ((MongoMetadataRecord) record).getObject());
     }
 
     @Override
@@ -366,7 +367,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         query.put(AbstractMongoEntity.LID, new BasicDBObject("$in", ids));
         for (DBObject object : records.find(query)) {
             Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, object.get("request")).get();
-            res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(AbstractMongoEntity.LID)).longValue()));
+            //res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(AbstractMongoEntity.LID)).longValue()));
         }
 
         return res;
@@ -377,7 +378,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, id);
         DBObject theOne = records.findOne(query);
         Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, theOne.get("request")).get();
-        return new MongoMetadataRecord<Long>(theOne, request.getCollection(), (String) theOne.get("identifier"), id);
+        //return new MongoMetadataRecord<Long>(theOne, request.getCollection(), (String) theOne.get("identifier"), id);
+		return null;
     }
 
 
