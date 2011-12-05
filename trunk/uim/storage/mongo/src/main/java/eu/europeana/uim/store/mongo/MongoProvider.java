@@ -23,6 +23,7 @@ public class MongoProvider extends AbstractMongoEntity<Long> implements Provider
 
     @Reference
     private Set<Provider<Long>> relatedOut = new HashSet<Provider<Long>>();
+    
     @Reference
     private Set<Provider<Long>> relatedIn = new HashSet<Provider<Long>>();
 
