@@ -114,12 +114,6 @@ public class TaskExecutor extends ThreadPoolExecutor {
                             "Taskexecution",
                             "Task could not perform its work and since it is mandatory for the workflow, the workflow cannot continue!");
                 }
-            } else {
-                if (loggingEngine != null) {
-                    loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t,
-                            metaDataRecord, "Taskexecution",
-                            "Task could not perform its work, but the processing of the meta data record can continue!");
-                }
             }
         }
 
