@@ -1,5 +1,6 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,10 @@ import eu.europeana.uim.store.UimDataSet;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I> {
-    private boolean    active   = false;
+public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I>,Serializable {
+
+	private static final long serialVersionUID = 1L;	
+	private boolean    active   = false;
     private Date       startTime;
     private Date       endTime;
     private UimDataSet<I> dataSet;

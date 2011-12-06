@@ -1,5 +1,7 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
+
 import eu.europeana.uim.store.UimEntity;
 
 /**
@@ -11,8 +13,13 @@ import eu.europeana.uim.store.UimEntity;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public abstract class AbstractEntityBean<I> implements UimEntity<I> {
+public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializable {
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
      * unique ID as Long
      */
     private I id;

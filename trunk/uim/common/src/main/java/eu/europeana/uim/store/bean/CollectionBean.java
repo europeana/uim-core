@@ -1,5 +1,6 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +18,11 @@ import eu.europeana.uim.store.Provider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I> {
-    private Provider<I>         provider;
+public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I>,Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private Provider<I>         provider;
 
     private String              language;
 

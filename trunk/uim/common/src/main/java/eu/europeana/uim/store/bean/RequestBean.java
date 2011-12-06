@@ -1,5 +1,6 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,9 +20,11 @@ import eu.europeana.uim.store.Request;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I> {
+public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,Serializable {
 
-    private Collection<I>       collection;
+	private static final long serialVersionUID = 1L;
+	
+	private Collection<I>       collection;
     private Date                date;
 
     private Date                from;

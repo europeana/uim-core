@@ -1,5 +1,6 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,8 +25,11 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
-public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I> {
-    /**
+public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I>,Serializable{
+
+	private static final long serialVersionUID = 1L;
+
+	/**
      * the collection that is responsible for this record
      */
     private Collection<I>                                collection;

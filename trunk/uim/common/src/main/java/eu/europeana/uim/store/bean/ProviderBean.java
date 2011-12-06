@@ -1,5 +1,6 @@
 package eu.europeana.uim.store.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,8 +18,11 @@ import eu.europeana.uim.store.Provider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provider<I> {
-    private Set<Provider<I>> relatedOut = new HashSet<Provider<I>>();
+public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provider<I>,Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	private Set<Provider<I>> relatedOut = new HashSet<Provider<I>>();
     private Set<Provider<I>> relatedIn  = new HashSet<Provider<I>>();
 
     private String            name;
