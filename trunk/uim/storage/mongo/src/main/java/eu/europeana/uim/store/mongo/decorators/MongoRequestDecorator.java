@@ -23,11 +23,18 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.Date;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
+import eu.europeana.uim.store.bean.RequestBean;
 
 /**
  * 
@@ -37,15 +44,42 @@ import eu.europeana.uim.store.Request;
 @Entity
 public class MongoRequestDecorator<I> implements Request<I> {
 
-	@Embedded
-	private Request<I> embeddedRequest; 
+	/**
+	 * 
+	 */
+	@Serialized
+	private RequestBean<I> embeddedRequest; 
+	
+	@Id
+    private ObjectId mongoid;
+
+    @Indexed
+	private String searchMnemonic;
+	
+    @Reference
+    private MongoCollectionDecorator<I> collection;
+    
+	/**
+	 * @param request
+	 */
+	public MongoRequestDecorator(){
+		this.embeddedRequest = new RequestBean<I>();
+	}
 	
 	/**
 	 * @param request
 	 */
-	public MongoRequestDecorator(Request<I> request){
-		this.embeddedRequest = request;
+	public MongoRequestDecorator(I id,  MongoCollectionDecorator<I> collection, Date date){
+		this.embeddedRequest = new RequestBean<I>(id,collection,date);
+		this.collection = collection;
 	}
+	
+
+	
+    public RequestBean<I> getEmbeddedRequest() {
+		return embeddedRequest;
+	}
+	
 	
 	@Override
 	public I getId() {

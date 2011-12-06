@@ -22,8 +22,14 @@ package eu.europeana.uim.store.mongo.decorators;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
@@ -38,15 +44,27 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
 @Entity
 public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
 
-	@Embedded
+	@Serialized
 	private MetaDataRecordBean<I> emebeddedMdr;
 	
+    @Id
+    private ObjectId mongoid;
+
+    @Indexed
+	private String searchMnemonic;
 	
+    @Reference
+    private MongoCollectionDecorator<I> coll;
 	
-	public MongoMetadataRecordDecorator (MetaDataRecordBean<I> mdr){
-		this.emebeddedMdr = mdr;
+    
+	public MongoMetadataRecordDecorator (){
+		this.emebeddedMdr = new MetaDataRecordBean<I>();
 	}
 	
+	public MongoMetadataRecordDecorator(I id, MongoCollectionDecorator<I> collection){
+		this.emebeddedMdr = new MetaDataRecordBean<I>(id,collection);
+		this.coll = collection;
+	}
 	
 	
 	@Override

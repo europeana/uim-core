@@ -23,23 +23,48 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.Date;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.bean.ExecutionBean;
 
 /**
  * 
  * @author Georgios Markakis
  */
 @Entity
-public class MongoExecutionDecorator<I> implements Execution<I> {
+public class MongoExecutionDecorator<I> extends MongoAbstractEntity<I> implements Execution<I> {
 
-	@Embedded
-	private Execution<I> embeddedExecution;
+	/**
+	 * 
+	 */
+	@Serialized
+	private ExecutionBean<I> embeddedExecution;
 	
+    
+    public MongoExecutionDecorator(){
+    	this.embeddedExecution = new ExecutionBean<I>();
+    }
+    
+    
+    public MongoExecutionDecorator(I id){
+    	super(id);
+    	this.embeddedExecution = new ExecutionBean<I>(id);
+    }
+    
+    
+    public ExecutionBean<I> getEmbeddedExecution() {
+		return embeddedExecution;
+	}
+    
 	@Override
 	public I getId() {
 		return embeddedExecution.getId();
@@ -53,7 +78,6 @@ public class MongoExecutionDecorator<I> implements Execution<I> {
 	@Override
 	public void setName(String name) {
 		embeddedExecution.setName(name);
-		
 	}
 
 	@Override
@@ -64,7 +88,6 @@ public class MongoExecutionDecorator<I> implements Execution<I> {
 	@Override
 	public void setWorkflow(String identifier) {
 		embeddedExecution.setWorkflow(identifier);
-		
 	}
 
 	@Override

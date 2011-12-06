@@ -29,6 +29,10 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
+import eu.europeana.uim.store.mongo.decorators.MongoExecutionDecorator;
+import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
+import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -101,12 +105,21 @@ public class MongoStorageEngine implements StorageEngine<Long> {
                     return MongoBundleActivator.getBundleClassLoader();
                 }
             });
-            */
+           
             morphia.
                     map(MongodbCollection.class).
                     map(MongoExecution.class).
                     map(MongoProvider.class).
                     map(MongoRequest.class);
+            */
+            
+            
+            morphia.
+            map(MongoProviderDecorator.class).
+            map(MongoExecutionDecorator.class).
+            map(MongoCollectionDecorator.class).
+            map(MongoRequestDecorator.class);
+            
             ds = morphia.createDatastore(mongo, dbName);
             status = EngineStatus.RUNNING;
 
@@ -151,7 +164,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Provider createProvider() {
-        Provider p = new MongoProvider(providerIdCounter.getAndIncrement());
+        Provider p = new MongoProviderDecorator(providerIdCounter.getAndIncrement());
         ds.save(p);
         return p;
     }
@@ -185,18 +198,18 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Provider getProvider(Long id) {
-        return ds.find(MongoProvider.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoProviderDecorator.class).filter(AbstractMongoEntity.LID, id).get();
     }
 
     @Override
     public Provider findProvider(String mnemonic) {
-        return ds.find(MongoProvider.class).field("mnemonic").equal(mnemonic).get();
+        return ds.find(MongoProviderDecorator.class).field("mnemonic").equal(mnemonic).get();
     }
 
     @Override
     public List<Provider<Long>> getAllProviders() {
         final List<Provider<Long>> res = new ArrayList<Provider<Long>>();
-        for (Provider p : ds.find(MongoProvider.class).asList()) {
+        for (Provider p : ds.find(MongoProviderDecorator.class).asList()) {
             res.add(p);
         }
         return res;
@@ -204,7 +217,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Collection createCollection(Provider provider) {
-        Collection c = new MongodbCollection(collectionIdCounter.getAndIncrement(), provider);
+        Collection c = new MongoCollectionDecorator(collectionIdCounter.getAndIncrement(), provider);
         ds.save(c);
         return c;
     }
@@ -225,18 +238,18 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Collection<Long> getCollection(Long id) {
-        return ds.find(MongodbCollection.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoCollectionDecorator.class).filter(AbstractMongoEntity.LID, id).get();
     }
 
     @Override
     public Collection<Long> findCollection(String mnemonic) {
-        return ds.find(MongodbCollection.class).filter("mnemonic", mnemonic).get();
+        return ds.find(MongoCollectionDecorator.class).filter("mnemonic", mnemonic).get();
     }
 
     @Override
     public List<Collection<Long>> getCollections(Provider<Long> provider) {
         List<Collection<Long>> res = new ArrayList<Collection<Long>>();
-        for (Collection c : ds.find(MongodbCollection.class).filter("provider", provider).asList()) {
+        for (Collection c : ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList()) {
             res.add(c);
         }
         return res;
@@ -245,7 +258,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public List<Collection<Long>> getAllCollections() {
         List<Collection<Long>> res = new ArrayList<Collection<Long>>();
-        for (Collection c : ds.find(MongodbCollection.class).asList()) {
+        for (Collection c : ds.find(MongoCollectionDecorator.class).asList()) {
             res.add(c);
         }
         return res;
@@ -253,7 +266,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Request createRequest(Collection collection, Date date) {
-        Request r = new MongoRequest(requestIdCounter.getAndIncrement(), (MongodbCollection) collection, date);
+        Request<Long> r = new MongoRequestDecorator<Long>(requestIdCounter.getAndIncrement(), (MongoCollectionDecorator<Long>) collection, date);
         ds.save(r);
         return r;
     }
@@ -261,7 +274,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public void updateRequest(Request request) throws StorageEngineException {
 
-        for (Request r : ds.find(MongoRequest.class).filter("collection", request.getCollection()).asList()) {
+        for (Request r : ds.find(MongoRequestDecorator.class).filter("collection", request.getCollection()).asList()) {
             if (r.getDate().equals(request.getDate()) && r.getId() != request.getId()) {
                 String unique = "REQUEST/" + request.getCollection().getMnemonic() + "/" + request.getDate();
                 throw new IllegalStateException("Duplicate unique key for request: <" + unique + ">");
@@ -273,7 +286,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public List<Request<Long>> getRequests(Collection<Long> collection) {
         List<Request<Long>> res = new ArrayList<Request<Long>>();
-        for (Request r : ds.find(MongoRequest.class).filter("collection", collection).asList()) {
+        for (Request r : ds.find(MongoRequestDecorator.class).filter("collection", collection).asList()) {
             res.add(r);
         }
         return res;
@@ -281,7 +294,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Request getRequest(Long id) throws StorageEngineException {
-        return ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoRequestDecorator.class).filter(AbstractMongoEntity.LID, id).get();
     }
     
     @Override
@@ -294,7 +307,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public MetaDataRecord createMetaDataRecord(Collection request, String identifier) throws StorageEngineException {
         BasicDBObject object = new BasicDBObject();
-        //MongoMetadataRecord mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
+        //MongoRequestDecorator mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
         //records.insert(mdr.getObject());
         //return mdr;
 		return null;

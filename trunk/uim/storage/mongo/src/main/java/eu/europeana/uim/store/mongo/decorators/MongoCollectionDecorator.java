@@ -23,35 +23,49 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.Date;
 import java.util.Map;
 
-import com.google.code.morphia.annotations.Embedded;
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.bean.CollectionBean;
 
 /**
- * @author georgiosmarkakis
- *
+ * 
+ * @author Georgios Markakis
  */
 
 @Entity
-public class MongoCollectionDecorator <I> implements Collection<I>{
+public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<I> implements Collection<I>{
 
-	@Embedded
-	private Collection<I> embeddedCollection;
+	@Serialized
+	private CollectionBean<I> embeddedCollection;
 	
-	private I searchID;
-	
-	private String searchMnemonic;
-
+	@Reference
+	private  MongoProviderDecorator<I> provider;
 	
 	
-	
-	public MongoCollectionDecorator(Collection<I> collection){
-		this.embeddedCollection = collection;
+	public MongoCollectionDecorator(){
+		super();
+		this.embeddedCollection = new CollectionBean<I>();	
 	}
 	
+	public MongoCollectionDecorator(I id, Provider<I> provider){
+		MongoProviderDecorator<I> prov = (MongoProviderDecorator<I>)provider;
+		this.embeddedCollection = new CollectionBean<I>(id,prov.getEmbeddedProvider());
+		this.provider = (MongoProviderDecorator<I>) provider;
+	}
+	
+	
+    public CollectionBean<I> getEmbeddedCollection() {
+		return embeddedCollection;
+	}
 	
 	@Override
 	public I getId() {
@@ -71,7 +85,7 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedCollection.setMnemonic(mnemonic);
-		
+		setSearchMnemonic(mnemonic);
 	}
 
 	@Override
@@ -82,7 +96,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setName(String name) {
 		embeddedCollection.setName(name);
-		
 	}
 
 	@Override
@@ -104,7 +117,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setOaiBaseUrl(String baseUrl) {
 		embeddedCollection.setOaiBaseUrl(baseUrl);
-		
 	}
 
 	@Override
@@ -115,7 +127,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setOaiSet(String set) {
 		embeddedCollection.setOaiSet(set);
-		
 	}
 
 	@Override
@@ -126,7 +137,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setOaiMetadataPrefix(String prefix) {
 		embeddedCollection.setOaiMetadataPrefix(prefix);
-		
 	}
 
 	@Override
@@ -137,7 +147,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setLastModified(Date date) {
 		embeddedCollection.setLastModified(date);
-		
 	}
 
 	@Override
@@ -148,13 +157,11 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void setLastSynchronized(Date date) {
 		embeddedCollection.setLastSynchronized(date);
-		
 	}
 
 	@Override
 	public void putValue(String key, String value) {
 		embeddedCollection.putValue(key, value);
-		
 	}
 
 	@Override
@@ -165,7 +172,6 @@ public class MongoCollectionDecorator <I> implements Collection<I>{
 	@Override
 	public void putValue(ControlledVocabularyKeyValue key, String value) {
 		embeddedCollection.putValue(key, value);
-		
 	}
 
 	@Override

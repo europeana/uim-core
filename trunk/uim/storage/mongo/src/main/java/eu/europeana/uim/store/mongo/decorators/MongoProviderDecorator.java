@@ -23,11 +23,17 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.Map;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
+
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.bean.ProviderBean;
 
 /**
  * 
@@ -35,36 +41,29 @@ import eu.europeana.uim.store.Provider;
  */
 
 @Entity
-public class MongoProviderDecorator<I>  implements Provider<I> {
+public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity implements Provider<I> {
 
-	@Embedded
-	private Provider<I> embeddedProvider;
+	@Serialized
+	private ProviderBean<I> embeddedProvider;
 	
 	
-	/**
-	 * @return the embeddedProvider
-	 */
-	public Provider<I> getEmbeddedProvider() {
+	public MongoProviderDecorator(){
+		this.embeddedProvider = new ProviderBean<I>();
+	}
+	
+	public MongoProviderDecorator(I id){
+		this.embeddedProvider = new ProviderBean<I>(id);
+	}
+	
+	
+	//Getters & Setters
+	
+    public ProviderBean<I> getEmbeddedProvider() {
 		return embeddedProvider;
 	}
-
-
-	/**
-	 * @param embeddedProvider the embeddedProvider to set
-	 */
-	public void setEmbeddedProvider(Provider<I> embeddedProvider) {
-		this.embeddedProvider = embeddedProvider;
-	}
-
-
-	MongoProviderDecorator(Provider<I> provider){
-		this.embeddedProvider = provider;
-	}
-	
 	
 	@Override
 	public I getId() {
-
 		return embeddedProvider.getId();
 	}
 
@@ -86,7 +85,7 @@ public class MongoProviderDecorator<I>  implements Provider<I> {
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedProvider.setMnemonic(mnemonic);
-		
+		setSearchMnemonic(mnemonic);
 	}
 
 	@Override
