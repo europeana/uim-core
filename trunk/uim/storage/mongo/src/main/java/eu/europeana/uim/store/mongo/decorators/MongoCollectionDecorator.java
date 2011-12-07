@@ -42,7 +42,7 @@ import eu.europeana.uim.store.bean.CollectionBean;
  */
 
 @Entity
-public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<I> implements Collection<I>{
+public class MongoCollectionDecorator<I> implements Collection<I>{
 
 	@Serialized
 	private CollectionBean<I> embeddedCollection;
@@ -50,14 +50,22 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<I> imp
 	@Reference
 	private  MongoProviderDecorator<I> provider;
 	
+	@Indexed
+	private String searchMnemonic;
+	
+    @Id
+    private ObjectId mongoId;
+	
+	@Indexed
+	private Long lid;
 	
 	public MongoCollectionDecorator(){
-		super();
 		this.embeddedCollection = new CollectionBean<I>();	
 	}
 	
 	public MongoCollectionDecorator(I id, Provider<I> provider){
 		MongoProviderDecorator<I> prov = (MongoProviderDecorator<I>)provider;
+		this.lid = (Long)id;
 		this.embeddedCollection = new CollectionBean<I>(id,prov.getEmbeddedProvider());
 		this.provider = (MongoProviderDecorator<I>) provider;
 	}
@@ -85,7 +93,7 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<I> imp
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedCollection.setMnemonic(mnemonic);
-		setSearchMnemonic(mnemonic);
+		this.searchMnemonic = mnemonic;
 	}
 
 	@Override

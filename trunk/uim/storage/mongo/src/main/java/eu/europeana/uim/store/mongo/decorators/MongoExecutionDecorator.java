@@ -41,7 +41,7 @@ import eu.europeana.uim.store.bean.ExecutionBean;
  * @author Georgios Markakis
  */
 @Entity
-public class MongoExecutionDecorator<I> extends MongoAbstractEntity<I> implements Execution<I> {
+public class MongoExecutionDecorator<I>  implements Execution<I> {
 
 	/**
 	 * 
@@ -49,14 +49,19 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<I> implement
 	@Serialized
 	private ExecutionBean<I> embeddedExecution;
 	
-    
+    @Id
+    private ObjectId mongoId;
+	
+	@Indexed
+	private Long lid;
+	
+	
     public MongoExecutionDecorator(){
     	this.embeddedExecution = new ExecutionBean<I>();
     }
     
     
     public MongoExecutionDecorator(I id){
-    	super(id);
     	this.embeddedExecution = new ExecutionBean<I>(id);
     }
     

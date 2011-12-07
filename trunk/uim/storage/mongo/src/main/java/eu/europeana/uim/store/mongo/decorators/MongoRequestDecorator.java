@@ -21,6 +21,7 @@
 package eu.europeana.uim.store.mongo.decorators;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.bson.types.ObjectId;
@@ -52,13 +53,19 @@ public class MongoRequestDecorator<I> implements Request<I> {
 	
 	@Id
     private ObjectId mongoid;
-
-    @Indexed
-	private String searchMnemonic;
+	
+	@Indexed
+	private Long lid;
 	
     @Reference
     private MongoCollectionDecorator<I> collection;
     
+    
+    @Reference
+    private HashSet<MongoMetadataRecordDecorator<I>> requestrecords;
+    
+
+
 	/**
 	 * @param request
 	 */
@@ -70,11 +77,34 @@ public class MongoRequestDecorator<I> implements Request<I> {
 	 * @param request
 	 */
 	public MongoRequestDecorator(I id,  MongoCollectionDecorator<I> collection, Date date){
-		this.embeddedRequest = new RequestBean<I>(id,collection,date);
+		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<I>>();
+		this.lid = (Long)id;
+		this.embeddedRequest = new RequestBean<I>(id,collection.getEmbeddedCollection(),date);
 		this.collection = collection;
 	}
 	
 
+	
+	public MongoCollectionDecorator<I> getCollectionReference(){
+		return this.collection;
+	}
+	
+	
+	/**
+	 * @param requestrecords the requestrecords to set
+	 */
+	public void setRequestrecords(HashSet<MongoMetadataRecordDecorator<I>> requestrecords) {
+		this.requestrecords = requestrecords;
+	}
+
+	/**
+	 * @return the requestrecords
+	 */
+	public HashSet<MongoMetadataRecordDecorator<I>> getRequestrecords() {
+		return requestrecords;
+	}
+	
+	
 	
     public RequestBean<I> getEmbeddedRequest() {
 		return embeddedRequest;

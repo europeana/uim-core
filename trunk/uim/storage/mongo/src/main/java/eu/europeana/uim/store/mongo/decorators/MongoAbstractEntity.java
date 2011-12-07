@@ -19,7 +19,7 @@ import eu.europeana.uim.store.UimEntity;
  */
 
 @Entity
-public abstract class MongoAbstractEntity<I>{
+public class MongoAbstractEntity<I>{
 
     @Id
     private ObjectId mongoId;
@@ -51,4 +51,5 @@ public abstract class MongoAbstractEntity<I>{
 	public void setLid(I lid) {
 		this.lid = lid;
 	}
+
 }

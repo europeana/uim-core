@@ -48,13 +48,13 @@ public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
 	private MetaDataRecordBean<I> emebeddedMdr;
 	
     @Id
-    private ObjectId mongoid;
-
-    @Indexed
-	private String searchMnemonic;
+    private ObjectId mongoId;
+	
+	@Indexed
+	private Long lid;
 	
     @Reference
-    private MongoCollectionDecorator<I> coll;
+    private MongoCollectionDecorator<I> collection;
 	
     
 	public MongoMetadataRecordDecorator (){
@@ -62,8 +62,9 @@ public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
 	}
 	
 	public MongoMetadataRecordDecorator(I id, MongoCollectionDecorator<I> collection){
-		this.emebeddedMdr = new MetaDataRecordBean<I>(id,collection);
-		this.coll = collection;
+		this.lid = (Long)id;
+		this.emebeddedMdr = new MetaDataRecordBean<I>(id,collection.getEmbeddedCollection());
+		this.collection = collection;
 	}
 	
 	

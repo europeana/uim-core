@@ -41,17 +41,26 @@ import eu.europeana.uim.store.bean.ProviderBean;
  */
 
 @Entity
-public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity implements Provider<I> {
+public class MongoProviderDecorator<I> implements Provider<I> {
 
 	@Serialized
 	private ProviderBean<I> embeddedProvider;
 	
+	@Indexed
+	private String searchMnemonic;
+	
+    @Id
+    private ObjectId mongoId;
+	
+	@Indexed
+	private Long lid;
 	
 	public MongoProviderDecorator(){
 		this.embeddedProvider = new ProviderBean<I>();
 	}
 	
 	public MongoProviderDecorator(I id){
+		this.lid = (Long) id;
 		this.embeddedProvider = new ProviderBean<I>(id);
 	}
 	
@@ -85,7 +94,7 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity implemen
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedProvider.setMnemonic(mnemonic);
-		setSearchMnemonic(mnemonic);
+		this.searchMnemonic = mnemonic;
 	}
 
 	@Override

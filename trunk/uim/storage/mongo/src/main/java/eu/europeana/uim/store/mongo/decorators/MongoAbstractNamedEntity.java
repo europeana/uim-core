@@ -12,7 +12,7 @@ import com.google.code.morphia.annotations.Indexed;
  */
 
 @Entity
-public abstract class MongoAbstractNamedEntity<I> extends MongoAbstractEntity<I> {
+public class MongoAbstractNamedEntity<I> extends MongoAbstractEntity<I> {
 
 	@Indexed
 	private String searchMnemonic;
