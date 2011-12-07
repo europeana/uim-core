@@ -277,7 +277,6 @@ public class IngestionDetailWidget extends IngestionWidget {
                 return object;
             }
         };
-
         cellTable.addColumn(logfileColumn, "Log");
         cellTable.setColumnWidth(logfileColumn, 10, Unit.PCT);
 
