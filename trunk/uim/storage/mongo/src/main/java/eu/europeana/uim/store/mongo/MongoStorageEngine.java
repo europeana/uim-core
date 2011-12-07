@@ -29,8 +29,11 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.mongo.decorators.MongoAbstractEntity;
+import eu.europeana.uim.store.mongo.decorators.MongoAbstractNamedEntity;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoExecutionDecorator;
+import eu.europeana.uim.store.mongo.decorators.MongoMetadataRecordDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 
@@ -46,6 +49,12 @@ import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 public class MongoStorageEngine implements StorageEngine<Long> {
 
     private static final String DEFAULT_UIM_DB_NAME = "UIM";
+    private static final String MNEMONICFIELD = "searchMnemonic";
+    private static final String LOCALIDFIELD = "lid";
+    
+    
+    
+    
     Mongo mongo = null;
     private DB db = null;
     private DBCollection records = null;
@@ -115,6 +124,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
             
             
             morphia.
+            //map(MongoAbstractEntity.class).
+            //map(MongoAbstractNamedEntity.class).
             map(MongoProviderDecorator.class).
             map(MongoExecutionDecorator.class).
             map(MongoCollectionDecorator.class).
@@ -124,10 +135,10 @@ public class MongoStorageEngine implements StorageEngine<Long> {
             status = EngineStatus.RUNNING;
 
             // initialize counters
-            providerIdCounter = new AtomicLong(ds.find(MongoProvider.class).countAll());
-            requestIdCounter = new AtomicLong(ds.find(MongoRequest.class).countAll());
-            collectionIdCounter = new AtomicLong(ds.find(MongodbCollection.class).countAll());
-            executionIdCounter = new AtomicLong(ds.find(MongoExecution.class).countAll());
+            providerIdCounter = new AtomicLong(ds.find(MongoProviderDecorator.class).countAll());
+            requestIdCounter = new AtomicLong(ds.find(MongoRequestDecorator.class).countAll());
+            collectionIdCounter = new AtomicLong(ds.find(MongoCollectionDecorator.class).countAll());
+            executionIdCounter = new AtomicLong(ds.find(MongoExecutionDecorator.class).countAll());
             mdrIdCounter = new AtomicLong(records.count());
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -198,12 +209,12 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Provider getProvider(Long id) {
-        return ds.find(MongoProviderDecorator.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoProviderDecorator.class).filter(LOCALIDFIELD, id).get();
     }
 
     @Override
     public Provider findProvider(String mnemonic) {
-        return ds.find(MongoProviderDecorator.class).field("mnemonic").equal(mnemonic).get();
+        return ds.find(MongoProviderDecorator.class).field(MNEMONICFIELD).equal(mnemonic).get();
     }
 
     @Override
@@ -238,12 +249,12 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Collection<Long> getCollection(Long id) {
-        return ds.find(MongoCollectionDecorator.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoCollectionDecorator.class).filter(LOCALIDFIELD, id).get();
     }
 
     @Override
     public Collection<Long> findCollection(String mnemonic) {
-        return ds.find(MongoCollectionDecorator.class).filter("mnemonic", mnemonic).get();
+        return ds.find(MongoCollectionDecorator.class).filter(MNEMONICFIELD, mnemonic).get();
     }
 
     @Override
@@ -273,13 +284,18 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public void updateRequest(Request request) throws StorageEngineException {
-
-        for (Request r : ds.find(MongoRequestDecorator.class).filter("collection", request.getCollection()).asList()) {
-            if (r.getDate().equals(request.getDate()) && r.getId() != request.getId()) {
-                String unique = "REQUEST/" + request.getCollection().getMnemonic() + "/" + request.getDate();
+    	
+    	/*
+    	MongoRequestDecorator<?> request2 = (MongoRequestDecorator<?>)request;
+    		
+        for (MongoRequestDecorator<?> r : ds.find(MongoRequestDecorator.class).filter("collection", request2.getCollectionReference()).asList()) {
+            if (r.getDate().equals(request.getDate()) && r.getId() != request2.getId()) {
+                String unique = "REQUEST/" + request2.getCollection().getMnemonic() + "/" + request2.getDate();
                 throw new IllegalStateException("Duplicate unique key for request: <" + unique + ">");
             }
         }
+        */
+    	
         ds.merge(request);
     }
 
@@ -294,23 +310,21 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Request getRequest(Long id) throws StorageEngineException {
-        return ds.find(MongoRequestDecorator.class).filter(AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoRequestDecorator.class).filter(LOCALIDFIELD, id).get();
     }
     
     @Override
     public List<Request<Long>> getRequests(MetaDataRecord<Long> mdr) throws StorageEngineException {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+    	ds.find(MongoRequestDecorator.class).filter(LOCALIDFIELD, mdr).get();
+		return null;
     }
 
     
     @Override
-    public MetaDataRecord createMetaDataRecord(Collection request, String identifier) throws StorageEngineException {
-        BasicDBObject object = new BasicDBObject();
-        //MongoRequestDecorator mdr = new MongoMetadataRecord(object, request, identifier, mdrIdCounter.getAndIncrement());
-        //records.insert(mdr.getObject());
-        //return mdr;
-		return null;
+    public MetaDataRecord<Long>  createMetaDataRecord(Collection<Long>  request, String identifier) throws StorageEngineException {
+    	MongoMetadataRecordDecorator<Long>  mdr = new MongoMetadataRecordDecorator<Long>(mdrIdCounter.getAndIncrement(),(MongoCollectionDecorator<Long>) request);
+    	ds.save(mdr);
+		return mdr;
     }
 
     
@@ -318,41 +332,24 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
             throws StorageEngineException {
-        //FIXME: no idea how to do that
+        
+    	MongoRequestDecorator<Long> req = (MongoRequestDecorator<Long>)request;
+  
+    	req.getRequestrecords().add((MongoMetadataRecordDecorator<Long>) record);
+    	
+    	ds.merge(req);
     }
 
     
     
     @Override
     public void updateMetaDataRecord(MetaDataRecord<Long> record) throws StorageEngineException {
-/*
-        if(!ALLOW_DUPLICATE_MDR_IDENTIFIERS) {
-            String unique = "MDR/" + record.getRequest().getCollection().getProvider().getMnemonic() + "/" + record.getIdentifier();
-
-            // no sql, just pain
-            // this absolutely doesn't scale, someone else will have to optimize this piece of crap - I'm not proud of it but at least it works.
-            BasicDBObject uniqueQuery = new BasicDBObject("identifier", record.getIdentifier());
-            List<DBObject> one = records.find(uniqueQuery, BasicDBObjectBuilder.start("request", 1).add(AbstractMongoEntity.LID, 1).get()).toArray();
-            List<MongoRequest> ftw = ds.find(MongoRequest.class).asList();
-            for (DBObject o : one) {
-                for (MongoRequest f : ftw) {
-                    if (o.get("request").equals(f.getId()) && !o.get(AbstractMongoEntity.LID).equals(record.getId())) {
-                        if (f.getCollection().getProvider().getMnemonic().equals(record.getRequest().getCollection().getProvider().getMnemonic())) {
-                            throw new IllegalStateException("Duplicate unique key for record: <" + unique + ">");
-                        }
-                    }
-                }
-            }
-        }
-*/
-
-        BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, record.getId());
-        //records.update(query, ((MongoMetadataRecord) record).getObject());
+    	ds.merge(record);
     }
 
     @Override
     public Execution createExecution(UimDataSet entity, String workflow) throws StorageEngineException {
-        MongoExecution me = new MongoExecution(executionIdCounter.getAndIncrement());
+        MongoExecutionDecorator<Long> me = new MongoExecutionDecorator<Long>(executionIdCounter.getAndIncrement());
         me.setDataSet(entity);
         me.setWorkflow(workflow);
         ds.save(me);
@@ -367,7 +364,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public List<Execution<Long>> getAllExecutions() {
         List<Execution<Long>> res = new ArrayList<Execution<Long>>();
-        for (Execution<Long> e : ds.find(MongoExecution.class).asList()) {
+        for (Execution<Long> e : ds.find(MongoExecutionDecorator.class).asList()) {
             res.add(e);
         }
         return res;
@@ -377,10 +374,10 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> ids) {
         ArrayList<MetaDataRecord<Long>> res = new ArrayList<MetaDataRecord<Long>>();
         BasicDBObject query = new BasicDBObject();
-        query.put(AbstractMongoEntity.LID, new BasicDBObject("$in", ids));
+        query.put(LOCALIDFIELD, new BasicDBObject("$in", ids));
         for (DBObject object : records.find(query)) {
-            Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, object.get("request")).get();
-            //res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(AbstractMongoEntity.LID)).longValue()));
+            Request request = ds.find(MongoRequestDecorator.class).filter(LOCALIDFIELD, object.get("request")).get();
+            //res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(LOCALIDFIELD)).longValue()));
         }
 
         return res;
@@ -388,22 +385,21 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public MetaDataRecord<Long> getMetaDataRecord(Long id) throws StorageEngineException {
-        BasicDBObject query = new BasicDBObject(AbstractMongoEntity.LID, id);
-        DBObject theOne = records.findOne(query);
-        Request request = ds.find(MongoRequest.class).filter(AbstractMongoEntity.LID, theOne.get("request")).get();
-        //return new MongoMetadataRecord<Long>(theOne, request.getCollection(), (String) theOne.get("identifier"), id);
-		return null;
+
+    	@SuppressWarnings("unchecked")
+		MongoMetadataRecordDecorator<Long> request = ds.find(MongoMetadataRecordDecorator.class).filter(LOCALIDFIELD, id).get();
+		return request;
     }
 
 
     @Override
     public Long[] getByRequest(Request request) {
         BasicDBObject query = new BasicDBObject("request", request.getId());
-        BasicDBObject fields = new BasicDBObject(AbstractMongoEntity.LID, 1);
+        BasicDBObject fields = new BasicDBObject(LOCALIDFIELD, 1);
         List<DBObject> results = records.find(query, fields).toArray();
         Long[] res = new Long[results.size()];
         for (int i = 0; i < results.size(); i++) {
-            res[i] = (Long) results.get(i).get(AbstractMongoEntity.LID);
+            res[i] = (Long) results.get(i).get(LOCALIDFIELD);
         }
 
         return res;
@@ -411,27 +407,28 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Long[] getByCollection(Collection collection) {
-        // mdr -> request -> collection
-        MongodbCollection mongodbCollection = ds.find(MongodbCollection.class).filter("lid", collection.getId()).get();
-        Long[] reqIds = getFromCollection(mongodbCollection);
-        Long[] res = getRecordsFromRequestIds(reqIds);
-        return res;
+
+    	ArrayList<Long> ids = new ArrayList<Long>();
+    	
+    	List <MongoMetadataRecordDecorator> records = ds.find(MongoMetadataRecordDecorator.class).filter("collection", collection).asList();
+    	
+        return (Long[]) ids.toArray();
     }
 
     private Long[] getRecordsFromRequestIds(Long[] reqIds) {
         BasicDBObject query = new BasicDBObject("request", new BasicDBObject("$in", reqIds));
-        BasicDBObject fields = new BasicDBObject(AbstractMongoEntity.LID, 1);
+        BasicDBObject fields = new BasicDBObject(LOCALIDFIELD, 1);
 
         List<DBObject> results = records.find(query, fields).toArray();
         Long[] res = new Long[results.size()];
         for (int i = 0; i < results.size(); i++) {
-            res[i] = (Long) results.get(i).get(AbstractMongoEntity.LID);
+            res[i] = (Long) results.get(i).get(LOCALIDFIELD);
         }
         return res;
     }
 
-    private Long[] getFromCollection(MongodbCollection<Long> mongodbCollection) {
-        List<MongoRequest> reqs = ds.find(MongoRequest.class).filter("collection", mongodbCollection).asList();
+    private Long[] getFromCollection(MongoCollectionDecorator<Long> mongodbCollection) {
+        List<MongoRequestDecorator> reqs = ds.find(MongoRequestDecorator.class).filter("collection", mongodbCollection).asList();
         Long[] reqIds = new Long[reqs.size()];
         for (int i = 0; i < reqs.size(); i++) {
             reqIds[i] = (Long)reqs.get(i).getId();
@@ -451,7 +448,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         Long[] ids = new Long[0];
 
         for(long id : providers) {
-            MongoProvider mongoProvider = ds.find(MongoProvider.class).filter("lid", id).get();
+            MongoProviderDecorator mongoProvider = ds.find(MongoProviderDecorator.class).filter("lid", id).get();
             ids = (Long[]) ArrayUtils.addAll(ids, getRequestIdsFromProvider(mongoProvider));
         }
         return getRecordsFromRequestIds(ids);
@@ -467,12 +464,12 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
 
-    private Long[] getRequestIdsFromProvider(MongoProvider mongoProvider) {
-        List<MongoRequest> reqs = new ArrayList<MongoRequest>();
-        List<MongodbCollection> collections = ds.find(MongodbCollection.class).filter("provider", mongoProvider).asList();
+    private Long[] getRequestIdsFromProvider(MongoProviderDecorator mongoProvider) {
+        List<MongoRequestDecorator> reqs = new ArrayList<MongoRequestDecorator>();
+        List<MongoCollectionDecorator> collections = ds.find(MongoCollectionDecorator.class).filter("provider", mongoProvider).asList();
         Long[] reqIds = new Long[0];
 
-        for (MongodbCollection collection : collections) {
+        for (MongoCollectionDecorator collection : collections) {
             reqIds = (Long[]) ArrayUtils.addAll(reqIds, getFromCollection(collection));
         }
         return reqIds;
@@ -490,31 +487,33 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public int getTotalByRequest(Request request) {
-        BasicDBObject query = new BasicDBObject("request", request.getId());
-        BasicDBObject fields = new BasicDBObject(AbstractMongoEntity.LID, 1);
-        return records.find(query, fields).count();
+    	MongoRequestDecorator<Long> req = (MongoRequestDecorator<Long>) request;
+    	
+    	return req.getRequestrecords().size();
     }
 
     @Override
     public int getTotalByCollection(Collection<Long> collection) {
-        MongodbCollection mongodbCollection = ds.find(MongodbCollection.class).filter("lid", collection.getId()).get();
-        Long[] reqIds = getFromCollection(mongodbCollection);
-
-        return getCountFromRequestIds(reqIds);
+    	List<MongoMetadataRecordDecorator> records = ds.find(MongoMetadataRecordDecorator.class).filter("collection", collection).asList();
+         
+        return records.size();
     }
 
-    private int getCountFromRequestIds(Long[] reqIds) {
-        BasicDBObject query = new BasicDBObject("request", new BasicDBObject("$in", reqIds));
-        BasicDBObject fields = new BasicDBObject(AbstractMongoEntity.LID, 1);
-
-        return records.find(query, fields).count();
-    }
 
     // TODO recursive
     @Override
     public int getTotalByProvider(Provider provider, boolean recursive) {
-        MongoProvider mongoProvider = ds.find(MongoProvider.class).filter("lid", provider.getId()).get();
-        return getCountFromRequestIds(getRequestIdsFromProvider(mongoProvider));
+    	
+    	int recordcounter = 0;
+    	
+    	List <MongoCollectionDecorator> mongoCollections = ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList();
+    	
+    	for(MongoCollectionDecorator p : mongoCollections){
+    		int tmp = getTotalByCollection(p);
+    		recordcounter = recordcounter + tmp;
+    	}
+    	
+        return recordcounter;
     }
 
     @Override
@@ -525,7 +524,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     
     @Override
     public Execution getExecution(Long id) throws StorageEngineException {
-        return ds.find(MongoExecution.class, AbstractMongoEntity.LID, id).get();
+        return ds.find(MongoExecutionDecorator.class, LOCALIDFIELD, id).get();
     }
 
 
