@@ -1,5 +1,6 @@
 package eu.europeana.uim.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
  * @since Dez 16, 2010
  */
-public final class TKey<NS, T> implements Comparable<TKey<NS, T>> {
+public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
     private static final long                  serialVersionUID = 1L;
 
     private final Class<T>                     type;
