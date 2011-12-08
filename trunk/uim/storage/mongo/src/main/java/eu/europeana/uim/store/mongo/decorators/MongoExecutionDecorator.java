@@ -29,6 +29,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
@@ -56,6 +57,10 @@ public class MongoExecutionDecorator<I>  implements Execution<I> {
 	private Long lid;
 	
 	
+	@Reference
+	private UimDataSet<I> datasetRefrerence;
+	
+	
     public MongoExecutionDecorator(){
     	this.embeddedExecution = new ExecutionBean<I>();
     }
@@ -63,6 +68,7 @@ public class MongoExecutionDecorator<I>  implements Execution<I> {
     
     public MongoExecutionDecorator(I id){
     	this.embeddedExecution = new ExecutionBean<I>(id);
+        this.lid = (Long) id;
     }
     
     
@@ -102,7 +108,21 @@ public class MongoExecutionDecorator<I>  implements Execution<I> {
 
 	@Override
 	public void setDataSet(UimDataSet<I> dataSet) {
-		embeddedExecution.setDataSet(dataSet);
+		
+		if(dataSet instanceof MongoCollectionDecorator){
+			MongoCollectionDecorator<I> tmp = (MongoCollectionDecorator<I>)dataSet;
+			embeddedExecution.setDataSet(tmp.getEmbeddedCollection());
+		}
+		else if(dataSet instanceof MongoMetadataRecordDecorator){
+			MongoMetadataRecordDecorator<I> tmp = (MongoMetadataRecordDecorator<I>)dataSet;
+			embeddedExecution.setDataSet(tmp.getEmebeddedMdr());
+		}
+		else if(dataSet instanceof MongoRequestDecorator){
+			MongoRequestDecorator<I> tmp = (MongoRequestDecorator<I>)dataSet;
+			embeddedExecution.setDataSet(tmp.getEmbeddedRequest());
+		}
+		
+		this.datasetRefrerence = dataSet;
 	}
 
 	@Override

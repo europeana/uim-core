@@ -47,7 +47,7 @@ public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
 	@Serialized
 	private MetaDataRecordBean<I> emebeddedMdr;
 	
-    @Id
+	@Id
     private ObjectId mongoId;
 	
 	@Indexed
@@ -67,6 +67,13 @@ public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
 		this.collection = collection;
 	}
 	
+	
+    /**
+	 * @return the emebeddedMdr
+	 */
+	public MetaDataRecordBean<I> getEmebeddedMdr() {
+		return emebeddedMdr;
+	}
 	
 	@Override
 	public I getId() {

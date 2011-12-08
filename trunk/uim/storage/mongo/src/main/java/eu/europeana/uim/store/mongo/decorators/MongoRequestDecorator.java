@@ -57,6 +57,9 @@ public class MongoRequestDecorator<I> implements Request<I> {
 	@Indexed
 	private Long lid;
 	
+	@Indexed
+	private Date searchDate;
+	
     @Reference
     private MongoCollectionDecorator<I> collection;
     
@@ -77,6 +80,7 @@ public class MongoRequestDecorator<I> implements Request<I> {
 	 * @param request
 	 */
 	public MongoRequestDecorator(I id,  MongoCollectionDecorator<I> collection, Date date){
+		this.searchDate = date;
 		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<I>>();
 		this.lid = (Long)id;
 		this.embeddedRequest = new RequestBean<I>(id,collection.getEmbeddedCollection(),date);

@@ -4,8 +4,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -13,6 +15,7 @@ import org.apache.commons.lang.ArrayUtils;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.DefaultCreator;
+import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -50,6 +53,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     private static final String DEFAULT_UIM_DB_NAME = "UIM";
     private static final String MNEMONICFIELD = "searchMnemonic";
+    private static final String NAMEFIELD = "searchName";
+    
     private static final String LOCALIDFIELD = "lid";
     
     
@@ -182,11 +187,28 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public void updateProvider(Provider<Long> provider) throws StorageEngineException {
+    	
+    	/*
+    	@SuppressWarnings("unchecked")
+		MongoProviderDecorator<Long> result = (MongoProviderDecorator<Long>) ds.find(MongoProviderDecorator.class).filter(NAMEFIELD, provider.getName()).filter(MNEMONICFIELD, provider.getMnemonic());
+    	
+    	if(result == null){
+    		result = (MongoProviderDecorator<Long>) ds.find(MongoProviderDecorator.class).filter(LOCALIDFIELD,provider.getId());
+    		if(result == null){
+    			throw new StorageEngineException("Provider with name '" + provider.getMnemonic() + "' cannot be updated because it does not exist in MongoDB");
+    		}
+    		
+    	}
+    	else{
+    		
+    	}
+    	*/
+    	
         for (Provider p : getAllProviders()) {
-            if (p.getName() != null && (p.getName().equals(provider.getName()) || p.getMnemonic().equals(provider.getMnemonic())) && p.getId() != provider.getId()) {
+            if (p.getName() != null && (p.getName().equals(provider.getName()) || p.getMnemonic().equals(provider.getMnemonic())) && !p.getId().equals(provider.getId())) {
                 throw new StorageEngineException("Provider with name '" + provider.getMnemonic() + "' already exists");
             }
-            if (p.getMnemonic() != null && p.getMnemonic().equals(provider.getMnemonic()) && p.getId() != provider.getId()) {
+            if (p.getMnemonic() != null && p.getMnemonic().equals(provider.getMnemonic()) && !p.getId().equals(provider.getId())) {
                 throw new StorageEngineException("Provider with mnemonic '" + provider.getMnemonic() + "' already exists");
             }
         }
@@ -276,7 +298,17 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Request createRequest(Collection collection, Date date) {
+    public Request createRequest(Collection collection, Date date) throws StorageEngineException {
+    	
+    	/*
+    	Query<MongoRequestDecorator> concurrent = ds.find(MongoRequestDecorator.class). filter("searchDate", date).filter("collection", collection);
+    	
+    	if(concurrent != null){
+    		throw new StorageEngineException("Duplicate request (within the same second) for collection'" + collection.getMnemonic() + "' is not allowed.");
+    	}
+    	*/
+    	
+    	
         Request<Long> r = new MongoRequestDecorator<Long>(requestIdCounter.getAndIncrement(), (MongoCollectionDecorator<Long>) collection, date);
         ds.save(r);
         return r;
@@ -394,13 +426,19 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Long[] getByRequest(Request request) {
-        BasicDBObject query = new BasicDBObject("request", request.getId());
-        BasicDBObject fields = new BasicDBObject(LOCALIDFIELD, 1);
-        List<DBObject> results = records.find(query, fields).toArray();
-        Long[] res = new Long[results.size()];
-        for (int i = 0; i < results.size(); i++) {
-            res[i] = (Long) results.get(i).get(LOCALIDFIELD);
-        }
+    	
+    	MongoRequestDecorator<Long> cast = (MongoRequestDecorator<Long>)request;
+    	HashSet<MongoMetadataRecordDecorator<Long>> reqrecords = cast.getRequestrecords();
+    	Long[] res = new Long[reqrecords.size()];
+    	
+    	int i = 0;
+    	
+    	for(MongoMetadataRecordDecorator<Long> rec : reqrecords){
+    		
+    		res[i] = rec.getId();
+    		
+    		i++;
+    	}
 
         return res;
     }
@@ -410,9 +448,18 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     	ArrayList<Long> ids = new ArrayList<Long>();
     	
-    	List <MongoMetadataRecordDecorator> records = ds.find(MongoMetadataRecordDecorator.class).filter("collection", collection).asList();
+    	List <MongoMetadataRecordDecorator> reqrecords = ds.find(MongoMetadataRecordDecorator.class).filter("collection", collection).asList();
     	
-        return (Long[]) ids.toArray();
+    	Long[] res = new Long[reqrecords.size()];
+    	
+    	int i = 0;
+    	for(MongoMetadataRecordDecorator<Long> rec : reqrecords){
+    		
+    		res[i] = rec.getId();
+    		
+    		i++;
+    	}
+        return res;
     }
 
     private Long[] getRecordsFromRequestIds(Long[] reqIds) {
@@ -436,55 +483,53 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         return reqIds;
     }
 
-    // TODO recursive
+
     public Long[] getByProvider(Provider<Long> provider, boolean recursive) {
-        List<Long> providers = new ArrayList<Long>();
-        if(recursive) {
-            getRecursive(provider, providers);
-        } else {
-            providers.add(provider.getId());
-        }
-
-        Long[] ids = new Long[0];
-
-        for(long id : providers) {
-            MongoProviderDecorator mongoProvider = ds.find(MongoProviderDecorator.class).filter("lid", id).get();
-            ids = (Long[]) ArrayUtils.addAll(ids, getRequestIdsFromProvider(mongoProvider));
-        }
-        return getRecordsFromRequestIds(ids);
+    	
+    	ArrayList<Long> vals = new ArrayList<Long>();
+    	  	
+    	List <MongoCollectionDecorator> mongoCollections = ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList();
+    	
+    	for(MongoCollectionDecorator p : mongoCollections){
+    		Long[] tmp = getByCollection(p);
+    		
+           for(int i=0; i<tmp.length ;i++){
+        	   vals.add(tmp[i]);
+           }
+    	}
+    	
+    	if(recursive == true){
+    		
+    		Set<Provider<Long>> relin = provider.getRelatedOut();
+    		
+    		for(Provider<Long> relpr : relin){
+    			Long[] tmp  = getByProvider(relpr,false);
+    	        for(int i=0; i<tmp.length ;i++){
+    	        	   vals.add(tmp[i]);
+    	           }			
+    		}
+    	}
+    
+        return vals.toArray(new Long[vals.size()]);
     }
 
-    public void getRecursive(Provider<Long> provider, List<Long> result) {
-        if (!result.contains(provider.getId())){
-            result.add(provider.getId());
-            for (Provider related : provider.getRelatedOut()) {
-                getRecursive(related, result);
-            }
-        }
-    }
 
 
-    private Long[] getRequestIdsFromProvider(MongoProviderDecorator mongoProvider) {
-        List<MongoRequestDecorator> reqs = new ArrayList<MongoRequestDecorator>();
-        List<MongoCollectionDecorator> collections = ds.find(MongoCollectionDecorator.class).filter("provider", mongoProvider).asList();
-        Long[] reqIds = new Long[0];
-
-        for (MongoCollectionDecorator collection : collections) {
-            reqIds = (Long[]) ArrayUtils.addAll(reqIds, getFromCollection(collection));
-        }
-        return reqIds;
-    }
-
+    
     @Override
     public Long[] getAllIds() {
-        List<DBObject> tutti = records.find().toArray();
-        Long[] tuttiArray = new Long[tutti.size()];
-        for (int i = 0; i < tutti.size(); i++) {
-            tuttiArray[i] = (Long) tutti.get(i).get("lid");
+    	ArrayList<Long> vals = new ArrayList<Long>();
+    	
+        List<MongoMetadataRecordDecorator<Long>> res = new ArrayList<MongoMetadataRecordDecorator<Long>>();
+        for (MongoMetadataRecordDecorator c : ds.find(MongoMetadataRecordDecorator.class).asList()) {
+        	vals.add((Long) c.getId());
         }
-        return tuttiArray;
+        
+        return vals.toArray(new Long[vals.size()]);
+
     }
 
+    
     @Override
     public int getTotalByRequest(Request request) {
     	MongoRequestDecorator<Long> req = (MongoRequestDecorator<Long>) request;

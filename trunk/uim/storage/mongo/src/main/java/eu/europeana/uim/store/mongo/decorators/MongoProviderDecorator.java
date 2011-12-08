@@ -20,6 +20,8 @@
  */
 package eu.europeana.uim.store.mongo.decorators;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +31,8 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.PrePersist;
+import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
@@ -46,8 +50,17 @@ public class MongoProviderDecorator<I> implements Provider<I> {
 	@Serialized
 	private ProviderBean<I> embeddedProvider;
 	
+	@Reference
+	private Set<Provider<I>> searchableRealtedIn;
+	
+	@Reference
+	private Set<Provider<I>> searchableRealtedOut;
+	
 	@Indexed
 	private String searchMnemonic;
+	
+	@Indexed
+	private String searchName;
 	
     @Id
     private ObjectId mongoId;
@@ -55,13 +68,45 @@ public class MongoProviderDecorator<I> implements Provider<I> {
 	@Indexed
 	private Long lid;
 	
+
+	
+	
 	public MongoProviderDecorator(){
+		searchableRealtedIn = new HashSet<Provider<I>>();
+		searchableRealtedOut = new HashSet<Provider<I>>();
 		this.embeddedProvider = new ProviderBean<I>();
 	}
 	
 	public MongoProviderDecorator(I id){
+		searchableRealtedIn = new HashSet<Provider<I>>();
+		searchableRealtedOut = new HashSet<Provider<I>>();
 		this.lid = (Long) id;
 		this.embeddedProvider = new ProviderBean<I>(id);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	@PrePersist 
+	void prePersist() 
+	{
+	
+		embeddedProvider.getRelatedIn().clear();
+		
+		for(Provider<I> p : searchableRealtedIn){
+			MongoProviderDecorator<I> cast = (MongoProviderDecorator<I>)p;
+			embeddedProvider.getRelatedIn().add(cast.getEmbeddedProvider());
+		}
+
+		embeddedProvider.getRelatedOut().clear();
+		
+		for(Provider<I> p : searchableRealtedOut){
+			MongoProviderDecorator<I> cast = (MongoProviderDecorator<I>)p;
+			embeddedProvider.getRelatedOut().add(cast.getEmbeddedProvider());
+		}
+
+		
 	}
 	
 	
@@ -78,12 +123,12 @@ public class MongoProviderDecorator<I> implements Provider<I> {
 
 	@Override
 	public Set<Provider<I>> getRelatedOut() {
-		return embeddedProvider.getRelatedOut();
+		return searchableRealtedOut;
 	}
 
 	@Override
 	public Set<Provider<I>> getRelatedIn() {
-		return embeddedProvider.getRelatedIn();
+		return searchableRealtedIn; 
 	}
 
 	@Override
@@ -105,6 +150,7 @@ public class MongoProviderDecorator<I> implements Provider<I> {
 	@Override
 	public void setName(String name) {
 		embeddedProvider.setName(name);
+		this.searchName = name;
 		
 	}
 
