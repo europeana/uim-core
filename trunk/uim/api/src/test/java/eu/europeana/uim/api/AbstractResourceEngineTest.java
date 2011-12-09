@@ -68,6 +68,13 @@ public abstract class AbstractResourceEngineTest<I> {
      */
     protected abstract I nextID();
 
+    protected abstract Workflow testGenerateWorkflow();
+    
+    protected abstract Provider<I> testGenerateProvider();
+    
+    protected abstract Collection<I> testGenerateCollection(Provider<I> provider);
+    
+    
     abstract class AbstractCreateAndGetResourceTestCase<J> {
         public abstract LinkedHashMap<String, List<String>> getEntityResources(J entity,
                 List<String> keys);
@@ -226,19 +233,14 @@ public abstract class AbstractResourceEngineTest<I> {
         assertNotNull(resources.get(EXAMPLE_KEY_1));
     }
 
+    
+       
     /**
      * Tests creation and retrieval of collection specific resources.
      */
     @Test
     public void testCreateAndGetWorkflowResource() {
-        Workflow workflow = mock(Workflow.class);
-
-        when(workflow.getIdentifier()).thenAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return "Workflow";
-            }
-        });
+        Workflow workflow = testGenerateWorkflow();
 
         LinkedHashMap<String, List<String>> resources = engine.getWorkflowResources(workflow,
                 Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
@@ -319,8 +321,8 @@ public abstract class AbstractResourceEngineTest<I> {
      */
     @Test
     public void testCreateAndGetProviderResource() {
-        Provider<I> provider = new ProviderBean<I>(nextID());
-        provider.setMnemonic("pro");
+        Provider<I> provider = testGenerateProvider();
+
 
         LinkedHashMap<String, List<String>> resources = engine.getProviderResources(provider,
                 Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
@@ -401,10 +403,9 @@ public abstract class AbstractResourceEngineTest<I> {
      */
     @Test
     public void testCreateAndGetCollectionResources() {
-        Provider<I> provider = new ProviderBean<I>(nextID());
-        provider.setMnemonic("pro");
-        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
-        collection.setMnemonic("col");
+        Provider<I> provider = testGenerateProvider();
+        
+        Collection<I> collection = testGenerateCollection(provider);
 
         LinkedHashMap<String, List<String>> resources = engine.getCollectionResources(collection,
                 Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
@@ -486,17 +487,11 @@ public abstract class AbstractResourceEngineTest<I> {
      */
     @Test
     public void testCreateAndGetMixedResource() {
-        Workflow workflow = mock(Workflow.class);
-        when(workflow.getIdentifier()).thenAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return "Workflow";
-            }
-        });
-        Provider<I> provider = new ProviderBean<I>(nextID());
-        provider.setMnemonic("pro");
-        Collection<I> collection = new CollectionBean<I>(nextID(), provider);
-        collection.setMnemonic("col");
+        Workflow workflow = testGenerateWorkflow();
+        
+        Provider<I> provider = testGenerateProvider();
+        
+        Collection<I> collection = testGenerateCollection(provider);
 
         LinkedHashMap<String, List<String>> colResources = engine.getCollectionResources(
                 collection, Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
