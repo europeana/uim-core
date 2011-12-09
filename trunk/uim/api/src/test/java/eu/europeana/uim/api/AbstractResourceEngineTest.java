@@ -4,8 +4,6 @@ package eu.europeana.uim.api;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,14 +13,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.store.bean.CollectionBean;
-import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -68,13 +61,22 @@ public abstract class AbstractResourceEngineTest<I> {
      */
     protected abstract I nextID();
 
+    /**
+     * @return generate test workflow
+     */
     protected abstract Workflow testGenerateWorkflow();
-    
+
+    /**
+     * @return generate test provider
+     */
     protected abstract Provider<I> testGenerateProvider();
-    
+
+    /**
+     * @param provider
+     * @return test collection
+     */
     protected abstract Collection<I> testGenerateCollection(Provider<I> provider);
-    
-    
+
     abstract class AbstractCreateAndGetResourceTestCase<J> {
         public abstract LinkedHashMap<String, List<String>> getEntityResources(J entity,
                 List<String> keys);
@@ -233,8 +235,6 @@ public abstract class AbstractResourceEngineTest<I> {
         assertNotNull(resources.get(EXAMPLE_KEY_1));
     }
 
-    
-       
     /**
      * Tests creation and retrieval of collection specific resources.
      */
@@ -323,7 +323,6 @@ public abstract class AbstractResourceEngineTest<I> {
     public void testCreateAndGetProviderResource() {
         Provider<I> provider = testGenerateProvider();
 
-
         LinkedHashMap<String, List<String>> resources = engine.getProviderResources(provider,
                 Arrays.asList(EXAMPLE_KEY_1, EXAMPLE_KEY_3));
 
@@ -404,7 +403,7 @@ public abstract class AbstractResourceEngineTest<I> {
     @Test
     public void testCreateAndGetCollectionResources() {
         Provider<I> provider = testGenerateProvider();
-        
+
         Collection<I> collection = testGenerateCollection(provider);
 
         LinkedHashMap<String, List<String>> resources = engine.getCollectionResources(collection,
@@ -488,9 +487,9 @@ public abstract class AbstractResourceEngineTest<I> {
     @Test
     public void testCreateAndGetMixedResource() {
         Workflow workflow = testGenerateWorkflow();
-        
+
         Provider<I> provider = testGenerateProvider();
-        
+
         Collection<I> collection = testGenerateCollection(provider);
 
         LinkedHashMap<String, List<String>> colResources = engine.getCollectionResources(

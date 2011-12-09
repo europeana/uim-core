@@ -1,14 +1,15 @@
 /* MemoryResourceEngineTest.java - created on May 9, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.store.memory;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import eu.europeana.uim.api.AbstractResourceEngineTest;
 import eu.europeana.uim.api.ResourceEngine;
@@ -37,10 +38,10 @@ public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
     protected Long nextID() {
         return id.incrementAndGet();
     }
-    
-    
+
+    @SuppressWarnings("rawtypes")
     @Override
-    public Workflow testGenerateWorkflow(){
+    public Workflow testGenerateWorkflow() {
         Workflow workflow = mock(Workflow.class);
 
         when(workflow.getIdentifier()).thenAnswer(new Answer() {
@@ -49,23 +50,23 @@ public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
                 return "Workflow";
             }
         });
-        
+
         return workflow;
     }
-    
+
     @Override
-    public Provider<Long> testGenerateProvider(){
-    	Provider<Long> provider = new ProviderBean<Long>(nextID());
+    public Provider<Long> testGenerateProvider() {
+        Provider<Long> provider = new ProviderBean<Long>(nextID());
         provider.setMnemonic("pro");
-        
-    	return provider;
+
+        return provider;
     }
-    
+
     @Override
-    public Collection<Long> testGenerateCollection(Provider<Long> provider){
-    	Collection<Long> collection = new CollectionBean<Long>(nextID(), provider);
+    public Collection<Long> testGenerateCollection(Provider<Long> provider) {
+        Collection<Long> collection = new CollectionBean<Long>(nextID(), provider);
         collection.setMnemonic("col");
-        
-    	return collection;
+
+        return collection;
     }
 }
