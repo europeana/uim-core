@@ -88,7 +88,7 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<Long>{
 			    	m = new Mongo();
 			        MongoResourceEngine engine = new MongoResourceEngine("UIMTEST");
 			        
-			        MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST2");
+			        MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST");
 			        
 			        m.dropDatabase("UIMTEST");
 			        engine.initialize();

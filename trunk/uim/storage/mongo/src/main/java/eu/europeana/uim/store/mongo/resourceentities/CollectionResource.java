@@ -34,6 +34,9 @@ public class CollectionResource {
 	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
+	public CollectionResource(){
+		
+	}
 	
 	@SuppressWarnings("unchecked")
 	public CollectionResource(Collection<?> collection){

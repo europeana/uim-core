@@ -237,6 +237,9 @@ public class MongoResourceEngine implements ResourceEngine {
         WorkflowResource wfresource = ds.find(WorkflowResource.class).filter("workflowid", workflow.getIdentifier()).get();
         
         if(wfresource == null){
+        	for(String key : keys){
+        		results.put(key, null);
+        	}
         	return results;
         }
         
@@ -300,6 +303,9 @@ public class MongoResourceEngine implements ResourceEngine {
         ProviderResource prresource = ds.find(ProviderResource.class).filter("provider", provider).get();
         
         if(prresource == null){
+        	for(String key : keys){
+        		results.put(key, null);
+        	}
         	return results;
         }
         
@@ -329,14 +335,14 @@ public class MongoResourceEngine implements ResourceEngine {
 		
 		if(colresource == null){
 			colresource = new CollectionResource(collection);
-			ds.save(collection);
+			ds.save(colresource);
 		}
         
         
         if (resources == null) {
             // clean up and remove id entry from resources
         	colresource.getResources().clear();
-        	ds.save(collection);
+        	ds.save(colresource);
             return;
         }
 
@@ -353,7 +359,7 @@ public class MongoResourceEngine implements ResourceEngine {
             }
         }
         
-        ds.save(collection);
+        ds.save(colresource);
 
 	}
 
@@ -368,7 +374,12 @@ public class MongoResourceEngine implements ResourceEngine {
         CollectionResource colresource = ds.find(CollectionResource.class).filter("collection", collection).get();
         
         if(colresource == null){
+        	
+        	for(String key : keys){
+        		results.put(key, null);
+        	}
         	return results;
+        	
         }
         
         LinkedHashMap<String, List<String>> collectionMap = colresource.getResources();

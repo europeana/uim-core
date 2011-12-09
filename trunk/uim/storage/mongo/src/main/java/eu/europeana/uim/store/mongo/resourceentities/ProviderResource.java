@@ -34,6 +34,9 @@ public class ProviderResource {
 	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
+
+	public ProviderResource(){
+	}
 	
 	@SuppressWarnings("unchecked")
 	public ProviderResource(Provider<?> provider){

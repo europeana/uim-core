@@ -32,9 +32,12 @@ public class WorkflowResource {
 	private LinkedHashMap<String, List<String>> resources;
 
 	
+	public WorkflowResource(){
+		
+	}
 	
-	public WorkflowResource(String workflowid){
-		this.workflowid = workflowid;
+	public WorkflowResource(String workid){
+		this.workflowid = workid;
 		this.resources = new LinkedHashMap<String, List<String>>();
 	}
 	
