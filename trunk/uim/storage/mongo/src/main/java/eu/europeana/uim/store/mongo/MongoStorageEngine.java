@@ -48,6 +48,7 @@ import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
  * TODO implement the recursive flag for providers
  *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Georgios Markakis <gwarkx@hotmail.com>
  */
 public class MongoStorageEngine implements StorageEngine<Long> {
 
@@ -109,25 +110,6 @@ public class MongoStorageEngine implements StorageEngine<Long> {
             Morphia morphia = new Morphia();
 
           
-            // see http://code.google.com/p/morphia/issues/detail?id=208
-          /*
-          morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
-                @Override
-                protected ClassLoader getClassLoaderForClass(String clazz, DBObject object) {
-                    // we're the only ones for now using Morphia so we can be sure that in any case
-                    // the classloader of this bundle has to be used
-                    return MongoBundleActivator.getBundleClassLoader();
-                }
-            });
-           
-            morphia.
-                    map(MongodbCollection.class).
-                    map(MongoExecution.class).
-                    map(MongoProvider.class).
-                    map(MongoRequest.class);
-            */
-            
-            
             morphia.
             //map(MongoAbstractEntity.class).
             //map(MongoAbstractNamedEntity.class).
@@ -299,16 +281,7 @@ public class MongoStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Request createRequest(Collection collection, Date date) throws StorageEngineException {
-    	
-    	/*
-    	Query<MongoRequestDecorator> concurrent = ds.find(MongoRequestDecorator.class). filter("searchDate", date).filter("collection", collection);
-    	
-    	if(concurrent != null){
-    		throw new StorageEngineException("Duplicate request (within the same second) for collection'" + collection.getMnemonic() + "' is not allowed.");
-    	}
-    	*/
-    	
-    	
+    	    	
         Request<Long> r = new MongoRequestDecorator<Long>(requestIdCounter.getAndIncrement(), (MongoCollectionDecorator<Long>) collection, date);
         ds.save(r);
         return r;
@@ -317,16 +290,14 @@ public class MongoStorageEngine implements StorageEngine<Long> {
     @Override
     public void updateRequest(Request request) throws StorageEngineException {
     	
-    	/*
     	MongoRequestDecorator<?> request2 = (MongoRequestDecorator<?>)request;
     		
         for (MongoRequestDecorator<?> r : ds.find(MongoRequestDecorator.class).filter("collection", request2.getCollectionReference()).asList()) {
-            if (r.getDate().equals(request.getDate()) && r.getId() != request2.getId()) {
+            if (r.getDate().equals(request.getDate()) && !r.getId().equals(request2.getId())) {
                 String unique = "REQUEST/" + request2.getCollection().getMnemonic() + "/" + request2.getDate();
                 throw new IllegalStateException("Duplicate unique key for request: <" + unique + ">");
             }
         }
-        */
     	
         ds.merge(request);
     }
@@ -462,28 +433,8 @@ public class MongoStorageEngine implements StorageEngine<Long> {
         return res;
     }
 
-    private Long[] getRecordsFromRequestIds(Long[] reqIds) {
-        BasicDBObject query = new BasicDBObject("request", new BasicDBObject("$in", reqIds));
-        BasicDBObject fields = new BasicDBObject(LOCALIDFIELD, 1);
-
-        List<DBObject> results = records.find(query, fields).toArray();
-        Long[] res = new Long[results.size()];
-        for (int i = 0; i < results.size(); i++) {
-            res[i] = (Long) results.get(i).get(LOCALIDFIELD);
-        }
-        return res;
-    }
-
-    private Long[] getFromCollection(MongoCollectionDecorator<Long> mongodbCollection) {
-        List<MongoRequestDecorator> reqs = ds.find(MongoRequestDecorator.class).filter("collection", mongodbCollection).asList();
-        Long[] reqIds = new Long[reqs.size()];
-        for (int i = 0; i < reqs.size(); i++) {
-            reqIds[i] = (Long)reqs.get(i).getId();
-        }
-        return reqIds;
-    }
-
-
+    
+    @Override
     public Long[] getByProvider(Provider<Long> provider, boolean recursive) {
     	
     	ArrayList<Long> vals = new ArrayList<Long>();

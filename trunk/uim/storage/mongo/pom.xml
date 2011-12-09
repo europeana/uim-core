@@ -100,10 +100,11 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>eu.europeana.uim.store.mongo.MongoBundleActivator</Bundle-Activator>
-						<!-- morphia has a class that uses com.google.gwt.user.client.rpc but 
+				       	<!--
+				       	    morphia has a class that uses com.google.gwt.user.client.rpc but 
 							we do not need it yet the maven bundle plugin will generate an entry for 
-							it due to our Embed-Dependency directive -->
+							it due to our Embed-Dependency directive 
+						 -->
 						<Import-Package>
 							!com.google.gwt.user.client.rpc,
 							!net.sf.cglib.asm.util,
