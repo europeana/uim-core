@@ -19,7 +19,7 @@ import eu.europeana.uim.api.StorageEngine;
  * @author Georgios Markakis
  */
 @RunWith(JUnit4.class)
-public class MongoStorageTest extends AbstractStorageEngineTest<Long> {
+public class MongoStorageEngineTest extends AbstractStorageEngineTest<Long> {
 
 	private MongoStorageEngine mongoEngine = null;
 

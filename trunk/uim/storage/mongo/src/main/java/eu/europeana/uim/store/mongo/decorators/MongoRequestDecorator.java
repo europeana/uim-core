@@ -122,7 +122,7 @@ public class MongoRequestDecorator<I> implements Request<I> {
 
 	@Override
 	public Collection<I> getCollection() {
-		return embeddedRequest.getCollection();
+		return  collection; // embeddedRequest.getCollection();
 	}
 
 	@Override
