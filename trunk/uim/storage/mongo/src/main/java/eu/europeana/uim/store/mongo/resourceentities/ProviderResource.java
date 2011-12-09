@@ -11,7 +11,9 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 
+import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 
 /**
@@ -27,22 +29,26 @@ public class ProviderResource {
 	@Reference
 	private  MongoProviderDecorator<Long> provider;
 	
+	// We have to serialize this because certain characters (ie .) are 
+	// not allowed to be stored directly in MongoDB
+	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
+	
+	@SuppressWarnings("unchecked")
+	public ProviderResource(Provider<?> provider){
+		this.provider = (MongoProviderDecorator<Long>) provider;
+		this.resources = new LinkedHashMap<String, List<String>>();
+		
+	}
+	
 	public MongoProviderDecorator<Long> getProvider() {
 		return provider;
 	}
 
-	public void setProvider(MongoProviderDecorator<Long> provider) {
-		this.provider = provider;
-	}
 
 	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
-	}
-
-	public void setResources(LinkedHashMap<String, List<String>> resources) {
-		this.resources = resources;
 	}
 
 	public ObjectId getMongoid() {

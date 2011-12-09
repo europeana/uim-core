@@ -11,7 +11,9 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Serialized;
 
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 
 /**
@@ -27,18 +29,24 @@ public class CollectionResource {
     @Reference
     private MongoCollectionDecorator<Long> collection;
 	
+	// We have to serialize this because certain characters (ie .) are 
+	// not allowed to be stored directry in MongoDB
+	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
+	
+	@SuppressWarnings("unchecked")
+	public CollectionResource(Collection<?> collection){
+		this.collection = (MongoCollectionDecorator<Long>) collection;
+		this.resources = new LinkedHashMap<String, List<String>>();
+	}
+	
 	public ObjectId getMongoid() {
 		return mongoid;
 	}
 
 	public MongoCollectionDecorator<Long> getCollection() {
 		return collection;
-	}
-
-	public void setCollection(MongoCollectionDecorator<Long> collection) {
-		this.collection = collection;
 	}
 
 	public LinkedHashMap<String, List<String>> getResources() {

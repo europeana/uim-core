@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
@@ -42,6 +43,10 @@ public class MongoResourceEngine implements ResourceEngine {
     private DB db = null;
     private Datastore ds = null;
     
+	public MongoResourceEngine(String dbName) {
+		this.dbName = dbName;
+	}
+
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.ResourceEngine#initialize()
 	 */
@@ -119,8 +124,7 @@ public class MongoResourceEngine implements ResourceEngine {
 	 */
 	@Override
 	public void checkpoint() {
-		// TODO Auto-generated method stub
-
+		//Does nothing?
 	}
 
 	/* (non-Javadoc)
@@ -136,8 +140,29 @@ public class MongoResourceEngine implements ResourceEngine {
 	 */
 	@Override
 	public void setGlobalResources(LinkedHashMap<String, List<String>> resources) {
-		// TODO Auto-generated method stub
-
+		
+		GlobalResource global = ds.find(GlobalResource.class).get();
+		
+		if(global == null){
+			global = new GlobalResource();
+			ds.save(global);
+		}
+		
+        if (resources == null) {
+        	global.getResources().clear();
+        	ds.save(global);
+            return;
+        }
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+            	global.getResources().remove(key);
+            } else {
+            	global.getResources().put(key, resources.get(key));
+            }
+        }
+        
+    	ds.save(global);
 	}
 
 	/* (non-Javadoc)
@@ -146,8 +171,23 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public LinkedHashMap<String, List<String>> getGlobalResources(
 			List<String> keys) {
-		// TODO Auto-generated method stub
-		return null;
+        
+		LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+		
+		GlobalResource global = ds.find(GlobalResource.class).get();
+		
+		if(global == null){
+			global = new GlobalResource();
+			ds.save(global);
+		}
+		
+        for (String key : keys) {
+            List<String> values = global.getResources().get(key);
+            results.put(key, values);
+
+        }
+        return results;
+
 	}
 
 	/* (non-Javadoc)
@@ -156,7 +196,33 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public void setWorkflowResources(Workflow workflow,
 			LinkedHashMap<String, List<String>> resources) {
-		// TODO Auto-generated method stub
+		
+		
+		WorkflowResource wfresource = ds.find(WorkflowResource.class).filter("workflowid", workflow.getIdentifier()).get();
+		
+		if(wfresource == null){
+			wfresource = new WorkflowResource(workflow.getIdentifier());
+			ds.save(wfresource);
+		}
+		
+	      if (resources == null) {
+	            // clean up and remove id entry from resources
+	    	  wfresource.getResources().clear();
+	    	  ds.save(wfresource);
+	          return;
+	        }
+
+	        LinkedHashMap<String, List<String>> workResources = wfresource.getResources();
+
+	        for (Entry<String, List<String>> entry : resources.entrySet()) {
+	            if (entry.getValue() == null) {
+	                // clean up. if the value is null, explicitely remove the key from the stored set.
+	                workResources.remove(entry.getKey());
+	            } else {
+	                workResources.put(entry.getKey(), entry.getValue());
+	            }
+	        }
+	        ds.save(wfresource);
 
 	}
 
@@ -166,8 +232,25 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public LinkedHashMap<String, List<String>> getWorkflowResources(
 			Workflow workflow, List<String> keys) {
-		// TODO Auto-generated method stub
-		return null;
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        
+        WorkflowResource wfresource = ds.find(WorkflowResource.class).filter("workflowid", workflow.getIdentifier()).get();
+        
+        if(wfresource == null){
+        	return results;
+        }
+        
+        LinkedHashMap<String, List<String>> workflowMap = wfresource.getResources();
+
+        for (String key : keys) {
+            List<String> values = null;
+            if (workflowMap != null) {
+                values = workflowMap.get(key);
+            }
+
+            results.put(key, values);
+        }
+        return results;
 	}
 
 	/* (non-Javadoc)
@@ -176,7 +259,33 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public void setProviderResources(Provider<?> provider,
 			LinkedHashMap<String, List<String>> resources) {
-		// TODO Auto-generated method stub
+		
+		ProviderResource prresource = ds.find(ProviderResource.class).filter("provider", provider).get();
+		
+		if(prresource == null){
+			prresource = new ProviderResource(provider);
+			ds.save(prresource);
+		}
+			
+        if (resources == null) {
+            // clean up and remove id entry from resources
+        	prresource.getResources().clear();
+        	ds.save(prresource);
+            return;
+        }
+
+        LinkedHashMap<String, List<String>> provResources = prresource.getResources();
+
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                provResources.remove(key);
+            } else {
+                provResources.put(key, resources.get(key));
+            }
+        }
+        
+        ds.save(prresource);
 
 	}
 
@@ -186,8 +295,26 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public LinkedHashMap<String, List<String>> getProviderResources(
 			Provider<?> provider, List<String> keys) {
-		// TODO Auto-generated method stub
-		return null;
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        
+        ProviderResource prresource = ds.find(ProviderResource.class).filter("provider", provider).get();
+        
+        if(prresource == null){
+        	return results;
+        }
+        
+        LinkedHashMap<String, List<String>> providerMap = prresource.getResources();
+
+        for (String key : keys) {
+            List<String> values = null;
+            if (providerMap != null) {
+                values = providerMap.get(key);
+            }
+
+            results.put(key, values);
+
+        }
+        return results;
 	}
 
 	/* (non-Javadoc)
@@ -196,7 +323,37 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public void setCollectionResources(Collection<?> collection,
 			LinkedHashMap<String, List<String>> resources) {
-		// TODO Auto-generated method stub
+		
+		
+        CollectionResource colresource = ds.find(CollectionResource.class).filter("collection", collection).get();
+		
+		if(colresource == null){
+			colresource = new CollectionResource(collection);
+			ds.save(collection);
+		}
+        
+        
+        if (resources == null) {
+            // clean up and remove id entry from resources
+        	colresource.getResources().clear();
+        	ds.save(collection);
+            return;
+        }
+
+
+        LinkedHashMap<String, List<String>> collResources = colresource.getResources();
+
+        // collectionResources.put(id.getId(), resources);
+        for (String key : resources.keySet()) {
+            if (resources.get(key) == null) {
+                // clean up. if the value is null, explicitely remove the key from the stored set.
+                collResources.remove(key);
+            } else {
+                collResources.put(key, resources.get(key));
+            }
+        }
+        
+        ds.save(collection);
 
 	}
 
@@ -206,8 +363,25 @@ public class MongoResourceEngine implements ResourceEngine {
 	@Override
 	public LinkedHashMap<String, List<String>> getCollectionResources(
 			Collection<?> collection, List<String> keys) {
-		// TODO Auto-generated method stub
-		return null;
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        
+        CollectionResource colresource = ds.find(CollectionResource.class).filter("collection", collection).get();
+        
+        if(colresource == null){
+        	return results;
+        }
+        
+        LinkedHashMap<String, List<String>> collectionMap = colresource.getResources();
+
+        for (String key : keys) {
+            List<String> values = null;
+            if (collectionMap != null) {
+                values = collectionMap.get(key);
+            }
+            results.put(key, values);
+
+        }
+        return results;
 	}
 
 	/* (non-Javadoc)

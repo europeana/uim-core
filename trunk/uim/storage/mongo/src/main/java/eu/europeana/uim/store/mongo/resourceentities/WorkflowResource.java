@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Serialized;
 
 /**
  * @author geomark
@@ -25,8 +26,17 @@ public class WorkflowResource {
 	@Indexed
 	private String workflowid;
 	
+	// We have to serialize this because certain characters (ie .) are 
+	// not allowed to be stored directly in MongoDB
+	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
+	
+	
+	public WorkflowResource(String workflowid){
+		this.workflowid = workflowid;
+		this.resources = new LinkedHashMap<String, List<String>>();
+	}
 	
 	public ObjectId getMongoid() {
 		return mongoid;
@@ -36,15 +46,8 @@ public class WorkflowResource {
 		return workflowid;
 	}
 
-	public void setWorkflowid(String workflowid) {
-		this.workflowid = workflowid;
-	}
-
 	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
 	}
 
-	public void setResources(LinkedHashMap<String, List<String>> resources) {
-		this.resources = resources;
-	}
 }

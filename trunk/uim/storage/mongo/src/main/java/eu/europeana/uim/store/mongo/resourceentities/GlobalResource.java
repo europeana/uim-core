@@ -3,12 +3,14 @@
  */
 package eu.europeana.uim.store.mongo.resourceentities;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Serialized;
 
 
 /**
@@ -21,17 +23,29 @@ public class GlobalResource {
 	@Id
     private ObjectId mongoid;
 
-	private List<String> resources;
+	// We have to serialize this because certain characters (ie .) are 
+	// not allowed to be stored directry in MongoDB
+	@Serialized
+	private LinkedHashMap<String, List<String>> resources;
 
-	public ObjectId getMongoid() {
-		return mongoid;
+	
+	public GlobalResource(){
+		resources = new LinkedHashMap<String, List<String>>();
 	}
-
-	public List<String> getResources() {
+	
+	
+	
+	/**
+	 * @return the resources
+	 */
+	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
 	}
 
-	public void setResources(List<String> resources) {
-		this.resources = resources;
+	public ObjectId getMongoid() {
+		
+		return mongoid;
 	}
+
+
 }
