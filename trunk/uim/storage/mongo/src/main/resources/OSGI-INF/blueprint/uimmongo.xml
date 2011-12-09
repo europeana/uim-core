@@ -7,6 +7,6 @@
 	</service>
 	
 	<service interface="eu.europeana.uim.api.ResourceEngine" ranking="9">
-        <bean class="eu.europeana.uim.store.memory.MongoResourceEngine" />
+        <bean class="eu.europeana.uim.store.mongo.MongoResourceEngine" />
     </service>
 </blueprint>
