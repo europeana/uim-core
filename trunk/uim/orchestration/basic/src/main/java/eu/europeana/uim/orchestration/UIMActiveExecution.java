@@ -50,30 +50,30 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * temporary files is not deleted after the execution.
      **/
 
-    public static String                      KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
-    private static Logger                     log                                = Logger.getLogger(UIMActiveExecution.class.getName());
+    public static String                         KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
+    private static Logger                        log                                = Logger.getLogger(UIMActiveExecution.class.getName());
     private HashMap<String, LinkedList<Task<I>>> success                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, LinkedList<Task<I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, HashSet<Task<I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<I>>>();
 
-    private HashMap<TKey<?, ?>, Object>       values                             = new HashMap<TKey<?, ?>, Object>();
+    private HashMap<TKey<?, ?>, Object>          values                             = new HashMap<TKey<?, ?>, Object>();
 
-    private final StorageEngine<I>            storageEngine;
-    private final LoggingEngine<I>            loggingEngine;
-    private final ResourceEngine              resourceEngine;
+    private final StorageEngine<I>               storageEngine;
+    private final LoggingEngine<I>               loggingEngine;
+    private final ResourceEngine                 resourceEngine;
 
-    private final Execution<I>                execution;
-    private final Workflow                    workflow;
-    private final Properties                  properties;
-    private final RevisableProgressMonitor    monitor;
+    private final Execution<I>                   execution;
+    private final Workflow                       workflow;
+    private final Properties                     properties;
+    private final RevisableProgressMonitor       monitor;
 
-    private boolean                           paused;
-    private boolean                           initialized;
-    private Throwable                         throwable;
+    private boolean                              paused;
+    private boolean                              initialized;
+    private Throwable                            throwable;
 
-    private int                               scheduled                          = 0;
+    private int                                  scheduled                          = 0;
 
-    private int                               completed                          = 0;
+    private int                                  completed                          = 0;
 
     /**
      * Creates a new instance of this class.
@@ -145,12 +145,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         return execution.getDataSet();
     }
 
-
     @Override
     public RevisableProgressMonitor getMonitor() {
         return monitor;
     }
-
 
     @Override
     public void setPaused(boolean paused) {
@@ -348,10 +346,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         return status;
     }
 
-//    @Override
-//    public Workflow getWorkflow() {
-//        return workflow;
-//    }
+// @Override
+// public Workflow getWorkflow() {
+// return workflow;
+// }
 
     @Override
     public void waitUntilFinished() {
