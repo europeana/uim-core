@@ -43,6 +43,10 @@ public class MongoResourceEngine implements ResourceEngine {
     private DB db = null;
     private Datastore ds = null;
     
+    
+	public MongoResourceEngine() {
+	}
+    
 	public MongoResourceEngine(String dbName) {
 		this.dbName = dbName;
 	}
