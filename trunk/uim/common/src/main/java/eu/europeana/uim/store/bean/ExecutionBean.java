@@ -18,22 +18,22 @@ import eu.europeana.uim.store.UimDataSet;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I>,Serializable {
+public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I>, Serializable {
+    private static final long   serialVersionUID = 1L;
+    
+    private boolean             active           = false;
+    private Date                startTime;
+    private Date                endTime;
+    private UimDataSet<I>       dataSet;
+    private String              workflowIdentifier;
+    private String              name;
+    private boolean             canceled         = false;
+    private int                 success;
+    private int                 failure;
+    private int                 processed;
+    private String              logFile;
 
-	private static final long serialVersionUID = 1L;	
-	private boolean    active   = false;
-    private Date       startTime;
-    private Date       endTime;
-    private UimDataSet<I> dataSet;
-    private String     workflowIdentifier;
-    private String     name;
-    private boolean    canceled = false;
-    private int        success;
-    private int        failure;
-    private int        processed;
-    private String     logFile;
-
-    private Map<String, String> values = new HashMap<String, String>();
+    private Map<String, String> values           = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -177,23 +177,21 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
         return values.get(key);
     }
 
-	@Override
-	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.getFieldId(),value);
-		
-	}
-
-	@Override
-	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.getFieldId());
-	}
-    
-    
     @Override
-    public Map<String, String> values() {
-         return values;
+    public void putValue(ControlledVocabularyKeyValue key, String value) {
+        putValue(key.getFieldId(), value);
+
     }
 
+    @Override
+    public String getValue(ControlledVocabularyKeyValue key) {
+        return getValue(key.getFieldId());
+    }
+
+    @Override
+    public Map<String, String> values() {
+        return values;
+    }
 
     @Override
     public String toString() {
@@ -208,8 +206,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
 
     @Override
     public void setLogFile(String logfile) {
-        this.logFile=logfile;
+        this.logFile = logfile;
     }
-    
-    
+
 }
