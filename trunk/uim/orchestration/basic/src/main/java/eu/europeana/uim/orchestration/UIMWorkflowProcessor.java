@@ -174,13 +174,13 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                     while (task != null) {
                                         // early failure, if something goes wrong we
                                         // can cancel the execution here "early"
-                                        // we cannot check the task, because we do not 
+                                        // we cannot check the task, because we do not
                                         // know when it's going to be executed
                                         if (execution.getThrowable() != null) {
                                             complete(execution, true);
                                             break;
                                         }
-                                        
+
                                         isbusy |= true; // well there is something todo
 
                                         task.setStep(thisStep, mandatory);
