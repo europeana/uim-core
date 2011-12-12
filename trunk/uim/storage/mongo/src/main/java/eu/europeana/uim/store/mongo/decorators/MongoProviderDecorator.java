@@ -31,6 +31,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -45,16 +46,19 @@ import eu.europeana.uim.store.bean.ProviderBean;
  */
 
 @Entity
-public class MongoProviderDecorator<I> implements Provider<I> {
+public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 
+	@NotSaved
+	private ProviderBean<ObjectId> embeddedProvider;
+	
 	@Serialized
-	private ProviderBean<I> embeddedProvider;
+	byte[] embeddedbinary;
 	
 	@Reference
-	private Set<Provider<I>> searchableRealtedIn;
+	private Set<Provider<ObjectId>> searchableRealtedIn;
 	
 	@Reference
-	private Set<Provider<I>> searchableRealtedOut;
+	private Set<Provider<ObjectId>> searchableRealtedOut;
 	
 	@Indexed
 	private String searchMnemonic;
@@ -65,69 +69,68 @@ public class MongoProviderDecorator<I> implements Provider<I> {
     @Id
     private ObjectId mongoId;
 	
-	@Indexed
-	private Long lid;
-	
-
 	
 	
 	public MongoProviderDecorator(){
-		searchableRealtedIn = new HashSet<Provider<I>>();
-		searchableRealtedOut = new HashSet<Provider<I>>();
-		this.embeddedProvider = new ProviderBean<I>();
+		searchableRealtedIn = new HashSet<Provider<ObjectId>>();
+		searchableRealtedOut = new HashSet<Provider<ObjectId>>();
 	}
 	
-	public MongoProviderDecorator(I id){
-		searchableRealtedIn = new HashSet<Provider<I>>();
-		searchableRealtedOut = new HashSet<Provider<I>>();
-		this.lid = (Long) id;
-		this.embeddedProvider = new ProviderBean<I>(id);
-	}
-	
-	
+
+		
 	/**
 	 * 
 	 */
 	@PrePersist 
 	void prePersist() 
 	{
+		saveProvider();
+		updaterelated();
+	}
 	
+	
+	private void saveProvider(){
+		if(embeddedProvider == null){
+			this.embeddedProvider = new ProviderBean<ObjectId>(mongoId);
+		}
+	}
+	
+	
+	private void updaterelated(){
 		embeddedProvider.getRelatedIn().clear();
 		
-		for(Provider<I> p : searchableRealtedIn){
-			MongoProviderDecorator<I> cast = (MongoProviderDecorator<I>)p;
+		for(Provider<ObjectId> p : searchableRealtedIn){
+			MongoProviderDecorator<ObjectId> cast = (MongoProviderDecorator<ObjectId>)p;
 			embeddedProvider.getRelatedIn().add(cast.getEmbeddedProvider());
 		}
 
 		embeddedProvider.getRelatedOut().clear();
 		
-		for(Provider<I> p : searchableRealtedOut){
-			MongoProviderDecorator<I> cast = (MongoProviderDecorator<I>)p;
+		for(Provider<ObjectId> p : searchableRealtedOut){
+			MongoProviderDecorator<ObjectId> cast = (MongoProviderDecorator<ObjectId>)p;
 			embeddedProvider.getRelatedOut().add(cast.getEmbeddedProvider());
 		}
-
-		
 	}
 	
 	
 	//Getters & Setters
 	
-    public ProviderBean<I> getEmbeddedProvider() {
+    public ProviderBean<ObjectId> getEmbeddedProvider() {
 		return embeddedProvider;
 	}
 	
 	@Override
-	public I getId() {
+	public ObjectId getId() {
 		return embeddedProvider.getId();
 	}
 
 	@Override
-	public Set<Provider<I>> getRelatedOut() {
+	public Set<Provider<ObjectId>> getRelatedOut() {
 		return searchableRealtedOut;
 	}
 
 	@Override
-	public Set<Provider<I>> getRelatedIn() {
+	public Set<Provider<ObjectId>> getRelatedIn() {
 		return searchableRealtedIn; 
 	}
 

@@ -24,10 +24,10 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.google.code.morphia.annotations.Embedded;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -42,46 +42,51 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
  */
 
 @Entity
-public class MongoMetadataRecordDecorator <I> implements MetaDataRecord<I> {
+public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId> {
 
+	@NotSaved
+	private MetaDataRecordBean<ObjectId> emebeddedMdr;
+	
 	@Serialized
-	private MetaDataRecordBean<I> emebeddedMdr;
+	byte[] embeddedbinary;
+	
 	
 	@Id
     private ObjectId mongoId;
 	
-	@Indexed
-	private Long lid;
 	
     @Reference
-    private MongoCollectionDecorator<I> collection;
+    private MongoCollectionDecorator<ObjectId> collection;
 	
     
 	public MongoMetadataRecordDecorator (){
-		this.emebeddedMdr = new MetaDataRecordBean<I>();
 	}
 	
-	public MongoMetadataRecordDecorator(I id, MongoCollectionDecorator<I> collection){
-		this.lid = (Long)id;
-		this.emebeddedMdr = new MetaDataRecordBean<I>(id,collection.getEmbeddedCollection());
+	public MongoMetadataRecordDecorator(MongoCollectionDecorator<ObjectId> collection){
 		this.collection = collection;
 	}
 	
 	
+	
+	
+	
+	
+	//Getters & Setters
+	
     /**
 	 * @return the emebeddedMdr
 	 */
-	public MetaDataRecordBean<I> getEmebeddedMdr() {
+	public MetaDataRecordBean<ObjectId> getEmebeddedMdr() {
 		return emebeddedMdr;
 	}
 	
 	@Override
-	public I getId() {
+	public ObjectId getId() {
 		return emebeddedMdr.getId();
 	}
 
 	@Override
-	public Collection<I> getCollection() {
+	public Collection<ObjectId> getCollection() {
 		return emebeddedMdr.getCollection();
 	}
 

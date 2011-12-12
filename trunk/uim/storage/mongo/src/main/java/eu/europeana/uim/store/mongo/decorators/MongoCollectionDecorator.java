@@ -28,6 +28,8 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -35,6 +37,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;
+import eu.europeana.uim.store.bean.ProviderBean;
 
 /**
  * 
@@ -42,13 +45,16 @@ import eu.europeana.uim.store.bean.CollectionBean;
  */
 
 @Entity
-public class MongoCollectionDecorator<I> implements Collection<I>{
+public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 
+	@NotSaved
+	private CollectionBean<ObjectId> embeddedCollection;
+	
 	@Serialized
-	private CollectionBean<I> embeddedCollection;
+	byte[] embeddedbinary;
 	
 	@Reference
-	private  MongoProviderDecorator<I> provider;
+	private  MongoProviderDecorator<ObjectId> provider;
 	
 	@Indexed
 	private String searchMnemonic;
@@ -56,32 +62,52 @@ public class MongoCollectionDecorator<I> implements Collection<I>{
     @Id
     private ObjectId mongoId;
 	
-	@Indexed
-	private Long lid;
+
 	
 	public MongoCollectionDecorator(){
-		this.embeddedCollection = new CollectionBean<I>();	
+
 	}
 	
-	public MongoCollectionDecorator(I id, Provider<I> provider){
-		MongoProviderDecorator<I> prov = (MongoProviderDecorator<I>)provider;
-		this.lid = (Long)id;
-		this.embeddedCollection = new CollectionBean<I>(id,prov.getEmbeddedProvider());
-		this.provider = (MongoProviderDecorator<I>) provider;
+	public MongoCollectionDecorator(Provider<ObjectId> provider){
+		MongoProviderDecorator<ObjectId> prov = (MongoProviderDecorator<ObjectId>)provider;
+
+		this.provider = (MongoProviderDecorator<ObjectId>) provider;
 	}
 	
 	
-    public CollectionBean<I> getEmbeddedCollection() {
+	/**
+	 * 
+	 */
+	@PrePersist 
+	void prePersist() 
+	{
+		saveCollection();
+	}
+	
+	
+	private void saveCollection(){
+		if(embeddedCollection == null){
+			this.embeddedCollection = new CollectionBean<ObjectId>(mongoId,provider.getEmbeddedProvider());
+		}
+	}
+	
+	
+	
+	
+	
+	//Getters & Setters
+	
+    public CollectionBean<ObjectId> getEmbeddedCollection() {
 		return embeddedCollection;
 	}
 	
 	@Override
-	public I getId() {
+	public ObjectId getId() {
 		return embeddedCollection.getId();
 	}
 
 	@Override
-	public Provider<I> getProvider() {
+	public Provider<ObjectId> getProvider() {
 		return embeddedCollection.getProvider();
 	}
 

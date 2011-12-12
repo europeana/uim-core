@@ -29,6 +29,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -42,42 +43,48 @@ import eu.europeana.uim.store.bean.ExecutionBean;
  * @author Georgios Markakis
  */
 @Entity
-public class MongoExecutionDecorator<I>  implements Execution<I> {
+public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
 
 	/**
 	 * 
 	 */
+	@NotSaved
+	private ExecutionBean<ObjectId> embeddedExecution;
+	
 	@Serialized
-	private ExecutionBean<I> embeddedExecution;
+	byte[] embeddedbinary;
 	
     @Id
     private ObjectId mongoId;
 	
-	@Indexed
-	private Long lid;
-	
 	
 	@Reference
-	private UimDataSet<I> datasetRefrerence;
+	private UimDataSet<ObjectId> datasetRefrerence;
 	
 	
     public MongoExecutionDecorator(){
-    	this.embeddedExecution = new ExecutionBean<I>();
+    	this.embeddedExecution = new ExecutionBean<ObjectId>();
     }
     
     
-    public MongoExecutionDecorator(I id){
-    	this.embeddedExecution = new ExecutionBean<I>(id);
-        this.lid = (Long) id;
+    public MongoExecutionDecorator(ObjectId id){
+    	this.embeddedExecution = new ExecutionBean<ObjectId>(id);
     }
     
     
-    public ExecutionBean<I> getEmbeddedExecution() {
+    
+    
+    
+    
+    
+	//Getters & Setters
+    
+    public ExecutionBean<ObjectId> getEmbeddedExecution() {
 		return embeddedExecution;
 	}
     
 	@Override
-	public I getId() {
+	public ObjectId getId() {
 		return embeddedExecution.getId();
 	}
 
@@ -102,23 +109,23 @@ public class MongoExecutionDecorator<I>  implements Execution<I> {
 	}
 
 	@Override
-	public UimDataSet<I> getDataSet() {
+	public UimDataSet<ObjectId> getDataSet() {
 		return embeddedExecution.getDataSet();
 	}
 
 	@Override
-	public void setDataSet(UimDataSet<I> dataSet) {
+	public void setDataSet(UimDataSet<ObjectId> dataSet) {
 		
 		if(dataSet instanceof MongoCollectionDecorator){
-			MongoCollectionDecorator<I> tmp = (MongoCollectionDecorator<I>)dataSet;
+			MongoCollectionDecorator<ObjectId> tmp = (MongoCollectionDecorator<ObjectId>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmbeddedCollection());
 		}
 		else if(dataSet instanceof MongoMetadataRecordDecorator){
-			MongoMetadataRecordDecorator<I> tmp = (MongoMetadataRecordDecorator<I>)dataSet;
+			MongoMetadataRecordDecorator<ObjectId> tmp = (MongoMetadataRecordDecorator<ObjectId>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmebeddedMdr());
 		}
 		else if(dataSet instanceof MongoRequestDecorator){
-			MongoRequestDecorator<I> tmp = (MongoRequestDecorator<I>)dataSet;
+			MongoRequestDecorator<ObjectId> tmp = (MongoRequestDecorator<ObjectId>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmbeddedRequest());
 		}
 		

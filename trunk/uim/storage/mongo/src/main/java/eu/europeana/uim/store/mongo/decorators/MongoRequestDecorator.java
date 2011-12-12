@@ -30,6 +30,7 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -43,53 +44,53 @@ import eu.europeana.uim.store.bean.RequestBean;
  */
 
 @Entity
-public class MongoRequestDecorator<I> implements Request<I> {
+public class MongoRequestDecorator<I> implements Request<ObjectId> {
 
 	/**
 	 * 
 	 */
+	@NotSaved
+	private RequestBean<ObjectId> embeddedRequest; 
+	
 	@Serialized
-	private RequestBean<I> embeddedRequest; 
+	byte[] embeddedbinary;
 	
 	@Id
     private ObjectId mongoid;
-	
-	@Indexed
-	private Long lid;
-	
+		
 	@Indexed
 	private Date searchDate;
 	
     @Reference
-    private MongoCollectionDecorator<I> collection;
+    private MongoCollectionDecorator<ObjectId> collection;
     
     
     @Reference
-    private HashSet<MongoMetadataRecordDecorator<I>> requestrecords;
+    private HashSet<MongoMetadataRecordDecorator<ObjectId>> requestrecords;
     
 
 
-	/**
-	 * @param request
-	 */
+
 	public MongoRequestDecorator(){
-		this.embeddedRequest = new RequestBean<I>();
 	}
 	
 	/**
 	 * @param request
 	 */
-	public MongoRequestDecorator(I id,  MongoCollectionDecorator<I> collection, Date date){
+	public MongoRequestDecorator(MongoCollectionDecorator<ObjectId> collection, Date date){
 		this.searchDate = date;
-		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<I>>();
-		this.lid = (Long)id;
-		this.embeddedRequest = new RequestBean<I>(id,collection.getEmbeddedCollection(),date);
+		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<ObjectId>>();
 		this.collection = collection;
 	}
 	
 
 	
-	public MongoCollectionDecorator<I> getCollectionReference(){
+	
+	
+	
+	//Getters & Setters
+	
+	public MongoCollectionDecorator<ObjectId> getCollectionReference(){
 		return this.collection;
 	}
 	
@@ -97,31 +98,31 @@ public class MongoRequestDecorator<I> implements Request<I> {
 	/**
 	 * @param requestrecords the requestrecords to set
 	 */
-	public void setRequestrecords(HashSet<MongoMetadataRecordDecorator<I>> requestrecords) {
+	public void setRequestrecords(HashSet<MongoMetadataRecordDecorator<ObjectId>> requestrecords) {
 		this.requestrecords = requestrecords;
 	}
 
 	/**
 	 * @return the requestrecords
 	 */
-	public HashSet<MongoMetadataRecordDecorator<I>> getRequestrecords() {
+	public HashSet<MongoMetadataRecordDecorator<ObjectId>> getRequestrecords() {
 		return requestrecords;
 	}
 	
 	
 	
-    public RequestBean<I> getEmbeddedRequest() {
+    public RequestBean<ObjectId> getEmbeddedRequest() {
 		return embeddedRequest;
 	}
 	
 	
 	@Override
-	public I getId() {
+	public  ObjectId getId() {
 		return embeddedRequest.getId();
 	}
 
 	@Override
-	public Collection<I> getCollection() {
+	public Collection<ObjectId> getCollection() {
 		return  collection; // embeddedRequest.getCollection();
 	}
 

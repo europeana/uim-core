@@ -5,6 +5,7 @@ package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
 
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 
@@ -18,7 +19,7 @@ import eu.europeana.uim.api.StorageEngine;
  * @author geomark
  *
  */
-public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest{
+public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<ObjectId>{
 
 	private MongoStorageEngine mongoEngine = null;
 
@@ -51,7 +52,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest{
 	 * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
 	 */
 	@Override
-	protected StorageEngine<Long> getStorageEngine() {
+	protected StorageEngine<ObjectId> getStorageEngine() {
 		   if (mongoEngine == null) {
 			      try {
 			    	m = new Mongo();
