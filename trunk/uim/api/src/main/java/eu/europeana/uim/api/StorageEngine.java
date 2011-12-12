@@ -30,12 +30,12 @@ public interface StorageEngine<I> {
      * @param config
      *            arbitrary key - value map
      */
-    public void setConfiguration(Map<String, String> config);
+    void setConfiguration(Map<String, String> config);
 
     /**
      * @return configuration as arbitrary key - value map
      */
-    public Map<String, String> getConfiguration();
+    Map<String, String> getConfiguration();
 
     /**
      * Initializes engine by for example opening database connection.

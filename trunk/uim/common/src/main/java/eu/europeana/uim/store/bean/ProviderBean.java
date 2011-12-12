@@ -18,21 +18,21 @@ import eu.europeana.uim.store.Provider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provider<I>,Serializable {
+public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provider<I>,
+        Serializable {
+    private static final long   serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-	
-	private Set<Provider<I>> relatedOut = new HashSet<Provider<I>>();
-    private Set<Provider<I>> relatedIn  = new HashSet<Provider<I>>();
+    private Set<Provider<I>>    relatedOut       = new HashSet<Provider<I>>();
+    private Set<Provider<I>>    relatedIn        = new HashSet<Provider<I>>();
 
-    private String            name;
+    private String              name;
 
-    private String            oaiBaseUrl;
-    private String            oaiMetadataPrefix;
+    private String              oaiBaseUrl;
+    private String              oaiMetadataPrefix;
 
-    private boolean           aggregator;
+    private boolean             aggregator;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private Map<String, String> values           = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -100,8 +100,7 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
     public Set<Provider<I>> getRelatedIn() {
         return relatedIn;
     }
-    
-    
+
     @Override
     public void putValue(String key, String value) {
         values.put(key, value);
@@ -112,32 +111,32 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
         return values.get(key);
     }
 
-	@Override
-	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.getFieldId(),value);
-		
-	}
-
-	@Override
-	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.getFieldId());
-	}
-    
     @Override
-    public Map<String, String> values() {
-         return values;
+    public void putValue(ControlledVocabularyKeyValue key, String value) {
+        putValue(key.getFieldId(), value);
+
     }
 
-    
+    @Override
+    public String getValue(ControlledVocabularyKeyValue key) {
+        return getValue(key.getFieldId());
+    }
+
+    @Override
+    public Map<String, String> values() {
+        return values;
+    }
+
     @Override
     public String toString() {
         String string = super.toString();
-        
+
         String oai = getOaiBaseUrl();
         if (oai != null) {
             string += " OAI:[";
             string += oai + "?verb={x}";
-            string += getOaiMetadataPrefix() != null ? "&metadataPrefix=" + getOaiMetadataPrefix() : "";
+            string += getOaiMetadataPrefix() != null ? "&metadataPrefix=" + getOaiMetadataPrefix()
+                    : "";
             string += "]";
         }
         return string;
