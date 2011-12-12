@@ -44,14 +44,14 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
  * @since Mar 22, 2011
  */
 public class UIMActiveExecution<I> implements ActiveExecution<I> {
-
     /**
      * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY if set to true, the directory with the
      * temporary files is not deleted after the execution.
      **/
-
     public static String                         KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
+
     private static Logger                        log                                = Logger.getLogger(UIMActiveExecution.class.getName());
+
     private HashMap<String, LinkedList<Task<I>>> success                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, LinkedList<Task<I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
     private HashMap<String, HashSet<Task<I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<I>>>();
