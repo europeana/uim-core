@@ -1,5 +1,7 @@
 package eu.europeana.uim.gui.cp.shared;
 
+import java.io.Serializable;
+
 /**
  * Collection data object used in GWT for visualization.
  * 
@@ -26,7 +28,7 @@ public class CollectionDTO extends DataSourceDTO {
      * 
      * @param id
      */
-    public CollectionDTO(Long id) {
+    public CollectionDTO(Serializable id) {
         super(id);
     }
 

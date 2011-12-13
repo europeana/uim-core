@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.client.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -17,16 +18,16 @@ import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 @RemoteServiceRelativePath("resource")
 public interface ResourceService extends RemoteService {
     /**
-     * @param provider
+     * @param providerId
      *            null or provider specific parameter
-     * @param collection
+     * @param collectionId
      *            null or collection specific parameter
      * @param workflow
      *            cannot be null defines parameter set
      * @return list of stored parameters queried from the resource engine specific to a workflow
      *         alone or together with a provider or collection
      */
-    List<ParameterDTO> getParameters(Long provider, Long collection, String workflow);
+    List<ParameterDTO> getParameters(Serializable providerId, Serializable collectionId, String workflow);
 
     /**
      * Set the given parameter in the resource engine specific to a workflow alone or together with
@@ -35,15 +36,15 @@ public interface ResourceService extends RemoteService {
      * @param parameter
      *            should not be null, values can be null (delete) or an empty array list (defined as
      *            empty) or the values
-     * @param provider
+     * @param providerId
      *            null or provider specific parameter
-     * @param collection
+     * @param collectionId
      *            null or collection specific parameter
      * @param workflow
      *            cannot be null defines parameter set
      * @return true, if changing was successfull
      */
-    Boolean setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow);
+    Boolean setParameters(ParameterDTO parameter, Serializable providerId, Serializable collectionId, String workflow);
 
     /**
      * @return list of resources file names in the configured resource directory

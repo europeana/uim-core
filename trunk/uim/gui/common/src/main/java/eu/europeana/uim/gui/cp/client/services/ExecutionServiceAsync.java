@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.client.services;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public interface ExecutionServiceAsync {
      * 
      * @param workflow
      *            what should be done?
-     * @param collection
+     * @param collectionId
      *            on what data?
      * @param executionName
      *            name for execution
@@ -29,7 +30,7 @@ public interface ExecutionServiceAsync {
      *            execution specific parameters which override potentially configured ones
      * @param async
      */
-    void startCollection(String workflow, Long collection, String executionName,
+    void startCollection(String workflow, Serializable collectionId, String executionName,
             Set<ParameterDTO> parameters, AsyncCallback<ExecutionDTO> async);
 
     /**
@@ -37,7 +38,7 @@ public interface ExecutionServiceAsync {
      * 
      * @param workflow
      *            what should be done?
-     * @param provider
+     * @param providerId
      *            on what data?
      * @param executionName
      *            name for execution
@@ -45,7 +46,7 @@ public interface ExecutionServiceAsync {
      *            execution specific parameters which override potentially configured ones
      * @param async
      */
-    void startProvider(String workflow, Long provider, String executionName,
+    void startProvider(String workflow, Serializable providerId, String executionName,
             Set<ParameterDTO> parameters, AsyncCallback<ExecutionDTO> async);
 
     /**
@@ -54,7 +55,7 @@ public interface ExecutionServiceAsync {
      * @param id
      * @param async
      */
-    void getExecution(Long id, AsyncCallback<ExecutionDTO> async);
+    void getExecution(Serializable id, AsyncCallback<ExecutionDTO> async);
 
     /**
      * Returns list of current running executions
@@ -69,36 +70,38 @@ public interface ExecutionServiceAsync {
      * @param async
      */
     void getPastExecutions(AsyncCallback<List<ExecutionDTO>> async);
-    
+
     /**
      * Returns list of completed executions for a list of workflows
-     * @param workflows the list of workflows, null means all.
+     * 
+     * @param workflows
+     *            the list of workflows, null means all.
      * @param async
      */
-    void getPastExecutions(String[] workflows,AsyncCallback<List<ExecutionDTO>> async);
+    void getPastExecutions(String[] workflows, AsyncCallback<List<ExecutionDTO>> async);
 
     /**
      * Pause the given execution (if it is paused or not running, nothing happens and false is
      * returned).
      * 
-     * @param execution
+     * @param executionId
      * @param async
      */
-    void pauseExecution(Long execution, AsyncCallback<Boolean> async);
+    void pauseExecution(Serializable executionId, AsyncCallback<Boolean> async);
 
     /**
      * Resumes the given execution (if it is not paused, nothing happens and false is returned).
      * 
-     * @param execution
+     * @param executionId
      * @param async
      */
-    void resumeExecution(Long execution, AsyncCallback<Boolean> async);
+    void resumeExecution(Serializable executionId, AsyncCallback<Boolean> async);
 
     /**
      * Cancels the given execution (if it is not running,, nothing happens and false is returned).
      * 
-     * @param execution
+     * @param executionId
      * @param async
      */
-    void cancelExecution(Long execution, AsyncCallback<Boolean> async);
+    void cancelExecution(Serializable executionId, AsyncCallback<Boolean> async);
 }

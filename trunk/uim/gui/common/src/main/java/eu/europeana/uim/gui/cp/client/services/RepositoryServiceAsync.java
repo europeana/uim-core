@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.client.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -42,18 +43,18 @@ public interface RepositoryServiceAsync {
     /**
      * Returns a list of all known collection for a given provider
      * 
-     * @param provider
+     * @param providerId
      * @param async
      */
-    void getCollections(Long provider, AsyncCallback<List<CollectionDTO>> async);
+    void getCollections(Serializable providerId, AsyncCallback<List<CollectionDTO>> async);
 
     /**
      * Returns number of metadata records in the provided collection
      * 
-     * @param collection
+     * @param collectionId
      * @param async
      */
-    void getCollectionTotal(Long collection, AsyncCallback<Integer> async);
+    void getCollectionTotal(Serializable collectionId, AsyncCallback<Integer> async);
 
     /**
      * @param provider

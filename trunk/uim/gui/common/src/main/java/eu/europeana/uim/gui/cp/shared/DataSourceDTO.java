@@ -1,5 +1,7 @@
 package eu.europeana.uim.gui.cp.shared;
 
+import java.io.Serializable;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.gwt.view.client.ProvidesKey;
 
@@ -23,7 +25,7 @@ public abstract class DataSourceDTO implements IsSerializable {
     /**
      * unique ID as Long
      */
-    private Long id;
+    private Serializable id;
 
     /**
      * Creates a new instance of this class.
@@ -37,14 +39,14 @@ public abstract class DataSourceDTO implements IsSerializable {
      * 
      * @param id
      */
-    public DataSourceDTO(Long id) {
+    public DataSourceDTO(Serializable id) {
         this.id = id;
     }
 
     /**
      * @return unique identifier
      */
-    public Long getId() {
+    public Serializable getId() {
         return id;
     }
 
@@ -52,7 +54,7 @@ public abstract class DataSourceDTO implements IsSerializable {
      * @param id
      *            unique identifier
      */
-    public void setId(Long id) {
+    public void setId(Serializable id) {
         this.id = id;
     }
 

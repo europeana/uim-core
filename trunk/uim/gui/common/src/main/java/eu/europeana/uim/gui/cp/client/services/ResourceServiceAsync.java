@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.client.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,15 +19,15 @@ public interface ResourceServiceAsync {
      * Returns list of stored parameters queried from the resource engine specific to a workflow
      * alone or together with a provider or collection
      * 
-     * @param provider
+     * @param providerId
      *            null or provider specific parameter
-     * @param collection
+     * @param collectionId
      *            null or collection specific parameter
      * @param workflow
      *            cannot be null defines parameter set
      * @param async
      */
-    void getParameters(Long provider, Long collection, String workflow,
+    void getParameters(Serializable providerId, Serializable collectionId, String workflow,
             AsyncCallback<List<ParameterDTO>> async);
 
     /**
@@ -36,15 +37,15 @@ public interface ResourceServiceAsync {
      * @param parameter
      *            should not be null, values can be null (delete) or an empty array list (defined as
      *            empty) or the values
-     * @param provider
+     * @param providerId
      *            null or provider specific parameter
-     * @param collection
+     * @param collectionId
      *            null or collection specific parameter
      * @param workflow
      *            cannot be null defines parameter set
      * @param async
      */
-    void setParameters(ParameterDTO parameter, Long provider, Long collection, String workflow,
+    void setParameters(ParameterDTO parameter, Serializable providerId, Serializable collectionId, String workflow,
             AsyncCallback<Boolean> async);
 
     /**

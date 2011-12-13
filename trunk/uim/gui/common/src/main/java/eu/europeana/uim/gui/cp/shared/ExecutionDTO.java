@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.shared;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.gwt.view.client.ProvidesKey;
 
 /**
- * Execution data object used in GWT for visualization.
+ * Execution data Serializable used in GWT for visualization.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 28, 2011
@@ -19,14 +20,14 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
      */
     public static final ProvidesKey<ExecutionDTO> KEY_PROVIDER = new ProvidesKey<ExecutionDTO>() {
                                                                    @Override
-                                                                   public Object getKey(
+                                                                   public Serializable getKey(
                                                                            ExecutionDTO item) {
                                                                        return item == null ? null
                                                                                : item.getId();
                                                                    }
                                                                };
 
-    private Long                                  id;
+    private Serializable                                id;
     private String                                name;
     private String                                workflow;
     private String                                dataset;
@@ -56,7 +57,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
      * 
      * @param id
      */
-    public ExecutionDTO(long id) {
+    public ExecutionDTO(Serializable id) {
         this.id = id;
     }
 
@@ -119,14 +120,14 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     /**
      * @return id
      */
-    public Long getId() {
+    public Serializable getId() {
         return id;
     }
 
     /**
      * @param id
      */
-    public void setId(Long id) {
+    public void setId(Serializable id) {
         this.id = id;
     }
 

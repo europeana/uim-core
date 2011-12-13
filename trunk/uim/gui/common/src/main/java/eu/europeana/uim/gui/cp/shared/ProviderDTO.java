@@ -1,5 +1,7 @@
 package eu.europeana.uim.gui.cp.shared;
 
+import java.io.Serializable;
+
 /**
  * Provider data object used in GWT for visualization.
  * 
@@ -27,7 +29,7 @@ public class ProviderDTO extends DataSourceDTO {
      * 
      * @param id
      */
-    public ProviderDTO(Long id) {
+    public ProviderDTO(Serializable id) {
         super(id);
     }
 

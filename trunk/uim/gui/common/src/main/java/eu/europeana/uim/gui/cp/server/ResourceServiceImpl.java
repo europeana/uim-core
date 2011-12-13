@@ -1,6 +1,7 @@
 package eu.europeana.uim.gui.cp.server;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -39,7 +40,7 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public List<ParameterDTO> getParameters(Long provider, Long collection, String workflow) {
+    public List<ParameterDTO> getParameters(Serializable provider, Serializable collection, String workflow) {
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
         if (workflow != null) {
             Workflow w = getEngine().getRegistry().getWorkflow(workflow);
@@ -74,9 +75,9 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             if (provider != null) {
-                Provider<Long> prov = null;
+                Provider<Serializable> prov = null;
                 try {
-                    prov = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
+                    prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
                 }
@@ -95,9 +96,9 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             if (collection != null) {
-                Collection<Long> coll = null;
+                Collection<Serializable> coll = null;
                 try {
-                    coll = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
+                    coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
                 }
@@ -128,7 +129,7 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public Boolean setParameters(ParameterDTO parameter, Long provider, Long collection,
+    public Boolean setParameters(ParameterDTO parameter, Serializable provider, Serializable collection,
             String workflow) {
         Boolean res = true;
 
@@ -150,9 +151,9 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
                 resource.setWorkflowResources(wf, values);
             }
         } else if (collection == null && provider != null && workflow != null) {
-            Provider<Long> prov = null;
+            Provider<Serializable> prov = null;
             try {
-                prov = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
+                prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
             }
@@ -161,9 +162,9 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
                 resource.setProviderResources(prov, values);
             }
         } else if (collection != null && provider != null && workflow != null) {
-            Collection<Long> coll = null;
+            Collection<Serializable> coll = null;
             try {
-                coll = ((StorageEngine<Long>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
+                coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
             } catch (Throwable t) {
                 log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
             }

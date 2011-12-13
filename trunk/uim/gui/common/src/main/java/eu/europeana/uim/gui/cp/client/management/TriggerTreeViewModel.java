@@ -1,6 +1,7 @@
 /* BrowserTreeViewModel.java - created on Apr 29, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.gui.cp.client.management;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -106,7 +107,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
         });
     }
 
-    private void loadCollections(Long providerId,
+    private void loadCollections(Serializable providerId,
             final ListDataProvider<BrowserObject> collectionsDataProvider) {
         repositoryService.getCollections(providerId, new AsyncCallback<List<CollectionDTO>>() {
             @Override

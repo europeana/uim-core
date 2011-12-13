@@ -160,7 +160,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
         sortHandler.setComparator(idColumn, new Comparator<ExecutionDTO>() {
             @Override
             public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return o1.getId().compareTo(o2.getId());
+                return o1.getId().toString().compareTo(o2.getId().toString());
             }
         });
         cellTable.addColumn(idColumn, "ID");

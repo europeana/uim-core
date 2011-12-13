@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.client.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -36,16 +37,16 @@ public interface RepositoryService extends RemoteService {
     List<ProviderDTO> getProviders();
 
     /**
-     * @param provider
+     * @param providerId
      * @return a list of all known collection for a given provider
      */
-    List<CollectionDTO> getCollections(Long provider);
+    List<CollectionDTO> getCollections(Serializable providerId);
 
     /**
-     * @param collection
+     * @param collectionId
      * @return number of metadata records in the provided collection
      */
-    Integer getCollectionTotal(Long collection);
+    Integer getCollectionTotal(Serializable collectionId);
 
     /**
      * @param provider

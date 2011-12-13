@@ -1,5 +1,6 @@
 package eu.europeana.uim.gui.cp.server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +41,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         super();
     }
 
-// private Map<Long, ProviderDTO> wrappedProviderDTOs = new HashMap<Long, ProviderDTO>();
+// private Map<Serializable, ProviderDTO> wrappedProviderDTOs = new HashMap<Serializable, ProviderDTO>();
 
     @Override
     public List<WorkflowDTO> getWorkflows() {
@@ -84,13 +85,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<ProviderDTO> getProviders() {
         List<ProviderDTO> res = new ArrayList<ProviderDTO>();
 
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
             return res;
         }
 
-        List<Provider<Long>> providers = null;
+        List<Provider<Serializable>> providers = null;
         try {
             providers = storage.getAllProviders();
         } catch (Throwable t) {
@@ -98,7 +99,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
 
         if (providers != null) {
-            for (Provider<Long> p : providers) {
+            for (Provider<Serializable> p : providers) {
                 try {
                     ProviderDTO provider = getWrappedProviderDTO(p);
                     res.add(provider);
@@ -122,16 +123,16 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     @Override
-    public List<CollectionDTO> getCollections(Long provider) {
+    public List<CollectionDTO> getCollections(Serializable provider) {
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
 
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
             return res;
         }
 
-        Provider<Long> p = null;
+        Provider<Serializable> p = null;
         try {
             p = storage.getProvider(provider);
         } catch (Throwable t) {
@@ -139,7 +140,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
 
         if (p != null) {
-            List<Collection<Long>> cols = null;
+            List<Collection<Serializable>> cols = null;
             try {
                 cols = storage.getCollections(p);
             } catch (Throwable t) {
@@ -148,7 +149,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             }
 
             if (cols != null) {
-                for (Collection<Long> col : cols) {
+                for (Collection<Serializable> col : cols) {
                     CollectionDTO collDTO = new CollectionDTO(col.getId());
                     collDTO.setName(col.getName());
                     collDTO.setMnemonic(col.getMnemonic());
@@ -176,7 +177,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return res;
     }
 
-    private ProviderDTO getWrappedProviderDTO(Provider<Long> p) {
+    private ProviderDTO getWrappedProviderDTO(Provider<Serializable> p) {
             ProviderDTO wrapped = new ProviderDTO(p.getId());
             wrapped.setName(p.getName());
             wrapped.setMnemonic(p.getMnemonic());
@@ -187,8 +188,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     @Override
-    public Integer getCollectionTotal(Long collection) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+    public Integer getCollectionTotal(Serializable collection) {
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
             return 0;
@@ -220,13 +221,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Boolean updateProvider(ProviderDTO provider) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
             return false;
         }
 
-        Provider<Long> prov;
+        Provider<Serializable> prov;
         try {
             if (provider.getId() == null) {
                 prov = storage.createProvider();
@@ -255,16 +256,16 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Boolean updateCollection(CollectionDTO collection) {
-        StorageEngine<Long> storage = (StorageEngine<Long>)getEngine().getRegistry().getStorageEngine();
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
             return false;
         }
 
-        Collection<Long> coll;
+        Collection<Serializable> coll;
         try {
             if (collection.getId() == null) {
-                Provider<Long> prov = storage.getProvider(collection.getProvider().getId());
+                Provider<Serializable> prov = storage.getProvider(collection.getProvider().getId());
                 coll = storage.createCollection(prov);
             } else {
                 coll = storage.getCollection(collection.getId());
