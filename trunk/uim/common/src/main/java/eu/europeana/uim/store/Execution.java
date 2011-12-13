@@ -180,5 +180,4 @@ public interface Execution<I> extends UimEntity<I> {
      * @param logfile
      */
     void setLogFile(String logfile);
-
 }
