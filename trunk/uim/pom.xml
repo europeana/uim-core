@@ -35,7 +35,7 @@
 		<module>model</module>
 
 		<!-- UIM gui common module -->
-<!-- 		<module>gui/common</module> -->
+		<module>gui/common</module>
 		
 		<!-- UIM Solr 1.4-3 OSGI support -->
 		<module>plugins/solr14</module>
