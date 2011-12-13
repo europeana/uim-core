@@ -42,8 +42,8 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     private Date                                  endTime;
     private boolean                               canceled;
     private boolean                               paused;
-    
-    private Map<String,String>                    values=new HashMap<String,String>();
+
+    private Map<String, String>                   values       = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -235,34 +235,31 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
         return paused;
     }
 
-     
-    
     /**
      * @param paused
      */
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
-    
 
     /**
-     * @param key 
+     * @param key
      * @return generic value
-     * 
      */
     public String getValue(String key) {
         return values.get(key);
     }
-    
+
     /**
      * Stores a generic value. USed e.g. to transport status of the reports for this execution
-     * @param key 
+     * 
+     * @param key
      * @param value
      */
-    public void setValue(final String key,final String value) {
-       values.put(key, value);
+    public void setValue(final String key, final String value) {
+        values.put(key, value);
     }
-    
+
     @Override
     public int compareTo(ExecutionDTO execution) {
         return execution.getStartTime().compareTo(this.getStartTime());
