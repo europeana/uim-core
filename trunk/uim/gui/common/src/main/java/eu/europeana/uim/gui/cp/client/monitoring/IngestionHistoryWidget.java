@@ -30,7 +30,6 @@ import com.google.gwt.view.client.SelectionModel;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
-import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Table view showing current exectuions.
@@ -272,9 +271,9 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                String createdValue = object.getValue(WorkflowStart.CREATED);
-                String deletedValue = object.getValue(WorkflowStart.DELETED);
-                String updatedValue = object.getValue(WorkflowStart.UPDATED);
+                String createdValue = object.getValue("Created Records");
+                String deletedValue = object.getValue("Deleted Records");
+                String updatedValue = object.getValue("Updated Records");
 
                 StringBuilder builder = new StringBuilder();
                 if (createdValue != null) {
