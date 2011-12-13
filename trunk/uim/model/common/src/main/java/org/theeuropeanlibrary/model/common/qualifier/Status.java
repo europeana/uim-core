@@ -9,11 +9,15 @@ package org.theeuropeanlibrary.model.common.qualifier;
  */
 public enum Status {
     /**
-     * is active
+     * has been created (intial storage)
      */
-    ACTIVE,
+    CREATED,
+    /**
+     * has been updated
+     */
+    UPDATED,
     /**
      * has been deleted
      */
-    DELETED
+    DELETED,
 }

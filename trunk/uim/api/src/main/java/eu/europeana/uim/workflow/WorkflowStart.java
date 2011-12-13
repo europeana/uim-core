@@ -4,6 +4,7 @@ import java.util.List;
 
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Start in a UIM workflow. We use this in order to implement the command pattern for workflow
@@ -13,15 +14,32 @@ import eu.europeana.uim.api.StorageEngine;
  */
 public interface WorkflowStart {
     /**
+     * key on execution to keep track of {@link MetaDataRecord} created during this workflow start
+     * (not mandatory, only selected {@link WorkflowStart}s might support this)
+     */
+    static final String CREATED = "Created Records";
+    /**
+     * key on execution to keep track of {@link MetaDataRecord} updated (existed previously) during
+     * this workflow start (not mandatory, only selected {@link WorkflowStart}s might support this)
+     */
+    static final String UPDATED = "Updated Records";
+    /**
+     * key on execution to keep track of {@link MetaDataRecord} deleted (must not have been existed
+     * in UIM before, just marks records as deleted by the provider) during this workflow start (not
+     * mandatory, only selected {@link WorkflowStart}s might support this)
+     */
+    static final String DELETED = "Deleted Records";
+
+    /**
      * @return identifier of the workflow start, should be simple classname
      */
     String getIdentifier();
-    
+
     /**
      * @return name of the workflow, should be reasonable meaningful
      */
     String getName();
-   
+
     /**
      * Get the description of the plugin which is provided to the operators when starting analyzing
      * workflows.
@@ -58,7 +76,8 @@ public interface WorkflowStart {
     /**
      * Create a runnable which is executed within a thread pool. The runnable is then scheduled and
      * executed in another thread
-     * @param <I> 
+     * 
+     * @param <I>
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -76,7 +95,8 @@ public interface WorkflowStart {
     /**
      * Check wheter there is more work to do or not. Finished means, that no new tasks can be
      * created.
-     * @param <I> 
+     * 
+     * @param <I>
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -91,7 +111,8 @@ public interface WorkflowStart {
     /**
      * Workflow start specific initialization with storage engine so that mdr's can be read from the
      * engine.
-     * @param <I> 
+     * 
+     * @param <I>
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -109,7 +130,8 @@ public interface WorkflowStart {
     /**
      * Finalization method (tear down) for an execution. At the end of each execution this method is
      * called to allow the plugin to clean up memory or external resources.
-     * @param <I> 
+     * 
+     * @param <I>
      * 
      * @param context
      *            holds execution depending, information the {@link ExecutionContext} for this
@@ -122,11 +144,13 @@ public interface WorkflowStart {
      *             resources, so that executing it in a new {@link ExecutionContext} will most
      *             likely fail
      */
-    <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException;
+    <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage)
+            throws WorkflowStartFailedException;
 
     /**
      * Get the number of total records, if it is known upfront. If not, returns -1.
-     * @param <I> 
+     * 
+     * @param <I>
      * 
      * @param context
      * @return the total number of records to process.

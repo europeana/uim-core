@@ -72,7 +72,6 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     private Throwable                            throwable;
 
     private int                                  scheduled                          = 0;
-
     private int                                  completed                          = 0;
 
     /**
@@ -448,5 +447,4 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
             }
         }
     }
-
 }
