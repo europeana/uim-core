@@ -13,25 +13,27 @@
         }
     </ui:style>
 
-    <g:HTMLPanel>
-        <table cellspacing='5' cellpadding='5' style='width:100%;'>
-            <tr>
-                <td valign='top'>
-                    <g:ListBox ui:field='providerBox' addStyleNames='{style.box}' />
-                </td>
-                <td valign='top'>
-                    <g:ListBox ui:field='collectionBox' addStyleNames='{style.box}' />
-                </td>
-            </tr>
-            <tr>
-                <td class='{style.formCell}' valign='top' align='left'>
-                    <s:ProviderForm ui:field='providerForm' />
-                </td>
-                <td class='{style.formCell}' valign='top' align='left'>
-                    <s:CollectionForm ui:field='collectionForm' />
-                </td>
-            </tr>
-        </table>
-    </g:HTMLPanel>
+    <g:ScrollPanel>
+        <g:HTMLPanel>
+            <table cellspacing='5' cellpadding='5' style='width:100%;'>
+                <tr>
+                    <td valign='top'>
+                        <g:ListBox ui:field='providerBox' addStyleNames='{style.box}' />
+                    </td>
+                    <td valign='top'>
+                        <g:ListBox ui:field='collectionBox' addStyleNames='{style.box}' />
+                    </td>
+                </tr>
+                <tr>
+                    <td class='{style.formCell}' valign='top' align='left'>
+                        <s:ProviderForm ui:field='providerForm' />
+                    </td>
+                    <td class='{style.formCell}' valign='top' align='left'>
+                        <s:CollectionForm ui:field='collectionForm' />
+                    </td>
+                </tr>
+            </table>
+        </g:HTMLPanel>
+    </g:ScrollPanel>
 </ui:UiBinder>
 

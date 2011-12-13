@@ -30,6 +30,7 @@ import com.google.gwt.view.client.SelectionModel;
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
+import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Table view showing current exectuions.
@@ -164,8 +165,8 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(idColumn, "ID");
-        cellTable.setColumnWidth(idColumn, 8, Unit.PCT);
-        
+        cellTable.setColumnWidth(idColumn, 10, Unit.PCT);
+
         // Name
         Column<ExecutionDTO, String> nameColumn = new Column<ExecutionDTO, String>(new TextCell()) {
             @Override
@@ -181,7 +182,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(nameColumn, "Name");
-        cellTable.setColumnWidth(nameColumn, 15, Unit.PCT);
+        cellTable.setColumnWidth(nameColumn, 20, Unit.PCT);
 
         // Data set
         Column<ExecutionDTO, String> datasetColumn = new Column<ExecutionDTO, String>(
@@ -199,25 +200,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(datasetColumn, "Dataset");
-        cellTable.setColumnWidth(datasetColumn, 15, Unit.PCT);
-
-//        // Workflow
-//        Column<ExecutionDTO, String> workflowColumn = new Column<ExecutionDTO, String>(
-//                new TextCell()) {
-//            @Override
-//            public String getValue(ExecutionDTO object) {
-//                return object.getWorkflow();
-//            }
-//        };
-//        workflowColumn.setSortable(true);
-//        sortHandler.setComparator(workflowColumn, new Comparator<ExecutionDTO>() {
-//            @Override
-//            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-//                return o1.getWorkflow().compareTo(o2.getWorkflow());
-//            }
-//        });
-//        cellTable.addColumn(workflowColumn, "Workflow");
-//        cellTable.setColumnWidth(workflowColumn, 15, Unit.PCT);
+        cellTable.setColumnWidth(datasetColumn, 18, Unit.PCT);
 
         DateTimeFormat dtf = DateTimeFormat.getFormat("dd.MM.yyyy 'at' HH:mm:ss");
         // Start Time
@@ -236,7 +219,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
             }
         });
         cellTable.addColumn(startTimeColumn, "Start Time");
-        cellTable.setColumnWidth(startTimeColumn, 12, Unit.PCT);
+        cellTable.setColumnWidth(startTimeColumn, 13, Unit.PCT);
 
         // End Time
         Column<ExecutionDTO, Date> endTimeColumn = new Column<ExecutionDTO, Date>(new DateCell(dtf)) {
@@ -252,15 +235,13 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 if (o1.getEndTime() != null && o2.getEndTime() != null) {
                     return o1.getEndTime().compareTo(o2.getEndTime());
                 } else {
-                    if (o1.getEndTime() == null) { 
-                        return o2.getEndTime() == null ? 0 : -1; 
-                    }
+                    if (o1.getEndTime() == null) { return o2.getEndTime() == null ? 0 : -1; }
                     return o2.getEndTime() == null ? 1 : 0;
                 }
             }
         });
         cellTable.addColumn(endTimeColumn, "End Time");
-        cellTable.setColumnWidth(endTimeColumn, 12, Unit.PCT);
+        cellTable.setColumnWidth(endTimeColumn, 13, Unit.PCT);
 
         // Canceled
         Column<ExecutionDTO, Boolean> doneColumn = new Column<ExecutionDTO, Boolean>(
@@ -272,62 +253,52 @@ public class IngestionHistoryWidget extends IngestionWidget {
         };
         doneColumn.setSortable(true);
         cellTable.addColumn(doneColumn, "C/F");
-        cellTable.setColumnWidth(doneColumn, 4, Unit.PCT);
+        cellTable.setColumnWidth(doneColumn, 5, Unit.PCT);
 
-
-        // Scheduled
+        // Scheduled/Failure/Completed
         Column<ExecutionDTO, String> scheduledColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getScheduled();
+                return object.getScheduled() + "/" + object.getFailure() + "/" +
+                       object.getCompleted();
             }
         };
-        scheduledColumn.setSortable(true);
-        sortHandler.setComparator(scheduledColumn, new Comparator<ExecutionDTO>() {
-            @Override
-            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return new Integer(o1.getScheduled()).compareTo(o2.getScheduled());
-            }
-        });
-        cellTable.addColumn(scheduledColumn, "Scheduled");
-        cellTable.setColumnWidth(scheduledColumn, 5, Unit.PCT);
+        cellTable.addColumn(scheduledColumn, "Scheduled/Failure/Completed");
+        cellTable.setColumnWidth(scheduledColumn, 13, Unit.PCT);
 
-        // Failure
+        // Created/Updated/Deleted
         Column<ExecutionDTO, String> failureColumn = new Column<ExecutionDTO, String>(
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                return "" + object.getFailure();
-            }
-        };
-        failureColumn.setSortable(true);
-        sortHandler.setComparator(failureColumn, new Comparator<ExecutionDTO>() {
-            @Override
-            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return new Integer(o1.getFailure()).compareTo(o2.getFailure());
-            }
-        });
-        cellTable.addColumn(failureColumn, "Failure");
-        cellTable.setColumnWidth(failureColumn, 5, Unit.PCT);
+                String createdValue = object.getValue(WorkflowStart.CREATED);
+                String deletedValue = object.getValue(WorkflowStart.DELETED);
+                String updatedValue = object.getValue(WorkflowStart.UPDATED);
 
-        // Completed
-        Column<ExecutionDTO, String> completedColumn = new Column<ExecutionDTO, String>(
-                new TextCell()) {
-            @Override
-            public String getValue(ExecutionDTO object) {
-                return "" + object.getCompleted();
+                StringBuilder builder = new StringBuilder();
+                if (createdValue != null) {
+                    builder.append(createdValue);
+                } else {
+                    builder.append(" ");
+                }
+                builder.append("/");
+                if (deletedValue != null) {
+                    builder.append(deletedValue);
+                } else {
+                    builder.append(" ");
+                }
+                builder.append("/");
+                if (updatedValue != null) {
+                    builder.append(updatedValue);
+                } else {
+                    builder.append(" ");
+                }
+                return builder.toString();
             }
         };
-        completedColumn.setSortable(true);
-        sortHandler.setComparator(completedColumn, new Comparator<ExecutionDTO>() {
-            @Override
-            public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                return new Integer(o1.getCompleted()).compareTo(o2.getCompleted());
-            }
-        });
-        cellTable.addColumn(completedColumn, "Completed");
-        cellTable.setColumnWidth(completedColumn, 5, Unit.PCT);
+        cellTable.addColumn(failureColumn, "Created/Updated/Deleted");
+        cellTable.setColumnWidth(failureColumn, 13, Unit.PCT);
 
         // Log file
         Column<ExecutionDTO, ExecutionDTO> logfileColumn = new Column<ExecutionDTO, ExecutionDTO>(
@@ -346,7 +317,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
         };
 
         cellTable.addColumn(logfileColumn, "Log");
-        cellTable.setColumnWidth(logfileColumn, 4, Unit.PCT);
+        cellTable.setColumnWidth(logfileColumn, 5, Unit.PCT);
 
         updatePastExecutions();
     }

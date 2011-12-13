@@ -82,7 +82,6 @@ public class IngestionDetailWidget extends IngestionWidget {
         executionStatus = new IngestionStatus(executionService);
 
         cellTable = new CellTable<ExecutionDTO>(ExecutionDTO.KEY_PROVIDER);
-        cellTable.setWidth("100%", true);
         cellTable.setHeight("30px");
         cellTable.setPageSize(10);
 
