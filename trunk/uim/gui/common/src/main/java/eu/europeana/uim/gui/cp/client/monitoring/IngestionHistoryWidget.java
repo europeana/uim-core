@@ -263,7 +263,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
                        object.getCompleted();
             }
         };
-        cellTable.addColumn(scheduledColumn, "Scheduled/Failure/Completed");
+        cellTable.addColumn(scheduledColumn, "Sche./Fail./Comp.");
         cellTable.setColumnWidth(scheduledColumn, 13, Unit.PCT);
 
         // Created/Updated/Deleted
@@ -296,7 +296,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 return builder.toString();
             }
         };
-        cellTable.addColumn(failureColumn, "Created/Updated/Deleted");
+        cellTable.addColumn(failureColumn, "Cre./Upd./Del.");
         cellTable.setColumnWidth(failureColumn, 13, Unit.PCT);
 
         // Log file
