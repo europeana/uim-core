@@ -31,12 +31,16 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.bean.RequestBean;
+import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
+import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
 
 /**
  * 
@@ -84,6 +88,19 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	}
 	
 
+	@PrePersist 
+	void prePersist() 
+	{
+		MongoDBRequestBeanBytesConverter converter = new MongoDBRequestBeanBytesConverter();
+		embeddedbinary = converter.encode(embeddedRequest);
+	}
+	
+	
+	@PreLoad
+	void preload(){
+		MongoDBRequestBeanBytesConverter converter = new MongoDBRequestBeanBytesConverter();
+		embeddedRequest = converter.decode(embeddedbinary);
+	}
 	
 	
 	

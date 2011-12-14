@@ -24,9 +24,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import eu.europeana.uim.common.TKey;
 import gnu.trove.TLongHashSet;
 
 import org.theeuropeanlibrary.repository.convert.Converter;
@@ -43,17 +46,17 @@ import com.google.protobuf.CodedOutputStream;
  */
 
 @SuppressWarnings("rawtypes")
-public class MongoDBTLongHashSetBytesConverter extends Converter<byte[], TLongHashSet>{
+public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
 
     /**
      * Single convenience instance of a string type converter
      */
-    public static final Converter<byte[], TLongHashSet> INSTANCE = new MongoDBTLongHashSetBytesConverter();
+   public static final Converter<byte[], Set> INSTANCE = new MongoDBTHashSetBytesConverter();
 
     @Override
-    public TLongHashSet decode(byte[] data) {
+    public Set decode(byte[] data) {
         InputStream bin = new ByteArrayInputStream(data);
-        TLongHashSet result = new TLongHashSet();
+        HashSet<TKey<?, ?>> result = new HashSet<TKey<?, ?>>();
         try {
             CodedInputStream input = null;
             try {
@@ -66,7 +69,8 @@ public class MongoDBTLongHashSetBytesConverter extends Converter<byte[], TLongHa
             }
             
             while (!input.isAtEnd()) {
-                long val = input.readFixed64();
+            	
+                TKey<?, ?> val =TKey.fromString(input.readString());
                 result.add(val);
             }
             bin.close();
@@ -78,15 +82,17 @@ public class MongoDBTLongHashSetBytesConverter extends Converter<byte[], TLongHa
     }
 
     @Override
-    public byte[] encode(TLongHashSet set) {
+    public byte[] encode(Set set) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        @SuppressWarnings("unchecked")
+		HashSet<TKey<?, ?>> castset = (HashSet<TKey<?, ?>>) set;
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(bout);
             CodedOutputStream output = CodedOutputStream.newInstance(gzip);
             synchronized (set) {
-                long[] array = set.toArray();
-                for (long o : array) {
-                    output.writeFixed64NoTag(o);
+                Object[] array = castset.toArray();
+                for (Object o : array) {
+                    //output.writeString(o);
                 }
             }
             output.flush();
@@ -113,8 +119,8 @@ public class MongoDBTLongHashSetBytesConverter extends Converter<byte[], TLongHa
     }
 
     @Override
-    public Class<TLongHashSet> getDecodeType() {
-        return TLongHashSet.class;
+    public Class<Set> getDecodeType() {
+        return  Set.class;
     }
 
 }

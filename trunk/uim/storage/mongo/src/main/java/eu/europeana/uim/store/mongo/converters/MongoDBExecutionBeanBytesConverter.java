@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -79,10 +80,10 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
     }
 
     @Override
-    public ExecutionBean<Long> decode(byte[] data) {
+    public ExecutionBean<ObjectId> decode(byte[] data) {
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
-        ExecutionBean<Long> bean = new ExecutionBean<Long>();
+        ExecutionBean<ObjectId> bean = new ExecutionBean<ObjectId>();
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
@@ -90,7 +91,7 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(input.readFixed64());
+                    bean.setId(ObjectId.massageToObjectId(input.readString()));
                     break;
                 case ACTIVE:
                     bean.setActive(input.readBool());
@@ -162,7 +163,7 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
         CodedOutputStream output = CodedOutputStream.newInstance(bout);
         try {
             if (data.getId() != null) {
-                output.writeFixed64(ID, (Long)data.getId());
+                output.writeString(ID,data.getId().toString());
             }
             output.writeBool(ACTIVE, data.isActive());
 

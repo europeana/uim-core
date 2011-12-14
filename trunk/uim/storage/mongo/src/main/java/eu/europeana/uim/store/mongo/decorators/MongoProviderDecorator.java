@@ -32,6 +32,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -39,6 +40,8 @@ import com.google.code.morphia.annotations.Serialized;
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.ProviderBean;
+import eu.europeana.uim.store.mongo.converters.MongoDBCollectionBeanBytesConverter;
+import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
 
 /**
  * 
@@ -81,19 +84,22 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	/**
 	 * 
 	 */
+	
 	@PrePersist 
 	void prePersist() 
 	{
-		saveProvider();
 		updaterelated();
+		MongoDBProviderBeanBytesConverter converter = new MongoDBProviderBeanBytesConverter();
+		embeddedbinary = converter.encode(embeddedProvider);
 	}
 	
 	
-	private void saveProvider(){
-		if(embeddedProvider == null){
-			this.embeddedProvider = new ProviderBean<ObjectId>(mongoId);
-		}
+	@PreLoad
+	void preload(){
+		MongoDBProviderBeanBytesConverter converter = new MongoDBProviderBeanBytesConverter();
+		embeddedProvider = converter.decode(embeddedbinary);
 	}
+
 	
 	
 	private void updaterelated(){

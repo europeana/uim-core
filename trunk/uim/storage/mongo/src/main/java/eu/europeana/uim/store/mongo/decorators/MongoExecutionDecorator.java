@@ -30,6 +30,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -37,6 +39,8 @@ import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.ExecutionBean;
+import eu.europeana.uim.store.mongo.converters.MongoDBExecutionBeanBytesConverter;
+import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
 
 /**
  * 
@@ -72,7 +76,19 @@ public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
     }
     
     
-    
+	@PrePersist 
+	void prePersist() 
+	{
+		MongoDBExecutionBeanBytesConverter converter = new MongoDBExecutionBeanBytesConverter();
+		embeddedbinary = converter.encode(embeddedExecution);
+	}
+	
+	
+	@PreLoad
+	void preload(){
+		MongoDBExecutionBeanBytesConverter converter = new MongoDBExecutionBeanBytesConverter();
+		embeddedExecution = converter.decode(embeddedbinary);
+	}
     
     
     

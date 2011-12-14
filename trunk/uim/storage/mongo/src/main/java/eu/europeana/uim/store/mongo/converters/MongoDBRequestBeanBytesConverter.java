@@ -27,6 +27,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -66,10 +68,10 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
     }
 
     @Override
-    public RequestBean<Long> decode(byte[] data) {
+    public RequestBean<ObjectId> decode(byte[] data) {
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
-        RequestBean<Long> bean = new RequestBean<Long>();
+        RequestBean<ObjectId> bean = new RequestBean<ObjectId>();
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
@@ -77,7 +79,7 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(input.readFixed64());
+                    bean.setId(ObjectId.massageToObjectId(input.readString()));
                     break;
                 case DATE:
                     bean.setDate(df.parse(input.readString()));
@@ -126,7 +128,7 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
         CodedOutputStream output = CodedOutputStream.newInstance(bout);
         try {
             if (data.getId() != null) {
-                output.writeFixed64(ID, (Long)data.getId());
+                output.writeString(ID,data.getId().toString());
             }
             if (data.getDate() != null) {
                 output.writeString(DATE, df.format(data.getDate()));

@@ -20,6 +20,7 @@
  */
 package eu.europeana.uim.store.mongo.decorators;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -28,6 +29,8 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PreLoad;
+import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
@@ -35,6 +38,8 @@ import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
+import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
+import eu.europeana.uim.store.mongo.converters.MongoDBTHashSetBytesConverter;
 
 /**
  * 
@@ -68,7 +73,19 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	
 	
 	
+	@PrePersist 
+	void prePersist() 
+	{
+		embeddedbinary = MongoDBTHashSetBytesConverter.INSTANCE.encode(emebeddedMdr.getAvailableKeys());
+	}
 	
+	
+	@PreLoad
+	void preload(){
+		emebeddedMdr = new MetaDataRecordBean<ObjectId>();
+		emebeddedMdr.setId(mongoId);		
+		HashSet<TKey<?, ?>> set = (HashSet<TKey<?, ?>>) MongoDBTHashSetBytesConverter.INSTANCE.decode(embeddedbinary);
+	}
 	
 	
 	//Getters & Setters

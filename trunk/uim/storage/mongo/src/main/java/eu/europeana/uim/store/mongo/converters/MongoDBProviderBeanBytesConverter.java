@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 
 
@@ -69,8 +70,8 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
     }
 
     @Override
-    public ProviderBean<Long> decode(byte[] data) {
-        ProviderBean<Long> bean = new ProviderBean<Long>();
+    public ProviderBean<ObjectId> decode(byte[] data) {
+        ProviderBean<ObjectId> bean = new ProviderBean<ObjectId>();
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
@@ -78,7 +79,7 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(input.readFixed64());
+                    bean.setId(ObjectId.massageToObjectId(input.readString()));
                     break;
                 case MNEMONIC:
                     bean.setMnemonic(input.readString());
@@ -119,7 +120,7 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
         CodedOutputStream output = CodedOutputStream.newInstance(bout);
         try {
             if (data.getId() != null) {
-                output.writeFixed64(ID, (Long)data.getId());
+                output.writeString(ID,data.getId().toString());
             }
             if (data.getMnemonic() != null) {
                 output.writeString(MNEMONIC, data.getMnemonic());

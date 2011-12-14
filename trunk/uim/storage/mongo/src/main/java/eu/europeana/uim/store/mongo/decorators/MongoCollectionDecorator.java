@@ -29,6 +29,7 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -37,7 +38,8 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;
-import eu.europeana.uim.store.bean.ProviderBean;
+import eu.europeana.uim.store.mongo.converters.MongoDBCollectionBeanBytesConverter;
+
 
 /**
  * 
@@ -81,15 +83,21 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	@PrePersist 
 	void prePersist() 
 	{
-		saveCollection();
+		MongoDBCollectionBeanBytesConverter converter = new MongoDBCollectionBeanBytesConverter();
+		
+		embeddedbinary = converter.encode(embeddedCollection);
+		
 	}
 	
 	
-	private void saveCollection(){
-		if(embeddedCollection == null){
-			this.embeddedCollection = new CollectionBean<ObjectId>(mongoId,provider.getEmbeddedProvider());
-		}
+	@PreLoad
+	void preload(){
+		MongoDBCollectionBeanBytesConverter converter = new MongoDBCollectionBeanBytesConverter();
+		
+		embeddedCollection = converter.decode(embeddedbinary);
 	}
+	
+
 	
 	
 	
