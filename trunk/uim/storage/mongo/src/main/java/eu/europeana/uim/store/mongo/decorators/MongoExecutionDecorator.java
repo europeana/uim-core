@@ -30,6 +30,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
@@ -79,15 +81,33 @@ public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
 	@PrePersist 
 	void prePersist() 
 	{
-		MongoDBExecutionBeanBytesConverter converter = new MongoDBExecutionBeanBytesConverter();
-		embeddedbinary = converter.encode(embeddedExecution);
+		embeddedbinary = MongoDBExecutionBeanBytesConverter.getInstance().encode(embeddedExecution);
+		
+	}
+	
+	@PostPersist
+	void postPersist(){
+		if(embeddedExecution.getId() == null){
+			embeddedExecution.setId(mongoId);
+		}
 	}
 	
 	
-	@PreLoad
-	void preload(){
-		MongoDBExecutionBeanBytesConverter converter = new MongoDBExecutionBeanBytesConverter();
-		embeddedExecution = converter.decode(embeddedbinary);
+	@PostLoad
+	void postLoad(){
+		embeddedExecution = MongoDBExecutionBeanBytesConverter.getInstance().decode(embeddedbinary);
+		if(datasetRefrerence instanceof MongoCollectionDecorator){
+			MongoCollectionDecorator<ObjectId> tmp = (MongoCollectionDecorator<ObjectId>)datasetRefrerence;
+			embeddedExecution.setDataSet(tmp.getEmbeddedCollection());
+		}
+		else if(datasetRefrerence instanceof MongoMetadataRecordDecorator){
+			MongoMetadataRecordDecorator<ObjectId> tmp = (MongoMetadataRecordDecorator<ObjectId>)datasetRefrerence;
+			embeddedExecution.setDataSet(tmp.getEmebeddedMdr());
+		}
+		else if(datasetRefrerence instanceof MongoRequestDecorator){
+			MongoRequestDecorator<ObjectId> tmp = (MongoRequestDecorator<ObjectId>)datasetRefrerence;
+			embeddedExecution.setDataSet(tmp.getEmbeddedRequest());
+		}
 	}
     
     

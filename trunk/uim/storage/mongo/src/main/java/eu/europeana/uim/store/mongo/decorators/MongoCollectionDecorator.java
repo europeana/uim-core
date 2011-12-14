@@ -29,6 +29,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
@@ -71,8 +73,9 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	}
 	
 	public MongoCollectionDecorator(Provider<ObjectId> provider){
-		MongoProviderDecorator<ObjectId> prov = (MongoProviderDecorator<ObjectId>)provider;
-
+		MongoProviderDecorator<ObjectId> provider2 = (MongoProviderDecorator<ObjectId>) provider;
+		embeddedCollection = new CollectionBean<ObjectId>();
+		embeddedCollection.setProvider(provider2.getEmbeddedProvider());
 		this.provider = (MongoProviderDecorator<ObjectId>) provider;
 	}
 	
@@ -82,19 +85,23 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	 */
 	@PrePersist 
 	void prePersist() 
-	{
-		MongoDBCollectionBeanBytesConverter converter = new MongoDBCollectionBeanBytesConverter();
-		
-		embeddedbinary = converter.encode(embeddedCollection);
-		
+	{		
+		embeddedbinary = MongoDBCollectionBeanBytesConverter.getInstance().encode(embeddedCollection);	
 	}
 	
 	
-	@PreLoad
-	void preload(){
-		MongoDBCollectionBeanBytesConverter converter = new MongoDBCollectionBeanBytesConverter();
+	@PostPersist
+	void postPersist(){
+		if(embeddedCollection.getId() == null){
+			embeddedCollection.setId(mongoId);
+		}
+	}
+	
+	@PostLoad
+	void postLoad(){
+		embeddedCollection = MongoDBCollectionBeanBytesConverter.getInstance().decode(embeddedbinary);
+		embeddedCollection.setProvider(provider.getEmbeddedProvider());
 		
-		embeddedCollection = converter.decode(embeddedbinary);
 	}
 	
 

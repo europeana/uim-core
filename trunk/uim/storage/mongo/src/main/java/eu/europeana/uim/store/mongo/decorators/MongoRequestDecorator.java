@@ -31,6 +31,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
@@ -60,7 +62,7 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	byte[] embeddedbinary;
 	
 	@Id
-    private ObjectId mongoid;
+    private ObjectId mongoId;
 		
 	@Indexed
 	private Date searchDate;
@@ -78,31 +80,41 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	public MongoRequestDecorator(){
 	}
 	
+	
 	/**
 	 * @param request
 	 */
 	public MongoRequestDecorator(MongoCollectionDecorator<ObjectId> collection, Date date){
 		this.searchDate = date;
-		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<ObjectId>>();
+		this.embeddedRequest = new RequestBean<ObjectId>();
+		this.embeddedRequest.setDate(date);
+		this.embeddedRequest.setCollection(collection.getEmbeddedCollection());
 		this.collection = collection;
+		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<ObjectId>>();
+
+	
 	}
 	
 
 	@PrePersist 
 	void prePersist() 
 	{
-		MongoDBRequestBeanBytesConverter converter = new MongoDBRequestBeanBytesConverter();
-		embeddedbinary = converter.encode(embeddedRequest);
+		embeddedbinary = MongoDBRequestBeanBytesConverter.getInstance().encode(embeddedRequest);
 	}
 	
 	
-	@PreLoad
-	void preload(){
-		MongoDBRequestBeanBytesConverter converter = new MongoDBRequestBeanBytesConverter();
-		embeddedRequest = converter.decode(embeddedbinary);
+	@PostPersist
+	void postPersist(){
+		if(embeddedRequest.getId() == null){
+			embeddedRequest.setId(mongoId);
+		}
 	}
 	
-	
+	@PostLoad
+	void postload(){
+		embeddedRequest = MongoDBRequestBeanBytesConverter.getInstance().decode(embeddedbinary);
+		embeddedRequest.setCollection(collection.getEmbeddedCollection());
+	}
 	
 	
 	//Getters & Setters
@@ -135,7 +147,7 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	
 	@Override
 	public  ObjectId getId() {
-		return embeddedRequest.getId();
+		return  mongoId; //embeddedRequest.getId();
 	}
 
 	@Override

@@ -51,10 +51,6 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
      */
     private static final Logger                      log       = Logger.getLogger(MongoDBExecutionBeanBytesConverter.class.getName());
 
-    /**
-     * Single convenience instance of a string type converter
-     */
-    public static final MongoDBExecutionBeanBytesConverter INSTANCE  = new MongoDBExecutionBeanBytesConverter();
 
     private static final int                        ID        = 1;
     private static final int                        ACTIVE    = 2;
@@ -69,6 +65,22 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
     private static final int                        VALUES    = 11;
     private static final int                        LOGFILE   = 12;
 
+    
+    /**
+     * Private Constructor (instantiate via factory method)
+     */
+    private MongoDBExecutionBeanBytesConverter(){
+    	
+    }
+    
+    /**
+     * Factory Method
+     */
+    public static MongoDBExecutionBeanBytesConverter getInstance() {
+    	return new MongoDBExecutionBeanBytesConverter();
+    }
+    
+    
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;
@@ -84,6 +96,9 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
         ExecutionBean<ObjectId> bean = new ExecutionBean<ObjectId>();
+        
+        if(data !=  null){
+        
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
@@ -150,6 +165,7 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
         } catch (IOException e) {
             throw new RuntimeException("Could not read ProviderBean from byte array!", e);
         } finally {
+        }
         }
         return bean;
     }

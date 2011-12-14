@@ -48,15 +48,27 @@ import com.google.protobuf.CodedOutputStream;
 @SuppressWarnings("rawtypes")
 public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
 
+
     /**
-     * Single convenience instance of a string type converter
+     * Private Constructor (instantiate via factory method)
      */
-   public static final Converter<byte[], Set> INSTANCE = new MongoDBTHashSetBytesConverter();
+	private MongoDBTHashSetBytesConverter(){
+		
+	}
+	
+    /**
+     * Factory Method
+     */
+    public static MongoDBTHashSetBytesConverter getInstance() {
+      return new MongoDBTHashSetBytesConverter();
+    }
 
     @Override
     public Set decode(byte[] data) {
         InputStream bin = new ByteArrayInputStream(data);
         HashSet<TKey<?, ?>> result = new HashSet<TKey<?, ?>>();
+        if(data != null){
+
         try {
             CodedInputStream input = null;
             try {
@@ -78,6 +90,7 @@ public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
             throw new RuntimeException("Could not read long set from byte array!", e);
         } finally {
         }
+        }
         return result;
     }
 
@@ -86,6 +99,9 @@ public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         @SuppressWarnings("unchecked")
 		HashSet<TKey<?, ?>> castset = (HashSet<TKey<?, ?>>) set;
+        
+        if(set == null){
+        	
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(bout);
             CodedOutputStream output = CodedOutputStream.newInstance(gzip);
@@ -108,7 +124,7 @@ public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
                 throw new RuntimeException("Could not close output stream!", e);
             }
         }
-
+        }
         byte[] data = bout.toByteArray();
         return data;
     }

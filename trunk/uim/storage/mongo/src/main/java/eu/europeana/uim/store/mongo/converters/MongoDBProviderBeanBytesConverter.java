@@ -46,10 +46,7 @@ import eu.europeana.uim.store.bean.ProviderBean;
 
 @SuppressWarnings("rawtypes")
 public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], ProviderBean>{
-    /**
-     * Single convenience instance of a string type converter
-     */
-    public static final MongoDBProviderBeanBytesConverter INSTANCE   = new MongoDBProviderBeanBytesConverter();
+
 
     private static final int                       ID         = 1;
     private static final int                       MNEMONIC   = 2;
@@ -59,6 +56,24 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
     private static final int                       OAIMETA    = 6;
     private static final int                       VALUES     = 7;
 
+    
+    
+    
+    /**
+     * Private Constructor (instantiate via factory method)
+     */
+    private MongoDBProviderBeanBytesConverter(){
+    	
+    }
+        
+    /**
+     * Factory Method
+     */
+    public static MongoDBProviderBeanBytesConverter getInstance() {
+    	return new MongoDBProviderBeanBytesConverter();
+    }
+    
+    
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;
@@ -68,19 +83,26 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
     public Class<ProviderBean> getDecodeType() {
         return ProviderBean.class;
     }
-
+    
+    
     @Override
     public ProviderBean<ObjectId> decode(byte[] data) {
         ProviderBean<ObjectId> bean = new ProviderBean<ObjectId>();
+        
+        
+        if(data != null){
+
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
             while ((tag = input.readTag()) != 0) {
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
+ 
                 case ID:
                     bean.setId(ObjectId.massageToObjectId(input.readString()));
                     break;
+
                 case MNEMONIC:
                     bean.setMnemonic(input.readString());
                     break;
@@ -110,6 +132,9 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
             throw new RuntimeException("Could not read ProviderBean from byte array!", e);
         } finally {
         }
+        
+        }
+        
         return bean;
     }
 

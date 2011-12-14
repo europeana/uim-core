@@ -68,6 +68,8 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	}
 	
 	public MongoMetadataRecordDecorator(MongoCollectionDecorator<ObjectId> collection){
+		emebeddedMdr = new MetaDataRecordBean<ObjectId>();
+		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
 		this.collection = collection;
 	}
 	
@@ -76,7 +78,7 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	@PrePersist 
 	void prePersist() 
 	{
-		embeddedbinary = MongoDBTHashSetBytesConverter.INSTANCE.encode(emebeddedMdr.getAvailableKeys());
+		embeddedbinary = MongoDBTHashSetBytesConverter.getInstance().encode(emebeddedMdr.getAvailableKeys());
 	}
 	
 	
@@ -84,8 +86,11 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	void preload(){
 		emebeddedMdr = new MetaDataRecordBean<ObjectId>();
 		emebeddedMdr.setId(mongoId);		
-		HashSet<TKey<?, ?>> set = (HashSet<TKey<?, ?>>) MongoDBTHashSetBytesConverter.INSTANCE.decode(embeddedbinary);
+		HashSet<TKey<?, ?>> set = (HashSet<TKey<?, ?>>) MongoDBTHashSetBytesConverter.getInstance().decode(embeddedbinary);
 	}
+	
+	
+	
 	
 	
 	//Getters & Setters

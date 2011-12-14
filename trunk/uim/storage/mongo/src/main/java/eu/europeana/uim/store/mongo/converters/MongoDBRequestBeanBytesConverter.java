@@ -57,6 +57,23 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
     private static final int                      FAILED   = 5;
     private static final int                      VALUES   = 6;
 
+    
+    
+    /**
+     * Private Constructor (instantiate via factory method)
+     */
+    private MongoDBRequestBeanBytesConverter(){
+    	
+    }
+    
+    
+    /**
+     * Factory Method
+     */
+    public static MongoDBRequestBeanBytesConverter getInstance() {
+      return new MongoDBRequestBeanBytesConverter();
+    }
+    
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;
@@ -72,6 +89,9 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
         RequestBean<ObjectId> bean = new RequestBean<ObjectId>();
+        
+        if(data != null){
+        
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         try {
@@ -116,6 +136,9 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
             throw new RuntimeException("Could not parse date!", e);
         } finally {
         }
+        
+        }
+        
         return bean;
     }
 

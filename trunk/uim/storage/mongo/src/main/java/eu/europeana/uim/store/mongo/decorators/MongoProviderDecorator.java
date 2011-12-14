@@ -32,6 +32,8 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PostLoad;
+import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
@@ -51,11 +53,15 @@ import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter
 @Entity
 public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 
-	@NotSaved
-	private ProviderBean<ObjectId> embeddedProvider;
+    @Id
+    private ObjectId mongoId;
 	
 	@Serialized
 	byte[] embeddedbinary;
+	
+	@NotSaved
+	private ProviderBean<ObjectId> embeddedProvider;
+	
 	
 	@Reference
 	private Set<Provider<ObjectId>> searchableRealtedIn;
@@ -69,12 +75,12 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	@Indexed
 	private String searchName;
 	
-    @Id
-    private ObjectId mongoId;
+
 	
 	
 	
 	public MongoProviderDecorator(){
+		embeddedProvider = new ProviderBean<ObjectId>();
 		searchableRealtedIn = new HashSet<Provider<ObjectId>>();
 		searchableRealtedOut = new HashSet<Provider<ObjectId>>();
 	}
@@ -88,17 +94,23 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	@PrePersist 
 	void prePersist() 
 	{
-		updaterelated();
-		MongoDBProviderBeanBytesConverter converter = new MongoDBProviderBeanBytesConverter();
-		embeddedbinary = converter.encode(embeddedProvider);
+		updaterelated();	
+		embeddedbinary = MongoDBProviderBeanBytesConverter.getInstance().encode(embeddedProvider);
 	}
 	
-	
-	@PreLoad
-	void preload(){
-		MongoDBProviderBeanBytesConverter converter = new MongoDBProviderBeanBytesConverter();
-		embeddedProvider = converter.decode(embeddedbinary);
+	@PostPersist
+	void postPersist(){
+		if(embeddedProvider.getId() == null){
+			embeddedProvider.setId(mongoId);
+		}
 	}
+	
+
+	@PostLoad
+	void postload(){
+			embeddedProvider = MongoDBProviderBeanBytesConverter.getInstance().decode(embeddedbinary);
+	}
+
 
 	
 	

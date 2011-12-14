@@ -19,10 +19,6 @@ import eu.europeana.uim.store.bean.CollectionBean;
 
 @SuppressWarnings("rawtypes")
 public class MongoDBCollectionBeanBytesConverter extends Converter<byte[], CollectionBean>{
-    /**
-     * Single convenience instance of a string type converter
-     */
-    public static final MongoDBCollectionBeanBytesConverter INSTANCE = new MongoDBCollectionBeanBytesConverter();
 
     private static final int                         ID       = 1;
     private static final int                         MNEMONIC = 2;
@@ -33,6 +29,22 @@ public class MongoDBCollectionBeanBytesConverter extends Converter<byte[], Colle
     private static final int                         OAISET   = 7;
     private static final int                         VALUES   = 8;
 
+    
+    /**
+     * Private Constructor (instantiate via factory method)
+     */
+    private MongoDBCollectionBeanBytesConverter(){
+    	
+    }
+    
+    
+    /**
+     * Factory Method
+     */
+    public static MongoDBCollectionBeanBytesConverter getInstance() {
+         return new MongoDBCollectionBeanBytesConverter();
+    }
+    
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;

@@ -57,7 +57,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     private static final String MNEMONICFIELD = "searchMnemonic";
     private static final String NAMEFIELD = "searchName";
     
-    private static final String LOCALIDFIELD = "lid";
+    private static final String LOCALIDFIELD = "mongoId";
     
     
     
