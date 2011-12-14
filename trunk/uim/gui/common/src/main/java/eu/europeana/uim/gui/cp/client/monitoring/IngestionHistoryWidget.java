@@ -272,8 +272,8 @@ public class IngestionHistoryWidget extends IngestionWidget {
             @Override
             public String getValue(ExecutionDTO object) {
                 String createdValue = object.getValue("Created Records");
-                String deletedValue = object.getValue("Deleted Records");
                 String updatedValue = object.getValue("Updated Records");
+                String deletedValue = object.getValue("Deleted Records");
 
                 StringBuilder builder = new StringBuilder();
                 if (createdValue != null) {
@@ -282,14 +282,14 @@ public class IngestionHistoryWidget extends IngestionWidget {
                     builder.append(" ");
                 }
                 builder.append("/");
-                if (deletedValue != null) {
-                    builder.append(deletedValue);
+                if (updatedValue != null) {
+                    builder.append(updatedValue);
                 } else {
                     builder.append(" ");
                 }
                 builder.append("/");
-                if (updatedValue != null) {
-                    builder.append(updatedValue);
+                if (deletedValue != null) {
+                    builder.append(deletedValue);
                 } else {
                     builder.append(" ");
                 }
