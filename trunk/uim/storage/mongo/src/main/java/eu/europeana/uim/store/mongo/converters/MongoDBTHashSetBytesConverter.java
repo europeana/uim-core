@@ -65,10 +65,10 @@ public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
 
     @Override
     public Set decode(byte[] data) {
-        InputStream bin = new ByteArrayInputStream(data);
+
         HashSet<TKey<?, ?>> result = new HashSet<TKey<?, ?>>();
         if(data != null){
-
+            InputStream bin = new ByteArrayInputStream(data);
         try {
             CodedInputStream input = null;
             try {
@@ -97,17 +97,26 @@ public class MongoDBTHashSetBytesConverter extends Converter<byte[], Set>{
     @Override
     public byte[] encode(Set set) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        @SuppressWarnings("unchecked")
-		HashSet<TKey<?, ?>> castset = (HashSet<TKey<?, ?>>) set;
         
-        if(set == null){
+        @SuppressWarnings("unchecked")
+	    HashSet<TKey<?, ?>> castset = new HashSet<TKey<?, ?>>();
+        
+        for(Object obj : set){
+        	TKey<?, ?> tmp = (TKey<?, ?>) obj;
+        	
+        	castset.add(tmp);
+        }
+        
+        if(set != null){
         	
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(bout);
             CodedOutputStream output = CodedOutputStream.newInstance(gzip);
-            synchronized (set) {
-                Object[] array = castset.toArray();
-                for (Object o : array) {
+            synchronized (castset) {
+            	TKey<?, ?>[] array = (TKey<?, ?>[]) castset.toArray();
+                for (TKey<?, ?> o : array) {
+                	//o.
+                	
                     //output.writeString(o);
                 }
             }
