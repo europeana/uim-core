@@ -2,7 +2,6 @@ package eu.europeana.uim.store.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,11 +24,11 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
-public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I>,Serializable{
+public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I>,
+        Serializable {
+    private static final long                            serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
+    /**
      * the collection that is responsible for this record
      */
     private Collection<I>                                collection;
@@ -37,12 +36,12 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     /**
      * holds for each key a list of known qualified values
      */
-    private HashMap<TKey<?, ?>, List<QualifiedValue<?>>> fields         = new HashMap<TKey<?, ?>, List<QualifiedValue<?>>>();
+    private HashMap<TKey<?, ?>, List<QualifiedValue<?>>> fields           = new HashMap<TKey<?, ?>, List<QualifiedValue<?>>>();
 
     /**
      * Maintain index in order to retain ordering. null: not calculated yet
      */
-    private transient Integer                            nextOrderIndex = null;
+    private transient Integer                            nextOrderIndex   = null;
 
     /**
      * Creates a new instance of this class.
@@ -85,7 +84,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                if (checkQualifier(value, qualifiers)) {
                     result = (T)value.getValue();
                     break;
                 }
@@ -100,7 +99,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                if (checkQualifier(value, qualifiers)) {
                     result = (QualifiedValue<T>)value;
                     break;
                 }
@@ -115,7 +114,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                if (checkQualifier(value, qualifiers)) {
                     result.add((QualifiedValue<T>)value);
                 }
             }
@@ -129,7 +128,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         List<QualifiedValue<?>> values = fields.get(key);
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
-                if (value.getQualifiers().containsAll(Arrays.asList(qualifiers))) {
+                if (checkQualifier(value, qualifiers)) {
                     result.add((T)value.getValue());
                 }
             }
@@ -144,7 +143,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
         Set<Enum<?>> quals = new HashSet<Enum<?>>();
         for (Enum<?> qualifier : qualifiers) {
-            if (qualifier != null) { 
+            if (qualifier != null) {
                 quals.add(qualifier);
             }
         }
@@ -199,36 +198,24 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     @Override
     public <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key, Enum<?>... qualifiers) {
         List<QualifiedValue<T>> result = new ArrayList<QualifiedValue<T>>();
-        
+
         List<QualifiedValue<?>> values = fields.remove(key);
         if (values != null && values.size() > 0) {
             List<QualifiedValue<?>> leftValues = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
-            
+
             for (QualifiedValue<?> value : values) {
-                if (qualifiers != null && qualifiers.length > 0) {
-                    boolean removed = true;
-                    
-                    for (Enum<?> qualifier : qualifiers)  {
-                        if(!value.getQualifiers().contains(qualifier)) {
-                            removed = false;
-                        }
-                    }
-                    
-                    if (removed) {
-                        result.add((QualifiedValue<T>)value);
-                    } else {
-                        leftValues.add(value);
-                    }
-                } else {
+                if (checkQualifier(value, qualifiers)) {
                     result.add((QualifiedValue<T>)value);
+                } else {
+                    leftValues.add(value);
                 }
             }
-            
+
             if (leftValues.size() > 0) {
                 fields.put(key, leftValues);
             }
         }
-        
+
         return result;
     }
 
@@ -237,5 +224,16 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      */
     public Set<TKey<?, ?>> getAvailableKeys() {
         return Collections.unmodifiableSet(new HashSet<TKey<?, ?>>(fields.keySet()));
+    }
+
+    private boolean checkQualifier(QualifiedValue<?> value, Enum<?>... qualifiers) {
+        boolean contained = true;
+        for (Enum<?> qualifier : qualifiers) {
+            if (!value.getQualifiers().contains(qualifier)) {
+                contained = false;
+                break;
+            }
+        }
+        return contained;
     }
 }
