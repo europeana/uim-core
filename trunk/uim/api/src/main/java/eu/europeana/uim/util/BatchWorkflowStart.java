@@ -312,6 +312,11 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                     if (poll != null) {
                         List<MetaDataRecord<I>> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
                         MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
+                        
+                        if (mdrs.length != poll.length) {
+                            log.warning(String.format("Requested %d records from storage backend, but got back %d records!",
+                                    poll.length, mdrs.length));
+                        }
 
                         for (int i = 0; i < mdrs.length; i++) {
                             MetaDataRecord<I> mdr = mdrs[i];
