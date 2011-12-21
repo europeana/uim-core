@@ -221,6 +221,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
             boolean shuffle = Boolean.parseBoolean(context.getProperties().getProperty(
                     BATCH_SHUFFLE, "false"));
 
+            log.info(String.format("Dataset has all together %d records!", records.length));
+
             if (shuffle) {
                 List<I> allids = Arrays.asList(records);
                 Collections.shuffle(allids);
@@ -312,9 +314,10 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                     if (poll != null) {
                         List<MetaDataRecord<I>> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
                         MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
-                        
+
                         if (mdrs.length != poll.length) {
-                            log.warning(String.format("Requested %d records from storage backend, but got back %d records!",
+                            log.warning(String.format(
+                                    "Requested %d records from storage backend, but got back %d records!",
                                     poll.length, mdrs.length));
                         }
 
