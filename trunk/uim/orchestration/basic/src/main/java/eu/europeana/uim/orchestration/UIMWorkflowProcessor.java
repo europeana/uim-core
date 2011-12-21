@@ -221,7 +221,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                             }
                         }
                     } catch (Throwable exc) {
-
                         log.log(Level.WARNING, "Exception in workflow execution", exc);
                     }
                 } // end synchronized execution
@@ -303,7 +302,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private void complete(ActiveExecution execution, boolean cancel) throws StorageEngineException {
         try {
             execution.getWorkflow().getStart().completed(execution, execution.getStorageEngine());
-
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution.getWorkflow().getStart(), t);
         }
@@ -342,10 +340,11 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             log.log(Level.SEVERE, "Failed to complete:" + execution, t);
         } finally {
             execution.getStorageEngine().completed(execution);
-            if (registry.getLoggingEngine() != null)
+            if (registry.getLoggingEngine() != null) {
                 registry.getLoggingEngine().log(execution.getExecution(), Level.INFO,
                         "UIMOrchestrator", "finish",
                         "Finished:" + execution.getExecution().getName());
+            }
 
             log.warning("Remove Execution:" + execution.toString());
             synchronized (executions) {
@@ -362,9 +361,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
      * @throws StorageEngineException
      */
     public void schedule(final ActiveExecution<I> execution) throws StorageEngineException {
-        if (execution.getWorkflow().getSteps().isEmpty())
-            throw new IllegalStateException("Empty workflow not allowed: " +
-                                            execution.getWorkflow().getClass().getName());
+        if (execution.getWorkflow().getSteps().isEmpty()) { throw new IllegalStateException(
+                "Empty workflow not allowed: " + execution.getWorkflow().getClass().getName()); }
         synchronized (executions) {
             executions.add(execution);
         }
@@ -375,7 +373,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             @Override
             public void run() {
                 try {
-
                     WorkflowStart start = execution.getWorkflow().getStart();
                     start.initialize(execution, execution.getStorageEngine());
 
@@ -403,7 +400,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                 } catch (Throwable t) {
                     log.log(Level.SEVERE, "Failed to startup execution.", t);
                     try {
-
                         execution.setThrowable(t);
                         execution.getExecution().setCanceled(true);
                         execution.getExecution().setActive(false);
@@ -496,8 +492,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     }
 
     /**
-     * Returns the maxInProgress.
-     * 
      * @return maximum number of processes in progress
      */
     public int getMaxInProgress() {
