@@ -333,7 +333,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             executionBean.setProcessedCount(execution.getScheduledSize());
 
             execution.getStorageEngine().updateExecution(executionBean);
-
         }
 
         try {
