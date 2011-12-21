@@ -231,7 +231,6 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
                 log.info(String.format("Loaded %d records in %.3f sec created shuffled.",
                         ids.length, (System.currentTimeMillis() - start) / 1000.0));
-
             } else if (context.getProperties().getProperty(BATCH_SUBSET_HEAD) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
