@@ -14,8 +14,8 @@ import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Serialized;
 
 /**
- * @author geomark
- *
+ * 
+ * @author Georgios Markakis
  */
 @Entity
 public class WorkflowResource {

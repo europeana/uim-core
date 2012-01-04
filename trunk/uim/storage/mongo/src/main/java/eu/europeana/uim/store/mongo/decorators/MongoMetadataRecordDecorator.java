@@ -20,6 +20,7 @@
  */
 package eu.europeana.uim.store.mongo.decorators;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -38,9 +39,10 @@ import com.google.code.morphia.annotations.Serialized;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
-import eu.europeana.uim.store.mongo.converters.MongoDBTHashSetBytesConverter;
+import eu.europeana.uim.store.mongo.converters.MongoDBEuropeanaMDRConverter;
 
 /**
  * 
@@ -53,8 +55,8 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	@NotSaved
 	private MetaDataRecordBean<ObjectId> emebeddedMdr;
 	
-	@Serialized
-	byte[] embeddedbinary;
+	@Serialized	
+	private HashMap<String, List<byte[]>> fields;
 	
 	
 	@Id
@@ -79,7 +81,7 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	@PrePersist 
 	void prePersist() 
 	{
-		embeddedbinary = MongoDBTHashSetBytesConverter.getInstance().encode(emebeddedMdr.getAvailableKeys());
+		fields = MongoDBEuropeanaMDRConverter.getInstance().encode(emebeddedMdr);
 	}
 	
 	@PostPersist
@@ -92,9 +94,8 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	
 	@PreLoad
 	void preload(){
-		emebeddedMdr = new MetaDataRecordBean<ObjectId>();
+		emebeddedMdr =  MongoDBEuropeanaMDRConverter.getInstance().decode(fields);
 		emebeddedMdr.setId(mongoId);		
-		HashSet<TKey<?, ?>> set = (HashSet<TKey<?, ?>>) MongoDBTHashSetBytesConverter.getInstance().decode(embeddedbinary);
 	}
 	
 	
