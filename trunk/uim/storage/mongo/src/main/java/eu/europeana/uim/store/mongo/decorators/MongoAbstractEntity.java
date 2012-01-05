@@ -19,7 +19,7 @@ import eu.europeana.uim.store.UimEntity;
  */
 
 @Entity
-public class MongoAbstractEntity<I>{
+public abstract class MongoAbstractEntity<I>{
 
     @Id
     private ObjectId mongoId;

@@ -43,10 +43,6 @@ import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
- * Not optimized whatsoever.
- * <p/>
- * TODO optimize
- * TODO implement the recursive flag for providers
  *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Georgios Markakis <gwarkx@hotmail.com>
@@ -70,9 +66,6 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     private EngineStatus status = EngineStatus.STOPPED;
 
     private String dbName;
-
-    // guys, if you change your minds again, here is a switch.
-    private static final boolean ALLOW_DUPLICATE_MDR_IDENTIFIERS = true;
  
     public MongoStorageEngine(String dbName) {
         this.dbName = dbName;

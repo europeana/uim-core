@@ -32,7 +32,6 @@ import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
-import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
@@ -40,9 +39,7 @@ import com.google.code.morphia.annotations.Serialized;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
-import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
 import eu.europeana.uim.store.mongo.converters.MongoDBEuropeanaMDRConverter;
 
 /**

@@ -49,7 +49,7 @@ import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
  * @author Georgios Markakis
  */
 @Entity
-public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
+public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> implements Execution<ObjectId> {
 
 	/**
 	 * 
@@ -59,11 +59,7 @@ public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
 	
 	@Serialized
 	byte[] embeddedbinary;
-	
-    @Id
-    private ObjectId mongoId;
-	
-	
+		
 	@Reference
 	private UimDataSet<ObjectId> datasetRefrerence;
 	
@@ -88,7 +84,7 @@ public class MongoExecutionDecorator<I>  implements Execution<ObjectId> {
 	@PostPersist
 	void postPersist(){
 		if(embeddedExecution.getId() == null){
-			embeddedExecution.setId(mongoId);
+			embeddedExecution.setId(getMongoId());
 		}
 	}
 	

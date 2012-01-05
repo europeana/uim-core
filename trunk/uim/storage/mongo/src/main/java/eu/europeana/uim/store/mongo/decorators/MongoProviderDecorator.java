@@ -51,10 +51,7 @@ import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter
  */
 
 @Entity
-public class MongoProviderDecorator<I> implements Provider<ObjectId> {
-
-    @Id
-    private ObjectId mongoId;
+public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId> implements Provider<ObjectId> {
 	
 	@Serialized
 	byte[] embeddedbinary;
@@ -68,9 +65,6 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	
 	@Reference
 	private Set<Provider<ObjectId>> searchableRealtedOut;
-	
-	@Indexed
-	private String searchMnemonic;
 	
 	@Indexed
 	private String searchName;
@@ -101,7 +95,7 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	@PostPersist
 	void postPersist(){
 		if(embeddedProvider.getId() == null){
-			embeddedProvider.setId(mongoId);
+			embeddedProvider.setId(getMongoId());
 		}
 	}
 	
@@ -160,7 +154,7 @@ public class MongoProviderDecorator<I> implements Provider<ObjectId> {
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedProvider.setMnemonic(mnemonic);
-		this.searchMnemonic = mnemonic;
+		setSearchMnemonic(mnemonic);
 	}
 
 	@Override

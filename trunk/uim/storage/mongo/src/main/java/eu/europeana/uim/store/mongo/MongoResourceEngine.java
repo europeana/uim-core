@@ -67,8 +67,6 @@ public class MongoResourceEngine implements ResourceEngine {
 
           
             morphia.
-            //map(MongoAbstractEntity.class).
-            //map(MongoAbstractNamedEntity.class).
             map(CollectionResource.class).
             map(GlobalResource.class).
             map(ProviderResource.class).
@@ -128,7 +126,7 @@ public class MongoResourceEngine implements ResourceEngine {
 	 */
 	@Override
 	public void checkpoint() {
-		//Does nothing?
+		//Does nothing in this implementation
 	}
 
 	/* (non-Javadoc)
@@ -353,7 +351,6 @@ public class MongoResourceEngine implements ResourceEngine {
 
         LinkedHashMap<String, List<String>> collResources = colresource.getResources();
 
-        // collectionResources.put(id.getId(), resources);
         for (String key : resources.keySet()) {
             if (resources.get(key) == null) {
                 // clean up. if the value is null, explicitely remove the key from the stored set.

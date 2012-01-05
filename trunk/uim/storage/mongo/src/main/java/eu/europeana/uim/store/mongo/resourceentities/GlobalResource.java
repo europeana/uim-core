@@ -24,7 +24,7 @@ public class GlobalResource {
     private ObjectId mongoid;
 
 	// We have to serialize this because certain characters (ie .) are 
-	// not allowed to be stored directry in MongoDB
+	// not allowed to be stored directly in MongoDB
 	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 

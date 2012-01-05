@@ -50,7 +50,7 @@ import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
  */
 
 @Entity
-public class MongoRequestDecorator<I> implements Request<ObjectId> {
+public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> implements Request<ObjectId> {
 
 	/**
 	 * 
@@ -60,10 +60,7 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	
 	@Serialized
 	byte[] embeddedbinary;
-	
-	@Id
-    private ObjectId mongoId;
-		
+			
 	@Indexed
 	private Date searchDate;
 	
@@ -106,7 +103,7 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	@PostPersist
 	void postPersist(){
 		if(embeddedRequest.getId() == null){
-			embeddedRequest.setId(mongoId);
+			embeddedRequest.setId(getMongoId());
 		}
 	}
 	
@@ -147,7 +144,7 @@ public class MongoRequestDecorator<I> implements Request<ObjectId> {
 	
 	@Override
 	public  ObjectId getId() {
-		return  mongoId; //embeddedRequest.getId();
+		return  getMongoId(); //embeddedRequest.getId();
 	}
 
 	@Override
