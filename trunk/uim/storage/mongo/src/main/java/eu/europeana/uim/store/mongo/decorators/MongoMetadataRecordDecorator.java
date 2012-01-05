@@ -30,6 +30,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.NotSaved;
+import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
@@ -92,10 +93,11 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	}
 	
 	
-	@PreLoad
+	@PostLoad
 	void preload(){
 		emebeddedMdr =  MongoDBEuropeanaMDRConverter.getInstance().decode(fields);
-		emebeddedMdr.setId(mongoId);		
+		emebeddedMdr.setId(mongoId);
+		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
 	}
 	
 	

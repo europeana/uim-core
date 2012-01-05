@@ -25,8 +25,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -57,9 +59,9 @@ import com.google.protobuf.WireFormat;
 public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List<byte[]>>, MetaDataRecordBean<ObjectId>>{
 
 
-	private static final int FIELD_ENTRY_ORDER     = 1;
-    private static final int FIELD_ENTRY_VALUE     = 2;
-    private static final int FIELD_ENTRY_QUALIFIER = 3;
+	private static final int FIELD_ENTRY_ORDER     = 10;
+    private static final int FIELD_ENTRY_VALUE     = 20;
+    private static final int FIELD_ENTRY_QUALIFIER = 30;
 	
     /**
      * Private Constructor (instantiate via factory method)
@@ -78,10 +80,40 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     @Override
     public MetaDataRecordBean<ObjectId> decode(HashMap<String, List<byte[]>> fields) {
 
+    	MetaDataRecordBean<ObjectId> mdr = new MetaDataRecordBean<ObjectId>();
+    	
+    	Collection c = fields.keySet();
+    	   
+        Iterator itr = c.iterator();
+    	
+        while (itr.hasNext()){
+        	
+        	TKey key = TKey.fromString((String)itr.next());
+        
+        	
+        	List<byte[]> bqvalues =  fields.get(key.toString());
+ 
+        	List<QualifiedValue<String>> qvalues = new ArrayList<QualifiedValue<String>>();
+        	
+        	
+        	for(byte[] qvalue: bqvalues){
+        		
+        		QualifiedValue qval;
+				try {
+					qval = decodeQualifiedValue( key, qvalue);
+					qvalues.add(qval);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-        return null;
+        	}
+			mdr.setValue(key, qvalues);  
+        }
+
+        return mdr;
     }
 
+    
     @Override
     public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<ObjectId> rec) {
     	
@@ -140,17 +172,28 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
 	        
 	        output.writeString(FIELD_ENTRY_VALUE, (String)qval.getValue());
 	        
+
 	        Set<Enum<?>> qualifiers = qval.getQualifiers();
 	        	            for (Enum<?> qualifier : qualifiers) {
 	        	                String qualifierEncoded = qualifier.getClass().getName() + "@" + qualifier.name();
 	        	                output.writeString(FIELD_ENTRY_QUALIFIER, qualifierEncoded);
 	       }
-	        
+
 	       output.flush();
+	       
+           gzip.flush();
+           gzip.close();
+	       
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        finally {
+        try {
+            bout.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not close output stream!", e);
+        }
+    }
 
     	
     	return bout.toByteArray();
@@ -158,8 +201,10 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     
     
     private <NS, T> QualifiedValue  decodeQualifiedValue(TKey<NS, T> key,byte[] enc) throws IOException{
-    	ByteArrayInputStream bin = new ByteArrayInputStream(enc);
+
+    	GZIPInputStream bin = new GZIPInputStream(new ByteArrayInputStream(enc));
         CodedInputStream input = CodedInputStream.newInstance(bin);
+
         
         int order = -1;
         String value = null;
@@ -180,7 +225,7 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
                 Class<? extends Enum> type;
                 try {
                     type = (Class<? extends Enum>)Class.forName(split[0]);
-                } catch (ClassNotFoundException e) {
+                } catch (ClassNotFoundException e) { 
                     throw new RuntimeException("Could not convert encoded enum '" + encoded +
                                                "'!", e);
                 }
@@ -192,8 +237,9 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
             }
         }
         
+        QualifiedValue qval = new QualifiedValue(value,qualifiers,order);
         
-    	return null;
+    	return qval;
     }
     
 
