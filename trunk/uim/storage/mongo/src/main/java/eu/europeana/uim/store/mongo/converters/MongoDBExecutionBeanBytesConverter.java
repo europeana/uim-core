@@ -81,16 +81,25 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
     }
     
     
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
+     */
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;
     }
 
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
+     */
     @Override
     public Class<ExecutionBean> getDecodeType() {
         return ExecutionBean.class;
     }
 
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
+     */
     @Override
     public ExecutionBean<ObjectId> decode(byte[] data) {
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
@@ -170,6 +179,11 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
         return bean;
     }
 
+    
+    
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#encode(java.lang.Object)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public byte[] encode(ExecutionBean data) {

@@ -74,17 +74,26 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
     }
     
     
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
+     */
     @Override
     public Class<byte[]> getEncodeType() {
         return byte[].class;
     }
 
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
+     */
     @Override
     public Class<ProviderBean> getDecodeType() {
         return ProviderBean.class;
     }
     
     
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
+     */
     @Override
     public ProviderBean<ObjectId> decode(byte[] data) {
         ProviderBean<ObjectId> bean = new ProviderBean<ObjectId>();
@@ -138,6 +147,11 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
         return bean;
     }
 
+    
+    
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#encode(java.lang.Object)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public byte[] encode(ProviderBean data) {

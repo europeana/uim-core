@@ -41,6 +41,7 @@ import eu.europeana.uim.store.bean.RequestBean;
  * 
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
  * @author Markus Muhr (markus.muhr@kb.nl)
+ * @author Georgios Markakis (gwarkx@hotmail.com)
  * @since Feb 18, 2011
  */
 @SuppressWarnings("rawtypes")

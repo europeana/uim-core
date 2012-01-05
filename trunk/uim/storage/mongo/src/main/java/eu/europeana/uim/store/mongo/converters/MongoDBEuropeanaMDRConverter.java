@@ -49,10 +49,14 @@ import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.WireFormat;
 
 /**
- * Converts a List to a byte array and back
+ * Converts between metadata record bean and byte array.
  * 
- * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @date May 10, 2011
+ * @author Andreas Juffinger <andreas.juffinger@kb.nl>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @author Nuno Freire <nfreire@gmail.com>
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * 
+ * @since Jan 5, 2012
  */
 
 @SuppressWarnings("rawtypes")
@@ -77,6 +81,10 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
       return new MongoDBEuropeanaMDRConverter();
     }
 
+    
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
+     */
     @Override
     public MetaDataRecordBean<ObjectId> decode(HashMap<String, List<byte[]>> fields) {
 
@@ -114,6 +122,9 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     }
 
     
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#encode(java.lang.Object)
+     */
     @Override
     public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<ObjectId> rec) {
     	
@@ -161,6 +172,10 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     
     
     
+    /**
+     * @param qval
+     * @return
+     */
     private byte[] encodeQualifiedValue(QualifiedValue qval){
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         GZIPOutputStream gzip;
@@ -200,6 +215,14 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     }
     
     
+    /**
+     * @param <NS>
+     * @param <T>
+     * @param key
+     * @param enc
+     * @return
+     * @throws IOException
+     */
     private <NS, T> QualifiedValue  decodeQualifiedValue(TKey<NS, T> key,byte[] enc) throws IOException{
 
     	GZIPInputStream bin = new GZIPInputStream(new ByteArrayInputStream(enc));
@@ -243,12 +266,18 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     }
     
 
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
+     */
     @SuppressWarnings("unchecked")
 	@Override
     public Class<HashMap<String, List<byte[]>>> getEncodeType() {
         return  (Class<HashMap<String, List<byte[]>>>) new HashMap<String, List<byte[]>>().getClass();
     }
 
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
+     */
     @SuppressWarnings("unchecked")
 	@Override
     public Class<MetaDataRecordBean<ObjectId>> getDecodeType() {

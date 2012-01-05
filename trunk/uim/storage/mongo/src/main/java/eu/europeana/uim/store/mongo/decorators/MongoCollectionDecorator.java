@@ -49,7 +49,7 @@ import eu.europeana.uim.store.mongo.converters.MongoDBCollectionBeanBytesConvert
  */
 
 @Entity
-public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
+public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<ObjectId> implements Collection<ObjectId>{
 
 	@NotSaved
 	private CollectionBean<ObjectId> embeddedCollection;
@@ -59,12 +59,6 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	
 	@Reference
 	private  MongoProviderDecorator<ObjectId> provider;
-	
-	@Indexed
-	private String searchMnemonic;
-	
-    @Id
-    private ObjectId mongoId;
 	
 
 	
@@ -93,7 +87,7 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	@PostPersist
 	void postPersist(){
 		if(embeddedCollection.getId() == null){
-			embeddedCollection.setId(mongoId);
+			embeddedCollection.setId(getMongoId());
 		}
 	}
 	
@@ -134,7 +128,7 @@ public class MongoCollectionDecorator<I> implements Collection<ObjectId>{
 	@Override
 	public void setMnemonic(String mnemonic) {
 		embeddedCollection.setMnemonic(mnemonic);
-		this.searchMnemonic = mnemonic;
+		setSearchMnemonic(mnemonic);
 	}
 
 	@Override

@@ -17,6 +17,16 @@ import com.google.protobuf.WireFormat;
 
 import eu.europeana.uim.store.bean.CollectionBean;
 
+/**
+ * Converts between collection bean and byte array.
+ *
+ * @author Andreas Juffinger <andreas.juffinger@kb.nl>
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @author Nuno Freire <nfreire@gmail.com>
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * 
+ * @since Jan 5, 2012
+ */
 @SuppressWarnings("rawtypes")
 public class MongoDBCollectionBeanBytesConverter extends Converter<byte[], CollectionBean>{
 
