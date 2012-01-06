@@ -8,21 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.bson.types.ObjectId;
-
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
-import com.google.code.morphia.mapping.DefaultCreator;
-import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-
 import eu.europeana.uim.api.EngineStatus;
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
@@ -33,8 +26,6 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.store.mongo.decorators.MongoAbstractEntity;
-import eu.europeana.uim.store.mongo.decorators.MongoAbstractNamedEntity;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoExecutionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoMetadataRecordDecorator;
@@ -99,8 +90,6 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
 
           
             morphia.
-            //map(MongoAbstractEntity.class).
-            //map(MongoAbstractNamedEntity.class).
             map(MongoProviderDecorator.class).
             map(MongoExecutionDecorator.class).
             map(MongoCollectionDecorator.class).
@@ -123,7 +112,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     }
 
     @Override
-    public void completed(ExecutionContext context) {
+    public void completed(ExecutionContext<ObjectId> context) {
     }
 
     public void shutdown() {
@@ -143,8 +132,8 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     }
 
     @Override
-    public Provider createProvider() {
-        Provider p = new MongoProviderDecorator();
+    public Provider<ObjectId> createProvider() {
+        Provider<ObjectId> p = new MongoProviderDecorator<ObjectId>();
         ds.save(p);
         return p;
     }
@@ -168,7 +157,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     	}
     	*/
     	
-        for (Provider p : getAllProviders()) {
+        for (Provider<ObjectId> p : getAllProviders()) {
             if (p.getName() != null && (p.getName().equals(provider.getName()) || p.getMnemonic().equals(provider.getMnemonic())) && !p.getId().equals(provider.getId())) {
                 throw new StorageEngineException("Provider with name '" + provider.getMnemonic() + "' already exists");
             }
@@ -194,12 +183,12 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     }
 
     @Override
-    public Provider getProvider(ObjectId id) {
+    public Provider<ObjectId> getProvider(ObjectId id) {
         return ds.find(MongoProviderDecorator.class).filter(LOCALIDFIELD, id).get();
     }
 
     @Override
-    public Provider findProvider(String mnemonic) {
+    public Provider<ObjectId> findProvider(String mnemonic) {
         return ds.find(MongoProviderDecorator.class).field(MNEMONICFIELD).equal(mnemonic).get();
     }
 
@@ -213,15 +202,15 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     }
 
     @Override
-    public Collection createCollection(Provider provider) {
-        Collection c = new MongoCollectionDecorator(provider);
+    public Collection<ObjectId> createCollection(Provider<ObjectId> provider) {
+        Collection<ObjectId> c = new MongoCollectionDecorator<ObjectId>(provider);
         ds.save(c);
         return c;
     }
 
     @Override
-    public void updateCollection(Collection collection) throws StorageEngineException {
-        for (Collection c : getAllCollections()) {
+    public void updateCollection(Collection<ObjectId> collection) throws StorageEngineException {
+        for (Collection<ObjectId> c : getAllCollections()) {
             if (c.getName() != null && (c.getName().equals(collection.getName())) && c.getId() != collection.getId()) {
                 throw new StorageEngineException("Collection with name '" + collection.getMnemonic() + "' already exists");
             }
@@ -246,7 +235,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     @Override
     public List<Collection<ObjectId>> getCollections(Provider<ObjectId> provider) {
         List<Collection<ObjectId>> res = new ArrayList<Collection<ObjectId>>();
-        for (Collection c : ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList()) {
+        for (Collection<ObjectId> c : ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList()) {
             res.add(c);
         }
         return res;
@@ -255,7 +244,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     @Override
     public List<Collection<ObjectId>> getAllCollections() {
         List<Collection<ObjectId>> res = new ArrayList<Collection<ObjectId>>();
-        for (Collection c : ds.find(MongoCollectionDecorator.class).asList()) {
+        for (Collection<ObjectId> c : ds.find(MongoCollectionDecorator.class).asList()) {
             res.add(c);
         }
         return res;

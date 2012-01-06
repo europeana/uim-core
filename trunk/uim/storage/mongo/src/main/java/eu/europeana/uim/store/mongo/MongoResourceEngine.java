@@ -32,7 +32,7 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * 
- * @author Georgios Markakis
+ * @author Georgios Markakis <gwarkx@hotmail.com>
  */
 public class MongoResourceEngine implements ResourceEngine {
 
@@ -283,7 +283,7 @@ public class MongoResourceEngine implements ResourceEngine {
 
         for (String key : resources.keySet()) {
             if (resources.get(key) == null) {
-                // clean up. if the value is null, explicitely remove the key from the stored set.
+                // clean up. if the value is null, explicitly remove the key from the stored set.
                 provResources.remove(key);
             } else {
                 provResources.put(key, resources.get(key));

@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -42,20 +42,20 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
+ * MongoDB ResourceEngine JUnit Tests. 
  * 
- * 
- * @author Georgios Markakis
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * @since Jan 6 2012
+ * @see eu.europeana.uim.store.memory.ResourceStorageEngineTest
  */
-public class MongoResourceEngineTest extends AbstractResourceEngineTest<Long>{
+public class MongoResourceEngineTest extends AbstractResourceEngineTest<ObjectId>{
 
 	private MongoResourceEngine mongoEngine = null;
 
 	private MongoStorageEngine mongostorageEngine = null;
 	
     private Mongo m = null;	
-	
-    private static AtomicLong id = new AtomicLong();
-    
+	    
     
 	/**
 	 * Run before each test
@@ -81,6 +81,9 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<Long>{
 	}
     
     
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#getResourceEngine()
+	 */
 	@Override
 	protected ResourceEngine getResourceEngine() {
 		   if (mongoEngine == null) {
@@ -106,11 +109,19 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<Long>{
 		   return mongoEngine;
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#nextID()
+	 */
 	@Override
-	protected Long nextID() {
-        return id.incrementAndGet();
+	protected ObjectId nextID() {
+        return new ObjectId();
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateWorkflow()
+	 */
 	@Override
 	protected Workflow testGenerateWorkflow() {
         Workflow workflow = mock(Workflow.class);
@@ -125,14 +136,23 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<Long>{
         return workflow;
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateProvider()
+	 */
 	@Override
-	protected Provider<Long> testGenerateProvider() {
+	protected Provider<ObjectId> testGenerateProvider() {
 		
 		return mongostorageEngine.createProvider();
 	}
 
+	
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateCollection(eu.europeana.uim.store.Provider)
+	 */
 	@Override
-	protected Collection<Long> testGenerateCollection(Provider<Long> provider) {
+	protected Collection<ObjectId> testGenerateCollection(Provider<ObjectId> provider) {
 
 		return mongostorageEngine.createCollection(provider);
 	}

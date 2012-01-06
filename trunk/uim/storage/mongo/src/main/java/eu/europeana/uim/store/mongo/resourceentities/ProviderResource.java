@@ -1,6 +1,24 @@
-/**
- * 
+/*
+ * Copyright 2007 EDL FOUNDATION
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon they
+ * will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * you may not use this work except in compliance with the
+ * Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in
+ * writing, software distributed under the Licence is
+ * distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied.
+ * See the Licence for the specific language governing
+ * permissions and limitations under the Licence.
  */
+
 package eu.europeana.uim.store.mongo.resourceentities;
 
 import java.util.LinkedHashMap;
@@ -17,17 +35,15 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 
 /**
- * @author geomark
- *
- */
+*
+* @author Georgios Markakis (gwarkx@hotmail.com)
+* @date Jan 6, 2012
+*/
 @Entity
-public class ProviderResource {
+public class ProviderResource extends AbstractResource{
 
-	@Id
-    private ObjectId mongoid;
-	
 	@Reference
-	private  MongoProviderDecorator<Long> provider;
+	private  MongoProviderDecorator<ObjectId> provider;
 	
 	// We have to serialize this because certain characters (ie .) are 
 	// not allowed to be stored directly in MongoDB
@@ -40,12 +56,12 @@ public class ProviderResource {
 	
 	@SuppressWarnings("unchecked")
 	public ProviderResource(Provider<?> provider){
-		this.provider = (MongoProviderDecorator<Long>) provider;
+		this.provider = (MongoProviderDecorator<ObjectId>) provider;
 		this.resources = new LinkedHashMap<String, List<String>>();
 		
 	}
 	
-	public MongoProviderDecorator<Long> getProvider() {
+	public MongoProviderDecorator<ObjectId> getProvider() {
 		return provider;
 	}
 
@@ -53,10 +69,5 @@ public class ProviderResource {
 	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
 	}
-
-	public ObjectId getMongoid() {
-		return mongoid;
-	}
-
 	
 }

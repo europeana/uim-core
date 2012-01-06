@@ -24,17 +24,11 @@ public abstract class MongoAbstractEntity<I>{
     @Id
     private ObjectId mongoId;
 	
-	@Indexed
-	private I lid;
-
 	
 	public MongoAbstractEntity(){
 	}
 	
-	public MongoAbstractEntity(I lid){
-		this.lid = lid;
-	}
-	
+
 	
 	public ObjectId getMongoId() {
 		return mongoId;
@@ -44,12 +38,6 @@ public abstract class MongoAbstractEntity<I>{
 		this.mongoId = mongoId;
 	}
 
-	public I getLid() {
-		return lid;
-	}
 
-	public void setLid(I lid) {
-		this.lid = lid;
-	}
 
 }

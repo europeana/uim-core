@@ -21,10 +21,6 @@ public abstract class MongoAbstractNamedEntity<I> extends MongoAbstractEntity<I>
 		super();
 	}
 	
-	public MongoAbstractNamedEntity(I id){
-		super(id);
-	}
-	
 	public String getSearchMnemonic() {
 		return searchMnemonic;
 	}
