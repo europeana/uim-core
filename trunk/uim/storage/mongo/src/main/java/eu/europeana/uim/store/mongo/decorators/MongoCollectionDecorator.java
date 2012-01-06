@@ -60,6 +60,11 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<Object
 	@Reference
 	private  MongoProviderDecorator<ObjectId> provider;
 	
+	/**
+	 * The provider name
+	 */
+	@Indexed
+	private String searchName;
 
 	
 	public MongoCollectionDecorator(){
@@ -139,6 +144,8 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<Object
 	@Override
 	public void setName(String name) {
 		embeddedCollection.setName(name);
+		this.searchName = name;
+		
 	}
 
 	@Override

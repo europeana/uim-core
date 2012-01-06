@@ -11,6 +11,7 @@ import java.util.Set;
 import org.bson.types.ObjectId;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.query.Criteria;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -42,8 +43,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
 
     private static final String DEFAULT_UIM_DB_NAME = "UIM";
     private static final String MNEMONICFIELD = "searchMnemonic";
-    private static final String NAMEFIELD = "searchName";
-    
+    private static final String NAMEFIELD = "searchName"; 
     private static final String LOCALIDFIELD = "mongoId";
     
     
@@ -55,6 +55,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     private Datastore ds = null;
 
     private EngineStatus status = EngineStatus.STOPPED;
+
 
     private String dbName;
  
@@ -141,23 +142,17 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
     @Override
     public void updateProvider(Provider<ObjectId> provider) throws StorageEngineException {
     	
-    	/*
-    	@SuppressWarnings("unchecked")
-		MongoProviderDecorator<Long> result = (MongoProviderDecorator<Long>) ds.find(MongoProviderDecorator.class).filter(NAMEFIELD, provider.getName()).filter(MNEMONICFIELD, provider.getMnemonic());
+    	ArrayList<MongoProviderDecorator> allresults = new ArrayList<MongoProviderDecorator>();
     	
-    	if(result == null){
-    		result = (MongoProviderDecorator<Long>) ds.find(MongoProviderDecorator.class).filter(LOCALIDFIELD,provider.getId());
-    		if(result == null){
-    			throw new StorageEngineException("Provider with name '" + provider.getMnemonic() + "' cannot be updated because it does not exist in MongoDB");
-    		}
-    		
-    	}
-    	else{
-    		
-    	}
-    	*/
-    	
-        for (Provider<ObjectId> p : getAllProviders()) {
+    
+		ArrayList<MongoProviderDecorator> result1 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(NAMEFIELD, provider.getName()).asList();
+    	ArrayList<MongoProviderDecorator>  result2 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(MNEMONICFIELD, provider.getMnemonic()).asList();	
+
+    	allresults.addAll(result1);
+    	allresults.addAll(result2);
+
+
+        for (Provider<ObjectId> p : allresults) {
             if (p.getName() != null && (p.getName().equals(provider.getName()) || p.getMnemonic().equals(provider.getMnemonic())) && !p.getId().equals(provider.getId())) {
                 throw new StorageEngineException("Provider with name '" + provider.getMnemonic() + "' already exists");
             }
@@ -166,6 +161,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
             }
         }
 
+        
         for (Provider<ObjectId> related : provider.getRelatedOut()) {
             if (!related.getRelatedIn().contains(provider)) {
                 related.getRelatedIn().add(provider);
@@ -178,6 +174,7 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
                 ds.merge(related);
             }
         }
+
 
         ds.merge(provider);
     }
@@ -210,7 +207,17 @@ public class MongoStorageEngine implements StorageEngine<ObjectId> {
 
     @Override
     public void updateCollection(Collection<ObjectId> collection) throws StorageEngineException {
-        for (Collection<ObjectId> c : getAllCollections()) {
+    	
+    	ArrayList<MongoCollectionDecorator> allresults = new ArrayList<MongoCollectionDecorator>();
+    	
+        
+		ArrayList<MongoCollectionDecorator> result1 = (ArrayList<MongoCollectionDecorator>) ds.find(MongoCollectionDecorator.class).filter(NAMEFIELD, collection.getName()).asList();
+    	ArrayList<MongoCollectionDecorator>  result2 = (ArrayList<MongoCollectionDecorator>) ds.find(MongoCollectionDecorator.class).filter(MNEMONICFIELD, collection.getMnemonic()).asList();	
+
+    	allresults.addAll(result1);
+    	allresults.addAll(result2);
+    	
+        for (Collection<ObjectId> c : allresults) {
             if (c.getName() != null && (c.getName().equals(collection.getName())) && c.getId() != collection.getId()) {
                 throw new StorageEngineException("Collection with name '" + collection.getMnemonic() + "' already exists");
             }

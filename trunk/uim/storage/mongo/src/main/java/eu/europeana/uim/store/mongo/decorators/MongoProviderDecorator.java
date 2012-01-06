@@ -20,52 +20,62 @@
  */
 package eu.europeana.uim.store.mongo.decorators;
 
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.bson.types.ObjectId;
-
-import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
-import com.google.code.morphia.annotations.PreLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
-
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.ProviderBean;
-import eu.europeana.uim.store.mongo.converters.MongoDBCollectionBeanBytesConverter;
 import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter;
 
-/**
- * 
- * @author Georgios Markakis
- */
 
+/**
+ * Morphia based MongoDB representation for a Provider object
+ * 
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * @date Jan 6, 2012
+ */
 @Entity
 public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId> implements Provider<ObjectId> {
 	
+	/**
+	 * Provider fields stored in a serialized form
+	 */
 	@Serialized
 	byte[] embeddedbinary;
 	
+	/**
+	 * The embeddedProvider object is instantiated  
+	 */
 	@NotSaved
 	private ProviderBean<ObjectId> embeddedProvider;
 	
 	
+	/**
+	 * References to "RelatedIn" MongoDB Provider objects
+	 */
 	@Reference
 	private Set<Provider<ObjectId>> searchableRealtedIn;
 	
+	/**
+	 * References to "RelatedOut" MongoDB Provider objects
+	 */
 	@Reference
 	private Set<Provider<ObjectId>> searchableRealtedOut;
 	
+	/**
+	 * The provider name
+	 */
 	@Indexed
 	private String searchName;
 	
@@ -73,6 +83,9 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	
 	
 	
+	/**
+	 * Default Constructor
+	 */
 	public MongoProviderDecorator(){
 		embeddedProvider = new ProviderBean<ObjectId>();
 		searchableRealtedIn = new HashSet<Provider<ObjectId>>();
@@ -81,8 +94,8 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	
 
 		
-	/**
-	 * 
+	/*
+	 * Lifecycle Methods 
 	 */
 	
 	@PrePersist 
