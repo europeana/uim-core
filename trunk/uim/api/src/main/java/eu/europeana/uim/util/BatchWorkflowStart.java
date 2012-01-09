@@ -333,6 +333,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                                 synchronized (getQueue()) {
                                     getQueue().offer(task);
                                 }
+                            } else {
+                                log.warning("Requested '" + poll[i] + "' record is null!");
                             }
                         }
                     }
