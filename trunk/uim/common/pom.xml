@@ -54,6 +54,7 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.sugarcrm.model,
+                            org.theeuropeanlibrary.repository.convert,
                             org.theeuropeanlibrary.translation,
                             org.theeuropeanlibrary.collections.guarded,
                             org.apache.commons.lang.*;version="2.4",
