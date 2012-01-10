@@ -86,7 +86,7 @@ public class Instant extends Temporal {
             yearText = yearText.replaceAll("\\u00A0", "u");
             yearText = yearText.replaceAll("\\?", "u");
             yearText = yearText.replaceAll("\\p{Punct}", "u");
-            yearText = yearText.replaceFirst("^[^\\d]+(\\d+)", "$1");
+//            yearText = yearText.replaceFirst("^[^\\d]+(\\d+)", "$1");
 
             if (yearText.equals("u") || yearText.equals("uuuu")) {
                 time = null;
@@ -362,13 +362,14 @@ public class Instant extends Temporal {
             } catch (Exception e) {
                 // FIXME: what to do here?
                 e.printStackTrace();
-                ret = "";
+                return "?";
             }
+
+            if (uncertain) ret += "?";
+            return ret;
         } else {
-            ret = "";
+            return "?";
         }
-        if (uncertain) ret += "?";
-        return ret;
     }
 
     /**
