@@ -11,9 +11,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bson.types.ObjectId;
+
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
+import eu.europeana.uim.gui.cp.shared.ObjectIdDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
@@ -105,7 +108,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     res.add(provider);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Error in copy data to DTO of provider!", t);
-// wrappedProviderDTOs.remove(p.getId());
                 }
             }
 
@@ -134,7 +136,16 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         Provider<Serializable> p = null;
         try {
-            p = storage.getProvider(provider);
+        	if(provider instanceof ObjectIdDTO){
+        		ObjectId prid = ObjectId.massageToObjectId(provider.toString());
+        		
+        		p = storage.getProvider(prid); 
+        	}
+        	else{
+        	   p = storage.getProvider(provider);
+        	}
+        	
+            
         } catch (Throwable t) {
             log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
         }
@@ -150,7 +161,15 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
             if (cols != null) {
                 for (Collection<Serializable> col : cols) {
-                    CollectionDTO collDTO = new CollectionDTO(col.getId());
+                    CollectionDTO collDTO = null;
+                    
+              	   if(! (col.getId() instanceof  ObjectId)){
+             		   collDTO = new CollectionDTO(new ObjectIdDTO(col.getId().toString()));
+            	   }
+            	   else{
+            		   collDTO = new CollectionDTO(col.getId());
+            	   }
+                    
                     collDTO.setName(col.getName());
                     collDTO.setMnemonic(col.getMnemonic());
                     collDTO.setProvider(getWrappedProviderDTO(p));
@@ -159,7 +178,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
                     collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
-// collDTO.setSize(col.get)
+
                     res.add(collDTO);
                 }
 
@@ -177,8 +196,25 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return res;
     }
 
+    
+
+    
+    
+    
+       
     private ProviderDTO getWrappedProviderDTO(Provider<Serializable> p) {
-            ProviderDTO wrapped = new ProviderDTO(p.getId());
+    	
+    	   ProviderDTO wrapped = null;
+    	
+    	   if(! (p.getId() instanceof  ObjectId)){
+    		   wrapped = new ProviderDTO(new ObjectIdDTO(p.getId().toString()));
+    	   }
+    	   else{
+    		   wrapped = new ProviderDTO(p.getId());
+    	   }
+    		   
+    	
+           
             wrapped.setName(p.getName());
             wrapped.setMnemonic(p.getMnemonic());
             wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
@@ -187,6 +223,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             return wrapped;
     }
 
+    /* (non-Javadoc)
+     * @see eu.europeana.uim.gui.cp.client.services.RepositoryService#getCollectionTotal(java.io.Serializable)
+     */
     @Override
     public Integer getCollectionTotal(Serializable collection) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
@@ -291,4 +330,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         return true;
     }
+
+	@Override
+	public void dummyObjectID(ObjectIdDTO obj) {
+		// TODO Auto-generated method stub
+		
+	}
 }

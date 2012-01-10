@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
+import eu.europeana.uim.gui.cp.shared.ObjectIdDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
@@ -69,4 +70,7 @@ public interface RepositoryServiceAsync {
      *            true, if update of collectiono was successfull
      */
     void updateCollection(CollectionDTO collection, AsyncCallback<Boolean> async);
+    
+    
+    void dummyObjectID(ObjectIdDTO obj, AsyncCallback<Boolean> async);
 }

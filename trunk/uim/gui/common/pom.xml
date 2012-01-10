@@ -81,6 +81,13 @@
             <artifactId>org.osgi.compendium</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.4</version>
+		</dependency>
+        
     </dependencies>
     
    	<!-- ================================================ -->

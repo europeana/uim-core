@@ -10,10 +10,13 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bson.types.ObjectId;
+
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.gui.cp.client.services.ResourceService;
+import eu.europeana.uim.gui.cp.shared.ObjectIdDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -42,6 +45,12 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     @Override
     public List<ParameterDTO> getParameters(Serializable provider, Serializable collection, String workflow) {
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
+        
+        if (provider instanceof ObjectIdDTO || collection instanceof ObjectIdDTO){
+        	provider = ObjectId.massageToObjectId(provider.toString());
+        	collection = ObjectId.massageToObjectId(collection.toString());
+        }
+        
         if (workflow != null) {
             Workflow w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
@@ -133,6 +142,12 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             String workflow) {
         Boolean res = true;
 
+        
+        if (provider instanceof ObjectIdDTO || collection instanceof ObjectIdDTO){
+        	provider = ObjectId.massageToObjectId(provider.toString());
+        	collection = ObjectId.massageToObjectId(collection.toString());
+        }
+        
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
         values.put(parameter.getKey(),
                 parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
