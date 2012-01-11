@@ -49,28 +49,28 @@ import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
  * @author Georgios Markakis
  */
 @Entity
-public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> implements Execution<ObjectId> {
+public class MongoExecutionDecorator<I> extends MongoAbstractEntity<String> implements Execution<String> {
 
 	/**
 	 * 
 	 */
 	@NotSaved
-	private ExecutionBean<ObjectId> embeddedExecution;
+	private ExecutionBean<String> embeddedExecution;
 	
 	@Serialized
 	byte[] embeddedbinary;
 		
 	@Reference
-	private UimDataSet<ObjectId> datasetRefrerence;
+	private UimDataSet<String> datasetRefrerence;
 	
 	
     public MongoExecutionDecorator(){
-    	this.embeddedExecution = new ExecutionBean<ObjectId>();
+    	this.embeddedExecution = new ExecutionBean<String>();
     }
     
     
-    public MongoExecutionDecorator(ObjectId id){
-    	this.embeddedExecution = new ExecutionBean<ObjectId>(id);
+    public MongoExecutionDecorator(String id){
+    	this.embeddedExecution = new ExecutionBean<String>(id);
     }
     
     
@@ -84,7 +84,7 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> im
 	@PostPersist
 	void postPersist(){
 		if(embeddedExecution.getId() == null){
-			embeddedExecution.setId(getMongoId());
+			embeddedExecution.setId(getMongoId().toString());
 		}
 	}
 	
@@ -93,15 +93,15 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> im
 	void postLoad(){
 		embeddedExecution = MongoDBExecutionBeanBytesConverter.getInstance().decode(embeddedbinary);
 		if(datasetRefrerence instanceof MongoCollectionDecorator){
-			MongoCollectionDecorator<ObjectId> tmp = (MongoCollectionDecorator<ObjectId>)datasetRefrerence;
+			MongoCollectionDecorator<String> tmp = (MongoCollectionDecorator<String>)datasetRefrerence;
 			embeddedExecution.setDataSet(tmp.getEmbeddedCollection());
 		}
 		else if(datasetRefrerence instanceof MongoMetadataRecordDecorator){
-			MongoMetadataRecordDecorator<ObjectId> tmp = (MongoMetadataRecordDecorator<ObjectId>)datasetRefrerence;
+			MongoMetadataRecordDecorator<String> tmp = (MongoMetadataRecordDecorator<String>)datasetRefrerence;
 			embeddedExecution.setDataSet(tmp.getEmebeddedMdr());
 		}
 		else if(datasetRefrerence instanceof MongoRequestDecorator){
-			MongoRequestDecorator<ObjectId> tmp = (MongoRequestDecorator<ObjectId>)datasetRefrerence;
+			MongoRequestDecorator<String> tmp = (MongoRequestDecorator<String>)datasetRefrerence;
 			embeddedExecution.setDataSet(tmp.getEmbeddedRequest());
 		}
 	}
@@ -111,12 +111,12 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> im
     
 	//Getters & Setters
     
-    public ExecutionBean<ObjectId> getEmbeddedExecution() {
+    public ExecutionBean<String> getEmbeddedExecution() {
 		return embeddedExecution;
 	}
     
 	@Override
-	public ObjectId getId() {
+	public String getId() {
 		return embeddedExecution.getId();
 	}
 
@@ -141,23 +141,23 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<ObjectId> im
 	}
 
 	@Override
-	public UimDataSet<ObjectId> getDataSet() {
+	public UimDataSet<String> getDataSet() {
 		return embeddedExecution.getDataSet();
 	}
 
 	@Override
-	public void setDataSet(UimDataSet<ObjectId> dataSet) {
+	public void setDataSet(UimDataSet<String> dataSet) {
 		
 		if(dataSet instanceof MongoCollectionDecorator){
-			MongoCollectionDecorator<ObjectId> tmp = (MongoCollectionDecorator<ObjectId>)dataSet;
+			MongoCollectionDecorator<String> tmp = (MongoCollectionDecorator<String>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmbeddedCollection());
 		}
 		else if(dataSet instanceof MongoMetadataRecordDecorator){
-			MongoMetadataRecordDecorator<ObjectId> tmp = (MongoMetadataRecordDecorator<ObjectId>)dataSet;
+			MongoMetadataRecordDecorator<String> tmp = (MongoMetadataRecordDecorator<String>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmebeddedMdr());
 		}
 		else if(dataSet instanceof MongoRequestDecorator){
-			MongoRequestDecorator<ObjectId> tmp = (MongoRequestDecorator<ObjectId>)dataSet;
+			MongoRequestDecorator<String> tmp = (MongoRequestDecorator<String>)dataSet;
 			embeddedExecution.setDataSet(tmp.getEmbeddedRequest());
 		}
 		

@@ -26,7 +26,6 @@ import static org.mockito.Mockito.when;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.invocation.InvocationOnMock;
@@ -48,7 +47,7 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Jan 6 2012
  * @see eu.europeana.uim.store.memory.ResourceStorageEngineTest
  */
-public class MongoResourceEngineTest extends AbstractResourceEngineTest<ObjectId>{
+public class MongoResourceEngineTest extends AbstractResourceEngineTest<String>{
 
 	private MongoResourceEngine mongoEngine = null;
 
@@ -114,8 +113,8 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<ObjectId
 	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#nextID()
 	 */
 	@Override
-	protected ObjectId nextID() {
-        return new ObjectId();
+	protected String nextID() {
+        return new String();
 	}
 
 	
@@ -142,7 +141,7 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<ObjectId
 	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateProvider()
 	 */
 	@Override
-	protected Provider<ObjectId> testGenerateProvider() {
+	protected Provider<String> testGenerateProvider() {
 		
 		return mongostorageEngine.createProvider();
 	}
@@ -152,7 +151,7 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<ObjectId
 	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateCollection(eu.europeana.uim.store.Provider)
 	 */
 	@Override
-	protected Collection<ObjectId> testGenerateCollection(Provider<ObjectId> provider) {
+	protected Collection<String> testGenerateCollection(Provider<String> provider) {
 
 		return mongostorageEngine.createCollection(provider);
 	}

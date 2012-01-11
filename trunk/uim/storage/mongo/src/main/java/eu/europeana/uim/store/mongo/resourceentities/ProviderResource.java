@@ -43,7 +43,7 @@ import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 public class ProviderResource extends AbstractResource{
 
 	@Reference
-	private  MongoProviderDecorator<ObjectId> provider;
+	private  MongoProviderDecorator<String> provider;
 	
 	// We have to serialize this because certain characters (ie .) are 
 	// not allowed to be stored directly in MongoDB
@@ -56,12 +56,12 @@ public class ProviderResource extends AbstractResource{
 	
 	@SuppressWarnings("unchecked")
 	public ProviderResource(Provider<?> provider){
-		this.provider = (MongoProviderDecorator<ObjectId>) provider;
+		this.provider = (MongoProviderDecorator<String>) provider;
 		this.resources = new LinkedHashMap<String, List<String>>();
 		
 	}
 	
-	public MongoProviderDecorator<ObjectId> getProvider() {
+	public MongoProviderDecorator<String> getProvider() {
 		return provider;
 	}
 

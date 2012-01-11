@@ -21,16 +21,12 @@
 package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
-
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
-
 import eu.europeana.uim.api.AbstractStorageEngineTest;
 import eu.europeana.uim.api.StorageEngine;
 
@@ -43,7 +39,7 @@ import eu.europeana.uim.api.StorageEngine;
  */
 
 @RunWith(JUnit4.class)
-public class MongoStorageEngineTest extends AbstractStorageEngineTest<ObjectId> {
+public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
 
 	private MongoStorageEngine mongoEngine = null;
 
@@ -76,7 +72,7 @@ public class MongoStorageEngineTest extends AbstractStorageEngineTest<ObjectId> 
 	 * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
 	 */
 	@Override
-	protected StorageEngine<ObjectId> getStorageEngine() {
+	protected StorageEngine<String> getStorageEngine() {
 		   if (mongoEngine == null) {
 			      try {
 			    	m = new Mongo();

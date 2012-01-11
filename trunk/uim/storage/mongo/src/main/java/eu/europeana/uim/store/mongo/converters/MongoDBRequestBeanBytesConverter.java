@@ -27,8 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -86,10 +84,10 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
     }
 
     @Override
-    public RequestBean<ObjectId> decode(byte[] data) {
+    public RequestBean<String> decode(byte[] data) {
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
-        RequestBean<ObjectId> bean = new RequestBean<ObjectId>();
+        RequestBean<String> bean = new RequestBean<String>();
         
         if(data != null){
         
@@ -100,7 +98,7 @@ public class MongoDBRequestBeanBytesConverter extends Converter<byte[], RequestB
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(ObjectId.massageToObjectId(input.readString()));
+                    bean.setId(input.readString());
                     break;
                 case DATE:
                     bean.setDate(df.parse(input.readString()));

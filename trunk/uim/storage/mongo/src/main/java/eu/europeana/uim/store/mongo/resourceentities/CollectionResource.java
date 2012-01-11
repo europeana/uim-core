@@ -43,7 +43,7 @@ import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 public class CollectionResource extends AbstractResource {
 
     @Reference
-    private MongoCollectionDecorator<ObjectId> collection;
+    private MongoCollectionDecorator<String> collection;
 	
 	// We have to serialize this because certain characters (ie .) are 
 	// not allowed to be stored directly in MongoDB
@@ -56,11 +56,11 @@ public class CollectionResource extends AbstractResource {
 	
 	@SuppressWarnings("unchecked")
 	public CollectionResource(Collection<?> collection){
-		this.collection = (MongoCollectionDecorator<ObjectId>) collection;
+		this.collection = (MongoCollectionDecorator<String>) collection;
 		this.resources = new LinkedHashMap<String, List<String>>();
 	}
 	
-	public MongoCollectionDecorator<ObjectId> getCollection() {
+	public MongoCollectionDecorator<String> getCollection() {
 		return collection;
 	}
 

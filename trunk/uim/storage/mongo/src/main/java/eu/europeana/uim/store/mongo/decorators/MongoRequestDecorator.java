@@ -50,13 +50,13 @@ import eu.europeana.uim.store.mongo.converters.MongoDBRequestBeanBytesConverter;
  */
 
 @Entity
-public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> implements Request<ObjectId> {
+public class MongoRequestDecorator<I> extends MongoAbstractEntity<String> implements Request<String> {
 
 	/**
 	 * 
 	 */
 	@NotSaved
-	private RequestBean<ObjectId> embeddedRequest; 
+	private RequestBean<String> embeddedRequest; 
 	
 	@Serialized
 	byte[] embeddedbinary;
@@ -65,11 +65,11 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> impl
 	private Date searchDate;
 	
     @Reference
-    private MongoCollectionDecorator<ObjectId> collection;
+    private MongoCollectionDecorator<String> collection;
     
     
     @Reference
-    private HashSet<MongoMetadataRecordDecorator<ObjectId>> requestrecords;
+    private HashSet<MongoMetadataRecordDecorator<String>> requestrecords;
     
 
 
@@ -81,13 +81,13 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> impl
 	/**
 	 * @param request
 	 */
-	public MongoRequestDecorator(MongoCollectionDecorator<ObjectId> collection, Date date){
+	public MongoRequestDecorator(MongoCollectionDecorator<String> collection, Date date){
 		this.searchDate = date;
-		this.embeddedRequest = new RequestBean<ObjectId>();
+		this.embeddedRequest = new RequestBean<String>();
 		this.embeddedRequest.setDate(date);
 		this.embeddedRequest.setCollection(collection.getEmbeddedCollection());
 		this.collection = collection;
-		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<ObjectId>>();
+		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<String>>();
 
 	
 	}
@@ -103,7 +103,7 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> impl
 	@PostPersist
 	void postPersist(){
 		if(embeddedRequest.getId() == null){
-			embeddedRequest.setId(getMongoId());
+			embeddedRequest.setId(getMongoId().toString());
 		}
 	}
 	
@@ -111,45 +111,46 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<ObjectId> impl
 	void postload(){
 		embeddedRequest = MongoDBRequestBeanBytesConverter.getInstance().decode(embeddedbinary);
 		embeddedRequest.setCollection(collection.getEmbeddedCollection());
+		embeddedRequest.setId(getMongoId().toString());
 	}
 	
 	
 	//Getters & Setters
 	
-	public MongoCollectionDecorator<ObjectId> getCollectionReference(){
-		return this.collection;
+	public MongoCollectionDecorator<String> getCollectionReference(){
+		return collection;
 	}
 	
 	
 	/**
 	 * @param requestrecords the requestrecords to set
 	 */
-	public void setRequestrecords(HashSet<MongoMetadataRecordDecorator<ObjectId>> requestrecords) {
+	public void setRequestrecords(HashSet<MongoMetadataRecordDecorator<String>> requestrecords) {
 		this.requestrecords = requestrecords;
 	}
 
 	/**
 	 * @return the requestrecords
 	 */
-	public HashSet<MongoMetadataRecordDecorator<ObjectId>> getRequestrecords() {
+	public HashSet<MongoMetadataRecordDecorator<String>> getRequestrecords() {
 		return requestrecords;
 	}
 	
 	
 	
-    public RequestBean<ObjectId> getEmbeddedRequest() {
+    public RequestBean<String> getEmbeddedRequest() {
 		return embeddedRequest;
 	}
 	
 	
 	@Override
-	public  ObjectId getId() {
-		return  getMongoId(); //embeddedRequest.getId();
+	public  String getId() {
+		return  embeddedRequest.getId();
 	}
 
 	@Override
-	public Collection<ObjectId> getCollection() {
-		return  collection; // embeddedRequest.getCollection();
+	public Collection<String> getCollection() {
+		return collection; // embeddedRequest.getCollection();
 	}
 
 	@Override

@@ -48,10 +48,10 @@ import eu.europeana.uim.store.mongo.converters.MongoDBEuropeanaMDRConverter;
  */
 
 @Entity
-public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId> {
+public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<String> {
 
 	@NotSaved
-	private MetaDataRecordBean<ObjectId> emebeddedMdr;
+	private MetaDataRecordBean<String> emebeddedMdr;
 	
 	@Serialized	
 	private HashMap<String, List<byte[]>> fields;
@@ -62,14 +62,14 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	
 	
     @Reference
-    private MongoCollectionDecorator<ObjectId> collection;
+    private MongoCollectionDecorator<String> collection;
 	
     
 	public MongoMetadataRecordDecorator (){
 	}
 	
-	public MongoMetadataRecordDecorator(MongoCollectionDecorator<ObjectId> collection){
-		emebeddedMdr = new MetaDataRecordBean<ObjectId>();
+	public MongoMetadataRecordDecorator(MongoCollectionDecorator<String> collection){
+		emebeddedMdr = new MetaDataRecordBean<String>();
 		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
 		this.collection = collection;
 	}
@@ -85,7 +85,7 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	@PostPersist
 	void postPersist(){
 		if(emebeddedMdr.getId() == null){
-			emebeddedMdr.setId(mongoId);
+			emebeddedMdr.setId(mongoId.toString());
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
 	@PostLoad
 	void preload(){
 		emebeddedMdr =  MongoDBEuropeanaMDRConverter.getInstance().decode(fields);
-		emebeddedMdr.setId(mongoId);
+		emebeddedMdr.setId(mongoId.toString());
 		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
 	}
 	
@@ -106,17 +106,17 @@ public class MongoMetadataRecordDecorator<I> implements MetaDataRecord<ObjectId>
     /**
 	 * @return the emebeddedMdr
 	 */
-	public MetaDataRecordBean<ObjectId> getEmebeddedMdr() {
+	public MetaDataRecordBean<String> getEmebeddedMdr() {
 		return emebeddedMdr;
 	}
 	
 	@Override
-	public ObjectId getId() {
+	public String getId() {
 		return emebeddedMdr.getId();
 	}
 
 	@Override
-	public Collection<ObjectId> getCollection() {
+	public Collection<String> getCollection() {
 		return emebeddedMdr.getCollection();
 	}
 

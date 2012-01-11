@@ -46,7 +46,7 @@ import eu.europeana.uim.store.mongo.converters.MongoDBProviderBeanBytesConverter
  * @date Jan 6, 2012
  */
 @Entity
-public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId> implements Provider<ObjectId> {
+public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<String> implements Provider<String> {
 	
 	/**
 	 * Provider fields stored in a serialized form
@@ -58,20 +58,20 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	 * The embeddedProvider object is instantiated  
 	 */
 	@NotSaved
-	private ProviderBean<ObjectId> embeddedProvider;
+	private ProviderBean<String> embeddedProvider;
 	
 	
 	/**
 	 * References to "RelatedIn" MongoDB Provider objects
 	 */
 	@Reference
-	private Set<Provider<ObjectId>> searchableRealtedIn;
+	private Set<Provider<String>> searchableRealtedIn;
 	
 	/**
 	 * References to "RelatedOut" MongoDB Provider objects
 	 */
 	@Reference
-	private Set<Provider<ObjectId>> searchableRealtedOut;
+	private Set<Provider<String>> searchableRealtedOut;
 	
 	/**
 	 * The provider name
@@ -87,9 +87,9 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	 * Default Constructor
 	 */
 	public MongoProviderDecorator(){
-		embeddedProvider = new ProviderBean<ObjectId>();
-		searchableRealtedIn = new HashSet<Provider<ObjectId>>();
-		searchableRealtedOut = new HashSet<Provider<ObjectId>>();
+		embeddedProvider = new ProviderBean<String>();
+		searchableRealtedIn = new HashSet<Provider<String>>();
+		searchableRealtedOut = new HashSet<Provider<String>>();
 	}
 	
 
@@ -108,7 +108,7 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	@PostPersist
 	void postPersist(){
 		if(embeddedProvider.getId() == null){
-			embeddedProvider.setId(getMongoId());
+			embeddedProvider.setId(getMongoId().toString());
 		}
 	}
 	
@@ -127,15 +127,15 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	private void updaterelated(){
 		embeddedProvider.getRelatedIn().clear();
 		
-		for(Provider<ObjectId> p : searchableRealtedIn){
-			MongoProviderDecorator<ObjectId> cast = (MongoProviderDecorator<ObjectId>)p;
+		for(Provider<String> p : searchableRealtedIn){
+			MongoProviderDecorator<String> cast = (MongoProviderDecorator<String>)p;
 			embeddedProvider.getRelatedIn().add(cast.getEmbeddedProvider());
 		}
 
 		embeddedProvider.getRelatedOut().clear();
 		
-		for(Provider<ObjectId> p : searchableRealtedOut){
-			MongoProviderDecorator<ObjectId> cast = (MongoProviderDecorator<ObjectId>)p;
+		for(Provider<String> p : searchableRealtedOut){
+			MongoProviderDecorator<String> cast = (MongoProviderDecorator<String>)p;
 			embeddedProvider.getRelatedOut().add(cast.getEmbeddedProvider());
 		}
 	}
@@ -143,22 +143,22 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<ObjectId
 	
 	//Getters & Setters
 	
-    public ProviderBean<ObjectId> getEmbeddedProvider() {
+    public ProviderBean<String> getEmbeddedProvider() {
 		return embeddedProvider;
 	}
 	
 	@Override
-	public ObjectId getId() {
+	public String getId() {
 		return embeddedProvider.getId();
 	}
 
 	@Override
-	public Set<Provider<ObjectId>> getRelatedOut() {
+	public Set<Provider<String>> getRelatedOut() {
 		return searchableRealtedOut;
 	}
 
 	@Override
-	public Set<Provider<ObjectId>> getRelatedIn() {
+	public Set<Provider<String>> getRelatedIn() {
 		return searchableRealtedIn; 
 	}
 

@@ -27,8 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -101,10 +99,10 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
      * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
      */
     @Override
-    public ExecutionBean<ObjectId> decode(byte[] data) {
+    public ExecutionBean<String> decode(byte[] data) {
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
 
-        ExecutionBean<ObjectId> bean = new ExecutionBean<ObjectId>();
+        ExecutionBean<String> bean = new ExecutionBean<String>();
         
         if(data !=  null){
         
@@ -115,7 +113,7 @@ public class MongoDBExecutionBeanBytesConverter extends Converter<byte[], Execut
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(ObjectId.massageToObjectId(input.readString()));
+                    bean.setId(input.readString());
                     break;
                 case ACTIVE:
                     bean.setActive(input.readBool());

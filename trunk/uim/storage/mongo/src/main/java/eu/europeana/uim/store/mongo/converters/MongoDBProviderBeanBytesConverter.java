@@ -24,8 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 
 
@@ -95,8 +93,8 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
      * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
      */
     @Override
-    public ProviderBean<ObjectId> decode(byte[] data) {
-        ProviderBean<ObjectId> bean = new ProviderBean<ObjectId>();
+    public ProviderBean<String> decode(byte[] data) {
+        ProviderBean<String> bean = new ProviderBean<String>();
         
         
         if(data != null){
@@ -109,7 +107,7 @@ public class MongoDBProviderBeanBytesConverter  extends Converter<byte[], Provid
                 switch (field) {
  
                 case ID:
-                    bean.setId(ObjectId.massageToObjectId(input.readString()));
+                    bean.setId(input.readString());
                     break;
 
                 case MNEMONIC:

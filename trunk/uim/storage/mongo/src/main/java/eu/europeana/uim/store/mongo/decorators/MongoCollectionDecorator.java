@@ -49,16 +49,16 @@ import eu.europeana.uim.store.mongo.converters.MongoDBCollectionBeanBytesConvert
  */
 
 @Entity
-public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<ObjectId> implements Collection<ObjectId>{
+public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<String> implements Collection<String>{
 
 	@NotSaved
-	private CollectionBean<ObjectId> embeddedCollection;
+	private CollectionBean<String> embeddedCollection;
 	
 	@Serialized
 	byte[] embeddedbinary;
 	
 	@Reference
-	private  MongoProviderDecorator<ObjectId> provider;
+	private  MongoProviderDecorator<String> provider;
 	
 	/**
 	 * The provider name
@@ -71,11 +71,11 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<Object
 
 	}
 	
-	public MongoCollectionDecorator(Provider<ObjectId> provider){
-		MongoProviderDecorator<ObjectId> provider2 = (MongoProviderDecorator<ObjectId>) provider;
-		embeddedCollection = new CollectionBean<ObjectId>();
+	public MongoCollectionDecorator(Provider<String> provider){
+		MongoProviderDecorator<String> provider2 = (MongoProviderDecorator<String>) provider;
+		embeddedCollection = new CollectionBean<String>();
 		embeddedCollection.setProvider(provider2.getEmbeddedProvider());
-		this.provider = (MongoProviderDecorator<ObjectId>) provider;
+		this.provider = (MongoProviderDecorator<String>) provider;
 	}
 	
 	
@@ -92,7 +92,7 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<Object
 	@PostPersist
 	void postPersist(){
 		if(embeddedCollection.getId() == null){
-			embeddedCollection.setId(getMongoId());
+			embeddedCollection.setId(getMongoId().toString());
 		}
 	}
 	
@@ -111,17 +111,17 @@ public class MongoCollectionDecorator<I> extends MongoAbstractNamedEntity<Object
 	
 	//Getters & Setters
 	
-    public CollectionBean<ObjectId> getEmbeddedCollection() {
+    public CollectionBean<String> getEmbeddedCollection() {
 		return embeddedCollection;
 	}
 	
 	@Override
-	public ObjectId getId() {
+	public String getId() {
 		return embeddedCollection.getId();
 	}
 
 	@Override
-	public Provider<ObjectId> getProvider() {
+	public Provider<String> getProvider() {
 		return embeddedCollection.getProvider();
 	}
 

@@ -23,7 +23,6 @@ package eu.europeana.uim.store.mongo.converters;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,17 +32,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
-import gnu.trove.TLongHashSet;
-
-import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
-
-
-import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.WireFormat;
@@ -60,7 +52,7 @@ import com.google.protobuf.WireFormat;
  */
 
 @SuppressWarnings("rawtypes")
-public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List<byte[]>>, MetaDataRecordBean<ObjectId>>{
+public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List<byte[]>>, MetaDataRecordBean<String>>{
 
 
 	private static final int FIELD_ENTRY_ORDER     = 10;
@@ -86,9 +78,9 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
      * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
      */
     @Override
-    public MetaDataRecordBean<ObjectId> decode(HashMap<String, List<byte[]>> fields) {
+    public MetaDataRecordBean<String> decode(HashMap<String, List<byte[]>> fields) {
 
-    	MetaDataRecordBean<ObjectId> mdr = new MetaDataRecordBean<ObjectId>();
+    	MetaDataRecordBean<String> mdr = new MetaDataRecordBean<String>();
     	
     	Collection c = fields.keySet();
     	   
@@ -126,7 +118,7 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
      * @see org.theeuropeanlibrary.repository.convert.Converter#encode(java.lang.Object)
      */
     @Override
-    public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<ObjectId> rec) {
+    public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<String> rec) {
     	
     	HashMap<String, List<byte[]>> sd = new HashMap<String, List<byte[]>>();
     	
@@ -280,8 +272,8 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
      */
     @SuppressWarnings("unchecked")
 	@Override
-    public Class<MetaDataRecordBean<ObjectId>> getDecodeType() {
-        return  (Class<MetaDataRecordBean<ObjectId>>) new MetaDataRecordBean<ObjectId>().getClass();
+    public Class<MetaDataRecordBean<String>> getDecodeType() {
+        return  (Class<MetaDataRecordBean<String>>) new MetaDataRecordBean<String>().getClass();
     }
 
 }

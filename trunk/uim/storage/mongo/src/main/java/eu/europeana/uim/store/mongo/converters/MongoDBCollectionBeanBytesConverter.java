@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
-import org.bson.types.ObjectId;
 import org.theeuropeanlibrary.repository.convert.Converter;
 
 
@@ -86,8 +85,8 @@ public class MongoDBCollectionBeanBytesConverter extends Converter<byte[], Colle
     }
 
     @Override
-    public CollectionBean<ObjectId> decode(byte[] data) {
-        CollectionBean<ObjectId> bean = new CollectionBean<ObjectId>();
+    public CollectionBean<String> decode(byte[] data) {
+        CollectionBean<String> bean = new CollectionBean<String>();
         CodedInputStream input = CodedInputStream.newInstance(data);
         int tag;
         
@@ -97,7 +96,7 @@ public class MongoDBCollectionBeanBytesConverter extends Converter<byte[], Colle
                 int field = WireFormat.getTagFieldNumber(tag);
                 switch (field) {
                 case ID:
-                    bean.setId(ObjectId.massageToObjectId(input.readString()));
+                    bean.setId(input.readString());
                     break;
                 case MNEMONIC:
                     bean.setMnemonic(input.readString());
