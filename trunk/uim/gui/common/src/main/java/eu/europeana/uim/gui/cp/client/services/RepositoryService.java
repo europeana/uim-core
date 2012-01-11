@@ -7,7 +7,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
-import eu.europeana.uim.gui.cp.shared.ObjectIdDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
@@ -61,8 +60,4 @@ public interface RepositoryService extends RemoteService {
      */
     Boolean updateCollection(CollectionDTO collection);
 
-    /**
-     * @param obj
-     */
-    void dummyObjectID(ObjectIdDTO obj);
 }

@@ -9,14 +9,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.bson.types.ObjectId;
-
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.gui.cp.client.services.ResourceService;
-import eu.europeana.uim.gui.cp.shared.ObjectIdDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -43,17 +39,9 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public List<ParameterDTO> getParameters(Serializable provider, Serializable collection,
-            String workflow) {
+    public List<ParameterDTO> getParameters(Serializable provider, Serializable collection, String workflow) {
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
-
-        Serializable localProvider = provider;
-        Serializable localCollection = collection;
-        if (localProvider instanceof ObjectIdDTO || localCollection instanceof ObjectIdDTO) {
-            localProvider = ObjectId.massageToObjectId(localProvider.toString());
-            localCollection = ObjectId.massageToObjectId(localCollection.toString());
-        }
-
+        
         if (workflow != null) {
             Workflow w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
@@ -86,13 +74,12 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
                 }
             }
 
-            if (localProvider != null) {
-                Provider<Serializable> prov = null;
+            if (provider != null) {
+            	Provider<Serializable> prov = null;
                 try {
-                    prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(localProvider);
+                    prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
                 } catch (Throwable t) {
-                    log.log(Level.WARNING, "Could not retrieve provider '" + localProvider + "'!",
-                            t);
+                    log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
                 }
 
                 if (prov != null) {
@@ -108,13 +95,12 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
                 }
             }
 
-            if (localCollection != null) {
+            if (collection != null) {
                 Collection<Serializable> coll = null;
                 try {
-                    coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(localCollection);
+                    coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
                 } catch (Throwable t) {
-                    log.log(Level.WARNING, "Could not retrieve collection '" + localCollection +
-                                           "'!", t);
+                    log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
                 }
 
                 if (coll != null) {
@@ -143,17 +129,11 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public Boolean setParameters(ParameterDTO parameter, Serializable provider,
-            Serializable collection, String workflow) {
+    public Boolean setParameters(ParameterDTO parameter, Serializable provider, Serializable collection,
+            String workflow) {
         Boolean res = true;
 
-        Serializable localProvider = provider;
-        Serializable localCollection = collection;
-        if (localProvider instanceof ObjectIdDTO || localCollection instanceof ObjectIdDTO) {
-            localProvider = ObjectId.massageToObjectId(localProvider.toString());
-            localCollection = ObjectId.massageToObjectId(localCollection.toString());
-        }
-
+        
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
         values.put(parameter.getKey(),
                 parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
@@ -164,31 +144,30 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             return res;
         }
 
-        if (localCollection == null && localProvider == null && workflow != null) {
+        if (collection == null && provider == null && workflow != null) {
             Workflow wf = getEngine().getRegistry().getWorkflow(workflow);
             if (wf == null) {
                 log.log(Level.WARNING, "Workflows are null!");
             } else {
                 resource.setWorkflowResources(wf, values);
             }
-        } else if (localCollection == null && localProvider != null && workflow != null) {
+        } else if (collection == null && provider != null && workflow != null) {
             Provider<Serializable> prov = null;
             try {
-                prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(localProvider);
+                prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
             } catch (Throwable t) {
-                log.log(Level.WARNING, "Could not retrieve provider '" + localProvider + "'!", t);
+                log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
             }
 
             if (prov != null) {
                 resource.setProviderResources(prov, values);
             }
-        } else if (localCollection != null && localProvider != null && workflow != null) {
+        } else if (collection != null && provider != null && workflow != null) {
             Collection<Serializable> coll = null;
             try {
-                coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(localCollection);
+                coll = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getCollection(collection);
             } catch (Throwable t) {
-                log.log(Level.WARNING, "Could not retrieve collection '" + localCollection + "'!",
-                        t);
+                log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
             }
 
             if (coll != null) {
