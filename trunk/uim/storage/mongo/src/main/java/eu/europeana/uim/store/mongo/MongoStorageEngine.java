@@ -220,10 +220,10 @@ public class MongoStorageEngine implements StorageEngine<String> {
     	allresults.addAll(result2);
     	
         for (Collection<String> c : allresults) {
-            if (c.getName() != null && (c.getName().equals(collection.getName())) && c.getId() != collection.getId()) {
+            if (c.getName() != null && (c.getName().equals(collection.getName())) && !c.getId().equals(collection.getId())) {
                 throw new StorageEngineException("Collection with name '" + collection.getMnemonic() + "' already exists");
             }
-            if (c.getMnemonic() != null && c.getMnemonic().equals(collection.getMnemonic()) && c.getId() != collection.getId()) {
+            if (c.getMnemonic() != null && c.getMnemonic().equals(collection.getMnemonic()) && !c.getId().equals(collection.getId())) {
                 throw new StorageEngineException("Collection with mnemonic '" + collection.getMnemonic() + "' already exists");
             }
 
