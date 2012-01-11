@@ -40,7 +40,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         super();
     }
 
-// private Map<Serializable, ProviderDTO> wrappedProviderDTOs = new HashMap<Serializable, ProviderDTO>();
+// private Map<Serializable, ProviderDTO> wrappedProviderDTOs = new HashMap<Serializable,
+// ProviderDTO>();
 
     @Override
     public List<WorkflowDTO> getWorkflows() {
@@ -132,8 +133,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         Provider<Serializable> p = null;
         try {
-       	   p = storage.getProvider(provider);
-            
+            p = storage.getProvider(provider);
+
         } catch (Throwable t) {
             log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
         }
@@ -149,7 +150,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
             if (cols != null) {
                 for (Collection<Serializable> col : cols) {
-                    CollectionDTO collDTO =  new CollectionDTO(col.getId());;
+                    CollectionDTO collDTO = new CollectionDTO(col.getId());
                     collDTO.setName(col.getName());
                     collDTO.setMnemonic(col.getMnemonic());
                     collDTO.setProvider(getWrappedProviderDTO(p));
@@ -176,25 +177,23 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return res;
     }
 
-    
-
-    
-    
-    
-       
     private ProviderDTO getWrappedProviderDTO(Provider<Serializable> p) {
-    	
-    	   ProviderDTO wrapped = new ProviderDTO(p.getId());    	
-            wrapped.setName(p.getName());
-            wrapped.setMnemonic(p.getMnemonic());
-            wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
-            wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
-            wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
-            return wrapped;
+
+        ProviderDTO wrapped = new ProviderDTO(p.getId());
+        wrapped.setName(p.getName());
+        wrapped.setMnemonic(p.getMnemonic());
+        wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
+        wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
+        wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
+        return wrapped;
     }
 
-    /* (non-Javadoc)
-     * @see eu.europeana.uim.gui.cp.client.services.RepositoryService#getCollectionTotal(java.io.Serializable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * eu.europeana.uim.gui.cp.client.services.RepositoryService#getCollectionTotal(java.io.Serializable
+     * )
      */
     @Override
     public Integer getCollectionTotal(Serializable collection) {
@@ -300,5 +299,4 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         return true;
     }
-
 }
