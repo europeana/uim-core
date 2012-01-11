@@ -134,7 +134,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         Provider<Serializable> p = null;
         try {
             p = storage.getProvider(provider);
-
         } catch (Throwable t) {
             log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
         }
@@ -159,7 +158,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
                     collDTO.setOaiSet(col.getOaiSet());
                     collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
-
                     res.add(collDTO);
                 }
 
@@ -178,7 +176,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     private ProviderDTO getWrappedProviderDTO(Provider<Serializable> p) {
-
         ProviderDTO wrapped = new ProviderDTO(p.getId());
         wrapped.setName(p.getName());
         wrapped.setMnemonic(p.getMnemonic());
@@ -188,13 +185,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return wrapped;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * eu.europeana.uim.gui.cp.client.services.RepositoryService#getCollectionTotal(java.io.Serializable
-     * )
-     */
     @Override
     public Integer getCollectionTotal(Serializable collection) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();

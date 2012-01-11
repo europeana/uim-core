@@ -39,9 +39,10 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public List<ParameterDTO> getParameters(Serializable provider, Serializable collection, String workflow) {
+    public List<ParameterDTO> getParameters(Serializable provider, Serializable collection,
+            String workflow) {
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
-        
+
         if (workflow != null) {
             Workflow w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
@@ -75,7 +76,7 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             if (provider != null) {
-            	Provider<Serializable> prov = null;
+                Provider<Serializable> prov = null;
                 try {
                     prov = ((StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine()).getProvider(provider);
                 } catch (Throwable t) {
@@ -129,11 +130,10 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
     }
 
     @Override
-    public Boolean setParameters(ParameterDTO parameter, Serializable provider, Serializable collection,
-            String workflow) {
+    public Boolean setParameters(ParameterDTO parameter, Serializable provider,
+            Serializable collection, String workflow) {
         Boolean res = true;
 
-        
         LinkedHashMap<String, List<String>> values = new LinkedHashMap<String, List<String>>();
         values.put(parameter.getKey(),
                 parameter.getValues() != null ? Arrays.asList(parameter.getValues()) : null);
