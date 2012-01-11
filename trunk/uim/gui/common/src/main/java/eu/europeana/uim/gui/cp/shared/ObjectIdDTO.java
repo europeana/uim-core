@@ -25,35 +25,33 @@ import java.io.Serializable;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
- *
+ * 
  * @author Georgios Markakis (gwarkx@hotmail.com)
  * @date Jan 10, 2012
  */
-public class ObjectIdDTO implements IsSerializable,Serializable{
+public class ObjectIdDTO implements IsSerializable, Serializable {
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private String id;
-	
-	public ObjectIdDTO(){
+    private String            id;
 
-	}
-	
-	
-	public ObjectIdDTO(String id){
-		this.id = id;
-	}
+    /**
+     * Creates a new instance of this class.
+     */
+    public ObjectIdDTO() {
 
+    }
 
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param id
+     */
+    public ObjectIdDTO(String id) {
+        this.id = id;
+    }
 
-	@Override
-	public String toString(){
-		return this.id;
-	}
-	
-	
-	
+    @Override
+    public String toString() {
+        return this.id;
+    }
 }

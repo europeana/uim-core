@@ -70,7 +70,10 @@ public interface RepositoryServiceAsync {
      *            true, if update of collectiono was successfull
      */
     void updateCollection(CollectionDTO collection, AsyncCallback<Boolean> async);
-    
-    
+
+    /**
+     * @param obj
+     * @param async
+     */
     void dummyObjectID(ObjectIdDTO obj, AsyncCallback<Boolean> async);
 }
