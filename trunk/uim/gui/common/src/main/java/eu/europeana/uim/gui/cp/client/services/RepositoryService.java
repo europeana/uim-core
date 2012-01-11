@@ -59,5 +59,4 @@ public interface RepositoryService extends RemoteService {
      * @return true, if update of collectiono was successfull
      */
     Boolean updateCollection(CollectionDTO collection);
-
 }
