@@ -15,11 +15,11 @@ public enum StandardControlledVocabulary implements ControlledVocabularyKeyValue
     /**
      * type of provider
      */
-    PROVIDER_TYPE,
+    PROVTYPE,
     /**
      * type of collection
      */
-    COLLECTION_TYPE;
+    COLLTYPE;
 
     private StandardControlledVocabulary() {
     }
