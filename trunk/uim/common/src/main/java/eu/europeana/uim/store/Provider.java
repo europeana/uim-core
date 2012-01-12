@@ -103,7 +103,6 @@ public interface Provider<I> extends UimEntity<I> {
      */
     String getValue(String key);
 
-    
     /**
      * string key,value pairs for arbitraty information on colleciton level
      * 
@@ -119,10 +118,7 @@ public interface Provider<I> extends UimEntity<I> {
      * @return the string value or null
      */
     String getValue(ControlledVocabularyKeyValue key);
-    
 
-    
-    
     /**
      * @return the values map
      */
