@@ -77,27 +77,17 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
     /* (non-Javadoc)
      * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public MetaDataRecordBean<String> decode(HashMap<String, List<byte[]>> fields) {
-
     	MetaDataRecordBean<String> mdr = new MetaDataRecordBean<String>();
-    	
-    	Collection c = fields.keySet();
-    	   
-        Iterator itr = c.iterator();
-    	
-        while (itr.hasNext()){
-        	
-        	TKey key = TKey.fromString((String)itr.next());
-        
-        	
-        	List<byte[]> bqvalues =  fields.get(key.toString());
- 
-        	List<QualifiedValue<String>> qvalues = new ArrayList<QualifiedValue<String>>();
-        	
-        	
-        	for(byte[] qvalue: bqvalues){
-        		
+    	Collection c = fields.keySet();    	   
+        Iterator itr = c.iterator();    	
+        while (itr.hasNext()){       	
+        	TKey key = TKey.fromString((String)itr.next());               	
+        	List<byte[]> bqvalues =  fields.get(key.toString()); 
+        	List<QualifiedValue<String>> qvalues = new ArrayList<QualifiedValue<String>>();        	
+        	for(byte[] qvalue: bqvalues){        		
         		QualifiedValue qval;
 				try {
 					qval = decodeQualifiedValue( key, qvalue);
@@ -105,11 +95,9 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
         	}
 			mdr.setValue(key, qvalues);  
         }
-
         return mdr;
     }
 
@@ -119,33 +107,23 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
      */
     @Override
     public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<String> rec) {
-    	
     	HashMap<String, List<byte[]>> sd = new HashMap<String, List<byte[]>>();
-    	
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        	
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();        	
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(bout);
             CodedOutputStream output = CodedOutputStream.newInstance(gzip);
-            
-             Set<TKey<?, ?>> keys = rec.getAvailableKeys();
+            Set<TKey<?, ?>> keys = rec.getAvailableKeys();
              
              for(TKey<?, ?> key: keys){
             	 ArrayList<byte[]> arlist = new ArrayList<byte[]>();
-            	 
-            	 List<?> values = rec.getQualifiedValues(key);
-            	 
+            	 List<?> values = rec.getQualifiedValues(key);           	 
             	 for(Object qval: values){
             		 byte[] enc = encodeQualifiedValue((QualifiedValue)qval);
             		 arlist.add(enc);
             	 }
-            	 
-            	 sd.put(key.toString(), arlist);
-            	 
+            	 sd.put(key.toString(), arlist); 
              }
-            
-            output.flush();
-            
+            output.flush();            
             gzip.flush();
             gzip.close();
         } catch (IOException e) {
@@ -157,40 +135,51 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
                 throw new RuntimeException("Could not close output stream!", e);
             }
         }
-        
 
         return sd;
     }
     
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
+     */
+    @SuppressWarnings("unchecked")
+	@Override
+    public Class<HashMap<String, List<byte[]>>> getEncodeType() {
+        return  (Class<HashMap<String, List<byte[]>>>) new HashMap<String, List<byte[]>>().getClass();
+    }
+
+    /* (non-Javadoc)
+     * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
+     */
+    @SuppressWarnings("unchecked")
+	@Override
+    public Class<MetaDataRecordBean<String>> getDecodeType() {
+        return  (Class<MetaDataRecordBean<String>>) new MetaDataRecordBean<String>().getClass();
+    }
     
     
     /**
-     * @param qval
-     * @return
+     * Encodes a Qualified value type into a byte array
+     * 
+     * @param qval the Qualified value type
+     * @return a byte array
      */
-    private byte[] encodeQualifiedValue(QualifiedValue qval){
+    private byte[] encodeQualifiedValue(QualifiedValue<?> qval){
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         GZIPOutputStream gzip;
 		try {
 			gzip = new GZIPOutputStream(bout);
-	        CodedOutputStream output = CodedOutputStream.newInstance(gzip);
-	        
-	        output.writeInt32(FIELD_ENTRY_ORDER, qval.getOrderIndex());
-	        
-	        output.writeString(FIELD_ENTRY_VALUE, (String)qval.getValue());
-	        
-
+	        CodedOutputStream output = CodedOutputStream.newInstance(gzip);	        
+	        output.writeInt32(FIELD_ENTRY_ORDER, qval.getOrderIndex());	        
+	        output.writeString(FIELD_ENTRY_VALUE, (String)qval.getValue());	       
 	        Set<Enum<?>> qualifiers = qval.getQualifiers();
 	        	            for (Enum<?> qualifier : qualifiers) {
 	        	                String qualifierEncoded = qualifier.getClass().getName() + "@" + qualifier.name();
 	        	                output.writeString(FIELD_ENTRY_QUALIFIER, qualifierEncoded);
 	       }
-
-	       output.flush();
-	       
+	       output.flush();	       
            gzip.flush();
-           gzip.close();
-	       
+           gzip.close();	       
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -200,27 +189,26 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
         } catch (IOException e) {
             throw new RuntimeException("Could not close output stream!", e);
         }
-    }
-
-    	
+    }    	
     	return bout.toByteArray();
     }
     
     
     /**
+     * Decodes a byte array into a Qualified value type
+     * 
      * @param <NS>
      * @param <T>
-     * @param key
-     * @param enc
-     * @return
+     * @param key the TKey type
+     * @param enc the byte array
+     * @return a Qualified value type
      * @throws IOException
      */
-    private <NS, T> QualifiedValue  decodeQualifiedValue(TKey<NS, T> key,byte[] enc) throws IOException{
+    @SuppressWarnings("unchecked")
+	private <NS, T> QualifiedValue  decodeQualifiedValue(TKey<NS, T> key,byte[] enc) throws IOException{
 
     	GZIPInputStream bin = new GZIPInputStream(new ByteArrayInputStream(enc));
-        CodedInputStream input = CodedInputStream.newInstance(bin);
-
-        
+        CodedInputStream input = CodedInputStream.newInstance(bin);        
         int order = -1;
         String value = null;
         Set<Enum<?>> qualifiers = new HashSet<Enum<?>>();
@@ -250,30 +238,12 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
             default:
                 break;
             }
-        }
-        
+        }        
         QualifiedValue qval = new QualifiedValue(value,qualifiers,order);
-        
-    	return qval;
+       	return qval;
     }
     
 
-    /* (non-Javadoc)
-     * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
-     */
-    @SuppressWarnings("unchecked")
-	@Override
-    public Class<HashMap<String, List<byte[]>>> getEncodeType() {
-        return  (Class<HashMap<String, List<byte[]>>>) new HashMap<String, List<byte[]>>().getClass();
-    }
 
-    /* (non-Javadoc)
-     * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
-     */
-    @SuppressWarnings("unchecked")
-	@Override
-    public Class<MetaDataRecordBean<String>> getDecodeType() {
-        return  (Class<MetaDataRecordBean<String>>) new MetaDataRecordBean<String>().getClass();
-    }
 
 }

@@ -23,42 +23,38 @@ package eu.europeana.uim.store.mongo.resourceentities;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import org.bson.types.ObjectId;
-
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Serialized;
 
-
 /**
-*
-* @author Georgios Markakis (gwarkx@hotmail.com)
-* @date Jan 6, 2012
-*/
+ * Morphia Entity Class representing a GlobalResource
+ * 
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * @date Jan 6, 2012
+ */
 @Entity
-public class GlobalResource extends AbstractResource{
-	
+public class GlobalResource extends AbstractResource {
 
-	// We have to serialize this because certain characters (ie .) are 
-	// not allowed to be stored directly in MongoDB
+	/**
+	 * The HashMap containing the resources We have to serialize this because
+	 * certain characters (ie .) are not allowed to be stored directly in
+	 * MongoDB
+	 */
 	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
-	
-	public GlobalResource(){
+	/**
+	 * Default Constructor
+	 */
+	public GlobalResource() {
 		resources = new LinkedHashMap<String, List<String>>();
 	}
-	
-	
+
 	/**
 	 * @return the resources
 	 */
 	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
 	}
-
-
-
 
 }

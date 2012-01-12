@@ -22,18 +22,13 @@ package eu.europeana.uim.store.mongo;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.net.UnknownHostException;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
-
 import eu.europeana.uim.api.AbstractResourceEngineTest;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.store.Collection;

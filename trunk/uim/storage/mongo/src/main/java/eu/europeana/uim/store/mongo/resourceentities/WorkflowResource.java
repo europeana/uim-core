@@ -32,36 +32,56 @@ import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Serialized;
 
 /**
-*
-* @author Georgios Markakis (gwarkx@hotmail.com)
-* @date Jan 6, 2012
-*/
+ * Morphia Entity Class representing a WorkflowResource
+ * 
+ * @author Georgios Markakis (gwarkx@hotmail.com)
+ * @date Jan 6, 2012
+ */
 @Entity
-public class WorkflowResource extends AbstractResource{
+public class WorkflowResource extends AbstractResource {
 
+	/**
+	 * The (indexed & searchable) workflowId
+	 */
 	@Indexed
 	private String workflowid;
-	
-	// We have to serialize this because certain characters (ie .) are 
+
+	// We have to serialize this because certain characters (ie .) are
 	// not allowed to be stored directly in MongoDB
 	@Serialized
 	private LinkedHashMap<String, List<String>> resources;
 
-	
-	public WorkflowResource(){
-		
+	/**
+	 * The default constructor (required by Morphia but not used in this
+	 * implementation)
+	 */
+	public WorkflowResource() {
 	}
-	
-	public WorkflowResource(String workid){
+
+	/**
+	 * The constructor used in this implementation
+	 * 
+	 * @param workid
+	 */
+	public WorkflowResource(String workid) {
 		this.workflowid = workid;
 		this.resources = new LinkedHashMap<String, List<String>>();
 	}
-	
 
+	/**
+	 * Get the workflowid
+	 * 
+	 * @return the workflowid
+	 */
 	public String getWorkflowid() {
 		return workflowid;
 	}
 
+	/**
+	 * Set the workflowId
+	 * 
+	 * @return
+	 */
 	public LinkedHashMap<String, List<String>> getResources() {
 		return resources;
 	}
