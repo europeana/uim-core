@@ -53,5 +53,15 @@ public enum InstantGranularity {
      * The date is unknown. None of the parts of the date are significant. Ex: when in MARC data we
      * find "?"
      */
-    UNKNOWN
+    UNKNOWN;
+    
+    
+    /**
+     * @param other
+     * @return true if this level of granularity has more detail than the other
+     */
+    public boolean isMoreDetailedThan(InstantGranularity other) {
+        return this!=UNKNOWN && this.ordinal() > other.ordinal();
+    }
+    
 }

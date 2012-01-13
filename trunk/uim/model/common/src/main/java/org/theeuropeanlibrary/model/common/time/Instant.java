@@ -295,10 +295,8 @@ public class Instant extends Temporal {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(time);
 
-                // well this is a bit a hack...
-                if (this.granularity.ordinal() < localGranularity.ordinal()) {
+                if(localGranularity.isMoreDetailedThan(this.granularity))
                     localGranularity = this.granularity;
-                }
 
                 switch (localGranularity) {
                 case MILLENNIUM: {
