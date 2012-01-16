@@ -37,6 +37,7 @@ public class Instant extends Temporal {
      * Creates a new instance of this class.
      */
     public Instant() {
+        this(null, InstantGranularity.UNKNOWN, true);
     }
 
     /**
@@ -71,56 +72,6 @@ public class Instant extends Temporal {
     }
 
     /**
-     * Creates a new instance of this class from a year represented in a String, and accepting
-     * unknown parts such as 1uuu or 19uu or 19--.
-     * 
-     * @param year
-     *            a year represented in a String, and accepting unknown parts such as 1uuu or 19uu
-     *            or 19--
-     * @throws NumberFormatException
-     */
-    public Instant(String year) {
-        try {
-            String yearText = year.replaceAll("[\\-\\.]", "u");
-            yearText = yearText.replaceAll("\\s", "u");
-            yearText = yearText.replaceAll("\\u00A0", "u");
-            yearText = yearText.replaceAll("\\?", "u");
-            yearText = yearText.replaceAll("\\p{Punct}", "u");
-//            yearText = yearText.replaceFirst("^[^\\d]+(\\d+)", "$1");
-
-            if (yearText.equals("u") || yearText.equals("uuuu")) {
-                time = null;
-                granularity = InstantGranularity.UNKNOWN;
-            } else if (yearText.endsWith("uuu")) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0,  yearText.length() - 3)) * 1000);
-                time = cal.getTime();
-                granularity = InstantGranularity.MILLENNIUM;
-            } else if (yearText.endsWith("uu")) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0, yearText.length() - 2)) * 100);
-                time = cal.getTime();
-                granularity = InstantGranularity.CENTURY;
-            } else if (yearText.endsWith("u")) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText.substring(0,  yearText.length() - 1)) * 10);
-                time = cal.getTime();
-                granularity = InstantGranularity.DECADE;
-            } else {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, Integer.parseInt(yearText));
-                time = cal.getTime();
-                granularity = InstantGranularity.YEAR;
-            }
-            uncertain = false;
-        } catch (NumberFormatException e) {
-            granularity = InstantGranularity.UNKNOWN;
-            uncertain = true;
-        }
-        normalizeTime();
-    }
-
-    /**
      * Creates a new instance of this class from a single year.
      * 
      * @param year
@@ -134,12 +85,11 @@ public class Instant extends Temporal {
         normalizeTime();
     }
 
-
     /**
      * Creates a new instance of this class from a single year.
      * 
      * @param year
-     * @param granularity 
+     * @param granularity
      */
     public Instant(int year, InstantGranularity granularity) {
         Calendar cal = Calendar.getInstance();
@@ -295,7 +245,7 @@ public class Instant extends Temporal {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(time);
 
-                if(localGranularity.isMoreDetailedThan(this.granularity))
+                if (localGranularity.isMoreDetailedThan(this.granularity))
                     localGranularity = this.granularity;
 
                 switch (localGranularity) {
@@ -487,6 +437,4 @@ public class Instant extends Temporal {
         if (uncertain != other.uncertain) return false;
         return true;
     }
-
-
 }
