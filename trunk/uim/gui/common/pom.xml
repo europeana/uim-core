@@ -86,7 +86,6 @@
    	<!-- ================================================ -->
 	<!-- Repository Configuration -->
 	<!-- ================================================ -->
-
 	<repositories>
       <repository>
           <id>europeanalabs.eu</id>
@@ -94,5 +93,4 @@
           <url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
       </repository>  
 	</repositories>
-	
 </project>
