@@ -161,11 +161,11 @@
 			<version>2.8.1</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.5.5</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.slf4j</groupId> -->
+<!-- 			<artifactId>slf4j-jdk14</artifactId> -->
+<!-- 			<version>1.5.5</version> -->
+<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>hsqldb</groupId>
@@ -190,7 +190,6 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
 		        
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -199,6 +198,5 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
-		
 	</dependencies>
 </project>
