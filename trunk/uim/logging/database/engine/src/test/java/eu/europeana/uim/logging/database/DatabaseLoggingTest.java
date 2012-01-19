@@ -12,13 +12,9 @@ import eu.europeana.uim.api.LoggingEngine;
  * @since Apr 4, 2011
  */
 public class DatabaseLoggingTest extends AbstractLoggingEngineTest {
-
-
     @Override
     protected LoggingEngine<Long> getLoggingEngine() {
-        DatabaseLoggingEngine loggingEngine = 
-            new DatabaseLoggingEngine();
-        
+        DatabaseLoggingEngine loggingEngine = new DatabaseLoggingEngine();
         return loggingEngine;
     }
 }
