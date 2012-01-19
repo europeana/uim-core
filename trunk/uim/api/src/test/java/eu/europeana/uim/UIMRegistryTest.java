@@ -36,11 +36,14 @@ public class UIMRegistryTest {
     @Test
     public void testRegistryOutput() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
-        StorageEngineAdapter storage = new StorageEngineAdapter() {};
-        registry.addStorageEngine(storage);   
-        LoggingEngineAdapter logging = new LoggingEngineAdapter() {};
+        StorageEngineAdapter storage = new StorageEngineAdapter() {
+        };
+        registry.addStorageEngine(storage);
+        LoggingEngineAdapter logging = new LoggingEngineAdapter() {
+        };
         registry.addLoggingEngine(logging);
-        ResourceEngineAdapter resource = new ResourceEngineAdapter() {};
+        ResourceEngineAdapter resource = new ResourceEngineAdapter() {
+        };
         registry.addResourceEngine(resource);
         LegalIngestionPlugin plugin = new LegalIngestionPlugin();
         registry.addPlugin(plugin);
@@ -59,16 +62,17 @@ public class UIMRegistryTest {
     @Test
     public void testStorageEngine() {
         registry.setConfiguredStorageEngine(StorageEngineAdapter.class.getSimpleName());
-        StorageEngineAdapter storage = new StorageEngineAdapter() {};
-        registry.addStorageEngine(storage);      
-        
+        StorageEngineAdapter storage = new StorageEngineAdapter() {
+        };
+        registry.addStorageEngine(storage);
+
         assertNotNull(registry.getStorageEngine());
         registry.setConfiguredStorageEngine("a");
         assertNull(registry.getActiveStorageEngine());
         assertNotNull(registry.getStorageEngine());
         assertNotNull(registry.getStorageEngine(StorageEngineAdapter.class.getSimpleName()));
         assertEquals(1, registry.getStorageEngines().size());
-        
+
         registry.removeStorageEngine(storage);
     }
 
@@ -79,7 +83,8 @@ public class UIMRegistryTest {
     @Test
     public void testLoggingEngine() {
         registry.setConfiguredLoggingEngine(LoggingEngineAdapter.class.getSimpleName());
-        LoggingEngineAdapter logging = new LoggingEngineAdapter() {};
+        LoggingEngineAdapter logging = new LoggingEngineAdapter() {
+        };
         registry.addLoggingEngine(logging);
         assertNotNull(registry.getLoggingEngine());
 
@@ -91,14 +96,15 @@ public class UIMRegistryTest {
         assertEquals(1, registry.getLoggingEngines().size());
         registry.removeLoggingEngine(logging);
     }
-    
+
     /**
      * Tests registration of a {@link ResourceEngine}.
      */
     @Test
     public void testResourceEngine() {
         registry.setConfiguredLoggingEngine(ResourceEngineAdapter.class.getSimpleName());
-        ResourceEngineAdapter resource = new ResourceEngineAdapter() {};
+        ResourceEngineAdapter resource = new ResourceEngineAdapter() {
+        };
         registry.addResourceEngine(resource);
         assertNotNull(registry.getResourceEngine());
 
@@ -108,19 +114,18 @@ public class UIMRegistryTest {
         assertNotNull(registry.getResourceEngine(ResourceEngineAdapter.class.getSimpleName()));
 
         assertEquals(1, registry.getResourceEngines().size());
-        
+
         registry.removeResourceEngine(resource);
     }
-    
+
     /**
      * Test if registration fails registration
      */
-    @Test(expected=IllegalArgumentException.class)
-   
+    @Test(expected = IllegalArgumentException.class)
     public void testPluginMemberFieldCheckToFail() {
         registry.addPlugin(new IllegalIngestionPlugin());
     }
-    
+
     /**
      * Test if registration fails registration
      */
@@ -128,14 +133,14 @@ public class UIMRegistryTest {
     public void testPluginMemberFieldCheckToSucceed() {
         registry.addPlugin(new LegalIngestionPlugin());
     }
-    
+
     /**
      * Test if registration fails registration
      */
     @Test
     public void testPluginRoundTrip() {
         assertTrue(registry.getPlugins().isEmpty());
-        
+
         LegalIngestionPlugin plugin = new LegalIngestionPlugin();
         registry.addPlugin(plugin);
         assertFalse(registry.getPlugins().isEmpty());
@@ -146,14 +151,14 @@ public class UIMRegistryTest {
         plugin2 = registry.getPlugin(new LegalIngestionPlugin().getIdentifier());
         assertSame(plugin, plugin2);
     }
-    
+
     /**
      * Test if registration fails registration
      */
     @Test
     public void testWorkflowRoundTrip() {
         assertTrue(registry.getWorkflows().isEmpty());
-        
+
         LegalIngestionWorkflow plugin = new LegalIngestionWorkflow();
         registry.addWorkflow(plugin);
         assertFalse(registry.getWorkflows().isEmpty());
@@ -164,7 +169,7 @@ public class UIMRegistryTest {
         plugin2 = registry.getWorkflow(new LegalIngestionWorkflow().getIdentifier());
         assertSame(plugin, plugin2);
     }
-    
+
     /**
      * Test getter setter tuples
      */

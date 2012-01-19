@@ -1,5 +1,6 @@
 /* UIMTaskTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -61,7 +62,7 @@ public class UIMTaskTest {
         IngestionPlugin plugin = mock(IngestionPlugin.class);
         task.setStep(plugin, false);
         task.run();
-        
+
         task.setOnFailure(new LinkedList<Task<Long>>());
         task.setOnSuccess(new LinkedList<Task<Long>>());
     }
