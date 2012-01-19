@@ -22,30 +22,29 @@ import eu.europeana.uim.store.bean.ExecutionBean;
  * @date Oct 19, 2011
  */
 public class ExecutionLogFileWriterTest {
-
     /**
-     * 
+     * Clear logging directory before tests.
      */
     @BeforeClass
     public static void setup() {
         File file = new File("./target/logtest");
         FileUtils.deleteQuietly(file);
     }
+
     /**
+     * Test logging to file!
+     * 
      * @throws IOException
      */
     @Test
     public void testLogToFile() throws IOException {
-        ExecutionLogFileWriter<Long> executionLogFileWriter = new ExecutionLogFileWriter<Long>("./target/logtest");
+        ExecutionLogFileWriter<Long> executionLogFileWriter = new ExecutionLogFileWriter<Long>(
+                "./target/logtest");
         assertNotNull(executionLogFileWriter);
         @SuppressWarnings({ "unchecked", "rawtypes" })
-        Execution<Long> execution=new ExecutionBean(1123);
+        Execution<Long> execution = new ExecutionBean(1123);
         executionLogFileWriter.log(execution, Level.SEVERE, "test1");
         assertTrue(executionLogFileWriter.getLogFile(execution).exists());
-        executionLogFileWriter.log(execution, Level.INFO, "test2");    
+        executionLogFileWriter.log(execution, Level.INFO, "test2");
     }
-    
-    
-    
-    
 }

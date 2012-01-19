@@ -38,23 +38,25 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMExecution implements Action {
     private static final Logger log = Logger.getLogger(UIMExecution.class.getName());
 
-    /** The oprations enum
+    /**
+     * The oprations enum
+     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 17, 2011
      */
     protected enum Operation {
         /** Operation start */
-        list, 
+        list,
         /** Operation start */
-        start, 
+        start,
         /** Operation start */
-        pause, 
+        pause,
         /** Operation start */
-        resume, 
+        resume,
         /** Operation start */
-        cancel, 
+        cancel,
         /** Operation start */
-        status, 
+        status,
         /** Operation start */
         help
     }
@@ -177,8 +179,8 @@ public class UIMExecution implements Action {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
-                out.println(String.format("Execution %d: Workflow %s, data set %s", e.getExecution().getId(),
-                        e.getWorkflow().getName(), e.getDataSet()));
+                out.println(String.format("Execution %d: Workflow %s, data set %s",
+                        e.getExecution().getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
             return null;
@@ -275,10 +277,10 @@ public class UIMExecution implements Action {
             for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getExecution().getStartTime()) + ", active=" + e.getExecution().isActive() +
-                                ", paused=" + e.isPaused() + ", cancelled=" +
-                                e.getMonitor().isCancelled(), e.getExecution().getId(), e.getWorkflow().getName(),
-                        e.getDataSet()));
+                                df.format(e.getExecution().getStartTime()) + ", active=" +
+                                e.getExecution().isActive() + ", paused=" + e.isPaused() +
+                                ", cancelled=" + e.getMonitor().isCancelled(),
+                        e.getExecution().getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
         }
     }

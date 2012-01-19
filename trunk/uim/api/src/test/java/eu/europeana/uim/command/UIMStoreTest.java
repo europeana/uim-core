@@ -21,14 +21,15 @@ import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 
 /**
- * 
+ * Tests store operations.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMStoreTest {
-
     /**
+     * Tests listing of operations of store.
+     * 
      * @throws Exception
      */
     @Test
@@ -41,11 +42,15 @@ public class UIMStoreTest {
         final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
-        
+
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>(){{add(provider);}});
+        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>() {
+            {
+                add(provider);
+            }
+        });
 
         registry.addStorageEngine(storage);
 
@@ -60,8 +65,7 @@ public class UIMStoreTest {
         String msg = new String(baos.toByteArray());
         assertEquals(20, msg.length());
     }
-    
-    
+
     /**
      * @throws Exception
      */
@@ -75,16 +79,24 @@ public class UIMStoreTest {
         final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
-        
+
         final CollectionBean<Long> collection = new CollectionBean<Long>(1L, provider);
         collection.setMnemonic("mnemonic");
         collection.setName("name");
-        
+
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>(){{add(provider);}});
-        when(storage.getCollections(provider)).thenReturn(new ArrayList<Collection<Long>>(){{add(collection);}});
+        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>() {
+            {
+                add(provider);
+            }
+        });
+        when(storage.getCollections(provider)).thenReturn(new ArrayList<Collection<Long>>() {
+            {
+                add(collection);
+            }
+        });
 
         registry.addStorageEngine(storage);
 
@@ -100,8 +112,6 @@ public class UIMStoreTest {
         assertEquals(38, msg.length());
     }
 
-    
-    
     /**
      * @throws Exception
      */
@@ -113,15 +123,14 @@ public class UIMStoreTest {
         ProviderBean<Long> provider = new ProviderBean<Long>(1L);
 
         UIMRegistry registry = new UIMRegistry();
-        
+
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.createProvider()).thenReturn(provider);
 
         registry.addStorageEngine(storage);
-        
-        
+
         CommandSession session = mock(CommandSession.class);
         when(session.getConsole()).thenReturn(out);
 
@@ -131,15 +140,16 @@ public class UIMStoreTest {
         command.argument1 = "name";
 
         command.execute(session);
-        
+
         assertEquals("mnemonic", provider.getMnemonic());
-        
+
         command.operation = UIMStore.Operation.checkpoint;
         command.execute(session);
     }
-    
-    
+
     /**
+     * Tests updating of providers in store.
+     * 
      * @throws Exception
      */
     @Test
@@ -150,15 +160,14 @@ public class UIMStoreTest {
         ProviderBean<Long> provider = new ProviderBean<Long>(1L);
 
         UIMRegistry registry = new UIMRegistry();
-        
+
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findProvider((String)any())).thenReturn(provider);
 
         registry.addStorageEngine(storage);
-        
-        
+
         CommandSession session = mock(CommandSession.class);
         when(session.getConsole()).thenReturn(out);
 
@@ -170,13 +179,14 @@ public class UIMStoreTest {
 
         command.execute(session);
         assertEquals("url", provider.getOaiBaseUrl());
-        
+
         command.operation = UIMStore.Operation.checkpoint;
         command.execute(session);
     }
-    
-    
+
     /**
+     * Test creation of collections in store.
+     * 
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -189,15 +199,14 @@ public class UIMStoreTest {
         Collection<Long> collection = new CollectionBean<Long>(1L, provider);
 
         UIMRegistry registry = new UIMRegistry();
-        
+
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findProvider((String)any())).thenReturn(provider);
         when(storage.createCollection((Provider<Long>)any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
-        
-        
+
         CommandSession session = mock(CommandSession.class);
         when(session.getConsole()).thenReturn(out);
 
@@ -208,16 +217,16 @@ public class UIMStoreTest {
         command.parent = "p";
 
         command.execute(session);
-        
+
         assertEquals("mnemonic", collection.getMnemonic());
-        
+
         command.operation = UIMStore.Operation.checkpoint;
         command.execute(session);
     }
-    
-    
 
     /**
+     * Tests updating of collections in store.
+     * 
      * @throws Exception
      */
     @Test
@@ -228,15 +237,14 @@ public class UIMStoreTest {
         Collection<Long> collection = new CollectionBean<Long>(1L, null);
 
         UIMRegistry registry = new UIMRegistry();
-        
+
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
         when(storage.findCollection((String)any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
-        
-        
+
         CommandSession session = mock(CommandSession.class);
         when(session.getConsole()).thenReturn(out);
 
@@ -248,9 +256,9 @@ public class UIMStoreTest {
 
         command.execute(session);
         assertEquals("url", collection.getOaiBaseUrl(false));
-        
+
         command.operation = UIMStore.Operation.checkpoint;
         command.execute(session);
     }
-    
+
 }

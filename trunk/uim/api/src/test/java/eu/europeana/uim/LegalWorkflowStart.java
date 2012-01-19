@@ -6,41 +6,32 @@ import java.util.List;
 
 import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.workflow.AbstractWorkflowStart;
 import eu.europeana.uim.workflow.TaskCreator;
-import eu.europeana.uim.workflow.WorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStartFailedException;
 
 /**
- * 
+ * This is a minimal workflow start. This should not throw an exception.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
-public class LegalWorkflowStart implements WorkflowStart {
-
-    @Override
-    public String getIdentifier() {
-        return LegalWorkflowStart.class.getSimpleName();
-    }
-
-    @Override
-    public String getName() {
-        return "legal workflow start";
-    }
-
-    @Override
-    public String getDescription() {
-        return "legal workflow start description";
+public class LegalWorkflowStart extends AbstractWorkflowStart {
+    /**
+     * Creates a new instance of this class.
+     */
+    public LegalWorkflowStart() {
+        super("Legal workflow start", "Legal workflow start description");
     }
 
     @Override
     public List<String> getParameters() {
-         return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
     public int getPreferredThreadCount() {
-         return 1;
+        return 1;
     }
 
     @Override
@@ -57,7 +48,7 @@ public class LegalWorkflowStart implements WorkflowStart {
 
     @Override
     public <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage) {
-         return false;
+        return false;
     }
 
     @Override
@@ -66,12 +57,12 @@ public class LegalWorkflowStart implements WorkflowStart {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage) throws WorkflowStartFailedException {
+    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage)
+            throws WorkflowStartFailedException {
     }
 
     @Override
     public <I> int getTotalSize(ExecutionContext<I> context) {
-         return 0;
+        return 0;
     }
-
 }

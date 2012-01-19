@@ -11,22 +11,20 @@ import org.junit.Test;
 import eu.europeana.uim.common.RevisableProgressMonitor;
 
 /**
- * 
+ * Tests monitoring of progress using console output.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class ConsoleProgressMonitorTest {
-
-    
     /**
-     * 
+     * Tests progress on console output.
      */
     @Test
-    public void testConsoleProgress(){
+    public void testConsoleProgress() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
-        
+
         ConsoleProgressMonitor monitor = new ConsoleProgressMonitor(out);
         monitor.setStart(1000);
 
@@ -34,8 +32,7 @@ public class ConsoleProgressMonitorTest {
         assertEquals("Junit test", monitor.getTask());
         assertEquals(5, monitor.getWork());
         assertEquals(0, monitor.getWorked());
-        
-        
+
         monitor.worked(1);
         assertEquals(5, monitor.getWork());
         assertEquals(1, monitor.getWorked());
@@ -43,30 +40,30 @@ public class ConsoleProgressMonitorTest {
         monitor.worked(2);
         assertEquals(5, monitor.getWork());
         assertEquals(3, monitor.getWorked());
-     
+
         monitor.done();
-        
+
         assertEquals("Starting:Junit test, 5 units of work. [..]\n", new String(baos.toByteArray()));
     }
 
     /**
-     * 
+     * Tests listening functionality on monitor using console progress.
      */
     @Test
-    public void testListeningProgress(){
+    public void testListeningProgress() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
-        
+
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
-        
+
         monitor.beginTask("Junit test", 500);
         assertEquals("Junit test", monitor.getTask());
         assertEquals(500, monitor.getWork());
         assertEquals(0, monitor.getWorked());
-        
+
         ConsoleProgressMonitor console = new ConsoleProgressMonitor(out);
         monitor.addListener(console);
-        
+
         monitor.worked(1);
         assertEquals(500, monitor.getWork());
         assertEquals(1, monitor.getWorked());
@@ -74,10 +71,11 @@ public class ConsoleProgressMonitorTest {
         monitor.worked(2);
         assertEquals(500, monitor.getWork());
         assertEquals(3, monitor.getWorked());
-     
+
         monitor.done();
         String msg = new String(baos.toByteArray());
-        assertEquals("Attached to monitor current status: <Junit test> total 500 units of work. Worked so far:0 [..]\n", msg);
+        assertEquals(
+                "Attached to monitor current status: <Junit test> total 500 units of work. Worked so far:0 [..]\n",
+                msg);
     }
-
 }

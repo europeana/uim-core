@@ -4,8 +4,8 @@ package eu.europeana.uim;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.europeana.uim.api.AbstractIngestionPlugin;
 import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -17,24 +17,16 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
-public class IllegalIngestionPlugin implements IngestionPlugin {
+public class IllegalIngestionPlugin extends AbstractIngestionPlugin {
     private static String constantConstant = "This is okay";
 
     private String        soNotRight;
 
-    @Override
-    public String getIdentifier() {
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public String getName() {
-        return "Evil Fields Plugins";
-    }
-
-    @Override
-    public String getDescription() {
-        return ("This plugin has evil non-static member fields ");
+    /**
+     * Creates a new instance of this class.
+     */
+    public IllegalIngestionPlugin() {
+        super("Evil Fields Plugins", "Evil Fields Plugins");
     }
 
     @Override
@@ -54,7 +46,6 @@ public class IllegalIngestionPlugin implements IngestionPlugin {
 
     @Override
     public void initialize() {
-
     }
 
     @Override
@@ -78,19 +69,17 @@ public class IllegalIngestionPlugin implements IngestionPlugin {
     }
 
     @Override
-    public <I>void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public <I>void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public <I>boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context) {
+    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context) {
         return true;
-
     }
-
 }

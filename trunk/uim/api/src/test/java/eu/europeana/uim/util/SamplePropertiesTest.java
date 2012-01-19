@@ -26,7 +26,6 @@ public class SamplePropertiesTest {
     /**
      * Tests loading of samples.
      * 
-     * 
      * @throws StorageEngineException
      * @throws IOException
      */

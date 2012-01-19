@@ -37,7 +37,7 @@ public class UIMWorkflow implements Action {
 
     private Registry    registry;
 
-    /** 
+    /**
      * what operation? only listing workflows right now
      */
     @Option(name = "-o", aliases = { "--operation" }, required = false)

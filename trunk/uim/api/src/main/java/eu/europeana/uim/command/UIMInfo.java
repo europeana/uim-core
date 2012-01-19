@@ -13,7 +13,7 @@ import org.apache.felix.service.command.Function;
 import eu.europeana.uim.api.Registry;
 
 /**
- * Inofos during execution.
+ * Infos during execution.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
@@ -22,7 +22,7 @@ import eu.europeana.uim.api.Registry;
 public class UIMInfo implements Function, Action {
     private static final Logger log = Logger.getLogger(UIMInfo.class.getName());
 
-    private Registry registry;
+    private Registry            registry;
 
     /**
      * Creates a new instance of this class.
@@ -36,7 +36,7 @@ public class UIMInfo implements Function, Action {
     @Override
     public Object execute(CommandSession session) throws Exception {
         try {
-        return execute(session, Collections.emptyList());
+            return execute(session, Collections.emptyList());
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to start info command:", t);
         }

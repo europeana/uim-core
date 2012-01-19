@@ -15,15 +15,15 @@ import eu.europeana.uim.LegalIngestionWorkflow;
 import eu.europeana.uim.UIMRegistry;
 
 /**
- * 
+ * UIM info tests.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMInfoTest {
-
-    
     /**
+     * Tests listing of operations of infos.
+     * 
      * @throws Exception
      */
     @Test
@@ -32,20 +32,18 @@ public class UIMInfoTest {
         PrintStream out = new PrintStream(baos);
 
         UIMRegistry registry = new UIMRegistry();
-        
+
         LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();
         registry.addWorkflow(workflow);
         assertFalse(registry.getWorkflows().isEmpty());
 
-        
         CommandSession session = mock(CommandSession.class);
         when(session.getConsole()).thenReturn(out);
-        
+
         UIMInfo command = new UIMInfo(registry);
         command.execute(session);
-        
+
         String msg = new String(baos.toByteArray());
-//        System.out.println(msg);
         assertEquals(488, msg.length());
     }
 }
