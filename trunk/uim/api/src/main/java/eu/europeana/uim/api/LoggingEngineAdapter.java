@@ -21,7 +21,6 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Feb 16, 2011
  */
 public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
-
     /** LoggingEngineAdapter for LONG identifiers */
     public static LoggingEngine<Long> LONG   = new LoggingEngineAdapter<Long>() {
                                              };
@@ -92,7 +91,7 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
     public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String link, int status, String... message) {
     }
-    
+
     @Override
     public void logField(String modul, String field, String qualifier, int status,
             String... message) {
@@ -147,5 +146,4 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         throwable.printStackTrace(printWriter);
         return result.toString();
     }
-
 }
