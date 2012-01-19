@@ -30,7 +30,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
     private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
     private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
-    private LinkedList<FieldEntry>          fieldlogs   = new LinkedList<FieldEntry>();
+    private LinkedList<FieldEntry>         fieldlogs  = new LinkedList<FieldEntry>();
 
     private Map<String, SummaryStatistics> durations  = new HashMap<String, SummaryStatistics>();
 
@@ -142,7 +142,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logField(String modul, String field, String qualifier, int status, String... message) {
+    public void logField(String modul, String field, String qualifier, int status,
+            String... message) {
         fieldlogs.add(new FieldEntry(modul, field, qualifier, status, new Date(), message));
         if (fieldlogs.size() > maxentries) {
             fieldlogs.removeFirst();
@@ -150,9 +151,10 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field, String qualifier,
-            int status, String... message) {
-        fieldlogs.add(new FieldEntry(execution, modul, mdr, field, qualifier, new Date(), status, message));
+    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
+            String qualifier, int status, String... message) {
+        fieldlogs.add(new FieldEntry(execution, modul, mdr, field, qualifier, new Date(), status,
+                message));
         if (fieldlogs.size() > maxentries) {
             entries.removeFirst();
         }
@@ -408,8 +410,6 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             return mdr != null ? mdr.getId() : null;
         }
     }
-    
-    
 
     private class FieldEntry implements LogEntryField<I> {
         private final String            module;
@@ -422,7 +422,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         private final MetaDataRecord<I> mdr;
         private final Execution<I>      execution;
 
-        public FieldEntry(String module, String field, String qualifier, int status, Date date, String[] message) {
+        public FieldEntry(String module, String field, String qualifier, int status, Date date,
+                          String[] message) {
             super();
             this.module = module;
             this.field = field;
@@ -435,8 +436,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             this.execution = null;
         }
 
-        public FieldEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String field, String qualifier,
-                         Date date, int status, String[] message) {
+        public FieldEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr,
+                          String field, String qualifier, Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
