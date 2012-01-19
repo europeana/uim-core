@@ -52,7 +52,7 @@ public class UIMRegistryTest {
         Orchestrator orchestrator = mock(Orchestrator.class);
         registry.setOrchestrator(orchestrator);
 
-        assertEquals(664, registry.toString().length());
+        assertEquals(663, registry.toString().length());
     }
 
     /**

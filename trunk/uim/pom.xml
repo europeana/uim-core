@@ -25,21 +25,21 @@
         <!-- the uim standard in memory storage implementation -->
         <module>storage/memory</module>
 
-        <!-- simplistic in-memory logging -->
-        <module>logging/memory</module>
-
         <!-- the standard orchestration implementation module -->
         <module>orchestration/basic</module>
 
+        <!-- simplistic in-memory logging -->
+<!--         <module>logging/memory</module> -->
+
         <!-- UIM Model Definitions -->
-        <module>model</module>
+<!--         <module>model</module> -->
 
         <!-- UIM gui common module -->
-        <module>gui/common</module>
+<!--         <module>gui/common</module> -->
 
         <!-- UIM Solr 1.4-3 OSGI support -->
-        <module>plugins/solr14</module>
-        <module>plugins/solr3</module>
+<!--         <module>plugins/solr14</module> -->
+<!--         <module>plugins/solr3</module> -->
     </modules>
 
     <build>
