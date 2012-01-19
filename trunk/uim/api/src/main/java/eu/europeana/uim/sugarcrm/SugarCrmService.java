@@ -16,12 +16,12 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-
 package eu.europeana.uim.sugarcrm;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -35,7 +35,6 @@ import eu.europeana.uim.workflow.Workflow;
  * @author Georgios Markakis
  */
 public interface SugarCrmService {
-
     /**
      * This method shows the current connection status of the plugin instance.
      * 

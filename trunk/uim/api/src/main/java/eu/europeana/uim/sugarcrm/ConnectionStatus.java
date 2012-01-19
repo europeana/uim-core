@@ -22,55 +22,53 @@
 package eu.europeana.uim.sugarcrm;
 
 /**
- * Hold connection status information  
+ * Hold connection status information
  * 
  * @author Georgios Markakis
+ * @since Jan 19, 2012
  */
 public class ConnectionStatus {
+    private String defaultURI;
+    private String sessionID;
 
-	private String defaultURI;
-	private String sessionID;
-	
-	
-		
-	/**
-	 * @param defaultURI the URL of the service endpoint
-	 */
-	public void setDefaultURI(String defaultURI) {
-		this.defaultURI = defaultURI;
-	}
+    /**
+     * @param defaultURI
+     *            the URL of the service endpoint
+     */
+    public void setDefaultURI(String defaultURI) {
+        this.defaultURI = defaultURI;
+    }
 
-	/**
-	 * @return the URL of the service endpoint
-	 */
-	public String getDefaultURI() {
-		return defaultURI;
-	}
+    /**
+     * @return the URL of the service endpoint
+     */
+    public String getDefaultURI() {
+        return defaultURI;
+    }
 
-	/**
-	 * @param sessionID the current sessionid
-	 */
-	public void setSessionID(String sessionID) {
-		this.sessionID = sessionID;
-	}
+    /**
+     * @param sessionID
+     *            the current sessionid
+     */
+    public void setSessionID(String sessionID) {
+        this.sessionID = sessionID;
+    }
 
-	/**
-	 * @return the current sessionid, null if there is no session active
-	 */
-	public String getSessionID() {
-		return sessionID;
-	}
-	
-	@Override
-	public String toString(){
-		
-		StringBuffer connectionInfo = new StringBuffer();
-		connectionInfo.append("Pointing at:");
-		connectionInfo.append(defaultURI);
-		connectionInfo.append("\n");
-		connectionInfo.append("Session Id:");
-		connectionInfo.append(sessionID);
-		
-		return connectionInfo.toString();		
-	}
+    /**
+     * @return the current sessionid, null if there is no session active
+     */
+    public String getSessionID() {
+        return sessionID;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer connectionInfo = new StringBuffer();
+        connectionInfo.append("Pointing at:");
+        connectionInfo.append(defaultURI);
+        connectionInfo.append("\n");
+        connectionInfo.append("Session Id:");
+        connectionInfo.append(sessionID);
+        return connectionInfo.toString();
+    }
 }

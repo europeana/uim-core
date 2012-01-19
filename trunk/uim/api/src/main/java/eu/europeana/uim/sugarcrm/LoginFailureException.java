@@ -25,15 +25,14 @@ package eu.europeana.uim.sugarcrm;
  * Exception thrown during logout from the SugarCRM server
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @date Aug 12, 2011
+ * @since Aug 12, 2011
  */
 public class LoginFailureException extends GenericSugarCrmException {
-
     /**
      * Creates a new instance of this class.
+     * 
      * @param generateMessageFromObject
      */
     public LoginFailureException(Object generateMessageFromObject) {
     }
-
 }

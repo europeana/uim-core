@@ -21,50 +21,50 @@
 package eu.europeana.uim.sugarcrm;
 
 /**
- *  A generic Class representing an unclassified
- *  SugarCRM exception
+ * A generic Class representing an unclassified SugarCRM exception
  * 
  * @author Georgios Markakis
- *
+ * @since Jan 19, 2012
  */
 public class GenericSugarCrmException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * or inheritance reasons, pipes through to the super constructor.
+     */
+    public GenericSugarCrmException() {
+        super();
+    }
 
-	/**
-	 *  The default constructor
-	 */
-	public GenericSugarCrmException() {
-	
-	}
+    /**
+     * For inheritance reasons, pipes through to the super constructor.
+     * 
+     * @param message
+     *            description of the error
+     */
+    public GenericSugarCrmException(String message) {
+        super(message);
+    }
 
-	/**
-	 * 
-	 * @param message
-	 */
-	public GenericSugarCrmException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * For inheritance reasons, pipes through to the super constructor.
+     * 
+     * @param cause
+     *            root cause of the error
+     */
+    public GenericSugarCrmException(Throwable cause) {
+        super(cause);
+    }
 
-	/**
-	 * @param cause
-	 */
-	public GenericSugarCrmException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public GenericSugarCrmException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-
-
+    /**
+     * For inheritance reasons, pipes through to the super constructor.
+     * 
+     * @param message
+     *            description of the error
+     * @param cause
+     *            root cause of the error
+     */
+    public GenericSugarCrmException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

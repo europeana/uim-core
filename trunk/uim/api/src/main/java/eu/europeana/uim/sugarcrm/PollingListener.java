@@ -23,33 +23,31 @@ package eu.europeana.uim.sugarcrm;
 
 import java.util.List;
 
-
 /**
- * Interface declaration of a Polling listener. It implements the
- * Command Pattern in PollingBean class. Any Class implementing
- * this interface can be added as a PollingBean listener. 
+ * Interface declaration of a Polling listener. It implements the Command Pattern in PollingBean
+ * class. Any Class implementing this interface can be added as a PollingBean listener.
  * 
  * @author Georgios Markakis
+ * @since Jan 19, 2012
  */
 public interface PollingListener {
-	
-	/**
-	 * Returns a specific query that will act as a trigger for  
-	 * the designated action (in case that any results are returned) .
-	 * 
-	 * @return the SugarCrmQuery to be executed
-	 */
-	public SugarCrmQuery getTrigger();
-	
-	
-	/**
-	 * Defines the contents of a specific action
-	 * 
-	 * @param pluginReference a reference to the SugarCRM OSGI plugin
-	 * @param retrievedRecords the input to the specified action
-	 * @throws GenericSugarCrmException
-	 */
-	public void performAction(SugarCrmService pluginReference, 
-			List<SugarCrmRecord> retrievedRecords) throws GenericSugarCrmException;
+    /**
+     * Returns a specific query that will act as a trigger for the designated action (in case that
+     * any results are returned) .
+     * 
+     * @return the SugarCrmQuery to be executed
+     */
+    public SugarCrmQuery getTrigger();
 
+    /**
+     * Defines the contents of a specific action
+     * 
+     * @param pluginReference
+     *            a reference to the SugarCRM OSGI plugin
+     * @param retrievedRecords
+     *            the input to the specified action
+     * @throws GenericSugarCrmException
+     */
+    public void performAction(SugarCrmService pluginReference, List<SugarCrmRecord> retrievedRecords)
+            throws GenericSugarCrmException;
 }

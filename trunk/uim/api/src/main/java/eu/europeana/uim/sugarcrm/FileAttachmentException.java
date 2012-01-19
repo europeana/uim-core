@@ -18,22 +18,20 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-
 package eu.europeana.uim.sugarcrm;
 
 /**
- * Exception thrown when there is a error during retrieval or storage of a file attachment 
+ * Exception thrown when there is a error during retrieval or storage of a file attachment
  * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */
-public class FileAttachmentException extends GenericSugarCrmException{
-
+public class FileAttachmentException extends GenericSugarCrmException {
     /**
      * Creates a new instance of this class.
+     * 
      * @param generateMessageFromObject
      */
     public FileAttachmentException(Object generateMessageFromObject) {
     }
-
 }

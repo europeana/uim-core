@@ -1,5 +1,4 @@
-
- /**
+/**
  * Licensed under the EUPL, Version 1.1 or - as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -23,8 +22,6 @@ package eu.europeana.uim.sugarcrm;
 import eu.europeana.uim.sugarcrm.model.SugarCrmField;
 import eu.europeana.uim.sugarcrm.model.UpdatableField;
 
-
-
 /**
  * Shared interface for the SugarCrmRecord
  * 
@@ -32,19 +29,18 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  * @date Aug 12, 2011
  */
 public interface SugarCrmRecord {
-
     /**
-     * Updates 
+     * Updates a field with the given value.
      * 
      * @param field
-     * @param value 
+     * @param value
      */
     public abstract void setItemValue(UpdatableField field, String value);
 
     /**
      * @param field
-     * @return the content of the field
+     *            sugar crm field
+     * @return content of the field
      */
     public abstract String getItemValue(SugarCrmField field);
-
 }
