@@ -29,9 +29,9 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 31, 2011
  */
 public class DatabaseLoggingEngine implements LoggingEngine<Long> {
-    private static final Logger          log = Logger.getLogger(DatabaseLoggingEngine.class.getName());
+    private static final Logger    log = Logger.getLogger(DatabaseLoggingEngine.class.getName());
 
-    private DatabaseLoggingStorage       storage;
+    private DatabaseLoggingStorage storage;
 
     /**
      * Creates a new instance of this class. The default constructor is used to initialize the
@@ -63,7 +63,6 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             }
         };
         initializer.initialize(DatabaseLoggingEngine.class.getClassLoader());
-
     }
 
     @Override
@@ -126,7 +125,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void logFailed(Execution<Long> execution, Level level, String modul,
             Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
-        
+
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr.getId(), messages);
         storage.getLogFailedHome().insert(entry);
@@ -222,5 +221,4 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
         }
         return result;
     }
-
 }
