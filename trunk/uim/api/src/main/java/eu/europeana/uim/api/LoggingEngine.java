@@ -248,8 +248,6 @@ public interface LoggingEngine<I> {
     void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String link, int status, String... message);
 
-    
-
     /**
      * Logs a message
      * 
@@ -290,8 +288,8 @@ public interface LoggingEngine<I> {
      * @param message
      *            message strings
      */
-    void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field, String qualifier,
-            int status, String... message);
+    void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
+            String qualifier, int status, String... message);
 
     /**
      * Logs a message
@@ -314,8 +312,6 @@ public interface LoggingEngine<I> {
     void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String field, String qualifier, int status, String... message);
 
-    
-    
     /**
      * Logs a processing duration for a given count of items
      * 
@@ -357,7 +353,7 @@ public interface LoggingEngine<I> {
      * @return the list of failed log entries for the execution
      */
     List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
-    
+
     /**
      * @param <I>
      * 
@@ -504,7 +500,7 @@ public interface LoggingEngine<I> {
          */
         I getMetaDataRecord();
     }
-    
+
     /**
      * @param <I>
      * 

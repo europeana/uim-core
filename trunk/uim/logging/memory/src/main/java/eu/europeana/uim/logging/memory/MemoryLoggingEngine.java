@@ -57,8 +57,10 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void log(Level level, IngestionPlugin plugin, String... message) {
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        entries.add(new LogEntry(level, plugin.getIdentifier(), new Date(), message));
+        if (entries.size() > maxentries) {
+            entries.removeFirst();
+        }
     }
 
     @Override
@@ -186,7 +188,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public List<LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
         List<LoggingEngine.LogEntry<I>> result = new ArrayList<LoggingEngine.LogEntry<I>>();
         for (LogEntry entry : entries) {
-            if (entry.execution.equals(execution)) {
+            if (entry.execution!= null && entry.execution.equals(execution)) {
                 result.add(entry);
             }
         }
@@ -195,14 +197,24 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(Execution<I> execution) {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        List<LoggingEngine.LogEntryFailed<I>> result = new ArrayList<LoggingEngine.LogEntryFailed<I>>();
+        for (FailedEntry entry : failed) {
+            if (entry.execution!= null && entry.execution.equals(execution)) {
+                result.add(entry);
+            }
+        }
+        return result;
     }
 
     @Override
     public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(Execution<I> execution) {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        List<LoggingEngine.LogEntryLink<I>> result = new ArrayList<LoggingEngine.LogEntryLink<I>>();
+        for (LinkEntry entry : linklogs) {
+            if (entry.execution!= null && entry.execution.equals(execution)) {
+                result.add(entry);
+            }
+        }
+        return result;
     }
 
     private class LogEntry implements LoggingEngine.LogEntry<I> {

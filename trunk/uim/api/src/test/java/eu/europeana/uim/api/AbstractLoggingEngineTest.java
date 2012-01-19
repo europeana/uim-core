@@ -3,11 +3,17 @@ package eu.europeana.uim.api;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.logging.Level;
+
+import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import eu.europeana.uim.api.LoggingEngine.LogEntry;
+import eu.europeana.uim.api.LoggingEngine.LogEntryFailed;
+import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -18,9 +24,8 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Apr 4, 2011
  */
 public abstract class AbstractLoggingEngineTest {
-
     LoggingEngine<Long> engine = null;
-    
+
     /**
      * Setups storage engine.
      */
@@ -47,21 +52,29 @@ public abstract class AbstractLoggingEngineTest {
      */
     @Test
     public void testSimpleLogging() {
+        IngestionPlugin plugin = mock(IngestionPlugin.class);
+
         engine.log(Level.INFO, "test", "a", "b", "c");
         engine.log(Level.INFO, "test", "a", "d", "e");
-        
         engine.log(Level.INFO, (String)null);
+
+        engine.log(Level.INFO, plugin, "a", "b", "c");
+        engine.log(Level.INFO, plugin, "a", "d", "e");
+        engine.log(Level.INFO, plugin);
+
+        engine.logField("modul", "field", "qualifier", 0, "a", "b", "c");
     }
 
     /**
      * Tests functionality of logging engine implementation based on JPA.
      */
+    @SuppressWarnings({ "unchecked" })
     @Test
     public void testLoggingExecution() {
-        @SuppressWarnings("unchecked")
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
         IngestionPlugin plugin = mock(IngestionPlugin.class);
+        MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
 
         engine.log(execution, Level.INFO, "test", "a0", "b", "c");
         engine.log(execution, Level.INFO, "test", "a0", "d", "e");
@@ -69,8 +82,24 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.log(execution, Level.INFO, plugin, "a1", "b", "c");
         engine.log(execution, Level.INFO, plugin, "a1", "d", "e");
+
+        engine.logField("modul", "field", "qualifier", 0, "a", "b", "c");
+
+        engine.logField(execution, "modul", mdr, "field", "qualifier", 0, "a", "b", "c");
+        engine.logField(execution, plugin, mdr, "field", "qualifier", 0, "a", "b", "c");
+
+        engine.logDuration(execution, "modul", 100l);
+        engine.logDuration(execution, plugin, 100l);
+
+        List<LogEntryLink<Long>> linkLogs = engine.getLinkLogs(execution);
+        Assert.assertEquals(0, linkLogs.size());
+
+        List<LogEntryFailed<Long>> failedLogs = engine.getFailedLogs(execution);
+        Assert.assertEquals(0, failedLogs.size());
+
+        List<LogEntry<Long>> logs = engine.getLogs(execution);
+        Assert.assertEquals(5, logs.size());
     }
-    
 
     /**
      * Tests functionality of logging engine implementation based on JPA.
@@ -98,11 +127,21 @@ public abstract class AbstractLoggingEngineTest {
         engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), "a1", "b", "c");
         engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), "a2", "d", "e");
 
-        engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), mdr, "a1", "b", "c");
-        engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), mdr, "a2", "d", "e");
+        engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), mdr, "a1", "b",
+                "c");
+        engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), mdr, "a2", "d",
+                "e");
+
+        List<LogEntry<Long>> logs = engine.getLogs(execution);
+        Assert.assertEquals(0, logs.size());
+
+        List<LogEntryLink<Long>> linkLogs = engine.getLinkLogs(execution);
+        Assert.assertEquals(0, linkLogs.size());
+
+        List<LogEntryFailed<Long>> failedLogs = engine.getFailedLogs(execution);
+        Assert.assertEquals(7, failedLogs.size());
     }
-    
-    
+
     /**
      * Tests functionality of logging engine implementation based on JPA.
      */
@@ -125,6 +164,14 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "b", "c");
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "d", "e");
-    }
 
+        List<LogEntry<Long>> logs = engine.getLogs(execution);
+        Assert.assertEquals(0, logs.size());
+
+        List<LogEntryFailed<Long>> failedLogs = engine.getFailedLogs(execution);
+        Assert.assertEquals(0, failedLogs.size());
+
+        List<LogEntryLink<Long>> linkLogs = engine.getLinkLogs(execution);
+        Assert.assertEquals(5, linkLogs.size());
+    }
 }

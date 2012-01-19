@@ -9,12 +9,9 @@ import eu.europeana.uim.api.LoggingEngine;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 4, 2011
  */
-public class MemoryLoggingTest extends AbstractLoggingEngineTest{
-    
+public class MemoryLoggingTest extends AbstractLoggingEngineTest {
     @Override
     protected LoggingEngine<Long> getLoggingEngine() {
         return new MemoryLoggingEngine<Long>();
     }
-    
-    
 }
