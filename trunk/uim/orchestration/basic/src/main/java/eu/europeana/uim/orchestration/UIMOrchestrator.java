@@ -126,19 +126,19 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
             Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
             e.setName(w.getName() +
-                       "/" +
-                       (dataset instanceof Collection ? ((Collection)dataset).getMnemonic() : dataset.toString()));
+                      "/" +
+                      (dataset instanceof Collection ? ((Collection)dataset).getMnemonic()
+                              : dataset.toString()));
             e.setActive(true);
             e.setStartTime(new Date());
-            
+
             // must update to get the id filled.
             storageEngine.updateExecution(e);
-            
+
             LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
                     properties, loggingEngine, executionLogFileWriter);
             monitor.addListener(loggingFacadeEngine);
             monitor.beginTask(w.getName(), 1);
-
 
             try {
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
