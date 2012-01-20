@@ -278,5 +278,4 @@ public interface RepoxUIMService {
      */
     public void initializeExport(Collection<?> col, int numberOfRecords)
             throws HarvestingOperationException;
-
 }
