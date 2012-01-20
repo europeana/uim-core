@@ -26,6 +26,7 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.sugarcrm.model,
+                            eu.europeana.uim.repox.model,
                             org.apache.commons.lang,
                             org.apache.felix.gogo.commands,
                             org.apache.felix.service.command,
