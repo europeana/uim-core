@@ -20,13 +20,13 @@
         <module>common</module>
 
         <!-- the uim api module -->
-        <module>api</module>
+<!--         <module>api</module> -->
 
         <!-- the uim standard in memory storage implementation -->
-        <module>storage/memory</module>
+<!--         <module>storage/memory</module> -->
 
         <!-- the standard orchestration implementation module -->
-        <module>orchestration/basic</module>
+<!--         <module>orchestration/basic</module> -->
 
         <!-- simplistic in-memory logging -->
 <!--         <module>logging/memory</module> -->
