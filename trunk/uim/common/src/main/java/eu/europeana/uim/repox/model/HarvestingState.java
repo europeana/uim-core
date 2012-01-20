@@ -26,10 +26,28 @@ package eu.europeana.uim.repox.model;
  * @author Georgios Markakis
  */
 public enum HarvestingState {
+    /**
+     * runs still
+     */
 	RUNNING,
+    /**
+     * there was an error
+     */
 	ERROR,
+    /**
+     * done without problems
+     */
 	OK,
+    /**
+     * done but there was a minor problem
+     */
 	WARNING,
+    /**
+     * canceled the job
+     */
 	CANCELED,
+    /**
+     * undefined
+     */
 	undefined
 }

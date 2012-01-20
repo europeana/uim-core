@@ -20,22 +20,22 @@
  */
 package eu.europeana.uim.repox;
 
-
 /**
- * Exception thrown in case of a harvesting operation error
- * (starting or scheduling an ingestion)
+ * Exception thrown in case of a harvesting operation error (starting or scheduling an ingestion)
  * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class HarvestingOperationException extends RepoxException {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public HarvestingOperationException(String message) {
-		super(message);
-	}	
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public HarvestingOperationException(String message) {
+        super(message);
+    }
 }

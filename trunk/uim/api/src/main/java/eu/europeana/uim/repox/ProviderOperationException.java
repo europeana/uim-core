@@ -20,23 +20,24 @@
  */
 package eu.europeana.uim.repox;
 
-
 /**
- * An exception thrown in case of a Provider related operation error 
- * (create, update or delete provider).
- *  
+ * An exception thrown in case of a Provider related operation error (create, update or delete
+ * provider).
+ * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class ProviderOperationException extends RepoxException {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public ProviderOperationException(String message) {
-		super(message);
-	}
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public ProviderOperationException(String message) {
+        super(message);
+    }
 
 }

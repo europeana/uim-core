@@ -20,28 +20,29 @@
  */
 package eu.europeana.uim.repox;
 
-
 /**
- *  Exception thrown in case Repox returns an error message
+ * Exception thrown in case Repox returns an error message
+ * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class RepoxException extends Exception {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
+    /**
+     * Default Constructor
+     */
+    public RepoxException() {
+        super();
+    }
 
-	/**
-	 * Default Constructor
-	 */
-	public RepoxException() {
-		super();
-	}
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public RepoxException(String message) {
-		super(message);
-	}
-
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public RepoxException(String message) {
+        super(message);
+    }
 }

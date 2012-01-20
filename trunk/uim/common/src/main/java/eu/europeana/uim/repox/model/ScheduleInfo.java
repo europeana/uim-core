@@ -22,58 +22,59 @@ package eu.europeana.uim.repox.model;
 
 import org.joda.time.DateTime;
 
-
 /**
  * Scheduler information object
  * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class ScheduleInfo {
+    private DateTime        datetime;
+    private IngestFrequency frequency;
+    private boolean         fullingest;
 
-	private DateTime datetime;
-	private IngestFrequency frequency;
-	private boolean fullingest;
-	
-	/**
-	 * @param frequency the frequency to set
-	 */
-	public void setFrequency(IngestFrequency frequency) {
-		this.frequency = frequency;
-	}
-	
-	/**
-	 * @return the frequency
-	 */
-	public IngestFrequency getFrequency() {
-		return frequency;
-	}
-	
-	/**
-	 * @param datetime the datetime to set
-	 */
-	public void setDatetime(DateTime datetime) {
-		this.datetime = datetime;
-	}
-	
-	/**
-	 * @return the datetime
-	 */
-	public DateTime getDatetime() {
-		return datetime;
-	}
-	
-	/**
-	 * @param fullingest the fullingest to set
-	 */
-	public void setFullingest(boolean fullingest) {
-		this.fullingest = fullingest;
-	}
-	
-	/**
-	 * @return the fullingest
-	 */
-	public boolean isFullingest() {
-		return fullingest;
-	}
-	
+    /**
+     * @param frequency
+     *            the frequency to set
+     */
+    public void setFrequency(IngestFrequency frequency) {
+        this.frequency = frequency;
+    }
+
+    /**
+     * @return the frequency
+     */
+    public IngestFrequency getFrequency() {
+        return frequency;
+    }
+
+    /**
+     * @param datetime
+     *            the datetime to set
+     */
+    public void setDatetime(DateTime datetime) {
+        this.datetime = datetime;
+    }
+
+    /**
+     * @return the datetime
+     */
+    public DateTime getDatetime() {
+        return datetime;
+    }
+
+    /**
+     * @param fullingest
+     *            the fullingest to set
+     */
+    public void setFullingest(boolean fullingest) {
+        this.fullingest = fullingest;
+    }
+
+    /**
+     * @return the fullingest
+     */
+    public boolean isFullingest() {
+        return fullingest;
+    }
 }

@@ -20,76 +20,75 @@
  */
 package eu.europeana.uim.repox.model;
 
-
 /**
  * Container Class for Harvesting Status Info
  * 
  * @author Georgios MarkakisS
+ * @since Jan 20, 2012
  */
 public class RepoxHarvestingStatus {
+    private HarvestingState status;
+    private String          timeLeft;
+    private String          percentage;
+    private String          records;
 
-	private HarvestingState status;
-	private String timeLeft;
-	private String percentage;
-	private String records;
-	
+    /**
+     * @param status
+     *            the status to set
+     */
+    public void setStatus(HarvestingState status) {
+        this.status = status;
+    }
 
-	/**
-	 * @param status the status to set
-	 */
-	public void setStatus(HarvestingState status) {
-		this.status = status;
-	}
+    /**
+     * @return the status
+     */
+    public HarvestingState getStatus() {
+        return status;
+    }
 
-	/**
-	 * @return the status
-	 */
-	public HarvestingState getStatus() {
-		return status;
-	}
+    /**
+     * @param timeLeft
+     *            the timeLeft to set
+     */
+    public void setTimeLeft(String timeLeft) {
+        this.timeLeft = timeLeft;
+    }
 
-	/**
-	 * @param timeLeft the timeLeft to set
-	 */
-	public void setTimeLeft(String timeLeft) {
-		this.timeLeft = timeLeft;
-	}
-	
-	/**
-	 * @return the timeLeft
-	 */
-	public String getTimeLeft() {
-		return timeLeft;
-	}
-	
-	/**
-	 * @param percentage the percentage to set
-	 */
-	public void setPercentage(String percentage) {
-		this.percentage = percentage;
-	}
-	
-	/**
-	 * @return the percentage
-	 */
-	public String getPercentage() {
-		return percentage;
-	}
-	
-	/**
-	 * @param records the records to set
-	 */
-	public void setRecords(String records) {
-		this.records = records;
-	}
-	
-	/**
-	 * @return the records
-	 */
-	public String getRecords() {
-		return records;
-	}
-	
-	
-	
+    /**
+     * @return the timeLeft
+     */
+    public String getTimeLeft() {
+        return timeLeft;
+    }
+
+    /**
+     * @param percentage
+     *            the percentage to set
+     */
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
+    }
+
+    /**
+     * @return the percentage
+     */
+    public String getPercentage() {
+        return percentage;
+    }
+
+    /**
+     * @param records
+     *            the records to set
+     */
+    public void setRecords(String records) {
+        this.records = records;
+    }
+
+    /**
+     * @return the records
+     */
+    public String getRecords() {
+        return records;
+    }
 }

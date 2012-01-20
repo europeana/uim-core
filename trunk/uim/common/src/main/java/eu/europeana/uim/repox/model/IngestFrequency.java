@@ -24,11 +24,23 @@ package eu.europeana.uim.repox.model;
  * Ingestion Frequency (used in schedule Service)
  * 
  * @author Georgios Markakis
- *
+ * @since Jan 20, 2012
  */
 public enum IngestFrequency {
-	ONCE,
-	DAILY,
-	WEEKLY,
-	XMONTHLY
+    /**
+     * once
+     */
+    ONCE,
+    /**
+     * per day
+     */
+    DAILY,
+    /**
+     * per month
+     */
+    WEEKLY,
+    /**
+     * per x months
+     */
+    XMONTHLY
 }

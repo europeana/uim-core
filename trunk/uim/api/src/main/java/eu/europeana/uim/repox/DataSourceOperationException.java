@@ -20,22 +20,23 @@
  */
 package eu.europeana.uim.repox;
 
-
 /**
- * An exception thrown in case of a Datasource operation error 
- * (create, update or delete datasource). 
+ * An exception thrown in case of a Datasource operation error (create, update or delete
+ * datasource).
  * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class DataSourceOperationException extends RepoxException {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public DataSourceOperationException(String message) {
-		super(message);
-	}
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public DataSourceOperationException(String message) {
+        super(message);
+    }
 }

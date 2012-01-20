@@ -20,24 +20,23 @@
  */
 package eu.europeana.uim.repox;
 
-
-
 /**
- * An exception thrown in case of a Aggregator related operation error 
- * (create, update or delete aggregator).
- *  
+ * An exception thrown in case of a Aggregator related operation error (create, update or delete
+ * aggregator).
+ * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class AggregatorOperationException extends RepoxException {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public AggregatorOperationException(String message) {
-		super(message);
-	}
-
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public AggregatorOperationException(String message) {
+        super(message);
+    }
 }

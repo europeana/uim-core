@@ -21,27 +21,26 @@
 package eu.europeana.uim.repox.model;
 
 /**
- * Hold connection status information  
+ * Hold connection status information
  * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class RepoxConnectionStatus {
+    private String defaultURI;
 
-	private String defaultURI;
+    /**
+     * @param defaultURI
+     *            the defaultURI to set
+     */
+    public void setDefaultURI(String defaultURI) {
+        this.defaultURI = defaultURI;
+    }
 
-	/**
-	 * @param defaultURI the defaultURI to set
-	 */
-	public void setDefaultURI(String defaultURI) {
-		this.defaultURI = defaultURI;
-	}
-
-	/**
-	 * @return the defaultURI
-	 */
-	public String getDefaultURI() {
-		return defaultURI;
-	}
-	
-	
+    /**
+     * @return the defaultURI
+     */
+    public String getDefaultURI() {
+        return defaultURI;
+    }
 }

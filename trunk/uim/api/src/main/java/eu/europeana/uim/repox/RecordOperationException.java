@@ -20,23 +20,22 @@
  */
 package eu.europeana.uim.repox;
 
-
-
 /**
  * Exception thrown in case of a record operation error
  * 
  * @author Georgios Markakis
+ * @since Jan 20, 2012
  */
 public class RecordOperationException extends RepoxException {
+    private static final long serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * This constructor takes as an argument a String
-	 * @param message the error message
-	 */
-	public RecordOperationException(String message) {
-		super(message);
-	}
-	
+    /**
+     * This constructor takes as an argument a String
+     * 
+     * @param message
+     *            the error message
+     */
+    public RecordOperationException(String message) {
+        super(message);
+    }
 }
