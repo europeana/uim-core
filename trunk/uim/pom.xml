@@ -29,7 +29,7 @@
         <module>orchestration/basic</module>
 
         <!-- simplistic in-memory logging -->
-<!--         <module>logging/memory</module> -->
+        <module>logging/memory</module>
 
         <!-- UIM Model Definitions -->
 <!--         <module>model</module> -->
