@@ -31,7 +31,7 @@ public interface ActiveExecution<I> extends ExecutionContext<I> {
      * @param paused
      *            Should the execution be paused?
      */
-    public void setPaused(boolean paused);
+    void setPaused(boolean paused);
 
     /**
      * @return Is the execution be paused?
@@ -42,7 +42,7 @@ public interface ActiveExecution<I> extends ExecutionContext<I> {
      * @param initialized
      *            is the execution already initialized
      */
-    public void setInitialized(boolean initialized);
+    void setInitialized(boolean initialized);
 
     /**
      * @return Is the execution initialized
