@@ -42,6 +42,7 @@
                             eu.europeana.uim.api,
                             eu.europeana.uim.command,
                             eu.europeana.uim.sugarcrm,
+                            eu.europeana.uim.repox,
                             eu.europeana.uim.util,
                             eu.europeana.uim.workflow
 						</Export-Package>

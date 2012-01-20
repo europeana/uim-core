@@ -55,6 +55,7 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.sugarcrm.model,
+                            eu.europeana.uim.repox.model,
                             org.theeuropeanlibrary.repository.convert,
                             org.theeuropeanlibrary.translation,
                             org.theeuropeanlibrary.collections.guarded,
@@ -127,6 +128,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
         </dependency>
 
         <dependency>
