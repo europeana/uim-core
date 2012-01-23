@@ -34,7 +34,7 @@ import eu.europeana.uim.workflow.Workflow;
  * 
  * @author Georgios Markakis
  */
-interface SugarCrmService {
+public interface SugarCrmService {
     /**
      * This method shows the current connection status of the plugin instance.
      * 

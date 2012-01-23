@@ -26,7 +26,7 @@ import eu.europeana.uim.sugarcrm.model.SugarCrmField;
  * @author Georgios Markakis
  * @since Jan 19, 2012
  */
-interface SugarCrmQuery {
+public interface SugarCrmQuery {
     /**
      * @param orderBy
      *            the field to sort by
