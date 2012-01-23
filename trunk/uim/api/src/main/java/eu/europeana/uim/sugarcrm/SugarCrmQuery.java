@@ -26,37 +26,37 @@ import eu.europeana.uim.sugarcrm.model.SugarCrmField;
  * @author Georgios Markakis
  * @since Jan 19, 2012
  */
-public interface SugarCrmQuery {
+interface SugarCrmQuery {
     /**
      * @param orderBy
      *            the field to sort by
      */
-    public void setOrderBy(SugarCrmField orderBy);
+    void setOrderBy(SugarCrmField orderBy);
 
     /**
      * @return the field to sort by
      */
-    public SugarCrmField getOrderBy();
+    SugarCrmField getOrderBy();
 
     /**
      * @param maxResults
      *            the maximum number of results to return
      */
-    public void setMaxResults(int maxResults);
+    void setMaxResults(int maxResults);
 
     /**
      * @return the maximum number of results to return
      */
-    public int getMaxResults();
+    int getMaxResults();
 
     /**
      * @param offset
      *            the index of result record to start from
      */
-    public void setOffset(int offset);
+    void setOffset(int offset);
 
     /**
      * @return the index of result record to start from
      */
-    public int getOffset();
+    int getOffset();
 }

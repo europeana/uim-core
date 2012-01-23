@@ -34,13 +34,13 @@ import eu.europeana.uim.workflow.Workflow;
  * 
  * @author Georgios Markakis
  */
-public interface SugarCrmService {
+interface SugarCrmService {
     /**
      * This method shows the current connection status of the plugin instance.
      * 
      * @return a ConnectionStatus object
      */
-    public ConnectionStatus showConnectionStatus();
+    ConnectionStatus showConnectionStatus();
 
     /**
      * Assigns the plugin instance a new session under a different user
@@ -50,7 +50,7 @@ public interface SugarCrmService {
      * @return the sessionID
      * @throws LoginFailureException
      */
-    public String updateSession(String username, String password) throws LoginFailureException;
+    String updateSession(String username, String password) throws LoginFailureException;
 
     /**
      * Changes the Status of a specific record
@@ -61,7 +61,7 @@ public interface SugarCrmService {
      *            the state to assign
      * @throws QueryResultException
      */
-    public void changeEntryStatus(String recordId, DatasetStates state) throws QueryResultException;
+    void changeEntryStatus(String recordId, DatasetStates state) throws QueryResultException;
 
     /**
      * Updates a specific record with the specific record values
@@ -72,7 +72,7 @@ public interface SugarCrmService {
      *            a map containing <EuropeanaUpdatableField,String> key/value pairs
      * @throws QueryResultException
      */
-    public void updateRecordData(String recordID, HashMap<UpdatableField, String> values)
+    void updateRecordData(String recordID, HashMap<UpdatableField, String> values)
             throws QueryResultException;
 
     /**
@@ -82,7 +82,7 @@ public interface SugarCrmService {
      *            the SugarCrmRecordImpl object
      * @throws QueryResultException
      */
-    public void updateRecordData(SugarCrmRecord record) throws QueryResultException;
+    void updateRecordData(SugarCrmRecord record) throws QueryResultException;
 
     /**
      * Retrieves the records According to a SugarCrmQuery
@@ -92,7 +92,7 @@ public interface SugarCrmService {
      * @return a List<SugarCrmRecordImpl> results
      * @throws QueryResultException
      */
-    public List<SugarCrmRecord> retrieveRecords(SugarCrmQuery query) throws QueryResultException;
+    List<SugarCrmRecord> retrieveRecords(SugarCrmQuery query) throws QueryResultException;
 
     /**
      * Retrieves a record object by it's ID
@@ -102,7 +102,7 @@ public interface SugarCrmService {
      * @return the corresponding SugarCrmRecordImpl object
      * @throws QueryResultException
      */
-    public SugarCrmRecord retrieveRecord(String id) throws QueryResultException;
+    SugarCrmRecord retrieveRecord(String id) throws QueryResultException;
 
     /**
      * Initializes a workflow in UIM from the data contained in a specific record: this method also
@@ -119,7 +119,7 @@ public interface SugarCrmService {
      * @throws QueryResultException
      * @throws StorageEngineException
      */
-    public Workflow initWorkflowFromRecord(String worklfowName, SugarCrmRecord record,
+    Workflow initWorkflowFromRecord(String worklfowName, SugarCrmRecord record,
             DatasetStates endstate) throws QueryResultException, StorageEngineException;
 
     /**
@@ -137,7 +137,7 @@ public interface SugarCrmService {
      * @throws QueryResultException
      * @throws StorageEngineException
      */
-    public List<Workflow> initWorkflowsFromRecords(String worklfowName, DatasetStates currentstate,
+    List<Workflow> initWorkflowsFromRecords(String worklfowName, DatasetStates currentstate,
             DatasetStates endstate) throws QueryResultException, StorageEngineException;
 
     /**
@@ -148,7 +148,7 @@ public interface SugarCrmService {
      * @return the reference to the created Provider
      * @throws StorageEngineException
      */
-    public Provider<?> updateProviderFromRecord(SugarCrmRecord record)
+    Provider<?> updateProviderFromRecord(SugarCrmRecord record)
             throws StorageEngineException;
 
     /**
@@ -161,7 +161,7 @@ public interface SugarCrmService {
      * @return the reference to the created Provider
      * @throws StorageEngineException
      */
-    public Collection<?> updateCollectionFromRecord(SugarCrmRecord record, Provider<?> provider)
+    Collection<?> updateCollectionFromRecord(SugarCrmRecord record, Provider<?> provider)
             throws StorageEngineException;
 
     /**
@@ -173,7 +173,7 @@ public interface SugarCrmService {
      *            the message contents
      * @throws FileAttachmentException
      */
-    public void addNoteAttachmentToRecord(String recordId, String message)
+    void addNoteAttachmentToRecord(String recordId, String message)
             throws FileAttachmentException;
 
     /**
@@ -184,7 +184,7 @@ public interface SugarCrmService {
      *            an instance of any Class implementing the PollingListener interface
      * @see PollingListener
      */
-    public void addPollingListener(String id, PollingListener listener);
+    void addPollingListener(String id, PollingListener listener);
 
     /**
      * Removes the specific listener from the queue
@@ -192,7 +192,7 @@ public interface SugarCrmService {
      * @param id
      * @see PollingListener
      */
-    public void removePollingListener(String id);
+    void removePollingListener(String id);
 
     /**
      * Get a list of all the available PollingListeners
@@ -200,7 +200,7 @@ public interface SugarCrmService {
      * @return the list
      * @see PollingListener
      */
-    public LinkedHashMap<String, PollingListener> getPollingListeners();
+    LinkedHashMap<String, PollingListener> getPollingListeners();
 
     /**
      * Set a list of PollingListeners
@@ -208,5 +208,5 @@ public interface SugarCrmService {
      * @param listeners
      * @see PollingListener
      */
-    public void setPollingListeners(LinkedHashMap<String, PollingListener> listeners);
+    void setPollingListeners(LinkedHashMap<String, PollingListener> listeners);
 }

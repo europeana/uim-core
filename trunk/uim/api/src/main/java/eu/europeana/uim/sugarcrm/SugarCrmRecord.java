@@ -35,12 +35,12 @@ public interface SugarCrmRecord {
      * @param field
      * @param value
      */
-    public abstract void setItemValue(UpdatableField field, String value);
+   void setItemValue(UpdatableField field, String value);
 
     /**
      * @param field
      *            sugar crm field
      * @return content of the field
      */
-    public abstract String getItemValue(SugarCrmField field);
+    String getItemValue(SugarCrmField field);
 }
