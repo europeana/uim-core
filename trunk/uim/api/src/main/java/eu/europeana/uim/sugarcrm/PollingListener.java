@@ -37,7 +37,7 @@ public interface PollingListener {
      * 
      * @return the SugarCrmQuery to be executed
      */
-    public SugarCrmQuery getTrigger();
+    SugarCrmQuery getTrigger();
 
     /**
      * Defines the contents of a specific action
@@ -48,6 +48,6 @@ public interface PollingListener {
      *            the input to the specified action
      * @throws GenericSugarCrmException
      */
-    public void performAction(SugarCrmService pluginReference, List<SugarCrmRecord> retrievedRecords)
+    void performAction(SugarCrmService pluginReference, List<SugarCrmRecord> retrievedRecords)
             throws GenericSugarCrmException;
 }
