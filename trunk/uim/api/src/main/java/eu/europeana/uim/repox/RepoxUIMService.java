@@ -35,13 +35,13 @@ import eu.europeana.uim.store.Provider;
  * @author Georgios Markakis
  * @since Jan 20, 2012
  */
-public interface RepoxUIMService {
+interface RepoxUIMService {
     /**
      * This method shows the current connection status of the plugin instance.
      * 
      * @return a ConnectionStatus object
      */
-    public RepoxConnectionStatus showConnectionStatus();
+    RepoxConnectionStatus showConnectionStatus();
 
     /**
      * Checks if an aggregator instance in UIM also exists in Repox
@@ -51,7 +51,7 @@ public interface RepoxUIMService {
      * @return Exists?
      * @throws AggregatorOperationException
      */
-    public boolean aggregatorExists(String countrycode) throws AggregatorOperationException;
+    boolean aggregatorExists(String countrycode) throws AggregatorOperationException;
 
     /**
      * Creates an Aggregator in Repox
@@ -61,8 +61,7 @@ public interface RepoxUIMService {
      * @param url
      * @throws AggregatorOperationException
      */
-    public void createAggregator(String countryCode, String url)
-            throws AggregatorOperationException;
+    void createAggregator(String countryCode, String url) throws AggregatorOperationException;
 
     /**
      * Deletes an existing Aggregator from Repox
@@ -71,7 +70,7 @@ public interface RepoxUIMService {
      *            code of a country
      * @throws AggregatorOperationException
      */
-    public void deleteAggregator(String countryCode) throws AggregatorOperationException;
+    void deleteAggregator(String countryCode) throws AggregatorOperationException;
 
     /**
      * Updates an existing Aggregator in Repox
@@ -83,7 +82,7 @@ public interface RepoxUIMService {
      * @param url
      * @throws AggregatorOperationException
      */
-    public void updateAggregator(String countryCode, String name, String nameCode, String url)
+    void updateAggregator(String countryCode, String name, String nameCode, String url)
             throws AggregatorOperationException;
 
     /**
@@ -94,7 +93,7 @@ public interface RepoxUIMService {
      * @return exists?
      * @throws ProviderOperationException
      */
-    public boolean providerExists(Provider<?> prov) throws ProviderOperationException;
+    boolean providerExists(Provider<?> prov) throws ProviderOperationException;
 
     /**
      * Creates a provider in Repox
@@ -103,7 +102,7 @@ public interface RepoxUIMService {
      *            a UIM Provider Object
      * @throws ProviderOperationException
      */
-    public void createProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
+    void createProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
 
     /**
      * Deletes a provider from Repox (the Collection Objects belonging to this provider are deleted
@@ -113,7 +112,7 @@ public interface RepoxUIMService {
      *            a UIM Provider Object
      * @throws ProviderOperationException
      */
-    public void deleteProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
+    void deleteProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
 
     /**
      * Updates a provider within Repox
@@ -122,7 +121,7 @@ public interface RepoxUIMService {
      *            a UIM Provider Object
      * @throws ProviderOperationException
      */
-    public void updateProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
+    void updateProviderfromUIMObj(Provider<?> prov) throws ProviderOperationException;
 
     /**
      * Retrieves all the available Aggregators from Repox
@@ -130,7 +129,7 @@ public interface RepoxUIMService {
      * @return an object containing all available Aggregators
      * @throws AggregatorOperationException
      */
-    public Set<Provider<?>> retrieveAggregators() throws AggregatorOperationException;
+    Set<Provider<?>> retrieveAggregators() throws AggregatorOperationException;
 
     /**
      * Retrieves all available providers within Repox
@@ -138,7 +137,7 @@ public interface RepoxUIMService {
      * @return a List of UIM Provider objects
      * @throws ProviderOperationException
      */
-    public Set<Provider<?>> retrieveProviders() throws ProviderOperationException;
+    Set<Provider<?>> retrieveProviders() throws ProviderOperationException;
 
     /**
      * Retrieve all available Repox DataSources
@@ -146,7 +145,7 @@ public interface RepoxUIMService {
      * @return a DataSources object
      * @throws DataSourceOperationException
      */
-    public Set<Collection<?>> retrieveDataSources() throws DataSourceOperationException;
+    Set<Collection<?>> retrieveDataSources() throws DataSourceOperationException;
 
     /**
      * Checks if a collection is represented as a datasource in Repox
@@ -156,7 +155,7 @@ public interface RepoxUIMService {
      * @return Exists?
      * @throws DataSourceOperationException
      */
-    public boolean datasourceExists(Collection<?> col) throws DataSourceOperationException;
+    boolean datasourceExists(Collection<?> col) throws DataSourceOperationException;
 
     /**
      * Create a Repox DataSource from an UIM object. The uim object is also assigned a "repoxid"
@@ -168,7 +167,7 @@ public interface RepoxUIMService {
      *            which provider
      * @throws DataSourceOperationException
      */
-    public void createDatasourcefromUIMObj(Collection<?> col, Provider<?> prov)
+    void createDatasourcefromUIMObj(Collection<?> col, Provider<?> prov)
             throws DataSourceOperationException;
 
     /**
@@ -178,7 +177,7 @@ public interface RepoxUIMService {
      *            a UIM Collection object
      * @throws DataSourceOperationException
      */
-    public void deleteDatasourcefromUIMObj(Collection<?> col) throws DataSourceOperationException;
+    void deleteDatasourcefromUIMObj(Collection<?> col) throws DataSourceOperationException;
 
     /**
      * Update an existing DataSource
@@ -187,7 +186,7 @@ public interface RepoxUIMService {
      *            a UIM Collection object
      * @throws DataSourceOperationException
      */
-    public void updateDatasourcefromUIMObj(Collection<?> col) throws DataSourceOperationException;
+    void updateDatasourcefromUIMObj(Collection<?> col) throws DataSourceOperationException;
 
     /**
      * Retrieve a specific Record
@@ -196,7 +195,7 @@ public interface RepoxUIMService {
      * @return a RecordResult object
      * @throws RecordOperationException
      */
-    public String retrieveRecord(String recordString) throws RecordOperationException;
+    String retrieveRecord(String recordString) throws RecordOperationException;
 
     /**
      * Starts a remote harvesting process
@@ -207,7 +206,7 @@ public interface RepoxUIMService {
      *            full?
      * @throws HarvestingOperationException
      */
-    public void initiateHarvestingfromUIMObj(Collection<?> col, boolean isfull)
+    void initiateHarvestingfromUIMObj(Collection<?> col, boolean isfull)
             throws HarvestingOperationException;
 
     /**
@@ -217,7 +216,7 @@ public interface RepoxUIMService {
      * @param info
      * @throws HarvestingOperationException
      */
-    public void scheduleHarvestingfromUIMObj(Collection<?> col, ScheduleInfo info)
+    void scheduleHarvestingfromUIMObj(Collection<?> col, ScheduleInfo info)
             throws HarvestingOperationException;
 
     /**
@@ -226,7 +225,7 @@ public interface RepoxUIMService {
      * @param col
      * @throws HarvestingOperationException
      */
-    public void cancelHarvesting(Collection<?> col) throws HarvestingOperationException;
+    void cancelHarvesting(Collection<?> col) throws HarvestingOperationException;
 
     /**
      * Check the status of an existing harvesting job
@@ -236,7 +235,7 @@ public interface RepoxUIMService {
      * @return status
      * @throws HarvestingOperationException
      */
-    public RepoxHarvestingStatus getHarvestingStatus(Collection<?> col)
+    RepoxHarvestingStatus getHarvestingStatus(Collection<?> col)
             throws HarvestingOperationException;
 
     /**
@@ -245,7 +244,7 @@ public interface RepoxUIMService {
      * @return an object containing a reference to all DataSources
      * @throws HarvestingOperationException
      */
-    public Set<Collection<?>> getActiveHarvestingSessions() throws HarvestingOperationException;
+    Set<Collection<?>> getActiveHarvestingSessions() throws HarvestingOperationException;
 
     /**
      * Gets a list of UIM Collections scheduled for harvesting (ingestion)
@@ -254,7 +253,7 @@ public interface RepoxUIMService {
      * @return a List of UIM Collection object references
      * @throws HarvestingOperationException
      */
-    public Set<ScheduleInfo> getScheduledHarvestingSessions(Collection<?> coll)
+    Set<ScheduleInfo> getScheduledHarvestingSessions(Collection<?> coll)
             throws HarvestingOperationException;
 
     /**
@@ -265,7 +264,7 @@ public interface RepoxUIMService {
      * @return the HarvestLog
      * @throws HarvestingOperationException
      */
-    public String getHarvestLog(Collection<?> col) throws HarvestingOperationException;
+    String getHarvestLog(Collection<?> col) throws HarvestingOperationException;
 
     /**
      * Initialize the export of Repox files
@@ -276,6 +275,6 @@ public interface RepoxUIMService {
      *            the number of records per file
      * @throws HarvestingOperationException
      */
-    public void initializeExport(Collection<?> col, int numberOfRecords)
+    void initializeExport(Collection<?> col, int numberOfRecords)
             throws HarvestingOperationException;
 }
