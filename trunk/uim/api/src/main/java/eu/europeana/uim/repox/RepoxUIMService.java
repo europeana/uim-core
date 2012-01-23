@@ -35,7 +35,7 @@ import eu.europeana.uim.store.Provider;
  * @author Georgios Markakis
  * @since Jan 20, 2012
  */
-interface RepoxUIMService {
+public interface RepoxUIMService {
     /**
      * This method shows the current connection status of the plugin instance.
      * 
