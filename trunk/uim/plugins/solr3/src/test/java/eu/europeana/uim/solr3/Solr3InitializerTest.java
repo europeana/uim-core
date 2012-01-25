@@ -12,15 +12,15 @@ import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
 
 /**
- * 
+ * Initialization tests for SOLR 3.x plugin.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Aug 7, 2011
  */
 public class Solr3InitializerTest {
-
-    
     /**
+     * Test setup and start.
+     * 
      * @throws SolrServerException
      * @throws IOException
      */
