@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -890,7 +889,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         String urlStr = operation.toString();
         URL url;
         try {
-            url = new URL(URLEncoder.encode(urlStr, "UTF-8"));
+            url = new URL(urlStr);
         } catch (Exception e) {
             throw new RepoxException("Could not creat url of '" + urlStr + "'!", e);
         }
@@ -901,29 +900,6 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         } catch (IOException e) {
             throw new RepoxException("Could not open url connection!", e);
         }
-
-        // if (conn.getResponseCode() != 200) { throw new IOException(conn.getResponseMessage()); }
-// BufferedReader rd;
-// try {
-// rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-// } catch (IOException e) {
-// throw new RepoxException("Could not open buffered reader!", e);
-// }
-// StringBuilder sb = new StringBuilder();
-// String line;
-// try {
-// while ((line = rd.readLine()) != null) {
-// sb.append(line);
-// }
-// } catch (IOException e) {
-// throw new RepoxException("Could not read buffered reader!", e);
-// } finally {
-// try {
-// rd.close();
-// } catch (IOException e) {
-// throw new RepoxException("Could not close buffered reader!", e);
-// }
-// }
 
         conn.disconnect();
 
@@ -982,7 +958,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         // description.append(ds.getDescription());
         description.append("NONE");
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
@@ -1046,7 +1022,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         description.append("description=");
         description.append(ds.getDescription());
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
@@ -1056,34 +1032,41 @@ public class RepoxRestClientImpl implements RepoxRestClient {
 
         namespace.append("namespace=");
         namespace.append(ds.getNamespace());
-        address.append("address=");
-        address.append(ds.getTarget().getAddress());
-        port.append("port=");
-        port.append(ds.getTarget().getPort());
-        database.append("database=");
-        database.append(ds.getTarget().getDatabase());
 
-        user.append("user=");
-        user.append(ds.getTarget().getUser());
-        password.append("password=");
-        password.append(ds.getTarget().getPassword());
-        recordSyntax.append("recordSyntax=");
-        recordSyntax.append(ds.getTarget().getRecordSyntax());
+        if (ds.getTarget() != null) {
+            address.append("address=");
+            address.append(ds.getTarget().getAddress());
+            port.append("port=");
+            port.append(ds.getTarget().getPort());
+            database.append("database=");
+            database.append(ds.getTarget().getDatabase());
 
-        charset.append("charset=");
-        charset.append(ds.getTarget().getCharset());
+            user.append("user=");
+            user.append(ds.getTarget().getUser());
+            password.append("password=");
+            password.append(ds.getTarget().getPassword());
+            recordSyntax.append("recordSyntax=");
+            recordSyntax.append(ds.getTarget().getRecordSyntax());
+
+            charset.append("charset=");
+            charset.append(ds.getTarget().getCharset());
+        }
+
         earliestTimestamp.append("earliestTimestamp=");
         earliestTimestamp.append(ds.getEarliestTimestamp());
-        recordIdPolicy.append("recordIdPolicy=");
-        recordIdPolicy.append(ds.getRecordIdPolicy().getType());
-        if (ds.getRecordIdPolicy().getType().equals("idExported")) {
-            idXpath.append("idXpath=");
-            idXpath.append(ds.getRecordIdPolicy().getIdXpath());
 
-            namespacePrefix.append("namespacePrefix=");
-            namespacePrefix.append(ds.getRecordIdPolicy().getNamespaces().getNamespace().getNamespacePrefix());
-            namespaceUri.append("namespaceUri=");
-            namespaceUri.append(ds.getRecordIdPolicy().getNamespaces().getNamespace().getNamespaceUri());
+        if (ds.getRecordIdPolicy() != null) {
+            recordIdPolicy.append("recordIdPolicy=");
+            recordIdPolicy.append(ds.getRecordIdPolicy().getType());
+            if (ds.getRecordIdPolicy().getType().equals("idExported")) {
+                idXpath.append("idXpath=");
+                idXpath.append(ds.getRecordIdPolicy().getIdXpath());
+
+                namespacePrefix.append("namespacePrefix=");
+                namespacePrefix.append(ds.getRecordIdPolicy().getNamespaces().getNamespace().getNamespacePrefix());
+                namespaceUri.append("namespaceUri=");
+                namespaceUri.append(ds.getRecordIdPolicy().getNamespaces().getNamespace().getNamespaceUri());
+            }
         }
 
         if (action.equals("create")) {
@@ -1141,7 +1124,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         description.append("description=");
         description.append(ds.getDescription());
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
@@ -1236,7 +1219,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         description.append("description=");
         description.append(ds.getDescription());
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
@@ -1423,7 +1406,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         description.append("description=");
         description.append(ds.getDescription());
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
@@ -1505,7 +1488,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         description.append("description=");
         description.append(ds.getDescription());
         nameCode.append("nameCode=");
-        nameCode.append(ds.getNameCode().toString());
+        nameCode.append(ds.getNameCode());
         name.append("name=");
         name.append(ds.getName());
         exportPath.append("exportPath=");
