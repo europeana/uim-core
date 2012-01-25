@@ -21,28 +21,31 @@
 package eu.europeana.uim.repox;
 
 /**
- * Exception thrown in case Repox returns an error message
+ * Basic exception thrown of methods in {@link RepoxService}.
  * 
  * @author Georgios Markakis
  * @since Jan 20, 2012
  */
 public class RepoxException extends Exception {
-    private static final long serialVersionUID = 1L;
-
     /**
-     * Default Constructor
-     */
-    public RepoxException() {
-        super();
-    }
-
-    /**
-     * This constructor takes as an argument a String
+     * For inheritance reasons, pipes through to the super constructor.
      * 
      * @param message
-     *            the error message
+     *            description of the error
      */
     public RepoxException(String message) {
         super(message);
+    }
+
+    /**
+     * For inheritance reasons, pipes through to the super constructor.
+     * 
+     * @param message
+     *            description of the error
+     * @param cause
+     *            root cause of the error
+     */
+    public RepoxException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
