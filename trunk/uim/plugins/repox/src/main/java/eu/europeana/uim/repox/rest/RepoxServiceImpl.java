@@ -25,7 +25,7 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @since Jan 23, 2012
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
-public class RestRepoxService implements RepoxService {
+public class RepoxServiceImpl implements RepoxService {
     /**
      * factory to retrieve (implicitly create) repox rest clients for specific repox locations
      */
@@ -44,7 +44,7 @@ public class RestRepoxService implements RepoxService {
     /**
      * Creates a new instance of this class.
      */
-    public RestRepoxService() {
+    public RepoxServiceImpl() {
         this(null, null, null);
     }
 
@@ -59,7 +59,7 @@ public class RestRepoxService implements RepoxService {
      * @param xmlFactory
      *            factory to create xml objects from UIM objects
      */
-    public RestRepoxService(RepoxRestClientFactory factory, Registry registry,
+    public RepoxServiceImpl(RepoxRestClientFactory factory, Registry registry,
                             XmlObjectFactory xmlFactory) {
         this.clientfactory = factory;
         this.registry = registry;
