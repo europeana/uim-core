@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="recordResult" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="source" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dataSources" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="aggregator" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="aggregators" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="provider" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="dataProviders" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="scheduleTasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="runningTasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="log" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="success" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="error" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="harvestingStatus" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+
+  </xs:element>
+    <xs:element name="harvestingStatus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="1" ref="status"/>
+        <xs:element minOccurs="0" ref="timeLeft"/>
+        <xs:element minOccurs="0" ref="percentage"/>
+        <xs:element minOccurs="0" ref="records"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="status" type="xs:string"/>
+  <xs:element name="timeLeft" type="xs:string"/>
+  <xs:element name="percentage" type="xs:string"/>
+  <xs:element name="records" type="xs:string"/>
+  
+  
+  
+  
+  <xs:element name="recordResult">
+    <xs:complexType>
+      <xs:attribute name="urn" use="required" type="xs:anyURI"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dataSources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="source"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="aggregators">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="aggregator"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dataProviders">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="provider"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="scheduleTasks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="task"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="task">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="time"/>
+        <xs:element ref="frequency"/>
+        <xs:element ref="fullIngest"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="time" type="xs:string"/>
+  <xs:element name="frequency">
+    <xs:complexType>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fullIngest" type="xs:boolean"/>
+  <xs:element name="runningTasks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="dataSource"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dataSource" type="xs:NCName"/>
+  <xs:element name="log">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="line"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="line" type="xs:string"/>
+  <xs:element name="success" type="xs:NCName"/>
+  <xs:element name="error">
+    <xs:complexType>
+      <xs:attribute name="cause" use="optional"/>
+      <xs:attribute name="requestURI" use="optional" type="xs:anyURI"/>
+      <xs:attribute name="type" use="optional" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="source">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="description"/>
+        <xs:element ref="recordIdPolicy"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="oai-source"/>
+          <xs:element ref="oai-set" minOccurs="0"/>
+        </xs:sequence>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="sourcesDirPath"/>
+          <xs:element ref="retrieveStrategy"/>
+          <xs:element ref="fileExtract"/>
+        </xs:sequence>
+        <xs:element minOccurs="0" ref="splitRecords"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="target"/>
+          <xs:element ref="harvestMethod"/>
+        </xs:sequence>
+        <xs:choice minOccurs="0">
+          <xs:element ref="earliestTimestamp"/>
+          <xs:element ref="idListFile"/>
+          <xs:element ref="maximumId"/>
+          <xs:element ref="filePath"/>
+          <xs:element ref="ftpPath"/>
+          <xs:element ref="isoFormat"/>
+          <xs:element ref="folder"/>
+        </xs:choice>
+        <xs:element ref="metadataTransformations" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="restServices" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="characterEncoding" type="xs:NCName"/>
+      <xs:attribute name="exportPath" use="optional" type="xs:anyURI"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="isoImplementationClass"/>
+      <xs:attribute name="lastIngest" use="required"/>
+      <xs:attribute name="metadataFormat" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="nameCode" use="optional" type="xs:string"/>
+      <xs:attribute name="namespace" use="required" type="xs:anyURI"/>
+      <xs:attribute name="sample" use="required" type="xs:integer"/>
+      <xs:attribute name="schema" use="required" type="xs:anyURI"/>
+      <xs:attribute name="status" use="required"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="recordIdPolicy">
+    <xs:complexType>
+      <xs:sequence minOccurs="0">
+        <xs:element ref="idXpath"/>
+        <xs:element ref="namespaces"/>
+      </xs:sequence>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="idXpath" type="xs:string"/>
+  <xs:element name="oai-source" type="xs:anyURI"/>
+  <xs:element name="oai-set" type="xs:NCName"/>
+  <xs:element name="sourcesDirPath" type="xs:string"/>
+  <xs:element name="retrieveStrategy">
+    <xs:complexType>
+      <xs:choice minOccurs="0">
+        <xs:element ref="url"/>
+        <xs:sequence>
+          <xs:element ref="server"/>
+          <xs:element ref="user"/>
+          <xs:element ref="password"/>
+          <xs:element ref="folderPath"/>
+        </xs:sequence>
+      </xs:choice>
+      <xs:attribute name="type" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="server" type="xs:NCName"/>
+  <xs:element name="folderPath" type="xs:string"/>
+  <xs:element name="fileExtract" type="xs:NCName"/>
+  <xs:element name="splitRecords">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="recordXPath" minOccurs="0"/>
+        <xs:element ref="namespaces" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="recordXPath" type="xs:NCName"/>
+  <xs:element name="target">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="address"/>
+        <xs:element ref="port"/>
+        <xs:element ref="database"/>
+        <xs:element ref="user"/>
+        <xs:element ref="password"/>
+        <xs:element ref="charset"/>
+        <xs:element ref="recordSyntax"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="address" type="xs:NMTOKEN"/>
+  <xs:element name="port" type="xs:integer"/>
+  <xs:element name="database" type="xs:string"/>
+  <xs:element name="charset" type="xs:string"/>
+  <xs:element name="recordSyntax" type="xs:string"/>
+  <xs:element name="harvestMethod" type="xs:string"/>
+  <xs:element name="earliestTimestamp" type="xs:integer"/>
+  <xs:element name="idListFile" type="xs:string"/>
+  <xs:element name="maximumId" type="xs:integer"/>
+  <xs:element name="filePath" type="xs:string"/>
+  <xs:element name="ftpPath" type="xs:string"/>
+  <xs:element name="isoFormat" type="xs:string"/>
+  <xs:element name="folder" type="xs:string"/>
+  <xs:element name="restServices" type="xs:string"/>
+  <xs:element name="metadataTransformations">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="metadataTransformation" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="metadataTransformation">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="aggregator">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element minOccurs="0" ref="nameCode"/>
+        <xs:element minOccurs="0" ref="url"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="provider">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="country"/>
+        <xs:element minOccurs="0" ref="description"/>
+        <xs:element ref="type"/>
+        <xs:element minOccurs="0" ref="nameCode" />
+        <xs:element minOccurs="0" ref="url"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="country" type="xs:NCName"/>
+  <xs:element name="type" type="xs:NCName"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="namespaces">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="namespace"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="namespace">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="namespacePrefix"/>
+        <xs:element ref="namespaceUri"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="namespacePrefix" type="xs:string"/>
+  <xs:element name="namespaceUri" type="xs:anyURI"/>
+  <xs:element name="user" type="xs:string"/>
+  <xs:element name="password" type="xs:string"/>
+  <xs:element name="url" type="xs:anyURI"/>
+  <xs:element name="name" type="xs:NCName"/>
+  <xs:element name="nameCode" type="xs:NMTOKEN"/>
+</xs:schema>
