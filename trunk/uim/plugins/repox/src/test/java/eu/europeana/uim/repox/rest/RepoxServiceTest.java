@@ -7,9 +7,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.UIMRegistry;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
@@ -26,11 +23,10 @@ import eu.europeana.uim.store.memory.MemoryStorageEngine;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jan 25, 2012
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class RepoxServiceTest {
-    private Registry     registry;
-    private RepoxService service;
-    private String       repoxUri;
+    private MemoryStorageEngine engine;
+    private RepoxService        service;
+    private String              repoxUri;
 
     /**
      * Initialize repox service.
@@ -40,14 +36,8 @@ public class RepoxServiceTest {
     @Before
     public void setupRepoxService() throws Exception {
         repoxUri = RepoxTestUtils.getUri(RepoxRestClientTest.class, "/config.properties");
-
-        registry = new UIMRegistry();
-
-        StorageEngine engine = spy(new MemoryStorageEngine());
-        registry.addStorageEngine(engine);
-        registry.setConfiguredStorageEngine(MemoryStorageEngine.class.getSimpleName());
-
-        service = new RepoxServiceImpl(new RepoxRestClientFactoryImpl(), registry,
+        engine = spy(new MemoryStorageEngine());
+        service = new RepoxServiceImpl(new RepoxRestClientFactoryImpl(),
                 new BasicXmlObjectFactory());
     }
 
@@ -58,12 +48,12 @@ public class RepoxServiceTest {
      */
     @Test
     public void testCreateUpdateDeleteProvider() throws Exception {
-        Provider provider = registry.getStorageEngine().createProvider();
+        Provider<Long> provider = engine.createProvider();
         provider.setMnemonic("prov");
         provider.setName("provider");
         provider.setOaiBaseUrl(repoxUri);
         provider.putValue(StandardControlledVocabulary.COUNTRY, "de");
-        registry.getStorageEngine().updateProvider(provider);
+        engine.updateProvider(provider);
 
         service.updateProvider(provider);
 
@@ -74,7 +64,7 @@ public class RepoxServiceTest {
         Assert.assertNotNull(provId);
 
         provider.setName("updated-provider");
-        registry.getStorageEngine().updateProvider(provider);
+        engine.updateProvider(provider);
 
         service.updateProvider(provider);
 
@@ -100,21 +90,21 @@ public class RepoxServiceTest {
      */
     @Test
     public void testCreateUpdateDeleteCollection() throws Exception {
-        Provider provider = registry.getStorageEngine().createProvider();
+        Provider<Long> provider = engine.createProvider();
         provider.setMnemonic("prov");
         provider.setName("provider");
         provider.setOaiBaseUrl(repoxUri);
         provider.putValue(StandardControlledVocabulary.COUNTRY, "de");
-        registry.getStorageEngine().updateProvider(provider);
+        engine.updateProvider(provider);
 
         service.updateProvider(provider);
 
-        Collection collection = registry.getStorageEngine().createCollection(provider);
+        Collection<Long> collection = engine.createCollection(provider);
         collection.setMnemonic("coll");
         collection.setName("collection");
         collection.setOaiBaseUrl(repoxUri);
         collection.putValue(StandardControlledVocabulary.COUNTRY, "de");
-        registry.getStorageEngine().updateCollection(collection);
+        engine.updateCollection(collection);
 
         service.updateCollection(collection);
 
@@ -125,7 +115,7 @@ public class RepoxServiceTest {
         Assert.assertNotNull(provId);
 
         collection.setName("updated-collection");
-        registry.getStorageEngine().updateCollection(collection);
+        engine.updateCollection(collection);
 
         service.updateCollection(collection);
 

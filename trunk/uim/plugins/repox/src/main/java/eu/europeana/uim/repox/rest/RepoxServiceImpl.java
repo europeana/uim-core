@@ -3,9 +3,6 @@ package eu.europeana.uim.repox.rest;
 
 import java.util.List;
 
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.repox.DataSourceOperationException;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
@@ -28,17 +25,11 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jan 23, 2012
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class RepoxServiceImpl implements RepoxService {
     /**
      * factory to retrieve (implicitly create) repox rest clients for specific repox locations
      */
     private RepoxRestClientFactory clientfactory;
-
-    /**
-     * registry to update changed data
-     */
-    private Registry               registry;
 
     /**
      * factory to create xml objects from UIM objects
@@ -49,7 +40,7 @@ public class RepoxServiceImpl implements RepoxService {
      * Creates a new instance of this class.
      */
     public RepoxServiceImpl() {
-        this(null, null, null);
+        this(null, null);
     }
 
     /**
@@ -58,31 +49,12 @@ public class RepoxServiceImpl implements RepoxService {
      * @param factory
      *            factory to retrieve (implicitly create) repox rest clients for specific repox
      *            locations
-     * @param registry
-     *            registry to update changed data
      * @param xmlFactory
      *            factory to create xml objects from UIM objects
      */
-    public RepoxServiceImpl(RepoxRestClientFactory factory, Registry registry,
-                            XmlObjectFactory xmlFactory) {
+    public RepoxServiceImpl(RepoxRestClientFactory factory, XmlObjectFactory xmlFactory) {
         this.clientfactory = factory;
-        this.registry = registry;
         this.xmlFactory = xmlFactory;
-    }
-
-    /**
-     * @param registry
-     *            registry to update changed data
-     */
-    public void setRegistry(Registry registry) {
-        this.registry = registry;
-    }
-
-    /**
-     * @return registry to update changed data
-     */
-    public Registry getRegistry() {
-        return registry;
     }
 
     /**
@@ -152,15 +124,6 @@ public class RepoxServiceImpl implements RepoxService {
                     jaxbProv, aggr);
 
             provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, createdProv.getId());
-
-            StorageEngine engine = registry.getStorageEngine();
-
-            // Store the created RepoxID into the UIM object
-            try {
-                engine.updateProvider(provider);
-            } catch (StorageEngineException e) {
-                throw new RepoxException("Storing an ID to the UIM Provider object failed");
-            }
         }
     }
 
@@ -227,16 +190,6 @@ public class RepoxServiceImpl implements RepoxService {
                     "Could not create source for collection '" + collection.getMnemonic() + "'!"); }
 
             collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retsource.getId());
-
-            StorageEngine engine = registry.getStorageEngine();
-            try {
-                engine.updateCollection(collection);
-                engine.checkpoint();
-            } catch (StorageEngineException e) {
-                throw new DataSourceOperationException(
-                        "Storing the returned Repox id to the UIM collection object failed.");
-            }
-
         } else {
             Source ds = xmlFactory.createDataSource(collection);
             ds.setId(collectionId);
