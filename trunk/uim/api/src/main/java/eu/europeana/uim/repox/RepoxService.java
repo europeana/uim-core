@@ -51,14 +51,14 @@ public interface RepoxService {
      */
     void updateProvider(Provider<?> provider) throws RepoxException;
 
-//    /**
-//     * Updates a provider within Repox
-//     * 
-//     * @param provider
-//     *            UIM provider object to update/create on Repox side
-//     * @throws RepoxException
-//     */
-//    void synchronizeProvider(Provider<?> provider) throws RepoxException;
+    /**
+     * Updates a provider within Repox
+     * 
+     * @param provider
+     *            UIM provider object to update/create on Repox side
+     * @throws RepoxException
+     */
+    void synchronizeProvider(Provider<?> provider) throws RepoxException;
 
     /**
      * Delete a collection within Repox (data source)
@@ -78,32 +78,22 @@ public interface RepoxService {
      */
     void updateCollection(Collection<?> collection) throws RepoxException;
 
-//    /**
-//     * Update a collection within Repox (data source)
-//     * 
-//     * @param collection
-//     *            UIM Collection object to be updated
-//     * @throws RepoxException
-//     */
-//    void synchronizeCollection(Collection<?> collection) throws RepoxException;
-//
-//    /**
-//     * Check the status of an existing harvesting job
-//     * 
-//     * @param col
-//     *            which collection
-//     * @return status
-//     * @throws RepoxException
-//     */
-//    RepoxHarvestingStatus getHarvestingStatus(Collection<?> col) throws RepoxException;
-//
-//    /**
-//     * Gets the latest harvesting Log for a specific DataSource
-//     * 
-//     * @param col
-//     *            a UIM Collection object reference
-//     * @return the HarvestLog
-//     * @throws RepoxException
-//     */
-//    String getHarvestLog(Collection<?> col) throws RepoxException;
+    /**
+     * Update a collection within Repox (data source)
+     * 
+     * @param collection
+     *            UIM Collection object to be updated
+     * @throws RepoxException
+     */
+    void synchronizeCollection(Collection<?> collection) throws RepoxException;
+
+    /**
+     * Gets the latest harvesting Log for a specific DataSource
+     * 
+     * @param collection
+     *            a UIM Collection object reference
+     * @return the HarvestLog
+     * @throws RepoxException
+     */
+    String getHarvestLog(Collection<?> collection) throws RepoxException;
 }
