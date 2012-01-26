@@ -2,6 +2,7 @@
 package eu.europeana.uim.repox.rest;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -9,6 +10,7 @@ import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import eu.europeana.uim.repox.rest.client.xml.Response;
 
@@ -80,5 +82,28 @@ public class RepoxTestUtils {
         logger.info("XML representation for '" + jaxbObject.getClass().getName() + "':");
         logger.info(writer.toString());
         logger.info("===========================================");
+    }
+
+    /**
+     * @param jaxbObject
+     * @return marshalled xml of given object
+     * @throws JAXBException
+     */
+    public static String marshall(Object jaxbObject) throws JAXBException {
+        StringWriter writer = new StringWriter();
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.marshal(jaxbObject, writer);
+        return writer.toString();
+    }
+
+    /**
+     * @param xmlObject
+     * @return unmarshalled object from xml
+     * @throws JAXBException
+     */
+    public static Object unmarshall(String xmlObject) throws JAXBException {
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Object jaxbObj = unmarshaller.unmarshal(new StringReader(xmlObject));
+        return jaxbObj;
     }
 }

@@ -21,7 +21,7 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
             countrystr = "eu";
         }
 
-        String aggrName = countrystr + "aggregator";
+        String aggrName = countrystr + "-aggregator";
         Aggregator aggr = new Aggregator();
         aggr.setName(aggrName);
         aggr.setNameCode(aggrName);

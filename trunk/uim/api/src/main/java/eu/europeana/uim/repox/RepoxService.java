@@ -59,7 +59,7 @@ public interface RepoxService {
 //     * @throws RepoxException
 //     */
 //    void synchronizeProvider(Provider<?> provider) throws RepoxException;
-    
+
     /**
      * Delete a collection within Repox (data source)
      * 
@@ -86,7 +86,7 @@ public interface RepoxService {
 //     * @throws RepoxException
 //     */
 //    void synchronizeCollection(Collection<?> collection) throws RepoxException;
-//    
+//
 //    /**
 //     * Check the status of an existing harvesting job
 //     * 
