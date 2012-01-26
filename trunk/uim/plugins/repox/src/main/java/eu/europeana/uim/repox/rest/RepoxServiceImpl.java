@@ -1,6 +1,8 @@
 /* RepoxServiceImpl.java - created on Jan 23, 2012, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.repox.rest;
 
+import java.util.List;
+
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
@@ -10,6 +12,8 @@ import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
+import eu.europeana.uim.repox.rest.client.xml.HarvestingStatus;
+import eu.europeana.uim.repox.rest.client.xml.Log;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
 import eu.europeana.uim.repox.rest.utils.RepoxControlledVocabulary;
@@ -170,6 +174,17 @@ public class RepoxServiceImpl implements RepoxService {
     }
 
     @Override
+    public void synchronizeProvider(Provider<?> provider) throws RepoxException {
+// String id = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
+// if (id == null) {
+// RepoxRestClient client = clientfactory.getInstance(provider.getOaiBaseUrl());
+// eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = client.retrieveProvider(id);
+// String xmlProvider = RepoxXmlUtils.marshall(jaxbProv);
+// provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_XML, xmlProvider);
+// }
+    }
+
+    @Override
     public void updateCollection(Collection<?> collection) throws RepoxException {
         RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
 
@@ -253,5 +268,41 @@ public class RepoxServiceImpl implements RepoxService {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
             client.deleteProvider(id);
         }
+    }
+
+    @Override
+    public void synchronizeCollection(Collection<?> collection) throws RepoxException {
+        String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        if (id == null) {
+            RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
+
+// eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = client.retrieveCollection(id);
+// String xmlProvider = RepoxXmlUtils.marshall(jaxbProv);
+// collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML, xmlProvider);
+
+            HarvestingStatus status = client.getHarvestingStatus(id);
+            collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
+                    status.getStatus());
+            collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
+                    status.getRecords());
+        }
+    }
+
+    @Override
+    public String getHarvestLog(Collection<?> collection) throws RepoxException {
+        StringBuffer sb = new StringBuffer();
+
+        String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        if (id == null) {
+            RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
+            Log harvestLog = client.getHarvestLog(id);
+
+            List<String> linelist = harvestLog.getLine();
+            for (String ln : linelist) {
+                sb.append(ln);
+            }
+        }
+
+        return sb.toString();
     }
 }

@@ -135,6 +135,12 @@ public class RepoxServiceTest {
         String updProvId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
         Assert.assertEquals(provId, updProvId);
 
+        service.synchronizeCollection(collection);
+        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
+        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
+
+        Assert.assertNotNull(service.getHarvestLog(collection));
+
         service.deleteCollection(collection);
 
         aggrId = collection.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);

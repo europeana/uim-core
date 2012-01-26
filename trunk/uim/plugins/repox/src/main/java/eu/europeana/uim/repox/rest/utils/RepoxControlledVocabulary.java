@@ -24,11 +24,27 @@ public enum RepoxControlledVocabulary implements ControlledVocabularyKeyValue {
      * repox identifier key used on maps of collections as ID of the repox collection (specific to
      * this implementation)
      */
-    COLLECTION_REPOX_ID, 
+    COLLECTION_REPOX_ID,
     /**
      * type of harvesting
      */
-    HARVESTING_TYPE;
+    HARVESTING_TYPE,
+    /**
+     * xml representation of provider
+     */
+    PROVIDER_REPOX_XML,
+    /**
+     * xml representation of collection
+     */
+    COLLECTION_REPOX_XML,
+    /**
+     * state of harvesting
+     */
+    COLLECTION_HARVESTING_STATE,
+    /**
+     * number of harvested record
+     */
+    COLLECTION_HARVESTED_RECORDS;
 
     /**
      * Creates a new instance of this class.

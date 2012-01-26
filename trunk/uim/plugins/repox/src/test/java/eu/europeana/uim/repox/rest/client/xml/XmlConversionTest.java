@@ -4,7 +4,7 @@ package eu.europeana.uim.repox.rest.client.xml;
 import java.io.InputStream;
 
 import junit.framework.Assert;
-import eu.europeana.uim.repox.rest.RepoxTestUtils;
+import eu.europeana.uim.repox.rest.utils.RepoxXmlUtils;
 
 /**
  * Tests marshalling/unmarshalling of a XML document to Java objects.
@@ -28,7 +28,7 @@ public class XmlConversionTest {
         }
         String xml = out.toString();
 
-        Object xmlObject = RepoxTestUtils.unmarshall(xml);
+        Object xmlObject = RepoxXmlUtils.unmarshall(xml);
         Assert.assertTrue(xmlObject instanceof Response);
 
         Response response = (Response)xmlObject;
@@ -36,7 +36,7 @@ public class XmlConversionTest {
         Assert.assertEquals(5, response.getDataProviders().getProvider().size());
         Assert.assertEquals(5, response.getDataSources().getSource().size());
 
-        String mXmlObject = RepoxTestUtils.marshall(response);
+        String mXmlObject = RepoxXmlUtils.marshall(response);
         Assert.assertTrue(mXmlObject.contains("TimestampHarvester"));
     }
 }

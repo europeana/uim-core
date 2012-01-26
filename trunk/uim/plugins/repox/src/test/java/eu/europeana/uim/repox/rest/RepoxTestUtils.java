@@ -2,17 +2,12 @@
 package eu.europeana.uim.repox.rest;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
-import eu.europeana.uim.repox.rest.client.xml.Response;
+import eu.europeana.uim.repox.rest.utils.RepoxXmlUtils;
 
 /**
  * Utility functions common to all tests like uri of repox used for testing and logging output.
@@ -48,22 +43,6 @@ public class RepoxTestUtils {
     }
 
     /**
-     * context for JAXB
-     */
-    private static JAXBContext jaxbContext;
-
-    /**
-     * initializes jaxb context with root class of MACS records
-     */
-    static {
-        try {
-            jaxbContext = JAXBContext.newInstance(Response.class);
-        } catch (JAXBException e) {
-            throw new RuntimeException("Failed to initialize jaxb.", e);
-        }
-    }
-
-    /**
      * This method marshals the contents of a JIBX Element and outputs the results to the Logger.
      * 
      * @param jaxbObject
@@ -73,37 +52,10 @@ public class RepoxTestUtils {
      * @throws JAXBException
      */
     public static void logMarshalledObject(Object jaxbObject, Logger logger) throws JAXBException {
-        StringWriter writer = new StringWriter();
-
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.marshal(jaxbObject, writer);
-
+        String xml = RepoxXmlUtils.marshall(jaxbObject);
         logger.info("===========================================");
         logger.info("XML representation for '" + jaxbObject.getClass().getName() + "':");
-        logger.info(writer.toString());
+        logger.info(xml);
         logger.info("===========================================");
-    }
-
-    /**
-     * @param jaxbObject
-     * @return marshalled xml of given object
-     * @throws JAXBException
-     */
-    public static String marshall(Object jaxbObject) throws JAXBException {
-        StringWriter writer = new StringWriter();
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.marshal(jaxbObject, writer);
-        return writer.toString();
-    }
-
-    /**
-     * @param xmlObject
-     * @return unmarshalled object from xml
-     * @throws JAXBException
-     */
-    public static Object unmarshall(String xmlObject) throws JAXBException {
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-        Object jaxbObj = unmarshaller.unmarshal(new StringReader(xmlObject));
-        return jaxbObj;
     }
 }
