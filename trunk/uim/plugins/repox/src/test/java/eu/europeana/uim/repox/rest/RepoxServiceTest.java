@@ -4,13 +4,15 @@ package eu.europeana.uim.repox.rest;
 import static org.mockito.Mockito.spy;
 import junit.framework.Assert;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.europeana.uim.repox.RepoxService;
+import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
 import eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory;
+import eu.europeana.uim.repox.rest.utils.DatasourceType;
 import eu.europeana.uim.repox.rest.utils.RepoxControlledVocabulary;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
@@ -24,21 +26,24 @@ import eu.europeana.uim.store.memory.MemoryStorageEngine;
  * @since Jan 25, 2012
  */
 public class RepoxServiceTest {
-    private MemoryStorageEngine engine;
-    private RepoxService        service;
-    private String              repoxUri;
+    private static MemoryStorageEngine        engine;
+    private static RepoxService               service;
+    private static String                     repoxUri;
+    private static String                     timeStamp;
+    private static RepoxRestClientFactoryImpl factory;
 
     /**
      * Initialize repox service.
      * 
      * @throws Exception
      */
-    @Before
-    public void setupRepoxService() throws Exception {
+    @BeforeClass
+    public static void setupRepoxService() throws Exception {
         repoxUri = RepoxTestUtils.getUri(RepoxRestClientTest.class, "/config.properties");
         engine = spy(new MemoryStorageEngine());
-        service = new RepoxServiceImpl(new RepoxRestClientFactoryImpl(),
-                new BasicXmlObjectFactory());
+        factory = new RepoxRestClientFactoryImpl();
+        service = new RepoxServiceImpl(factory, new BasicXmlObjectFactory());
+        timeStamp = Long.toString(System.nanoTime());
     }
 
     /**
@@ -49,10 +54,10 @@ public class RepoxServiceTest {
     @Test
     public void testCreateUpdateDeleteProvider() throws Exception {
         Provider<Long> provider = engine.createProvider();
-        provider.setMnemonic("prov");
+        provider.setMnemonic("prov1_" + timeStamp);
         provider.setName("provider");
         provider.setOaiBaseUrl(repoxUri);
-        provider.putValue(StandardControlledVocabulary.COUNTRY, "de");
+        provider.putValue(StandardControlledVocabulary.COUNTRY, "de_" + timeStamp);
         engine.updateProvider(provider);
 
         service.updateProvider(provider);
@@ -81,6 +86,9 @@ public class RepoxServiceTest {
 
         provId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
         Assert.assertNull(provId);
+
+        RepoxRestClient client = factory.getInstance(repoxUri);
+        client.deleteAggregator(aggrId);
     }
 
     /**
@@ -91,54 +99,50 @@ public class RepoxServiceTest {
     @Test
     public void testCreateUpdateDeleteCollection() throws Exception {
         Provider<Long> provider = engine.createProvider();
-        provider.setMnemonic("prov");
+        provider.setMnemonic("prov2_" + timeStamp);
         provider.setName("provider");
         provider.setOaiBaseUrl(repoxUri);
-        provider.putValue(StandardControlledVocabulary.COUNTRY, "de");
+        provider.putValue(StandardControlledVocabulary.COUNTRY, "de_" + timeStamp);
         engine.updateProvider(provider);
 
         service.updateProvider(provider);
 
         Collection<Long> collection = engine.createCollection(provider);
-        collection.setMnemonic("coll");
+        collection.setMnemonic("coll_" + timeStamp);
         collection.setName("collection");
         collection.setOaiBaseUrl(repoxUri);
         collection.putValue(StandardControlledVocabulary.COUNTRY, "de");
+        collection.putValue(RepoxControlledVocabulary.HARVESTING_TYPE,
+                DatasourceType.oai_pmh.name());
         engine.updateCollection(collection);
 
         service.updateCollection(collection);
 
-        String aggrId = collection.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
-        Assert.assertNotNull(aggrId);
-
-        String provId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
-        Assert.assertNotNull(provId);
+        String collId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        Assert.assertNotNull(collId);
 
         collection.setName("updated-collection");
         engine.updateCollection(collection);
 
         service.updateCollection(collection);
 
-        String updAggrId = collection.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
-        Assert.assertEquals(aggrId, updAggrId);
-
-        String updProvId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
-        Assert.assertEquals(provId, updProvId);
+        String updCollId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        Assert.assertEquals(collId, updCollId);
 
         service.synchronizeCollection(collection);
         Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
         Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
 
-        Assert.assertNotNull(service.getHarvestLog(collection));
+//        Assert.assertNotNull(service.getHarvestLog(collection));
 
         service.deleteCollection(collection);
 
-        aggrId = collection.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
-        Assert.assertNotNull(aggrId);
-
-        provId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
-        Assert.assertNull(provId);
+        collId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        Assert.assertNull(collId);
 
         service.deleteProvider(provider);
+
+        RepoxRestClient client = factory.getInstance(repoxUri);
+        client.deleteAggregator(provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID));
     }
 }

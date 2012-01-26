@@ -22,7 +22,8 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         }
 
         String aggrName = countrystr + "-aggregator";
-        Aggregator aggr = new Aggregator();
+
+        Aggregator aggr = DummyXmlObjectCreator.createAggregator(aggrName);
         aggr.setName(aggrName);
         aggr.setNameCode(aggrName);
 
@@ -31,7 +32,7 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
 
     @Override
     public eu.europeana.uim.repox.rest.client.xml.Provider createProvider(Provider<?> provider) {
-        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = new eu.europeana.uim.repox.rest.client.xml.Provider();
+        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = DummyXmlObjectCreator.createProvider(provider.getName());
 
         jaxbProv.setName(provider.getName());
         jaxbProv.setNameCode(provider.getMnemonic());
@@ -47,12 +48,10 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
 
     @Override
     public Source createDataSource(Collection<?> collection) {
-        Source ds = new Source();
-        String id = (collection.getMnemonic());
-        ds.setId(id);
+        Source ds = DummyXmlObjectCreator.createOAIDataSource(collection.getMnemonic());
+        ds.setId(collection.getMnemonic());
         ds.setNameCode(collection.getMnemonic());
         ds.setName(collection.getName());
-        ds.setExportPath("");
         return ds;
     }
 }

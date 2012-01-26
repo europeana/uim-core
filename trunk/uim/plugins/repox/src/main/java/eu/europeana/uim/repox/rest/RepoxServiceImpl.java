@@ -130,9 +130,10 @@ public class RepoxServiceImpl implements RepoxService {
     @Override
     public void deleteProvider(Provider<?> provider) throws RepoxException {
         String id = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
-        if (id == null) {
+        if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(provider.getOaiBaseUrl());
             client.deleteProvider(id);
+            provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, null);
         }
     }
 
@@ -217,16 +218,17 @@ public class RepoxServiceImpl implements RepoxService {
     @Override
     public void deleteCollection(Collection<?> collection) throws RepoxException {
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
-        if (id == null) {
+        if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
-            client.deleteProvider(id);
+            client.deleteDatasource(id);
+            collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, null);
         }
     }
 
     @Override
     public void synchronizeCollection(Collection<?> collection) throws RepoxException {
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
-        if (id == null) {
+        if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
 
 // eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = client.retrieveCollection(id);
@@ -237,7 +239,7 @@ public class RepoxServiceImpl implements RepoxService {
             collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
                     status.getStatus());
             collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
-                    status.getRecords());
+                    status.getRecords() != null ? status.getRecords() : "");
         }
     }
 
@@ -246,7 +248,7 @@ public class RepoxServiceImpl implements RepoxService {
         StringBuffer sb = new StringBuffer();
 
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
-        if (id == null) {
+        if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
             Log harvestLog = client.getHarvestLog(id);
 
