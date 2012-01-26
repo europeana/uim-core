@@ -22,8 +22,17 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
+                            eu.europeana.uim.repox, 
+                            eu.europeana.uim.repox.model, 
+                            eu.europeana.uim.store, 
+                            javax.xml.bind, 
+                            javax.xml.bind.annotation,
+                            javax.xml.bind.annotation.adapters, 
+                            javax.xml.namespace, 
+                            org.joda.time,
                         </Import-Package>
                         <Export-Package>
+                            eu.europeana.uim.repox.rest
                         </Export-Package>
                         <Embed-Dependency></Embed-Dependency>
                         <!-- <Embed-Transitive>true</Embed-Transitive> -->
