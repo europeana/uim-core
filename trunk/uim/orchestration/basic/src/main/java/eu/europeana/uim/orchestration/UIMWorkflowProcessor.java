@@ -33,27 +33,27 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * @since Mar 22, 2011
  */
 public class UIMWorkflowProcessor<I> implements Runnable {
-    private static Logger                                             log              = Logger.getLogger(UIMWorkflowProcessor.class.getName());
+    private static Logger                                             log                  = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
-    private SimpleThreadFactory                                       factory          = new SimpleThreadFactory(
-                                                                                               "processor");
+    private SimpleThreadFactory                                       factory              = new SimpleThreadFactory(
+                                                                                                   "processor");
     private Thread                                                    dispatcher;
 
     private final Registry                                            registry;
 
-    private boolean                                                   running          = false;
+    private boolean                                                   running              = false;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED        = TKey.register(
-                                                                                               UIMWorkflowProcessor.class,
-                                                                                               "creators",
-                                                                                               (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
+    private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED            = TKey.register(
+                                                                                                   UIMWorkflowProcessor.class,
+                                                                                                   "creators",
+                                                                                                   (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
 
-    private List<ActiveExecution<I>>                                  executions       = new ArrayList<ActiveExecution<I>>();
+    private List<ActiveExecution<I>>                                  executions           = new ArrayList<ActiveExecution<I>>();
 
-    private int                                                       maxTotalProgress = 5000;
-
-    private int                                                       maxInProgress    = 1000;
+    private int                                                       maxRunningExecutions = 4;
+    private int                                                       maxTotalProgress     = 5000;
+    private int                                                       maxInProgress        = 1000;
 
     /**
      * Creates a new instance of this class.
@@ -305,6 +305,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution.getWorkflow().getStart(), t);
         }
+
         for (IngestionPlugin step : execution.getWorkflow().getSteps()) {
             try {
                 step.completed(execution);
@@ -347,11 +348,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             }
 
             log.warning("Remove Execution:" + execution.toString());
-            synchronized (executions) {
-                executions.remove(execution);
-            }
+            removeExecution(execution);
         }
-
     }
 
     /**
@@ -364,7 +362,16 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         if (execution.getWorkflow().getSteps().isEmpty()) { throw new IllegalStateException(
                 "Empty workflow not allowed: " + execution.getWorkflow().getClass().getName()); }
         synchronized (executions) {
+            int counter = 0;
+            for (ActiveExecution<I> exec : executions) {
+                if (!exec.isPaused()) {
+                    counter++;
+                }
+            }
             executions.add(execution);
+            if (counter >= maxRunningExecutions) {
+                execution.setPaused(true);
+            }
         }
 
         // init in separate thread, so that we are not blocking here.
@@ -396,7 +403,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
                     execution.putValue(SCHEDULED, new ArrayList<TaskCreator>());
                     execution.setInitialized(true);
-
                 } catch (Throwable t) {
                     log.log(Level.SEVERE, "Failed to startup execution.", t);
                     try {
@@ -408,13 +414,39 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     } catch (StorageEngineException e) {
                         log.log(Level.SEVERE, "Failed to persist failed execution.", e);
                     } finally {
-                        synchronized (executions) {
-                            executions.remove(execution);
-                        }
+                        removeExecution(execution);
                     }
                 }
             }
+
         }, "Initializer" + execution.getExecution().getId() + ": " + execution.getWorkflow()).start();
+    }
+    
+    private void removeExecution(final ActiveExecution<I> execution) {
+        synchronized (executions) {
+            executions.remove(execution);
+            
+            int counter = 0;
+            for (ActiveExecution<I> exec : executions) {
+                if (!exec.isPaused()) {
+                    counter++;
+                }
+            }
+            
+            while (counter < maxRunningExecutions) {
+                ActiveExecution<I> latest = null;
+                for (ActiveExecution<I> exec : executions) {
+                    if (exec.isPaused() && (latest == null || latest.getExecution().getStartTime().compareTo(exec.getExecution().getStartTime()) < 0)) {
+                        latest = exec;
+                    }
+                }
+                if (latest == null) {
+                    break;
+                }
+                latest.setPaused(false);
+                counter++;
+            }
+        }
     }
 
     /**
@@ -496,5 +528,20 @@ public class UIMWorkflowProcessor<I> implements Runnable {
      */
     public int getMaxInProgress() {
         return maxInProgress;
+    }
+
+    /**
+     * @return maximum number of running executions at once
+     */
+    public int getMaxRunningExecutions() {
+        return maxRunningExecutions;
+    }
+
+    /**
+     * @param maxRunningExecutions
+     *            maximum number of running executions at once
+     */
+    public void setMaxRunningExecutions(int maxRunningExecutions) {
+        this.maxRunningExecutions = maxRunningExecutions;
     }
 }

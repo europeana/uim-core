@@ -1,7 +1,7 @@
 package eu.europeana.uim.workflows;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,8 +19,28 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 4, 2011
  */
 public class SysoutPlugin extends AbstractIngestionPlugin {
-    private static TKey<SysoutPlugin, Data> DATA_KEY = TKey.register(SysoutPlugin.class, "data",
-                                                             Data.class);
+    private static TKey<SysoutPlugin, Data> DATA_KEY     = TKey.register(SysoutPlugin.class,
+                                                                 "data", Data.class);
+
+    /**
+     * ranges of random sleep (e.g. 500-1000, default is 0-100)
+     */
+    public static final String              SLEEP_RANGES = "sysout.sleep-ranges";
+
+    /**
+     * Random sleep enabled?
+     */
+    public static final String              RANDOM_SLEEP = "sysout.random.sleep";
+
+    /**
+     * parameters to be set for topic matching plugin
+     */
+    private static final List<String>       PARAMETER    = new ArrayList<String>() {
+                                                             {
+                                                                 add(SLEEP_RANGES);
+                                                                 add(RANDOM_SLEEP);
+                                                             }
+                                                         };
 
     /**
      * Creates a new instance of this class.
@@ -62,7 +82,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
 
         if (data.randsleep) {
             try {
-                int sleep = data.random.nextInt(100);
+                int sleep = data.ranges[0] + data.random.nextInt(data.ranges[1]);
                 Thread.sleep(sleep);
                 System.out.println(getClass().getSimpleName() + ": " + identifier + "(s=" + sleep +
                                    ")");
@@ -81,8 +101,17 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
         Data data = new Data();
         context.putValue(DATA_KEY, data);
 
-        String property = context.getProperties().getProperty("sysout.random.sleep", "false");
-        data.randsleep = Boolean.parseBoolean(property);
+        String sleep = context.getProperties().getProperty(RANDOM_SLEEP, "false");
+        data.randsleep = Boolean.parseBoolean(sleep);
+
+        String ranges = context.getProperties().getProperty(SLEEP_RANGES, "0-100");
+        String[] split = ranges.split("-");
+        if (split.length == 2) {
+            int bottom = Integer.parseInt(split[0]);
+            int top = Integer.parseInt(split[1]);
+            data.ranges[0] = bottom;
+            data.ranges[1] = top;
+        }
     }
 
     @Override
@@ -91,12 +120,13 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
 
     @Override
     public List<String> getParameters() {
-        return Arrays.asList("sysout.random.sleep");
+        return PARAMETER;
     }
 
     private final static class Data implements Serializable {
         public Random  random    = new Random();
         public boolean randsleep = false;
+        public int[]   ranges    = new int[] { 0, 100 };
         @SuppressWarnings("unused")
         public int     processed = 0;
     }
