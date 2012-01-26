@@ -4,6 +4,9 @@ package eu.europeana.uim.repox.rest.client.xml;
 import java.io.InputStream;
 
 import junit.framework.Assert;
+
+import org.junit.Test;
+
 import eu.europeana.uim.repox.rest.utils.RepoxXmlUtils;
 
 /**
@@ -18,6 +21,7 @@ public class XmlConversionTest {
      * 
      * @throws Exception
      */
+    @Test
     public void convertResponse() throws Exception {
         InputStream in = XmlConversionTest.class.getResourceAsStream("/repox/response.xml");
 
@@ -32,9 +36,9 @@ public class XmlConversionTest {
         Assert.assertTrue(xmlObject instanceof Response);
 
         Response response = (Response)xmlObject;
-        Assert.assertEquals(5, response.getAggregators().getAggregator().size());
-        Assert.assertEquals(5, response.getDataProviders().getProvider().size());
-        Assert.assertEquals(5, response.getDataSources().getSource().size());
+        Assert.assertEquals(2, response.getAggregators().getAggregator().size());
+        Assert.assertEquals(3, response.getDataProviders().getProvider().size());
+        Assert.assertEquals(8, response.getDataSources().getSource().size());
 
         String mXmlObject = RepoxXmlUtils.marshall(response);
         Assert.assertTrue(mXmlObject.contains("TimestampHarvester"));
