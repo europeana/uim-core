@@ -145,6 +145,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         Response resp = invokeRestCall("/aggregators/update", Response.class, id.toString(),
                 name.toString(), nameCode.toString(), homepage.toString());
 
+        
         if (resp.getAggregator() == null) {
             if (resp.getError() != null) {
                 throw new RepoxException("Could not update aggregator! Reason: " +
