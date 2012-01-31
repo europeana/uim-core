@@ -54,7 +54,7 @@ public interface RepoxService {
     void updateProvider(Provider<?> provider) throws RepoxException;
 
     /**
-     * Updates a provider within Repox
+     * Updates an UIM provider from Repox
      * 
      * @param provider
      *            UIM provider object to update/create on Repox side
@@ -63,7 +63,7 @@ public interface RepoxService {
     void synchronizeProvider(Provider<?> provider) throws RepoxException;
 
     /**
-     * Delete a collection within Repox (data source)
+     * Deletes a collection within Repox (data source)
      * 
      * @param collection
      *            UIM Collection object to be deleted
@@ -72,7 +72,7 @@ public interface RepoxService {
     void deleteCollection(Collection<?> collection) throws RepoxException;
 
     /**
-     * Update a collection within Repox (data source)
+     * Updates a collection within Repox (data source)
      * 
      * @param collection
      *            UIM Collection object to be updated
@@ -81,7 +81,7 @@ public interface RepoxService {
     void updateCollection(Collection<?> collection) throws RepoxException;
 
     /**
-     * Update a collection within Repox (data source)
+     * Updates an UIM collection with Repox information (data source)
      * 
      * @param collection
      *            UIM Collection object to be updated
