@@ -109,6 +109,7 @@ public class Instant extends Temporal {
     public Instant(int year, int month) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         time = cal.getTime();
         granularity = InstantGranularity.MONTH;
@@ -126,6 +127,7 @@ public class Instant extends Temporal {
     public Instant(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
         time = cal.getTime();
@@ -146,6 +148,7 @@ public class Instant extends Temporal {
     public Instant(int year, int month, int day, int hour, int minute) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.HOUR_OF_DAY, hour);
@@ -169,6 +172,7 @@ public class Instant extends Temporal {
     public Instant(int year, int month, int day, int hour, int minute, int miliseconds) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.HOUR_OF_DAY, hour);
