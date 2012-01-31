@@ -11,6 +11,7 @@ import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.HarvestingStatus;
 import eu.europeana.uim.repox.rest.client.xml.Log;
+import eu.europeana.uim.repox.rest.client.xml.RunningTasks;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
 import eu.europeana.uim.repox.rest.utils.RepoxControlledVocabulary;
@@ -260,4 +261,20 @@ public class RepoxServiceImpl implements RepoxService {
 
         return sb.toString();
     }
+
+    @Override
+    public List<String> getActiveHarvestings(String url) throws RepoxException {
+        RepoxRestClient client = clientfactory.getInstance(url);
+        RunningTasks rTasks = client.getActiveHarvestingSessions();
+        return rTasks.getDataSource();
+    }
+
+//    @Override
+//    public void synchronize(StorageEngine<?> engine, String url) throws RepoxException {
+//        RepoxRestClient client = clientfactory.getInstance(url);
+//
+//        DataProviders providers = client.retrieveProviders();
+//
+//        DataSources sources = client.retrieveDataSources();
+//    }
 }

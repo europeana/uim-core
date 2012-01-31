@@ -20,6 +20,8 @@
  */
 package eu.europeana.uim.repox;
 
+import java.util.List;
+
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -96,4 +98,25 @@ public interface RepoxService {
      * @throws RepoxException
      */
     String getHarvestLog(Collection<?> collection) throws RepoxException;
+
+    /**
+     * Gets a list of mnemonics of collections currently being harvested
+     * 
+     * @param url
+     *            repox defined by this URL
+     * @return mnemonics of collections
+     * @throws RepoxException
+     */
+    List<String> getActiveHarvestings(String url) throws RepoxException;
+
+    /**
+     * Synchronizes all information from Repox to UIM.
+     * 
+     * @param engine
+     *            storage engine to lookup UIM objects
+     * @param url
+     *            repox defined by this URL
+     * @throws RepoxException
+     */
+//    void synchronize(StorageEngine<?> engine, String url) throws RepoxException;
 }

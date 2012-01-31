@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
+ * Blocks while intialization of generic things.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 2, 2011
@@ -90,7 +90,7 @@ public abstract class BlockingInitializer implements Runnable {
             log.log(Level.SEVERE, "Failed to initialize with classloader:" +
                                   Thread.currentThread().getContextClassLoader(), t);
             status = STATUS_FAILED;
-            exception = new RuntimeException("Exception while running initialization.",t);
+            exception = new RuntimeException("Exception while running initialization.", t);
         }
     }
 
