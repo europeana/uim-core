@@ -1,8 +1,6 @@
 /* RepoxClientTest.java - created on Jan 25, 2012, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.repox.rest.client;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.Assert;
@@ -37,13 +35,34 @@ public class RepoxRestClientTest {
     /**
      * Sets up the repox using host in config properties specific to environment.
      * 
-     * @throws IOException
+     * @throws Exception
      */
     @BeforeClass
-    public static void setupRepoxClient() throws IOException {
+    public static void setupRepoxClient() throws Exception {
         uri = RepoxTestUtils.getUri(RepoxRestClientTest.class, "/config.properties");
         repoxRestClient = new RepoxRestClientImpl(uri);
         timeStamp = Long.toString(System.nanoTime());
+
+        Aggregators aggrs = repoxRestClient.retrieveAggregators();
+        for (Aggregator aggr : aggrs.getAggregator()) {
+            if (aggr.getId().startsWith("aggr_")) {
+                repoxRestClient.deleteAggregator(aggr.getId());
+            }
+        }
+
+        DataProviders provs = repoxRestClient.retrieveProviders();
+        for (Provider prov : provs.getProvider()) {
+            if (prov.getId().startsWith("prov_")) {
+                repoxRestClient.deleteProvider(prov.getId());
+            }
+        }
+
+        DataSources sources = repoxRestClient.retrieveDataSources();
+        for (Source source : sources.getSource()) {
+            if (source.getId().startsWith("ds_")) {
+                repoxRestClient.deleteDatasource(source.getId());
+            }
+        }
     }
 
     /**
@@ -199,7 +218,7 @@ public class RepoxRestClientTest {
             }
 
             // Create an OAI PMH String
-            Source oaids = DummyXmlObjectCreator.createOAIDataSource(timeStamp);
+            Source oaids = DummyXmlObjectCreator.createOAIDataSource("ds_oai_" + timeStamp);
             Source respOaids = repoxRestClient.createDatasourceOAI(oaids, respprov);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(respOaids, logger);
@@ -285,7 +304,7 @@ public class RepoxRestClientTest {
             }
 
             // Create an Z3950Timestamp String
-            Source z3950TSds = DummyXmlObjectCreator.createZ3950TimestampDataSource("bdaSet_" +
+            Source z3950TSds = DummyXmlObjectCreator.createZ3950TimestampDataSource("ds_Z3950Timestamp_" +
                                                                                     timeStamp);
             Source respz3950TSds = repoxRestClient.createDatasourceZ3950Timestamp(z3950TSds,
                     respprov);
@@ -353,7 +372,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-//    @Test
+// @Test
     public void testCreateUpdateDeleteZ3950IDFileDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes
@@ -373,7 +392,7 @@ public class RepoxRestClientTest {
             }
 
             // Create an Z3950OIdFile String
-            Source z3950IDFileds = DummyXmlObjectCreator.createZ3950IdFileDataSource("bdaSet_" +
+            Source z3950IDFileds = DummyXmlObjectCreator.createZ3950IdFileDataSource("ds_Z3950IDFile_" +
                                                                                      timeStamp);
             Source respZ3950IDFileds = repoxRestClient.createDatasourceZ3950IdFile(z3950IDFileds,
                     respprov);
@@ -382,18 +401,15 @@ public class RepoxRestClientTest {
             }
 
             // Update an Z3950OIdFile String
-            respZ3950IDFileds.setDescription("altered!");
+            respZ3950IDFileds.setDescription("altered");
 
             Source updZ3950IDFileds = repoxRestClient.updateDatasourceZ3950IdFile(respZ3950IDFileds);
             Assert.assertNotNull(updZ3950IDFileds);
-            Assert.assertEquals("altered!", updZ3950IDFileds.getDescription());
+            Assert.assertEquals("altered", updZ3950IDFileds.getDescription());
 
             // Initialize a harvesting session
             String harvestRes = repoxRestClient.initiateHarvesting(updZ3950IDFileds.getId(), true);
             Assert.assertNotNull(harvestRes);
-            if (logEnabled) {
-                RepoxTestUtils.logMarshalledObject(harvestRes, logger);
-            }
 
             RunningTasks rt = repoxRestClient.getActiveHarvestingSessions();
             Assert.assertNotNull(rt);
@@ -445,7 +461,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-    // @Test
+    @Test
     public void testCreateUpdateDeleteZ3950IdSequenceDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes
@@ -466,7 +482,7 @@ public class RepoxRestClientTest {
 
             // Create an Z3950OIdSequence String
             // NPE
-            Source Z3950IdSeqds = DummyXmlObjectCreator.createZ3950IdSequenceDataSource("bdaSet_" +
+            Source Z3950IdSeqds = DummyXmlObjectCreator.createZ3950IdSequenceDataSource("ds_Z3950IdSequence_" +
                                                                                         timeStamp);
             Source respZ3950IdSeqds = repoxRestClient.createDatasourceZ3950IdSequence(Z3950IdSeqds,
                     respprov);
@@ -475,32 +491,29 @@ public class RepoxRestClientTest {
             }
 
             // Update an Z3950OIdSequence String
-            respZ3950IdSeqds.setDescription("altered!");
+            respZ3950IdSeqds.setDescription("altered");
 
             Source updZ3950IdSeqds = repoxRestClient.updateDatasourceZ3950IdSequence(respZ3950IdSeqds);
             Assert.assertNotNull(updZ3950IdSeqds);
-            Assert.assertEquals("altered!", updZ3950IdSeqds.getDescription());
+            Assert.assertEquals("altered", updZ3950IdSeqds.getDescription());
 
             // Initialize a harvesting session
             String harvestRes = repoxRestClient.initiateHarvesting(updZ3950IdSeqds.getId(), true);
             Assert.assertNotNull(harvestRes);
-            if (logEnabled) {
-                RepoxTestUtils.logMarshalledObject(harvestRes, logger);
-            }
 
             RunningTasks rt = repoxRestClient.getActiveHarvestingSessions();
             Assert.assertNotNull(rt);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(rt, logger);
             }
-//            List<String> dslist = rt.getDataSource();
-//            String dsisregistered = null;
-//            for (String ds : dslist) {
-//                if (ds.equals(updZ3950IdSeqds.getId())) {
-//                    dsisregistered = ds;
-//                }
-//            }
-//            Assert.assertNotNull(dsisregistered);
+// List<String> dslist = rt.getDataSource();
+// String dsisregistered = null;
+// for (String ds : dslist) {
+// if (ds.equals(updZ3950IdSeqds.getId())) {
+// dsisregistered = ds;
+// }
+// }
+// Assert.assertNotNull(dsisregistered);
 
             // Gets the Harvesting Status for the created String
             HarvestingStatus status = repoxRestClient.getHarvestingStatus(updZ3950IdSeqds.getId());
@@ -538,7 +551,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-    // @Test
+    @Test
     public void testCreateUpdateDeleteFtpDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes
@@ -559,7 +572,7 @@ public class RepoxRestClientTest {
             }
 
             // Create an FTP String
-            Source Ftpds = DummyXmlObjectCreator.createFtpDataSource("bdaSet_" + timeStamp);
+            Source Ftpds = DummyXmlObjectCreator.createFtpDataSource("ds_ftp_" + timeStamp);
             Source respFtpds = repoxRestClient.createDatasourceFtp(Ftpds, respprov);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(respFtpds, logger);
@@ -568,33 +581,30 @@ public class RepoxRestClientTest {
             // Temporarily placing values here until issue is fixed
 
             // Update an FTP String
-            respFtpds.setDescription("altered!@#$%");
+            respFtpds.setDescription("altered");
             // TODO:Temporarily disable this until issues are resolved
             // Source updFtpds = repoxRestClient.updateDatasourceFtp(respFtpds);
-            Source updFtpds = repoxRestClient.updateDatasourceFtp(Ftpds);
+            Source updFtpds = repoxRestClient.updateDatasourceFtp(respFtpds);
             Assert.assertNotNull(updFtpds);
             // Assert.assertEquals("altered!@#$%",updFtpds.getDescription());
 
             // Initialize a harvesting session
             String harvestRes = repoxRestClient.initiateHarvesting(updFtpds.getId(), true);
             Assert.assertNotNull(harvestRes);
-            if (logEnabled) {
-                RepoxTestUtils.logMarshalledObject(harvestRes, logger);
-            }
 
             RunningTasks rt = repoxRestClient.getActiveHarvestingSessions();
             Assert.assertNotNull(rt);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(rt, logger);
             }
-//            List<String> dslist = rt.getDataSource();
-//            String dsisregistered = null;
-//            for (String ds : dslist) {
-//                if (ds.equals(updFtpds.getId())) {
-//                    dsisregistered = ds;
-//                }
-//            }
-//            Assert.assertNotNull(dsisregistered);
+// List<String> dslist = rt.getDataSource();
+// String dsisregistered = null;
+// for (String ds : dslist) {
+// if (ds.equals(updFtpds.getId())) {
+// dsisregistered = ds;
+// }
+// }
+// Assert.assertNotNull(dsisregistered);
 
             // Gets the Harvesting Status for the created String
             HarvestingStatus status = repoxRestClient.getHarvestingStatus(updFtpds.getId());
@@ -632,7 +642,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-    // @Test
+    @Test
     public void testCreateUpdateDeleteHttpDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes
@@ -652,14 +662,14 @@ public class RepoxRestClientTest {
             }
 
             // Create an HTTP String - NPE????
-            Source httpds = DummyXmlObjectCreator.createHttpDataSource("bdaSet_" + timeStamp);
+            Source httpds = DummyXmlObjectCreator.createHttpDataSource("ds_http_" + timeStamp);
             Source respHttpds = repoxRestClient.createDatasourceHttp(httpds, respprov);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(respHttpds, logger);
             }
 
             // Update an HTTP String
-            httpds.setDescription("altered!@#$%");
+            httpds.setDescription("altered");
 
             // TODO:Temporarily disable this until issues are resolved
             // Source updHttpds = repoxRestClient.updateDatasourceHttp(respHttpds);
@@ -671,23 +681,20 @@ public class RepoxRestClientTest {
             // Initialize a harvesting session
             String harvestRes = repoxRestClient.initiateHarvesting(updHttpds.getId(), true);
             Assert.assertNotNull(harvestRes);
-            if (logEnabled) {
-                RepoxTestUtils.logMarshalledObject(harvestRes, logger);
-            }
 
             RunningTasks rt = repoxRestClient.getActiveHarvestingSessions();
             Assert.assertNotNull(rt);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(rt, logger);
             }
-            List<String> dslist = rt.getDataSource();
-            String dsisregistered = null;
-            for (String ds : dslist) {
-                if (ds.equals(updHttpds.getId())) {
-                    dsisregistered = ds;
-                }
-            }
-            Assert.assertNotNull(dsisregistered);
+// List<String> dslist = rt.getDataSource();
+// String dsisregistered = null;
+// for (String ds : dslist) {
+// if (ds.equals(updHttpds.getId())) {
+// dsisregistered = ds;
+// }
+// }
+// Assert.assertNotNull(dsisregistered);
 
             // Gets the Harvesting Status for the created String
             HarvestingStatus status = repoxRestClient.getHarvestingStatus(updHttpds.getId());
@@ -725,7 +732,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-    // @Test
+    @Test
     public void testCreateUpdateDeleteFolderDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes
@@ -746,41 +753,38 @@ public class RepoxRestClientTest {
             }
 
             // Create an Folder String
-            Source folderds = DummyXmlObjectCreator.createFolderDataSource("bdaSet_" + timeStamp);
+            Source folderds = DummyXmlObjectCreator.createFolderDataSource("ds_folder_" + timeStamp);
             Source respfolderds = repoxRestClient.createDatasourceFolder(folderds, respprov);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(respfolderds, logger);
             }
 
             // Update an Folder String
-            respfolderds.setDescription("altered!@#$%");
+            respfolderds.setDescription("altered");
 
             // TODO:Temporarily disable this until issues are resolved
             // Source updfolderds = repoxRestClient.updateDatasourceFolder(respfolderds);
-            Source updfolderds = repoxRestClient.updateDatasourceFolder(folderds);
+            Source updfolderds = repoxRestClient.updateDatasourceFolder(respfolderds);
             Assert.assertNotNull(updfolderds);
             // Assert.assertEquals("altered!@#$%",updfolderds.getDescription());
 
             // Initialize a harvesting session
             String harvestRes = repoxRestClient.initiateHarvesting(updfolderds.getId(), true);
             Assert.assertNotNull(harvestRes);
-            if (logEnabled) {
-                RepoxTestUtils.logMarshalledObject(harvestRes, logger);
-            }
 
             RunningTasks rt = repoxRestClient.getActiveHarvestingSessions();
             Assert.assertNotNull(rt);
             if (logEnabled) {
                 RepoxTestUtils.logMarshalledObject(rt, logger);
             }
-//            List<String> dslist = rt.getDataSource();
-//            String dsisregistered = null;
-//            for (String ds : dslist) {
-//                if (ds.equals(updfolderds.getId())) {
-//                    dsisregistered = ds;
-//                }
-//            }
-//            Assert.assertNotNull(dsisregistered);
+// List<String> dslist = rt.getDataSource();
+// String dsisregistered = null;
+// for (String ds : dslist) {
+// if (ds.equals(updfolderds.getId())) {
+// dsisregistered = ds;
+// }
+// }
+// Assert.assertNotNull(dsisregistered);
 
             // Gets the Harvesting Status for the created String
             HarvestingStatus status = repoxRestClient.getHarvestingStatus(updfolderds.getId());

@@ -145,7 +145,6 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         Response resp = invokeRestCall("/aggregators/update", Response.class, id.toString(),
                 name.toString(), nameCode.toString(), homepage.toString());
 
-        
         if (resp.getAggregator() == null) {
             if (resp.getError() != null) {
                 throw new RepoxException("Could not update aggregator! Reason: " +
@@ -881,10 +880,10 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
 
         for (int i = 0; i < params.length; i++) {
-            if (i != 0) {
+            if (i != 0 && params[i] != null && params[i].length() > 0) {
                 operation.append("&");
             }
-            operation.append(params[i]);
+            operation.append(params[i].replaceAll(" ", "%20"));
         }
 
         String urlStr = operation.toString();
@@ -1330,9 +1329,11 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         isoFormat.append(ds.getIsoFormat());
         // isoFormat.append("test");
 
-        charset.append("charset=");
-        charset.append(ds.getTarget().getCharset());
-        // charset.append("test");
+        if (ds.getTarget() != null) {
+            charset.append("charset=");
+            charset.append(ds.getTarget().getCharset());
+        }
+        
         recordIdPolicy.append("recordIdPolicy=");
         recordIdPolicy.append(ds.getRecordIdPolicy().getType());
         if (ds.getRecordIdPolicy().getType().equals("idExported")) {
@@ -1504,9 +1505,10 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         isoFormat.append("isoFormat=");
         isoFormat.append(ds.getIsoFormat());
         // isoFormat.append("test");
-        charset.append("charset=");
-        // charset.append("test");
-        charset.append(ds.getTarget().getCharset());
+        if (ds.getTarget() != null) {
+            charset.append("charset=");
+            charset.append(ds.getTarget().getCharset());
+        }
         recordIdPolicy.append("recordIdPolicy=");
         recordIdPolicy.append(ds.getRecordIdPolicy().getType());
         if (ds.getRecordIdPolicy().getType().equals("idExported")) {
