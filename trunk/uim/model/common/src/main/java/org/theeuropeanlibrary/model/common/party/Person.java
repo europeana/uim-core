@@ -81,7 +81,8 @@ public class Person extends Party {
      *            name of the person (excluding surname)
      */
     public Person(String surname, String firstNames) {
-        super(firstNames==null ? surname : (surname==null ? firstNames : firstNames + " " + surname));
+        super(firstNames == null ? surname : (surname == null ? firstNames : firstNames + " " +
+                                                                             surname));
         this.firstNames = firstNames;
         this.surname = surname;
         lifePeriod = null;
@@ -103,10 +104,9 @@ public class Person extends Party {
      */
     public Person(String surname, String firstNames, Period lifePeriod, Period flourishingPeriod,
                   List<Identifier> identifiers) {
-    	
-    	
-        super(firstNames==null ? surname : (surname==null ? firstNames : firstNames + " " + surname)
-        		, identifiers);
+
+        super(firstNames == null ? surname : (surname == null ? firstNames : firstNames + " " +
+                                                                             surname), identifiers);
         this.firstNames = firstNames;
         this.surname = surname;
         this.lifePeriod = lifePeriod;
@@ -201,18 +201,25 @@ public class Person extends Party {
     @Override
     public String getDisplay() {
         String ret = "";
-        if (partyName != null)
+        if (partyName != null) {
             ret = partyName;
-        else {
-            if (surname != null) ret = surname;
-            if (firstNames != null) {
-                if (ret.isEmpty())
-                    ret = firstNames;
-                else
-                    ret += ", " + firstNames;
+        } else {
+            if (surname != null) {
+                ret = surname;
             }
-            if (numerals != null) ret += ", " + numerals;
-            if (title != null) ret += ", " + title;
+            if (firstNames != null) {
+                if (ret.isEmpty()) {
+                    ret = firstNames;
+                } else {
+                    ret += ", " + firstNames;
+                }
+            }
+            if (numerals != null) {
+                ret += ", " + numerals;
+            }
+            if (title != null) {
+                ret += ", " + title;
+            }
             if (lifePeriod != null) {
                 ret += ", " + lifePeriod.getDisplay();
             }
@@ -228,12 +235,10 @@ public class Person extends Party {
         if (firstNames == null && surname == null) {
             return partyName;
         } else {
-            if (firstNames == null) { 
+            if (firstNames == null) {
                 return surname;
             } else {
-                if (surname != null) {
-                    return surname.trim() + " " + firstNames.trim() ;
-                }
+                if (surname != null) { return surname.trim() + " " + firstNames.trim(); }
                 return firstNames;
             }
         }
@@ -247,12 +252,10 @@ public class Person extends Party {
         if (firstNames == null && surname == null) {
             return partyName;
         } else {
-            if (firstNames == null) { 
+            if (firstNames == null) {
                 return surname;
             } else {
-                if (surname != null) {
-                    return firstNames.trim() + " " + surname.trim() ;
-                }
+                if (surname != null) { return firstNames.trim() + " " + surname.trim(); }
                 return firstNames;
             }
         }
@@ -268,25 +271,22 @@ public class Person extends Party {
         this.surname = surname;
     }
 
-    
-	/**
-	 * Splits the name by whitespace and returns a String with all the first letters from the names.
-	 * the output for "Jonh Smith" is "JS"  
-	 * 
-	 * @return name initials
-	 */
-	public String getNameInitials() {
-		String fullname=getFullName();
-		String[] split=fullname.split(" ");
-		String initials="";
-		for(String n:split) {
-			if(n.length()>0)
-				initials+=n.charAt(0);
-		}
-		return initials;
-	}
-    
-    
+    /**
+     * Splits the name by whitespace and returns a String with all the first letters from the names.
+     * the output for "Jonh Smith" is "JS"
+     * 
+     * @return name initials
+     */
+    public String getNameInitials() {
+        String fullname = getFullName();
+        String[] split = fullname.split(" ");
+        String initials = "";
+        for (String n : split) {
+            if (n.length() > 0) initials += n.charAt(0);
+        }
+        return initials;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
