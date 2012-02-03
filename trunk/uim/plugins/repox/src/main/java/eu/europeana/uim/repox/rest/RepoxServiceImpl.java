@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import eu.europeana.uim.repox.DataSourceOperationException;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
@@ -128,7 +127,7 @@ public class RepoxServiceImpl implements RepoxService {
                 Aggregator createdAggregator = client.createAggregator(aggregator);
                 aggregatorId = createdAggregator.getId();
             }
-            
+
             provider.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, aggregatorId);
         }
 
@@ -202,21 +201,23 @@ public class RepoxServiceImpl implements RepoxService {
         RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
 
         String htypeString = collection.getValue(RepoxControlledVocabulary.HARVESTING_TYPE);
-
-        if (htypeString == null) {
+        if (htypeString == null) { 
             htypeString = DatasourceType.oai_pmh.name();
-            collection.putValue(RepoxControlledVocabulary.HARVESTING_TYPE, htypeString);
 //            throw new DataSourceOperationException(
 //                "Error during the creation of a Datasource: "
-//                        + "HARVESTING_TYPE information not available in UIM for the specific object.");
-            
+//                        + "HARVESTING_TYPE information not available in UIM for the specific object."); 
         }
 
         DatasourceType harvestingtype = DatasourceType.valueOf(htypeString);
-
-        String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        
         Source retDs = client.retrieveDataSource(collection.getMnemonic());
-        if (collectionId == null && retDs == null) {
+        String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
+        if (collectionId == null && retDs != null) {
+            collectionId = retDs.getId();
+            collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retDs.getId());
+        }
+
+        if (collectionId == null) {
             Source ds = xmlFactory.createDataSource(collection);
 
             eu.europeana.uim.repox.rest.client.xml.Provider jibxProv = new eu.europeana.uim.repox.rest.client.xml.Provider();
