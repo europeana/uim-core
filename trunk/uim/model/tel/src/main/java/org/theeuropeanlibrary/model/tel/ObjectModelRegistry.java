@@ -74,15 +74,15 @@ public final class ObjectModelRegistry {
 																								    		"collection",
 																								    		String.class);
     
-    public static final TKey<ObjectModelRegistry, String>                     STATEMENT_OF_RESPONSABILITY          = TKey.register(
-																								    		ObjectModelRegistry.class,
-																								    		"responsability",
-																								    		String.class);
-
-    public static final TKey<ObjectModelRegistry, String>                     SUBCOLLECTION          = TKey.register(
-                                                                                                          ObjectModelRegistry.class,
-                                                                                                          "subcollection",
-                                                                                                          String.class);
+//    public static final TKey<ObjectModelRegistry, String>                     STATEMENT_OF_RESPONSABILITY          = TKey.register(
+//																								    		ObjectModelRegistry.class,
+//																								    		"responsability",
+//																								    		String.class);
+//
+//    public static final TKey<ObjectModelRegistry, String>                     SUBCOLLECTION          = TKey.register(
+//                                                                                                          ObjectModelRegistry.class,
+//                                                                                                          "subcollection",
+//                                                                                                          String.class);
 
     public static final TKey<ObjectModelRegistry, Identifier>                 IDENTIFIER          = TKey.register(
                                                                                                           ObjectModelRegistry.class,
