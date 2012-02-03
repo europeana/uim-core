@@ -30,6 +30,7 @@
                             javax.xml.bind.annotation.adapters, 
                             javax.xml.namespace, 
                             org.joda.time,
+                            org.osgi.service.blueprint,
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox.rest

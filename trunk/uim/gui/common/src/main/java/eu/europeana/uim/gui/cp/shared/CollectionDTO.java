@@ -23,6 +23,10 @@ public class CollectionDTO extends DataSourceDTO {
 
     private String      country;
 
+    private String      updateDate;
+    private String      harvestStatus;
+    private String      harvestRecords;
+
     /**
      * Creates a new instance of this class.
      * 
@@ -174,6 +178,55 @@ public class CollectionDTO extends DataSourceDTO {
      */
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    /**
+     * @return update date
+     */
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    /**
+     * @param updateDate
+     *            update date
+     */
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    /**
+     * @return harvesting status
+     */
+    public String getHarvestStatus() {
+        return harvestStatus;
+    }
+
+    /**
+     * @param harvestStatus
+     *            harvesting status
+     */
+    public void setHarvestStatus(String harvestStatus) {
+        this.harvestStatus = harvestStatus;
+    }
+
+    /**
+     * Returns the harvestRecords.
+     * 
+     * @return the harvestRecords
+     */
+    public String getHarvestRecords() {
+        return harvestRecords;
+    }
+
+    /**
+     * Sets the harvestRecords to the given value.
+     * 
+     * @param harvestRecords
+     *            the harvestRecords to set
+     */
+    public void setHarvestRecords(String harvestRecords) {
+        this.harvestRecords = harvestRecords;
     }
 
     @Override

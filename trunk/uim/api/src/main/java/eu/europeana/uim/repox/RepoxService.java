@@ -45,7 +45,7 @@ public interface RepoxService {
     void deleteProvider(Provider<?> provider) throws RepoxException;
 
     /**
-     * Updates a provider within Repox
+     * Create/Update a provider in Repox
      * 
      * @param provider
      *            UIM provider object to update/create on Repox side
@@ -54,7 +54,7 @@ public interface RepoxService {
     void updateProvider(Provider<?> provider) throws RepoxException;
 
     /**
-     * Updates an UIM provider from Repox
+     * Reads information from repox to a provider (data source)
      * 
      * @param provider
      *            UIM provider object to update/create on Repox side
@@ -72,7 +72,7 @@ public interface RepoxService {
     void deleteCollection(Collection<?> collection) throws RepoxException;
 
     /**
-     * Updates a collection within Repox (data source)
+     * Create/Update a collection in Repox
      * 
      * @param collection
      *            UIM Collection object to be updated
@@ -81,7 +81,7 @@ public interface RepoxService {
     void updateCollection(Collection<?> collection) throws RepoxException;
 
     /**
-     * Updates an UIM collection with Repox information (data source)
+     * Reads information from repox to a collection (data source)
      * 
      * @param collection
      *            UIM Collection object to be updated
@@ -108,15 +108,4 @@ public interface RepoxService {
      * @throws RepoxException
      */
     List<String> getActiveHarvestings(String url) throws RepoxException;
-
-    /**
-     * Synchronizes all information from Repox to UIM.
-     * 
-     * @param engine
-     *            storage engine to lookup UIM objects
-     * @param url
-     *            repox defined by this URL
-     * @throws RepoxException
-     */
-//    void synchronize(StorageEngine<?> engine, String url) throws RepoxException;
 }

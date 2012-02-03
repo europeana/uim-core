@@ -6,6 +6,7 @@ import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -21,9 +22,10 @@ import eu.europeana.uim.workflow.Workflow;
  * @since May 11, 2011
  */
 @SuppressWarnings("rawtypes")
-public class ReflectionEngine extends Engine {
+public class ReflectionEngine extends RepoxEngine {
     private Registry        registry;
     private Orchestrator    ochestrator;
+    private RepoxService    repoxService;
 
     private static String   configuredStorageEngine = "MemoryStorageEngine";
 
@@ -53,6 +55,9 @@ public class ReflectionEngine extends Engine {
                     workflowObject.getClass()).newInstance(registry, workflowObject);
 
             registry.setOrchestrator(ochestrator);
+
+            Class<?> repoxServiceClazz = Class.forName("eu.europeana.uim.repox.rest.RepoxServiceImpl");
+            repoxService = (RepoxService)repoxServiceClazz.newInstance();
         } catch (Throwable e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -65,17 +70,17 @@ public class ReflectionEngine extends Engine {
         setupWorkflows();
 
         setupSampleData();
-//        try {
-//        StorageEngine<?> storageEngine = registry.getStorageEngine();
-//        List<?> colls = storageEngine.getAllCollections();
-//        
-//        MetaDataRecord<?> mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test1");
-//        storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
-//        mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test2");
-//        storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
-//        } catch (Exception e) {
-//            
-//        }
+// try {
+// StorageEngine<?> storageEngine = registry.getStorageEngine();
+// List<?> colls = storageEngine.getAllCollections();
+//
+// MetaDataRecord<?> mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test1");
+// storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
+// mdr = storageEngine.createMetaDataRecord((Collection)colls.get(0), "test2");
+// storageEngine.updateMetaDataRecord((MetaDataRecord)mdr);
+// } catch (Exception e) {
+//
+// }
     }
 
     private void setupSampleData() {
@@ -168,5 +173,10 @@ public class ReflectionEngine extends Engine {
     @Override
     public Registry getRegistry() {
         return registry;
+    }
+
+    @Override
+    public RepoxService getRepoxService() {
+        return repoxService;
     }
 }

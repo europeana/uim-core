@@ -119,4 +119,11 @@ public class ProviderForm extends Composite {
         }
         countryBox.setText(provider != null ? provider.getCountry() : "");
     }
+
+    /**
+     * @return provider
+     */
+    public ProviderDTO getProvider() {
+        return provider;
+    }
 }

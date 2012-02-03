@@ -26,11 +26,14 @@ public class RepoxRestClientFactoryImpl implements RepoxRestClientFactory {
 
     @Override
     public RepoxRestClient getInstance(String url) {
-        RepoxRestClientImpl client = lookup.get(url);
+        String localUrl = url;
+        localUrl = localUrl.replace("OAIHandler", "rest");
+
+        RepoxRestClientImpl client = lookup.get(localUrl);
         if (client == null) {
             client = new RepoxRestClientImpl();
-            client.setUri(url);
-            lookup.put(url, client);
+            client.setUri(localUrl);
+            lookup.put(localUrl, client);
         }
         return client;
     }

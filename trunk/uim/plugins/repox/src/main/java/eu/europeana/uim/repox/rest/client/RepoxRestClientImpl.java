@@ -174,6 +174,19 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
     }
 
+    @Override
+    public Aggregator retrieveAggregator(String aggrID) throws RepoxException {
+        Aggregator aggregator = null;
+        Aggregators aggregators = retrieveAggregators();
+        for (Aggregator aggr : aggregators.getAggregator()) {
+            if (aggr.getId().equals(aggrID)) {
+                aggregator = aggr;
+                break;
+            }
+        }
+        return aggregator;
+    }
+
     /*
      * Provider related operations
      */
@@ -342,6 +355,19 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
     }
 
+    @Override
+    public Provider retrieveProvider(String id) throws RepoxException {
+        Provider provider = null;
+        DataProviders providers = retrieveProviders();
+        for (Provider prov : providers.getProvider()) {
+            if (prov.getId().equals(id)) {
+                provider = prov;
+                break;
+            }
+        }
+        return provider;
+    }
+
     /*
      * Datasources related operations
      */
@@ -359,6 +385,19 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         } else {
             return resp.getDataSources();
         }
+    }
+
+    @Override
+    public Source retrieveDataSource(String id) throws RepoxException {
+        Source source = null;
+        DataSources sources = retrieveDataSources();
+        for (Source src : sources.getSource()) {
+            if (src.getId().equals(id)) {
+                source = src;
+                break;
+            }
+        }
+        return source;
     }
 
     @Override
@@ -1333,7 +1372,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
             charset.append("charset=");
             charset.append(ds.getTarget().getCharset());
         }
-        
+
         recordIdPolicy.append("recordIdPolicy=");
         recordIdPolicy.append(ds.getRecordIdPolicy().getType());
         if (ds.getRecordIdPolicy().getType().equals("idExported")) {

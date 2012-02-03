@@ -49,14 +49,44 @@ public interface RepositoryService extends RemoteService {
     Integer getCollectionTotal(Serializable collectionId);
 
     /**
+     * Update UIM provider using data from control panel.
+     * 
      * @param provider
      * @return true, if update of provider was successfull
      */
     Boolean updateProvider(ProviderDTO provider);
 
     /**
+     * Update UIM collection using data from control panel.
+     * 
      * @param collection
      * @return true, if update of collectiono was successfull
      */
     Boolean updateCollection(CollectionDTO collection);
+
+    /**
+     * Update UIM provider using data from control panel.
+     * 
+     * @param providerId
+     *            identifier of provider in UIM
+     * @return not null, if update of repox provider was successfull (null, also if there is no
+     *         configured repox)
+     */
+    ProviderDTO synchronizeRepoxProvider(Serializable providerId);
+
+    /**
+     * Update repox provider using data
+     * 
+     * @param collectionId
+     *            identifier of collection in UIm
+     * @return not null, if update of repox collection was successfull (null, also if there is no
+     *         configured repox)
+     */
+    CollectionDTO synchronizeRepoxCollection(Serializable collectionId);
+
+    /**
+     * @return true, if update of repox provider was successfull (false, also if there is no
+     *         configured repox)
+     */
+    Boolean synchronizeRepox();
 }

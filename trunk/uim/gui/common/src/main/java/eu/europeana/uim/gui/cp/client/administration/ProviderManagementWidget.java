@@ -109,24 +109,47 @@ public class ProviderManagementWidget extends IngestionWidget {
                 CollectionDTO collection = new CollectionDTO();
                 collection.setProvider(provider);
                 collectionForm.setCollection(collection);
+
+                synchronizeProvider(provider);
             }
         });
 
         collectionBox.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
+                CollectionDTO coll;
                 int selectedIndex = collectionBox.getSelectedIndex();
                 if (selectedIndex == 0) {
-                    CollectionDTO collection = new CollectionDTO();
-                    collection.setProvider(providers.get(providerBox.getSelectedIndex() - 1));
-                    collectionForm.setCollection(collection);
+                    coll = new CollectionDTO();
+                    coll.setProvider(providers.get(providerBox.getSelectedIndex() - 1));
                 } else {
-                    collectionForm.setCollection(collections.get(selectedIndex - 1));
+                    coll = collections.get(selectedIndex - 1);
                 }
+                collectionForm.setCollection(coll);
+                synchronizeCollection(coll);
             }
         });
 
         return widget;
+    }
+
+    private void synchronizeProvider(ProviderDTO provider) {
+        repositoryService.synchronizeRepoxProvider(provider.getId(),
+                new AsyncCallback<ProviderDTO>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(ProviderDTO result) {
+                        if (result != null) {
+                            if (providerForm.getProvider().getId().equals(result.getId())) {
+                                providerForm.setProvider(result);
+                            }
+                        }
+                    }
+                });
     }
 
     private void updateProviders() {
@@ -147,6 +170,25 @@ public class ProviderManagementWidget extends IngestionWidget {
                 }
             }
         });
+    }
+
+    private void synchronizeCollection(CollectionDTO collection) {
+        repositoryService.synchronizeRepoxCollection(collection.getId(),
+                new AsyncCallback<CollectionDTO>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                    }
+
+                    @Override
+                    public void onSuccess(CollectionDTO result) {
+                        if (result != null) {
+                            if (collectionForm.getCollection().getId().equals(result.getId())) {
+                                collectionForm.setCollection(result);
+                            }
+                        }
+                    }
+                });
     }
 
     private void updateCollections(ProviderDTO provider) {

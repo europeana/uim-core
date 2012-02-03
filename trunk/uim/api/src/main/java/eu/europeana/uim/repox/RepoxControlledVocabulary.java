@@ -1,5 +1,5 @@
 /* UimControlledVocabulary.java - created on Sep 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.repox.rest.utils;
+package eu.europeana.uim.repox;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 
@@ -29,6 +29,10 @@ public enum RepoxControlledVocabulary implements ControlledVocabularyKeyValue {
      * type of harvesting
      */
     HARVESTING_TYPE,
+    /**
+     * last time repox information on UIM object has been updated
+     */
+    LAST_UPDATE_DATE,
     /**
      * xml representation of provider
      */

@@ -91,6 +91,30 @@
                 </td>
             </tr>
             <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='update'>Last Update</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='updateBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='status'>Harvesting Status</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='statusBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='records'>Harvesting Records</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='recordsBox' />
+                </td>
+            </tr>
+            <tr>
                 <td colspan='2' align='center'>
                     <g:Button ui:field='commitButton'>
                         <ui:msg key='executionFormCommitButton'>Commit</ui:msg>

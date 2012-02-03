@@ -37,9 +37,11 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         jaxbProv.setName(provider.getName());
         jaxbProv.setNameCode(provider.getMnemonic());
 
-        String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY).toLowerCase();
+        String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
         if (countrystr == null) {
             countrystr = "eu";
+        } else {
+            countrystr = countrystr.toLowerCase();
         }
         jaxbProv.setCountry(countrystr);
 

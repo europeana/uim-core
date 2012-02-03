@@ -89,6 +89,16 @@ public interface RepoxRestClient {
     Aggregators retrieveAggregators() throws RepoxException;
 
     /**
+     * Retrieves an aggregator for the specific ID from Repox
+     * 
+     * @param aggregatorId
+     *            identifer for an aggregator
+     * @return aggregator for ID or null if not existing
+     * @throws RepoxException
+     */
+    Aggregator retrieveAggregator(String aggregatorId) throws RepoxException;
+
+    /**
      * Creates a provider in Repox and assigns it to the specific Aggregator
      * 
      * @param prov
@@ -129,13 +139,27 @@ public interface RepoxRestClient {
     DataProviders retrieveProviders() throws RepoxException;
 
     /**
+     * @param providerId
+     * @return specific provider
+     * @throws RepoxException
+     */
+    eu.europeana.uim.repox.rest.client.xml.Provider retrieveProvider(String providerId)
+            throws RepoxException;
+
+    /**
      * Retrieve all available Repox DataSources
      * 
      * @return a DataSources object
      * @throws RepoxException
-     * @throws RepoxException
      */
     DataSources retrieveDataSources() throws RepoxException;
+
+    /**
+     * @param sourceId
+     * @return specific data source
+     * @throws RepoxException
+     */
+    Source retrieveDataSource(String sourceId) throws RepoxException;
 
     /**
      * Creates an OAI DataSource. It accesses the following REST Interface:

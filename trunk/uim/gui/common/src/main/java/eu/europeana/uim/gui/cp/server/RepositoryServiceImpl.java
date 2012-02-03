@@ -4,18 +4,27 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
+import eu.europeana.uim.gui.cp.server.engine.RepoxEngine;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
+import eu.europeana.uim.repox.RepoxControlledVocabulary;
+import eu.europeana.uim.repox.RepoxException;
+import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
@@ -38,10 +47,48 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
      */
     public RepositoryServiceImpl() {
         super();
+
+// Timer t = new Timer() {
+// @Override
+// public void run() {
+// synchronizeRepox();
+// }
+// };
+// t.scheduleRepeating(72000000);
     }
 
-// private Map<Serializable, ProviderDTO> wrappedProviderDTOs = new HashMap<Serializable,
-// ProviderDTO>();
+    @Override
+    public Boolean synchronizeRepox() {
+        boolean success = false;
+        if (getEngine() instanceof RepoxEngine) {
+            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+            if (repoxService != null) {
+                StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+
+                try {
+                    List<Provider<Serializable>> providers = storage.getAllProviders();
+                    for (Provider<Serializable> provider : providers) {
+                        boolean update = synchronizeProvider(repoxService, provider);
+                        if (update) {
+                            storage.updateProvider(provider);
+                        }
+                    }
+
+                    List<Collection<Serializable>> collections = storage.getAllCollections();
+                    for (Collection<Serializable> collection : collections) {
+                        boolean update = synchronizeCollection(repoxService, collection);
+                        if (update) {
+                            storage.updateCollection(collection);
+                        }
+                    }
+                } catch (StorageEngineException e) {
+                    throw new RuntimeException(
+                            "Could not synchronize providers and collections with repox!", e);
+                }
+            }
+        }
+        return success;
+    }
 
     @Override
     public List<WorkflowDTO> getWorkflows() {
@@ -149,15 +196,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
             if (cols != null) {
                 for (Collection<Serializable> col : cols) {
-                    CollectionDTO collDTO = new CollectionDTO(col.getId());
-                    collDTO.setName(col.getName());
-                    collDTO.setMnemonic(col.getMnemonic());
-                    collDTO.setProvider(getWrappedProviderDTO(p));
-                    collDTO.setLanguage(col.getLanguage());
-                    collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
-                    collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
-                    collDTO.setOaiSet(col.getOaiSet());
-                    collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
+                    CollectionDTO collDTO = getWrappedCollectionDTO(col);
                     res.add(collDTO);
                 }
 
@@ -175,14 +214,30 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return res;
     }
 
-    private ProviderDTO getWrappedProviderDTO(Provider<Serializable> p) {
-        ProviderDTO wrapped = new ProviderDTO(p.getId());
-        wrapped.setName(p.getName());
-        wrapped.setMnemonic(p.getMnemonic());
-        wrapped.setOaiBaseUrl(p.getOaiBaseUrl());
-        wrapped.setOaiMetadataPrefix(p.getOaiMetadataPrefix());
-        wrapped.setCountry(p.getValue(StandardControlledVocabulary.COUNTRY));
-        return wrapped;
+    private ProviderDTO getWrappedProviderDTO(Provider<Serializable> pro) {
+        ProviderDTO provDTO = new ProviderDTO(pro.getId());
+        provDTO.setName(pro.getName());
+        provDTO.setMnemonic(pro.getMnemonic());
+        provDTO.setOaiBaseUrl(pro.getOaiBaseUrl());
+        provDTO.setOaiMetadataPrefix(pro.getOaiMetadataPrefix());
+        provDTO.setCountry(pro.getValue(StandardControlledVocabulary.COUNTRY));
+        return provDTO;
+    }
+
+    private CollectionDTO getWrappedCollectionDTO(Collection<Serializable> col) {
+        CollectionDTO collDTO = new CollectionDTO(col.getId());
+        collDTO.setName(col.getName());
+        collDTO.setMnemonic(col.getMnemonic());
+        collDTO.setProvider(getWrappedProviderDTO(col.getProvider()));
+        collDTO.setLanguage(col.getLanguage());
+        collDTO.setOaiBaseUrl(col.getOaiBaseUrl(false));
+        collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
+        collDTO.setOaiSet(col.getOaiSet());
+        collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
+        collDTO.setUpdateDate(col.getValue(RepoxControlledVocabulary.LAST_UPDATE_DATE));
+        collDTO.setHarvestStatus(col.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
+        collDTO.setHarvestRecords(col.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
+        return collDTO;
     }
 
     @Override
@@ -288,5 +343,115 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
 
         return true;
+    }
+
+    @Override
+    public ProviderDTO synchronizeRepoxProvider(Serializable providerId) {
+        ProviderDTO prov = null;
+        if (getEngine() instanceof RepoxEngine) {
+            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+            if (repoxService != null) {
+                StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+                try {
+                    Provider<Serializable> provider = storage.getProvider(providerId);
+
+                    boolean update = synchronizeProvider(repoxService, provider);
+                    if (update) {
+                        storage.updateProvider(provider);
+                        prov = getWrappedProviderDTO(provider);
+                    }
+                } catch (StorageEngineException e) {
+                    throw new RuntimeException("Could not read/write provider '" + providerId +
+                                               "'!", e);
+                }
+            }
+        }
+        return prov;
+    }
+
+    private boolean synchronizeProvider(RepoxService repoxService, Provider<Serializable> provider) {
+        Map<String, String> beforeValues = new HashMap<String, String>(provider.values());
+
+        try {
+            repoxService.updateProvider(provider);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not update provider to repox!", e);
+        }
+        try {
+            repoxService.synchronizeProvider(provider);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not synchronize provider to repox!", e);
+        }
+
+        boolean update = false;
+        Map<String, String> afterValues = provider.values();
+        for (Entry<String, String> entry : afterValues.entrySet()) {
+            String beforeValue = beforeValues.remove(entry.getKey());
+            if (!entry.getValue().equals(beforeValue)) {
+                update = true;
+                break;
+            }
+        }
+        if (!update && !beforeValues.isEmpty()) {
+            update = true;
+        }
+
+        return update;
+    }
+
+    @Override
+    public CollectionDTO synchronizeRepoxCollection(Serializable collectionId) {
+        CollectionDTO coll = null;
+        if (getEngine() instanceof RepoxEngine) {
+            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+            if (repoxService != null) {
+                StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+                try {
+                    Collection<Serializable> collection = storage.getCollection(collectionId);
+
+                    boolean update = synchronizeCollection(repoxService, collection);
+
+                    if (update) {
+                        storage.updateCollection(collection);
+                        coll = getWrappedCollectionDTO(collection);
+                    }
+                } catch (StorageEngineException e) {
+                    throw new RuntimeException("Could not read/write collection '" + collectionId +
+                                               "'!", e);
+                }
+            }
+        }
+        return coll;
+    }
+
+    private boolean synchronizeCollection(RepoxService repoxService,
+            Collection<Serializable> collection) {
+        Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+
+        try {
+            repoxService.updateCollection(collection);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not update collection to repox!", e);
+        }
+        try {
+            repoxService.synchronizeCollection(collection);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not synchronize collection to repox!", e);
+        }
+
+        boolean update = false;
+        Map<String, String> afterValues = collection.values();
+        for (Entry<String, String> entry : afterValues.entrySet()) {
+            String beforeValue = beforeValues.remove(entry.getKey());
+            if (!entry.getValue().equals(beforeValue)) {
+                update = true;
+                break;
+            }
+        }
+        if (!update && !beforeValues.isEmpty()) {
+            update = true;
+        }
+
+        return update;
     }
 }

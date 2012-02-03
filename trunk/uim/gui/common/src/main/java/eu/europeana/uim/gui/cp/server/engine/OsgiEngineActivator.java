@@ -5,6 +5,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.repox.RepoxService;
 
 /**
  * This bundle activator serves as a dependency provisioning mechanism to the GWT RemoteServices. We
@@ -16,7 +17,7 @@ import eu.europeana.uim.api.Registry;
  * @since Jun 17, 2011
  */
 public class OsgiEngineActivator implements BundleActivator {
-    private static OsgiEngine engine = null;
+    private static Engine engine = null;
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
@@ -31,7 +32,22 @@ public class OsgiEngineActivator implements BundleActivator {
             Thread.sleep(1000);
         }
 
-        engine = new OsgiEngine(registry);
+        RepoxService repoxService = null;
+
+        wait = 0;
+        while (repoxService == null && wait++ < 10) {
+            ServiceReference repoxServiceRef = bundleContext.getServiceReference("eu.europeana.uim.repox.RepoxService");
+            if (repoxServiceRef != null) {
+                repoxService = (RepoxService)bundleContext.getService(repoxServiceRef);
+            }
+            Thread.sleep(1000);
+        }
+
+        if (repoxService != null) {
+            engine = new RepoxOsgiEngine(registry, repoxService);
+        } else {
+            engine = new OsgiEngine(registry);
+        }
         Engine.setEngine(engine);
     }
 
