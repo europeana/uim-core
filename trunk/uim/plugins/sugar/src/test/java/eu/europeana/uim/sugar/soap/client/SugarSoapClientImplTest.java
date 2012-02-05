@@ -1,6 +1,7 @@
 /* SugarSoapClientImpl.java - created on Feb 5, 2012, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.sugar.soap.client;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -163,6 +164,9 @@ public class SugarSoapClientImplTest {
         
         String sugarid = provider.get(((SugarSoapClientImpl)client).getProviderMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
+        
+        List<Map<String,String>> contacts = client.getProviderContacts(session, mnemonic);
+        assertFalse(contacts.isEmpty());
     }
     
     /**

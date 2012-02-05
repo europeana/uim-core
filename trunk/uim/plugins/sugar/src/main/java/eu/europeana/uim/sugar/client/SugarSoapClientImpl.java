@@ -64,32 +64,6 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private SugarsoapBindingStub binding;
 
-    /**
-     * Creates a new instance of this class.
-     * 
-     * @param endPointUrl
-     *            The URL of the SugarCRM SOAP service
-     */
-    public SugarSoapClientImpl(String endPointUrl) {
-        setEndPointUrl(endPointUrl);
-
-    }
-
-    /**
-     * Creates a new instance of this class.
-     * 
-     * @param endPointUrl
-     *            The URL of the SugarCRM SOAP service
-     * @param username
-     *            default username to use
-     * @param password
-     *            default password to use
-     */
-    public SugarSoapClientImpl(String endPointUrl, String username, String password) {
-        setEndPointUrl(endPointUrl);
-        setUsername(username);
-        setPassword(password);
-    }
 
     /**
      * Creates a new instance of this class.
