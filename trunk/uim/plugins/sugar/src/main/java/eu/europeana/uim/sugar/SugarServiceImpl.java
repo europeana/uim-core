@@ -30,16 +30,27 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  */
 public class SugarServiceImpl implements SugarService {
 
-    private String             sessionID = null;
+    private String       sessionID = null;
 
     private SugarClient  sugarClient;
     private SugarMapping sugarMapping;
+
+    private String       sugarMappingClass;
 
     /**
      * Creates a new instance of this class.
      * 
      */
     public SugarServiceImpl() {
+    }
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     * @param client
+     */
+    public SugarServiceImpl(SugarClient client) {
+        this.setSugarClient(client);
     }
 
     /**
@@ -234,7 +245,7 @@ public class SugarServiceImpl implements SugarService {
                 }
             }
         }
-        
+
         if (update) {
             @SuppressWarnings("unused")
             boolean changed = client.updateCollection(sessionID, mnemonic, updates);
@@ -327,9 +338,7 @@ public class SugarServiceImpl implements SugarService {
         for (RetrievableField field : fields) {
             String value = values.get(field.getFieldId());
 
-            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
-                return value;
-            }
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) { return value; }
         }
         return null;
     }
@@ -374,27 +383,22 @@ public class SugarServiceImpl implements SugarService {
         return result;
     }
 
-
     @Override
     public String getCollectionMnemonic(Map<String, String> values) throws SugarException {
         RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
         for (RetrievableField field : fields) {
             String value = values.get(field.getFieldId());
 
-            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
-                return value;
-            }
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) { return value; }
         }
         return null;
     }
-
 
     @Override
     public String getProviderForCollection(String mnemonic) throws SugarException {
         SugarClient client = validateConnection();
         return client.getProviderForCollection(sessionID, mnemonic);
     }
-
 
     @Override
     public List<Map<String, String>> listCollections(boolean activeOnly) throws SugarException {
@@ -459,7 +463,9 @@ public class SugarServiceImpl implements SugarService {
 
     /**
      * Sets the sugarClient to the given value.
-     * @param sugarClient the sugarClient to set
+     * 
+     * @param sugarClient
+     *            the sugarClient to set
      */
     public void setSugarClient(SugarClient sugarClient) {
         this.sugarClient = sugarClient;
@@ -467,6 +473,7 @@ public class SugarServiceImpl implements SugarService {
 
     /**
      * Returns the sugarMapping.
+     * 
      * @return the sugarMapping
      */
     public SugarMapping getSugarMapping() {
@@ -475,10 +482,41 @@ public class SugarServiceImpl implements SugarService {
 
     /**
      * Sets the sugarMapping to the given value.
-     * @param sugarMapping the sugarMapping to set
+     * 
+     * @param sugarMapping
+     *            the sugarMapping to set
      */
     public void setSugarMapping(SugarMapping sugarMapping) {
         this.sugarMapping = sugarMapping;
+    }
+
+    /**
+     * Returns the sugarMappingClass.
+     * 
+     * @return the sugarMappingClass
+     */
+    public String getSugarMappingClass() {
+        return sugarMappingClass;
+    }
+
+    /**
+     * Sets the sugarMappingClass to the given value.
+     * 
+     * @param sugarMappingClass
+     *            the sugarMappingClass to set
+     */
+    public void setSugarMappingClass(String sugarMappingClass) {
+        this.sugarMappingClass = sugarMappingClass;
+
+        try {
+            Class<?> mapping = Class.forName(sugarMappingClass, true,
+                    SugarServiceImpl.class.getClassLoader());
+            setSugarMapping((SugarMapping)mapping.newInstance());
+        } catch (Throwable e) {
+            throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
+                    e);
+        }
+
     }
 
 }

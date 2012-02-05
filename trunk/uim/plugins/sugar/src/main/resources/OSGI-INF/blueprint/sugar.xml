@@ -16,6 +16,8 @@
             <cm:property name="collectionMnemonicField" value="" />
             
             <cm:property name="contactModule" value="" />
+
+            <cm:property name="sugarMappingClass" value="" />
         </cm:default-properties>
     </cm:property-placeholder>
     
@@ -32,7 +34,7 @@
 
     <bean id="rs" class="eu.europeana.uim.sugar.SugarServiceImpl">
         <property name="sugarClient" ref="ssci" />
-        <property name="sugarMapping" ref="xof" />
+        <property name="sugarMappingClass" value="${sugarMappingClass}" />
     </bean>
     
     <service id="sugarService" ref="ss" interface="eu.europeana.uim.sugarcrm.SugarService" />
