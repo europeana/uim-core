@@ -4,11 +4,13 @@ package eu.europeana.uim.sugar.soap.client;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +32,6 @@ import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
 
 import eu.europeana.uim.sugar.soap.utils.SugarUtil;
-import eu.europeana.uim.sugarcrm.LoginFailureException;
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
@@ -174,7 +175,7 @@ public class SugarSoapClientImpl implements SugarClient {
      * Login to SugarCRM and return the session ID.
      * 
      * @return the session id
-     * @throws LoginFailureException
+     * @throws SugarException
      *             if login was not successful
      */
     @Override
@@ -192,7 +193,7 @@ public class SugarSoapClientImpl implements SugarClient {
      * @param password
      *            the SugarCRM password
      * @return the session id
-     * @throws LoginFailureException
+     * @throws SugarException
      *             if login was not successful
      */
     @Override
@@ -224,7 +225,23 @@ public class SugarSoapClientImpl implements SugarClient {
             throw new SugarException("General server error during login:" + username, ex);
         }
     }
+
     
+    /**
+     * Logout from SugarCRM
+     * 
+     * @param session
+     *            the session id
+     */
+    @Override
+    public void logout(String session) {
+        try {
+            binding.logout(session);
+            log.info("Logout Successfully for session " + session);
+        } catch (RemoteException ex) {
+            log.severe("Logout failed. Message: " + ex.getMessage());
+        }
+    }
     
     
     /**
@@ -289,21 +306,51 @@ public class SugarSoapClientImpl implements SugarClient {
         }
     }
 
-    /**
-     * Logout from SugarCRM
-     * 
-     * @param session
-     *            the session id
-     */
+    
     @Override
-    public void logout(String session) {
-        try {
-            binding.logout(session);
-            log.info("Logout Successfully for session " + session);
-        } catch (RemoteException ex) {
-            log.severe("Logout failed. Message: " + ex.getMessage());
-        }
+    public boolean updateCollection(String session, String id, Map<String, String> values) {
+        return updateEntry(session, getCollectionModule(), id, getCollectionMnemonicField(), values);    
     }
+
+    @Override
+    public boolean updateProvider(String session, String id, Map<String, String> values) {
+        return updateEntry(session, getProviderModule(), id, getProviderMnemonicField(), values);    
+    }
+
+    @Override
+    public boolean updateEntry(String session, String module, String id, String idfield,
+            Map<String, String> values) {
+        
+        
+        Map<String, String> singleEntry = getSingleEntry(session, module, id, idfield);
+        
+        if (singleEntry==null) {
+            log.severe("Could not get record to update: module: "+module+" id: "+id+" idfield: "+idfield);
+            return false;
+        }
+        
+        String sugarid = singleEntry.get("id");
+        if (sugarid==null) {
+            log.severe("Could not get internal SugarCRM id to update: module: "+module+" id: "+id+" idfield: "+idfield);
+            return false; 
+        }
+        
+        ArrayList<Name_value> nameValues=new ArrayList<Name_value>();
+        
+        nameValues.add(new Name_value("id", sugarid));
+        for (Entry<String, String> entry: values.entrySet() ) {
+            nameValues.add(new Name_value(entry.getKey(), entry.getValue()));
+        }
+        
+        try {
+            binding.set_entry(session, module,(Name_value[])nameValues.toArray(new Name_value[0]));
+        } catch (RemoteException e) {
+            log.log(Level.SEVERE,"Could not update the record. Module "+module+" id: "+id+" idfield: "+idfield, e);
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Returns a list of all available SugarCRM modules
@@ -427,7 +474,7 @@ public class SugarSoapClientImpl implements SugarClient {
      */
 
     @Override
-    public HashMap<String, String> getSingleEntry(String session, String module, String id,
+    public Map<String, String> getSingleEntry(String session, String module, String id,
             String idfield) {
         String query = idfield + " = \"" + id + "\"";
 
@@ -436,8 +483,6 @@ public class SugarSoapClientImpl implements SugarClient {
         if (list != null && !list.isEmpty()) {
             Map<String, String> resultInListView = list.iterator().next();
 
-            // get full record
-
             // first determine the internal id
             String internalid = resultInListView.get("id");
 
@@ -445,10 +490,8 @@ public class SugarSoapClientImpl implements SugarClient {
                 log.severe("Record does not have an internal SugarCRM id!");
                 return null;
             }
-            HashMap<String, String> recordMap = getSingleEntryFromInternalId(session, module,
-                    internalid);
 
-            return recordMap;
+            return resultInListView;
 
         } else {
             return null;
@@ -727,23 +770,5 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
 
-    @Override
-    public boolean updateCollection(String session, String id, Map<String, String> values) {
-        // return false;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-
-    @Override
-    public boolean updateProvider(String session, String id, Map<String, String> values) {
-        // return false;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-
-    @Override
-    public boolean updateEntry(String session, String module, String id, String idfield,
-            Map<String, String> values) {
-        // return false;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
 
 }

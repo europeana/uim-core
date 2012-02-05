@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -113,6 +114,31 @@ public class SugarSoapClientImplTest {
         
         String sugarid = collection.get(((SugarSoapClientImpl)client).getCollectionMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testUpdateCollection() {
+        String mnemonic = properties.getProperty("test.collection.mnemonic");
+        Map<String,String> collection = client.getCollection(session, mnemonic);
+        assertNotNull(collection.get("id"));
+
+        String oldname = collection.get("name");
+        String newname = "Unit Test" + hashCode();
+        
+        Map<String, String> update = Collections.singletonMap("name", newname);
+        client.updateCollection(session, mnemonic, update);
+
+        collection = client.getCollection(session, mnemonic);
+        assertEquals(collection.get("name"), newname);
+
+        update = Collections.singletonMap("name", oldname);
+        client.updateCollection(session, mnemonic, update);
+
+        collection = client.getCollection(session, mnemonic);
+        assertEquals(collection.get("name"), oldname);
     }
     
     /**

@@ -63,6 +63,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
 					<instrumentation>
 						<ignores>
@@ -152,18 +153,18 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-            <build>
-                <plugins>
-                </plugins>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                    </resource>
-                    <resource>
-                        <directory>src/main/profiles/tel</directory>
-                    </resource>
-                </resources>
-            </build>
+			<build>
+				<plugins>
+				</plugins>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/profiles/tel</directory>
+					</resource>
+				</resources>
+			</build>
 		</profile>
 	</profiles>
 </project>
