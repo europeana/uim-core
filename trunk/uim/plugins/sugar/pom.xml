@@ -22,24 +22,22 @@
 				<configuration>
 					<instructions>
 						<Import-Package>
-							eu.europeana.uim.repox,
-							eu.europeana.uim.repox.model,
+							eu.europeana.uim.sugarcrm,
+							eu.europeana.uim.sugarcrm.model,
 							eu.europeana.uim.store,
-							javax.xml.bind,
-							javax.xml.bind.annotation,
-							javax.xml.bind.annotation.adapters,
-							javax.xml.namespace,
-							org.joda.time,
-							org.osgi.service.blueprint,
+                            org.apache.commons.lang,
+                            javax.servlet,
+                            javax.servlet.http,
+                            javax.naming.*,
+                            javax.xml.*,
+                            org.xml.sax.*,
+                            org.w3c.dom,
+                            !*
 						</Import-Package>
 						<Export-Package>
-							eu.europeana.uim.repox.rest,
-							eu.europeana.uim.repox.rest.client,
-							eu.europeana.uim.repox.rest.utils,
+							eu.europeana.uim.sugar
 						</Export-Package>
-						<Embed-Dependency></Embed-Dependency>
-						<!-- <Embed-Transitive>true</Embed-Transitive> -->
-						<!-- <Embed-StripVersion>true</Embed-StripVersion> -->
+						<Embed-Dependency>axis,axis-saaj,wsdl4j,geronimo-jaxrpc_1.1_spec,commons-discovery,commons-httpclient,commons-codec,commons-logging</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>

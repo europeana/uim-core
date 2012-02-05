@@ -1,5 +1,5 @@
 /* SoapSugarCRMManager.java - created on Jul 29, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.sugar.soap.client;
+package eu.europeana.uim.sugar.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,7 +31,7 @@ import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
 
-import eu.europeana.uim.sugar.soap.utils.SugarUtil;
+import eu.europeana.uim.sugar.utils.SugarUtil;
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**

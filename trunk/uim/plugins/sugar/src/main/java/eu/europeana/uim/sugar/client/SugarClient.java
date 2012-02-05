@@ -1,5 +1,5 @@
 /* SugarCRMManager.java - created on Aug 5, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.sugar.soap.client;
+package eu.europeana.uim.sugar.client;
 
 import java.util.List;
 import java.util.Map;

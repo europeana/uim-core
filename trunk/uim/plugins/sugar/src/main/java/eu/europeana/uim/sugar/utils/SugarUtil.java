@@ -1,5 +1,5 @@
 /* SugarUtil.java - created on Feb 4, 2012, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.sugar.soap.utils;
+package eu.europeana.uim.sugar.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
