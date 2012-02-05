@@ -92,6 +92,14 @@ public interface SugarService {
     List<Map<String, String>> listProviders(boolean activeOnly)  throws SugarException;
 
     /**
+     * @param mnemonic of the collection 
+     * @return the provider mnemonic the collection belongs to
+     *         null if not found
+     * @throws SugarException
+     */
+    String getProviderForCollection(String mnemonic)  throws SugarException;
+
+    /**
      * Update a collection in Sugar
      * 
      * @param collection
@@ -120,7 +128,20 @@ public interface SugarService {
      * @throws SugarException
      */
     boolean synchronizeCollection(Collection<?> collection, Map<String, String> values) throws SugarException;
+    
+    /**
+     * @param values
+     * @return the mnemonic value of the collection
+     * @throws SugarException
+     */
+    String getCollectionMnemonic(Map<String, String> values) throws SugarException;
 
+    /**
+     * @param values
+     * @return the mnemonic value of the provider
+     * @throws SugarException
+     */
+    String getProviderMnemonic(Map<String, String> values) throws SugarException;
 
     /**
      * @param activeOnly 

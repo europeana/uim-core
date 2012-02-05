@@ -37,4 +37,17 @@
     
     <service id="sugarService" ref="ss" interface="eu.europeana.uim.sugarcrm.SugarService" />
     
+    
+    <service interface="javax.servlet.http.HttpServlet">
+        <service-properties>
+            <entry key="alias" value="/sugarcrm2uim" />
+        </service-properties>
+
+        <bean
+            class="eu.europeana.uim.sugar.servlet.SugarServlet">
+            <argument index="0" ref="registry" />
+            <argument index="1" ref="sugarService" />
+        </bean>
+    </service>
+    
 </blueprint>

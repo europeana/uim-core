@@ -254,7 +254,7 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
     @Override
-    public String getProviderMnemonicForCollectionId(String session, String collectionid) {
+    public String getProviderForCollection(String session, String collectionid) {
         List<String> relationsships = getRelationsships(session, getCollectionModule(),
                 collectionid, getProviderModule(), "");
 

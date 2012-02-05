@@ -234,7 +234,7 @@ public interface SugarClient {
      *            The collection identifier
      * @return the mnemonic of the provider, null if not found
      */
-    public String getProviderMnemonicForCollectionId(String session, String collectionid);
+    public String getProviderForCollection(String session, String collectionid);
 
     /**
      * Get all relationsships between a single entry in a module and entries in another

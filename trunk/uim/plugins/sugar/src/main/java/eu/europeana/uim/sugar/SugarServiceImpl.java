@@ -234,7 +234,7 @@ public class SugarServiceImpl implements SugarService {
                 }
             }
         }
-
+        
         if (update) {
             @SuppressWarnings("unused")
             boolean changed = client.updateCollection(sessionID, mnemonic, updates);
@@ -322,6 +322,19 @@ public class SugarServiceImpl implements SugarService {
     }
 
     @Override
+    public String getProviderMnemonic(Map<String, String> values) throws SugarException {
+        RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
+        for (RetrievableField field : fields) {
+            String value = values.get(field.getFieldId());
+
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Map<String, String>> listProviders(boolean activeOnly) throws SugarException {
         SugarClient client = validateConnection();
 
@@ -360,6 +373,28 @@ public class SugarServiceImpl implements SugarService {
         }
         return result;
     }
+
+
+    @Override
+    public String getCollectionMnemonic(Map<String, String> values) throws SugarException {
+        RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
+        for (RetrievableField field : fields) {
+            String value = values.get(field.getFieldId());
+
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public String getProviderForCollection(String mnemonic) throws SugarException {
+        SugarClient client = validateConnection();
+        return client.getProviderForCollection(sessionID, mnemonic);
+    }
+
 
     @Override
     public List<Map<String, String>> listCollections(boolean activeOnly) throws SugarException {
