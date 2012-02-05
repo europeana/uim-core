@@ -64,7 +64,6 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private SugarsoapBindingStub binding;
 
-
     /**
      * Creates a new instance of this class.
      * 
@@ -157,8 +156,6 @@ public class SugarSoapClientImpl implements SugarClient {
         return login(getUsername(), getPassword());
     }
 
-    
-
     /**
      * Login to SugarCRM and return the session ID.
      * 
@@ -175,7 +172,7 @@ public class SugarSoapClientImpl implements SugarClient {
         if (binding == null) {
             initializeWSDLBinding();
         }
-        
+
         User_auth userAuthInfo = new User_auth();
         userAuthInfo.setUser_name(username);
         userAuthInfo.setPassword(SugarUtil.generateMD5HexString(password));
@@ -187,8 +184,7 @@ public class SugarSoapClientImpl implements SugarClient {
             if ("-1".equals(loginResult.getId())) {
                 log.severe("Login failed. " + loginResult.getError().getName() +
                            loginResult.getError().getDescription());
-                throw new SugarException("Login failed for the credentials for user:" +
-                                                 username);
+                throw new SugarException("Login failed for the credentials for user:" + username);
             }
             log.info("SugarCRM Login successful for " + username + " SessionID: " +
                      loginResult.getId());
@@ -200,7 +196,6 @@ public class SugarSoapClientImpl implements SugarClient {
         }
     }
 
-    
     /**
      * Logout from SugarCRM
      * 
@@ -216,8 +211,7 @@ public class SugarSoapClientImpl implements SugarClient {
             log.severe("Logout failed. Message: " + ex.getMessage());
         }
     }
-    
-    
+
     /**
      * Get the full record for a single collection
      * 
@@ -233,10 +227,9 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
     @Override
-    public List<Map<String, String>> getContacts(String session, String query, 
+    public List<Map<String, String>> getContacts(String session, String query,
             int maxContactsToFetch) {
-        return getModuleList(session, getContactModule(), query, null, maxContactsToFetch,
-                0);
+        return getModuleList(session, getContactModule(), query, null, maxContactsToFetch, 0);
     }
 
     @Override
@@ -251,14 +244,12 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
     @Override
-    public List<Map<String, String>> getCollections(String session, String query,
-            int maxResults) {
+    public List<Map<String, String>> getCollections(String session, String query, int maxResults) {
         return getModuleList(session, getCollectionModule(), query, null, maxResults, 0);
     }
 
     @Override
-    public List<Map<String, String>> getProviders(String session, String query, 
-            int maxResults) {
+    public List<Map<String, String>> getProviders(String session, String query, int maxResults) {
         return getModuleList(session, getProviderModule(), query, null, maxResults, 0);
     }
 
@@ -280,51 +271,51 @@ public class SugarSoapClientImpl implements SugarClient {
         }
     }
 
-    
     @Override
     public boolean updateCollection(String session, String id, Map<String, String> values) {
-        return updateEntry(session, getCollectionModule(), id, getCollectionMnemonicField(), values);    
+        return updateEntry(session, getCollectionModule(), id, getCollectionMnemonicField(), values);
     }
 
     @Override
     public boolean updateProvider(String session, String id, Map<String, String> values) {
-        return updateEntry(session, getProviderModule(), id, getProviderMnemonicField(), values);    
+        return updateEntry(session, getProviderModule(), id, getProviderMnemonicField(), values);
     }
 
     @Override
     public boolean updateEntry(String session, String module, String id, String idfield,
             Map<String, String> values) {
-        
-        
+
         Map<String, String> singleEntry = getSingleEntry(session, module, id, idfield);
-        
-        if (singleEntry==null) {
-            log.severe("Could not get record to update: module: "+module+" id: "+id+" idfield: "+idfield);
+
+        if (singleEntry == null) {
+            log.severe("Could not get record to update: module: " + module + " id: " + id +
+                       " idfield: " + idfield);
             return false;
         }
-        
+
         String sugarid = singleEntry.get("id");
-        if (sugarid==null) {
-            log.severe("Could not get internal SugarCRM id to update: module: "+module+" id: "+id+" idfield: "+idfield);
-            return false; 
+        if (sugarid == null) {
+            log.severe("Could not get internal SugarCRM id to update: module: " + module + " id: " +
+                       id + " idfield: " + idfield);
+            return false;
         }
-        
-        ArrayList<Name_value> nameValues=new ArrayList<Name_value>();
-        
+
+        ArrayList<Name_value> nameValues = new ArrayList<Name_value>();
+
         nameValues.add(new Name_value("id", sugarid));
-        for (Entry<String, String> entry: values.entrySet() ) {
+        for (Entry<String, String> entry : values.entrySet()) {
             nameValues.add(new Name_value(entry.getKey(), entry.getValue()));
         }
-        
+
         try {
-            binding.set_entry(session, module,(Name_value[])nameValues.toArray(new Name_value[0]));
+            binding.set_entry(session, module, nameValues.toArray(new Name_value[0]));
         } catch (RemoteException e) {
-            log.log(Level.SEVERE,"Could not update the record. Module "+module+" id: "+id+" idfield: "+idfield, e);
+            log.log(Level.SEVERE, "Could not update the record. Module " + module + " id: " + id +
+                                  " idfield: " + idfield, e);
             return false;
         }
         return true;
     }
-
 
     /**
      * Returns a list of all available SugarCRM modules
@@ -347,8 +338,8 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
     /**
-     * Returns a list of all entries with the complete record. This call gets first a list of
-     * all ids, and then queries again for each entry.
+     * Returns a list of all entries with the complete record. This call gets first a list of all
+     * ids, and then queries again for each entry.
      * 
      * @param session
      *            the session id
@@ -361,8 +352,8 @@ public class SugarSoapClientImpl implements SugarClient {
      * @return a list of full records
      */
     @Override
-    public List<Map<String, String>> getModuleList(String session, String module,
-            String query, String orderBy, int maxresults, int offset) {
+    public List<Map<String, String>> getModuleList(String session, String module, String query,
+            String orderBy, int maxresults, int offset) {
         String[] select_fields = null;
 
         Get_entry_list_result getEntryListResponse = null;
@@ -452,8 +443,7 @@ public class SugarSoapClientImpl implements SugarClient {
             String idfield) {
         String query = idfield + " = \"" + id + "\"";
 
-        List<Map<String, String>> list = getModuleList(session, module, query, "",
-                1, 0);
+        List<Map<String, String>> list = getModuleList(session, module, query, "", 1, 0);
         if (list != null && !list.isEmpty()) {
             Map<String, String> resultInListView = list.iterator().next();
 
@@ -481,13 +471,13 @@ public class SugarSoapClientImpl implements SugarClient {
      */
     @Override
     public List<Map<String, String>> getProviderContacts(String session, String id) {
-        List<Map<String, String>> allContactsInListview = getContacts(session, "", Integer.MAX_VALUE);
+        List<Map<String, String>> allContactsInListview = getContacts(session, "",
+                Integer.MAX_VALUE);
         if (allContactsInListview == null || allContactsInListview.size() == 0) {
             log.severe("Could not get contacts in Listview!");
             return null;
         }
-        
-        
+
         List<Map<String, String>> result = new LinkedList<Map<String, String>>();
         for (Map<String, String> contact : allContactsInListview) {
 
@@ -655,12 +645,13 @@ public class SugarSoapClientImpl implements SugarClient {
         return providerMnemonicField;
     }
 
-    
     /**
      * @return the provider mnemonic field unqualified
      */
     public String getProviderMnemonicUnqualified() {
-        return getProviderMnemonicField().substring(getProviderMnemonicField().lastIndexOf(".")+ 1);
+        if (getProviderMnemonicField().contains(".")) { return getProviderMnemonicField().substring(
+                getProviderMnemonicField().lastIndexOf(".") + 1); }
+        return getProviderMnemonicField();
     }
 
     /**
@@ -681,12 +672,14 @@ public class SugarSoapClientImpl implements SugarClient {
     public String getCollectionMnemonicField() {
         return collectionMnemonicField;
     }
-    
+
     /**
      * @return the collection mnemonic field unqualified
      */
     public String getCollectionMnemonicUnqualified() {
-        return getCollectionMnemonicField().substring(getCollectionMnemonicField().lastIndexOf(".") + 1);
+        if (getCollectionMnemonicField().contains(".")) { return getCollectionMnemonicField().substring(
+                getCollectionMnemonicField().lastIndexOf(".") + 1); }
+        return getCollectionMnemonicField();
     }
 
     /**
@@ -701,6 +694,7 @@ public class SugarSoapClientImpl implements SugarClient {
 
     /**
      * Returns the contactMnemonicField.
+     * 
      * @return the contactMnemonicField
      */
     public String getContactMnemonicField() {
@@ -709,21 +703,25 @@ public class SugarSoapClientImpl implements SugarClient {
 
     /**
      * Returns the contactMnemonicField.
+     * 
      * @return the contactMnemonicField
      */
     public String getContactMnemonicUnqualified() {
-        return getContactMnemonicField().substring(getContactMnemonicField().lastIndexOf(".") + 1);
+        if (getContactMnemonicField().contains(".")) { return getContactMnemonicField().substring(
+                getContactMnemonicField().lastIndexOf(".") + 1); }
+        return getContactMnemonicField();
     }
 
     /**
      * Sets the contactMnemonicField to the given value.
-     * @param contactMnemonicField the contactMnemonicField to set
+     * 
+     * @param contactMnemonicField
+     *            the contactMnemonicField to set
      */
     public void setContactMnemonicField(String contactMnemonicField) {
         this.contactMnemonicField = contactMnemonicField;
     }
 
-    
     /**
      * Returns the endPointUrl.
      * 
@@ -742,7 +740,5 @@ public class SugarSoapClientImpl implements SugarClient {
     public void setEndPointUrl(String endPointUrl) {
         this.endPointUrl = endPointUrl;
     }
-
-
 
 }

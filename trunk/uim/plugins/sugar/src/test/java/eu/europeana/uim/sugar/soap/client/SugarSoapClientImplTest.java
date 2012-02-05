@@ -1,8 +1,8 @@
 /* SugarSoapClientImpl.java - created on Feb 5, 2012, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.sugar.soap.client;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +19,6 @@ import org.junit.Test;
 
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
-import eu.europeana.uim.sugarcrm.LoginFailureException;
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
@@ -56,7 +55,7 @@ public class SugarSoapClientImplTest {
     }
     
     /**
-     * @throws LoginFailureException
+     * @throws SugarException
      */
     @Before
     public void login() throws SugarException{

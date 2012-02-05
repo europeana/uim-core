@@ -4,6 +4,9 @@ package eu.europeana.uim.sugar.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.theeuropeanlibrary.model.common.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
+
 /**
  * 
  * 
@@ -42,4 +45,54 @@ public class SugarUtil {
         return hexString.toString();
     }
 
+    
+    /**
+     * Converts the SugarCrm language field content to simple Iso3 code.
+     * 
+     * @param code
+     *            the full field entry from SugarCRM
+     * @return the Iso3 code, "und" if not known
+     */
+    public static Language normalizeSugarLanguage(String code) {
+        if (code == null || code.isEmpty()) return Language.UND;
+        String[] split = code.split("-", 2);
+        String isocode = split[0].trim();
+
+        Language language = Language.lookupLanguage(isocode);
+        if (language == null) {
+            if (split.length > 1) {
+                language = Language.lookupLanguage(split[1]);
+            }
+            if (language == null) {
+                language = Language.UND;
+            }
+        }
+
+        return language;
+    }
+
+    /**
+     * Converts the SugarCrm language field content to simple Iso3 code.
+     * 
+     * @param code
+     *            the full field entry from SugarCRM
+     * @return the Iso3 code, "und" if not known
+     */
+    public static Country normalizeSugarCountry(String code) {
+        if (code == null || code.isEmpty()) return Country.XX;
+        String[] split = code.split("-", 2);
+        String isocode = split[0].trim();
+
+        Country country = Country.lookupCountry(isocode, false);
+        if (country == null) {
+            if (split.length > 1) {
+                country = Country.lookupCountry(split[1], false);
+            }
+            if (country == null) {
+                country = Country.XX;
+            }
+        }
+
+        return country;
+    }
 }

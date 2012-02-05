@@ -1,17 +1,26 @@
 /* SugarCRMServiceImpl.java - created on Aug 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.sugar;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 
-import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.StandardControlledVocabulary;
 import eu.europeana.uim.sugar.client.SugarClient;
+import eu.europeana.uim.sugar.client.SugarMapping;
+import eu.europeana.uim.sugar.utils.SugarUtil;
 import eu.europeana.uim.sugarcrm.SugarException;
 import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugarcrm.model.RetrievableField;
+import eu.europeana.uim.sugarcrm.model.UpdatableField;
 
 /**
  * TEL specific implementation of the SugarCRM service
@@ -21,20 +30,20 @@ import eu.europeana.uim.sugarcrm.SugarService;
  */
 public class SugarServiceImpl implements SugarService {
 
-    private String            sessionID = null;
+    private String             sessionID = null;
 
-    private final Registry    registry;
-    private final SugarClient manager;
+    private final SugarClient  client;
+    private final SugarMapping mapping;
 
     /**
      * Creates a new instance of this class.
      * 
-     * @param registry
-     * @param manager
+     * @param client
+     * @param mapping
      */
-    public SugarServiceImpl(Registry registry, SugarClient manager) {
-        this.registry = registry;
-        this.manager = manager;
+    public SugarServiceImpl(SugarClient client, SugarMapping mapping) {
+        this.client = client;
+        this.mapping = mapping;
     }
 
     /**
@@ -42,8 +51,8 @@ public class SugarServiceImpl implements SugarService {
      * 
      * @return
      */
-    private SugarClient getManager() {
-        return manager;
+    private SugarClient getClient() {
+        return client;
     }
 
     @Override
@@ -52,10 +61,10 @@ public class SugarServiceImpl implements SugarService {
     }
 
     @Override
-    public String login(String username, String password) throws SugarException {
+    public String login() throws SugarException {
         sessionID = null;
         try {
-            sessionID = getManager().login(username, password);
+            sessionID = getClient().login();
             return sessionID;
         } catch (SugarException e) {
             throw new SugarException("Could not login to SugarCRM" + e);
@@ -63,90 +72,347 @@ public class SugarServiceImpl implements SugarService {
     }
 
     @Override
-    public void updateProvider(Provider<?> provider) throws SugarException {
-        SugarClient client = validateConnection();
-
-        
-        String mnemonic = provider.getMnemonic();
-        Map<String, String> sugarProvider = client.getProvider(sessionID, mnemonic);
-        
-        
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+    public void logout() throws SugarException {
+        if (sessionID != null) {
+            getClient().logout(sessionID);
+        }
+        sessionID = null;
     }
 
     @Override
-    public void synchronizeProvider(Provider<?> provider) throws SugarException {
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+    public void updateProvider(Provider<?> provider) throws SugarException {
+        SugarClient client = validateConnection();
+
+        String mnemonic = provider.getMnemonic();
+        Map<String, String> sugarprovider = client.getProvider(sessionID, mnemonic);
+
+        boolean update = false;
+
+        Map<String, String> updates = new HashMap<String, String>();
+        UpdatableField[] fields = mapping.getProviderUpdateableFields();
+        for (UpdatableField field : fields) {
+            String value = sugarprovider.get(field.getFieldId());
+
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                // well this cannot change.
+
+            } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getName())) {
+                    updates.put(field.getFieldId(), provider.getName());
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_BASE.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getOaiBaseUrl())) {
+                    updates.put(field.getFieldId(), provider.getOaiBaseUrl());
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_PREFIX.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getOaiMetadataPrefix())) {
+                    updates.put(field.getFieldId(), provider.getOaiMetadataPrefix());
+                    update = true;
+                }
+            } else {
+                // deal with values on the map.
+                String pValue = provider.getValue(field.getMappingField());
+                if (!StringUtils.equals(value, pValue)) {
+                    updates.put(field.getFieldId(), pValue);
+                    update = true;
+                }
+            }
+        }
+
+        if (update) {
+            @SuppressWarnings("unused")
+            boolean changed = client.updateProvider(sessionID, mnemonic, updates);
+        }
+    }
+
+    @Override
+    public boolean synchronizeProvider(Provider<?> provider) throws SugarException {
+        if (provider == null || provider.getMnemonic() == null || provider.getMnemonic().isEmpty())
+            throw new NullPointerException("Provider and provider mnemonic must not be null.");
+
+        SugarClient client = validateConnection();
+        Map<String, String> sugarprovider = client.getProvider(sessionID, provider.getMnemonic());
+
+        return synchronizeProvider(provider, sugarprovider);
+    }
+
+    @Override
+    public boolean synchronizeProvider(Provider<?> provider, Map<String, String> sugarprovider)
+            throws SugarException {
+        if (provider == null || provider.getMnemonic() == null || provider.getMnemonic().isEmpty())
+            throw new NullPointerException("Provider and provider mnemonic must not be null.");
+
+        boolean update = false;
+        RetrievableField[] fields = mapping.getProviderRetrievableFields();
+        for (RetrievableField field : fields) {
+            String value = sugarprovider.get(field.getFieldId());
+
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                // well this cannot change.
+
+            } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getName())) {
+                    provider.setName(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_BASE.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getOaiBaseUrl())) {
+                    provider.setOaiBaseUrl(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_PREFIX.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, provider.getOaiMetadataPrefix())) {
+                    provider.setOaiMetadataPrefix(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.COUNTRY.equals(field.getMappingField())) {
+                Country country = SugarUtil.normalizeSugarCountry(value);
+
+                value = country.getIso3();
+                String pValue = provider.getValue(field.getMappingField());
+
+                if (!StringUtils.equals(value, pValue)) {
+                    provider.putValue(field.getMappingField(), value);
+                    update = true;
+                }
+            } else {
+                // deal with values on the map.
+                // this includes country and type
+                String pValue = provider.getValue(field.getMappingField());
+                if (!StringUtils.equals(value, pValue)) {
+                    provider.putValue(field.getMappingField(), value);
+                    update = true;
+                }
+            }
+        }
+        return update;
     }
 
     @Override
     public void updateCollection(Collection<?> collection) throws SugarException {
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-
-    @Override
-    public void synchronizeCollection(Collection<?> collection) throws SugarException {
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-    
-    
-    @Override
-    public List<Map<String, String>> listProviders() throws SugarException {
         SugarClient client = validateConnection();
-        
-        List<Map<String,String>> providers = client.getProviders(sessionID, "",  Integer.MAX_VALUE);
-        return providers;
-    }
 
-    
-    
-    @Override
-    public List<Map<String, String>> listCollections() throws SugarException {
-        SugarClient client = validateConnection();
-        
-        List<Map<String,String>> providers = client.getCollections(sessionID, "", Integer.MAX_VALUE);
-        return providers;
-    }
+        String mnemonic = collection.getMnemonic();
+        Map<String, String> sugarprovider = client.getCollection(sessionID, mnemonic);
 
-    
-    
-    private SugarClient validateConnection() throws SugarException {
-        if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
+        boolean update = false;
 
-        SugarClient sugarCRMManager = getManager();
-        if (sugarCRMManager == null) { throw new SugarException(
-                "Could not find SugarCRMManager!"); }
-        return sugarCRMManager;
-    }
+        Map<String, String> updates = new HashMap<String, String>();
+        UpdatableField[] fields = mapping.getCollectionUpdateableFields();
+        for (UpdatableField field : fields) {
+            String value = sugarprovider.get(field.getFieldId());
 
-    
-    
-    /**
-     * Converts the SugarCrm language field content to simple Iso3 code.
-     * 
-     * @param code
-     *            the full field entry from SugarCRM
-     * @return the Iso3 code, "und" if not known
-     */
-    public static Language normalizeSugarLanguage(String code) {
-        if (code == null || code.isEmpty()) return Language.UND;
-        String[] split = code.split("-", 2);
-        String isocode = split[0].trim();
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                // well this cannot change.
 
-        Language language = Language.lookupLanguage(isocode);
-        if (language == null) {
-            if (split.length > 1) {
-                language = Language.lookupLanguage(split[1]);
-            }
-            if (language == null) {
-                language = Language.UND;
+            } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getName())) {
+                    updates.put(field.getFieldId(), collection.getName());
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_BASE.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiBaseUrl(false))) {
+                    updates.put(field.getFieldId(), collection.getOaiBaseUrl(false));
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_SET.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiSet())) {
+                    updates.put(field.getFieldId(), collection.getOaiSet());
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_PREFIX.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiMetadataPrefix(false))) {
+                    updates.put(field.getFieldId(), collection.getOaiMetadataPrefix(false));
+                    update = true;
+                }
+            } else {
+                // deal with values on the map.
+                String pValue = collection.getValue(field.getMappingField());
+                if (!StringUtils.equals(value, pValue)) {
+                    updates.put(field.getFieldId(), pValue);
+                    update = true;
+                }
             }
         }
 
-        return language;
+        if (update) {
+            @SuppressWarnings("unused")
+            boolean changed = client.updateCollection(sessionID, mnemonic, updates);
+        }
+
     }
+
+    @Override
+    public boolean synchronizeCollection(Collection<?> collection) throws SugarException {
+        if (collection == null || collection.getMnemonic() == null ||
+            collection.getMnemonic().isEmpty())
+            throw new NullPointerException("Collection and collection mnemonic must not be null.");
+
+        SugarClient client = validateConnection();
+        Map<String, String> sugarprovider = client.getCollection(sessionID,
+                collection.getMnemonic());
+
+        return synchronizeCollection(collection, sugarprovider);
+    }
+
+    @Override
+    public boolean synchronizeCollection(Collection<?> collection, Map<String, String> sugarprovider)
+            throws SugarException {
+
+        boolean update = false;
+        RetrievableField[] fields = mapping.getCollectionRetrievableFields();
+        for (RetrievableField field : fields) {
+            String value = sugarprovider.get(field.getFieldId());
+
+            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+                // well this cannot change.
+
+            } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getName())) {
+                    collection.setName(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_BASE.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiBaseUrl(false))) {
+                    collection.setOaiBaseUrl(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_SET.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiSet())) {
+                    collection.setOaiSet(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.INTERNAL_OAI_PREFIX.equals(field.getMappingField())) {
+                if (!StringUtils.equals(value, collection.getOaiMetadataPrefix(false))) {
+                    collection.setOaiMetadataPrefix(value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.COUNTRY.equals(field.getMappingField())) {
+                Country country = SugarUtil.normalizeSugarCountry(value);
+
+                value = country.getIso3();
+                String pValue = collection.getValue(field.getMappingField());
+
+                if (!StringUtils.equals(value, pValue)) {
+                    collection.putValue(field.getMappingField(), value);
+                    update = true;
+                }
+            } else if (StandardControlledVocabulary.LANGUAGE.equals(field.getMappingField())) {
+                Language language = SugarUtil.normalizeSugarLanguage(value);
+
+                value = language.getIso3();
+                String pValue = collection.getValue(field.getMappingField());
+
+                if (!StringUtils.equals(value, pValue)) {
+                    collection.putValue(field.getMappingField(), value);
+                    update = true;
+                }
+            } else {
+                // deal with values on the map.
+                // this includes country and type
+                String pValue = collection.getValue(field.getMappingField());
+                if (!StringUtils.equals(value, pValue)) {
+                    collection.putValue(field.getMappingField(), value);
+                    update = true;
+                }
+            }
+        }
+        return update;
+
+    }
+
+    @Override
+    public List<Map<String, String>> listProviders(boolean activeOnly) throws SugarException {
+        SugarClient client = validateConnection();
+
+        List<Map<String, String>> providers = client.getProviders(sessionID, "", Integer.MAX_VALUE);
+
+        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        RetrievableField[] fields = mapping.getProviderRetrievableFields();
+
+        for (Map<String, String> record : providers) {
+            if ("1".equals(record.get("deleted"))) {
+                continue;
+            }
+
+            HashMap<String, String> resultRecord = new HashMap<String, String>();
+            for (RetrievableField field : fields) {
+                if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
+                    if (activeOnly) {
+                        if ("0".equals(record.get(field.getFieldId()))) {
+                            resultRecord = null;
+                            break;
+                        }
+                    }
+                } else {
+                    for (Entry<String, String> entry : record.entrySet()) {
+                        if (field.getFieldId().equals(entry.getKey())) {
+                            // retrievable.
+                            resultRecord.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+
+            if (resultRecord != null) {
+                result.add(resultRecord);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Map<String, String>> listCollections(boolean activeOnly) throws SugarException {
+        SugarClient client = validateConnection();
+
+        List<Map<String, String>> collections = client.getCollections(sessionID, "",
+                Integer.MAX_VALUE);
+
+        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        RetrievableField[] fields = mapping.getCollectionRetrievableFields();
+
+        for (Map<String, String> record : collections) {
+            if ("1".equals(record.get("deleted"))) {
+                continue;
+            }
+
+            HashMap<String, String> resultRecord = new HashMap<String, String>();
+            for (RetrievableField field : fields) {
+                if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
+                    if (activeOnly) {
+                        if ("0".equals(record.get(field.getFieldId()))) {
+                            resultRecord = null;
+                            break;
+                        }
+                    }
+                } else {
+                    for (Entry<String, String> entry : record.entrySet()) {
+                        if (field.getFieldId().equals(entry.getKey())) {
+                            // retrievable.
+                            resultRecord.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+
+            if (resultRecord != null) {
+                result.add(resultRecord);
+            }
+        }
+
+        return result;
+    }
+
+    private SugarClient validateConnection() throws SugarException {
+        SugarClient client = getClient();
+        if (client == null) { throw new SugarException(
+                "Could not find sugar client implementation!"); }
+
+        if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
+
+        return client;
+    }
+
 }
