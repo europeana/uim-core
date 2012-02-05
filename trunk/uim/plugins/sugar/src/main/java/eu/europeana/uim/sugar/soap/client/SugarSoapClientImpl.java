@@ -42,7 +42,7 @@ import eu.europeana.uim.sugarcrm.SugarException;
  */
 public class SugarSoapClientImpl implements SugarClient {
 
-    private static final Logger  log     = Logger.getLogger(SugarSoapClientImplTest.class.getName());
+    private static final Logger  log     = Logger.getLogger(SugarSoapClientImpl.class.getName());
 
     private static final Integer TIMEOUT = 20000;
 
