@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>eu.europeana</groupId>
+		<artifactId>europeana-uim</artifactId>
+		<version>1.3.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>europeana-uim-plugin-sugar</artifactId>
+	<name>Unified Ingestion Manager: Sugar Integration Plugin</name>
+	<packaging>bundle</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.1.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Import-Package>
+							eu.europeana.uim.repox,
+							eu.europeana.uim.repox.model,
+							eu.europeana.uim.store,
+							javax.xml.bind,
+							javax.xml.bind.annotation,
+							javax.xml.bind.annotation.adapters,
+							javax.xml.namespace,
+							org.joda.time,
+							org.osgi.service.blueprint,
+						</Import-Package>
+						<Export-Package>
+							eu.europeana.uim.repox.rest,
+							eu.europeana.uim.repox.rest.client,
+							eu.europeana.uim.repox.rest.utils,
+						</Export-Package>
+						<Embed-Dependency></Embed-Dependency>
+						<!-- <Embed-Transitive>true</Embed-Transitive> -->
+						<!-- <Embed-StripVersion>true</Embed-StripVersion> -->
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>axistools-maven-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>wsdl2java</goal>
+						</goals>
+						<configuration>
+							<packageSpace>org.sugarcrm.soap</packageSpace>
+							<wsdlFile>src/main/wsdl/sugarcrm.wsdl</wsdlFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<ignores>
+							<ignore>org.sugarcrm.*</ignore>
+							<ignore>org.sugarcrm.soap.*</ignore>
+						</ignores>
+						<excludes>
+							<exclude>org/sugarcrm/**/*.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>europeana-uim-common</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>europeana-uim-api</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>europeana-uim-model-common</artifactId>
+			<version>${parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>europeana-uim-storage-memory</artifactId>
+			<version>${parent.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.axis</groupId>
+			<artifactId>axis-saaj</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.geronimo.specs</groupId>
+			<artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/sugar</connection>
+		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/sugar</developerConnection>
+	</scm>
+
+	<profiles>
+		<profile>
+			<id>tel</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+            <build>
+                <plugins>
+                </plugins>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                    </resource>
+                    <resource>
+                        <directory>src/main/profiles/tel</directory>
+                    </resource>
+                </resources>
+            </build>
+		</profile>
+	</profiles>
+</project>
