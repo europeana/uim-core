@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.europeana.uim.sugar.soap.SugarException;
 import eu.europeana.uim.sugarcrm.LoginFailureException;
+import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
  * 

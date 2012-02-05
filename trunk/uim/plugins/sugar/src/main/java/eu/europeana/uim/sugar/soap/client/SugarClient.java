@@ -4,7 +4,7 @@ package eu.europeana.uim.sugar.soap.client;
 import java.util.List;
 import java.util.Map;
 
-import eu.europeana.uim.sugar.soap.SugarException;
+import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
  * Interface for the access layer to (potentially) different ways to query SugarCRM

@@ -10,6 +10,8 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.sugar.soap.client.SugarClient;
+import eu.europeana.uim.sugarcrm.SugarException;
+import eu.europeana.uim.sugarcrm.SugarService;
 
 /**
  * TEL specific implementation of the SugarCRM service

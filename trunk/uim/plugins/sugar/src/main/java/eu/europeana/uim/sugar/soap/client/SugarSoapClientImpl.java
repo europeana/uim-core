@@ -29,9 +29,9 @@ import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
 
-import eu.europeana.uim.sugar.soap.SugarException;
 import eu.europeana.uim.sugar.soap.utils.SugarUtil;
 import eu.europeana.uim.sugarcrm.LoginFailureException;
+import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
  * This manages all the connection to the TEL SugarCRM and delivers the result back using SOAP
