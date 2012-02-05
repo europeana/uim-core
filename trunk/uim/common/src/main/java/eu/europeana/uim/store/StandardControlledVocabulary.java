@@ -8,18 +8,58 @@ package eu.europeana.uim.store;
  * @since Sep 3, 2011
  */
 public enum StandardControlledVocabulary implements ControlledVocabularyKeyValue {
+    
+    /**
+     * mnemonic
+     */
+    MNEMONIC,
+    
+    /**
+     * name
+     */
+    NAME,
+    
+    /**
+     * type of provider
+     */
+    TYPE,
+
     /**
      * country
      */
     COUNTRY,
-    /**
-     * type of provider
+    
+    /** language
+     *
      */
-    PROVTYPE,
+    LANGUAGE,
+    
     /**
-     * type of collection
+     * oaiBase
      */
-    COLLTYPE;
+    INTERNAL_OAI_BASE,
+    
+    /**
+     * set
+     */
+    INTERNAL_OAI_SET,
+    
+    /**
+     * prefix
+     */
+    INTERNAL_OAI_PREFIX,
+    
+    /**
+     * active
+     */
+    REPOX_TYPE,
+    
+    /**
+     * active
+     */
+    ACTIVE
+    ;
+    
 
     private StandardControlledVocabulary() {
     }

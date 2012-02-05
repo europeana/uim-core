@@ -19,6 +19,8 @@
  */
 package eu.europeana.uim.sugarcrm.model;
 
+import eu.europeana.uim.store.ControlledVocabularyKeyValue;
+
 /**
  * Interface declaration of a SugarCRM field
  * 
@@ -36,6 +38,12 @@ public interface SugarCrmField {
      * @return the qualified field id in the SugarCRM
      */
     public String getQualifiedFieldId();
+
+    /**
+     * @return the matching target controlled field in UIM
+     */
+    public ControlledVocabularyKeyValue getMappingField();
+    
     
 	/**
 	 * @return the semantic meaning of the field

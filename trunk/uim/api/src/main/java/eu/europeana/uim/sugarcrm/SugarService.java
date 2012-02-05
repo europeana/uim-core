@@ -34,15 +34,19 @@ public interface SugarService {
 
     
     /**
-     * Assigns the plugin instance a new session under a different user
+     * Logins and ensures a new session
      * 
-     * @param username
-     * @param password
      * @return the sessionID
      * @throws SugarException
      */
-    String login(String username, String password) throws SugarException;
+    String login() throws SugarException;
+    
+    /**
+     * @throws SugarException
+     */
+    void logout() throws SugarException;
 
+    
     /**
      * @return true iff there is a valid session
      * @throws SugarException
@@ -63,15 +67,29 @@ public interface SugarService {
      * 
      * @param provider
      *            UIM provider object to update/create on UIM side
+     * @return true iff a value in the provider bean has been changed.
      * @throws SugarException
      */
-    void synchronizeProvider(Provider<?> provider) throws SugarException;
+    boolean synchronizeProvider(Provider<?> provider) throws SugarException;
+    
+    /**
+     * Reads information from map to a UIM provider (data source)
+     * 
+     * @param provider
+     *            UIM provider object to update/create on UIM side
+     * @param values 
+     *            the values to populate UIM from 
+     * @return true iff a value in the provider bean has been changed.
+     * @throws SugarException
+     */
+    boolean synchronizeProvider(Provider<?> provider, Map<String, String> values) throws SugarException;
 
     /**
+     * @param activeOnly 
      * @return a list of all providers in sugar
      * @throws SugarException
      */
-    List<Map<String, String>> listProviders()  throws SugarException;
+    List<Map<String, String>> listProviders(boolean activeOnly)  throws SugarException;
 
     /**
      * Update a collection in Sugar
@@ -87,15 +105,28 @@ public interface SugarService {
      * 
      * @param collection
      *            UIM Collection object to be updated
+     * @return true iff a value in the collection bean has been changed.
      * @throws SugarException
      */
-    void synchronizeCollection(Collection<?> collection) throws SugarException;
+    boolean synchronizeCollection(Collection<?> collection) throws SugarException;
+
+    /**
+     * Reads information from sugar to a UIM collection (data source)
+     * 
+     * @param collection
+     *            UIM Collection object to be updated
+     * @param values 
+     * @return true iff a value in the collection bean has been changed.
+     * @throws SugarException
+     */
+    boolean synchronizeCollection(Collection<?> collection, Map<String, String> values) throws SugarException;
 
 
     /**
+     * @param activeOnly 
      * @return a list of all collections in sugar
      * @throws SugarException
      */
-    List<Map<String, String>> listCollections()  throws SugarException;
+    List<Map<String, String>> listCollections(boolean activeOnly)  throws SugarException;
 
 }
