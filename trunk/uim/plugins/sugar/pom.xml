@@ -37,7 +37,7 @@
 						<Export-Package>
 							eu.europeana.uim.sugar
 						</Export-Package>
-						<Embed-Dependency>axis,axis-saaj,wsdl4j,geronimo-jaxrpc_1.1_spec,commons-discovery,commons-httpclient,commons-codec,commons-logging</Embed-Dependency>
+						<Embed-Dependency>axis,axis-saaj,wsdl4j,geronimo-jaxrpc_1.1_spec,commons-discovery,commons-logging</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -61,7 +61,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.5</version>
 				<configuration>
 					<instrumentation>
 						<ignores>
@@ -126,6 +125,12 @@
 			<version>0.2</version>
 		</dependency>
 
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
@@ -154,14 +159,14 @@
 			<build>
 				<plugins>
 				</plugins>
-				<resources>
-					<resource>
+				<testResources>
+					<testResource>
 						<directory>src/main/resources</directory>
-					</resource>
-					<resource>
+					</testResource>
+					<testResource>
 						<directory>src/main/profiles/tel</directory>
-					</resource>
-				</resources>
+					</testResource>
+				</testResources>
 			</build>
 		</profile>
 	</profiles>
