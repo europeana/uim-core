@@ -32,8 +32,15 @@ public class SugarServiceImpl implements SugarService {
 
     private String             sessionID = null;
 
-    private final SugarClient  client;
-    private final SugarMapping mapping;
+    private SugarClient  sugarClient;
+    private SugarMapping sugarMapping;
+
+    /**
+     * Creates a new instance of this class.
+     * 
+     */
+    public SugarServiceImpl() {
+    }
 
     /**
      * Creates a new instance of this class.
@@ -42,17 +49,8 @@ public class SugarServiceImpl implements SugarService {
      * @param mapping
      */
     public SugarServiceImpl(SugarClient client, SugarMapping mapping) {
-        this.client = client;
-        this.mapping = mapping;
-    }
-
-    /**
-     * lazy loading of sugar crm manager.
-     * 
-     * @return
-     */
-    private SugarClient getClient() {
-        return client;
+        this.setSugarClient(client);
+        this.setSugarMapping(mapping);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class SugarServiceImpl implements SugarService {
     public String login() throws SugarException {
         sessionID = null;
         try {
-            sessionID = getClient().login();
+            sessionID = getSugarClient().login();
             return sessionID;
         } catch (SugarException e) {
             throw new SugarException("Could not login to SugarCRM" + e);
@@ -74,7 +72,7 @@ public class SugarServiceImpl implements SugarService {
     @Override
     public void logout() throws SugarException {
         if (sessionID != null) {
-            getClient().logout(sessionID);
+            getSugarClient().logout(sessionID);
         }
         sessionID = null;
     }
@@ -89,7 +87,7 @@ public class SugarServiceImpl implements SugarService {
         boolean update = false;
 
         Map<String, String> updates = new HashMap<String, String>();
-        UpdatableField[] fields = mapping.getProviderUpdateableFields();
+        UpdatableField[] fields = getSugarMapping().getProviderUpdateableFields();
         for (UpdatableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
@@ -145,7 +143,7 @@ public class SugarServiceImpl implements SugarService {
             throw new NullPointerException("Provider and provider mnemonic must not be null.");
 
         boolean update = false;
-        RetrievableField[] fields = mapping.getProviderRetrievableFields();
+        RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
         for (RetrievableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
@@ -200,7 +198,7 @@ public class SugarServiceImpl implements SugarService {
         boolean update = false;
 
         Map<String, String> updates = new HashMap<String, String>();
-        UpdatableField[] fields = mapping.getCollectionUpdateableFields();
+        UpdatableField[] fields = getSugarMapping().getCollectionUpdateableFields();
         for (UpdatableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
@@ -262,7 +260,7 @@ public class SugarServiceImpl implements SugarService {
             throws SugarException {
 
         boolean update = false;
-        RetrievableField[] fields = mapping.getCollectionRetrievableFields();
+        RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
         for (RetrievableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
@@ -330,7 +328,7 @@ public class SugarServiceImpl implements SugarService {
         List<Map<String, String>> providers = client.getProviders(sessionID, "", Integer.MAX_VALUE);
 
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-        RetrievableField[] fields = mapping.getProviderRetrievableFields();
+        RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
 
         for (Map<String, String> record : providers) {
             if ("1".equals(record.get("deleted"))) {
@@ -371,7 +369,7 @@ public class SugarServiceImpl implements SugarService {
                 Integer.MAX_VALUE);
 
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
-        RetrievableField[] fields = mapping.getCollectionRetrievableFields();
+        RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
 
         for (Map<String, String> record : collections) {
             if ("1".equals(record.get("deleted"))) {
@@ -406,13 +404,46 @@ public class SugarServiceImpl implements SugarService {
     }
 
     private SugarClient validateConnection() throws SugarException {
-        SugarClient client = getClient();
+        SugarClient client = getSugarClient();
         if (client == null) { throw new SugarException(
                 "Could not find sugar client implementation!"); }
 
         if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
 
         return client;
+    }
+
+    /**
+     * lazy loading of sugar crm manager.
+     * 
+     * @return the sugarClien
+     */
+    public SugarClient getSugarClient() {
+        return sugarClient;
+    }
+
+    /**
+     * Sets the sugarClient to the given value.
+     * @param sugarClient the sugarClient to set
+     */
+    public void setSugarClient(SugarClient sugarClient) {
+        this.sugarClient = sugarClient;
+    }
+
+    /**
+     * Returns the sugarMapping.
+     * @return the sugarMapping
+     */
+    public SugarMapping getSugarMapping() {
+        return sugarMapping;
+    }
+
+    /**
+     * Sets the sugarMapping to the given value.
+     * @param sugarMapping the sugarMapping to set
+     */
+    public void setSugarMapping(SugarMapping sugarMapping) {
+        this.sugarMapping = sugarMapping;
     }
 
 }

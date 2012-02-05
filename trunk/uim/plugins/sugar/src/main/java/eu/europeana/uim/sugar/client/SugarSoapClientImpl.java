@@ -46,6 +46,7 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private static final Integer TIMEOUT = 20000;
 
+    private String               endPointUrl;
     private String               username;
     private String               password;
 
@@ -60,7 +61,6 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private int                  timeout = TIMEOUT;
 
-    private String               endPointUrl;
 
     private SugarsoapBindingStub binding;
 
