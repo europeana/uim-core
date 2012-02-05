@@ -29,6 +29,7 @@ import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
 
+import eu.europeana.uim.sugar.soap.SugarException;
 import eu.europeana.uim.sugar.soap.utils.SugarUtil;
 import eu.europeana.uim.sugarcrm.LoginFailureException;
 
@@ -177,7 +178,7 @@ public class SugarSoapClientImpl implements SugarClient {
      *             if login was not successful
      */
     @Override
-    public String login() throws LoginFailureException {
+    public String login() throws SugarException {
         return login(getUsername(), getPassword());
     }
 
@@ -195,7 +196,7 @@ public class SugarSoapClientImpl implements SugarClient {
      *             if login was not successful
      */
     @Override
-    public String login(String username, String password) throws LoginFailureException {
+    public String login(String username, String password) throws SugarException {
         if (binding == null) {
             initializeWSDLBinding();
         }
@@ -211,7 +212,7 @@ public class SugarSoapClientImpl implements SugarClient {
             if ("-1".equals(loginResult.getId())) {
                 log.severe("Login failed. " + loginResult.getError().getName() +
                            loginResult.getError().getDescription());
-                throw new LoginFailureException("Login failed for the credentials for user:" +
+                throw new SugarException("Login failed for the credentials for user:" +
                                                  username);
             }
             log.info("SugarCRM Login successful for " + username + " SessionID: " +
@@ -220,7 +221,7 @@ public class SugarSoapClientImpl implements SugarClient {
             return sessionID;
         } catch (RemoteException ex) {
             log.log(Level.SEVERE, "Could not login.", ex);
-            throw new LoginFailureException("General server error during login:" + username, ex);
+            throw new SugarException("General server error during login:" + username, ex);
         }
     }
     

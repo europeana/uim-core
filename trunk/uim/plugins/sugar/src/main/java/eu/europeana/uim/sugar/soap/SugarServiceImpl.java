@@ -10,11 +10,6 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.sugar.soap.client.SugarClient;
-import eu.europeana.uim.sugarcrm.GenericSugarCrmException;
-import eu.europeana.uim.sugarcrm.LoginFailureException;
-import eu.europeana.uim.sugarcrm.QueryResultException;
-import eu.europeana.uim.sugarcrm.SugarException;
-import eu.europeana.uim.sugarcrm.SugarService;
 
 /**
  * TEL specific implementation of the SugarCRM service
@@ -50,23 +45,23 @@ public class SugarServiceImpl implements SugarService {
     }
 
     @Override
-    public boolean hasActiveSession() throws GenericSugarCrmException {
+    public boolean hasActiveSession() throws SugarException {
         return sessionID != null;
     }
 
     @Override
-    public String login(String username, String password) throws LoginFailureException {
+    public String login(String username, String password) throws SugarException {
         sessionID = null;
         try {
             sessionID = getManager().login(username, password);
             return sessionID;
-        } catch (LoginFailureException e) {
-            throw new LoginFailureException("Could not login to SugarCRM" + e);
+        } catch (SugarException e) {
+            throw new SugarException("Could not login to SugarCRM" + e);
         }
     }
 
     @Override
-    public void updateProvider(Provider<?> provider) throws GenericSugarCrmException {
+    public void updateProvider(Provider<?> provider) throws SugarException {
         SugarClient client = validateConnection();
 
         
@@ -79,19 +74,19 @@ public class SugarServiceImpl implements SugarService {
     }
 
     @Override
-    public void synchronizeProvider(Provider<?> provider) throws GenericSugarCrmException {
+    public void synchronizeProvider(Provider<?> provider) throws SugarException {
         //
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public void updateCollection(Collection<?> collection) throws GenericSugarCrmException {
+    public void updateCollection(Collection<?> collection) throws SugarException {
         //
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public void synchronizeCollection(Collection<?> collection) throws GenericSugarCrmException {
+    public void synchronizeCollection(Collection<?> collection) throws SugarException {
         //
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
@@ -117,11 +112,11 @@ public class SugarServiceImpl implements SugarService {
 
     
     
-    private SugarClient validateConnection() throws QueryResultException {
-        if (sessionID == null) { throw new QueryResultException("Could not find a valid session!"); }
+    private SugarClient validateConnection() throws SugarException {
+        if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
 
         SugarClient sugarCRMManager = getManager();
-        if (sugarCRMManager == null) { throw new QueryResultException(
+        if (sugarCRMManager == null) { throw new SugarException(
                 "Could not find SugarCRMManager!"); }
         return sugarCRMManager;
     }

@@ -4,7 +4,7 @@ package eu.europeana.uim.sugar.soap.client;
 import java.util.List;
 import java.util.Map;
 
-import eu.europeana.uim.sugarcrm.LoginFailureException;
+import eu.europeana.uim.sugar.soap.SugarException;
 
 /**
  * Interface for the access layer to (potentially) different ways to query SugarCRM
@@ -25,10 +25,10 @@ public interface SugarClient {
      * Login to SugarCRM and return the session ID.
      * 
      * @return the session id
-     * @throws LoginFailureException
+     * @throws SugarException
      *             if login was not successful
      */
-    public String login() throws LoginFailureException;
+    public String login() throws SugarException;
 
     /**
      * Login to SugarCRM and return the session ID.
@@ -38,10 +38,10 @@ public interface SugarClient {
      * @param password
      *            the SugarCRM password
      * @return the session id
-     * @throws LoginFailureException
+     * @throws SugarException
      *             if login was not successful
      */
-    public String login(String username, String password) throws LoginFailureException;
+    public String login(String username, String password) throws SugarException;
 
     /**
      * Logout from SugarCRM

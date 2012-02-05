@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.europeana.uim.sugar.soap.SugarException;
 import eu.europeana.uim.sugarcrm.LoginFailureException;
 
 /**
@@ -54,7 +55,7 @@ public class SugarSoapClientImplTest {
      * @throws LoginFailureException
      */
     @Before
-    public void login() throws LoginFailureException{
+    public void login() throws SugarException{
         String endpoint = properties.getProperty("sugar.endpoint");
         
         String providerModul = properties.getProperty("sugar.provider");
