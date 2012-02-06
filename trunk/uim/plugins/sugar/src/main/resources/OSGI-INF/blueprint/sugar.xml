@@ -47,7 +47,7 @@
 
 	<service interface="javax.servlet.http.HttpServlet">
 		<service-properties>
-			<entry key="alias" value="/sugarcrm2uim" />
+			<entry key="alias" value="/sugarcrm" />
 		</service-properties>
 
 		<bean class="eu.europeana.uim.sugar.servlet.SugarServlet">

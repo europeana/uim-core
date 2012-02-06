@@ -61,15 +61,15 @@ public class SugarServlet extends HttpServlet {
         }
 
         String action = req.getParameter("action");
-        String orgid = req.getParameter("organization");
-        String collid = req.getParameter("collection");
+        String type =  req.getParameter("type");
+        String id = req.getParameter("id");
 
         if ("update".equals(action)) {
             try {
-                if (orgid != null && !orgid.isEmpty()) {
+                if ("organization".equals(type)) {
 
                     StringBuilder builder = new StringBuilder();
-                    if ("*".equals(orgid)) {
+                    if ("*".equals(id)) {
                         List<Map<String, String>> providers = getSugarService().listProviders(true);
                         for (Map<String, String> provider : providers) {
                             String mnemonic = getSugarService().getProviderMnemonic(provider);
@@ -86,14 +86,14 @@ public class SugarServlet extends HttpServlet {
                         resp.getWriter().write(builder.toString());
                         resp.getWriter().write(" DONE:" + providers.size());
                     } else {
-                        boolean update = updateProvider(orgid, null);
-                        builder.append(orgid + ": " + (update ? "UPD" : "NaN"));
+                        boolean update = updateProvider(id, null);
+                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
                         resp.setStatus(200);
                         resp.getWriter().write(" DONE");
                     }
-                } else if (collid != null && !collid.isEmpty()) {
+                } else if ("collection".equals(type)) {
                     StringBuilder builder = new StringBuilder();
-                    if ("*".equals(collid)) {
+                    if ("*".equals(id)) {
                         List<Map<String, String>> collections = getSugarService().listCollections(
                                 true);
                         for (Map<String, String> collection : collections) {
@@ -111,8 +111,8 @@ public class SugarServlet extends HttpServlet {
                         resp.getWriter().write(builder.toString());
                         resp.getWriter().write(" DONE:" + collections.size());
                     } else {
-                        boolean update = updateCollection(collid, null);
-                        builder.append(collid + ": " + (update ? "UPD" : "NaN"));
+                        boolean update = updateCollection(id, null);
+                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
                         resp.setStatus(200);
                         resp.getWriter().write(" DONE");
                     }
