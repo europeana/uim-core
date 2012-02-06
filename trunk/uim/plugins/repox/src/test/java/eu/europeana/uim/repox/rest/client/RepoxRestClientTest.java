@@ -642,7 +642,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-//    @Test
+    @Test
     public void testCreateUpdateDeleteHttpDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes

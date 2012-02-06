@@ -69,8 +69,9 @@ public class XmlObjectFactoryTest {
         eu.europeana.uim.repox.rest.client.xml.Provider prov = factory.createProvider(provider);
         Assert.assertEquals(provider.getName(), prov.getName());
         Assert.assertEquals(provider.getMnemonic(), prov.getNameCode());
-        Assert.assertEquals(provider.getValue(StandardControlledVocabulary.COUNTRY),
-                prov.getCountry());
+        String iso3 = Country.lookupCountry(prov.getCountry(), false).getIso3();
+        String country = provider.getValue(StandardControlledVocabulary.COUNTRY);
+        Assert.assertTrue(iso3.equals(country));
     }
 
     /**
