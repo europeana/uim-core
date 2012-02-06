@@ -85,7 +85,7 @@
                     </g:Button>
                     &nbsp;
                     <g:Button ui:field='clearButton'>
-                        <ui:msg key='providerFormClearButton'>Reset Map</ui:msg>
+                        <ui:msg key='providerFormClearButton'>Reset</ui:msg>
                     </g:Button>
                 </td>
             </tr>

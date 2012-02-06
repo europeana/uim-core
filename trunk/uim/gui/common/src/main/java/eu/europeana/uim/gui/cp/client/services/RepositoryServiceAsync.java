@@ -73,6 +73,8 @@ public interface RepositoryServiceAsync {
      */
     void updateCollection(CollectionDTO collection, AsyncCallback<Boolean> async);
 
+    void clearCollectionValues(CollectionDTO collection, AsyncCallback<Boolean> async);
+    
     /**
      * Update UIM provider using data from control panel.
      * 

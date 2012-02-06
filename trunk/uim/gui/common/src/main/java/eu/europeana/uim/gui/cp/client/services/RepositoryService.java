@@ -66,6 +66,9 @@ public interface RepositoryService extends RemoteService {
      */
     Boolean updateCollection(CollectionDTO collection);
 
+    
+    Boolean clearCollectionValues(CollectionDTO collection);
+    
     /**
      * Update UIM provider using data from control panel.
      * 

@@ -330,6 +330,29 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return true;
     }
 
+    
+    @Override
+    public Boolean clearCollectionValues(CollectionDTO collection) {
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return false;
+        }
+
+        Collection<Serializable> coll;
+        try {
+            if (collection.getId() != null) {
+                coll = storage.getCollection(collection.getId());
+                coll.values().clear();
+                storage.updateCollection(coll);
+            }
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve collection '" + collection + "'!", t);
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public Boolean updateCollection(CollectionDTO collection) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();

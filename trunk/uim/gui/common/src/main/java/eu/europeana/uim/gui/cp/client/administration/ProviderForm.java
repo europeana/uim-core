@@ -37,10 +37,13 @@ public class ProviderForm extends Composite {
     TextBox             oaiMetadataPrefixBox;
     @UiField
     TextBox             countryBox;
+
     @UiField
     Button              commitButton;
+
     @UiField
     Button              cancelButton;
+
     @UiField
     Button              clearButton;
 
@@ -100,26 +103,27 @@ public class ProviderForm extends Composite {
         });
 
         clearButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent clickEvent) {
-                    repositoryService.clearProviderValues(provider, new AsyncCallback<Boolean>() {
-                        @Override
-                        public void onFailure(Throwable caught) {
-                            caught.printStackTrace();
-                        }
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                repositoryService.clearProviderValues(provider, new AsyncCallback<Boolean>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                    }
 
-                        @Override
-                        public void onSuccess(Boolean result) {
-                            if (result == null || !result) {
-                                Window.alert("Could not update provider!");
-                            }
+                    @Override
+                    public void onSuccess(Boolean result) {
+                        if (result == null || !result) {
+                            Window.alert("Could not update provider!");
                         }
-                    });
+                    }
+                });
 
-                    clearForm();
-                    listener.updated(provider);
-                }
-            });    }
+                clearForm();
+                listener.updated(provider);
+            }
+        });
+    }
 
     private void clearForm() {
         mnemonicBox.setText("");

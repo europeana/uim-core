@@ -123,6 +123,10 @@
                     <g:Button ui:field='cancelButton'>
                         <ui:msg key='executionFormCancelButton'>Cancel</ui:msg>
                     </g:Button>
+                    &nbsp;
+                    <g:Button ui:field='clearButton'>
+                        <ui:msg key='providerFormClearButton'>Reset</ui:msg>
+                    </g:Button>
                 </td>
             </tr>
         </table>
