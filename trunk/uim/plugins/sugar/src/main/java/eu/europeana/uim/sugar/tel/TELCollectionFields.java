@@ -4,6 +4,7 @@ package eu.europeana.uim.sugar.tel;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.StandardControlledVocabulary;
+import eu.europeana.uim.sugarcrm.SugarControlledVocabulary;
 import eu.europeana.uim.sugarcrm.model.RetrievableField;
 import eu.europeana.uim.sugarcrm.model.UpdatableField;
 
@@ -50,18 +51,42 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     TEL_DISCIPLINES("tel_disciplines", "telda_tel_dataset.tel_disciplines", null, "TEL Disciplines"),
 
-    LAST_HARVESTING_DATE("harvested", "telda_tel_dataset.harvested", null, "Harvesting date"),
+    
+    HARVESTING_METHOD("harvesting_method", "telda_tel_dataset.harvesting_method",
+                      RepoxControlledVocabulary.HARVESTING_TYPE, "Harvesting method"),
+
+    HARVESTING_STATUS("harvesting_status", "telda_tel_dataset.harvesting_status",
+                      RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE, "Harvesting status"),
 
     HARVESTED_RECORDS("count_harvested_records", "telda_tel_dataset.count_harvested_records",
                       RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
                       "Number of harvested records"),
 
+    // TODO: should come from repox but doesn't
+    HARVESTING_DATE("tel_harvesting_date", "telda_tel_dataset.tel_harvesting_date", null,
+                    "Harvesting Date"),
 
-    HARVESTING_STATUS("harvesting_status", "telda_tel_dataset.harvesting_status",
-                      RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE, "Harvesting status"),
+    // TODO: should come from repox but doesn't
+    HARVESTING_UPDATE("tel_harvesting_update", "telda_tel_dataset.tel_harvesting_update", null,
+                      "Harvesting Update"),
 
-    HARVESTING_METHOD("harvesting_method", "telda_tel_dataset.harvesting_method",
-                      RepoxControlledVocabulary.HARVESTING_TYPE, "Harvesting method"),
+    INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
+                    SugarControlledVocabulary.COLLECTION_INDEXED_RECORDS,
+                    "Total number of indexed records"),
+
+    LAST_LOADED_DATE("tel_last_loading_date", "telda_tel_dataset.tel_last_loading_date",
+                     SugarControlledVocabulary.COLLECTION_LAST_LOADED_DATE, "Last UIM Loading Date"),
+
+    LAST_LOADED_RECORDS("tel_last_loading_records", "telda_tel_dataset.tel_last_loading_records",
+                        SugarControlledVocabulary.COLLECTION_LAST_LOADED_RECORDS,
+                        "Number of indexed records"),
+
+    LAST_INDEXED_DATE("tel_last_indexed_date", "telda_tel_dataset.tel_last_indexed_date",
+                      SugarControlledVocabulary.COLLECTION_LAST_INDEXED_DATE, "Last Indexing Date"),
+
+    LAST_INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
+                         SugarControlledVocabulary.COLLECTION_LAST_INDEXED_RECORDS,
+                         "Number of indexed records"),
 
     LINKCHECK_EXECUTION("tel_linkcheck_execution", "telda_tel_dataset.tel_linkcheck_execution",
                         null, "Linkcheck execution"),
