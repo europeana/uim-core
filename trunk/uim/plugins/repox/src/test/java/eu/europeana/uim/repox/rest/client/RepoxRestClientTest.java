@@ -43,26 +43,26 @@ public class RepoxRestClientTest {
         repoxRestClient = new RepoxRestClientImpl(uri);
         timeStamp = Long.toString(System.nanoTime());
 
-        Aggregators aggrs = repoxRestClient.retrieveAggregators();
-        for (Aggregator aggr : aggrs.getAggregator()) {
-            if (aggr.getId().startsWith("aggr_")) {
-                repoxRestClient.deleteAggregator(aggr.getId());
-            }
-        }
-
-        DataProviders provs = repoxRestClient.retrieveProviders();
-        for (Provider prov : provs.getProvider()) {
-            if (prov.getId().startsWith("prov_")) {
-                repoxRestClient.deleteProvider(prov.getId());
-            }
-        }
-
-        DataSources sources = repoxRestClient.retrieveDataSources();
-        for (Source source : sources.getSource()) {
-            if (source.getId().startsWith("ds_")) {
-                repoxRestClient.deleteDatasource(source.getId());
-            }
-        }
+//        Aggregators aggrs = repoxRestClient.retrieveAggregators();
+//        for (Aggregator aggr : aggrs.getAggregator()) {
+//            if (aggr.getName().contains("_")) {
+//                repoxRestClient.deleteAggregator(aggr.getId());
+//            }
+//        }
+//
+//        DataProviders provs = repoxRestClient.retrieveProviders();
+//        for (Provider prov : provs.getProvider()) {
+//            if (prov.getName().contains("_")) {
+//                repoxRestClient.deleteProvider(prov.getId());
+//            }
+//        }
+//
+//        DataSources sources = repoxRestClient.retrieveDataSources();
+//        for (Source source : sources.getSource()) {
+//            if (source.getId().contains("_")) {
+//                repoxRestClient.deleteDatasource(source.getId());
+//            }
+//        }
     }
 
     /**
@@ -642,7 +642,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
-    @Test
+//    @Test
     public void testCreateUpdateDeleteHttpDataSource() throws Exception {
         try {
             // Create an Aggregator for testing purposes

@@ -22,13 +22,13 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.repox, 
-                            eu.europeana.uim.repox.model, 
-                            eu.europeana.uim.store, 
-                            javax.xml.bind, 
+                            eu.europeana.uim.repox,
+                            eu.europeana.uim.repox.model,
+                            eu.europeana.uim.store,
+                            javax.xml.bind,
                             javax.xml.bind.annotation,
-                            javax.xml.bind.annotation.adapters, 
-                            javax.xml.namespace, 
+                            javax.xml.bind.annotation.adapters,
+                            javax.xml.namespace,
                             org.joda.time,
                             org.osgi.service.blueprint,
                         </Import-Package>
@@ -79,6 +79,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-model-common</artifactId>
             <version>${parent.version}</version>
         </dependency>
 

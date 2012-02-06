@@ -5,6 +5,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
@@ -43,11 +44,11 @@ public class XmlObjectFactoryTest {
         Provider<Long> provider = engine.createProvider();
         provider.setName("test-provider");
         provider.setMnemonic("test-prov");
-        provider.putValue(StandardControlledVocabulary.COUNTRY, "uk");
+        provider.putValue(StandardControlledVocabulary.COUNTRY, "GBR");
         engine.updateProvider(provider);
 
         Aggregator aggr = factory.createAggregator(provider);
-        Assert.assertTrue(aggr.getNameCode().startsWith(
+        Assert.assertTrue(Country.lookupCountry(aggr.getNameCode(), false).getIso3().equals(
                 provider.getValue(StandardControlledVocabulary.COUNTRY)));
     }
 
@@ -61,7 +62,7 @@ public class XmlObjectFactoryTest {
         Provider<Long> provider = engine.createProvider();
         provider.setName("test-provider");
         provider.setMnemonic("test-prov");
-        provider.putValue(StandardControlledVocabulary.COUNTRY, "uk");
+        provider.putValue(StandardControlledVocabulary.COUNTRY, "GBR");
         engine.updateProvider(provider);
 
         eu.europeana.uim.repox.rest.client.xml.Provider prov = factory.createProvider(provider);
@@ -81,7 +82,7 @@ public class XmlObjectFactoryTest {
         Provider<Long> provider = engine.createProvider();
         provider.setName("test-provider");
         provider.setMnemonic("test-prov");
-        provider.putValue(StandardControlledVocabulary.COUNTRY, "uk");
+        provider.putValue(StandardControlledVocabulary.COUNTRY, "GBR");
         engine.updateProvider(provider);
 
         Collection<Long> collection = engine.createCollection(provider);

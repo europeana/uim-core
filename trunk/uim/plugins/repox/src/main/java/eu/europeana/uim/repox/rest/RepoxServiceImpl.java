@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
+import org.theeuropeanlibrary.model.common.qualifier.Country;
+
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
@@ -104,14 +106,34 @@ public class RepoxServiceImpl implements RepoxService {
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
 
         RepoxRestClient client = clientfactory.getInstance(provider.getOaiBaseUrl());
+        updateProvider(client, provider, null);
+    }
 
-        String aggregatorId = provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
+    private void updateProvider(RepoxRestClient client, Provider<?> provider,
+            Collection<?> collection) throws RepoxException {
+        String aggregatorId;
+        if (collection != null) {
+            aggregatorId = collection.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
+        } else {
+            aggregatorId = provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
+        }
+
         if (aggregatorId == null) {
             String countryCode = provider.getValue(StandardControlledVocabulary.COUNTRY);
 
             if (countryCode == null) {
                 countryCode = "xx";
-                provider.putValue(StandardControlledVocabulary.COUNTRY, countryCode);
+                provider.putValue(StandardControlledVocabulary.COUNTRY, "XXX");
+            } else {
+                countryCode = countryCode.toLowerCase();
+                if (countryCode == "xxx") {
+                    countryCode = "eu";
+                } else {
+                    Country country = Country.lookupCountry(countryCode, false);
+                    if (country != null) {
+                        countryCode = country.getIso2();
+                    }
+                }
             }
 
             Aggregator aggregator = xmlFactory.createAggregator(provider);
@@ -128,10 +150,20 @@ public class RepoxServiceImpl implements RepoxService {
                 aggregatorId = createdAggregator.getId();
             }
 
-            provider.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, aggregatorId);
+            if (collection != null) {
+                collection.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, aggregatorId);
+            } else {
+                provider.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, aggregatorId);
+            }
         }
 
-        String providerId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
+        String providerId;
+        if (collection != null) {
+            providerId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
+        } else {
+            providerId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
+        }
+
         if (providerId != null) {
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
             jaxbProv.setId(providerId);
@@ -155,7 +187,11 @@ public class RepoxServiceImpl implements RepoxService {
                 providerId = createdProv.getId();
             }
 
-            provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, providerId);
+            if (collection != null) {
+                collection.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, providerId);
+            } else {
+                provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, providerId);
+            }
         }
     }
 
@@ -200,16 +236,18 @@ public class RepoxServiceImpl implements RepoxService {
 
         RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
 
+        updateProvider(client, collection.getProvider(), collection);
+
         String htypeString = collection.getValue(RepoxControlledVocabulary.HARVESTING_TYPE);
-        if (htypeString == null) { 
+        if (htypeString == null) {
             htypeString = DatasourceType.oai_pmh.name();
-//            throw new DataSourceOperationException(
-//                "Error during the creation of a Datasource: "
-//                        + "HARVESTING_TYPE information not available in UIM for the specific object."); 
+// throw new DataSourceOperationException(
+// "Error during the creation of a Datasource: "
+// + "HARVESTING_TYPE information not available in UIM for the specific object.");
         }
 
         DatasourceType harvestingtype = DatasourceType.valueOf(htypeString);
-        
+
         Source retDs = client.retrieveDataSource(collection.getMnemonic());
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         if (collectionId == null && retDs != null) {

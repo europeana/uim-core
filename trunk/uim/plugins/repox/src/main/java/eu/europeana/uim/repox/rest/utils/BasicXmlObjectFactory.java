@@ -1,5 +1,7 @@
 package eu.europeana.uim.repox.rest.utils;
 
+import org.theeuropeanlibrary.model.common.qualifier.Country;
+
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.store.Collection;
@@ -17,15 +19,18 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
     @Override
     public Aggregator createAggregator(Provider<?> provider) {
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY).toLowerCase();
-        if (countrystr == null) {
-            countrystr = "eu";
+        Country country = Country.lookupCountry(countrystr, false);
+
+        Aggregator aggr;
+        if (country != null) {
+            aggr = DummyXmlObjectCreator.createAggregator(country.getName());
+            aggr.setName(country.getName());
+            aggr.setNameCode(country.getIso2());
+        } else {
+            aggr = DummyXmlObjectCreator.createAggregator(countrystr);
+            aggr.setName(countrystr);
+            aggr.setNameCode(countrystr);
         }
-
-        String aggrName = countrystr + "-aggregator";
-
-        Aggregator aggr = DummyXmlObjectCreator.createAggregator(aggrName);
-        aggr.setName(aggrName);
-        aggr.setNameCode(aggrName);
 
         return aggr;
     }
@@ -38,11 +43,6 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         jaxbProv.setNameCode(provider.getMnemonic());
 
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
-        if (countrystr == null) {
-            countrystr = "eu";
-        } else {
-            countrystr = countrystr.toLowerCase();
-        }
         jaxbProv.setCountry(countrystr);
 
         return jaxbProv;
