@@ -155,6 +155,7 @@ public class SugarServlet extends HttpServlet {
             update = getSugarService().synchronizeProvider(prov);
         }
 
+        // update is also false for inactive element
         if (update) {
             engine.updateProvider(prov);
         }
@@ -191,6 +192,7 @@ public class SugarServlet extends HttpServlet {
             update = getSugarService().synchronizeCollection(coll);
         }
 
+        // update is also false for inactive element
         if (update) {
             engine.updateCollection(coll);
         }

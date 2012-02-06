@@ -158,7 +158,13 @@ public class SugarServiceImpl implements SugarService {
         for (RetrievableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
-            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+            if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
+                if ("0".equals(value)) {
+                    update = false;
+                    break;
+                }
+
+            } else if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
 
             } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
@@ -275,7 +281,13 @@ public class SugarServiceImpl implements SugarService {
         for (RetrievableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
-            if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
+            if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
+                if ("0".equals(value)) {
+                    update = false;
+                    break;
+                }
+
+            } else if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
 
             } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
