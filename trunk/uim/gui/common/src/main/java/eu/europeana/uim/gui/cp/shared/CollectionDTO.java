@@ -211,19 +211,15 @@ public class CollectionDTO extends DataSourceDTO {
     }
 
     /**
-     * Returns the harvestRecords.
-     * 
-     * @return the harvestRecords
+     * @return number of harvested records
      */
     public String getHarvestRecords() {
         return harvestRecords;
     }
 
     /**
-     * Sets the harvestRecords to the given value.
-     * 
      * @param harvestRecords
-     *            the harvestRecords to set
+     *            number of harvested records
      */
     public void setHarvestRecords(String harvestRecords) {
         this.harvestRecords = harvestRecords;

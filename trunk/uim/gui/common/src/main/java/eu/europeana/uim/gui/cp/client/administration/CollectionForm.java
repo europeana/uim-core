@@ -52,7 +52,7 @@ public class CollectionForm extends Composite {
     @UiField
     Button                cancelButton;
     @UiField
-    Button              clearButton;
+    Button                clearButton;
 
     private CollectionDTO collection;
 
@@ -69,7 +69,7 @@ public class CollectionForm extends Composite {
         updateBox.setEnabled(false);
         statusBox.setEnabled(false);
         recordsBox.setEnabled(false);
-        
+
         commitButton.setEnabled(false);
 
         commitButton.addClickHandler(new ClickHandler() {
@@ -116,7 +116,7 @@ public class CollectionForm extends Composite {
                 clearForm();
             }
         });
-        
+
         clearButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
@@ -137,7 +137,7 @@ public class CollectionForm extends Composite {
                 clearForm();
                 listener.updated(collection);
             }
-        });        
+        });
     }
 
     private void clearForm() {
@@ -169,19 +169,19 @@ public class CollectionForm extends Composite {
         statusBox.setText(collection != null ? collection.getHarvestStatus() : "");
         recordsBox.setText(collection != null ? collection.getHarvestRecords() : "");
 
-//        if (collection != null) {
-//            Map<String, String> values = collection.getValues();
-//            if (values != null) {
-//                StringBuilder builder = new StringBuilder();
-//                for (Entry<String, String> entry : values.entrySet()) {
-//                    builder.append(entry.getKey());
-//                    builder.append(" : ");
-//                    builder.append(entry.getKey());
-//                    builder.append("/n");
-//                }
-//                valuesBox.setText(builder.toString());
-//            }
-//        }
+// if (collection != null) {
+// Map<String, String> values = collection.getValues();
+// if (values != null) {
+// StringBuilder builder = new StringBuilder();
+// for (Entry<String, String> entry : values.entrySet()) {
+// builder.append(entry.getKey());
+// builder.append(" : ");
+// builder.append(entry.getKey());
+// builder.append("/n");
+// }
+// valuesBox.setText(builder.toString());
+// }
+// }
     }
 
     /**
