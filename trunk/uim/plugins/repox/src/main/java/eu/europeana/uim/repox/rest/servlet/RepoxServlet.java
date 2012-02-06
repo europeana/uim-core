@@ -2,6 +2,11 @@
 package eu.europeana.uim.repox.rest.servlet;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,7 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
+import eu.europeana.uim.store.Collection;
 
 /**
  * Servlet as a callback for SugarCRM
@@ -34,85 +42,42 @@ public class RepoxServlet extends HttpServlet {
         this.registry = registry;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         resp.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
         resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
         resp.setDateHeader("Expires", 0); // prevents caching at the proxy server
 
-//        try {
-//            if (!getSugarService().hasActiveSession()) getSugarService().login();
-//        } catch (SugarException se) {
-//            try {
-//                resp.setStatus(500);
-//                se.printStackTrace(resp.getWriter());
-//                return;
-//            } catch (IOException e) {
-//                resp.setStatus(500);
-//                return;
-//            }
-//        }
-
         String action = req.getParameter("action");
-        String type =  req.getParameter("type");
         String id = req.getParameter("id");
 
         if ("update".equals(action)) {
             try {
-                if ("organization".equals(type)) {
+                StorageEngine<Serializable> storageEngine = (StorageEngine<Serializable>)registry.getStorageEngine();
 
-                    StringBuilder builder = new StringBuilder();
-                    if ("*".equals(id)) {
-//                        List<Map<String, String>> providers = getSugarService().listProviders(true);
-//                        for (Map<String, String> provider : providers) {
-//                            String mnemonic = getSugarService().getProviderMnemonic(provider);
-//                            if (mnemonic != null) {
-//                                boolean update = updateProvider(mnemonic, provider);
-//                                if (builder.length() > 0) {
-//                                    builder.append(", \n");
-//                                }
-//                                builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
-//                            }
-//                        }
-//
-//                        resp.setStatus(200);
-//                        resp.getWriter().write(builder.toString());
-//                        resp.getWriter().write(" DONE:" + providers.size());
-                    } else {
-//                        boolean update = updateProvider(id, null);
-//                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
-//                        resp.setStatus(200);
-//                        resp.getWriter().write(" DONE");
+                StringBuilder builder = new StringBuilder();
+                if ("*".equals(id)) {
+                    List<Collection<Serializable>> collections = storageEngine.getAllCollections();
+                    for (Collection<Serializable> coll : collections) {
+                        boolean updated = synchronizeCollection(coll);
+                        builder.append(coll.getMnemonic());
+                        if (updated) {
+                            storageEngine.updateCollection(coll);
+                            builder.append(" upd, ");
+                        } else {
+                            builder.append(" same, ");
+                        }
                     }
-                } else if ("collection".equals(type)) {
-                    StringBuilder builder = new StringBuilder();
-                    if ("*".equals(id)) {
-//                        List<Map<String, String>> collections = getSugarService().listCollections(
-//                                true);
-//                        for (Map<String, String> collection : collections) {
-//                            String mnemonic = getSugarService().getCollectionMnemonic(collection);
-//                            if (mnemonic != null) {
-//                                boolean update = updateCollection(mnemonic, collection);
-//                                if (builder.length() > 0) {
-//                                    builder.append(", \n");
-//                                }
-//                                builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
-//                            }
-//                        }
-//
-//                        resp.setStatus(200);
-//                        resp.getWriter().write(builder.toString());
-//                        resp.getWriter().write(" DONE:" + collections.size());
-                    } else {
-//                        boolean update = updateCollection(id, null);
-//                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
-//                        resp.setStatus(200);
-//                        resp.getWriter().write(" DONE");
-                    }
-
+                    resp.setStatus(200);
+                    resp.getWriter().write(builder.toString());
+                    resp.getWriter().write(" DONE:" + collections.size());
                 } else {
-                    resp.sendError(400,
-                            "Illegal arguments, neither collection nor provider id was given.");
+                    Collection<Serializable> coll = storageEngine.getCollection(id);
+                    boolean updated = synchronizeCollection(coll);
+                    builder.append(id + ": " + (updated ? "upd" : "same"));
+                    resp.setStatus(200);
+                    resp.getWriter().write(" DONE");
                 }
             } catch (Throwable t) {
                 logger.log(Level.SEVERE, "Error during update", t);
@@ -131,24 +96,48 @@ public class RepoxServlet extends HttpServlet {
         }
     }
 
+    private boolean synchronizeCollection(Collection<Serializable> collection) {
+        Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+
+        try {
+            repoxService.updateCollection(collection);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not update collection to repox!", e);
+        }
+        try {
+            repoxService.synchronizeCollection(collection);
+        } catch (RepoxException e) {
+            throw new RuntimeException("Could not synchronize collection to repox!", e);
+        }
+
+        boolean update = false;
+        Map<String, String> afterValues = collection.values();
+        for (Entry<String, String> entry : afterValues.entrySet()) {
+            String beforeValue = beforeValues.remove(entry.getKey());
+            if (!entry.getValue().equals(beforeValue)) {
+                update = true;
+                break;
+            }
+        }
+        if (!update && !beforeValues.isEmpty()) {
+            update = true;
+        }
+
+        return update;
+    }
 
     /**
-     * Returns the repoxService.
-     * 
-     * @return the repoxService
+     * @return repox service
      */
     public RepoxService getRepoxService() {
         return repoxService;
     }
 
     /**
-     * Sets the sugarService to the given value.
-     * 
      * @param repoxService
-     *            the repoxService to set
+     *            repox service
      */
     public void setRepoxService(RepoxService repoxService) {
         this.repoxService = repoxService;
     }
-
 }

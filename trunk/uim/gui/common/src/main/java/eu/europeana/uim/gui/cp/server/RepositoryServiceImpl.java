@@ -47,14 +47,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
      */
     public RepositoryServiceImpl() {
         super();
-
-// Timer t = new Timer() {
-// @Override
-// public void run() {
-// synchronizeRepox();
-// }
-// };
-// t.scheduleRepeating(72000000);
     }
 
     @Override
