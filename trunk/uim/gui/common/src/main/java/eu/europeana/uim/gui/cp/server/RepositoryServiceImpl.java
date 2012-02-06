@@ -273,6 +273,29 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     @Override
+    public Boolean clearProviderValues(ProviderDTO provider) {
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+            return false;
+        }
+
+        Provider<Serializable> prov;
+        try {
+            if (provider.getId() != null) {
+                prov = storage.getProvider(provider.getId());
+                prov.values().clear();
+                storage.updateProvider(prov);
+            }
+        } catch (Throwable t) {
+            log.log(Level.WARNING, "Could not retrieve provider '" + provider + "'!", t);
+            return false;
+        }
+        return true;
+    }
+
+    
+    @Override
     public Boolean updateProvider(ProviderDTO provider) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {

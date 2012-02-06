@@ -41,6 +41,8 @@ public class ProviderForm extends Composite {
     Button              commitButton;
     @UiField
     Button              cancelButton;
+    @UiField
+    Button              clearButton;
 
     private ProviderDTO provider;
 
@@ -96,7 +98,28 @@ public class ProviderForm extends Composite {
                 clearForm();
             }
         });
-    }
+
+        clearButton.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent clickEvent) {
+                    repositoryService.clearProviderValues(provider, new AsyncCallback<Boolean>() {
+                        @Override
+                        public void onFailure(Throwable caught) {
+                            caught.printStackTrace();
+                        }
+
+                        @Override
+                        public void onSuccess(Boolean result) {
+                            if (result == null || !result) {
+                                Window.alert("Could not update provider!");
+                            }
+                        }
+                    });
+
+                    clearForm();
+                    listener.updated(provider);
+                }
+            });    }
 
     private void clearForm() {
         mnemonicBox.setText("");

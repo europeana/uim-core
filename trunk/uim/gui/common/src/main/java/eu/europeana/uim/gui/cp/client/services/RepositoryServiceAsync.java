@@ -63,6 +63,9 @@ public interface RepositoryServiceAsync {
      */
     void updateProvider(ProviderDTO provider, AsyncCallback<Boolean> async);
 
+    
+    void clearProviderValues(ProviderDTO provider, AsyncCallback<Boolean> async);
+    
     /**
      * @param collection
      * @param async
