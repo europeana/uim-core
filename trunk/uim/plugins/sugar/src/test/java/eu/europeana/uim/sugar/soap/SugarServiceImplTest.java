@@ -108,7 +108,7 @@ public class SugarServiceImplTest {
         List<Map<String,String>> alllist = service.listCollections(false);
         List<Map<String, String>> active = service.listCollections(true);
         
-        assertTrue(alllist.size() > active.size());
+        assertTrue(alllist.size() >= active.size());
     }
 
 
@@ -121,7 +121,7 @@ public class SugarServiceImplTest {
         List<Map<String,String>> alllist = service.listProviders(false);
         List<Map<String, String>> active = service.listProviders(true);
         
-        assertTrue(alllist.size() > active.size());
+        assertTrue(alllist.size() >= active.size());
     }
 
     
