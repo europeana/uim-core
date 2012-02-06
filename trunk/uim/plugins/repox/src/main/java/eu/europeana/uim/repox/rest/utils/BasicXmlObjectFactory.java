@@ -18,19 +18,30 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
 public class BasicXmlObjectFactory implements XmlObjectFactory {
     @Override
     public Aggregator createAggregator(Provider<?> provider) {
-        String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY).toLowerCase();
-        Country country = Country.lookupCountry(countrystr, false);
-
-        Aggregator aggr;
-        if (country != null) {
-            aggr = DummyXmlObjectCreator.createAggregator(country.getName());
-            aggr.setName(country.getName());
-            aggr.setNameCode(country.getIso2());
+        String countryCode = provider.getValue(StandardControlledVocabulary.COUNTRY);
+        String countryName = null;
+        if (countryCode == null) {
+            countryCode = "eu";
+            countryName = "European Union";
         } else {
-            aggr = DummyXmlObjectCreator.createAggregator(countrystr);
-            aggr.setName(countrystr);
-            aggr.setNameCode(countrystr);
+            countryCode = countryCode.toLowerCase();
+            if (countryCode.equals("xxx")) {
+                countryCode = "eu";
+                countryName = "European Union";
+            } else {
+                Country country = Country.lookupCountry(countryCode, false);
+                if (country != null) {
+                    countryCode = country.getIso2();
+                    countryName = country.getName();
+                } else {
+                    countryName = countryCode;
+                }
+            }
         }
+
+        Aggregator aggr = DummyXmlObjectCreator.createAggregator(countryName);
+        aggr.setName(countryName);
+        aggr.setNameCode(countryCode);
 
         return aggr;
     }

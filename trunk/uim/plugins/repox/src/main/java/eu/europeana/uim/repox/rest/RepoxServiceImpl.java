@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.theeuropeanlibrary.model.common.qualifier.Country;
-
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
@@ -119,23 +117,10 @@ public class RepoxServiceImpl implements RepoxService {
         }
 
         if (aggregatorId == null) {
-            String countryCode = provider.getValue(StandardControlledVocabulary.COUNTRY);
-
-            if (countryCode == null) {
-                countryCode = "xx";
+            if (provider.getValue(StandardControlledVocabulary.COUNTRY) == null) {
                 provider.putValue(StandardControlledVocabulary.COUNTRY, "XXX");
-            } else {
-                countryCode = countryCode.toLowerCase();
-                if (countryCode == "xxx") {
-                    countryCode = "eu";
-                } else {
-                    Country country = Country.lookupCountry(countryCode, false);
-                    if (country != null) {
-                        countryCode = country.getIso2();
-                    }
-                }
-            }
-
+            } 
+           
             Aggregator aggregator = xmlFactory.createAggregator(provider);
 
             Aggregators aggregators = client.retrieveAggregators();
@@ -225,7 +210,7 @@ public class RepoxServiceImpl implements RepoxService {
             if (storedXml == null || !storedXml.equals(xmlProvider)) {
                 provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_XML, xmlProvider);
                 provider.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                        new Date(System.nanoTime()).toString());
+                        new Date(System.currentTimeMillis()).toString());
             }
         }
     }
@@ -259,7 +244,7 @@ public class RepoxServiceImpl implements RepoxService {
             Source ds = xmlFactory.createDataSource(collection);
 
             eu.europeana.uim.repox.rest.client.xml.Provider jibxProv = new eu.europeana.uim.repox.rest.client.xml.Provider();
-            jibxProv.setId(collection.getProvider().getValue(
+            jibxProv.setId(collection.getValue(
                     RepoxControlledVocabulary.PROVIDER_REPOX_ID));
 
             Source retsource = null;
@@ -339,7 +324,7 @@ public class RepoxServiceImpl implements RepoxService {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
                             xmlCollection);
                     collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                            new Date(System.nanoTime()).toString());
+                            new Date(System.currentTimeMillis()).toString());
                 }
             }
 
@@ -351,7 +336,7 @@ public class RepoxServiceImpl implements RepoxService {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
                         status.getStatus());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                        new Date(System.nanoTime()).toString());
+                        new Date(System.currentTimeMillis()).toString());
             }
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
             if ((storedRecords == null && status.getRecords() != null) ||
@@ -359,7 +344,7 @@ public class RepoxServiceImpl implements RepoxService {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
                         status.getRecords());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                        new Date(System.nanoTime()).toString());
+                        new Date(System.currentTimeMillis()).toString());
             }
         }
     }

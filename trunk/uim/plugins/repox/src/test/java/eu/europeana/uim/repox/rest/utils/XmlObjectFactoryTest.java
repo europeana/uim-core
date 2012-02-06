@@ -48,8 +48,9 @@ public class XmlObjectFactoryTest {
         engine.updateProvider(provider);
 
         Aggregator aggr = factory.createAggregator(provider);
-        Assert.assertTrue(Country.lookupCountry(aggr.getNameCode(), false).getIso3().equals(
-                provider.getValue(StandardControlledVocabulary.COUNTRY)));
+        String iso3 = Country.lookupCountry(aggr.getNameCode(), false).getIso3();
+        String country = provider.getValue(StandardControlledVocabulary.COUNTRY);
+        Assert.assertTrue(iso3.equals(country));
     }
 
     /**
