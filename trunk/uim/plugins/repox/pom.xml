@@ -22,14 +22,17 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.repox,
-                            eu.europeana.uim.repox.model,
-                            eu.europeana.uim.store,
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.repox, 
+                            eu.europeana.uim.repox.model, 
+                            eu.europeana.uim.store, 
                             org.theeuropeanlibrary.model.common.qualifier,
-                            javax.xml.bind,
+                            javax.xml.bind, 
                             javax.xml.bind.annotation,
                             javax.xml.bind.annotation.adapters,
                             javax.xml.namespace,
+                            javax.servlet,
+                            javax.servlet.http,
                             org.joda.time,
                             org.osgi.service.blueprint,
                         </Import-Package>
@@ -94,6 +97,11 @@
             <artifactId>europeana-uim-storage-memory</artifactId>
             <version>${parent.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
         </dependency>
 
         <dependency>
