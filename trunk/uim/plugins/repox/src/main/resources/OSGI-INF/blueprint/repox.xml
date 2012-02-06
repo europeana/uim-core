@@ -22,7 +22,7 @@
 			<entry key="alias" value="/repox" />
 		</service-properties>
 
-		<bean class="eu.europeana.uim.repox.rest.servlet.SugarServlet">
+		<bean class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
 			<argument index="0" ref="registry" />
 			<property name="repoxService" ref="rs" />
 		</bean>
