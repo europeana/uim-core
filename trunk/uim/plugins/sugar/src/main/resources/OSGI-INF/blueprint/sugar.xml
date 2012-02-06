@@ -22,8 +22,10 @@
 		</cm:default-properties>
 	</cm:property-placeholder>
 
+    <bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
+
 	<bean id="ssci" class="eu.europeana.uim.sugar.client.SugarSoapClientImpl">
-		<argument index="0" value="endPointUrl" />
+		<argument index="0" value="${endPointUrl}" />
 		<argument index="1" value="${username}" />
 		<argument index="2" value="${password}" />
 		<argument index="3" value="${providerModule}" />
@@ -33,15 +35,15 @@
 		<argument index="7" value="${contactModule}" />
 	</bean>
 
-	<bean id="rs" class="eu.europeana.uim.sugar.SugarServiceImpl">
-		<property name="sugarClient" ref="ssci" />
-		<property name="sugarMappingClass" value="${sugarMappingClass}" />
-	</bean>
-
 	<service id="sugarService" ref="ss"
 		interface="eu.europeana.uim.sugarcrm.SugarService" />
 
-	<bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
+	<bean id="ss" class="eu.europeana.uim.sugar.SugarServiceImpl">
+		<argument ref="ssci" />
+		<property name="sugarMappingClass" value="${sugarMappingClass}" />
+	</bean>
+
+
 
 	<service interface="javax.servlet.http.HttpServlet">
 		<service-properties>
@@ -50,7 +52,7 @@
 
 		<bean class="eu.europeana.uim.sugar.servlet.SugarServlet">
 			<argument index="0" ref="registry" />
-			<argument index="1" ref="sugarService" />
+			<property name="sugarService" ref="ss" />
 		</bean>
 	</service>
 

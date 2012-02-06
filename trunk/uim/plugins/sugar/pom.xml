@@ -22,9 +22,12 @@
 				<configuration>
 					<instructions>
 						<Import-Package>
+						    eu.europeana.uim.api,
+							eu.europeana.uim.store,
 							eu.europeana.uim.sugarcrm,
 							eu.europeana.uim.sugarcrm.model,
-							eu.europeana.uim.store,
+							eu.europeana.uim.repox,
+							org.theeuropeanlibrary.model.common.qualifier,
                             org.apache.commons.lang,
                             javax.servlet,
                             javax.servlet.http,
@@ -35,7 +38,10 @@
                             !*
 						</Import-Package>
 						<Export-Package>
-							eu.europeana.uim.sugar
+							eu.europeana.uim.sugar,
+							eu.europeana.uim.sugar.client,
+							eu.europeana.uim.sugar.utils,
+							eu.europeana.uim.sugar.tel
 						</Export-Package>
 						<Embed-Dependency>axis,axis-saaj,wsdl4j,geronimo-jaxrpc_1.1_spec,commons-discovery,commons-logging</Embed-Dependency>
 					</instructions>

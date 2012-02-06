@@ -255,15 +255,17 @@ public class SugarSoapClientImpl implements SugarClient {
 
     @Override
     public String getProviderForCollection(String session, String collectionid) {
+        Map<String, String> collection = getCollection(session, collectionid);
+        
         List<String> relationsships = getRelationsships(session, getCollectionModule(),
-                collectionid, getProviderModule(), "");
+                collection.get("id"), getProviderModule(), "");
 
         if (!relationsships.isEmpty()) {
             // just get the provider record for the first entry in the relation
             Map<String, String> singleEntry = getSingleEntryFromInternalId(session,
                     getProviderModule(), relationsships.iterator().next());
             if (singleEntry == null) { return null; }
-            String providerID = singleEntry.get(getProviderMnemonicField());
+            String providerID = singleEntry.get(getProviderMnemonicUnqualified());
             return providerID;
         } else {
             // could not find any relevant provider for this.

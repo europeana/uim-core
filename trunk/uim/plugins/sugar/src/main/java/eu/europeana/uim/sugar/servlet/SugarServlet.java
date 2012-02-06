@@ -29,18 +29,16 @@ import eu.europeana.uim.sugarcrm.SugarService;
 public class SugarServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(SugarServlet.class.getName());
 
-    private final Registry      registry;
-    private final SugarService  sugar;
+    private Registry            registry;
+    private SugarService        sugarService;
 
     /**
      * Creates a new instance of this class.
      * 
      * @param registry
-     * @param sugar
      */
-    public SugarServlet(Registry registry, SugarService sugar) {
+    public SugarServlet(Registry registry) {
         this.registry = registry;
-        this.sugar = sugar;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class SugarServlet extends HttpServlet {
         resp.setDateHeader("Expires", 0); // prevents caching at the proxy server
 
         try {
-            if (!sugar.hasActiveSession()) sugar.login();
+            if (!getSugarService().hasActiveSession()) getSugarService().login();
         } catch (SugarException se) {
             try {
                 resp.setStatus(500);
@@ -72,9 +70,9 @@ public class SugarServlet extends HttpServlet {
 
                     StringBuilder builder = new StringBuilder();
                     if ("*".equals(orgid)) {
-                        List<Map<String, String>> providers = sugar.listProviders(true);
+                        List<Map<String, String>> providers = getSugarService().listProviders(true);
                         for (Map<String, String> provider : providers) {
-                            String mnemonic = sugar.getProviderMnemonic(provider);
+                            String mnemonic = getSugarService().getProviderMnemonic(provider);
                             if (mnemonic != null) {
                                 boolean update = updateProvider(mnemonic, provider);
                                 if (builder.length() > 0) {
@@ -96,9 +94,10 @@ public class SugarServlet extends HttpServlet {
                 } else if (collid != null && !collid.isEmpty()) {
                     StringBuilder builder = new StringBuilder();
                     if ("*".equals(collid)) {
-                        List<Map<String, String>> collections = sugar.listCollections(true);
+                        List<Map<String, String>> collections = getSugarService().listCollections(
+                                true);
                         for (Map<String, String> collection : collections) {
-                            String mnemonic = sugar.getCollectionMnemonic(collection);
+                            String mnemonic = getSugarService().getCollectionMnemonic(collection);
                             if (mnemonic != null) {
                                 boolean update = updateCollection(mnemonic, collection);
                                 if (builder.length() > 0) {
@@ -144,12 +143,16 @@ public class SugarServlet extends HttpServlet {
         @SuppressWarnings("unchecked")
         StorageEngine<I> engine = (StorageEngine<I>)registry.getStorageEngine();
         Provider<I> prov = engine.findProvider(mnemonic);
+        if (prov == null) {
+            prov = engine.createProvider();
+            prov.setMnemonic(mnemonic);
+        }
 
         boolean update;
         if (provider != null) {
-            update = sugar.synchronizeProvider(prov, provider);
+            update = getSugarService().synchronizeProvider(prov, provider);
         } else {
-            update = sugar.synchronizeProvider(prov);
+            update = getSugarService().synchronizeProvider(prov);
         }
 
         if (update) {
@@ -164,30 +167,54 @@ public class SugarServlet extends HttpServlet {
         StorageEngine<I> engine = (StorageEngine<I>)registry.getStorageEngine();
         Collection<I> coll = engine.findCollection(mnemonic);
         if (coll == null) {
-            String providerMnemonic = sugar.getProviderForCollection(mnemonic);
+            String providerMnemonic = getSugarService().getProviderForCollection(mnemonic);
             if (providerMnemonic != null) {
                 Provider<I> provider = engine.findProvider(providerMnemonic);
                 if (provider != null) {
                     coll = engine.createCollection(provider);
                     coll.setMnemonic(mnemonic);
+                } else {
+                    throw new IllegalStateException("Provider <" + providerMnemonic +
+                                                    "> does not exist for collection <" + mnemonic +
+                                                    ">");
                 }
-            }
-        }
-
-        if (coll != null) {
-            boolean update;
-            if (collection != null) {
-                update = sugar.synchronizeCollection(coll, collection);
             } else {
-                update = sugar.synchronizeCollection(coll);
+                throw new IllegalStateException("Provider not found for collection <" + mnemonic +
+                                                ">");
             }
-
-            if (update) {
-                engine.updateCollection(coll);
-            }
-            return update;
         }
-        return false;
+
+        boolean update;
+        if (collection != null) {
+            update = getSugarService().synchronizeCollection(coll, collection);
+        } else {
+            update = getSugarService().synchronizeCollection(coll);
+        }
+
+        if (update) {
+            engine.updateCollection(coll);
+        }
+        return update;
+
+    }
+
+    /**
+     * Returns the sugarService.
+     * 
+     * @return the sugarService
+     */
+    public SugarService getSugarService() {
+        return sugarService;
+    }
+
+    /**
+     * Sets the sugarService to the given value.
+     * 
+     * @param sugarService
+     *            the sugarService to set
+     */
+    public void setSugarService(SugarService sugarService) {
+        this.sugarService = sugarService;
     }
 
 }

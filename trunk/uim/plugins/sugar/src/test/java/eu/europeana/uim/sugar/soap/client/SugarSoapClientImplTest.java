@@ -116,6 +116,10 @@ public class SugarSoapClientImplTest {
         
         String sugarid = collection.get(((SugarSoapClientImpl)client).getCollectionMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
+        
+        String provider = client.getProviderForCollection(session, mnemonic);
+        String pMnemonic = properties.getProperty("test.provider.mnemonic");
+        assertEquals(provider, pMnemonic);
     }
 
     /**
