@@ -110,7 +110,7 @@ public class RepoxServiceImpl implements RepoxService {
             String countryCode = provider.getValue(StandardControlledVocabulary.COUNTRY);
 
             if (countryCode == null) {
-                countryCode = "eu";
+                countryCode = "xx";
                 provider.putValue(StandardControlledVocabulary.COUNTRY, countryCode);
             }
 
