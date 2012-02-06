@@ -38,7 +38,7 @@
                             eu.europeana.uim.repox.rest.client,
                             eu.europeana.uim.repox.rest.utils,
                         </Export-Package>
-                        <Embed-Dependency></Embed-Dependency>
+                        <!-- <Embed-Dependency></Embed-Dependency> -->
                         <!-- <Embed-Transitive>true</Embed-Transitive> -->
                         <!-- <Embed-StripVersion>true</Embed-StripVersion> -->
                     </instructions>
