@@ -63,9 +63,12 @@ public interface RepositoryServiceAsync {
      */
     void updateProvider(ProviderDTO provider, AsyncCallback<Boolean> async);
 
-    
+    /**
+     * @param provider
+     * @param async
+     */
     void clearProviderValues(ProviderDTO provider, AsyncCallback<Boolean> async);
-    
+
     /**
      * @param collection
      * @param async
@@ -73,8 +76,12 @@ public interface RepositoryServiceAsync {
      */
     void updateCollection(CollectionDTO collection, AsyncCallback<Boolean> async);
 
+    /**
+     * @param collection
+     * @param async
+     */
     void clearCollectionValues(CollectionDTO collection, AsyncCallback<Boolean> async);
-    
+
     /**
      * Update UIM provider using data from control panel.
      * 
@@ -96,7 +103,7 @@ public interface RepositoryServiceAsync {
      *            configured repox)
      */
     void synchronizeRepoxCollection(Serializable collectionId, AsyncCallback<CollectionDTO> async);
-    
+
     /**
      * @param async
      *            true, if synchronization with repox was successfull
