@@ -12,6 +12,7 @@ import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
+import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
 import eu.europeana.uim.store.Collection;
@@ -115,6 +116,11 @@ public class RepoxServiceTest {
 
         engine.updateCollection(collection);
         service.updateCollection(collection);
+        
+        
+        Source source = factory.getInstance(repoxUri).retrieveDataSourceByNameCode(collection.getMnemonic());
+        Assert.assertEquals(collection.getName(), source.getName());
+        
 
         String collId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         Assert.assertNotNull(collId);
@@ -123,6 +129,9 @@ public class RepoxServiceTest {
         engine.updateCollection(collection);
         service.updateCollection(collection);
 
+        source = factory.getInstance(repoxUri).retrieveDataSourceByNameCode(collection.getMnemonic());
+        Assert.assertEquals(collection.getName(), source.getName());
+
         String updCollId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         Assert.assertEquals(collId, updCollId);
         Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
@@ -130,6 +139,7 @@ public class RepoxServiceTest {
         service.synchronizeCollection(collection);
         Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
         Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
+        
 
         //        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
 

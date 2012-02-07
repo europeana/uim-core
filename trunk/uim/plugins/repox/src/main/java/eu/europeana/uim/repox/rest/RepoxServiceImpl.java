@@ -249,11 +249,13 @@ public class RepoxServiceImpl implements RepoxService {
             collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retDs.getId());
         }
 
+        // create the update ds for repox
+        Source ds = xmlFactory.createDataSource(collection);
+
         // eather we dont have it in our map - so assume a new synch
         // or the thing does not exist in repox, but was synched before -
         // that happens when record is deleted in repox.
         if (collectionId == null || retDs == null) {
-            Source ds = xmlFactory.createDataSource(collection);
 
             eu.europeana.uim.repox.rest.client.xml.Provider jibxProv = new eu.europeana.uim.repox.rest.client.xml.Provider();
             jibxProv.setId(collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID));
@@ -284,19 +286,19 @@ public class RepoxServiceImpl implements RepoxService {
         } else {
             switch (harvestingtype) {
             case oai_pmh:
-                client.updateDatasourceOAI(retDs);
+                client.updateDatasourceOAI(ds);
                 break;
             case z39_50:
-                client.updateDatasourceZ3950Timestamp(retDs);
+                client.updateDatasourceZ3950Timestamp(ds);
                 break;
             case ftp:
-                client.updateDatasourceFtp(retDs);
+                client.updateDatasourceFtp(ds);
                 break;
             case http:
-                client.updateDatasourceHttp(retDs);
+                client.updateDatasourceHttp(ds);
                 break;
             case folder:
-                client.updateDatasourceFolder(retDs);
+                client.updateDatasourceFolder(ds);
                 break;
             }
         }
@@ -330,6 +332,8 @@ public class RepoxServiceImpl implements RepoxService {
                 } catch (JAXBException e) {
                     throw new RuntimeException("Could not marshall source for id '" + id + "'!", e);
                 }
+                
+                
                 String storedXml = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML);
                 if (storedXml == null || !storedXml.equals(xmlCollection)) {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
