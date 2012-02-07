@@ -17,11 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageUpdateListener;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.sugarcrm.SugarService;
 
 /**
  * Servlet as a callback for SugarCRM
@@ -33,7 +32,9 @@ public class RepoxServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RepoxServlet.class.getName());
 
     private Registry            registry;
+
     private RepoxService        repoxService;
+    private SugarService        sugarService;
 
     /**
      * Creates a new instance of this class.
@@ -42,7 +43,6 @@ public class RepoxServlet extends HttpServlet {
      */
     public RepoxServlet(Registry registry) {
         this.registry = registry;
-        this.registry.addStorageUpdateListener(new RepoxServletListener());
     }
 
     @SuppressWarnings("unchecked")
@@ -67,9 +67,8 @@ public class RepoxServlet extends HttpServlet {
                         builder.append(coll.getMnemonic());
                         if (updated) {
                             storageEngine.updateCollection(coll);
-                            for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
-                                ((StorageUpdateListener<Serializable>)listener).updateCollection(
-                                        "repox", coll);
+                            if (sugarService != null) {
+                                sugarService.updateCollection(coll);
                             }
                             builder.append(" upd, ");
                         } else {
@@ -83,9 +82,9 @@ public class RepoxServlet extends HttpServlet {
                     Collection<Serializable> coll = storageEngine.getCollection(id);
                     boolean updated = synchronizeCollection(coll);
                     if (updated) {
-                        for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
-                            ((StorageUpdateListener<Serializable>)listener).updateCollection(
-                                    "sugar", coll);
+                        storageEngine.updateCollection(coll);
+                        if (sugarService != null) {
+                            sugarService.updateCollection(coll);
                         }
                     }
                     builder.append(id + ": " + (updated ? "upd" : "same"));
@@ -154,28 +153,35 @@ public class RepoxServlet extends HttpServlet {
         this.repoxService = repoxService;
     }
 
-    private class RepoxServletListener implements StorageUpdateListener<Serializable> {
+    /**
+     * Returns the sugarService.
+     * 
+     * @return the sugarService
+     */
+    public SugarService getSugarService() {
+        return sugarService;
+    }
 
-        @Override
-        public String getIdentifier() {
-            return "repox";
-        }
+    /**
+     * Sets the sugarService to the given value.
+     * 
+     * @param sugarService
+     *            the sugarService to set
+     */
+    public void setSugarService(SugarService sugarService) {
+        this.sugarService = sugarService;
+        logger.info("Sugar service SET for repox servlet.");
+    }
 
-        @Override
-        public void updateCollection(String modul, Collection<Serializable> collection) {
-            if (!"repox".equals(modul)) {
-                try {
-                    repoxService.updateCollection(collection);
-                } catch (RepoxException e) {
-                    throw new RuntimeException("Could not synchronize collection to repox!", e);
-                }
-            }
-        }
-
-        @Override
-        public void updateProvider(String modul, Provider<Serializable> provider) {
-            // nothing to do in repox - can't decide to which provider to speak.
-        }
+    /**
+     * Sets the sugarService to the given value.
+     * 
+     * @param sugarService
+     *            the sugarService to set
+     */
+    public void unsetSugarService(SugarService sugarService) {
+        this.sugarService = null;
+        logger.info("Sugar service UNSET for repox servlet.");
     }
 
 }

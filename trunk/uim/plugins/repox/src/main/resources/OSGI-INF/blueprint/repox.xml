@@ -14,6 +14,15 @@
 		<property name="clientfactory" ref="rcf" />
 		<property name="xmlFactory" ref="xof" />
 	</bean>
+
+
+    <reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService" availability="optional">
+        <reference-listener
+                bind-method="setSugarService" unbind-method="unsetSugarService" ref="repoxServlet">
+        </reference-listener>
+    </reference>
+
+
 	<service id="repoxService" ref="rs"
 		interface="eu.europeana.uim.repox.RepoxService" />
 
@@ -22,7 +31,7 @@
 			<entry key="alias" value="/repox" />
 		</service-properties>
 
-		<bean class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
+		<bean id="repoxServlet" class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
 			<argument index="0" ref="registry" />
 			<property name="repoxService" ref="rs" />
 		</bean>
