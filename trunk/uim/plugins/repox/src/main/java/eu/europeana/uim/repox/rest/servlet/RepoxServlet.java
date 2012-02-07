@@ -17,9 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageUpdateListener;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.Provider;
 
 /**
  * Servlet as a callback for SugarCRM
@@ -40,6 +42,7 @@ public class RepoxServlet extends HttpServlet {
      */
     public RepoxServlet(Registry registry) {
         this.registry = registry;
+        this.registry.addStorageUpdateListener(new RepoxServletListener());
     }
 
     @SuppressWarnings("unchecked")
@@ -64,6 +67,10 @@ public class RepoxServlet extends HttpServlet {
                         builder.append(coll.getMnemonic());
                         if (updated) {
                             storageEngine.updateCollection(coll);
+                            for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
+                                ((StorageUpdateListener<Serializable>)listener).updateCollection(
+                                        "repox", coll);
+                            }
                             builder.append(" upd, ");
                         } else {
                             builder.append(" same, ");
@@ -75,6 +82,12 @@ public class RepoxServlet extends HttpServlet {
                 } else {
                     Collection<Serializable> coll = storageEngine.getCollection(id);
                     boolean updated = synchronizeCollection(coll);
+                    if (updated) {
+                        for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
+                            ((StorageUpdateListener<Serializable>)listener).updateCollection(
+                                    "sugar", coll);
+                        }
+                    }
                     builder.append(id + ": " + (updated ? "upd" : "same"));
                     resp.setStatus(200);
                     resp.getWriter().write(" DONE");
@@ -140,4 +153,29 @@ public class RepoxServlet extends HttpServlet {
     public void setRepoxService(RepoxService repoxService) {
         this.repoxService = repoxService;
     }
+
+    private class RepoxServletListener implements StorageUpdateListener<Serializable> {
+
+        @Override
+        public String getIdentifier() {
+            return "repox";
+        }
+
+        @Override
+        public void updateCollection(String modul, Collection<Serializable> collection) {
+            if (!"repox".equals(modul)) {
+                try {
+                    repoxService.synchronizeCollection(collection);
+                } catch (RepoxException e) {
+                    throw new RuntimeException("Could not synchronize collection to repox!", e);
+                }
+            }
+        }
+
+        @Override
+        public void updateProvider(String modul, Provider<Serializable> provider) {
+            // nothing to do in repox - can't decide to which provider to speak.
+        }
+    }
+
 }

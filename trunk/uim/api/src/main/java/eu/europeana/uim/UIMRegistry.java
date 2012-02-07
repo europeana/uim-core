@@ -16,6 +16,7 @@ import eu.europeana.uim.api.Orchestrator;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.api.StorageUpdateListener;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -27,24 +28,25 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
-    private static Logger                 log            = Logger.getLogger(UIMRegistry.class.getName());
+    private static Logger                  log            = Logger.getLogger(UIMRegistry.class.getName());
 
-    private String                        configuredStorageEngine;
-    private StorageEngine<?>              activeStorage  = null;
-    private Map<String, StorageEngine<?>> storages       = new HashMap<String, StorageEngine<?>>();
+    private String                         configuredStorageEngine;
+    private StorageEngine<?>               activeStorage  = null;
+    private Map<String, StorageEngine<?>>  storages       = new HashMap<String, StorageEngine<?>>();
 
-    private String                        configuredLoggingEngine;
-    private LoggingEngine<?>              activeLogging  = null;
-    private Map<String, LoggingEngine<?>> loggers        = new HashMap<String, LoggingEngine<?>>();
+    private String                         configuredLoggingEngine;
+    private LoggingEngine<?>               activeLogging  = null;
+    private Map<String, LoggingEngine<?>>  loggers        = new HashMap<String, LoggingEngine<?>>();
 
-    private String                        configuredResourceEngine;
-    private ResourceEngine                activeResource = null;
-    private Map<String, ResourceEngine>   resources      = new HashMap<String, ResourceEngine>();
+    private String                         configuredResourceEngine;
+    private ResourceEngine                 activeResource = null;
+    private Map<String, ResourceEngine>    resources      = new HashMap<String, ResourceEngine>();
 
-    private Map<String, IngestionPlugin>  plugins        = new HashMap<String, IngestionPlugin>();
-    private Map<String, Workflow>         workflows      = new HashMap<String, Workflow>();
+    private Map<String, IngestionPlugin>   plugins        = new HashMap<String, IngestionPlugin>();
+    private Map<String, Workflow>          workflows      = new HashMap<String, Workflow>();
 
-    private Orchestrator<?>               orchestrator   = null;
+    private List<StorageUpdateListener<?>> listeners      = new ArrayList<StorageUpdateListener<?>>();
+    private Orchestrator<?>                orchestrator   = null;
 
     /**
      * Creates a new instance of this class.
@@ -352,6 +354,25 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
+    public void addStorageUpdateListener(StorageUpdateListener<?> listener) {
+        if (listener != null) {
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeStorageUpdateListener(StorageUpdateListener<?> listener) {
+        if (listener != null) {
+            listeners.remove(listener);
+        }
+    }
+
+    @Override
+    public List<StorageUpdateListener<?>> getStorageUpdateListener() {
+        return listeners;
+    }
+
+    @Override
     public Orchestrator<?> getOrchestrator() {
         return orchestrator;
     }
@@ -465,4 +486,5 @@ public class UIMRegistry implements Registry {
 
         return builder.toString();
     }
+
 }

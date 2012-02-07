@@ -1,3 +1,4 @@
+
 package eu.europeana.uim.api;
 
 import java.util.Collection;
@@ -161,6 +162,25 @@ public interface Registry {
      */
     ResourceEngine getResourceEngine(String identifier);
 
+    
+    /**
+     * @param listener
+     *            add listener to registration
+     */
+    void addStorageUpdateListener(StorageUpdateListener<?> listener);
+    /**
+     * @param listener
+     *            add listener to registration
+     */
+    void removeStorageUpdateListener(StorageUpdateListener<?> listener);
+
+    /**
+     * @return registered updat listeners
+     */
+    List<StorageUpdateListener<?>> getStorageUpdateListener();
+
+    
+    
     /**
      * @return registered orchestrator
      */
