@@ -165,7 +165,7 @@ public class RepoxServlet extends HttpServlet {
         public void updateCollection(String modul, Collection<Serializable> collection) {
             if (!"repox".equals(modul)) {
                 try {
-                    repoxService.synchronizeCollection(collection);
+                    repoxService.updateCollection(collection);
                 } catch (RepoxException e) {
                     throw new RuntimeException("Could not synchronize collection to repox!", e);
                 }

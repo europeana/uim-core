@@ -248,7 +248,7 @@ public class SugarServlet extends HttpServlet {
         public void updateCollection(String modul, Collection<Serializable> collection) {
             if (!"sugar".equals(modul)) {
                 try {
-                    getSugarService().synchronizeCollection(collection);
+                    getSugarService().updateCollection(collection);
                 } catch (SugarException e) {
                     log.log(Level.SEVERE, "Error during listener update", e);
                 }
@@ -259,7 +259,7 @@ public class SugarServlet extends HttpServlet {
         public void updateProvider(String modul, Provider<Serializable> provider) {
             if (!"sugar".equals(modul)) {
                 try {
-                    getSugarService().synchronizeProvider(provider);
+                    getSugarService().updateProvider(provider);
                 } catch (SugarException e) {
                     log.log(Level.SEVERE, "Error during listener update", e);
                 }
