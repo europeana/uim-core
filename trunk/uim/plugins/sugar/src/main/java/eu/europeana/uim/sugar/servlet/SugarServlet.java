@@ -246,8 +246,13 @@ public class SugarServlet extends HttpServlet {
 
         @Override
         public void updateCollection(String modul, Collection<Serializable> collection) {
-            //
-            throw new UnsupportedOperationException("Sorry, not implemented.");
+            if (!"sugar".equals(modul)) {
+                try {
+                    getSugarService().synchronizeCollection(collection);
+                } catch (SugarException e) {
+                    log.log(Level.SEVERE, "Error during listener update", e);
+                }
+            }
         }
 
         @Override
