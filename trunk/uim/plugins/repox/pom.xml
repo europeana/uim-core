@@ -26,6 +26,7 @@
                             eu.europeana.uim.repox, 
                             eu.europeana.uim.repox.model, 
                             eu.europeana.uim.store, 
+                            eu.europeana.uim.sugarcrm,
                             org.theeuropeanlibrary.model.common.qualifier,
                             javax.xml.bind, 
                             javax.xml.bind.annotation,

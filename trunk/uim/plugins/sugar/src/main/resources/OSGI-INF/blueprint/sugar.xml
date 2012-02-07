@@ -35,6 +35,13 @@
 		<argument index="7" value="${contactModule}" />
 	</bean>
 
+
+    <reference id="repox" interface="eu.europeana.uim.repox.RepoxService" availability="optional">
+        <reference-listener
+                bind-method="setRepoxService" unbind-method="unsetRepoxService" ref="sugarServlet">
+        </reference-listener>
+    </reference>
+
 	<service id="sugarService" ref="ss"
 		interface="eu.europeana.uim.sugarcrm.SugarService" />
 
@@ -50,7 +57,7 @@
 			<entry key="alias" value="/sugar" />
 		</service-properties>
 
-		<bean class="eu.europeana.uim.sugar.servlet.SugarServlet">
+		<bean id="sugarServlet" class="eu.europeana.uim.sugar.servlet.SugarServlet">
 			<argument index="0" ref="registry" />
 			<property name="sugarService" ref="ss" />
 		</bean>

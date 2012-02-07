@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.api.StorageUpdateListener;
+import eu.europeana.uim.repox.RepoxException;
+import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.sugarcrm.SugarException;
@@ -32,7 +33,9 @@ public class SugarServlet extends HttpServlet {
     private static final Logger log = Logger.getLogger(SugarServlet.class.getName());
 
     private Registry            registry;
+
     private SugarService        sugarService;
+    private RepoxService        repoxService;
 
     /**
      * Creates a new instance of this class.
@@ -41,7 +44,6 @@ public class SugarServlet extends HttpServlet {
      */
     public SugarServlet(Registry registry) {
         this.registry = registry;
-        this.registry.addStorageUpdateListener(new SugarServletListener());
     }
 
     @Override
@@ -80,7 +82,7 @@ public class SugarServlet extends HttpServlet {
                             if (mnemonic != null) {
                                 boolean update = updateProvider(mnemonic, provider);
                                 log.info("Updated/Synched provider with sugar:" + mnemonic);
-                                
+
                                 if (builder.length() > 0) {
                                     builder.append(", \n");
                                 }
@@ -170,8 +172,12 @@ public class SugarServlet extends HttpServlet {
         // update is also false for inactive element
         if (update) {
             engine.updateProvider(prov);
-            for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
-                ((StorageUpdateListener<Serializable>)listener).updateProvider("sugar", prov);
+            if (getRepoxService() != null) {
+                try {
+                    getRepoxService().updateProvider(prov);
+                } catch (RepoxException e) {
+                    log.log(Level.WARNING, "Failed to update repox from sugar servlet.", e);
+                }
             }
         }
         return update;
@@ -210,8 +216,12 @@ public class SugarServlet extends HttpServlet {
         // update is also false for inactive element
         if (update) {
             engine.updateCollection(coll);
-            for (StorageUpdateListener<?> listener : registry.getStorageUpdateListener()) {
-                ((StorageUpdateListener<Serializable>)listener).updateCollection("sugar", coll);
+            if (getRepoxService() != null) {
+                try {
+                    getRepoxService().updateCollection(coll);
+                } catch (RepoxException e) {
+                    log.log(Level.WARNING, "Failed to update repox from sugar servlet.", e);
+                }
             }
         }
         return update;
@@ -237,35 +247,30 @@ public class SugarServlet extends HttpServlet {
         this.sugarService = sugarService;
     }
 
-    private class SugarServletListener implements StorageUpdateListener<Serializable> {
+    /**
+     * Returns the repoxService.
+     * @return the repoxService
+     */
+    public RepoxService getRepoxService() {
+        return repoxService;
+    }
 
-        @Override
-        public String getIdentifier() {
-            return "sugar";
-        }
+    /**
+     * Sets the repoxService to the given value.
+     * @param repoxService the repoxService to set
+     */
+    public void setRepoxService(RepoxService repoxService) {
+        this.repoxService = repoxService;
+        log.info("REpox service SET for sugar servlet.");
+    }
 
-        @Override
-        public void updateCollection(String modul, Collection<Serializable> collection) {
-            if (!"sugar".equals(modul)) {
-                try {
-                    getSugarService().updateCollection(collection);
-                } catch (SugarException e) {
-                    log.log(Level.SEVERE, "Error during listener update", e);
-                }
-            }
-        }
-
-        @Override
-        public void updateProvider(String modul, Provider<Serializable> provider) {
-            if (!"sugar".equals(modul)) {
-                try {
-                    getSugarService().updateProvider(provider);
-                } catch (SugarException e) {
-                    log.log(Level.SEVERE, "Error during listener update", e);
-                }
-            }
-        }
-
+    /**
+     * Sets the repoxService to the given value.
+     * @param repoxService the repoxService to set
+     */
+    public void unsetRepoxService(RepoxService repoxService) {
+        this.repoxService = null;
+        log.info("Repox service UNSET for repox servlet.");
     }
 
 }
