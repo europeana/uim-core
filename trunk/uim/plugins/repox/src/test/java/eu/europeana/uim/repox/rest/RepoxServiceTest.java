@@ -59,7 +59,6 @@ public class RepoxServiceTest {
         provider.setOaiBaseUrl(repoxUri);
         provider.putValue(StandardControlledVocabulary.COUNTRY, "de_" + timeStamp);
         engine.updateProvider(provider);
-
         service.updateProvider(provider);
 
         String aggrId = provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
@@ -70,7 +69,6 @@ public class RepoxServiceTest {
 
         provider.setName("updated-provider");
         engine.updateProvider(provider);
-
         service.updateProvider(provider);
 
         String updAggrId = provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID);
@@ -114,8 +112,8 @@ public class RepoxServiceTest {
         collection.putValue(StandardControlledVocabulary.COUNTRY, "de");
         collection.putValue(RepoxControlledVocabulary.HARVESTING_TYPE,
                 DatasourceType.oai_pmh.name());
-        engine.updateCollection(collection);
 
+        engine.updateCollection(collection);
         service.updateCollection(collection);
 
         String collId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
@@ -123,15 +121,17 @@ public class RepoxServiceTest {
 
         collection.setName("updated-collection");
         engine.updateCollection(collection);
-
         service.updateCollection(collection);
 
         String updCollId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         Assert.assertEquals(collId, updCollId);
+        Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
 
         service.synchronizeCollection(collection);
         Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
-//        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
+        Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
+
+        //        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
 
 //        Assert.assertNotNull(service.getHarvestLog(collection));
 
@@ -144,5 +144,16 @@ public class RepoxServiceTest {
 
         RepoxRestClient client = factory.getInstance(repoxUri);
         client.deleteAggregator(provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID));
+    }
+    
+    
+    /**
+     * Tests creation, updating and deletion of collection in test repox installation.
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testSynchronizeCollection() throws Exception {
+        
     }
 }

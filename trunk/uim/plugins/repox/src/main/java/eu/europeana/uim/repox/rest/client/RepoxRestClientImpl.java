@@ -186,6 +186,18 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
         return aggregator;
     }
+    @Override
+    public Aggregator retrieveAggregatorByNameCode(String mnemonic) throws RepoxException {
+        Aggregator aggregator = null;
+        Aggregators aggregators = retrieveAggregators();
+        for (Aggregator aggr : aggregators.getAggregator()) {
+            if (aggr.getNameCode().equals(mnemonic)) {
+                aggregator = aggr;
+                break;
+            }
+        }
+        return aggregator;
+    }
 
     /*
      * Provider related operations
@@ -368,6 +380,19 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         return provider;
     }
 
+    @Override
+    public Provider retrieveProviderByNameCode(String mnemonic) throws RepoxException {
+        Provider provider = null;
+        DataProviders providers = retrieveProviders();
+        for (Provider prov : providers.getProvider()) {
+            if (prov.getNameCode().equals(mnemonic)) {
+                provider = prov;
+                break;
+            }
+        }
+        return provider;
+    }
+
     /*
      * Datasources related operations
      */
@@ -393,6 +418,19 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         DataSources sources = retrieveDataSources();
         for (Source src : sources.getSource()) {
             if (src.getId().equals(id)) {
+                source = src;
+                break;
+            }
+        }
+        return source;
+    }
+
+    @Override
+    public Source retrieveDataSourceByNameCode(String mnemonic) throws RepoxException {
+        Source source = null;
+        DataSources sources = retrieveDataSources();
+        for (Source src : sources.getSource()) {
+            if (src.getNameCode().equals(mnemonic)) {
                 source = src;
                 break;
             }
