@@ -22,7 +22,7 @@
 		</cm:default-properties>
 	</cm:property-placeholder>
 
-    <bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
+	<bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
 
 	<bean id="ssci" class="eu.europeana.uim.sugar.client.SugarSoapClientImpl">
 		<argument index="0" value="${endPointUrl}" />
@@ -36,11 +36,12 @@
 	</bean>
 
 
-    <reference id="repox" interface="eu.europeana.uim.repox.RepoxService" availability="optional">
-        <reference-listener
-                bind-method="setRepoxService" unbind-method="unsetRepoxService" ref="sugarServlet">
-        </reference-listener>
-    </reference>
+	<reference id="repox" interface="eu.europeana.uim.repox.RepoxService"
+		availability="optional">
+		<reference-listener bind-method="setRepoxService"
+			unbind-method="unsetRepoxService" ref="sugarServlet">
+		</reference-listener>
+	</reference>
 
 	<service id="sugarService" ref="ss"
 		interface="eu.europeana.uim.sugarcrm.SugarService" />
@@ -50,17 +51,16 @@
 		<property name="sugarMappingClass" value="${sugarMappingClass}" />
 	</bean>
 
+	<bean id="sugarServlet" class="eu.europeana.uim.sugar.servlet.SugarServlet">
+		<argument index="0" ref="registry" />
+		<property name="sugarService" ref="ss" />
+	</bean>
 
-
-	<service interface="javax.servlet.http.HttpServlet">
+	<service id="sugarServletService" ref="sugarServlet"
+		interface="javax.servlet.http.HttpServlet">
 		<service-properties>
 			<entry key="alias" value="/sugar" />
 		</service-properties>
-
-		<bean id="sugarServlet" class="eu.europeana.uim.sugar.servlet.SugarServlet">
-			<argument index="0" ref="registry" />
-			<property name="sugarService" ref="ss" />
-		</bean>
 	</service>
 
 </blueprint>
