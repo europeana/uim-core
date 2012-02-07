@@ -396,8 +396,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     boolean update = synchronizeProvider(repoxService, provider);
                     if (update) {
                         storage.updateProvider(provider);
-                        prov = getWrappedProviderDTO(provider);
                     }
+
+                    prov = getWrappedProviderDTO(provider);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Could not read/write provider '" + providerId +
                                                "'!", e);
@@ -446,11 +447,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     Collection<Serializable> collection = storage.getCollection(collectionId);
 
                     boolean update = synchronizeCollection(repoxService, collection);
-
                     if (update) {
                         storage.updateCollection(collection);
-                        coll = getWrappedCollectionDTO(collection);
                     }
+
+                    coll = getWrappedCollectionDTO(collection);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Could not read/write collection '" + collectionId +
                                                "'!", e);
