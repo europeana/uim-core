@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
@@ -286,7 +288,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return true;
     }
 
-    
     @Override
     public Boolean updateProvider(ProviderDTO provider) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
@@ -322,7 +323,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return true;
     }
 
-    
     @Override
     public Boolean clearCollectionValues(CollectionDTO collection) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
@@ -421,19 +421,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             throw new RuntimeException("Could not synchronize provider to repox!", e);
         }
 
-        boolean update = false;
         Map<String, String> afterValues = provider.values();
-        for (Entry<String, String> entry : afterValues.entrySet()) {
-            String beforeValue = beforeValues.remove(entry.getKey());
-            if (!entry.getValue().equals(beforeValue)) {
-                update = true;
-                break;
+        boolean update = beforeValues.size() != afterValues.size();
+        if (!update) {
+            for (Entry<String, String> entry : afterValues.entrySet()) {
+                String beforeValue = beforeValues.get(entry.getKey());
+                if (StringUtils.equals(beforeValue, entry.getValue())) {
+                    update = true;
+                    break;
+                }
             }
         }
-        if (!update && !beforeValues.isEmpty()) {
-            update = true;
-        }
-
         return update;
     }
 
@@ -477,17 +475,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             throw new RuntimeException("Could not synchronize collection to repox!", e);
         }
 
-        boolean update = false;
         Map<String, String> afterValues = collection.values();
-        for (Entry<String, String> entry : afterValues.entrySet()) {
-            String beforeValue = beforeValues.remove(entry.getKey());
-            if (!entry.getValue().equals(beforeValue)) {
-                update = true;
-                break;
+
+        boolean update = beforeValues.size() != afterValues.size();
+        if (!update) {
+            for (Entry<String, String> entry : afterValues.entrySet()) {
+                String beforeValue = beforeValues.get(entry.getKey());
+                if (StringUtils.equals(beforeValue, entry.getValue())) {
+                    update = true;
+                    break;
+                }
             }
-        }
-        if (!update && !beforeValues.isEmpty()) {
-            update = true;
         }
 
         return update;
