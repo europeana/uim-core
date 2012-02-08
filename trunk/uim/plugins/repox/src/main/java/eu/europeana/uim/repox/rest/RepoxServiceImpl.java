@@ -256,7 +256,7 @@ public class RepoxServiceImpl implements RepoxService {
         try {
             harvestingtype = DatasourceType.valueOf(htypeString);
         } catch (Throwable t) {
-            logger.log(Level.WARNING, "Failed to parse harvesting type: <" + harvestingtype + ">");
+            logger.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
         }
 
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
