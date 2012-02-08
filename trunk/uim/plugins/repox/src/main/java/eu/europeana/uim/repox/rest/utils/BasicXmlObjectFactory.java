@@ -48,28 +48,50 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
 
     @Override
     public eu.europeana.uim.repox.rest.client.xml.Provider createProvider(Provider<?> provider) {
-        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = DummyXmlObjectCreator.createProvider(provider.getName());
+        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider = DummyXmlObjectCreator.createProvider(provider.getName());
 
-        jaxbProv.setName(provider.getName());
-        jaxbProv.setNameCode(provider.getMnemonic());
+        jaxbProvider.setName(provider.getName());
+        jaxbProvider.setNameCode(provider.getMnemonic());
 
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
         if (countrystr != null) {
             Country country = Country.lookupCountry(countrystr.toLowerCase(), false);
             if (country != null) {
-                jaxbProv.setCountry(country.getIso2());
+                jaxbProvider.setCountry(country.getIso2());
             }
         }
 
-        return jaxbProv;
+        return jaxbProvider;
+    }
+
+    @Override
+    public void updateProvider(Provider<?> provider,
+            eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider) {
+        jaxbProvider.setName(provider.getName());
+        jaxbProvider.setNameCode(provider.getMnemonic());
+
+        String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
+        if (countrystr != null) {
+            Country country = Country.lookupCountry(countrystr.toLowerCase(), false);
+            if (country != null) {
+                jaxbProvider.setCountry(country.getIso2());
+            }
+        }
     }
 
     @Override
     public Source createDataSource(Collection<?> collection) {
-        Source ds = DummyXmlObjectCreator.createOAIDataSource(collection.getMnemonic());
-        ds.setId(collection.getMnemonic());
-        ds.setNameCode(collection.getMnemonic());
-        ds.setName(collection.getName());
-        return ds;
+        Source jaxbSource = DummyXmlObjectCreator.createOAIDataSource(collection.getMnemonic());
+        jaxbSource.setId(collection.getMnemonic());
+        jaxbSource.setNameCode(collection.getMnemonic());
+        jaxbSource.setName(collection.getName());
+        return jaxbSource;
+    }
+
+    @Override
+    public void updateDataSource(Collection<?> collection, Source jaxbSource) {
+        jaxbSource.setId(collection.getMnemonic());
+        jaxbSource.setNameCode(collection.getMnemonic());
+        jaxbSource.setName(collection.getName());
     }
 }

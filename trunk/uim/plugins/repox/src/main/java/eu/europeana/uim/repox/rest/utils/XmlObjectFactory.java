@@ -14,15 +14,23 @@ import eu.europeana.uim.store.Provider;
  */
 public interface XmlObjectFactory {
     /**
-     * Fill aggregator with additional information from provider.
+     * Create jaxb aggregator from provider.
      * 
      * @param provider
      * @return aggregator
      */
     Aggregator createAggregator(Provider<?> provider);
 
+//    /**
+//     * Fill jaxb aggregator with additional information from provider.
+//     * 
+//     * @param provider
+//     * @param jaxbAggregator
+//     */
+//    void updateAggregator(Provider<?> provider, Aggregator jaxbAggregator);
+
     /**
-     * Fill jaxb provider with additional information from provider.
+     * Create jaxb provider from uim provider.
      * 
      * @param provider
      * @return jaxbProvider
@@ -30,10 +38,27 @@ public interface XmlObjectFactory {
     eu.europeana.uim.repox.rest.client.xml.Provider createProvider(Provider<?> provider);
 
     /**
-     * Fill source with additional information from collection.
+     * Fill jaxb provider with additional information from provider.
+     * 
+     * @param provider
+     * @param jaxbProvider
+     */
+    void updateProvider(Provider<?> provider,
+            eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider);
+
+    /**
+     * Create jaxb source from collection.
      * 
      * @param collection
      * @return datasource
      */
     Source createDataSource(Collection<?> collection);
+
+    /**
+     * Fill jaxb source with additional information from collection.
+     * 
+     * @param collection
+     * @param jaxbSource
+     */
+    void updateDataSource(Collection<?> collection, Source jaxbSource);
 }

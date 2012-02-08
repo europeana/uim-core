@@ -101,7 +101,7 @@ public interface RepoxRestClient {
     /**
      * Retrieves an aggregator for the specific ID from Repox
      * 
-     * @param aggregatorId
+     * @param mnemonic
      *            identifer for an aggregator
      * @return aggregator for ID or null if not existing
      * @throws RepoxException
@@ -157,7 +157,7 @@ public interface RepoxRestClient {
             throws RepoxException;
 
     /**
-     * @param providerId
+     * @param mnemonic
      * @return specific provider
      * @throws RepoxException
      */
@@ -180,7 +180,7 @@ public interface RepoxRestClient {
     Source retrieveDataSource(String sourceId) throws RepoxException;
 
     /**
-     * @param sourceId
+     * @param mnemonic
      * @return specific data source
      * @throws RepoxException
      */

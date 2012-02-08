@@ -24,15 +24,12 @@ import java.util.Map;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
-
 /**
  * This is the main interface for the OSGI based SugarCrm plugin OSGI service.
  * 
  * @author Georgios Markakis
  */
 public interface SugarService {
-
-    
     /**
      * Logins and ensures a new session
      * 
@@ -40,19 +37,18 @@ public interface SugarService {
      * @throws SugarException
      */
     String login() throws SugarException;
-    
+
     /**
      * @throws SugarException
      */
     void logout() throws SugarException;
 
-    
     /**
      * @return true iff there is a valid session
      * @throws SugarException
      */
     boolean hasActiveSession() throws SugarException;
-    
+
     /**
      * Update a provider in Sugar
      * 
@@ -71,33 +67,34 @@ public interface SugarService {
      * @throws SugarException
      */
     boolean synchronizeProvider(Provider<?> provider) throws SugarException;
-    
+
     /**
      * Reads information from map to a UIM provider (data source)
      * 
      * @param provider
      *            UIM provider object to update/create on UIM side
-     * @param values 
-     *            the values to populate UIM from 
+     * @param values
+     *            the values to populate UIM from
      * @return true iff a value in the provider bean has been changed.
      * @throws SugarException
      */
-    boolean synchronizeProvider(Provider<?> provider, Map<String, String> values) throws SugarException;
+    boolean synchronizeProvider(Provider<?> provider, Map<String, String> values)
+            throws SugarException;
 
     /**
-     * @param activeOnly 
+     * @param activeOnly
      * @return a list of all providers in sugar
      * @throws SugarException
      */
-    List<Map<String, String>> listProviders(boolean activeOnly)  throws SugarException;
+    List<Map<String, String>> listProviders(boolean activeOnly) throws SugarException;
 
     /**
-     * @param mnemonic of the collection 
-     * @return the provider mnemonic the collection belongs to
-     *         null if not found
+     * @param mnemonic
+     *            of the collection
+     * @return the provider mnemonic the collection belongs to null if not found
      * @throws SugarException
      */
-    String getProviderForCollection(String mnemonic)  throws SugarException;
+    String getProviderForCollection(String mnemonic) throws SugarException;
 
     /**
      * Update a collection in Sugar
@@ -123,12 +120,13 @@ public interface SugarService {
      * 
      * @param collection
      *            UIM Collection object to be updated
-     * @param values 
+     * @param values
      * @return true iff a value in the collection bean has been changed.
      * @throws SugarException
      */
-    boolean synchronizeCollection(Collection<?> collection, Map<String, String> values) throws SugarException;
-    
+    boolean synchronizeCollection(Collection<?> collection, Map<String, String> values)
+            throws SugarException;
+
     /**
      * @param values
      * @return the mnemonic value of the collection
@@ -144,10 +142,9 @@ public interface SugarService {
     String getProviderMnemonic(Map<String, String> values) throws SugarException;
 
     /**
-     * @param activeOnly 
+     * @param activeOnly
      * @return a list of all collections in sugar
      * @throws SugarException
      */
-    List<Map<String, String>> listCollections(boolean activeOnly)  throws SugarException;
-
+    List<Map<String, String>> listCollections(boolean activeOnly) throws SugarException;
 }

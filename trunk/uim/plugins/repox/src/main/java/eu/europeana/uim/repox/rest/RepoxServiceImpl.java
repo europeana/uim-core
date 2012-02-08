@@ -15,7 +15,6 @@ import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
-import eu.europeana.uim.repox.rest.client.xml.Aggregators;
 import eu.europeana.uim.repox.rest.client.xml.HarvestingStatus;
 import eu.europeana.uim.repox.rest.client.xml.Log;
 import eu.europeana.uim.repox.rest.client.xml.RunningTasks;
@@ -35,8 +34,8 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @since Jan 23, 2012
  */
 public class RepoxServiceImpl implements RepoxService {
-    private static final Logger logger = Logger.getLogger(RepoxServiceImpl.class.getName());
-    
+    private static final Logger    logger = Logger.getLogger(RepoxServiceImpl.class.getName());
+
     /**
      * factory to retrieve (implicitly create) repox rest clients for specific repox locations
      */
@@ -121,18 +120,24 @@ public class RepoxServiceImpl implements RepoxService {
             providerId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
         }
 
-        eu.europeana.uim.repox.rest.client.xml.Provider retDs = client.retrieveProviderByNameCode(provider.getMnemonic());
-        if (providerId == null && retDs != null) {
-            providerId = retDs.getId();
+        eu.europeana.uim.repox.rest.client.xml.Provider retDs;
+        if (providerId == null) {
+            retDs = client.retrieveProviderByNameCode(provider.getMnemonic());
 
-            if (collection != null) {
-                collection.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
-            } else {
-                provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
+            if (retDs != null) {
+                providerId = retDs.getId();
+
+                if (collection != null) {
+                    collection.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
+                } else {
+                    provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
+                }
             }
+        } else {
+            retDs = client.retrieveProvider(providerId);
         }
 
-        if (providerId == null || retDs == null) {
+        if (retDs == null) {
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
             jaxbProv.setId(providerId);
 
@@ -149,10 +154,9 @@ public class RepoxServiceImpl implements RepoxService {
                 provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, providerId);
             }
         } else {
-            eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
-            jaxbProv.setId(providerId);
-            client.updateProvider(jaxbProv);
-
+            xmlFactory.updateProvider(provider, retDs);
+            retDs.setId(providerId);
+            client.updateProvider(retDs);
         }
     }
 
@@ -170,21 +174,25 @@ public class RepoxServiceImpl implements RepoxService {
         }
         Aggregator aggregator = xmlFactory.createAggregator(provider);
 
-        Aggregator retDs = client.retrieveAggregatorByNameCode(aggregator.getNameCode());
-        if (aggregatorId == null && retDs != null) {
-            aggregatorId = retDs.getId();
+        if (aggregatorId == null) {
+            Aggregator rtAggregator = client.retrieveAggregatorByNameCode(aggregator.getNameCode());
 
-            if (collection != null) {
-                collection.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, retDs.getId());
-            } else {
-                provider.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID, retDs.getId());
+            if (rtAggregator != null) {
+                aggregatorId = rtAggregator.getId();
+
+                if (collection != null) {
+                    collection.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID,
+                            rtAggregator.getId());
+                } else {
+                    provider.putValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID,
+                            rtAggregator.getId());
+                }
             }
         }
-        
 
-        if (aggregatorId == null || retDs == null) {
+        if (aggregatorId == null) {
             aggregator.setId(aggregatorId);
-            
+
             Aggregator createdAggregator = client.createAggregator(aggregator);
             aggregatorId = createdAggregator.getId();
 
@@ -207,7 +215,7 @@ public class RepoxServiceImpl implements RepoxService {
         if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(provider.getOaiBaseUrl());
             client.deleteProvider(id);
-            
+
             provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, null);
         }
     }
@@ -240,30 +248,32 @@ public class RepoxServiceImpl implements RepoxService {
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
         RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
+
         updateProvider(client, collection.getProvider(), collection);
 
         String htypeString = collection.getValue(RepoxControlledVocabulary.HARVESTING_TYPE);
         DatasourceType harvestingtype = DatasourceType.oai_pmh;
         try {
             harvestingtype = DatasourceType.valueOf(htypeString);
-        } catch (Throwable t){
+        } catch (Throwable t) {
             logger.log(Level.WARNING, "Failed to parse harvesting type: <" + harvestingtype + ">");
         }
 
-        Source retDs = client.retrieveDataSourceByNameCode(collection.getMnemonic());
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
-        if (collectionId == null && retDs != null) {
-            collectionId = retDs.getId();
-            collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retDs.getId());
+
+        Source retDs;
+        if (collectionId == null) {
+            retDs = client.retrieveDataSourceByNameCode(collection.getMnemonic());
+            if (retDs != null) {
+                collectionId = retDs.getId();
+                collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retDs.getId());
+            }
+        } else {
+            retDs = client.retrieveDataSource(collectionId);
         }
 
-        // create the update ds for repox
-        Source ds = xmlFactory.createDataSource(collection);
-
-        // eather we dont have it in our map - so assume a new synch
-        // or the thing does not exist in repox, but was synched before -
-        // that happens when record is deleted in repox.
-        if (collectionId == null || retDs == null) {
+        if (retDs == null) {
+            Source ds = xmlFactory.createDataSource(collection);
 
             eu.europeana.uim.repox.rest.client.xml.Provider jibxProv = new eu.europeana.uim.repox.rest.client.xml.Provider();
             jibxProv.setId(collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID));
@@ -292,21 +302,23 @@ public class RepoxServiceImpl implements RepoxService {
 
             collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retsource.getId());
         } else {
+            xmlFactory.updateDataSource(collection, retDs);
+
             switch (harvestingtype) {
             case oai_pmh:
-                client.updateDatasourceOAI(ds);
+                client.updateDatasourceOAI(retDs);
                 break;
             case z39_50:
-                client.updateDatasourceZ3950Timestamp(ds);
+                client.updateDatasourceZ3950Timestamp(retDs);
                 break;
             case ftp:
-                client.updateDatasourceFtp(ds);
+                client.updateDatasourceFtp(retDs);
                 break;
             case http:
-                client.updateDatasourceHttp(ds);
+                client.updateDatasourceHttp(retDs);
                 break;
             case folder:
-                client.updateDatasourceFolder(ds);
+                client.updateDatasourceFolder(retDs);
                 break;
             }
         }
@@ -340,8 +352,7 @@ public class RepoxServiceImpl implements RepoxService {
                 } catch (JAXBException e) {
                     throw new RuntimeException("Could not marshall source for id '" + id + "'!", e);
                 }
-                
-                
+
                 String storedXml = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML);
                 if (storedXml == null || !storedXml.equals(xmlCollection)) {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
@@ -361,6 +372,7 @@ public class RepoxServiceImpl implements RepoxService {
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
                         new Date(System.currentTimeMillis()).toString());
             }
+
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
             if ((storedRecords == null && status.getRecords() != null) ||
                 (storedRecords != null && !storedRecords.equals(status.getRecords()))) {
@@ -377,7 +389,6 @@ public class RepoxServiceImpl implements RepoxService {
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return null; }
 
         StringBuffer sb = new StringBuffer();
-
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
@@ -388,7 +399,6 @@ public class RepoxServiceImpl implements RepoxService {
                 sb.append(ln);
             }
         }
-
         return sb.toString();
     }
 
