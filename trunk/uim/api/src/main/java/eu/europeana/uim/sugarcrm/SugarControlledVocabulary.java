@@ -10,17 +10,25 @@ import eu.europeana.uim.store.ControlledVocabularyKeyValue;
  * @since Jan 23, 2012
  */
 public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
-
+    /**
+     * number of indexed records
+     */
     COLLECTION_INDEXED_RECORDS,
-
-    
+    /**
+     * last loaded records number
+     */
     COLLECTION_LAST_LOADED_RECORDS,
-    
+    /**
+     * last loaded date
+     */
     COLLECTION_LAST_LOADED_DATE,
-    
-    
+    /**
+     * last indexed date
+     */
     COLLECTION_LAST_INDEXED_RECORDS,
-    
+    /**
+     * last indexed records number
+     */
     COLLECTION_LAST_INDEXED_DATE;
 
     /**
