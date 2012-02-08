@@ -296,7 +296,6 @@ public class RepoxServiceImpl implements RepoxService {
                 retsource = client.createDatasourceFolder(ds, jibxProv);
                 break;
             }
-
             if (retsource == null) { throw new RepoxException(
                     "Could not create source for collection '" + collection.getMnemonic() + "'!"); }
 
@@ -304,23 +303,26 @@ public class RepoxServiceImpl implements RepoxService {
         } else {
             xmlFactory.updateDataSource(collection, retDs);
 
+            Source retsource = null;
             switch (harvestingtype) {
             case oai_pmh:
-                client.updateDatasourceOAI(retDs);
+                retsource = client.updateDatasourceOAI(retDs);
                 break;
             case z39_50:
-                client.updateDatasourceZ3950Timestamp(retDs);
+                retsource = client.updateDatasourceZ3950Timestamp(retDs);
                 break;
             case ftp:
-                client.updateDatasourceFtp(retDs);
+                retsource = client.updateDatasourceFtp(retDs);
                 break;
             case http:
-                client.updateDatasourceHttp(retDs);
+                retsource = client.updateDatasourceHttp(retDs);
                 break;
             case folder:
-                client.updateDatasourceFolder(retDs);
+                retsource = client.updateDatasourceFolder(retDs);
                 break;
             }
+            if (retsource == null) { throw new RepoxException(
+                    "Could not update source for collection '" + collection.getMnemonic() + "'!"); }
         }
     }
 
