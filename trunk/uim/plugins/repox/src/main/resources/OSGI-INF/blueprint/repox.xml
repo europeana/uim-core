@@ -15,26 +15,26 @@
 		<property name="xmlFactory" ref="xof" />
 	</bean>
 
-
-    <reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService" availability="optional">
-        <reference-listener
-                bind-method="setSugarService" unbind-method="unsetSugarService" ref="repoxServlet">
-        </reference-listener>
-    </reference>
-
-
 	<service id="repoxService" ref="rs"
 		interface="eu.europeana.uim.repox.RepoxService" />
 
-	<service interface="javax.servlet.http.HttpServlet">
+	<reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService"
+		availability="optional">
+		<reference-listener bind-method="setSugarService"
+			unbind-method="unsetSugarService" ref="repoxServlet">
+		</reference-listener>
+	</reference>
+
+	<bean id="repoxServlet" class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
+		<argument index="0" ref="registry" />
+		<property name="repoxService" ref="rs" />
+	</bean>
+
+	<service id="repoxServletService" ref="repoxServlet"
+		interface="javax.servlet.http.HttpServlet">
 		<service-properties>
 			<entry key="alias" value="/repox" />
 		</service-properties>
-
-		<bean id="repoxServlet" class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
-			<argument index="0" ref="registry" />
-			<property name="repoxService" ref="rs" />
-		</bean>
 	</service>
 
 </blueprint>

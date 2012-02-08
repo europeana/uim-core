@@ -56,6 +56,8 @@
         </reference-listener>
     </reference-list>
 
+
+
     <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingIngestionPlugin">
     </bean>
 

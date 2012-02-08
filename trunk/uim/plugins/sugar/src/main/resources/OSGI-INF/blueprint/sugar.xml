@@ -35,7 +35,6 @@
 		<argument index="7" value="${contactModule}" />
 	</bean>
 
-
 	<reference id="repox" interface="eu.europeana.uim.repox.RepoxService"
 		availability="optional">
 		<reference-listener bind-method="setRepoxService"
