@@ -482,7 +482,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
-                if (StringUtils.equals(beforeValue, entry.getValue())) {
+                if (!StringUtils.equals(beforeValue, entry.getValue())) {
                     update = true;
                     break;
                 }
