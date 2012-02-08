@@ -18,11 +18,11 @@ import eu.europeana.uim.store.Provider;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I>,Serializable {
+public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I>,
+        Serializable {
+    private static final long   serialVersionUID = 1L;
 
-	private static final long serialVersionUID = 1L;
-
-	private Provider<I>         provider;
+    private Provider<I>         provider;
 
     private String              language;
 
@@ -33,7 +33,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     private Date                lastModified;
     private Date                lastSynchronized;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private Map<String, String> values           = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -105,7 +105,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     @Override
     public String getOaiMetadataPrefix(boolean fallback) {
         if (oaiMetadataPrefix != null && oaiMetadataPrefix.trim().length() > 0) { return oaiMetadataPrefix; }
-        
+
         if (fallback) { return provider.getOaiMetadataPrefix(); }
         return null;
     }
@@ -150,19 +150,17 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         return values;
     }
 
-    
-	@Override
-	public void putValue(ControlledVocabularyKeyValue key, String value) {
-		putValue(key.getFieldId(),value);
-		
-	}
+    @Override
+    public void putValue(ControlledVocabularyKeyValue key, String value) {
+        putValue(key.getFieldId(), value);
 
-	@Override
-	public String getValue(ControlledVocabularyKeyValue key) {
-		return getValue(key.getFieldId());
-	}
-    
-    
+    }
+
+    @Override
+    public String getValue(ControlledVocabularyKeyValue key) {
+        return getValue(key.getFieldId());
+    }
+
     @Override
     public String toString() {
         String string = super.toString();
@@ -180,6 +178,4 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
         }
         return string;
     }
-
-
 }
