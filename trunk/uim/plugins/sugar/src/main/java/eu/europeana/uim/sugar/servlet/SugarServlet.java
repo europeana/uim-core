@@ -152,7 +152,7 @@ public class SugarServlet extends HttpServlet {
         }
     }
 
-    private boolean updateProvider(String mnemonic, Map<String, String> provider)
+    public boolean updateProvider(String mnemonic, Map<String, String> provider)
             throws SugarException, StorageEngineException {
         @SuppressWarnings("unchecked")
         StorageEngine<Serializable> engine = (StorageEngine<Serializable>)registry.getStorageEngine();
@@ -183,7 +183,7 @@ public class SugarServlet extends HttpServlet {
         return update;
     }
 
-    private boolean updateCollection(String mnemonic, Map<String, String> collection)
+    public boolean updateCollection(String mnemonic, Map<String, String> collection)
             throws SugarException, StorageEngineException {
         @SuppressWarnings("unchecked")
         StorageEngine<Serializable> engine = (StorageEngine<Serializable>)registry.getStorageEngine();
