@@ -20,7 +20,7 @@ public enum StandardControlledVocabulary implements ControlledVocabularyKeyValue
     NAME,
     
     /**
-     * type of provider
+     * type of provider/collection
      */
     TYPE,
 
