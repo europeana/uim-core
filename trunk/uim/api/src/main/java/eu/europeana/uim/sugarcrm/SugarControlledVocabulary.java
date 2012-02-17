@@ -1,6 +1,9 @@
 /* UimControlledVocabulary.java - created on Sep 3, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.sugarcrm;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 
 /**
@@ -10,27 +13,32 @@ import eu.europeana.uim.store.ControlledVocabularyKeyValue;
  * @since Jan 23, 2012
  */
 public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
-    /**
-     * number of indexed records
-     */
-    COLLECTION_INDEXED_RECORDS,
-    /**
-     * last loaded records number
-     */
-    COLLECTION_LAST_LOADED_RECORDS,
-    /**
-     * last loaded date
-     */
-    COLLECTION_LAST_LOADED_DATE,
-    /**
-     * last indexed date
-     */
-    COLLECTION_LAST_INDEXED_RECORDS,
-    /**
-     * last indexed records number
-     */
-    COLLECTION_LAST_INDEXED_DATE;
 
+    /** nubmer of records loaded into uim */
+    COLLECTION_LAST_LOADED_RECORDS,
+    
+    /** when last time data loaded to uim*/
+    COLLECTION_LAST_LOADED_DATE,
+    
+    /** number of total records indexed for collection */
+    COLLECTION_INDEXED_RECORDS,
+    
+    /** number of records indexed in execution */
+    COLLECTION_LAST_INDEXED_RECORDS,
+    
+    /** date of indexing finished */
+    COLLECTION_LAST_INDEXED_DATE,
+    
+    /** execution id of validation run */
+    COLLECTION_LINK_VALIDATION,
+    
+    /** execution id of validation run */
+    COLLECTION_FIELD_VALIDATION;
+
+    
+    public static DateFormat DATEFORMAT = new SimpleDateFormat("MM/dd/yyyy");
+    
+    
     /**
      * Creates a new instance of this class.
      */
