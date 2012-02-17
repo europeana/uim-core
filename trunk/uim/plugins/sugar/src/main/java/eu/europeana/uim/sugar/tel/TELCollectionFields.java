@@ -51,7 +51,6 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     TEL_DISCIPLINES("tel_disciplines", "telda_tel_dataset.tel_disciplines", null, "TEL Disciplines"),
 
-    
     HARVESTING_METHOD("harvesting_method", "telda_tel_dataset.harvesting_method",
                       RepoxControlledVocabulary.HARVESTING_TYPE, "Harvesting method"),
 
@@ -89,10 +88,11 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                          "Number of indexed records"),
 
     LINKCHECK_EXECUTION("tel_linkcheck_execution", "telda_tel_dataset.tel_linkcheck_execution",
-                        null, "Linkcheck execution"),
+                        SugarControlledVocabulary.COLLECTION_LINK_VALIDATION, "Linkcheck execution"),
 
     FIELDCHECK_EXECUTION("tel_fieldcheck_execution", "telda_tel_dataset.tel_fieldcheck_execution",
-                         null, "Fieldcheck execution"),
+                         SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
+                         "Fieldcheck execution"),
 
     DATE_MODIFIED("date_modified", "telda_tel_dataset.date_modified", null, "Date of Modification");
 
