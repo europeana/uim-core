@@ -36,6 +36,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     COLLECTION_FIELD_VALIDATION;
 
     
+    /** SugarCRM date format */
     public static DateFormat DATEFORMAT = new SimpleDateFormat("MM/dd/yyyy");
     
     
