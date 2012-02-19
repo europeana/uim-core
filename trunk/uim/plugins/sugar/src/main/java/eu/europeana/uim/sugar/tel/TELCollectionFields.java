@@ -80,10 +80,17 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                         SugarControlledVocabulary.COLLECTION_LAST_LOADED_RECORDS,
                         "Number of indexed records"),
 
+    LAST_ACCEPTANCE_DATE("tel_last_acceptance_date", "telda_tel_dataset.tel_last_acceptance_date",
+                      SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_DATE, "Last Acceptance Date"),
+
+    LAST_ACCEPTANCE_RECORDS("tel_last_acceptance_records", "telda_tel_dataset.tel_last_acceptance_records",
+                         SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_RECORDS,
+                         "Number of acceptance records"),
+
     LAST_INDEXED_DATE("tel_last_indexed_date", "telda_tel_dataset.tel_last_indexed_date",
                       SugarControlledVocabulary.COLLECTION_LAST_INDEXED_DATE, "Last Indexing Date"),
 
-    LAST_INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
+    LAST_INDEXED_RECORDS("tel_last_indexed_records", "telda_tel_dataset.tel_last_indexed_records",
                          SugarControlledVocabulary.COLLECTION_LAST_INDEXED_RECORDS,
                          "Number of indexed records"),
 

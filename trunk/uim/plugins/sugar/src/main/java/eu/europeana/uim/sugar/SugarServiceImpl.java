@@ -462,7 +462,8 @@ public class SugarServiceImpl implements SugarService {
         if (client == null) { throw new SugarException(
                 "Could not find sugar client implementation!"); }
 
-        if (sessionCreate.before(new Date(new Date().getTime() - (4 * 1000 * 60 * 60)))) {
+        if (sessionCreate == null ||
+            sessionCreate.before(new Date(new Date().getTime() - (4 * 1000 * 60 * 60)))) {
             sessionID = client.login();
         }
         if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }

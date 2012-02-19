@@ -61,7 +61,6 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private int                  timeout = TIMEOUT;
 
-
     private SugarsoapBindingStub binding;
 
     /**
@@ -256,7 +255,7 @@ public class SugarSoapClientImpl implements SugarClient {
     @Override
     public String getProviderForCollection(String session, String mnemonic) {
         Map<String, String> collection = getCollection(session, mnemonic);
-        
+
         List<String> relationsships = getRelationsships(session, getCollectionModule(),
                 collection.get("id"), getProviderModule(), "");
 
@@ -306,7 +305,11 @@ public class SugarSoapClientImpl implements SugarClient {
 
         nameValues.add(new Name_value("id", sugarid));
         for (Entry<String, String> entry : values.entrySet()) {
-            nameValues.add(new Name_value(entry.getKey(), entry.getValue()));
+            if (entry.getValue() != null) {
+                nameValues.add(new Name_value(entry.getKey(), entry.getValue()));
+            } else {
+                log.warning("Key:" + entry.getKey() + " has NULL value.");
+            }
         }
 
         try {

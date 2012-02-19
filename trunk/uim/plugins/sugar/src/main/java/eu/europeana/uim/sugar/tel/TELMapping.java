@@ -58,6 +58,9 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.LAST_LOADED_DATE,
                 TELCollectionFields.LAST_LOADED_RECORDS,
                 
+                TELCollectionFields.LAST_ACCEPTANCE_DATE,
+                TELCollectionFields.LAST_ACCEPTANCE_RECORDS,
+                
                 TELCollectionFields.LAST_INDEXED_DATE,
                 TELCollectionFields.LAST_INDEXED_RECORDS,
                 
