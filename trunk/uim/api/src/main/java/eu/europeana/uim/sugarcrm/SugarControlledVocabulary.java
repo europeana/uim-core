@@ -23,6 +23,12 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     /** number of total records indexed for collection */
     COLLECTION_INDEXED_RECORDS,
     
+    /** number of records indexed for acceptance in execution */
+    COLLECTION_LAST_ACCEPTANCE_RECORDS,
+    
+    /** date of acceptance indexing finished */
+    COLLECTION_LAST_ACCEPTANCE_DATE,
+    
     /** number of records indexed in execution */
     COLLECTION_LAST_INDEXED_RECORDS,
     
@@ -37,7 +43,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
 
     
     /** SugarCRM date format */
-    public static DateFormat DATEFORMAT = new SimpleDateFormat("MM/dd/yyyy");
+    public static DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
     
     
     /**
