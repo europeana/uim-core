@@ -2,6 +2,7 @@
 package eu.europeana.uim.sugar;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,8 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  */
 public class SugarServiceImpl implements SugarService {
 
-    private String       sessionID = null;
+    private Date         sessionCreate = null;
+    private String       sessionID     = null;
 
     private SugarClient  sugarClient;
     private SugarMapping sugarMapping;
@@ -74,6 +76,7 @@ public class SugarServiceImpl implements SugarService {
         sessionID = null;
         try {
             sessionID = getSugarClient().login();
+            sessionCreate = new Date();
             return sessionID;
         } catch (SugarException e) {
             throw new SugarException("Could not login to SugarCRM" + e);
@@ -459,7 +462,11 @@ public class SugarServiceImpl implements SugarService {
         if (client == null) { throw new SugarException(
                 "Could not find sugar client implementation!"); }
 
+        if (sessionCreate.before(new Date(new Date().getTime() - (4 * 1000 * 60 * 60)))) {
+            sessionID = client.login();
+        }
         if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
+        
 
         return client;
     }
