@@ -69,10 +69,6 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     HARVESTING_UPDATE("tel_harvesting_update", "telda_tel_dataset.tel_harvesting_update", null,
                       "Harvesting Update"),
 
-    INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
-                    SugarControlledVocabulary.COLLECTION_INDEXED_RECORDS,
-                    "Total number of indexed records"),
-
     LAST_LOADED_DATE("tel_last_loading_date", "telda_tel_dataset.tel_last_loading_date",
                      SugarControlledVocabulary.COLLECTION_LAST_LOADED_DATE, "Last UIM Loading Date"),
 
@@ -81,11 +77,17 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                         "Number of indexed records"),
 
     LAST_ACCEPTANCE_DATE("tel_last_acceptance_date", "telda_tel_dataset.tel_last_acceptance_date",
-                      SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_DATE, "Last Acceptance Date"),
+                         SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_DATE,
+                         "Last Acceptance Date"),
 
-    LAST_ACCEPTANCE_RECORDS("tel_last_acceptance_records", "telda_tel_dataset.tel_last_acceptance_records",
-                         SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_RECORDS,
-                         "Number of acceptance records"),
+    LAST_ACCEPTANCE_RECORDS("tel_last_acceptance_records",
+                            "telda_tel_dataset.tel_last_acceptance_records",
+                            SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_RECORDS,
+                            "Number of acceptance records"),
+
+    INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
+                    SugarControlledVocabulary.COLLECTION_INDEXED_RECORDS,
+                    "Total number of indexed records"),
 
     LAST_INDEXED_DATE("tel_last_indexed_date", "telda_tel_dataset.tel_last_indexed_date",
                       SugarControlledVocabulary.COLLECTION_LAST_INDEXED_DATE, "Last Indexing Date"),
@@ -93,6 +95,15 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     LAST_INDEXED_RECORDS("tel_last_indexed_records", "telda_tel_dataset.tel_last_indexed_records",
                          SugarControlledVocabulary.COLLECTION_LAST_INDEXED_RECORDS,
                          "Number of indexed records"),
+
+    LOD_RECORDS("count_lod_records", "telda_tel_dataset.count_lod_records",
+                SugarControlledVocabulary.COLLECTION_LOD_RECORDS, "Total number of lod records"),
+
+    LAST_LOD_DATE("tel_last_lod_date", "telda_tel_dataset.tel_last_lod_date",
+                  SugarControlledVocabulary.COLLECTION_LAST_LOD_DATE, "Last LOD Date"),
+
+    LAST_LOD_RECORDS("tel_last_lod_records", "telda_tel_dataset.tel_last_lod_records",
+                     SugarControlledVocabulary.COLLECTION_LAST_LOD_RECORDS, "Number of lod records"),
 
     LINKCHECK_EXECUTION("tel_linkcheck_execution", "telda_tel_dataset.tel_linkcheck_execution",
                         SugarControlledVocabulary.COLLECTION_LINK_VALIDATION, "Linkcheck execution"),
