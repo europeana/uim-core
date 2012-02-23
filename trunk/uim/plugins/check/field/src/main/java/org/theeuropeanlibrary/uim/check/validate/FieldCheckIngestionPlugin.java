@@ -118,7 +118,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
     @Override
     public int getPreferredThreadCount() {
-        return 2;
+        return 8;
     }
 
     @Override
