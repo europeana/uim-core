@@ -18,6 +18,10 @@ public enum LinkTarget {
      */
     CATALOGUE_RECORD,
     /**
+     * A link to the lod record display (should lead to RDF)
+     */
+    LOD_RECORD,
+    /**
      * A link to the table of contents
      */
     TABLE_OF_CONTENTS,
