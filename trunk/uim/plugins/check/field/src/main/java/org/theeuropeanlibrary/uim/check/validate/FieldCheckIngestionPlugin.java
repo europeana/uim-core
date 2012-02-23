@@ -239,8 +239,10 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             String tk = tKey.getFullName();
             String qu = Arrays.toString(qualifier);
 
-            context.getLoggingEngine().logField(context.getExecution(), this, mdr, tk, qu,
-                    values.size());
+            if (value.populate) {
+                context.getLoggingEngine().logField(context.getExecution(), this, mdr, tk, qu,
+                        values.size());
+            }
 
             synchronized (entry.getValue()) {
                 entry.getValue().addValue(values.size());
@@ -260,8 +262,10 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.ACCEPT);
         }
 
-        context.getLoggingEngine().logField(context.getExecution(), this, mdr,
-                ObjectModelRegistry.MATURITY.getFullName(), "", sum);
+        if (value.populate) {
+            context.getLoggingEngine().logField(context.getExecution(), this, mdr,
+                    ObjectModelRegistry.MATURITY.getFullName(), "", sum);
+        }
 
         synchronized (value) {
             value.fine++;
@@ -288,16 +292,14 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                 "completed", mnem, name, "" + value.start, "" + value.fine, time);
 
         try {
-            if (collection != null) {
-                if (value.populate) {
-                    collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
-                            "" + context.getExecution().getId());
+            if (collection != null && value.populate) {
+                collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
+                        "" + context.getExecution().getId());
 
-                    ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
+                ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
 
-                    if (getSugarService() != null) {
-                        getSugarService().updateCollection(collection);
-                    }
+                if (getSugarService() != null) {
+                    getSugarService().updateCollection(collection);
                 }
             }
         } catch (Throwable t) {
