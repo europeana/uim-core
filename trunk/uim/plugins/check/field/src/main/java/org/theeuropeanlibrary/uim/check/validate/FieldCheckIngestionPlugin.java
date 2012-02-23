@@ -44,7 +44,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     /**
      * Set the Logging variable to use logging within this class
      */
-    private static final Logger           log       = Logger.getLogger(FieldCheckIngestionPlugin.class.getName());
+    private static final Logger                                log           = Logger.getLogger(FieldCheckIngestionPlugin.class.getName());
 
     /**
      * where to write the statistics output
@@ -53,6 +53,9 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
     /** minimum sum of points */
     public static final String                                 KEY_THRESHOLD = "fieldcheck.threshold";
+
+    /** minimum sum of points */
+    public static final String                                 KEY_POPULATE  = "fieldcheck.populate";
 
     /**
      * typed key to retrieve the container holding all execution dependent variables
@@ -68,14 +71,15 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     private static final List<String>                          PARAMETERS    = new ArrayList<String>() {
                                                                                  {
                                                                                      add(KEY_FIELDSPEC);
+                                                                                     add(KEY_THRESHOLD);
+                                                                                     add(KEY_POPULATE);
                                                                                  }
                                                                              };
 
     private final static SimpleDateFormat                      df            = new SimpleDateFormat(
                                                                                      "yyyy-MM-dd HH:mm:ss");
 
-    private static SugarService sugarService;
-
+    private static SugarService                                sugarService;
 
     /**
      * Creates a new instance of this class.
@@ -137,6 +141,9 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         Properties props = context.getProperties();
         String threshold = props.getProperty(KEY_THRESHOLD, "10");
         value.threshold = Integer.parseInt(threshold);
+
+        String populate = props.getProperty(KEY_POPULATE, "true");
+        value.populate = Boolean.parseBoolean(populate);
 
         String fieldSpecPath = props.getProperty(KEY_FIELDSPEC);
         if (fieldSpecPath != null && !fieldSpecPath.isEmpty()) {
@@ -216,7 +223,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             // not configured... just pass by
             return true;
         }
-        
+
         synchronized (value) {
             value.start++;
         }
@@ -228,12 +235,12 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
             Enum<?>[] qualifier = datakey.getQualifier();
             List<?> values = mdr.getValues(datakey.getTkey(), datakey.getQualifier());
-            
+
             String tk = tKey.getFullName();
             String qu = Arrays.toString(qualifier);
 
-            context.getLoggingEngine().logField(context.getExecution(), this, mdr,
-                    tk, qu, values.size());
+            context.getLoggingEngine().logField(context.getExecution(), this, mdr, tk, qu,
+                    values.size());
 
             synchronized (entry.getValue()) {
                 entry.getValue().addValue(values.size());
@@ -242,7 +249,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                 }
             }
         }
-
 
         if (sum == 0) {
             mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.REJECT);
@@ -283,14 +289,15 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
         try {
             if (collection != null) {
+                if (value.populate) {
+                    collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
+                            "" + context.getExecution().getId());
 
-                collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
-                        "" + context.getExecution().getId());
+                    ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
 
-                ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
-
-                if (getSugarService() != null) {
-                    getSugarService().updateCollection(collection);
+                    if (getSugarService() != null) {
+                        getSugarService().updateCollection(collection);
+                    }
                 }
             }
         } catch (Throwable t) {
@@ -306,7 +313,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     static class Data implements Serializable {
         private int                             start     = 0;
         private int                             fine      = 0;
-        private int                             threshold = 5;
+        private int                             threshold = 10;
+        private boolean                         populate  = true;
         private Map<DataKey, SummaryStatistics> exists    = new HashMap<DataKey, SummaryStatistics>();
     }
 
@@ -334,26 +342,26 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             return qualifier;
         }
     }
-    
-
 
     /**
      * Sets the sugarService to the given value.
-     * @param sugarService the sugarService to set
+     * 
+     * @param sugarService
+     *            the sugarService to set
      */
     public void setSugarService(SugarService sugarService) {
         FieldCheckIngestionPlugin.sugarService = sugarService;
     }
-    
-    
+
     /**
      * Sets the sugarService to the given value.
-     * @param sugarService the sugarService to set
+     * 
+     * @param sugarService
+     *            the sugarService to set
      */
     public void unsetSugarService(SugarService sugarService) {
         FieldCheckIngestionPlugin.sugarService = null;
     }
-    
 
     /**
      * @return the sugar service
@@ -361,6 +369,5 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     public SugarService getSugarService() {
         return FieldCheckIngestionPlugin.sugarService;
     }
-    
 
 }
