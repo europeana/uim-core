@@ -371,5 +371,4 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     public SugarService getSugarService() {
         return FieldCheckIngestionPlugin.sugarService;
     }
-
 }
