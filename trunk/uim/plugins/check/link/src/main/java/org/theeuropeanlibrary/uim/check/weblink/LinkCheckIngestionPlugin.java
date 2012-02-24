@@ -70,8 +70,7 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
 
     private final static SimpleDateFormat df        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private static SugarService sugarService;
-
+    private static SugarService           sugarService;
 
     /**
      * Creates a new instance of this class.
@@ -263,26 +262,20 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
 
         return true;
     }
-    
-    
 
     /**
-     * Sets the sugarService to the given value.
-     * @param sugarService the sugarService to set
+     * @param sugarService
      */
     public void setSugarService(SugarService sugarService) {
         LinkCheckIngestionPlugin.sugarService = sugarService;
     }
-    
-    
+
     /**
-     * Sets the sugarService to the given value.
-     * @param sugarService the sugarService to set
+     * @param sugarService
      */
     public void unsetSugarService(SugarService sugarService) {
         LinkCheckIngestionPlugin.sugarService = null;
     }
-    
 
     /**
      * @return the sugar service
@@ -290,6 +283,4 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
     public SugarService getSugarService() {
         return LinkCheckIngestionPlugin.sugarService;
     }
-    
-
 }
