@@ -435,8 +435,8 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public synchronized void cleanup() {
-        values.clear();
-        values = null;
+//        values.clear();
+//        values = null;
         
         if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
             if (resourceEngine != null) {
