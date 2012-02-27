@@ -142,7 +142,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         String threshold = props.getProperty(KEY_THRESHOLD, "10");
         value.threshold = Integer.parseInt(threshold);
 
-        String populate = props.getProperty(KEY_POPULATE, "true");
+        String populate = props.getProperty(KEY_POPULATE, "false");
         value.populate = Boolean.parseBoolean(populate);
 
         String fieldSpecPath = props.getProperty(KEY_FIELDSPEC);
