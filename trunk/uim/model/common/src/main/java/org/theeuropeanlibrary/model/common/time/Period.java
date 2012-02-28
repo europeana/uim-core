@@ -112,7 +112,4 @@ public class Period extends Temporal {
         } else if (!start.equals(other.start)) return false;
         return true;
     }
-    
-    
-    
 }
