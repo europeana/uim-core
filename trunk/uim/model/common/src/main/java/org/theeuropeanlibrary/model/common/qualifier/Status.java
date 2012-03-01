@@ -19,5 +19,22 @@ public enum Status {
     /**
      * has been deleted
      */
-    DELETED,
+    DELETED;
+    
+    
+    public static Status fromMarc21Code(char bibLevelCode) {
+        switch (bibLevelCode) {
+        case 'a':
+            return UPDATED;
+        case 'c':
+            return UPDATED;
+        case 'd':
+            return DELETED;
+        case 'n':
+            return CREATED;
+        case 'p':
+            return UPDATED;
+        }
+        return null;
+    }
 }

@@ -10,6 +10,8 @@ package org.theeuropeanlibrary.model.common.qualifier;
 public enum PartyIdentifierType {
     /** TEL assigned */
     TEL,
+    /** TEL assigned identifier, which may not be correct, but may still be useful. */
+    TEL_UNCERTAIN,
     /** The identifier in the source library's authority file */
     LIBRARY_AUTHORITY_FILE,
     /** Id in VIAF */
