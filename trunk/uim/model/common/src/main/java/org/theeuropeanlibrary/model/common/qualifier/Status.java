@@ -20,8 +20,11 @@ public enum Status {
      * has been deleted
      */
     DELETED;
-    
-    
+
+    /**
+     * @param bibLevelCode
+     * @return status depending on bib level code
+     */
     public static Status fromMarc21Code(char bibLevelCode) {
         switch (bibLevelCode) {
         case 'a':
