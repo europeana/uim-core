@@ -10,13 +10,13 @@ package org.theeuropeanlibrary.model.tel.qualifier;
 public enum BibliographicLevel {
 	
 	/** 
-	 *	MARC21 code 'b'
+	 *	MARC21 code 'a'
 	 *  UNIMARC code -
 	 */
 	ANALITIC_MONOGRAPHIC,
 	
 	/** 
-	 *	MARC21 code 'a'
+	 *	MARC21 code 'b'
 	 *  UNIMARC code -
 	 */
 	ANALITIC_SERIAL,
@@ -65,9 +65,9 @@ public enum BibliographicLevel {
 	 */
 	public static BibliographicLevel fromMarc21Code(char bibLevelCode) {
 		switch (bibLevelCode) {
-		case 'b':
-			return ANALITIC_MONOGRAPHIC;
 		case 'a':
+			return ANALITIC_MONOGRAPHIC;
+		case 'b':
 			return ANALITIC_SERIAL;
 		case 'c':
 			return COLLECTION_MADE_UP;
@@ -100,5 +100,20 @@ public enum BibliographicLevel {
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * @return true if the valeu corresponds to a general continuing resource
+	 */
+	public boolean isContinuingResource() {
+	        switch (this) {
+	        case ANALITIC_SERIAL:
+	        case SERIAL:
+	        case INTEGRATING_RESOURCE:
+	            return true;
+            default:
+                return false;
+	        }
+	    }
 }
 
