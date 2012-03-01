@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,13 +21,12 @@ import eu.europeana.uim.sugar.soap.SugarServiceImplTest;
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
- * 
+ * Tests sugar servlet.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 9, 2012
  */
 public class SugarServletTest {
-
     private static String           username;
     private static String           password;
     private static Properties       properties;
@@ -68,34 +66,42 @@ public class SugarServletTest {
 
         service = new SugarServiceImpl(client, new PropertiesSugarMapping(properties));
     }
-    
+
     /**
-     * @throws SugarException 
+     * Logout after finished tests.
      * 
+     * @throws SugarException
      */
     @AfterClass
     public static void logout() throws SugarException {
         service.logout();
     }
 
-
     /**
+     * Login into service, necessary to be done before using it.
+     * 
      * @throws SugarException
      */
-    @Before
+    @BeforeClass
     public void login() throws SugarException {
         if (!service.hasActiveSession()) {
             service.login();
         }
     }
-    
+
+    /**
+     * Test update functionality on collection!
+     * 
+     * @throws SugarException
+     * @throws StorageEngineException
+     */
     @Test
     public void testUpdateCollection() throws SugarException, StorageEngineException {
         Registry registry = new UIMRegistry();
         registry.addStorageEngine(new MemoryStorageEngine());
         SugarServlet servlet = new SugarServlet(registry);
         servlet.setSugarService(service);
-        
+
         servlet.updateProvider("P01374", null);
         servlet.updateCollection("a1009b", null);
     }
