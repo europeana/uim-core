@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -82,7 +83,7 @@ public class SugarServletTest {
      * 
      * @throws SugarException
      */
-    @BeforeClass
+    @Before
     public void login() throws SugarException {
         if (!service.hasActiveSession()) {
             service.login();
