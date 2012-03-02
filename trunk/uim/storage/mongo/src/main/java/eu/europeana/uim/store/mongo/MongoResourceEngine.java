@@ -53,7 +53,7 @@ import eu.europeana.uim.workflow.Workflow;
  * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
  */
-public class MongoResourceEngine implements ResourceEngine {
+public class MongoResourceEngine extends AbstractEngine implements ResourceEngine {
 
 	private static final String DEFAULT_UIM_DB_NAME = "UIM";
 	private String dbName;
@@ -426,29 +426,7 @@ public class MongoResourceEngine implements ResourceEngine {
 		return results;
 	}
 
-	/**
-	 * Private method that guranteed that the UIM Entity which is used for
-	 * search purposes will always be converted to MongoDB entity type which
-	 * contains a valid ObjectID reference.
-	 * 
-	 * @param uimType
-	 * @return an appropriate MongoDB entity type
-	 */
-	private UimEntity<?> ensureConsistency(UimEntity<?> uimType) {
-		if (uimType instanceof CollectionBean) {
-			MongoCollectionDecorator<String> tmp = new MongoCollectionDecorator<String>();
-			ObjectId id = ObjectId.massageToObjectId(uimType.getId());
-			tmp.setMongoId(id);
-			return tmp;
-		}
-		if (uimType instanceof ProviderBean) {
-			MongoProviderDecorator<String> tmp = new MongoProviderDecorator<String>();
-			ObjectId id = ObjectId.massageToObjectId(uimType.getId());
-			tmp.setMongoId(id);
-			return tmp;
-		}
-		return uimType;
-	}
+
 
 	/*
 	 * (non-Javadoc)

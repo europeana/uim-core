@@ -58,7 +58,7 @@ import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Georgios Markakis <gwarkx@hotmail.com>
  */
-public class MongoStorageEngine implements StorageEngine<String> {
+public class MongoStorageEngine extends AbstractEngine implements StorageEngine<String> {
 
     private static final String DEFAULT_UIM_DB_NAME = "UIM";
     private static final String MNEMONICFIELD = "searchMnemonic";
@@ -160,10 +160,8 @@ public class MongoStorageEngine implements StorageEngine<String> {
 
     @Override
     public void updateProvider(Provider<String> provider) throws StorageEngineException {
-    	
+    	    	
     	ArrayList<MongoProviderDecorator> allresults = new ArrayList<MongoProviderDecorator>();
-    	
-    
 		ArrayList<MongoProviderDecorator> result1 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(NAMEFIELD, provider.getName()).asList();
     	ArrayList<MongoProviderDecorator>  result2 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(MNEMONICFIELD, provider.getMnemonic()).asList();	
 
@@ -278,7 +276,7 @@ public class MongoStorageEngine implements StorageEngine<String> {
 
     @Override
     public Request<String> createRequest(Collection<String> collection, Date date) throws StorageEngineException {
-    	    	
+		collection = (Collection<String>) ensureConsistency(collection);    	
         Request<String> r = new MongoRequestDecorator<String>((MongoCollectionDecorator<String>) collection, date);
         ds.save(r);
         return r;
@@ -413,11 +411,9 @@ public class MongoStorageEngine implements StorageEngine<String> {
 
     @Override
     public String[] getByCollection(Collection<String> collection) {
-
+		collection = (Collection<String>) ensureConsistency(collection);
     	ArrayList<String> ids = new ArrayList<String>();
-    	
     	List <MongoMetadataRecordDecorator> reqrecords = ds.find(MongoMetadataRecordDecorator.class).filter("collection", collection).asList();
-    	
     	String[] res = new String[reqrecords.size()];
     	
     	int i = 0;
@@ -433,7 +429,7 @@ public class MongoStorageEngine implements StorageEngine<String> {
     
     @Override
     public String[] getByProvider(Provider<String> provider, boolean recursive) {
-    	
+    	provider = (Provider<String>) ensureConsistency(provider);
     	ArrayList<String> vals = new ArrayList<String>();
     	  	
     	List <MongoCollectionDecorator> mongoCollections = ds.find(MongoCollectionDecorator.class).filter("provider", provider).asList();
