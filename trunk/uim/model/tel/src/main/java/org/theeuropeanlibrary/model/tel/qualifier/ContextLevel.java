@@ -16,5 +16,5 @@ public enum ContextLevel {
     /**
      * value is about the actual object (text, image, etc.)
      */
-    CONTENT;
+    CONTENT,
 }

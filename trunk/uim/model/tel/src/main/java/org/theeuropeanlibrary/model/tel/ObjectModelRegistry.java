@@ -48,6 +48,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.FacetType;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
+import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 import org.theeuropeanlibrary.model.tel.qualifier.PrintType;
 
@@ -226,9 +227,14 @@ public final class ObjectModelRegistry {
                                                                                                           PrintType.class);
 
     public static final TKey<ObjectModelRegistry, Audience>                   AUDIENCE            = TKey.register(
+            ObjectModelRegistry.class,
+            "audience",
+            Audience.class);
+
+    public static final TKey<ObjectModelRegistry, FormOfItem>                   FORM            = TKey.register(
                                                                                                           ObjectModelRegistry.class,
-                                                                                                          "audience",
-                                                                                                          Audience.class);
+                                                                                                          "form",
+                                                                                                          FormOfItem.class);
 
     private static final Map<Class<?>, TKey<?, ?>>                            tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
@@ -414,6 +420,12 @@ public final class ObjectModelRegistry {
             {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
+                add(FieldSource.class);
+            }
+        });
+        validQualifiers.put(FORM, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(ContextLevel.class);
                 add(FieldSource.class);
             }
         });
