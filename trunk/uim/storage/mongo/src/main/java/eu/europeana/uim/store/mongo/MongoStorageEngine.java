@@ -64,6 +64,7 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
     private static final String MNEMONICFIELD = "searchMnemonic";
     private static final String NAMEFIELD = "searchName"; 
     private static final String LOCALIDFIELD = "mongoId";
+    private static final String RECORDUIDFIELD = "uniqueID";
     
     
     
@@ -319,8 +320,8 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
 
     
     @Override
-    public MetaDataRecord<String>  createMetaDataRecord(Collection<String>  request, String identifier) throws StorageEngineException {
-    	MongoMetadataRecordDecorator<String>  mdr = new MongoMetadataRecordDecorator<String>((MongoCollectionDecorator<String>) request);
+    public MetaDataRecord<String>  createMetaDataRecord(Collection<String>  collection, String identifier) throws StorageEngineException {
+    	MongoMetadataRecordDecorator<String>  mdr = new MongoMetadataRecordDecorator<String>((MongoCollectionDecorator<String>) collection,identifier);
     	ds.save(mdr);
 		return mdr;
     }
@@ -372,9 +373,9 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
     public List<MetaDataRecord<String>> getMetaDataRecords(List<String> ids) {
         ArrayList<MetaDataRecord<String>> res = new ArrayList<MetaDataRecord<String>>();
         BasicDBObject query = new BasicDBObject();
-        query.put(LOCALIDFIELD, new BasicDBObject("$in", ids));
+        query.put(RECORDUIDFIELD, new BasicDBObject("$in", ids));
         for (DBObject object : records.find(query)) {
-            Request<String> request = ds.find(MongoRequestDecorator.class).filter(LOCALIDFIELD, object.get("request")).get();
+            Request<String> request = ds.find(MongoRequestDecorator.class).filter(RECORDUIDFIELD, object.get("request")).get();
             //res.add(new MongoMetadataRecord(object, request.getCollection(), (String) object.get("identifier"), ((Long) object.get(LOCALIDFIELD)).longValue()));
         }
 
@@ -385,7 +386,7 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
     public MetaDataRecord<String> getMetaDataRecord(String id) throws StorageEngineException {
 
     	@SuppressWarnings("unchecked")
-		MongoMetadataRecordDecorator<String> request = ds.find(MongoMetadataRecordDecorator.class).filter(LOCALIDFIELD, new ObjectId(id)).get();
+		MongoMetadataRecordDecorator<String> request = ds.find(MongoMetadataRecordDecorator.class).filter(RECORDUIDFIELD, id).get();
 		return request;
     }
 

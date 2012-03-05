@@ -23,6 +23,7 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.HashMap;
 import java.util.List;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
@@ -71,6 +72,13 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I>
 	@Reference
 	private MongoCollectionDecorator<String> collection;
 
+	
+	/**
+	 * The (indexed & searchable) unique identifier
+	 */
+	@Indexed (unique=true, dropDups=true) 
+	private String uniqueID;
+	
 	/**
 	 * The default constructor (required by Morphia but not used in this
 	 * implementation)
@@ -78,19 +86,24 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I>
 	public MongoMetadataRecordDecorator() {
 	}
 
+
+	
 	/**
-	 * The constructor actually used by this implementation
+	 * Assigns a specific unique ID
 	 * 
 	 * @param collection
 	 *            the associated collection
 	 */
 	public MongoMetadataRecordDecorator(
-			MongoCollectionDecorator<String> collection) {
+			MongoCollectionDecorator<String> collection,String uuid) {
 		emebeddedMdr = new MetaDataRecordBean<String>();
 		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
+		emebeddedMdr.setId(uuid);
+		this.uniqueID = uuid;
 		this.collection = collection;
 	}
-
+	
+	
 	/*
 	 * Lifecycle methods
 	 */
@@ -109,12 +122,12 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I>
 	 * Called after the Decorator is stored into the Database. It assigns the
 	 * automatically generated ObjectId string value to the wrapped UIMEntity.
 	 */
-	@PostPersist
-	void postPersist() {
-		if (emebeddedMdr.getId() == null) {
-			emebeddedMdr.setId(getMongoId().toString());
-		}
-	}
+	//@PostPersist
+	//void postPersist() {
+	//	if (emebeddedMdr.getId() == null) {
+	//		emebeddedMdr.setId(getMongoId().toString());
+	//	}
+	//}
 
 	/**
 	 * Called after retrieving the Decorator via a query. It re-instantiates the
@@ -124,7 +137,11 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I>
 	void preload() {
 		emebeddedMdr = MongoDBEuropeanaMDRConverter.getInstance()
 				.decode(fields);
-		emebeddedMdr.setId(getMongoId().toString());
+		
+		if(emebeddedMdr.getId() == null){
+			emebeddedMdr.setId(uniqueID);
+		}
+		
 		emebeddedMdr.setCollection(collection.getEmbeddedCollection());
 	}
 
