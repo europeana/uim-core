@@ -107,49 +107,51 @@ public class Identifier {
         } else if (!scope.equals(other.scope)) return false;
         return true;
     }
-    
+
     @Override
     public String toString() {
-    	return getStringEncodedForm();
+        return getStringEncodedForm();
     }
-    
-	/**
-	 * Encodes the Identifier encoded in a String, in the form <scope>:<identifier>
-	 * 
-	 * @return encoded id string
-	 */
-	public String getStringEncodedForm() {
-		if(getScope()!=null)
-			try {
-				return URLEncoder.encode(getScope(), "UTF-8")+":"+getIdentifier();
-			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException("UTF-8 not supported???", e);
-			}
-		return ":"+getIdentifier();
-	}
-	
-	/**
-	 * Creates an Identifier from an encoded form (as the result of the getStringEncodedForm method)
-	 * 
-	 * @param encodedIdString in the form <scope>:<identifier>
-	 * @return identifier
-	 */
-	public static Identifier decodeIdentifier(String encodedIdString) {
-		try {
-			int idxColon=encodedIdString.indexOf(':');
-			if(idxColon==-1)
-				throw new IllegalArgumentException("Invalid encoded ID (no colon found): "+encodedIdString);
-			Identifier id=null;
-			if(idxColon==0) {
-				id=new Identifier(encodedIdString.substring(1));
-			}else {
-				String idPart = encodedIdString.substring(idxColon+1);
-				String scopePart = URLDecoder.decode(encodedIdString.substring(0, idxColon), "UTF-8");
-				id=new Identifier(idPart, scopePart);
-			}
-			return id;
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("UTF-8 not supported???", e);
-		}	
-	}
+
+    /**
+     * Encodes the Identifier encoded in a String, in the form <scope>:<identifier>
+     * 
+     * @return encoded id string
+     */
+    public String getStringEncodedForm() {
+        if (getScope() != null) try {
+            return URLEncoder.encode(getScope(), "UTF-8") + ":" + getIdentifier();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported???", e);
+        }
+        return ":" + getIdentifier();
+    }
+
+    /**
+     * Creates an Identifier from an encoded form (as the result of the getStringEncodedForm method)
+     * 
+     * @param encodedIdString
+     *            in the form <scope>:<identifier>
+     * @return identifier
+     */
+    public static Identifier decodeIdentifier(String encodedIdString) {
+        try {
+            int idxColon = encodedIdString.indexOf(':');
+            if (idxColon == -1)
+                throw new IllegalArgumentException("Invalid encoded ID (no colon found): " +
+                                                   encodedIdString);
+            Identifier id = null;
+            if (idxColon == 0) {
+                id = new Identifier(encodedIdString.substring(1));
+            } else {
+                String idPart = encodedIdString.substring(idxColon + 1);
+                String scopePart = URLDecoder.decode(encodedIdString.substring(0, idxColon),
+                        "UTF-8");
+                id = new Identifier(idPart, scopePart);
+            }
+            return id;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported???", e);
+        }
+    }
 }
