@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
+import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
@@ -173,5 +174,9 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
         final PrintWriter printWriter = new PrintWriter(result);
         throwable.printStackTrace(printWriter);
         return result.toString();
+    }
+
+    @Override
+    public void completed(ExecutionContext<I> execution) {
     }
 }

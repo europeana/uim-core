@@ -336,6 +336,13 @@ public interface LoggingEngine<I> {
      */
     void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration);
 
+    
+    /**method to ensure flushing to disk at the end of workflows.
+     * @param context 
+     */
+    void completed(ExecutionContext<I> context);
+    
+    
     /**
      * @param execution
      * @return the list of failed log entries for the execution

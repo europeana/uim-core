@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 
+import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.common.MemoryProgressMonitor;
@@ -323,6 +324,13 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
             Execution<I> execution) {
         return delegateLoggingEngine.getLinkLogs(execution);
     }
+    
+
+    @Override
+    public void completed(ExecutionContext<I> execution) {
+        delegateLoggingEngine.completed(execution);
+    }
+
 
     private String generateStacktrace(Throwable t) {
         if (t == null) { return ""; }

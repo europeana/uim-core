@@ -132,6 +132,10 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         return Collections.emptyList();
     }
 
+    @Override
+    public void completed(ExecutionContext<I> context) {
+    }
+
     /**
      * utility method to serialize a throwable to a string
      * 
@@ -146,4 +150,5 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         throwable.printStackTrace(printWriter);
         return result.toString();
     }
+
 }

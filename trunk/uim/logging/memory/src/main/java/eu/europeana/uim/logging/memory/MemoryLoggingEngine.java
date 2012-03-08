@@ -11,6 +11,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
+import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.LoggingEngineAdapter;
@@ -500,5 +501,10 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         public I getMetaDataRecord() {
             return mdr != null ? mdr.getId() : null;
         }
+    }
+
+    @Override
+    public void completed(ExecutionContext<I> execution) {
+        // 
     }
 }

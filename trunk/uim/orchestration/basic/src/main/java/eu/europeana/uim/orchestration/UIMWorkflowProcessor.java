@@ -315,6 +315,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                 log.log(Level.SEVERE, "Failed to complete:" + step, t);
             }
         }
+        
 
         synchronized (execution) {
             Execution executionBean = execution.getExecution();
@@ -336,6 +337,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
         try {
             execution.getStorageEngine().checkpoint();
+            execution.getLoggingEngine().completed(execution);
+
             execution.cleanup();
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution, t);
