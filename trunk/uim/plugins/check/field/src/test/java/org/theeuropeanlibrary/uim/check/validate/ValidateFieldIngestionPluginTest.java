@@ -63,22 +63,27 @@ public class ValidateFieldIngestionPluginTest {
         when(context.getValue((TKey<?, FieldCheckIngestionPlugin.Data>)any())).thenReturn(data);
 
         MetaDataRecord mdr = new MetaDataRecordBean(0l, collection);
+        //5p
         mdr.addValue(ObjectModelRegistry.TITLE, new Title("Validation Test"));
-        Enum<?>[] linkTypeQualifier = new Enum<?>[] { LinkTarget.TABLE_OF_CONTENTS };
+        
+        //2p
         mdr.addValue(
                 ObjectModelRegistry.LINK,
                 new Link(
                         "http://www.theeuropeanlibrary.org/exhibition-reading-europe/detail.html?id=103043"),
-                linkTypeQualifier);
+                LinkTarget.THUMBNAIL);
+        
+        //2p
         mdr.addValue(
                 ObjectModelRegistry.LINK,
                 new Link(
                         "http://www.theeuropeanlibrary.org/exhibition-reading-europe/detail.html?id=96805"),
-                linkTypeQualifier);
+                        LinkTarget.DIGITAL_OBJECT);
 
         plugin.initialize(context);
         plugin.processRecord(mdr, context);
 
+        // together 9pt
         assertEquals(Maturity.WEAK_REJECT, mdr.getFirstValue(ObjectModelRegistry.MATURITY));
 
         plugin.completed(context);

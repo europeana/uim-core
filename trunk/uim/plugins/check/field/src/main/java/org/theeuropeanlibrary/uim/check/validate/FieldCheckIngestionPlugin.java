@@ -411,6 +411,12 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         }
 
         @Override
+        public String toString() {
+            return "DataKey [tkey=" + tkey + ", qualifier=" + Arrays.toString(qualifier) +
+                   ", points=" + points + "]";
+        }
+
+        @Override
         public int hashCode() {
             final int prime = 31;
             int result = 1;
