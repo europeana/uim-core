@@ -404,6 +404,33 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         public Enum<?>[] getQualifier() {
             return qualifier;
         }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + points;
+            result = prime * result + Arrays.hashCode(qualifier);
+            result = prime * result + ((tkey == null) ? 0 : tkey.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
+            DataKey other = (DataKey)obj;
+            if (points != other.points) return false;
+            if (!Arrays.equals(qualifier, other.qualifier)) return false;
+            if (tkey == null) {
+                if (other.tkey != null) return false;
+            } else if (!tkey.equals(other.tkey)) return false;
+            return true;
+        }
+        
+        
+        
     }
 
     /**

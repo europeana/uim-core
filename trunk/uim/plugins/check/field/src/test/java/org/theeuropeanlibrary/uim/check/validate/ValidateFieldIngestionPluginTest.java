@@ -79,7 +79,7 @@ public class ValidateFieldIngestionPluginTest {
         plugin.initialize(context);
         plugin.processRecord(mdr, context);
 
-        assertEquals(Maturity.ACCEPT, mdr.getFirstValue(ObjectModelRegistry.MATURITY));
+        assertEquals(Maturity.WEAK_REJECT, mdr.getFirstValue(ObjectModelRegistry.MATURITY));
 
         plugin.completed(context);
 
