@@ -41,6 +41,7 @@ import eu.europeana.uim.sugarcrm.SugarService;
  * @since Mar 15, 2011
  */
 public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
+
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -64,6 +65,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                                                                                      FieldCheckIngestionPlugin.class,
                                                                                      "data",
                                                                                      Data.class);
+    /** DataKey KEY */
+    private static final DataKey MATURITY = new DataKey(ObjectModelRegistry.MATURITY, 0);
 
     /**
      * external parameters that must be provided
@@ -178,9 +181,13 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                                         enumv));
                             }
 
-                            value.exists.put(
+                            value.total.put(
                                     new DataKey(tKey, points, qualifiers.toArray(new Enum<?>[0])),
                                     new SummaryStatistics());
+
+                            value.batch.put(
+                                    new DataKey(tKey, points, qualifiers.toArray(new Enum<?>[0])),
+                                    new HashMap<Integer, Integer>());
                         } catch (Throwable e) {
                             throw new IngestionPluginFailedException(
                                     "Could not parse field specification in file <" +
@@ -189,6 +196,9 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                     }
                     linenum++;
                 }
+
+                value.batch.put(MATURITY,
+                        new HashMap<Integer, Integer>());
             } catch (Throwable t) {
                 if (t instanceof IngestionPluginFailedException)
                     throw (IngestionPluginFailedException)t;
@@ -219,7 +229,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA);
-        if (value.exists.isEmpty()) {
+        if (value.total.isEmpty()) {
             // not configured... just pass by
             return true;
         }
@@ -229,25 +239,24 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         }
 
         int sum = 0;
-        for (Entry<DataKey, SummaryStatistics> entry : value.exists.entrySet()) {
+        for (Entry<DataKey, SummaryStatistics> entry : value.total.entrySet()) {
             DataKey datakey = entry.getKey();
-            TKey<?, ?> tKey = datakey.getTkey();
-
-            Enum<?>[] qualifier = datakey.getQualifier();
             List<?> values = mdr.getValues(datakey.getTkey(), datakey.getQualifier());
-
-            String tk = tKey.getFullName();
-            String qu = Arrays.toString(qualifier);
-
-            if (value.populate) {
-                context.getLoggingEngine().logField(context.getExecution(), this, mdr, tk, qu,
-                        values.size());
-            }
 
             synchronized (entry.getValue()) {
                 entry.getValue().addValue(values.size());
                 if (!values.isEmpty()) {
                     sum += datakey.getPoints();
+                }
+            }
+
+            synchronized (value.batch) {
+                Map<Integer, Integer> map = value.batch.get(datakey);
+                int size = values.size();
+                if (map.containsKey(size)) {
+                    map.put(values.size(), map.get(values.size()) + 1);
+                } else {
+                    map.put(values.size(), 1);
                 }
             }
         }
@@ -262,9 +271,37 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.ACCEPT);
         }
 
+        synchronized (value.batch) {
+            Map<Integer, Integer> map = value.batch.get(MATURITY);
+            if (map.containsKey(sum)) {
+                map.put(sum, map.get(sum) + 1);
+            } else {
+                map.put(sum, 1);
+            }
+        }
+
+        
         if (value.populate) {
-            context.getLoggingEngine().logField(context.getExecution(), this, mdr,
-                    ObjectModelRegistry.MATURITY.getFullName(), "", sum);
+            if (value.start % 1000 == 0) {
+                synchronized (value.batch) {
+                    for (Entry<DataKey, Map<Integer, Integer>> entry : value.batch.entrySet()) {
+                        DataKey datakey = entry.getKey();
+                        TKey<?, ?> tKey = datakey.getTkey();
+                        Enum<?>[] qualifier = datakey.getQualifier();
+                        String tk = tKey.getFullName();
+                        String qu = Arrays.toString(qualifier);
+
+                        for (Entry<Integer, Integer> values : entry.getValue().entrySet()) {
+                            context.getLoggingEngine().logField(context.getExecution(), this, null,
+                                    tk, qu, values.getKey(), values.getValue().toString());
+
+                        }
+                        
+                        // clear
+                        entry.getValue().clear();
+                    }
+                }
+            }
         }
 
         synchronized (value) {
@@ -292,16 +329,38 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                 "completed", mnem, name, "" + value.start, "" + value.fine, time);
 
         try {
-            if (collection != null && value.populate) {
-                collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
-                        "" + context.getExecution().getId());
+            if (value.populate) {
+                synchronized (value.batch) {
+                    for (Entry<DataKey, Map<Integer, Integer>> entry : value.batch.entrySet()) {
+                        DataKey datakey = entry.getKey();
+                        TKey<?, ?> tKey = datakey.getTkey();
+                        Enum<?>[] qualifier = datakey.getQualifier();
+                        String tk = tKey.getFullName();
+                        String qu = Arrays.toString(qualifier);
 
-                ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
+                        for (Entry<Integer, Integer> values : entry.getValue().entrySet()) {
+                            context.getLoggingEngine().logField(context.getExecution(), this, null,
+                                    tk, qu, values.getKey(), values.getValue().toString());
 
-                if (getSugarService() != null) {
-                    getSugarService().updateCollection(collection);
+                        }
+                        
+                        // clear
+                        entry.getValue().clear();
+                    }
+                }
+
+                if (collection != null) {
+                    collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
+                            "" + context.getExecution().getId());
+                    
+                    ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
+                    
+                    if (getSugarService() != null) {
+                        getSugarService().updateCollection(collection);
+                    }
                 }
             }
+            
         } catch (Throwable t) {
             context.getLoggingEngine().logFailed(Level.INFO, this, t,
                     "Update collection or sugar service on " + collection + " failed");
@@ -313,11 +372,13 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
     // Container holding all execution specific information for the validation plugin.
     static class Data implements Serializable {
-        private int                             start     = 0;
-        private int                             fine      = 0;
-        private int                             threshold = 10;
-        private boolean                         populate  = true;
-        private Map<DataKey, SummaryStatistics> exists    = new HashMap<DataKey, SummaryStatistics>();
+        private int                                 start     = 0;
+        private int                                 fine      = 0;
+        private int                                 threshold = 10;
+        private boolean                             populate  = true;
+
+        private Map<DataKey, SummaryStatistics>     total     = new HashMap<DataKey, SummaryStatistics>();
+        private Map<DataKey, Map<Integer, Integer>> batch     = new HashMap<DataKey, Map<Integer, Integer>>();
     }
 
     private static class DataKey {

@@ -138,7 +138,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
             Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
 
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
-                LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr.getId(), messages);
+                LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr != null ? mdr.getId() : null, messages);
         insert(entry, false);
     }
 
@@ -157,7 +157,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void logLink(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
             String link, int status, String... messages) {
-        TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr.getId(), link,
+        TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr != null ? mdr.getId() : null, link,
                 new Date(), status, messages);
         insert(entry, false);
     }
@@ -179,7 +179,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     @Override
     public void logField(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
             String field, String qualifier, int status, String... messages) {
-        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr.getId(), field,
+        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr != null ? mdr.getId() : null, field,
                 qualifier, new Date(), status, messages);
         insert(entry, false);
     }
