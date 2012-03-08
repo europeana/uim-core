@@ -66,7 +66,9 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                                                                                      "data",
                                                                                      Data.class);
     /** DataKey KEY */
-    private static final DataKey MATURITY = new DataKey(ObjectModelRegistry.MATURITY, 0);
+    private static final DataKey                               MATURITY      = new DataKey(
+                                                                                     ObjectModelRegistry.MATURITY,
+                                                                                     0);
 
     /**
      * external parameters that must be provided
@@ -173,12 +175,15 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
                             List<Enum<?>> qualifiers = new ArrayList<Enum<?>>();
                             String[] qsplit = split[1].split(",");
-                            for (int i = 1; i < qsplit.length; i++) {
-                                String clazz = qsplit[i].substring(0, qsplit[i].lastIndexOf("."));
-                                String enumv = qsplit[i].substring(qsplit[i].lastIndexOf(".") + 1);
+                            for (int i = 0; i < qsplit.length; i++) {
+                                if (qsplit[i] != null && qsplit[i].length() > 0) {
+                                    String clazz = qsplit[i].substring(0,
+                                            qsplit[i].lastIndexOf("."));
+                                    String enumv = qsplit[i].substring(qsplit[i].lastIndexOf(".") + 1);
 
-                                qualifiers.add(Enum.valueOf((Class<Enum>)Class.forName(clazz),
-                                        enumv));
+                                    qualifiers.add(Enum.valueOf((Class<Enum>)Class.forName(clazz),
+                                            enumv));
+                                }
                             }
 
                             value.total.put(
@@ -197,8 +202,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                     linenum++;
                 }
 
-                value.batch.put(MATURITY,
-                        new HashMap<Integer, Integer>());
+                value.batch.put(MATURITY, new HashMap<Integer, Integer>());
             } catch (Throwable t) {
                 if (t instanceof IngestionPluginFailedException)
                     throw (IngestionPluginFailedException)t;
@@ -280,7 +284,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             }
         }
 
-        
         if (value.populate) {
             if (value.start % 1000 == 0) {
                 synchronized (value.batch) {
@@ -293,10 +296,11 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
                         for (Entry<Integer, Integer> values : entry.getValue().entrySet()) {
                             context.getLoggingEngine().logField(context.getExecution(), this, null,
-                                    tk, qu, values.getKey(), values.getValue().toString());
+                                    tk, qu, 0, values.getKey().toString(),
+                                    values.getValue().toString());
 
                         }
-                        
+
                         // clear
                         entry.getValue().clear();
                     }
@@ -340,10 +344,11 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
                         for (Entry<Integer, Integer> values : entry.getValue().entrySet()) {
                             context.getLoggingEngine().logField(context.getExecution(), this, null,
-                                    tk, qu, values.getKey(), values.getValue().toString());
+                                    tk, qu, 0, values.getKey().toString(),
+                                    values.getValue().toString());
 
                         }
-                        
+
                         // clear
                         entry.getValue().clear();
                     }
@@ -352,15 +357,15 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                 if (collection != null) {
                     collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
                             "" + context.getExecution().getId());
-                    
+
                     ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
-                    
+
                     if (getSugarService() != null) {
                         getSugarService().updateCollection(collection);
                     }
                 }
             }
-            
+
         } catch (Throwable t) {
             context.getLoggingEngine().logFailed(Level.INFO, this, t,
                     "Update collection or sugar service on " + collection + " failed");
@@ -428,9 +433,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             } else if (!tkey.equals(other.tkey)) return false;
             return true;
         }
-        
-        
-        
+
     }
 
     /**
