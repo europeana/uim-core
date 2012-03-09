@@ -70,6 +70,12 @@ public class Submission {
             return remaining.remove(guarded);
         }
     }
+    
+    public boolean hasRemaining() {
+        synchronized(remaining) {
+            return !remaining.isEmpty();
+        }
+    }
 
     /**
      * @return processed

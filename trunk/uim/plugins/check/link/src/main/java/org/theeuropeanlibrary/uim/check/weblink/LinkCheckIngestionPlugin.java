@@ -237,11 +237,19 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                                     synchronized (submission) {
                                         execution.putValue("linkcheck.processed",
                                                 "" + submission.getProcessed());
+                                        
                                         if (!execution.isActive()) {
+                                            
                                             // need to store our own
                                             try {
-                                                if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
-                                                    ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                if (submission.getProcessed() % 500 == 0) {
+                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    }
+                                                } else if (!submission.hasRemaining()) {
+                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    }
                                                 }
                                             } catch (StorageEngineException e) {
                                                 throw new RuntimeException(

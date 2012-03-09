@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.21" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 2.6.0.v20100531 Build &lt;2.6.0.v20100609-1613></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.1.v20110905 Build &lt;3.7.1.v20110905-1820></property>
     <property name="units">in</property>
+    <method name="beforeRender"><![CDATA[reportContext.getRenderOption().setOption("ChartDpi",600);]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">72</property>
@@ -1539,7 +1540,9 @@ where execution = ?]]></xml-property>
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">execution</property>
-                                <expression name="expression" type="javascript">params["execution"].value</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">params["execution"].value</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">
@@ -2724,7 +2727,9 @@ function beforeDrawLegendItem( lerh, bounds, icsc )
                         <list-property name="paramBindings">
                             <structure>
                                 <property name="paramName">execution</property>
-                                <expression name="expression" type="javascript">params["execution"].value</expression>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">params["execution"].value</value>
+                                </simple-property-list>
                             </structure>
                         </list-property>
                         <list-property name="boundDataColumns">

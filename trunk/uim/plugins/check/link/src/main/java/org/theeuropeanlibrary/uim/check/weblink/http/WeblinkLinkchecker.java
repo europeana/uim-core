@@ -134,6 +134,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                     synchronized (submission) {
                         submission.incrExceptions();
                     }
+                    
                     log.log(Level.INFO, "Failed to load url: <" + guarded.getUrl() + ">.", t);
                     guarded.processed(0, t.getLocalizedMessage());
 
@@ -158,6 +159,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                             submission.removeRemaining(guarded);
                         }
 
+                        // just do if no exception happened
                         if (status > 0) {
                             String message = response == null ? "No response."
                                     : response.getStatusLine().getReasonPhrase();
