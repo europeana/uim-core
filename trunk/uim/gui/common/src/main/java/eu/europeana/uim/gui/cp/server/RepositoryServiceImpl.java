@@ -143,7 +143,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             for (Provider<Serializable> p : providers) {
                 try {
                     ProviderDTO provider = getWrappedProviderDTO(p);
-                    res.add(provider);
+                    if (provider != null)
+                        res.add(provider);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Error in copy data to DTO of provider!", t);
                 }
@@ -191,7 +192,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             if (cols != null) {
                 for (Collection<Serializable> col : cols) {
                     CollectionDTO collDTO = getWrappedCollectionDTO(col);
-                    res.add(collDTO);
+                    if (collDTO != null)
+                        res.add(collDTO);
                 }
 
                 Collections.sort(res, new Comparator<CollectionDTO>() {
@@ -209,6 +211,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     private ProviderDTO getWrappedProviderDTO(Provider<Serializable> pro) {
+        if (pro == null) return null;
+        
         ProviderDTO provDTO = new ProviderDTO(pro.getId());
         provDTO.setName(pro.getName());
         provDTO.setMnemonic(pro.getMnemonic());
@@ -219,6 +223,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     private CollectionDTO getWrappedCollectionDTO(Collection<Serializable> col) {
+        if (col == null) return null;
+        
         CollectionDTO collDTO = new CollectionDTO(col.getId());
         collDTO.setName(col.getName());
         collDTO.setMnemonic(col.getMnemonic());
