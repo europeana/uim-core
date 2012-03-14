@@ -125,10 +125,10 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @author Markus Muhr (markus.muhr@kb.nl)
      * @since Mar 21, 2011
      */
-    public class QualifiedValue<T> implements Comparable<QualifiedValue<?>>,Serializable {
+    public class QualifiedValue<T> implements Comparable<QualifiedValue<?>>, Serializable {
+        private static final long  serialVersionUID = 1L;
 
-		private static final long serialVersionUID = 1L;
-		/**
+        /**
          * generic value
          */
         private final T            value;
