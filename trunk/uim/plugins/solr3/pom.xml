@@ -33,8 +33,8 @@
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.solr3,
-                            org.apache.lucene.*;version="3.3.0",
-                            org.apache.solr.*;version="3.3.0"
+                            org.apache.lucene.*;version="3.5.0",
+                            org.apache.solr.*;version="3.5.0"
 						</Export-Package>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
