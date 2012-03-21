@@ -76,34 +76,6 @@ public enum ResourceType {
 	
 	
 	/**
-	 * @return is Visual Material
-	 */
-	public boolean isVisualMaterial() {
-	    return this==VIDEO || this==STILL_IMAGE || this==MIXED_MATERIALS ||  this==THREE_DIMENSIONAL_OBJECT || this==MULTIMEDIA;
-	}
-	
-	/**
-	 * @return is a Book or manuscript
-	 */
-	public boolean isBook() {
-	    return this==TEXT ;
-	}
-	
-	/**
-	 * @return is a map
-	 */
-	public boolean isMap() {
-	    return this==CARTOGRAPHIC ;
-	}
-
-	/**
-	 * @return is sound or music
-	 */
-	public boolean isSound() {
-	    return this==MUSIC_SOUND_RECORDING || this==NOTATED_MUSIC || this==SOUND_RECORDING;
-	}
-
-	/**
 	 * @param typeOfRecordCode
 	 * @return ResourceType
 	 */

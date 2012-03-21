@@ -46,7 +46,6 @@ import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
-import org.theeuropeanlibrary.model.tel.qualifier.FacetType;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
@@ -339,12 +338,6 @@ public final class ObjectModelRegistry {
             }
         });
 
-        validQualifiers.put(FACET, new ArrayList<Class<? extends Enum<?>>>() {
-            {
-                add(FacetType.class);
-                add(FieldSource.class);
-            }
-        });
 
         validQualifiers.put(PARTY, new ArrayList<Class<? extends Enum<?>>>() {
             {

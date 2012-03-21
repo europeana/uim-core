@@ -26,13 +26,11 @@ public enum TextRelation {
      */
     RIGHTS_UNCONTROLED,
     /**
-     * resource type. if encoded according to TEL normalized value, the FacetType should be used
-     * to encode the data, instead of this one 
+     * resource type. if encoded according to TEL normalized value
      */
     TYPE_UNCONTROLED,
     /**
-     * resource format. if encoded according to TEL normalized value, the FacetType should be
-     * used to encode the data, instead of this one
+     * resource format. if encoded according to TEL normalized value
      */
     FORMAT_UNCONTROLED,
     /**
