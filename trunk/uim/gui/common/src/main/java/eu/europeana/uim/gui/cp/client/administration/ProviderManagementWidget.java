@@ -206,7 +206,7 @@ public class ProviderManagementWidget extends IngestionWidget {
                         collections.addAll(result);
                         collectionBox.addItem(NEW_COLLECTION);
                         for (CollectionDTO collection : collections) {
-                            collectionBox.addItem(collection.getName());
+                            collectionBox.addItem(collection.toString());
                         }
                     }
                 });

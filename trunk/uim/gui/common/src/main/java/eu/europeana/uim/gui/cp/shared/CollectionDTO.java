@@ -227,6 +227,6 @@ public class CollectionDTO extends DataSourceDTO {
 
     @Override
     public String toString() {
-        return getMnemonic() + "\t" + getName();
+        return getMnemonic() + ":" + getName();
     }
 }
