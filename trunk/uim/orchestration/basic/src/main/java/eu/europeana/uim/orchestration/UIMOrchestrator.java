@@ -43,10 +43,12 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * @since Mar 22, 2011
  */
 public class UIMOrchestrator<I> implements Orchestrator<I> {
-    private static Logger                 log = Logger.getLogger(UIMOrchestrator.class.getName());
+    private static Logger                  log     = Logger.getLogger(UIMOrchestrator.class.getName());
 
-    private final Registry                registry;
-    private final UIMWorkflowProcessor<I> processor;
+    private final Registry                 registry;
+    private final UIMWorkflowProcessor<I>  processor;
+
+    private final List<ActiveExecution<I>> startup = new ArrayList<ActiveExecution<I>>();
 
     /**
      * Creates a new instance of this class.
@@ -142,12 +144,18 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
             try {
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-                storageEngine.updateExecution(e);
-
                 UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
                         storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
+                synchronized (startup) {
+                    startup.add(activeExecution);
+                }
+
+                storageEngine.updateExecution(e);
                 processor.schedule(activeExecution);
 
+                synchronized (startup) {
+                    startup.remove(activeExecution);
+                }
                 return activeExecution;
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Could not update execution details: " + t.getMessage(), t);
@@ -245,7 +253,12 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
 
     @Override
     public List<ActiveExecution<I>> getActiveExecutions() {
-        return processor.getExecutions();
+        synchronized (startup) {
+            List<ActiveExecution<I>> result = new ArrayList<ActiveExecution<I>>(
+                    processor.getExecutions());
+            result.addAll(startup);
+            return result;
+        }
     }
 
     @Override
