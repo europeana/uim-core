@@ -49,7 +49,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     private Map<Serializable, ExecutionDTO> wrappedExecutionDTOs = new HashMap<Serializable, ExecutionDTO>();
-    private Map<String, String>       workflowNames        = new HashMap<String, String>();
+    private Map<String, String>             workflowNames        = new HashMap<String, String>();
 
     @Override
     public List<ExecutionDTO> getActiveExecutions() {
@@ -162,8 +162,8 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     @Override
-    public ExecutionDTO startCollection(String workflow, Serializable collection, String executionName,
-            Set<ParameterDTO> parameters) {
+    public ExecutionDTO startCollection(String workflow, Serializable collection,
+            String executionName, Set<ParameterDTO> parameters) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
@@ -257,8 +257,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 // return null;
     }
 
-    private void populateWrappedExecutionDTO(ExecutionDTO execution, ActiveExecution<Serializable> ae,
-            eu.europeana.uim.workflow.Workflow w, UimDataSet<Serializable> dataset, String executionName) {
+    private void populateWrappedExecutionDTO(ExecutionDTO execution,
+            ActiveExecution<Serializable> ae, eu.europeana.uim.workflow.Workflow w,
+            UimDataSet<Serializable> dataset, String executionName) {
         execution.setId(ae.getExecution().getId());
         execution.setName(executionName);
 
@@ -326,7 +327,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             } else if (e.getDataSet() instanceof Provider) {
                 wrapped.setDataSet(((Provider)e.getDataSet()).getName());
             } else {
-                wrapped.setDataSet(e.getDataSet().toString());
+                if (e.getDataSet() != null) {
+                    wrapped.setDataSet(e.getDataSet().toString());
+                } else {
+                    wrapped.setDataSet("Unknown");
+                }
             }
 
             wrapped.setName(e.getName());
