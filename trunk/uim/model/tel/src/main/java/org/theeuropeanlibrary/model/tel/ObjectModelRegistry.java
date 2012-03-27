@@ -45,9 +45,11 @@ import org.theeuropeanlibrary.model.common.time.Period;
 import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
+import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
+import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 import org.theeuropeanlibrary.model.tel.qualifier.PrintType;
 
@@ -70,14 +72,14 @@ public final class ObjectModelRegistry {
                                                                                                           "metadatarecord",
                                                                                                           MetaDataRecordBean.class);
     public static final TKey<ObjectModelRegistry, String>                     COLLECTION          = TKey.register(
-																								    		ObjectModelRegistry.class,
-																								    		"collection",
-																								    		String.class);
+                                                                                                            ObjectModelRegistry.class,
+                                                                                                            "collection",
+                                                                                                            String.class);
     
 //    public static final TKey<ObjectModelRegistry, String>                     STATEMENT_OF_RESPONSABILITY          = TKey.register(
-//																								    		ObjectModelRegistry.class,
-//																								    		"responsability",
-//																								    		String.class);
+//                                                                                                          ObjectModelRegistry.class,
+//                                                                                                          "responsability",
+//                                                                                                          String.class);
 //
 //    public static final TKey<ObjectModelRegistry, String>                     SUBCOLLECTION          = TKey.register(
 //                                                                                                          ObjectModelRegistry.class,
@@ -234,7 +236,17 @@ public final class ObjectModelRegistry {
                                                                                                           ObjectModelRegistry.class,
                                                                                                           "form",
                                                                                                           FormOfItem.class);
+    
+    public static final TKey<ObjectModelRegistry, CatalogingForm>               CATALOGING_FORM            = TKey.register(
+            ObjectModelRegistry.class,
+            "cataloging_form",
+            CatalogingForm.class);
 
+    public static final TKey<ObjectModelRegistry, Illustrations>               ILLUSTRATIONS            = TKey.register(
+            ObjectModelRegistry.class,
+            "illustrations",
+            Illustrations.class);
+    
     private static final Map<Class<?>, TKey<?, ?>>                            tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
     private static final Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>> validQualifiers     = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>();
