@@ -28,11 +28,13 @@
     <feature name="uim-europeana-definitions" version="1.3.0.SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-datamodel-definitions/1.3.0-SNAPSHOT</bundle> 
     </feature>
-    
-    
+
     <feature name="uim-integration-plugins" version="1.3.0-SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-plugin-repox/1.3.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-plugin-sugarcrmclient/1.3.0-SNAPSHOT</bundle>
+        <!-- 
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-mint/1.3.0-SNAPSHOT</bundle>
+         -->
     </feature>
 
     <feature name="uim-europeana-workflows" version="1.3.0.SNAPSHOT">
