@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.core.CoreContainer;
 
 import eu.europeana.uim.common.BlockingInitializer;
@@ -59,11 +59,11 @@ public class Solr4Initializer extends BlockingInitializer {
             status = STATUS_BOOTING;
             if (url.startsWith("file://")) {
                 File home = new File(url.substring(7));
-                container = new CoreContainer();
+                container = new CoreContainer.Initializer().initialize();
                 container.load(home.getAbsolutePath(), new File(home, "solr.xml"));
                 server = new EmbeddedSolrServer(container, core);
             } else {
-                server = new CommonsHttpSolrServer(new URL(url) + core);
+                server = new HttpSolrServer(new URL(url) + core);
             }
 
             status = STATUS_INITIALIZED;
