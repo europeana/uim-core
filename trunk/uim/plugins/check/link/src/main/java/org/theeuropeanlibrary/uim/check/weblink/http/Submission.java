@@ -71,6 +71,9 @@ public class Submission {
         }
     }
     
+    /**
+     * @return more?
+     */
     public boolean hasRemaining() {
         synchronized(remaining) {
             return !remaining.isEmpty();
