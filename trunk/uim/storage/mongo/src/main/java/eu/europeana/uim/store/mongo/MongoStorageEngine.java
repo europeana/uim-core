@@ -161,7 +161,9 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
 
     @Override
     public void updateProvider(Provider<String> provider) throws StorageEngineException {
-    	    	
+    	
+    	provider = (Provider<String>) ensureConsistency(provider);
+    	
     	ArrayList<MongoProviderDecorator> allresults = new ArrayList<MongoProviderDecorator>();
 		ArrayList<MongoProviderDecorator> result1 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(NAMEFIELD, provider.getName()).asList();
     	ArrayList<MongoProviderDecorator>  result2 = (ArrayList<MongoProviderDecorator>) ds.find(MongoProviderDecorator.class).filter(MNEMONICFIELD, provider.getMnemonic()).asList();	
@@ -225,6 +227,7 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
 
     @Override
     public void updateCollection(Collection<String> collection) throws StorageEngineException {
+    	collection = (Collection<String>) ensureConsistency(collection);  
     	
     	ArrayList<MongoCollectionDecorator> allresults = new ArrayList<MongoCollectionDecorator>();
     	
@@ -298,8 +301,11 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
         ds.merge(request);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public List<Request<String>> getRequests(Collection<String> collection) {
+    	collection = (Collection<String>) ensureConsistency(collection);  
+    	
         List<Request<String>> res = new ArrayList<Request<String>>();
         for (Request<String> r : ds.find(MongoRequestDecorator.class).filter("collection", collection).asList()) {
             res.add(r);
@@ -321,6 +327,7 @@ public class MongoStorageEngine extends AbstractEngine implements StorageEngine<
     
     @Override
     public MetaDataRecord<String>  createMetaDataRecord(Collection<String>  collection, String identifier) throws StorageEngineException {
+    	collection = (Collection<String>) ensureConsistency(collection);  
     	MongoMetadataRecordDecorator<String>  mdr = new MongoMetadataRecordDecorator<String>((MongoCollectionDecorator<String>) collection,identifier);
     	ds.save(mdr);
 		return mdr;

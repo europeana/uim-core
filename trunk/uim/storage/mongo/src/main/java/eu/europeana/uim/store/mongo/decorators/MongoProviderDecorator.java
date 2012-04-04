@@ -89,6 +89,15 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<String>
 		searchableRealtedIn = new HashSet<Provider<String>>();
 		searchableRealtedOut = new HashSet<Provider<String>>();
 	}
+	
+	/**
+	 * @param provider
+	 */
+	public MongoProviderDecorator(ProviderBean provider) {
+		embeddedProvider = provider;
+		searchableRealtedIn = new HashSet<Provider<String>>();
+		searchableRealtedOut = new HashSet<Provider<String>>();
+	}
 
 	/*
 	 * Lifecycle Methods

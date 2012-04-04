@@ -32,13 +32,23 @@ public abstract class AbstractEngine {
 	 */
 	 UimEntity<?> ensureConsistency(UimEntity<?> uimType) {
 		if (uimType instanceof CollectionBean) {
-			MongoCollectionDecorator<String> tmp = new MongoCollectionDecorator<String>();
+			
+			CollectionBean<?> coll = (CollectionBean<?>) uimType;
+			
+			@SuppressWarnings("rawtypes")
+			MongoProviderDecorator<String> provref = new MongoProviderDecorator<String>((ProviderBean) coll.getProvider());
+			ObjectId provid = ObjectId.massageToObjectId(coll.getProvider().getId());
+			provref.setMongoId(provid);
+			
+			MongoCollectionDecorator<String> tmp = new MongoCollectionDecorator<String>(provref);
 			ObjectId id = ObjectId.massageToObjectId(uimType.getId());
+			
 			tmp.setMongoId(id);
 			return tmp;
 		}
 		if (uimType instanceof ProviderBean) {
-			MongoProviderDecorator<String> tmp = new MongoProviderDecorator<String>();
+			ProviderBean<?> prov = (ProviderBean<?>) uimType;
+			MongoProviderDecorator<String> tmp = new MongoProviderDecorator<String>(prov);
 			ObjectId id = ObjectId.massageToObjectId(uimType.getId());
 			tmp.setMongoId(id);
 			return tmp;
