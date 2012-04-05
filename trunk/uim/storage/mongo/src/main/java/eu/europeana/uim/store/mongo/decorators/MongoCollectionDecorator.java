@@ -95,6 +95,8 @@ public class MongoCollectionDecorator<I> extends
 		embeddedCollection.setProvider(provider2.getEmbeddedProvider());
 		this.provider = (MongoProviderDecorator<String>) provider;
 	}
+	
+
 
 	/*
 	 * Lifecycle methods
@@ -143,6 +145,14 @@ public class MongoCollectionDecorator<I> extends
 		return embeddedCollection;
 	}
 
+	
+	
+	/**
+	 * @param collection
+	 */
+	public void setEmbeddedCollection(CollectionBean<String> collection) {
+		this.embeddedCollection = collection;
+	}
 	/*
 	 * Overridden (decorator-specific) methods
 	 */
