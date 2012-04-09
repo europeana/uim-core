@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.model.common;
 
 /**
  * Any textual content, or textual description of a resource
+ * This object is generic, and requires always a TextRelation qualifier that defines the entity type of the entity described in the text
  * 
  * @author Nuno Freire <nfreire@gmail.com>
  * @since Mar 21, 2011

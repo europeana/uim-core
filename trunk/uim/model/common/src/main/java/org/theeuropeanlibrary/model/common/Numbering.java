@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.model.common;
 
 /**
  * Defining a numbering for volume, issue etc and scope of validity.
+ * This object is generic, and requires always a NumberingRelation qualifier that defines the entity type of the entity described in the text
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 18, 2011
