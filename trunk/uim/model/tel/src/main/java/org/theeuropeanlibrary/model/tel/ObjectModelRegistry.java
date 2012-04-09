@@ -3,8 +3,11 @@ package org.theeuropeanlibrary.model.tel;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
@@ -489,4 +492,18 @@ public final class ObjectModelRegistry {
     public static <T> TKey<ObjectModelRegistry, T> lookup(Class<T> cls) {
         return (TKey<ObjectModelRegistry, T>)tKeyClassMap.get(cls);
     }
+    
+    public static Set<Class<?>> getAllSupportedClasses() {
+        return tKeyClassMap.keySet();
+    }
+
+    public static Set<Class<? extends Enum>> getAllSupportedQualifiers() {
+        Set<Class<? extends Enum>> qualifiers=new HashSet<Class<? extends Enum>>();
+        for(Entry<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>> entry: validQualifiers.entrySet()) {
+            qualifiers.addAll(entry.getValue());
+        }
+        return qualifiers;
+    }
+    
+    
 }
