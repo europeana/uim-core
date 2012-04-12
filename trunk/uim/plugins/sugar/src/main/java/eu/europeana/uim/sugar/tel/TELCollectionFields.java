@@ -38,16 +38,26 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     TEL_COLLECTION_KIND("type_dataset", "telda_tel_dataset.type_dataset",
                         StandardControlledVocabulary.TYPE, "Dataset Type"),
 
-    TEL_ACTIVE_PORTAL("tel_inportal", "telda_tel_dataset.tel_inportal", null, "Active in portal"),
-
     TEL_ACTIVE_UIM("tel_inuim_c", "telda_tel_dataset.tel_inuim_c",
                    StandardControlledVocabulary.ACTIVE, "Active in UIM"),
 
-    TEL_CAROUSEL_MANDATORY("tel_carousel_mandatory", "telda_tel_dataset.tel_carousel_mandatory",
-                           null, "Carousel Mandatory"),
+    TEL_ACTIVE_PORTAL("tel_inportal", "telda_tel_dataset.tel_inportal", null, "Active in portal"),
 
-    TEL_CAROUSEL_CANDIDATE("tel_carousel_candidate", "telda_tel_dataset.tel_carousel_candidate",
-                           null, "Carousel Candidate"),
+    TEL_PORTAL_STATUS("tel_portal_status", "telda_tel_dataset.tel_portal_status", null,
+                      "Portal status"),
+
+    TEL_PORTAL_CAROUSEL_MANDATORY("tel_carousel_mandatory",
+                                  "telda_tel_dataset.tel_carousel_mandatory", null,
+                                  "Carousel Mandatory"),
+
+    TEL_PORTAL_CAROUSEL_CANDIDATE("tel_carousel_candidate",
+                                  "telda_tel_dataset.tel_carousel_candidate", null,
+                                  "Carousel Candidate"),
+
+    TEL_PORTAL_FEDERATED_SRU_BASE("tel_srubase", "telda_tel_dataset.tel_srubase", null, "SRU Base"),
+
+    TEL_PORTAL_FEDERATED_SRU_FORMAT("tel_sruformat", "telda_tel_dataset.tel_sruformat", null,
+                                    "SRU Format"),
 
     TEL_DISCIPLINES("tel_disciplines", "telda_tel_dataset.tel_disciplines", null, "TEL Disciplines"),
 
