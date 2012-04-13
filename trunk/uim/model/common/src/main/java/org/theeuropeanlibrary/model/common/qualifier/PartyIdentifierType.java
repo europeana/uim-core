@@ -8,18 +8,34 @@ package org.theeuropeanlibrary.model.common.qualifier;
  * @since Mar 18, 2011
  */
 public enum PartyIdentifierType {
-    /** TEL assigned */
+    /**
+     * TEL assigned
+     */
     TEL,
-    /** TEL assigned identifier, which may not be correct, but may still be useful. */
+    /**
+     * FIXME: certainty about enrichments should go in separate enum
+     * 
+     * TEL assigned identifier, which may not be correct, but may still be useful.
+     */
     TEL_UNCERTAIN,
-    /** The identifier in the source library's authority file */
+    /**
+     * The identifier in the source library's authority file
+     */
     LIBRARY_AUTHORITY_FILE,
-    /** Id in VIAF */
+    /**
+     * Id in VIAF
+     */
     VIAF,
-    /** International Standard Name Identifier */
+    /**
+     * International Standard Name Identifier
+     */
     ISNI,
-    /** URL for the homepage of the party */
+    /**
+     * URL for the homepage of the party
+     */
     URL,
-    /** MACS the party */
+    /**
+     * MACS the party
+     */
     MACS;
 }
