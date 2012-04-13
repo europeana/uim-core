@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import eu.europeana.uim.api.IngestionPlugin;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
@@ -186,10 +188,22 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         ResourceEngine resource = getEngine().getRegistry().getResourceEngine();
         File rootDirectory = resource.getResourceDirectory();
         if (rootDirectory != null && rootDirectory.exists() && rootDirectory.isDirectory()) {
-            for (File file : rootDirectory.listFiles()) {
-                fileNames.add(file.getName());
+            listFiles(rootDirectory, "", fileNames);
+        }
+
+        Collections.sort(fileNames);
+        return fileNames;
+    }
+
+    private void listFiles(File directory, String prefix, List<String> filenames) {
+        for (File file : directory.listFiles()) {
+            if (!file.getName().startsWith(".")) {
+                if (file.isDirectory()) {
+                    listFiles(file, prefix + file.getName() + "/", filenames);
+                } else {
+                    filenames.add(prefix + file.getName());
+                }
             }
         }
-        return fileNames;
     }
 }
