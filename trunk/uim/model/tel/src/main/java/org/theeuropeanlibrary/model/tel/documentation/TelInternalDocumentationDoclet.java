@@ -35,7 +35,6 @@ import eu.europeana.uim.common.TKey;
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 23 de Fev de 2012
  */
-@SuppressWarnings("restriction")
 public class TelInternalDocumentationDoclet {
     private static final HashMap<String, String> TEXT_SECTIONS=new HashMap<String, String>();
     
@@ -77,50 +76,7 @@ public class TelInternalDocumentationDoclet {
      * @return success
      */
     public static boolean start(RootDoc root) {
-        ArrayList<ClassDoc> qualifiers = new ArrayList<ClassDoc>();
-        HashSet<ClassDoc> superClasses = new HashSet<ClassDoc>();
-        HashSet<String> allClasseNames = new HashSet<String>();
-        HashMap<String, ArrayList<ClassDoc>> classesByGroup = new HashMap<String, ArrayList<ClassDoc>>();
-
-        ClassDoc[] classes = root.classes();
-        for (int i = 0; i < classes.length; ++i) {
-            ClassDoc classDoc = classes[i];
-            String className = classDoc.qualifiedName();
-            allClasseNames.add(classDoc.name());
-            if (className.contains(".qualifier.")) {
-                qualifiers.add(classDoc);
-            } else {
-                String group = className.substring(0, className.lastIndexOf('.'));
-                group = group.substring(group.lastIndexOf('.') + 1);
-                if (group.equals("common") || group.equals("tel")) group = "";
-                ArrayList<ClassDoc> clsDocs = classesByGroup.get(group);
-                if (clsDocs == null) {
-                    clsDocs = new ArrayList<ClassDoc>();
-                    classesByGroup.put(group, clsDocs);
-                }
-                clsDocs.add(classDoc);
-
-                superClasses.add(classDoc.superclass());
-            }
-        }
-
-        for (String group : new String[] { "", "party", "time", "spatial", "subject" }) {
-            Collections.sort(classesByGroup.get(group), new Comparator<ClassDoc>() {
-                @Override
-                public int compare(ClassDoc o1, ClassDoc o2) {
-                    return o1.name().compareTo(o2.name());
-                }
-            });
-        }
-        Collections.sort(qualifiers, new Comparator<ClassDoc>() {
-            @Override
-            public int compare(ClassDoc o1, ClassDoc o2) {
-                return o1.name().compareTo(o2.name());
-            }
-        });
-
-// System.out.println(qualifiers);
-// System.out.println(classesByGroup);
+        ObjectModelJavaDocs iomDocs=new ObjectModelJavaDocs(root);
 
         DomBuilder html = new DomBuilder("html");
         html.addElement("head");
@@ -136,14 +92,17 @@ public class TelInternalDocumentationDoclet {
         createIntroductoryText(html);
 
         html.addEmptyElementBellow("hr");
-        createIndex(html, classesByGroup, qualifiers, superClasses);
+        createIndex(html, iomDocs);
         html.addEmptyElementBellow("hr");
 
         for (String group : new String[] { "", "party", "time", "spatial", "subject" }) {
             html.addElementBellow("h2", PACKAGE_DESCRIPTIONS.get(group));
-            for (ClassDoc cd : classesByGroup.get(group)) {
-                if (isClassToDocument(cd, superClasses)) {
-                    classToDom(html, cd, allClasseNames);
+            for (ClassDoc cd : iomDocs.getClassesByGroup().get(group)) {
+                if (isClassToDocument(cd, iomDocs.getSuperClasses())) {
+                    if(cd.qualifiedName().contains(".qualifier."))
+                        qualifierToDom(html, cd, true);
+                    else
+                        classToDom(html, cd, iomDocs.getAllClasseNames());
                     html.addEmptyElementBellow("br");
                 }
             }
@@ -151,9 +110,11 @@ public class TelInternalDocumentationDoclet {
         }
 
         html.addElementBellow("h2", "Qualifiers");
-        for (ClassDoc cd : qualifiers) {
-            qualifierToDom(html, cd);
-            html.addEmptyElementBellow("br");
+        for (ClassDoc cd : iomDocs.getQualifiers()) {
+            if(!iomDocs.isSupportedClass(cd.qualifiedName())) {
+                qualifierToDom(html, cd, false);
+                html.addEmptyElementBellow("br");
+            }
         }
 
         try {
@@ -179,6 +140,7 @@ public class TelInternalDocumentationDoclet {
         return true;
     }
 
+
     /**
      * @param html
      */
@@ -193,15 +155,13 @@ public class TelInternalDocumentationDoclet {
         }
     }
 
-    private static void createIndex(DomBuilder html,
-            HashMap<String, ArrayList<ClassDoc>> classesByGroup, ArrayList<ClassDoc> qualifiers,
-            HashSet<ClassDoc> superClasses) {
+    private static void createIndex(DomBuilder html, ObjectModelJavaDocs iomDocs) {
         html.addElementBellow("h2", "Data Elements' Index");
         for (String group : new String[] { "", "party", "time", "spatial", "subject" }) {
             html.addElementBellow("h3", PACKAGE_DESCRIPTIONS.get(group));
             html.addElement("ul");
-            for (ClassDoc cd : classesByGroup.get(group)) {
-                if (isClassToDocument(cd, superClasses)) {
+            for (ClassDoc cd : iomDocs.getClassesByGroup().get(group)) {
+                if (isClassToDocument(cd, iomDocs.getSuperClasses())) {
                     html.addElement("li");
                     addLinkToClass(html, cd.name());
                     html.goToParent();
@@ -212,7 +172,7 @@ public class TelInternalDocumentationDoclet {
 
         html.addElementBellow("h3", "Qualifiers");
         html.addElement("ul");
-        for (ClassDoc cd : qualifiers) {
+        for (ClassDoc cd : iomDocs.getQualifiers()) {
             html.addElement("li");
             addLinkToClass(html, cd.name());
             html.goToParent();
@@ -347,23 +307,7 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
         dom.goToParent();
 
-        ArrayList<FieldDoc> allFields = new ArrayList<FieldDoc>();
-        if (hasSuperClass) {
-            for (FieldDoc fd : cls.superclass().fields()) {
-                if (fd.isStatic()) continue;
-                allFields.add(fd);
-            }
-        }
-        for (FieldDoc fd : cls.fields()) {
-            if (fd.isStatic()) continue;
-            allFields.add(fd);
-        }
-        Collections.sort(allFields, new Comparator<FieldDoc>() {
-            @Override
-            public int compare(FieldDoc o1, FieldDoc o2) {
-                return o1.name().compareTo(o2.name());
-            }
-        });
+        ArrayList<FieldDoc> allFields = getAllFieldDocs(cls, hasSuperClass);
 
         for (FieldDoc fd : allFields) {
             dom.addElement("tr");
@@ -402,6 +346,37 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
     }
 
+    
+    
+
+    /**
+     * @param cls
+     * @param hasSuperClass
+     * @return all fields of a class
+     */
+    protected static ArrayList<FieldDoc> getAllFieldDocs(ClassDoc cls, boolean hasSuperClass){
+        ArrayList<FieldDoc> allFields = new ArrayList<FieldDoc>();
+        if (hasSuperClass) {
+            for (FieldDoc fd : cls.superclass().fields()) {
+                if (fd.isStatic()) continue;
+                allFields.add(fd);
+            }
+        }
+        for (FieldDoc fd : cls.fields()) {
+            if (fd.isStatic()) continue;
+            allFields.add(fd);
+        }
+        Collections.sort(allFields, new Comparator<FieldDoc>() {
+            @Override
+            public int compare(FieldDoc o1, FieldDoc o2) {
+                return o1.name().compareTo(o2.name());
+            }
+        });
+        return allFields;
+    }
+    
+    
+    
     /**
      * @param dom
      * @param simpleTypeName
@@ -413,7 +388,7 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
     }
 
-    private static void qualifierToDom(DomBuilder dom, ClassDoc cls) {
+    private static void qualifierToDom(DomBuilder dom, ClassDoc cls, boolean asClass) {
         dom.addElement("table");
         dom.setAttribute("border", 1);
         dom.addElement("tr");
@@ -423,6 +398,8 @@ public class TelInternalDocumentationDoclet {
         dom.addElement("a");
         dom.setAttribute("name", cls.name());
         dom.addElementBellow("b", cls.name());
+//        if(asClass) 
+            dom.addTextNode(" (controled values)");
         dom.goToParent();
 
         dom.goToParent();
@@ -439,12 +416,67 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
         dom.goToParent();
 
-        for (FieldDoc fd : cls.fields()) {
+        if(cls.fields().length>25) {
             dom.addElement("tr");
-            dom.addElementBellow("td", fd.name());
-            dom.addElementBellow("td", fd.commentText());
+            dom.addElement("td");
+            dom.setAttribute("colspan", 2);
+            int col=0;
+            String text="";
+            for (FieldDoc fd : cls.fields()) {
+                if(!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
+                    continue;
+                if(col>0)
+                    text+="; ";
+                text+=fd.name();
+                if(!fd.commentText().isEmpty())
+                    text+=" ("+fd.commentText()+")";
+                col++;
+            }
+            dom.setText(text);
             dom.goToParent();
+            dom.goToParent();
+        }else {
+            for (FieldDoc fd : cls.fields()) {
+                if(!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
+                    continue;
+                dom.addElement("tr");
+                dom.addElementBellow("td", fd.name());
+                dom.addElementBellow("td", fd.commentText());
+                dom.goToParent();
+            }
         }
+        
+        
+        if(asClass) {
+            // allowed qualifiers
+            TKey<ObjectModelRegistry, ?> tkey;
+            try {
+                tkey = ObjectModelRegistry.lookup(Class.forName(cls.qualifiedName()));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+            List<Class<? extends Enum<?>>> validEnums = ObjectModelRegistry.getValidEnums(tkey);
+            dom.addElement("tr");
+            dom.addElement("td");
+            dom.setAttribute("colspan", 2);
+            dom.addElementBellow("b", "Qualifiers");
+            dom.goToParent();
+            dom.goToParent();
+            
+            dom.addElement("tr");
+            dom.addElement("td");
+            dom.setAttribute("colspan", 2);
+            if (validEnums.size() == 0) {
+                dom.setText("None");
+            } else {
+                for (Class<? extends Enum<?>> q : validEnums) {
+                    addLinkToClass(dom, q.getSimpleName());
+                    dom.addEmptyElementBellow("br");
+                }
+            }
+            dom.goToParent();
+            dom.goToParent();
+        }        
         dom.goToParent();// table
     }
 }

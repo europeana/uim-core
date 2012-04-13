@@ -11,7 +11,6 @@ public class Main {
     /**
      * @param args
      */
-    @SuppressWarnings("restriction")
     public static void main(String[] args) {
         String programName = "GenerateTelInternalDocumentationScript";
         String defaultDocletClassName = TelInternalDocumentationDoclet.class.getCanonicalName();
@@ -23,6 +22,13 @@ public class Main {
                 "org.theeuropeanlibrary.model.common.spatial",
                 "org.theeuropeanlibrary.model.common.subject",
                 "org.theeuropeanlibrary.model.common.time" };
+        com.sun.tools.javadoc.Main.execute(programName, defaultDocletClassName, javaDocParams);
+        
+        
+        defaultDocletClassName = RdfMappingClassesTableDoclet.class.getCanonicalName();
+        com.sun.tools.javadoc.Main.execute(programName, defaultDocletClassName, javaDocParams);
+
+        defaultDocletClassName = RdfMappingPropertiesTableDoclet.class.getCanonicalName();
         com.sun.tools.javadoc.Main.execute(programName, defaultDocletClassName, javaDocParams);
     }
 }
