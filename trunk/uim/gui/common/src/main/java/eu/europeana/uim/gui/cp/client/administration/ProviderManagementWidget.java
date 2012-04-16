@@ -1,6 +1,7 @@
 package eu.europeana.uim.gui.cp.client.administration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -14,7 +15,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
-import eu.europeana.uim.gui.cp.client.management.BrowserObject;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.DataSourceDTO;
@@ -111,7 +111,7 @@ public class ProviderManagementWidget extends IngestionWidget {
                 collection.setProvider(provider);
                 collectionForm.setCollection(collection);
 
-//                synchronizeProvider(provider);
+// synchronizeProvider(provider);
             }
         });
 
@@ -134,24 +134,24 @@ public class ProviderManagementWidget extends IngestionWidget {
         return widget;
     }
 
-//    private void synchronizeProvider(ProviderDTO provider) {
-//        repositoryService.synchronizeRepoxProvider(provider.getId(),
-//                new AsyncCallback<ProviderDTO>() {
-//                    @Override
-//                    public void onFailure(Throwable caught) {
-//                        caught.printStackTrace();
-//                    }
+// private void synchronizeProvider(ProviderDTO provider) {
+// repositoryService.synchronizeRepoxProvider(provider.getId(),
+// new AsyncCallback<ProviderDTO>() {
+// @Override
+// public void onFailure(Throwable caught) {
+// caught.printStackTrace();
+// }
 //
-//                    @Override
-//                    public void onSuccess(ProviderDTO result) {
-//                        if (result != null) {
-//                            if (providerForm.getProvider().getId().equals(result.getId())) {
-//                                providerForm.setProvider(result);
-//                            }
-//                        }
-//                    }
-//                });
-//    }
+// @Override
+// public void onSuccess(ProviderDTO result) {
+// if (result != null) {
+// if (providerForm.getProvider().getId().equals(result.getId())) {
+// providerForm.setProvider(result);
+// }
+// }
+// }
+// });
+// }
 
     private void updateProviders() {
         repositoryService.getProviders(new AsyncCallback<List<ProviderDTO>>() {
@@ -166,10 +166,18 @@ public class ProviderManagementWidget extends IngestionWidget {
                 providerBox.clear();
                 providers.addAll(result);
                 providerBox.addItem(NEW_PROVIDER);
-                for (ProviderDTO p : providers) {
-                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() + ": " + p.getName();
-                    providerBox.addItem(name);
+
+                List<String> items = new ArrayList<String>();
+                for (ProviderDTO provider : providers) {
+                    String name = provider.getCountry() == null ? "XXX: " + provider.getName()
+                            : provider.getCountry() + ": " + provider.getName();
+                    items.add(name);
                 }
+                Collections.sort(items);
+                for (String item : items) {
+                    providerBox.addItem(item);
+                }
+
             }
         });
     }
@@ -207,9 +215,15 @@ public class ProviderManagementWidget extends IngestionWidget {
                         collectionBox.clear();
                         collections.addAll(result);
                         collectionBox.addItem(NEW_COLLECTION);
+                        
+                        List<String> items = new ArrayList<String>();
                         for (CollectionDTO collection : collections) {
                             String name = collection.getMnemonic() + ": " + collection.getName();
-                            collectionBox.addItem(name);
+                            items.add(name);
+                        }
+                        Collections.sort(items);
+                        for (String item : items) {
+                            collectionBox.addItem(item);
                         }
                     }
                 });

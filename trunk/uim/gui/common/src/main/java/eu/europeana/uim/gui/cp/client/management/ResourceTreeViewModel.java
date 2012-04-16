@@ -2,6 +2,8 @@
 package eu.europeana.uim.gui.cp.client.management;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -100,9 +102,15 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 List<BrowserObject> providerList = providersDataProvider.getList();
                 providerList.clear();
                 for (ProviderDTO p : providers) {
-                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() + ": " + p.getName();
+                    String name = p.getCountry() == null ? "XXX: " + p.getName() : p.getCountry() + ": " + p.getName();
                     providerList.add(new BrowserObject(name, p));
                 }
+                Collections.sort(providerList, new Comparator<BrowserObject>() {
+                    @Override
+                    public int compare(BrowserObject o1, BrowserObject o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
             }
         });
     }
@@ -123,6 +131,13 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 for (CollectionDTO collection : collections) {
                     collectionList.add(new BrowserObject(collection.getMnemonic() + ": " + collection.getName(), collection));
                 }
+                Collections.sort(collectionList, new Comparator<BrowserObject>() {
+                    @Override
+                    public int compare(BrowserObject o1, BrowserObject o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+
             }
         });
     }
@@ -142,6 +157,13 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 for (WorkflowDTO w : workflows) {
                     workflowList.add(new BrowserObject(w.getName(), w));
                 }
+                Collections.sort(workflowList, new Comparator<BrowserObject>() {
+                    @Override
+                    public int compare(BrowserObject o1, BrowserObject o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+
             }
         });
     }
