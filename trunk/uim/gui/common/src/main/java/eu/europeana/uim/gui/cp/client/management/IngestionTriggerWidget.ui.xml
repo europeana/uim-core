@@ -45,7 +45,7 @@
                                     </g:layer>
                                 </g:LayoutPanel>
                             </g:center>
-                            <g:east size="400">
+                            <g:east size="500">
                                 <g:ScrollPanel addStyleNames='{style.scrollPanel}'>
                                     <c:CellTable ui:field="cellTable" addStyleNames="{style.cellTable}" />
                                 </g:ScrollPanel>
