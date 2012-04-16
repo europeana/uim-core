@@ -100,7 +100,8 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 List<BrowserObject> providerList = providersDataProvider.getList();
                 providerList.clear();
                 for (ProviderDTO p : providers) {
-                    providerList.add(new BrowserObject(p.getName(), p));
+                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() + ": " + p.getName();
+                    providerList.add(new BrowserObject(name, p));
                 }
             }
         });
@@ -120,7 +121,7 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
                 for (CollectionDTO collection : collections) {
-                    collectionList.add(new BrowserObject(collection.getMnemonic() + ":" + collection.getName(), collection));
+                    collectionList.add(new BrowserObject(collection.getMnemonic() + ": " + collection.getName(), collection));
                 }
             }
         });

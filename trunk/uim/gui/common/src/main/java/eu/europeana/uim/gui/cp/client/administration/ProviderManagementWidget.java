@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
+import eu.europeana.uim.gui.cp.client.management.BrowserObject;
 import eu.europeana.uim.gui.cp.client.services.RepositoryServiceAsync;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.DataSourceDTO;
@@ -165,8 +166,9 @@ public class ProviderManagementWidget extends IngestionWidget {
                 providerBox.clear();
                 providers.addAll(result);
                 providerBox.addItem(NEW_PROVIDER);
-                for (ProviderDTO provider : providers) {
-                    providerBox.addItem(provider.getName());
+                for (ProviderDTO p : providers) {
+                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() + ": " + p.getName();
+                    providerBox.addItem(name);
                 }
             }
         });
@@ -206,7 +208,8 @@ public class ProviderManagementWidget extends IngestionWidget {
                         collections.addAll(result);
                         collectionBox.addItem(NEW_COLLECTION);
                         for (CollectionDTO collection : collections) {
-                            collectionBox.addItem(collection.toString());
+                            String name = collection.getMnemonic() + ": " + collection.getName();
+                            collectionBox.addItem(name);
                         }
                     }
                 });
