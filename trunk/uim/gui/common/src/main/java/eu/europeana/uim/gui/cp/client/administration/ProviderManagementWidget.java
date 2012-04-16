@@ -2,6 +2,7 @@ package eu.europeana.uim.gui.cp.client.administration;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -164,20 +165,27 @@ public class ProviderManagementWidget extends IngestionWidget {
             public void onSuccess(List<ProviderDTO> result) {
                 providers.clear();
                 providerBox.clear();
+
+                Collections.sort(result, new Comparator<ProviderDTO>() {
+                    @Override
+                    public int compare(ProviderDTO o1, ProviderDTO o2) {
+                        String n1 = o1.getCountry() == null ? "XXX: " + o1.getName()
+                                : o1.getCountry() + ": " + o1.getName();
+                        String n2 = o2.getCountry() == null ? "XXX: " + o2.getName()
+                                : o2.getCountry() + ": " + o2.getName();
+
+                        return n1.compareTo(n2);
+                    }
+                });
+
                 providers.addAll(result);
                 providerBox.addItem(NEW_PROVIDER);
 
-                List<String> items = new ArrayList<String>();
                 for (ProviderDTO provider : providers) {
                     String name = provider.getCountry() == null ? "XXX: " + provider.getName()
                             : provider.getCountry() + ": " + provider.getName();
-                    items.add(name);
+                    providerBox.addItem(name);
                 }
-                Collections.sort(items);
-                for (String item : items) {
-                    providerBox.addItem(item);
-                }
-
             }
         });
     }
@@ -213,17 +221,22 @@ public class ProviderManagementWidget extends IngestionWidget {
                     public void onSuccess(List<CollectionDTO> result) {
                         collections.clear();
                         collectionBox.clear();
+                        
+                        Collections.sort(result, new Comparator<CollectionDTO>() {
+                            @Override
+                            public int compare(CollectionDTO o1, CollectionDTO o2) {
+                                String n1 = o1.getMnemonic() + ": " + o1.getName();
+                                String n2 = o2.getMnemonic() + ": " + o2.getName();
+                                return n1.compareTo(n2);
+                            }
+                        });
+
                         collections.addAll(result);
                         collectionBox.addItem(NEW_COLLECTION);
-                        
-                        List<String> items = new ArrayList<String>();
+
                         for (CollectionDTO collection : collections) {
                             String name = collection.getMnemonic() + ": " + collection.getName();
-                            items.add(name);
-                        }
-                        Collections.sort(items);
-                        for (String item : items) {
-                            collectionBox.addItem(item);
+                            collectionBox.addItem(name);
                         }
                     }
                 });
