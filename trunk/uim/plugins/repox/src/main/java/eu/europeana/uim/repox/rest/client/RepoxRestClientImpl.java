@@ -205,6 +205,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     @Override
     public Provider createProvider(Provider prov, Aggregator agr) throws RepoxException {
         StringBuffer aggregatorId = new StringBuffer();
+        StringBuffer providerId = new StringBuffer();
         StringBuffer name = new StringBuffer();
         StringBuffer description = new StringBuffer();
         StringBuffer country = new StringBuffer();
@@ -214,10 +215,14 @@ public class RepoxRestClientImpl implements RepoxRestClient {
 
         aggregatorId.append("aggregatorId=");
         aggregatorId.append(agr.getId());
+        
+        providerId.append("dataProviderId=");
+        providerId.append(prov.getId());
+        
         name.append("name=");
         name.append(prov.getName());
+        
         description.append("description=");
-
         if (prov.getDescription() != null) {
             description.append(prov.getDescription());
         } else {
@@ -249,7 +254,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
 
         Response resp = invokeRestCall("/dataProviders/create", Response.class,
-                aggregatorId.toString(), name.toString(), description.toString(),
+                aggregatorId.toString(), providerId.toString(), name.toString(), description.toString(),
                 country.toString(), nameCode.toString(), homepage.toString(),
                 datasetType.toString());
 

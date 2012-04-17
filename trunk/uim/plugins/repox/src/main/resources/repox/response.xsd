@@ -117,6 +117,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="description"/>
+        <xs:element ref="exportDirPath"/>
         <xs:element ref="recordIdPolicy"/>
         <xs:sequence minOccurs="0">
           <xs:element ref="oai-source"/>
@@ -261,6 +262,7 @@
   <xs:element name="country" type="xs:NCName"/>
   <xs:element name="type" type="xs:NCName"/>
   <xs:element name="description" type="xs:string"/>
+  <xs:element name="exportDirPath" type="xs:string"/>
   <xs:element name="namespaces">
     <xs:complexType>
       <xs:sequence>

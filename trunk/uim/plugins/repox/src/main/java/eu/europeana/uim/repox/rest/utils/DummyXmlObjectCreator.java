@@ -33,12 +33,13 @@ public class DummyXmlObjectCreator {
     }
 
     /**
-     * @param name
+     * @param id
      * @return dummy filled provider
      */
-    public static Provider createProvider(String name) {
+    public static Provider createProvider(String id) {
         Provider provider = new Provider();
-        provider.setName(name);
+        provider.setId(id);
+        provider.setName("prov");
         provider.setNameCode("7777");
         provider.setUrl("http://www.in.gr");
         return provider;

@@ -48,7 +48,7 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
 
     @Override
     public eu.europeana.uim.repox.rest.client.xml.Provider createProvider(Provider<?> provider) {
-        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider = DummyXmlObjectCreator.createProvider(provider.getName());
+        eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider = DummyXmlObjectCreator.createProvider(provider.getMnemonic());
 
         jaxbProvider.setName(provider.getName());
         jaxbProvider.setNameCode(provider.getMnemonic());
