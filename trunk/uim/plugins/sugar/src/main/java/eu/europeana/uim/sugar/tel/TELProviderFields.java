@@ -41,7 +41,7 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
     
     LINK_CONTACT("tel_partner_link_contact_c","accounts.tel_partner_link_contact_c",null,"Link to Contact information"),
     
-    LINK_OPENING("accounts.tel_partner_link_opening_c","accounts.tel_partner_link_opening_c",null,"Link to Opening information"),
+    LINK_OPENING("tel_partner_link_opening_c","accounts.tel_partner_link_opening_c",null,"Link to Opening information"),
     IMAGE_LIST("tel_orgimages_c", "accounts_cstm.tel_orgimages_c", null, "Image List"),
 
     EMAIL("email1", "email1", null, "EMail"),
