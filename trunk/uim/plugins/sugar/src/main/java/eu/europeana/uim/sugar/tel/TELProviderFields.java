@@ -38,7 +38,10 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
 
     WIKIPEDIA_EN("tel_wikipedia_link_english_c", "accounts_cstm.tel_wikipedia_link_english_c",
                  null, "Wikipedia EN"),
-
+    
+    LINK_CONTACT("tel_partner_link_contact_c","accounts.tel_partner_link_contact_c",null,"Link to Contact information"),
+    
+    LINK_OPENING("accounts.tel_partner_link_opening_c","accounts.tel_partner_link_opening_c",null,"Link to Opening information"),
     IMAGE_LIST("tel_orgimages_c", "accounts_cstm.tel_orgimages_c", null, "Image List"),
 
     EMAIL("email1", "email1", null, "EMail"),
@@ -71,7 +74,9 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
     REPOX_PREFIX("default_oai_metadataprefix_c", "accounts_cstm.default_oai_metadataprefix_c",
                  StandardControlledVocabulary.INTERNAL_OAI_BASE, "REPOX prefix"),
 
-    DATE_MODIFIED("date_modified", "accounts.date_modified", null, "Date of Modification"), ;
+    DATE_MODIFIED("date_modified", "accounts.date_modified", null, "Date of Modification"), 
+    
+    ;
 
     private final String                       fieldId;
     private final String                       qualifiedFieldId;
