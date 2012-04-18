@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 
@@ -265,14 +266,19 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             }
         }
 
-        if (sum == 0) {
+        List<Link> links = mdr.getValues(ObjectModelRegistry.LINK);
+        if (links == null || links.isEmpty()) {
             mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.REJECT);
-        } else if (sum < value.threshold) {
-            mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.WEAK_REJECT);
-        } else if (sum == value.threshold) {
-            mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.WEAK_ACCEPT);
-        } else if (sum > value.threshold) {
-            mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.ACCEPT);
+        } else {
+            if (sum == 0) {
+                mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.REJECT);
+            } else if (sum < value.threshold) {
+                mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.WEAK_REJECT);
+            } else if (sum == value.threshold) {
+                mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.WEAK_ACCEPT);
+            } else if (sum > value.threshold) {
+                mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.ACCEPT);
+            }
         }
 
         synchronized (value.batch) {
