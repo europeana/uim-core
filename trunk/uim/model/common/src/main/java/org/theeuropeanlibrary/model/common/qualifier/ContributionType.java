@@ -19,5 +19,10 @@ public enum ContributionType {
     /**
      * party contributed to the content of the work as an illustrator
      */
-    ILLUSTRATOR
+    ILLUSTRATOR,
+    /**
+     * party contributed to the content of the work as an editor
+     */
+    EDITOR
+
 }
