@@ -75,19 +75,20 @@ public final class ObjectModelRegistry {
                                                                                                           "metadatarecord",
                                                                                                           MetaDataRecordBean.class);
     public static final TKey<ObjectModelRegistry, String>                     COLLECTION          = TKey.register(
-                                                                                                            ObjectModelRegistry.class,
-                                                                                                            "collection",
-                                                                                                            String.class);
-    
-//    public static final TKey<ObjectModelRegistry, String>                     STATEMENT_OF_RESPONSABILITY          = TKey.register(
-//                                                                                                          ObjectModelRegistry.class,
-//                                                                                                          "responsability",
-//                                                                                                          String.class);
+                                                                                                          ObjectModelRegistry.class,
+                                                                                                          "collection",
+                                                                                                          String.class);
+
+// public static final TKey<ObjectModelRegistry, String> STATEMENT_OF_RESPONSABILITY =
+// TKey.register(
+// ObjectModelRegistry.class,
+// "responsability",
+// String.class);
 //
-//    public static final TKey<ObjectModelRegistry, String>                     SUBCOLLECTION          = TKey.register(
-//                                                                                                          ObjectModelRegistry.class,
-//                                                                                                          "subcollection",
-//                                                                                                          String.class);
+// public static final TKey<ObjectModelRegistry, String> SUBCOLLECTION = TKey.register(
+// ObjectModelRegistry.class,
+// "subcollection",
+// String.class);
 
     public static final TKey<ObjectModelRegistry, Identifier>                 IDENTIFIER          = TKey.register(
                                                                                                           ObjectModelRegistry.class,
@@ -231,25 +232,25 @@ public final class ObjectModelRegistry {
                                                                                                           PrintType.class);
 
     public static final TKey<ObjectModelRegistry, Audience>                   AUDIENCE            = TKey.register(
-            ObjectModelRegistry.class,
-            "audience",
-            Audience.class);
+                                                                                                          ObjectModelRegistry.class,
+                                                                                                          "audience",
+                                                                                                          Audience.class);
 
-    public static final TKey<ObjectModelRegistry, FormOfItem>                   FORM            = TKey.register(
+    public static final TKey<ObjectModelRegistry, FormOfItem>                 FORM                = TKey.register(
                                                                                                           ObjectModelRegistry.class,
                                                                                                           "form",
                                                                                                           FormOfItem.class);
-    
-    public static final TKey<ObjectModelRegistry, CatalogingForm>               CATALOGING_FORM            = TKey.register(
-            ObjectModelRegistry.class,
-            "cataloging_form",
-            CatalogingForm.class);
 
-    public static final TKey<ObjectModelRegistry, Illustrations>               ILLUSTRATIONS            = TKey.register(
-            ObjectModelRegistry.class,
-            "illustrations",
-            Illustrations.class);
-    
+    public static final TKey<ObjectModelRegistry, CatalogingForm>             CATALOGING_FORM     = TKey.register(
+                                                                                                          ObjectModelRegistry.class,
+                                                                                                          "cataloging_form",
+                                                                                                          CatalogingForm.class);
+
+    public static final TKey<ObjectModelRegistry, Illustrations>              ILLUSTRATIONS       = TKey.register(
+                                                                                                          ObjectModelRegistry.class,
+                                                                                                          "illustrations",
+                                                                                                          Illustrations.class);
+
     private static final Map<Class<?>, TKey<?, ?>>                            tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
     private static final Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>> validQualifiers     = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>();
@@ -352,7 +353,6 @@ public final class ObjectModelRegistry {
                 add(FieldSource.class);
             }
         });
-
 
         validQualifiers.put(PARTY, new ArrayList<Class<? extends Enum<?>>>() {
             {
@@ -492,18 +492,17 @@ public final class ObjectModelRegistry {
     public static <T> TKey<ObjectModelRegistry, T> lookup(Class<T> cls) {
         return (TKey<ObjectModelRegistry, T>)tKeyClassMap.get(cls);
     }
-    
+
     public static Set<Class<?>> getAllSupportedClasses() {
         return tKeyClassMap.keySet();
     }
 
     public static Set<Class<? extends Enum>> getAllSupportedQualifiers() {
-        Set<Class<? extends Enum>> qualifiers=new HashSet<Class<? extends Enum>>();
-        for(Entry<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>> entry: validQualifiers.entrySet()) {
+        Set<Class<? extends Enum>> qualifiers = new HashSet<Class<? extends Enum>>();
+        for (Entry<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>> entry : validQualifiers.entrySet()) {
             qualifiers.addAll(entry.getValue());
         }
         return qualifiers;
     }
-    
-    
+
 }
