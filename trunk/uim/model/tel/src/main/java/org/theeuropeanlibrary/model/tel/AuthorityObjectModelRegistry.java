@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
@@ -227,5 +228,12 @@ public final class AuthorityObjectModelRegistry {
     @SuppressWarnings("unchecked")
     public static <T> TKey<AuthorityObjectModelRegistry, T> lookup(Class<T> cls) {
         return (TKey<AuthorityObjectModelRegistry, T>)tKeyClassMap.get(cls);
+    }
+
+    /**
+     * @return all classes registered
+     */
+    public static Set<Class<?>> getAllSupportedClasses() {
+        return tKeyClassMap.keySet();
     }
 }
