@@ -8,61 +8,57 @@ package org.theeuropeanlibrary.model.tel.qualifier;
  * @date 29 de Ago de 2011
  */
 public enum PrintType {
-	
-	/** 
-	 *	Printed resource
-	 */
-	PRINTED,
-	
-	/** 
-	 *	Manuscript
-	 */
-	MANUSCRIPT;
-	
-	
-	/**
-	 * @param typeOfRecordCode
-	 * @return ResourceType
-	 */
-	public static PrintType fromMarc21Code(char typeOfRecordCode) {
-		switch (typeOfRecordCode) {
-		case 'a':
-			return PRINTED;
-		case 't':
-			return MANUSCRIPT;
-		case 'e':
-			return PRINTED;
-		case 'f':
-			return MANUSCRIPT;
-		case 'c':
-			return PRINTED;
-		case 'd':
-			return MANUSCRIPT;
-		}
-		return null;
-	}
-	
-	
-	/**
-	 * @param typeOfRecordCode
-	 * @return ResourceType
-	 */
-	public static PrintType fromUnimarcCode(char typeOfRecordCode) {
-		switch (typeOfRecordCode) {
-		case 'a':
-			return PRINTED;
-		case 'b':
-			return MANUSCRIPT;
-		case 'e':
-			return PRINTED;
-		case 'f':
-			return MANUSCRIPT;
-		case 'c':
-			return PRINTED;
-		case 'd':
-			return MANUSCRIPT;
-		}
-		return null;
-	}
-	
+    /**
+     * Printed resource
+     */
+    PRINTED,
+
+    /**
+     * Manuscript
+     */
+    MANUSCRIPT;
+
+    /**
+     * @param typeOfRecordCode
+     * @return ResourceType
+     */
+    public static PrintType fromMarc21Code(char typeOfRecordCode) {
+        switch (typeOfRecordCode) {
+        case 'a':
+            return PRINTED;
+        case 't':
+            return MANUSCRIPT;
+        case 'e':
+            return PRINTED;
+        case 'f':
+            return MANUSCRIPT;
+        case 'c':
+            return PRINTED;
+        case 'd':
+            return MANUSCRIPT;
+        }
+        return null;
+    }
+
+    /**
+     * @param typeOfRecordCode
+     * @return ResourceType
+     */
+    public static PrintType fromUnimarcCode(char typeOfRecordCode) {
+        switch (typeOfRecordCode) {
+        case 'a':
+            return PRINTED;
+        case 'b':
+            return MANUSCRIPT;
+        case 'e':
+            return PRINTED;
+        case 'f':
+            return MANUSCRIPT;
+        case 'c':
+            return PRINTED;
+        case 'd':
+            return MANUSCRIPT;
+        }
+        return null;
+    }
 }
