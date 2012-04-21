@@ -26,7 +26,6 @@ import eu.europeana.uim.gui.cp.shared.ProgressDTO;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -59,29 +58,31 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         try {
             Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
             activeExecutions = orchestrator.getActiveExecutions();
+            
+            if (activeExecutions != null) {
+                for (ActiveExecution<Serializable> activeExecution : activeExecutions) {
+                    if (activeExecution != null && activeExecution.getExecution().getId() != null) {
+                        Execution<Serializable> execution = activeExecution.getExecution();
+                        try {
+                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
+                                    execution, activeExecution);
+                            r.add(exec);
+                        } catch (Throwable t) {
+                            log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
+                            wrappedExecutionDTOs.remove(execution.getId());
+                        }
+                    } else {
+                        log.log(Level.WARNING, "An active execution or its identifier is null!");
+                    }
+                }
+            } else {
+                log.log(Level.WARNING, "Active executions are null!");
+            }
+            
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Could not query active execution!", t);
         }
 
-        if (activeExecutions != null) {
-            for (ActiveExecution<Serializable> execution : activeExecutions) {
-                if (execution != null && execution.getExecution().getId() != null) {
-                    Execution<Serializable> executionBean = execution.getExecution();
-                    try {
-                        ExecutionDTO exec = getWrappedExecutionDTO(executionBean.getId(),
-                                executionBean, execution);
-                        r.add(exec);
-                    } catch (Throwable t) {
-                        log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                        wrappedExecutionDTOs.remove(executionBean.getId());
-                    }
-                } else {
-                    log.log(Level.WARNING, "An active execution or its identifier is null!");
-                }
-            }
-        } else {
-            log.log(Level.WARNING, "Active executions are null!");
-        }
 
         return r;
     }
@@ -109,65 +110,65 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         List<Execution<Serializable>> executions = null;
         try {
             executions = storage.getAllExecutions();
+
+            if (executions != null) {
+                HashSet<Serializable> active = new HashSet<Serializable>();
+                try {
+                    Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
+                    for (ActiveExecution<Serializable> ae : orchestrator.getActiveExecutions()) {
+                        active.add(ae.getExecution().getId());
+                    }
+                } catch (Throwable t) {
+                    log.log(Level.SEVERE, "Could not query active execution!", t);
+                }
+
+                // sometimes something goes wrong and the execuiton is not updated to be
+                // inactive, even if its Serializable gone - thats why we need to check against
+                // the current live executions.
+                for (Execution<Serializable> execution : executions) {
+                    if (!active.contains(execution.getId())) {
+                        try {
+                            if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
+                                ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
+                                        execution, null);
+                                r.add(exec);
+                            }
+                        } catch (Throwable t) {
+                            log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
+                            wrappedExecutionDTOs.remove(execution.getId());
+                        }
+                    }
+                }
+
+                Collections.sort(r, new Comparator<ExecutionDTO>() {
+                    @Override
+                    public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                        if (o2.getEndTime() != null && o1.getEndTime() != null) {
+                            return o2.getEndTime().compareTo(o1.getEndTime());
+                        } else {
+                            if (o2.getEndTime() == null) { return o1.getEndTime() == null ? 0 : -1; }
+                            return o1.getEndTime() == null ? 1 : 0;
+                        }
+                    }
+
+                });
+            } else {
+                log.log(Level.WARNING, "Past executions are null!");
+            }
+
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Could not query past execution!", t);
         }
-
-        if (executions != null) {
-            HashSet<Serializable> active = new HashSet<Serializable>();
-            try {
-                Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
-                for (ActiveExecution<Serializable> ae : orchestrator.getActiveExecutions()) {
-                    active.add(ae.getExecution().getId());
-                }
-            } catch (Throwable t) {
-                log.log(Level.SEVERE, "Could not query active execution!", t);
-            }
-
-            // sometimes something goes wrong and the execuiton is not updated to be
-            // inactive, even if its Serializable gone - thats why we need to check against
-            // the current live executions.
-            for (Execution<Serializable> execution : executions) {
-                if (!active.contains(execution.getId())) {
-                    try {
-                        if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
-                            ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
-                                    execution, null);
-                            r.add(exec);
-                        }
-                    } catch (Throwable t) {
-                        log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                        wrappedExecutionDTOs.remove(execution.getId());
-                    }
-                }
-            }
-
-            Collections.sort(r, new Comparator<ExecutionDTO>() {
-                @Override
-                public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                    if (o2.getEndTime() != null && o1.getEndTime() != null) {
-                        return o2.getEndTime().compareTo(o1.getEndTime());
-                    } else {
-                        if (o2.getEndTime() == null) { return o1.getEndTime() == null ? 0 : -1; }
-                        return o1.getEndTime() == null ? 1 : 0;
-                    }
-                }
-
-            });
-        } else {
-            log.log(Level.WARNING, "Past executions are null!");
-        }
-
         return r;
     }
 
     @Override
-    public ExecutionDTO startCollection(String workflow, Serializable collection,
+    public Boolean startCollection(String workflow, Serializable collection,
             String executionName, Set<ParameterDTO> parameters) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
-            return null;
+            return false;
         }
         Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
 
@@ -179,13 +180,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         }
         if (c == null) {
             log.log(Level.WARNING, "Collection are null!");
-            return null;
+            return false;
         }
 
         eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
-        ExecutionDTO execution = new ExecutionDTO();
 
-        GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
         ActiveExecution<Serializable> ae;
         if (parameters != null) {
@@ -194,13 +193,11 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         } else {
             ae = orchestrator.executeWorkflow(w, c);
         }
-        ae.getMonitor().addListener(monitor);
+
         if (executionName != null) {
             ae.getExecution().setName(executionName);
         }
-        populateWrappedExecutionDTO(execution, ae, w, c, executionName);
-
-        return execution;
+        return true;
     }
 
     private Properties prepareProperties(Set<ParameterDTO> parameters) {
@@ -257,38 +254,6 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 // return null;
     }
 
-    private void populateWrappedExecutionDTO(ExecutionDTO execution,
-            ActiveExecution<Serializable> ae, eu.europeana.uim.workflow.Workflow w,
-            UimDataSet<Serializable> dataset, String executionName) {
-        execution.setId(ae.getExecution().getId());
-        execution.setName(executionName);
-
-        execution.setWorkflow(getWorkflowName(ae.getExecution().getWorkflow()));
-
-        execution.setCompleted(ae.getCompletedSize());
-        execution.setFailure(ae.getFailureSize());
-        execution.setScheduled(ae.getScheduledSize());
-        execution.setCanceled(ae.getExecution().isCanceled());
-        execution.setStartTime(ae.getExecution().getStartTime());
-        execution.setDataSet(dataset.toString());
-        if (dataset instanceof Collection) {
-            execution.setDataSet(((Collection)dataset).getName());
-        } else if (dataset instanceof Provider) {
-            execution.setDataSet(((Provider)dataset).getName());
-        } else {
-            execution.setDataSet(dataset.toString());
-        }
-
-        ProgressDTO progress = new ProgressDTO();
-        progress.setWork(ae.getTotalSize());
-        progress.setWorked(ae.getFailureSize() + ae.getCompletedSize());
-        progress.setTask(ae.getMonitor().getTask());
-        progress.setSubtask(ae.getMonitor().getSubtask());
-
-        execution.setProgress(progress);
-
-        wrappedExecutionDTOs.put(ae.getExecution().getId(), execution);
-    }
 
     @Override
     public ExecutionDTO getExecution(Serializable id) {
@@ -301,7 +266,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
         ExecutionDTO exec = null;
         ActiveExecution<Serializable> ae = orchestrator.getActiveExecution(id);
-        if (ae != null) {
+        if (ae != null && ae.getExecution() != null) {
             exec = getWrappedExecutionDTO(ae.getExecution().getId(), ae.getExecution(), ae);
         } else {
             Execution<Serializable> execution;
@@ -315,12 +280,12 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return exec;
     }
 
-    private ExecutionDTO getWrappedExecutionDTO(Serializable execution, Execution<Serializable> e,
+    private synchronized ExecutionDTO getWrappedExecutionDTO(Serializable id, Execution<Serializable> e,
             ActiveExecution<Serializable> ae) {
-        ExecutionDTO wrapped = wrappedExecutionDTOs.get(execution);
+        ExecutionDTO wrapped = wrappedExecutionDTOs.get(id);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
-            wrapped.setId(execution);
+            wrapped.setId(id);
             wrapped.setStartTime(e.getStartTime());
             if (e.getDataSet() instanceof Collection) {
                 wrapped.setDataSet(((Collection)e.getDataSet()).getName());
@@ -337,7 +302,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setName(e.getName());
             wrapped.setWorkflow(getWorkflowName(e.getWorkflow()));
             wrapped.setProgress(new ProgressDTO());
-            wrappedExecutionDTOs.put(execution, wrapped);
+            wrappedExecutionDTOs.put(id, wrapped);
+            
+            log.info("Created new execution DTO for id:" +  id + ", now we have " + wrappedExecutionDTOs.size() + " elements in map.");
         }
         // update what may have changed
         wrapped.setActive(e.isActive());

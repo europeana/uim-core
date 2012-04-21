@@ -32,7 +32,7 @@ public interface ExecutionService extends RemoteService {
      *            execution specific parameters which override potentially configured ones
      * @return created execution
      */
-    ExecutionDTO startCollection(String workflow, Serializable collectionId, String executionName,
+    Boolean startCollection(String workflow, Serializable collectionId, String executionName,
             Set<ParameterDTO> parameters);
 
     /**

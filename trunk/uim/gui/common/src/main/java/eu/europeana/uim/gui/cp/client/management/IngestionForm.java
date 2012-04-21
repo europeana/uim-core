@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -107,17 +108,39 @@ public class IngestionForm extends Composite {
         changedParameters.clear();
     }
 
+    
     private void executeCollection() {
         executionService.startCollection(workflow.getIdentifier(), collection.getId(),
-                nameBox.getText(), changedParameters, new AsyncCallback<ExecutionDTO>() {
+                nameBox.getText(), changedParameters, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        // TODO panic
                         throwable.printStackTrace();
                     }
 
                     @Override
-                    public void onSuccess(ExecutionDTO execution) {
+                    public void onSuccess(Boolean execution) {
+                        final DialogBox box = new DialogBox();
+                        box.setTitle("Start ingestion: " + (execution ? "SUCCESSFUL" : "FAILED"));
+
+                        // Set the dialog box's caption.
+                        if (execution) {
+                            box.setText("Sucessfully started workflow:" + workflow.getName());
+                        } else {
+                            box.setText("Failed to start workflow:" + workflow.getName() +
+                                        ". Please look into log file for more details.");
+                        }
+
+                        // DialogBox is a SimplePanel, so you have to set its widget property to
+                        // whatever you want its contents to be.
+                        Button ok = new Button("OK");
+                        ok.addClickHandler(new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                box.hide();
+                            }
+                        });
+                        box.setWidget(ok);
+                        box.show();
                     }
                 });
     }

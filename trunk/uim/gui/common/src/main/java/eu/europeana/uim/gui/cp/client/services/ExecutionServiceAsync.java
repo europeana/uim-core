@@ -31,7 +31,7 @@ public interface ExecutionServiceAsync {
      * @param async
      */
     void startCollection(String workflow, Serializable collectionId, String executionName,
-            Set<ParameterDTO> parameters, AsyncCallback<ExecutionDTO> async);
+            Set<ParameterDTO> parameters, AsyncCallback<Boolean> async);
 
     /**
      * Triggers a new execution.
