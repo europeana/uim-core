@@ -5,8 +5,6 @@ import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.theeuropeanlibrary.model.tel.cerif.CerifConcept;
-import org.theeuropeanlibrary.model.tel.cerif.CerifOntology;
 
 /**
  * Tests the CerifOntology class - in memory representation of the CERIF subject scheme

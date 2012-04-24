@@ -11,7 +11,6 @@ import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.theeuropeanlibrary.model.common.qualifier.TitleType;
-import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;

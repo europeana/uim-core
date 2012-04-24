@@ -2,38 +2,11 @@
 package org.theeuropeanlibrary.model.tel;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.theeuropeanlibrary.model.common.Identifier;
-import org.theeuropeanlibrary.model.common.Link;
-import org.theeuropeanlibrary.model.common.Numbering;
-import org.theeuropeanlibrary.model.common.Text;
-import org.theeuropeanlibrary.model.common.Title;
-import org.theeuropeanlibrary.model.common.party.Family;
-import org.theeuropeanlibrary.model.common.party.Meeting;
-import org.theeuropeanlibrary.model.common.party.Organization;
-import org.theeuropeanlibrary.model.common.party.Party;
-import org.theeuropeanlibrary.model.common.party.Person;
-import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
-import org.theeuropeanlibrary.model.common.qualifier.PartyIdentifierType;
-import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
-import org.theeuropeanlibrary.model.common.spatial.BoundingBoxReferencedPlace;
-import org.theeuropeanlibrary.model.common.spatial.GeoReferencedPlace;
-import org.theeuropeanlibrary.model.common.spatial.NamedPlace;
-import org.theeuropeanlibrary.model.common.spatial.SpatialEntity;
-import org.theeuropeanlibrary.model.common.subject.Topic;
-import org.theeuropeanlibrary.model.common.time.HistoricalPeriod;
-import org.theeuropeanlibrary.model.common.time.Instant;
-import org.theeuropeanlibrary.model.common.time.InstantGranularity;
-import org.theeuropeanlibrary.model.common.time.Period;
-import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
-import org.theeuropeanlibrary.model.tel.Edition;
-import org.theeuropeanlibrary.model.tel.Facet;
-import org.theeuropeanlibrary.model.tel.LabeledText;
 
 /**
  * Tests the conversion of a compreensive metadata record

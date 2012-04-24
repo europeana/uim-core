@@ -25,7 +25,9 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.io.FileUtils;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.RootDoc;
 
 import eu.europeana.uim.common.TKey;
 
