@@ -65,5 +65,11 @@ public enum IdentifierType {
     /**
      * The identifier used in the oaipmh frame
      */
-    OAIPMH
+    OAIPMH,
+    /**
+     * This identifier should be used to display the EOD button, and be sent to the EOD service link
+     * This identifier should not be displayed. If it is to be displayed, the identifier is
+     * duplicated in another identifier object in the record.
+     */
+    EOD
 }
