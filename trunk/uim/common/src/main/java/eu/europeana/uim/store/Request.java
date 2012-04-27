@@ -45,7 +45,7 @@ public interface Request<I> extends UimDataSet<I> {
     /**
      * @param from
      */
-    public void setDataFrom(Date from);
+    void setDataFrom(Date from);
 
     /**
      * @return a specific date which reflects the period of thime the request did process (null if
@@ -56,7 +56,7 @@ public interface Request<I> extends UimDataSet<I> {
     /**
      * @param till
      */
-    public void setDataTill(Date till);
+    void setDataTill(Date till);
 
     /**
      * @return a specific date which reflects the period of time the request did process (same as @see
@@ -67,7 +67,7 @@ public interface Request<I> extends UimDataSet<I> {
     /**
      * @param failed
      */
-    public void setFailed(boolean failed);
+    void setFailed(boolean failed);
 
     /**
      * @return true if something went wrong during the processing so that it is unclear if
