@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -237,6 +238,20 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                 int subset = Integer.parseInt(context.getProperties().getProperty(BATCH_SUBSET_HEAD));
 
                 List<I> allids = Arrays.asList(records);
+                if (allids.size() > 0) {
+                    I i = allids.get(0);
+                    if (i instanceof Comparable) {
+                        Collections.sort(allids, new Comparator<I>() {
+                            @SuppressWarnings("rawtypes")
+                            @Override
+                            public int compare(I o1, I o2) {
+                                return ((Comparable)o1).compareTo(o2);
+                            }
+
+                        });
+                    }
+                }
+
                 allids = allids.subList(0, Math.min(subset, allids.size() - 1));
                 Object[] ids = allids.toArray(new Object[allids.size()]);
                 data.total = ids.length;
@@ -261,6 +276,20 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                                        subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else {
+                
+                if (records.length > 0) {
+                    I i = records[0];
+                    if (i instanceof Comparable) {
+                        Arrays.sort(records, new Comparator<I>() {
+                            @SuppressWarnings("rawtypes")
+                            @Override
+                            public int compare(I o1, I o2) {
+                                return ((Comparable)o1).compareTo(o2);
+                            }
+                        });
+                    }
+                }
+                
                 addArray(context, records);
                 data.total = records.length;
 

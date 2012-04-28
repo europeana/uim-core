@@ -84,7 +84,30 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     LAST_LOADED_RECORDS("tel_last_loading_records", "telda_tel_dataset.tel_last_loading_records",
                         SugarControlledVocabulary.COLLECTION_LAST_LOADED_RECORDS,
-                        "Number of indexed records"),
+                        "Number of loaded records"),
+
+    LAST_TRANSFORM_DATE("tel_last_xslt_date", "telda_tel_dataset.tel_last_xslt_date",
+                        SugarControlledVocabulary.COLLECTION_LAST_TRANSFORM_DATE,
+                        "Last UIM XSLT Date"),
+
+    LAST_TRANSFORM_RECORDS("tel_last_xslt_records", "telda_tel_dataset.tel_last_xslt_records",
+                           SugarControlledVocabulary.COLLECTION_LAST_TRANSFORM_RECORDS,
+                           "Number of transformed records"),
+
+    LAST_CLUSTER_DATE("tel_last_cluster_date", "telda_tel_dataset.tel_last_cluster_date",
+                      SugarControlledVocabulary.COLLECTION_LAST_CLUSTER_DATE,
+                      "Last UIM Cluster Index Date"),
+
+    LAST_CLUSTER_RECORDS("tel_last_cluster_records", "telda_tel_dataset.tel_last_cluster_records",
+                         SugarControlledVocabulary.COLLECTION_LAST_CLUSTER_RECORDS,
+                         "Number of cluster indexed records"),
+
+    LAST_ENRICH_DATE("tel_last_enrich_date", "telda_tel_dataset.tel_last_enrich_date",
+                     SugarControlledVocabulary.COLLECTION_LAST_ENRICH_DATE, "Last UIM Enrich Date"),
+
+    LAST_ENRICH_RECORDS("tel_last_enrich_records", "telda_tel_dataset.tel_last_enrich_records",
+                        SugarControlledVocabulary.COLLECTION_LAST_ENRICH_RECORDS,
+                        "Number of enriched records"),
 
     LAST_ACCEPTANCE_DATE("tel_last_acceptance_date", "telda_tel_dataset.tel_last_acceptance_date",
                          SugarControlledVocabulary.COLLECTION_LAST_ACCEPTANCE_DATE,

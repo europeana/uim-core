@@ -19,13 +19,35 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     
     /** when last time data loaded to uim*/
     COLLECTION_LAST_LOADED_DATE,
+
     
+    /** number of records indexed for acceptance in execution */
+    COLLECTION_LAST_TRANSFORM_RECORDS,
+    
+    /** date of acceptance indexing finished */
+    COLLECTION_LAST_TRANSFORM_DATE,
+
+    
+    /** number of records indexed for acceptance in execution */
+    COLLECTION_LAST_CLUSTER_RECORDS,
+    
+    /** date of acceptance indexing finished */
+    COLLECTION_LAST_CLUSTER_DATE,
+
+    
+    /** number of records enriched in execution */
+    COLLECTION_LAST_ENRICH_RECORDS,
+    
+    /** date of enrichment finished */
+    COLLECTION_LAST_ENRICH_DATE,
+
     
     /** number of records indexed for acceptance in execution */
     COLLECTION_LAST_ACCEPTANCE_RECORDS,
     
     /** date of acceptance indexing finished */
     COLLECTION_LAST_ACCEPTANCE_DATE,
+    
     
     /** number of total records indexed for collection */
     COLLECTION_INDEXED_RECORDS,
@@ -36,6 +58,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     /** date of indexing finished */
     COLLECTION_LAST_INDEXED_DATE,
     
+    
     /** number of total records in lod */
     COLLECTION_LOD_RECORDS,
 
@@ -44,6 +67,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     
     /** date of lod finished */
     COLLECTION_LAST_LOD_DATE,
+    
     
     /** execution id of validation run */
     COLLECTION_LINK_VALIDATION,
