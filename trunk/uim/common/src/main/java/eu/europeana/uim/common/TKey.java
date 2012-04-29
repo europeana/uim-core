@@ -15,7 +15,7 @@ import java.util.Map;
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
  * @since Dez 16, 2010
  */
-public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
+public final class TKey<NS, T> implements Comparable<TKey<NS, T>>, Serializable {
     private static final long                  serialVersionUID = 1L;
 
     private final Class<T>                     type;
@@ -23,6 +23,8 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
     private final String                       full;
 
     private static Map<TKey<?, ?>, TKey<?, ?>> registry         = new HashMap<TKey<?, ?>, TKey<?, ?>>();
+
+    private static Map<String, TKey<?, ?>>     lookup           = new HashMap<String, TKey<?, ?>>();
 
     private final Class<NS>                    namespace;
 
@@ -190,6 +192,10 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
                     return null;
                 }
             } else if (split.length == 2) {
+                if (lookup.containsKey(split[0])) {
+                    return lookup.get(split[0]);
+                }
+                
                 String[] nn = split[0].split("/");
                 if (nn.length != 2) {
                     throw new IllegalArgumentException("Cannot split namespace and key for <" +
@@ -200,7 +206,10 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
                     for (TKey<?, ?> key : registry.keySet()) {
                         if (key.getNamespace().getName().equals(nn[0])) {
                             namespace = key.getNamespace();
-                            if (key.getName().equals(nn[1])) { return key; }
+                            if (key.getName().equals(nn[1])) { 
+                                lookup.put(split[0], key);
+                                return key; 
+                            }
                         }
                     }
 
@@ -212,7 +221,9 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>,Serializable {
                         split[1] = split[1].substring(0, split[1].length() - 6);
                     }
                     Class<?> type = Class.forName(split[1]);
-                    return TKey.register(namespace, nn[1], type);
+                    TKey<?, ?> key = TKey.register(namespace, nn[1], type);
+                    lookup.put(split[0], key);
+                    return key;
                 }
             } else {
                 throw new IllegalArgumentException("Given string is not valid: <" + string + ">");
