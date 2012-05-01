@@ -39,9 +39,18 @@ public abstract class AbstractSugarServlet extends HttpServlet {
         String type = req.getParameter("type");
         String id = req.getParameter("id");
 
+        log.fine("Sugar update request:" + req.getParameterMap());
+        if ("true".equals(req.getParameter("async"))) {
+            asynchUpdate(resp, action, type, id);
+        } else {
+            synchUpdate(resp, action, type, id);
+        }
+    }
+
+    private void synchUpdate(HttpServletResponse resp, String action, String type, String id)
+            throws ServletException {
         if ("update".equals(action)) {
             try {
-                log.fine("Sugar update request:" + req.getParameterMap());
                 if ("organization".equals(type)) {
 
                     StringBuilder builder = new StringBuilder();
@@ -74,8 +83,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
                 } else if ("collection".equals(type)) {
                     StringBuilder builder = new StringBuilder();
                     if ("*".equals(id)) {
-                        List<Map<String, String>> collections = listCollections(
-                                true);
+                        List<Map<String, String>> collections = listCollections(true);
                         for (Map<String, String> collection : collections) {
                             String mnemonic = getCollectionMnemonic(collection);
                             if (mnemonic != null) {
@@ -122,6 +130,81 @@ public abstract class AbstractSugarServlet extends HttpServlet {
         }
     }
 
+    private void asynchUpdate(HttpServletResponse resp, final String action, final String type,
+            final String id) throws ServletException {
+
+        Runnable async = new Runnable() {
+            public void run() {
+                if ("update".equals(action)) {
+                    try {
+                        if ("organization".equals(type)) {
+
+                            StringBuilder builder = new StringBuilder();
+                            if ("*".equals(id)) {
+                                List<Map<String, String>> providers = listProviders(true);
+                                for (Map<String, String> provider : providers) {
+                                    String mnemonic = getProviderMnemonic(provider);
+                                    if (mnemonic != null) {
+                                        boolean update = updateProvider(mnemonic, provider);
+                                        log.info("Updated/Synched provider with sugar:" + mnemonic);
+
+                                        if (builder.length() > 0) {
+                                            builder.append(", \n");
+                                        }
+                                        builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+                                    }
+                                }
+
+                                log.info(" DONE comlete provider update:" + providers.size());
+                            } else {
+                                boolean update = updateProvider(id, null);
+                                log.info("Updated/Synched provider with sugar:" + id);
+                            }
+                        } else if ("collection".equals(type)) {
+                            StringBuilder builder = new StringBuilder();
+                            if ("*".equals(id)) {
+                                List<Map<String, String>> collections = listCollections(true);
+                                for (Map<String, String> collection : collections) {
+                                    String mnemonic = getCollectionMnemonic(collection);
+                                    if (mnemonic != null) {
+                                        boolean update = updateCollection(mnemonic, collection);
+                                        log.info("Updated/Synched collection with sugar:" +
+                                                 mnemonic);
+
+                                        if (builder.length() > 0) {
+                                            builder.append(", \n");
+                                        }
+                                        builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+                                    }
+                                }
+
+                                log.info(" DONE complete collection update:" + collections.size());
+                            } else {
+                                boolean update = updateCollection(id, null);
+                                log.info("Updated/Synched collection with sugar:" + id);
+                            }
+
+                        } else {
+                            log.severe("Illegal arguments, neither collection nor provider id was given.");
+                        }
+                    } catch (Throwable t) {
+                        log.log(Level.SEVERE, "Error during update", t);
+                    }
+                } else {
+                    log.warning("Action: <" + action + "> is invalid.");
+                }
+            }
+        };
+
+        new Thread(async).start();
+        resp.setStatus(200);
+        try {
+            resp.getWriter().write("Started asynch processing.");
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "Cannot write to response.", e);
+        }
+    }
+
     /**
      * @param mnemonic
      * @param provider
@@ -141,20 +224,21 @@ public abstract class AbstractSugarServlet extends HttpServlet {
             throws SugarException;
 
     /**
-     * @param activeOnly 
+     * @param activeOnly
      * @return a list of all collections in sugar
      * @throws SugarException
      */
-    public abstract List<Map<String, String>> listCollections(boolean activeOnly)  throws SugarException;
+    public abstract List<Map<String, String>> listCollections(boolean activeOnly)
+            throws SugarException;
 
     /**
-     * @param activeOnly 
+     * @param activeOnly
      * @return a list of all providers in sugar
      * @throws SugarException
      */
-    public abstract List<Map<String, String>> listProviders(boolean activeOnly)  throws SugarException;
+    public abstract List<Map<String, String>> listProviders(boolean activeOnly)
+            throws SugarException;
 
-    
     /**
      * @param values
      * @return the mnemonic value of the collection
