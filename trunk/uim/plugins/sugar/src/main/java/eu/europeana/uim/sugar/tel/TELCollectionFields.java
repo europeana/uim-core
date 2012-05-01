@@ -59,6 +59,19 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     TEL_PORTAL_FEDERATED_SRU_FORMAT("tel_sruformat", "telda_tel_dataset.tel_sruformat", null,
                                     "SRU Format"),
 
+    TEL_PORTAL_EOD_SYSID("tel_eodsysid", "telda_tel_dataset.tel_eodsysid", null,
+                         "EOD System Identifier"),
+
+    TEL_PORTAL_EOD_IDMATCHER("tel_eod_idmatcher", "telda_tel_dataset.tel_eod_idmatcher", null,
+                             "EOD IdMatcher"),
+
+    TEL_PORTAL_EOD_CUTOFFYEAR("tel_eod_cutoffyear", "telda_tel_dataset.tel_eod_cutoffyear", null,
+                              "EOD CuttOff Year"),
+
+    TEL_PORTAL_EOD_BIBLIOGRAPHIC_LEVEL("tel_eod_bibliographiclevel",
+                                       "telda_tel_dataset.tel_eod_bibliographiclevel", null,
+                                       "EOD Bibl. Level"),
+
     TEL_DISCIPLINES("tel_disciplines", "telda_tel_dataset.tel_disciplines", null, "TEL Disciplines"),
 
     HARVESTING_METHOD("harvesting_method", "telda_tel_dataset.harvesting_method",
