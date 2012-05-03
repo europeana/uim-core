@@ -390,7 +390,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         Provider provider = null;
         DataProviders providers = retrieveProviders();
         for (Provider prov : providers.getProvider()) {
-            if (prov.getNameCode().equals(mnemonic)) {
+            if (prov.getNameCode() != null && prov.getNameCode().equals(mnemonic)) {
                 provider = prov;
                 break;
             }
