@@ -2,13 +2,11 @@
 package eu.europeana.uim.gui.cp.server;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.common.FileUtils;
 import eu.europeana.uim.gui.cp.server.engine.Engine;
 import eu.europeana.uim.store.Execution;
 
@@ -80,21 +79,14 @@ public class LogFileService extends HttpServlet {
             return;
         }
 
-        int head = 0;
-        if (request.getParameter("head") != null) {
-            try {
-                head = Integer.valueOf(request.getParameter("head")).intValue();
-            } catch (NumberFormatException e) {
-                response.sendError(501,
-                        "Wrong head parameter (parameter head=" + request.getParameter("head") +
-                                "\n");
-                return;
-            }
-        }
-
         boolean htmlOutput = false;
         if ("html".equalsIgnoreCase(request.getParameter("format"))) {
             htmlOutput = true;
+        }
+
+        boolean fullResponse = false;
+        if ("true".equalsIgnoreCase(request.getParameter("full"))) {
+            fullResponse = true;
         }
 
         @SuppressWarnings("unchecked")
@@ -105,56 +97,100 @@ public class LogFileService extends HttpServlet {
         } catch (StorageEngineException e) {
             throw new RuntimeException("Could not retrieve execution from storage engine", e);
         }
-        String logFile=execution.getLogFile();
-        if (logFile == null) {
-            // the logging engine does not support logging
-            // send demo data
-            File tmpFile = File.createTempFile("demouim", "log");
-            writeDemoData(execution, tmpFile);
-            logFile = tmpFile.getCanonicalPath();
-        }
 
-        File logFileHandler = new File(logFile);
-
-        if (!logFileHandler.exists()) {
-            response.sendError(404, "Could not find log file " + logFileHandler.getCanonicalPath());
-            return;
-        }
-
+        String logFile = execution.getLogFile();
         // this is bound to long identifiers
 
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(logFileHandler));
-            response.addHeader("X-Last-File-Pos-Sent", String.valueOf(logFileHandler.length()));
-            if (execution.isActive()) {
-                response.addHeader("X-More-Data","true");
-            }
-            // set response header
-            if (htmlOutput) {
-                response.setContentType("text/html");
-                sendHtmlHeader(out,execution.isActive());
-            } else {
-                response.setContentType("text/plain");
-            }
 
-            bufferedReader.skip(head);
-            String thisLine;
-            while ((thisLine = bufferedReader.readLine()) != null) {
+            if (logFile == null) {
+                // set response header
                 if (htmlOutput) {
-                    colorizedLogEntry(out, thisLine);
+                    response.setContentType("text/html");
+                    sendHtmlHeader(out, execution.getId(), execution.isActive());
                 } else {
-                    out.write(thisLine + "\n");
+                    response.setContentType("text/plain");
+                }
+
+                out.write("No log file found.\n");
+                if (htmlOutput) {
+                    sendHtmlFooter(out, execution.getId(), execution.isActive());
+                }
+
+            } else {
+                File logFileHandler = new File(logFile);
+
+                if (!logFileHandler.exists()) {
+                    response.sendError(404,
+                            "Could not find log file " + logFileHandler.getCanonicalPath());
+                    return;
+                }
+
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(logFileHandler));
+                response.addHeader("X-Last-File-Pos-Sent", String.valueOf(logFileHandler.length()));
+                if (execution.isActive()) {
+                    response.addHeader("X-More-Data", "true");
+                }
+                // set response header
+                if (htmlOutput) {
+                    response.setContentType("text/html");
+                    sendHtmlHeader(out, execution.getId(), execution.isActive());
+                } else {
+                    response.setContentType("text/plain");
+                }
+
+                if (fullResponse) {
+                    String thisLine = bufferedReader.readLine();
+                    while (thisLine != null) {
+                        if (htmlOutput) {
+                            colorizedLogEntry(out, thisLine);
+                        } else {
+                            out.write(thisLine + "\n");
+                        }
+                        thisLine = bufferedReader.readLine();
+                    }
+
+                } else {
+                    List<String> tail = FileUtils.tail(logFileHandler, 1000);
+
+                    // skipped beginning.
+                    if (tail.size() == 1000) {
+                        String thisLine = bufferedReader.readLine();
+                        for (int i = 0; i < 10; i++) {
+                            if (htmlOutput) {
+                                colorizedLogEntry(out, thisLine);
+                            } else {
+                                out.write(thisLine + "\n");
+                            }
+
+                            thisLine = bufferedReader.readLine();
+                            if (thisLine == null) {
+                                break;
+                            }
+                        }
+
+                        colorizedLogEntry(out, "\n\r");
+                        colorizedLogEntry(out, "<------------------ SKIPPED ------------->\n\r");
+                        colorizedLogEntry(out, "\n\r");
+                    }
+
+                    for (String thisLine : tail) {
+                        if (htmlOutput) {
+                            colorizedLogEntry(out, thisLine);
+                        } else {
+                            out.write(thisLine + "\n");
+                        }
+                    }
+                }
+
+                if (htmlOutput) {
+                    sendHtmlFooter(out, execution.getId(), execution.isActive());
                 }
             }
-
-            if (htmlOutput) {
-                sendHtmlFooter(out,execution.isActive());
-            }
         } catch (IOException ioe) {
-            response.sendError(501,
-                    "Error while reading logfile " + logFileHandler.getCanonicalPath());
+            response.sendError(501, "Error while reading logfile " + logFile);
             return;
         } finally {
             if (out != null) out.close();
@@ -173,53 +209,42 @@ public class LogFileService extends HttpServlet {
         } else if (thisLine.contains(Level.SEVERE.getName())) {
             color = "#FF0000";
         }
-        
-        String reformattedStr=thisLine.replaceAll("\\n", "\n     ");
+
+        String reformattedStr = thisLine.replaceAll("\\n", "\n     ");
         if (color == null) {
             out.write("<div><code>" + reformattedStr + "</code></div>");
         } else {
-            out.write("<div style=\"color:" + color + ";\"><code>" + reformattedStr + "</code></div>");
+            out.write("<div style=\"color:" + color + ";\"><code>" + reformattedStr +
+                      "</code></div>");
         }
-    }
-
-    /**
-     * @param executionBean
-     * @param tmpFile
-     * @throws IOException
-     */
-    private void writeDemoData(Execution<Long> executionBean, File tmpFile) throws IOException {
-        FileWriter fstream = new FileWriter(tmpFile);
-        BufferedWriter out = new BufferedWriter(fstream);
-        out.write(new Date() + "|" + Level.SEVERE.getName() + "|Dummy log for execution " +
-                  executionBean.getId() + "\n");
-        out.close();
     }
 
     /**
      * @param out
      */
-    private void sendHtmlFooter(PrintWriter out,boolean moreData) {
-        if (moreData ) {
+    private void sendHtmlFooter(PrintWriter out, Long execution, boolean moreData) {
+        if (moreData) {
             out.write("<img src=\"../img/ajax-loader.gif\" alt=\">Loading...\"></img>");
         }
-        out.write("</body></html>");
+        out.write("<p><a href=\\\"logfile?format=html&execution=\" +\n" + 
+        		"                  execution + \"&full=true\\\">Full Log</a></p></body></html>");
     }
 
     /**
      * @param out
      */
-    private void sendHtmlHeader(PrintWriter out,boolean moreData) {
+    private void sendHtmlHeader(PrintWriter out, Long execution, boolean moreData) {
         out.write("<!DOCTYPE html>  \n" + "<html lang=\"en\">  \n" + "  <head>  \n"
                   + "    <meta charset=\"utf-8\">  \n" + "    <title>Logfile</title>  \n");
-        if (moreData) {
-           out.write( "<meta http-equiv=\"refresh\" content=\"30\" />"); 
-        }
-        out.write("<script>function load()\n" + 
-        		"{\n" + 
-        		"window.scrollTo(0, document.body.scrollHeight);" + 
-        		"} </script>");
-        out.write ("  </head>  \n" + "  <body onload=\"load()\">  ");
-        
-        
+// if (moreData) {
+// out.write("<meta http-equiv=\"refresh\" content=\"30\" />");
+// }
+        out.write("<script>function load()\n" + "{\n"
+                  + "window.scrollTo(0, document.body.scrollHeight);" + "} </script>");
+        out.write("  </head>  \n" +
+                  "  <body onload=\"load()\"><p><a href=\"logfile?format=html&execution=" +
+                  execution + "&full=true\">Full Log</a></p>");
+
     }
+
 }

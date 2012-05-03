@@ -57,8 +57,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         java.util.Collection<ActiveExecution<Serializable>> activeExecutions = null;
         try {
             Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
-            activeExecutions = orchestrator.getActiveExecutions();
+            if (orchestrator == null) return r;
             
+            activeExecutions = orchestrator.getActiveExecutions();
             if (activeExecutions != null) {
                 for (ActiveExecution<Serializable> activeExecution : activeExecutions) {
                     if (activeExecution != null && activeExecution.getExecution().getId() != null) {
