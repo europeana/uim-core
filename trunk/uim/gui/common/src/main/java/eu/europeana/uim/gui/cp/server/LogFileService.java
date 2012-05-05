@@ -128,7 +128,6 @@ public class LogFileService extends HttpServlet {
                     return;
                 }
 
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(logFileHandler));
                 response.addHeader("X-Last-File-Pos-Sent", String.valueOf(logFileHandler.length()));
                 if (execution.isActive()) {
                     response.addHeader("X-More-Data", "true");
@@ -142,6 +141,8 @@ public class LogFileService extends HttpServlet {
                 }
 
                 if (fullResponse) {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(
+                            logFileHandler));
                     String thisLine = bufferedReader.readLine();
                     while (thisLine != null) {
                         if (htmlOutput) {
@@ -154,28 +155,11 @@ public class LogFileService extends HttpServlet {
 
                 } else {
                     List<String> tail = FileUtils.tail(logFileHandler, 1000);
-
-                    // skipped beginning.
-                    if (tail.size() == 1000) {
-                        String thisLine = bufferedReader.readLine();
-                        for (int i = 0; i < 10; i++) {
-                            if (htmlOutput) {
-                                colorizedLogEntry(out, thisLine);
-                            } else {
-                                out.write(thisLine + "\n");
-                            }
-
-                            thisLine = bufferedReader.readLine();
-                            if (thisLine == null) {
-                                break;
-                            }
-                        }
-
-                        colorizedLogEntry(out, "\n\r");
+                    if (tail.size() >= 1000) {
                         colorizedLogEntry(out, "<------------------ SKIPPED ------------->\n\r");
                         colorizedLogEntry(out, "\n\r");
                     }
-
+                    
                     for (String thisLine : tail) {
                         if (htmlOutput) {
                             colorizedLogEntry(out, thisLine);
@@ -226,8 +210,12 @@ public class LogFileService extends HttpServlet {
         if (moreData) {
             out.write("<img src=\"../img/ajax-loader.gif\" alt=\">Loading...\"></img>");
         }
-        out.write("<p><a href=\\\"logfile?format=html&execution=\" +\n" + 
-        		"                  execution + \"&full=true\\\">Full Log</a></p></body></html>");
+
+        out.write("<p><a href=\"logfile?format=html&execution=" + execution +
+                  "&full=\"true\">Full Log</a></p>");
+
+        out.write("</body></html>");
+
     }
 
     /**
@@ -241,9 +229,10 @@ public class LogFileService extends HttpServlet {
 // }
         out.write("<script>function load()\n" + "{\n"
                   + "window.scrollTo(0, document.body.scrollHeight);" + "} </script>");
-        out.write("  </head>  \n" +
-                  "  <body onload=\"load()\"><p><a href=\"logfile?format=html&execution=" +
-                  execution + "&full=true\">Full Log</a></p>");
+        out.write("  </head>  \n" + "  <body onload=\"load()\">");
+
+        out.write("<p><a href=\"logfile?format=html&execution=" + execution +
+                  "&full=\"true\">Full Log</a></p>");
 
     }
 
