@@ -212,7 +212,7 @@ public class LogFileService extends HttpServlet {
         }
 
         out.write("<p><a href=\"logfile?format=html&execution=" + execution +
-                  "&full=\"true\">Full Log</a></p>");
+                  "&full=true\">Full Log</a></p>");
 
         out.write("</body></html>");
 
@@ -232,7 +232,7 @@ public class LogFileService extends HttpServlet {
         out.write("  </head>  \n" + "  <body onload=\"load()\">");
 
         out.write("<p><a href=\"logfile?format=html&execution=" + execution +
-                  "&full=\"true\">Full Log</a></p>");
+                  "&full=true\">Full Log</a></p>");
 
     }
 
