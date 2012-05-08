@@ -52,10 +52,16 @@ public final class ObjectModelUtils {
      * @param qualifiedValues
      * @return values
      */
-    public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues) {
+    public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues, boolean unique) {
         List<T> values = new ArrayList<T>(qualifiedValues.size());
         for (QualifiedValue<? extends T> value : qualifiedValues) {
+            if (unique) {
+                if (!values.contains(value.getValue())) {
+                    values.add(value.getValue());
+                }
+            } else {
             values.add(value.getValue());
+            }
         }
         return values;
     }
@@ -80,7 +86,7 @@ public final class ObjectModelUtils {
      * @return places
      */
     public static List<NamedPlace> getPlaces(MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        return toValues(getQualifiedPlaces(record, qualifiers));
+        return toValues(getQualifiedPlaces(record, qualifiers), true);
     }
 
     /**
@@ -104,7 +110,7 @@ public final class ObjectModelUtils {
      * @return places
      */
     public static List<Party> getParties(MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        return toValues(getQualifiedParties(record, qualifiers));
+        return toValues(getQualifiedParties(record, qualifiers), true);
     }
 
     /**
@@ -132,7 +138,7 @@ public final class ObjectModelUtils {
      * @return places
      */
     public static List<Temporal> getTemporals(MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        return toValues(getQualifiedTemporals(record, qualifiers));
+        return toValues(getQualifiedTemporals(record, qualifiers), true);
     }
 
     /**
@@ -225,7 +231,8 @@ public final class ObjectModelUtils {
             Temporal temporal = (Temporal)subjectValue.getValue();
 
             String subject = displaySubject(temporal.getSubject());
-            if (subject != null && !subject.isEmpty()) { return temporal.toString() + ", " + subject; }
+            if (subject != null && !subject.isEmpty()) { return temporal.toString() + ", " +
+                                                                subject; }
             return temporal.toString();
 
         } else if (subjectValue.getValue() instanceof Title) {
@@ -249,7 +256,8 @@ public final class ObjectModelUtils {
             SpatialEntity spatialEntity = (SpatialEntity)subjectValue.getValue();
 
             String subject = displaySubject(spatialEntity.getSubject());
-            if (subject != null && !subject.isEmpty()) { return spatialEntity.toString() + ", " + subject; }
+            if (subject != null && !subject.isEmpty()) { return spatialEntity.toString() + ", " +
+                                                                subject; }
             return spatialEntity.toString();
         }
         return "";
@@ -265,22 +273,25 @@ public final class ObjectModelUtils {
         if (subject == null) { return null; }
         if (subject instanceof TitleSubject) {
             TitleSubject titleSubject = (TitleSubject)subject;
-            return StringUtils.join(filterEmpty(subject.getFormSubdivision(),
-                    subject.getGeneralSubdivision(), subject.getChronologicalSubdivision(),
-                    subject.getGeographicSubdivision(), titleSubject.getTitleDates(),
-                    titleSubject.getMiscellaneousInformation()), ", ");
+            return StringUtils.join(
+                    filterEmpty(subject.getFormSubdivision(), subject.getGeneralSubdivision(),
+                            subject.getChronologicalSubdivision(),
+                            subject.getGeographicSubdivision(), titleSubject.getTitleDates(),
+                            titleSubject.getMiscellaneousInformation()), ", ");
         }
         if (subject instanceof Topic) {
             Topic topic = (Topic)subject;
-            return StringUtils.join(filterEmpty(topic.getTopicName(),
-                    topic.getTopicDescription(), topic.getSecondTopicTerm(),
-                    topic.getLocationOfEvent(), topic.getActiveDates(),
-                    subject.getFormSubdivision(), subject.getGeneralSubdivision(),
-                    subject.getChronologicalSubdivision(), subject.getGeographicSubdivision()), ", ");
+            return StringUtils.join(
+                    filterEmpty(topic.getTopicName(), topic.getTopicDescription(),
+                            topic.getSecondTopicTerm(), topic.getLocationOfEvent(),
+                            topic.getActiveDates(), subject.getFormSubdivision(),
+                            subject.getGeneralSubdivision(), subject.getChronologicalSubdivision(),
+                            subject.getGeographicSubdivision()), ", ");
         }
-        return StringUtils.join(filterEmpty(subject.getFormSubdivision(),
-                subject.getGeneralSubdivision(), subject.getChronologicalSubdivision(),
-                subject.getGeographicSubdivision()), ", ");
+        return StringUtils.join(
+                filterEmpty(subject.getFormSubdivision(), subject.getGeneralSubdivision(),
+                        subject.getChronologicalSubdivision(), subject.getGeographicSubdivision()),
+                ", ");
     }
 
     /**
@@ -291,12 +302,12 @@ public final class ObjectModelUtils {
 
         // places
         String publisher = StringUtils.join(getPlaces(record, SpatialRelation.PUBLICATION), ",");
-// String sep = len == result.length() ? "" : " : ";
 
         // publishers and times
         List<Object> partiesAndTemporals = new ArrayList<Object>();
         partiesAndTemporals.addAll(getParties(record, PartyRelation.PUBLISHER));
-        partiesAndTemporals.addAll(getTemporals(record, TemporalRelation.PUBLICATION));
+        partiesAndTemporals.addAll(getTemporals(record, TemporalRelation.PUBLICATION,
+                TemporalRelation.CREATION, TemporalRelation.CREATION_OR_AVAILABILITY));
 
         String parties = StringUtils.join(partiesAndTemporals, ",");
         if (publisher.length() > 0) {
@@ -304,8 +315,7 @@ public final class ObjectModelUtils {
                 publisher += ": " + parties;
             }
         } else {
-            if (parties.length() > 0) 
-                publisher =  parties;
+            if (parties.length() > 0) publisher = parties;
         }
         return publisher;
     }
@@ -321,22 +331,20 @@ public final class ObjectModelUtils {
                                            (qualifier != null ? qualifier.toString().toLowerCase()
                                                    : "unknown"), locale);
     }
-    
-    
-    
+
     /**
      * @param <I>
      * @param values
      * @return the filtered list (no empty and null values)
      */
-    public static <I> List<I> filterEmpty(I...values){
+    public static <I> List<I> filterEmpty(I... values) {
         List<I> result = new ArrayList<I>();
         for (I i : values) {
             if (i != null && !i.toString().isEmpty()) {
                 result.add(i);
             }
         }
-        
+
         return result;
     }
 }
