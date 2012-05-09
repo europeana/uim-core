@@ -34,6 +34,9 @@ public class DatabaseEntityTest {
     private TLogEntryLinkHome     logLinkHome;
 
     @Autowired
+    private TLogEntryFieldHome    logFieldHome;
+
+    @Autowired
     private TLogEntryDurationHome logDurationHome;
 
     /**
@@ -88,8 +91,6 @@ public class DatabaseEntityTest {
         assertEquals("MODULE", storedEntry.getModule());
         assertEquals(3, storedEntry.getMessages().length);
     }
-    
-    
 
     /**
      * Tests string message type log entry.
@@ -97,7 +98,8 @@ public class DatabaseEntityTest {
     @Test
     public void testLogEntryFailed() {
         Date date = new Date();
-        TLogEntryFailed entry = new TLogEntryFailed(1L, Level.WARNING, "module", "stacktrace", date, 2L, "a", "b", "c");
+        TLogEntryFailed entry = new TLogEntryFailed(1L, Level.WARNING, "module", "stacktrace",
+                date, 2L, "a", "b", "c");
 
         logFailedHome.insert(entry);
         Long oid = entry.getOid();
@@ -135,9 +137,6 @@ public class DatabaseEntityTest {
         assertEquals("MODULE", storedEntry.getModule());
         assertEquals(3, storedEntry.getMessages().length);
     }
-
-
-    
 
     /**
      * Tests string message type log entry.
@@ -184,7 +183,6 @@ public class DatabaseEntityTest {
         assertEquals(3, storedEntry.getMessages().length);
     }
 
-    
     /**
      * Tests duration entry.
      */
@@ -212,4 +210,54 @@ public class DatabaseEntityTest {
 
         assertEquals("MODULE", storedEntry.getModule());
     }
+
+    /**
+     * Tests string message type log entry.
+     */
+    @Test
+    public void testLogEntryField() {
+        Date date = new Date();
+        TLogEntryField entry = new TLogEntryField(1L, "module", 2L, "field", "qualifier", date, 200,
+                "a", "b", "c");
+
+        logFieldHome.insert(entry);
+        Long oid = entry.getOid();
+
+        TLogEntryField storedEntry = logFieldHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("module", storedEntry.getModule());
+        assertEquals(entry.getModule(), storedEntry.getModule());
+
+        assertEquals("field", storedEntry.getField());
+        assertEquals(entry.getField(), storedEntry.getField());
+
+        assertEquals("qualifier", storedEntry.getQualifier());
+        assertEquals(entry.getQualifier(), storedEntry.getQualifier());
+
+        assertEquals(3, storedEntry.getMessages().length);
+        assertEquals("a", storedEntry.getMessages()[0]);
+        assertEquals("b", storedEntry.getMessages()[1]);
+        assertEquals("c", storedEntry.getMessages()[2]);
+        assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
+
+        assertEquals(200, storedEntry.getStatus());
+        assertEquals(entry.getStatus(), storedEntry.getStatus());
+
+        assertNotNull(storedEntry.getExecution());
+        assertNotNull(storedEntry.getMetaDataRecord());
+
+        storedEntry.setModule("MODULE");
+        storedEntry.setMessage(new String[] {});
+
+        logFieldHome.update(storedEntry);
+        storedEntry = logFieldHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getDate(), storedEntry.getDate());
+
+        assertEquals("MODULE", storedEntry.getModule());
+        assertEquals(3, storedEntry.getMessages().length);
+    }
+
 }
