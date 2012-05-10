@@ -24,6 +24,11 @@
             </plugin>
         </plugins>
     </build>
+  <scm>
+    <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/model</connection>
+    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/model</developerConnection>
+  </scm>
+    
     <modules>
         <module>common</module>
         <module>edm</module>
