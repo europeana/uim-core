@@ -91,4 +91,13 @@ public class NamedPlace extends SpatialEntity {
     public String toString() {
         return placeName;
     }
+    
+
+    /**
+     * @return a String readable by a human 
+     */
+    @Override
+    public String getDisplay() {
+        return placeName;
+    }
 }

@@ -122,4 +122,16 @@ public class GeoReferencedPlace extends NamedPlace {
             return false;
         return true;
     }
+    
+
+    /**
+     * @return a String readable by a human 
+     */
+    @Override
+    public String getDisplay() {
+        //TODO: use a friendly display for coordinates
+        if(getPlaceName()!=null)
+            return getPlaceName()+ "(latitude:"+latitude+" longitude:"+longitude+")";
+        return "latitude:"+latitude+" longitude:"+longitude;
+    }
 }

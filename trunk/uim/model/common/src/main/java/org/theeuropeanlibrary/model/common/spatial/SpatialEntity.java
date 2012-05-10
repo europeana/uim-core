@@ -105,4 +105,14 @@ public class SpatialEntity {
         } else if (!subject.equals(other.subject)) return false;
         return true;
     }
+    
+    /**
+     * @return a String readable by a human 
+     */
+    public String getDisplay() {
+        if(identifiers!=null)
+            for(Identifier id: identifiers)
+                return id.getIdentifier();
+        return "";
+    }
 }

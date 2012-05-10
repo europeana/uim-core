@@ -215,4 +215,19 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
             return false;
         return true;
     }
+    
+    /**
+     * @return a String readable by a human 
+     */
+    @Override
+    public String getDisplay() {
+        //TODO: use a friendly display for coordinates
+        String box="northLimit:"+northLimit + "southLimit:"+southLimit + "eastLimit:"+eastLimit + "westLimit:"+westLimit;
+        if (projection!=null && !projection.isEmpty())
+            box += " projection:"+projection;
+            
+        if(getPlaceName()!=null)
+            return getPlaceName()+ "("+box+")";
+        return box;
+    }
 }

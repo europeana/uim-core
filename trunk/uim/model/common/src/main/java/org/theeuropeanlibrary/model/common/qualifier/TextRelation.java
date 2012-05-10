@@ -21,7 +21,7 @@ public enum TextRelation {
      */
     TABLE_OF_CONTENTS,
     /**
-     * Rights information. If encoded according to Europeana guidelines, the FacetType should be
+     * Rights information. If encoded according to Europeana guidelines, the Link object (with LinkTarget.RIGHTS qualifier) should be
      * used to encode the data, instead of this one
      */
     RIGHTS_UNCONTROLED,
