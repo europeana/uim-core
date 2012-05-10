@@ -4,7 +4,7 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
 
 	<artifactId>europeana-uim-model-tel</artifactId>
@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-	<build/>
+	<build />
 
 
 	<dependencies>
@@ -52,4 +52,9 @@
 			</dependencies>
 		</profile>
 	</profiles>
+
+  <scm>
+    <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-model-parent-1.3.0/europeana-uim-model-tel</connection>
+    <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-model-parent-1.3.0/europeana-uim-model-tel</developerConnection>
+  </scm>
 </project>
