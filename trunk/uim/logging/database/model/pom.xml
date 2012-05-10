@@ -76,6 +76,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean compile process-classes compile test-compile</preparationGoals>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>
