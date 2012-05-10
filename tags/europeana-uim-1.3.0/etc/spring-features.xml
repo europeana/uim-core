@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="spring-features">
+    
+    <feature name="spring-ws" version="2.0.0.RELEASE">
+        <bundle>wrap:mvn:stax/stax/1.2.0</bundle>   
+        <bundle>mvn:javax.activation/com.springsource.javax.activation/1.1.1</bundle>        
+        <bundle>mvn:javax.servlet/com.springsource.javax.servlet/2.5.0</bundle>     
+        <bundle>mvn:javax.xml.stream/com.springsource.javax.xml.stream/1.0.1</bundle> 
+        <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.logging/1.1.1</bundle>
+        <bundle>mvn:org.aopalliance/com.springsource.org.aopalliance/1.0.0</bundle>
+        <feature version="3.0.5.RELEASE">spring</feature>
+        <bundle>mvn:org.springframework/org.springframework.oxm/3.0.5.RELEASE</bundle>
+        <bundle>mvn:org.springframework/org.springframework.web/3.0.5.RELEASE</bundle>
+        <bundle>mvn:org.springframework/org.springframework.web.servlet/3.0.5.RELEASE</bundle>
+        <bundle>mvn:org.springframework.ws/org.springframework.xml/2.0.0.RELEASE</bundle>
+        <bundle>mvn:javax.xml.bind/com.springsource.javax.xml.bind/2.2.0</bundle>
+        <bundle>mvn:javax.xml.soap/com.springsource.javax.xml.soap/1.3.0</bundle>  
+        <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.codec/1.4.0</bundle> 
+        <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.httpclient/3.1.0</bundle> 
+        <bundle>mvn:org.springframework.ws/org.springframework.ws/2.0.0.RELEASE</bundle>
+        <bundle>mvn:org.springframework/org.springframework.jms/3.0.5.RELEASE</bundle>
+        <bundle>mvn:javax.mail/com.springsource.javax.mail/1.4.1</bundle>
+        <bundle>mvn:javax.jms/com.springsource.javax.jms/1.1.0</bundle>
+        <bundle>mvn:javax.xml.rpc/com.springsource.javax.xml.rpc/1.1.0</bundle>
+        <bundle>mvn:javax.ejb/com.springsource.javax.ejb/3.0.0</bundle>
+        <bundle>mvn:javax.mail/com.springsource.javax.mail/1.4.1</bundle>
+        <bundle>mvn:org.springframework/org.springframework.jms/3.0.5.RELEASE</bundle>
+        <bundle>mvn:javax.xml.rpc/com.springsource.javax.xml.rpc/1.1.0</bundle>
+        <bundle>mvn:com.sun.xml/com.springsource.com.sun.xml.messaging.saaj/1.3.2</bundle>
+        <bundle>mvn:org.joda/com.springsource.org.joda.time/1.6.0</bundle>
+        <bundle>mvn:org.xmlpull/com.springsource.org.xmlpull/1.1.4</bundle>
+        <bundle>mvn:org.jibx/jibx-run/1.2.3</bundle>
+        <bundle>mvn:org.jibx/jibx-extras/1.2.3</bundle>
+    </feature>
+
+     <feature name="spring-quartz" version="1.6.2">
+         <bundle>mvn:org.apache.commons/com.springsource.org.apache.commons.collections/3.2.1</bundle>
+         <bundle>mvn:org.springframework/org.springframework.transaction/3.0.5.RELEASE</bundle>
+         <bundle>mvn:com.opensymphony.quartz/com.springsource.org.quartz/1.6.2</bundle>
+     </feature>
+
+</features>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file 
+    distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to You under 
+    the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may 
+    obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to 
+    in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+    ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under 
+    the License. -->
+<config>
+    <lib dir="./lib" />
+
+    <mainIndex>
+        <!-- lucene options specific to the main on-disk lucene index -->
+        <useCompoundFile>false</useCompoundFile>
+        <mergeFactor>4</mergeFactor>
+        <maxBufferedDocs>1000</maxBufferedDocs>
+        <maxMergeDocs>2147483647</maxMergeDocs>
+        <maxFieldLength>10000</maxFieldLength>
+    </mainIndex>
+
+    <updateHandler class="solr.DirectUpdateHandler2">
+        <maxPendingDeletes>1000</maxPendingDeletes>
+    </updateHandler>
+
+    <query>
+        <!-- Maximum number of clauses in a boolean query... can affect range or prefix queries that expand to big boolean 
+            queries. An exception is thrown if exceeded. -->
+        <maxBooleanClauses>1024</maxBooleanClauses>
+
+        <filterCache class="solr.FastLRUCache" size="16384" initialSize="4096" autowarmCount="4096" />
+
+        <!-- queryResultCache caches results of searches - ordered lists of document ids (DocList) based on a query, a sort, 
+            and the range of documents requested. -->
+        <queryResultCache class="solr.LRUCache" size="16284" initialSize="4096" autowarmCount="1024" />
+        <queryResultWindowSize>100</queryResultWindowSize>
+        <queryResultMaxDocsCached>100</queryResultMaxDocsCached>
+
+        <!-- documentCache caches Lucene Document objects (the stored fields for each document). Since Lucene internal document 
+            ids are transient, this cache will not be autowarmed. -->
+        <documentCache class="solr.LRUCache" size="16384" initialSize="16384" autowarmCount="0" />
+
+        <enableLazyFieldLoading>true</enableLazyFieldLoading>
+
+        <listener event="firstSearcher" class="solr.QuerySenderListener">
+            <arr name="queries">
+                <lst>
+                    <str name="q">*:*</str>
+                    <str name="start">0</str>
+                    <str name="rows">100</str>
+                </lst>
+            </arr>
+        </listener>
+
+        <listener event="newSearcher" class="solr.QuerySenderListener">
+            <arr name="queries">
+                <lst>
+                    <str name="q">*:*</str>
+                    <str name="start">0</str>
+                    <str name="rows">100</str>
+                </lst>
+            </arr>
+        </listener>
+
+
+        <!-- If a search request comes in and there is no current registered searcher, then immediately register the still 
+            warming searcher and use it. If "false" then all requests will block until the first searcher is done warming. -->
+        <useColdSearcher>true</useColdSearcher>
+        <maxWarmingSearchers>5</maxWarmingSearchers>
+    </query>
+
+    <requestDispatcher handleSelect="true">
+        <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="8192" />
+    </requestDispatcher>
+
+    <requestHandler name="standard" class="org.apache.solr.handler.StandardRequestHandler" default="true" />
+
+    <requestHandler name="/update/bin" class="org.apache.solr.handler.BinaryUpdateRequestHandler" />
+    <requestHandler name="/update" class="org.apache.solr.handler.XmlUpdateRequestHandler" />
+
+    <queryResponseWriter name="bin" class="org.apache.solr.response.BinaryResponseWriter" default="true" />
+    <queryResponseWriter name="json" class="org.apache.solr.response.JSONResponseWriter" />
+
+    <!-- config for the admin interface -->
+    <admin>
+        <defaultQuery>*:*</defaultQuery>
+    </admin>
+</config>
+
