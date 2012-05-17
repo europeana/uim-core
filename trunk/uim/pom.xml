@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>europeana-uim</artifactId>
@@ -94,11 +95,11 @@
 					<version>2.1</version>
 				</plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.surefire</groupId>
-                    <artifactId>surefire-junit4</artifactId>
-                    <version>2.4.3</version>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.surefire</groupId>
+					<artifactId>surefire-junit4</artifactId>
+					<version>2.4.3</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -106,11 +107,11 @@
 					<version>2.1</version>
 				</plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.1</version>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -136,11 +137,11 @@
 					<version>1.2</version>
 				</plugin>
 
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.3.6</version>
-                </plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.6</version>
+				</plugin>
 
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
@@ -447,6 +448,52 @@
 					<name>TEL Snapshot Repository</name>
 					<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
 				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>europeana</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<modules>
+				<!-- a version independent common module -->
+				<module>common</module>
+
+				<!-- the uim api module -->
+				<module>api</module>
+
+				<!-- the standard orchestration implementation module -->
+				<module>orchestration/basic</module>
+
+				<!-- the uim standard in memory storage implementation -->
+				<module>storage/memory</module>
+
+				<!-- the uim standard in memory storage implementation -->
+				<module>storage/mongo</module>
+
+				<!-- simplistic in-memory logging -->
+				<module>logging/memory</module>
+
+				<!-- UIM Model Definitions -->
+				<module>model</module>
+
+				<!-- UIM gui common module -->
+				<module>gui/common</module>
+
+				<!-- UIM Solr 1.4-3 OSGI support
+				<module>plugins/solr14</module>
+				<module>plugins/solr3</module>
+				 -->
+			</modules>
+
+			<distributionManagement>
+				<repository>
+					<id>europeanalabs.eu</id>
+					<name>europeanalabs.eu-releases</name>
+					<url>http://europeanalabs.eu/artifactory/uim-releases-local</url>
+				</repository>
 			</distributionManagement>
 		</profile>
 	</profiles>
