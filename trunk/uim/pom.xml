@@ -482,10 +482,10 @@
 				<!-- UIM gui common module -->
 				<module>gui/common</module>
 
-				<!-- UIM Solr 1.4-3 OSGI support
-				<module>plugins/solr14</module>
+				<!-- UIM Solr 1.4-3 OSGI support-->
 				<module>plugins/solr3</module>
-				 -->
+				<module>plugins/check/link</module>
+				 
 			</modules>
 
 			<distributionManagement>
