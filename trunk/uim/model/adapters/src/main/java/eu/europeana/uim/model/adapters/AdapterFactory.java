@@ -16,20 +16,29 @@
  */
 package eu.europeana.uim.model.adapters;
 
+import java.util.Map;
+import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * General interface for a metadata record adapter. 
+ * Factory class for creating adapters
  *
  * @author Georgios Markakis <gwarkx@hotmail.com>
- * @since 9 May 2012
+ * @since 20 May 2012
  */
-public interface MetadataRecordAdapter<I,Q extends QValueAdapterStrategy<?,?,?,?>> extends MetaDataRecord<I> {
+public class AdapterFactory {
 
-	 /**
-	  * Returns the original metadata record contained within the adapter
-	  * 
-	 * @return the adapted record
+	
+	/**
+	 * Factory method
+	 * 
+	 * @param adaptedRecord the metadata record to be adapted
+	 * @param strategies a Map containing conversion strategies
+	 * @return an adapter for the given input
 	 */
-	public MetaDataRecord<I> getAdaptedRecord();
+	public static <T,S extends QValueAdapterStrategy<?,?,?,?>> MetadataRecordAdapter<T,S> 
+	getAdapter(MetaDataRecord<T> adaptedRecord,Map<TKey<?, ?>,S> strategies){
+		return new MetadataRecordAdapterImpl<T,S>(adaptedRecord,strategies);
+	}
+	
 }

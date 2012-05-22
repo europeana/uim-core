@@ -16,6 +16,8 @@
  */
 package eu.europeana.uim.model.adapters.europeana;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.theeuropeanlibrary.model.common.Link;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.model.adapters.QValueAdapterStrategy;
@@ -25,7 +27,7 @@ import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
 
 /**
- *
+ * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
  * @since 8 May 2012
  */
@@ -33,14 +35,43 @@ public class EuropeanaLinkAdapterStrategy extends QValueAdapterStrategy<ObjectMo
 
 	@Override
 	public AdaptedInput adaptinput(TKey<ObjectModelRegistry, Link> key, Enum<?>... qualifiers) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		AdaptedInput adinput = new AdaptedInput();
+		
+		TKey<EuropeanaModelRegistry, EuropeanaLink> tkey = EuropeanaModelRegistry.EUROPEANALINK;
+		adinput.setKey(tkey);
+		Set<Enum<?>> qs = new HashSet<Enum<?>>();
+		
+		if(qualifiers != null){
+			
+			for(int i=0;i<qualifiers.length;i++){
+				qs.add(qualifiers[i]);
+			}
+		}
+		
+		adinput.setQualifiers(qs);
+
+		return adinput;
 	}
 
+
+
 	@Override
-	public AdaptedOutput adaptoutput(EuropeanaLink adaptedResult, Enum<?>... qualifiers) {
-		// TODO Auto-generated method stub
-		return null;
+	public AdaptedOutput adaptoutput(EuropeanaLink adaptedResult, Set<Enum<?>> set) {
+
+		AdaptedOutput adoutput = new AdaptedOutput();
+		
+		Link link = new Link();
+		
+		link.setAnchorKey(adaptedResult.getAnchorKey());
+		link.setCachedPath(adaptedResult.getCachedPath());
+		link.setLastChecked(adaptedResult.getLastChecked());
+		//link.getLinkStatus(adaptedResult.getLinkStatus());
+		link.setUrl(adaptedResult.getUrl());
+		
+		adoutput.setOutputObject(link);
+		
+		return adoutput;
 	}
 
 }

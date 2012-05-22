@@ -52,6 +52,13 @@ public final class EuropeanaModelRegistry {
                                                                              String.class);
     
 
+    /** The key for a full EDM Record representation
+     */
+    public static final TKey<EuropeanaModelRegistry, EuropeanaLink>  EUROPEANALINK  = TKey.register(
+    		                                                                 EuropeanaModelRegistry.class,
+                                                                             "europeanalink",
+                                                                             EuropeanaLink.class);
+    
     
     
 	

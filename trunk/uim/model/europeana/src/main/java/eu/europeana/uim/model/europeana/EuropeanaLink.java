@@ -51,4 +51,102 @@ public class EuropeanaLink {
     
     @FieldId(7)
     private boolean cacheable;
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * @return the lastChecked
+	 */
+	public Date getLastChecked() {
+		return lastChecked;
+	}
+
+	/**
+	 * @param lastChecked the lastChecked to set
+	 */
+	public void setLastChecked(Date lastChecked) {
+		this.lastChecked = lastChecked;
+	}
+
+	/**
+	 * @return the linkStatus
+	 */
+	public LinkStatus getLinkStatus() {
+		return linkStatus;
+	}
+
+	/**
+	 * @param linkStatus the linkStatus to set
+	 */
+	public void setLinkStatus(LinkStatus linkStatus) {
+		this.linkStatus = linkStatus;
+	}
+
+	/**
+	 * @return the cachedPath
+	 */
+	public String getCachedPath() {
+		return cachedPath;
+	}
+
+	/**
+	 * @param cachedPath the cachedPath to set
+	 */
+	public void setCachedPath(String cachedPath) {
+		this.cachedPath = cachedPath;
+	}
+
+	/**
+	 * @return the anchorKey
+	 */
+	public String getAnchorKey() {
+		return anchorKey;
+	}
+
+	/**
+	 * @param anchorKey the anchorKey to set
+	 */
+	public void setAnchorKey(String anchorKey) {
+		this.anchorKey = anchorKey;
+	}
+
+	/**
+	 * @return the mongoId
+	 */
+	public String getMongoId() {
+		return mongoId;
+	}
+
+	/**
+	 * @param mongoId the mongoId to set
+	 */
+	public void setMongoId(String mongoId) {
+		this.mongoId = mongoId;
+	}
+
+	/**
+	 * @return the cacheable
+	 */
+	public boolean isCacheable() {
+		return cacheable;
+	}
+
+	/**
+	 * @param cacheable the cacheable to set
+	 */
+	public void setCacheable(boolean cacheable) {
+		this.cacheable = cacheable;
+	}
 }

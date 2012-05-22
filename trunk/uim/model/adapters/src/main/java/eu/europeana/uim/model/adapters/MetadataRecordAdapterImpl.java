@@ -16,8 +16,10 @@
  */
 package eu.europeana.uim.model.adapters;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import eu.europeana.uim.common.TKey;
 
@@ -25,13 +27,14 @@ import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 
+
 /**
  *
  * @author Georgios Markakis <gwarkx@hotmail.com>
  * @param <FROMNS>
  * @since 9 May 2012
  */
-public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?>> implements MetadataRecordAdapter<I>{
+public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?>> implements MetadataRecordAdapter<I,Q>{
 
 	public  Map<TKey<?, ?>,Q> strategies;
 	
@@ -42,23 +45,14 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	 * @param adaptedRecord
 	 * @param strategies
 	 */
-	private MetadataRecordAdapterImpl(MetaDataRecord<I>adaptedRecord,Map<TKey<?, ?>,Q> strategies){
+	protected MetadataRecordAdapterImpl(MetaDataRecord<I>adaptedRecord,Map<TKey<?, ?>,Q> strategies){
 		this.adaptedRecord = adaptedRecord;
 		this.strategies = strategies;
 		
 		
 	}
 	
-	
-	/**
-	 * @param adaptedRecord
-	 * @param strategies
-	 * @return
-	 */
-	public static <T,S extends QValueAdapterStrategy<?,?,?,?>> MetadataRecordAdapterImpl<T,S> init(MetaDataRecord<T> adaptedRecord,Map<TKey<?, ?>,S> strategies){
-		return new MetadataRecordAdapterImpl<T,S>(adaptedRecord,strategies);
-	}
-	
+		
 	
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.store.MetaDataRecord#getCollection()
@@ -74,20 +68,20 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	@Override
 	public <N,T> T getFirstValue(TKey<N, T> key, Enum<?>... qualifiers) {
 	
-		StrategyExecutor<N, T, T> executor = new StrategyExecutor<N, T, T>(key, qualifiers){
+		StrategyExecutor<N, T, T> executor = new StrategyExecutor<N, T, T>(key,null,qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value,Enum<?>[] qualifiers) {
 
 				return adaptedRecord.getFirstValue(key, qualifiers);
 			}
-
-			@Override
-			public T adaptback2normal(QValueAdapterStrategy<N, T, ?, ?> strategy, T result) {
-				
-				return strategy.adaptValue(result);
-			}
 			
+			@Override
+			public T adaptback2normal(
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
+				return (T) strategy.adaptValue(result);
+			}
 		};
 		
 		executor.execute();
@@ -104,19 +98,20 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	public <N, T> eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> getFirstQualifiedValue(
 			TKey<N, T> key, Enum<?>... qualifiers) {
 		
-		StrategyExecutor<N, T, QualifiedValue<T>> executor = new StrategyExecutor<N, T, QualifiedValue<T>>(key, qualifiers){
+		StrategyExecutor<N, T, QualifiedValue<T>> executor = new StrategyExecutor<N, T, QualifiedValue<T>>(key,null,qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value, Enum<?>[] qualifiers) {
 
 				return adaptedRecord.getFirstQualifiedValue(key, qualifiers);
 			}
 
+
 			@Override
 			public eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> adaptback2normal(
-					QValueAdapterStrategy<N, T, ?, ?> strategy,
-					eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> result) {
-				return strategy.adaptQvalue(result);
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
+				return (eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>) strategy.adaptQvalue((eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>) result);
 			}
 			
 		};
@@ -133,19 +128,23 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> getQualifiedValues(
 			TKey<N, T> key, Enum<?>... qualifiers) {
 		
-		StrategyExecutor<N, T, List<QualifiedValue<T>>> executor = new StrategyExecutor<N, T, List<QualifiedValue<T>>>(key, qualifiers){
+		StrategyExecutor<N, T, List<QualifiedValue<T>>> executor = new StrategyExecutor<N, T, List<QualifiedValue<T>>>(key,null,qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value, Enum<?>[] qualifiers) {
 
 				return adaptedRecord.getQualifiedValues(key, qualifiers);
 			}
 
+			
+			@SuppressWarnings("unchecked")
 			@Override
 			public List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> adaptback2normal(
-					QValueAdapterStrategy<N, T, ?, ?> strategy,
-					List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> result) {
-				return strategy.adaptqualifierList(result);
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
+				
+				return (List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>>) 
+						strategy.adaptqualifierList((List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>>) result);
 			}
 		};
 		
@@ -160,21 +159,20 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	@Override
 	public <N, T> List<T> getValues(TKey<N, T> key, Enum<?>... qualifiers) {
 		
-		StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key, qualifiers){
+		StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key,null, qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value,Enum<?>[] qualifiers) {
 
 				return adaptedRecord.getFirstValue(key, qualifiers);
 			}
 
 			@Override
 			public List<T> adaptback2normal(
-					QValueAdapterStrategy<N, T, ?, ?> strategy, List<T> result) {
-				return strategy.adaptList(result);
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
+				return (List<T>) strategy.adaptList((List<?>) result);
 			}
-
-
 			
 		};
 		executor.execute();
@@ -187,21 +185,24 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	 */
 	@Override
 	public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-		StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key, qualifiers){
+		StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key,value,qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value,Enum<?>[] qualifiers) {
 
-				adaptedRecord.addValue(key,null, qualifiers);
+				adaptedRecord.addValue(key,value, qualifiers);
 				return null;
 			}
 
 			@Override
 			public List<T> adaptback2normal(
-					QValueAdapterStrategy<N, T, ?, ?> strategy, List<T> result) {
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
 				// Not actually used, since method returns no value
 				return null;
-			}			
+			}
+
+		
 		};
 		
 		executor.execute();
@@ -214,19 +215,21 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 	@Override
 	public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> deleteValues(
 			TKey<N, T> key, Enum<?>... qualifiers) {
-		StrategyExecutor<N, T, List<QualifiedValue<T>>> executor = new StrategyExecutor<N, T, List<QualifiedValue<T>>>(key, qualifiers){
+		StrategyExecutor<N, T, List<QualifiedValue<T>>> executor = new StrategyExecutor<N, T, List<QualifiedValue<T>>>(key,null, qualifiers){
 
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
-			public Object query(TKey<?,?> key, Enum<?>... qualifiers) {
+			public Object query(TKey key,Object value,Enum<?>[] qualifiers) {
 
 				return adaptedRecord.deleteValues(key, qualifiers);
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> adaptback2normal(
-					QValueAdapterStrategy<N, T, ?, ?> strategy,
-					List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> result) {
-				return strategy.adaptqualifierList(result);
+					QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
+				return (List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>>) 
+						strategy.adaptqualifierList( (List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>>) result);
 			}
 		};
 		
@@ -266,18 +269,21 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 
 		TKey<N, T> key;
 		Enum<?>[] qualifiers;
+		T value;
+		
 		private RESTYPE result;
 		
-		public StrategyExecutor(TKey<N, T> key, Enum<?>... qualifiers){
+		public StrategyExecutor(TKey<N, T> key,T value, Enum<?>... qualifiers){
 			this.key = key;
+			this.value = value;
 			this.qualifiers = qualifiers;
 		}
 		
 		
-		public abstract Object query(TKey<?, ?> key, Enum<?>... qualifiers);
+		public abstract Object query(TKey key,Object value, Enum<?>[] qualifiers);
 		
 		
-		public abstract RESTYPE adaptback2normal(QValueAdapterStrategy<N,T,?,?> strategy, RESTYPE result);
+		public abstract RESTYPE adaptback2normal(QValueAdapterStrategy<N,T,?,?> strategy, Object result);
 		
 		
 		/**
@@ -285,18 +291,35 @@ public class MetadataRecordAdapterImpl<I,Q extends QValueAdapterStrategy<?,?,?,?
 		 */
 		public void execute(){
 			//First find if a transformation strategy is available 
+			@SuppressWarnings("unchecked")
 			QValueAdapterStrategy<N,T,?,?> strategy = (QValueAdapterStrategy<N,T,?,?>) strategies.get(key);;
 			if (strategy == null){
-				setResult((RESTYPE) query(key, qualifiers));
+				setResult((RESTYPE) query(key,value, qualifiers));
 			}
 			else{
-				
+			
 				//First convert the value into the format which is anticipated to be present in 
 				//the qualifier index
 				QValueAdapterStrategy<N,T,?,?>.AdaptedInput adapted = strategy.adaptinput(key,qualifiers);
 				
+				Enum<?>[] qualifiersarray = null;
+				
+				if(adapted.getQualifiers() != null){
+					Set<Enum<?>> qs = adapted.getQualifiers();
+					
+					qualifiersarray = new Enum<?>[qs.size()];			
+					Iterator<Enum<?>> it = qs.iterator();
+					int i = 0; 
+					while(it.hasNext()){
+						qualifiersarray[i]= it.next(); 
+						i++;
+					}
+
+				}
+				adapted.getQualifiers();
+				
 				//Get the result according to the converted key and qualifiers
-				RESTYPE adaptedResult = (RESTYPE) query(adapted.getKey(), adapted.getQualifiers()); 
+				Object adaptedResult = query(adapted.getKey(),value,qualifiersarray); 
 				
 				//Adapt the object of the retrieved result
 				RESTYPE result = (RESTYPE) adaptback2normal(strategy,adaptedResult);

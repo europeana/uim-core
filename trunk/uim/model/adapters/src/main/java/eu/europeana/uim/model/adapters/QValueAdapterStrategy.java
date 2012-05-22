@@ -18,6 +18,7 @@ package eu.europeana.uim.model.adapters;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
@@ -38,11 +39,15 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
 	 * @param asd
 	 * @return
 	 */
-	final <T, Y> List<QualifiedValue<T>> adaptqualifierList(List<QualifiedValue<Y>> value){
+	final List<?> adaptqualifierList(List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>> value){
 		
-		List<QualifiedValue<Y>> retvalue = new ArrayList<QualifiedValue<Y>>();
+		List<QualifiedValue<FROMTYPE>> retvalue = new ArrayList<QualifiedValue<FROMTYPE>>();
 		
-		return null;
+		for(QualifiedValue<?> item : value){
+			retvalue.add(adaptQvalue(item));
+		}
+		
+		return retvalue;
 		
 	}
 	
@@ -51,23 +56,13 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
 	 * @param asd
 	 * @return
 	 */
-	final <T, Y>List<T> adaptList(List<Y> value){
+	final List<FROMTYPE> adaptList(List<?> value){
 		
-		List<Y> retvalue = new ArrayList<Y>();
+		List<FROMTYPE> retlist = new ArrayList<FROMTYPE>();
 		
-		return null;
-		
-	}
-	
-	/**
-	 * @param asd
-	 * @return
-	 */
-	final <T, Y>QualifiedValue<T> adaptQvalue(QualifiedValue<Y> value){
-		
-		Y obj = adaptValue(value.getValue());
-		
-		//QualifiedValue<Y> retqvalue = new QualifiedValue<Y>();
+		for(Object i : value){
+			retlist.add(adaptValue(i));
+		}
 		
 		return null;
 		
@@ -77,11 +72,28 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
 	 * @param asd
 	 * @return
 	 */
-	final <T, Y>T adaptValue(Y value){
+	final QualifiedValue<FROMTYPE> adaptQvalue(QualifiedValue<?> value){
 		
-		AdaptedOutput out = adaptoutput((TOTYPE) value);
 		
-		return null;
+		AdaptedOutput out = adaptoutput((TOTYPE) value.getValue(),value.getQualifiers());
+		
+		FROMTYPE obj = out.getOutputObject();
+			
+		QualifiedValue<FROMTYPE> retqvalue = new QualifiedValue<FROMTYPE>(obj,out.getOutputQualifiers(),value.getOrderIndex());
+		
+		return retqvalue;
+		
+	}
+	
+	/**
+	 * @param asd
+	 * @return
+	 */
+	final FROMTYPE adaptValue(Object value){
+		
+		AdaptedOutput out = adaptoutput((TOTYPE) value,null);
+		
+		return out.getOutputObject();
 		
 	}
 	
@@ -90,7 +102,7 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
      * @param adaptedResult
      * @return
      */
-    public abstract AdaptedOutput adaptoutput(TOTYPE adaptedResult,Enum<?>... qualifiers);
+    public abstract AdaptedOutput adaptoutput(TOTYPE adaptedResult,Set<Enum<?>> set);
     
     
     /**
@@ -111,13 +123,8 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
     public final class AdaptedInput
     {
     	private TKey<TONS,TOTYPE> key;
-    	private Enum<?>[] qualifiers;
-    	
-    	private Class<TOTYPE> adaptedClass; 
-    	
-    	public AdaptedInput(Class<TOTYPE> adaptedClass){
-    		this.setAdaptedClass(adaptedClass);
-    	}
+    	private Set<Enum<?>>  qualifiers;
+
     	
 		/**
 		 * @return the key
@@ -133,30 +140,19 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
 			this.key = key;
 		}
 
+
 		/**
 		 * @return the qualifiers
 		 */
-		public Enum<?>[] getQualifiers() {
+		public Set<Enum<?>> getQualifiers() {
 			return qualifiers;
 		}
 
 		/**
 		 * @param qualifiers the qualifiers to set
 		 */
-		public void setQualifiers(Enum<?>[] qualifiers) {
+		public void setQualifiers(Set<Enum<?>> qualifiers) {
 			this.qualifiers = qualifiers;
-		}
-		/**
-		 * @return the adaptedClass
-		 */
-		public Class<TOTYPE> getAdaptedClass() {
-			return adaptedClass;
-		}
-		/**
-		 * @param adaptedClass the adaptedClass to set
-		 */
-		public void setAdaptedClass(Class<TOTYPE> adaptedClass) {
-			this.adaptedClass = adaptedClass;
 		}
     	
     }
@@ -169,41 +165,8 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
    public final class AdaptedOutput
    {
    	private FROMTYPE outputObject;
-   	private Enum<?>[] outputQualifiers;
+   	private Set<Enum<?>>  outputQualifiers;
    	
-   	private Class<FROMTYPE> adaptedClass; 
-   	
-   	public AdaptedOutput(Class<FROMTYPE> adaptedClass){
-   		this.setAdaptedClass(adaptedClass);
-   	}
-
-		/**
-		 * @return the adaptedClass
-		 */
-		public Class<FROMTYPE> getAdaptedClass() {
-			return adaptedClass;
-		}
-		/**
-		 * @param adaptedClass the adaptedClass to set
-		 */
-		public void setAdaptedClass(Class<FROMTYPE> adaptedClass) {
-			this.adaptedClass = adaptedClass;
-		}
-
-		/**
-		 * @return the outputQualifiers
-		 */
-		public Enum<?>[] getOutputQualifiers() {
-			return outputQualifiers;
-		}
-
-		/**
-		 * @param outputQualifiers the outputQualifiers to set
-		 */
-		public void setOutputQualifiers(Enum<?>[] outputQualifiers) {
-			this.outputQualifiers = outputQualifiers;
-		}
-
 		/**
 		 * @return the outputObject
 		 */
@@ -216,6 +179,20 @@ public abstract class QValueAdapterStrategy<FROMNS,FROMTYPE,TONS,TOTYPE>{
 		 */
 		public void setOutputObject(FROMTYPE outputObject) {
 			this.outputObject = outputObject;
+		}
+
+		/**
+		 * @return the outputQualifiers
+		 */
+		public Set<Enum<?>> getOutputQualifiers() {
+			return outputQualifiers;
+		}
+
+		/**
+		 * @param outputQualifiers the outputQualifiers to set
+		 */
+		public void setOutputQualifiers(Set<Enum<?>> outputQualifiers) {
+			this.outputQualifiers = outputQualifiers;
 		}
    	
    }
