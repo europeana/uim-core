@@ -138,7 +138,7 @@ public class EuropeanaLinkAdapterTest {
 	 */
 	@Test
 	public void getValues(){
-		mdrad.getValues(ObjectModelRegistry.LINK);
+		//mdrad.getValues(ObjectModelRegistry.LINK);
 	}
 	
 	

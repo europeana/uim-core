@@ -16,10 +16,8 @@
 		<module>common</module>
 		<module>edm</module>
 		<module>tel</module>
-		<!-- 
 	    <module>europeana</module>
 		<module>adapters</module>
-        -->
 	</modules>
 
 
