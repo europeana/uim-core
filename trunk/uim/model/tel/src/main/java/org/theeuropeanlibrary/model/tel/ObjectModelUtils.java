@@ -1,11 +1,9 @@
 /* ObjectModelUtils.java - created on Jun 10, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.tel;
 
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,7 +38,6 @@ import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
  * @since Jun 10, 2011
  */
 public final class ObjectModelUtils {
-
     /**
      * Private constructor as this is a utility function class.
      */
@@ -53,6 +50,7 @@ public final class ObjectModelUtils {
      * 
      * @param <T>
      * @param qualifiedValues
+     * @param unique
      * @return values
      */
     public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues,
@@ -300,10 +298,10 @@ public final class ObjectModelUtils {
 
     /**
      * @param record
+     * @param preferredLanguage
      * @return display string with publish information about the record
      */
     public static String displayPublisher(MetaDataRecord<?> record, Language preferredLanguage) {
-
         // places
         String publisher = StringUtils.join(getPlaces(record, SpatialRelation.PUBLICATION), ",");
 
@@ -311,7 +309,7 @@ public final class ObjectModelUtils {
         List<Object> partiesAndTemporals = new ArrayList<Object>();
         partiesAndTemporals.addAll(getParties(record, PartyRelation.PUBLISHER));
 
-        List<Temporal> temporals=null;
+        List<Temporal> temporals = null;
 
         if (preferredLanguage != null) {
             // try to get
@@ -325,7 +323,6 @@ public final class ObjectModelUtils {
                 temporals = getTemporals(record, TemporalRelation.CREATION_OR_AVAILABILITY,
                         preferredLanguage);
             }
-
         }
 
         if (temporals == null || temporals.isEmpty()) {
