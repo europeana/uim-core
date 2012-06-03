@@ -125,6 +125,7 @@ public class MongoProviderDecorator<I> extends MongoAbstractNamedEntity<String>
 	void postload() {
 		embeddedProvider = MongoDBProviderBeanBytesConverter.getInstance()
 				.decode(embeddedbinary);
+		updaterelated();
 	}
 
 	/**

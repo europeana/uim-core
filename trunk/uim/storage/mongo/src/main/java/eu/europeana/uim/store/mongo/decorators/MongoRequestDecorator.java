@@ -143,6 +143,26 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 		embeddedRequest.setId(getMongoId().toString());
 	}
 
+	
+	/**
+	 * Auxiliary method that returns the embedded RequestBean type of this
+	 * Decorator
+	 * 
+	 * @return the embedded ProviderBean
+	 */
+	public RequestBean<String> getEmbeddedRequest() {
+		return embeddedRequest;
+	}
+	
+	/**
+	 * Auxiliary method that sets the embedded RequestBean type of this
+	 * Decorator
+	 * @param embeddedRequest the embeddedRequest to set
+	 */
+	public void setEmbeddedRequest(RequestBean<String> embeddedRequest) {
+		this.embeddedRequest = embeddedRequest;
+	}
+
 	/**
 	 * Auxiliary method that returns the embedded MongoCollectionDecorator type
 	 * of this Decorator
@@ -169,15 +189,6 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 		return requestrecords;
 	}
 
-	/**
-	 * Auxiliary method that returns the embedded RequestBean type of this
-	 * Decorator
-	 * 
-	 * @return the embedded ProviderBean
-	 */
-	public RequestBean<String> getEmbeddedRequest() {
-		return embeddedRequest;
-	}
 
 	/*
 	 * Overridden (decorator-specific) methods

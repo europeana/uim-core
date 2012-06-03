@@ -86,7 +86,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	}
 
 	/**
-     * 
+     * Default constructor
      */
 	public MongoStorageEngine() {
 
@@ -214,9 +214,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 */
 	@Override
 	public Provider<String> createProvider() {
-		Provider<String> p = new MongoProviderDecorator<String>();
+		MongoProviderDecorator<String> p = new MongoProviderDecorator<String>();
 		ds.save(p);
-		return p;
+		return p.getEmbeddedProvider();
 	}
 
 	/*
@@ -231,7 +231,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public void updateProvider(Provider<String> provider)
 			throws StorageEngineException {
 
-		provider = (Provider<String>) ensureConsistency(provider);
+		provider = (MongoProviderDecorator<String>) ensureConsistency(provider);
 
 		ArrayList<MongoProviderDecorator> allresults = new ArrayList<MongoProviderDecorator>();
 		ArrayList<MongoProviderDecorator> result1 = (ArrayList<MongoProviderDecorator>) ds
@@ -244,7 +244,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 		allresults.addAll(result1);
 		allresults.addAll(result2);
 
-		for (Provider<String> p : allresults) {
+		for (MongoProviderDecorator<String> p : allresults) {
 			if (p.getName() != null
 					&& (p.getName().equals(provider.getName()) || p
 							.getMnemonic().equals(provider.getMnemonic()))
@@ -284,8 +284,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Provider<String> getProvider(String id) {
-		return ds.find(MongoProviderDecorator.class)
-				.filter(LOCALIDFIELD, new ObjectId(id)).get();
+		
+		MongoProviderDecorator<String> prov = ds.find(MongoProviderDecorator.class)
+		.filter(LOCALIDFIELD, new ObjectId(id)).get();
+		
+		Provider<String> retprov = prov != null? prov.getEmbeddedProvider(): null; 
+		
+		return retprov;
 	}
 
 	/*
@@ -296,8 +301,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Provider<String> findProvider(String mnemonic) {
-		return ds.find(MongoProviderDecorator.class).field(MNEMONICFIELD)
+		MongoProviderDecorator<String> prov = ds.find(MongoProviderDecorator.class).field(MNEMONICFIELD)
 				.equal(mnemonic).get();
+		
+		Provider<String> retprov = prov != null? prov.getEmbeddedProvider(): null; 
+		
+		return retprov;
 	}
 
 	/*
@@ -307,10 +316,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 */
 	@Override
 	public List<Provider<String>> getAllProviders() {
-		final List<Provider<String>> res = new ArrayList<Provider<String>>();
-		for (Provider<String> p : ds.find(MongoProviderDecorator.class)
-				.asList()) {
-			res.add(p);
+		List<Provider<String>> res = new ArrayList<Provider<String>>();
+
+		@SuppressWarnings("rawtypes")
+		List<MongoProviderDecorator> decs = ds.find(MongoProviderDecorator.class).asList();
+		
+		for (MongoProviderDecorator<String> p : decs) {
+			res.add(p.getEmbeddedProvider());
 		}
 		return res;
 	}
@@ -322,11 +334,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#createCollection(eu.europeana.uim.
 	 * store.Provider)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> createCollection(Provider<String> provider) {
-		Collection<String> c = new MongoCollectionDecorator<String>(provider);
+		provider = (Provider<String>) ensureConsistency(provider);
+		MongoCollectionDecorator<String> c = new MongoCollectionDecorator<String>(provider);
 		ds.save(c);
-		return c;
+		return c.getEmbeddedCollection();
 	}
 
 	/*
@@ -340,6 +354,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public void updateCollection(Collection<String> collection)
 			throws StorageEngineException {
+		
 		collection = (Collection<String>) ensureConsistency(collection);
 
 		ArrayList<MongoCollectionDecorator> allresults = new ArrayList<MongoCollectionDecorator>();
@@ -380,8 +395,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> getCollection(String id) {
-		return ds.find(MongoCollectionDecorator.class)
+		@SuppressWarnings("rawtypes")
+		MongoCollectionDecorator coll = ds.find(MongoCollectionDecorator.class)
 				.filter(LOCALIDFIELD, new ObjectId(id)).get();
+		
+		Collection<String> retcoll = (coll == null)? coll: coll.getEmbeddedCollection();
+		
+		return retcoll;
 	}
 
 	/*
@@ -392,8 +412,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> findCollection(String mnemonic) {
-		return ds.find(MongoCollectionDecorator.class)
+		@SuppressWarnings("rawtypes")
+		MongoCollectionDecorator coll = ds.find(MongoCollectionDecorator.class)
 				.filter(MNEMONICFIELD, mnemonic).get();
+		
+		Collection<String> retcoll = (coll == null)? coll: coll.getEmbeddedCollection();
+		
+		return retcoll;
 	}
 
 	/*
@@ -403,12 +428,15 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#getCollections(eu.europeana.uim.store
 	 * .Provider)
 	 */
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Collection<String>> getCollections(Provider<String> provider) {
+		provider = (Provider<String>) ensureConsistency(provider);
 		List<Collection<String>> res = new ArrayList<Collection<String>>();
-		for (Collection<String> c : ds.find(MongoCollectionDecorator.class)
+		for (MongoCollectionDecorator<String> c : ds.find(MongoCollectionDecorator.class)
 				.filter("provider", provider).asList()) {
-			res.add(c);
+			res.add(c.getEmbeddedCollection());
 		}
 		return res;
 	}
@@ -421,9 +449,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public List<Collection<String>> getAllCollections() {
 		List<Collection<String>> res = new ArrayList<Collection<String>>();
-		for (Collection<String> c : ds.find(MongoCollectionDecorator.class)
+		for (MongoCollectionDecorator<String> c : ds.find(MongoCollectionDecorator.class)
 				.asList()) {
-			res.add(c);
+			res.add(c.getEmbeddedCollection());
 		}
 		return res;
 	}
@@ -440,10 +468,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public Request<String> createRequest(Collection<String> collection,
 			Date date) throws StorageEngineException {
 		collection = (Collection<String>) ensureConsistency(collection);
-		Request<String> r = new MongoRequestDecorator<String>(
+		MongoRequestDecorator<String> r = new MongoRequestDecorator<String>(
 				(MongoCollectionDecorator<String>) collection, date);
 		ds.save(r);
-		return r;
+		return r.getEmbeddedRequest();
 	}
 
 	/*
@@ -457,7 +485,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public void updateRequest(Request<String> request)
 			throws StorageEngineException {
 
-		MongoRequestDecorator<String> request2 = (MongoRequestDecorator<String>) request;
+		@SuppressWarnings("unchecked")
+		MongoRequestDecorator<String> request2 = (MongoRequestDecorator<String>) ensureConsistency(request);
 
 		for (MongoRequestDecorator<?> r : ds.find(MongoRequestDecorator.class)
 				.filter("collection", request2.getCollectionReference())
@@ -472,7 +501,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 			}
 		}
 
-		ds.merge(request);
+		ds.merge(request2);
 	}
 
 	/*
@@ -488,9 +517,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 		collection = (Collection<String>) ensureConsistency(collection);
 
 		List<Request<String>> res = new ArrayList<Request<String>>();
-		for (Request<String> r : ds.find(MongoRequestDecorator.class)
+		for (MongoRequestDecorator<String> r : ds.find(MongoRequestDecorator.class)
 				.filter("collection", collection).asList()) {
-			res.add(r);
+			res.add(r.getEmbeddedRequest());
 		}
 		return res;
 	}
@@ -500,11 +529,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * 
 	 * @see eu.europeana.uim.api.StorageEngine#getRequest(java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public Request<String> getRequest(String id) throws StorageEngineException {
-		return ds.find(MongoRequestDecorator.class)
+		MongoRequestDecorator<?> req = ds.find(MongoRequestDecorator.class)
 				.filter(LOCALIDFIELD, new ObjectId(id)).get();
+		return req.getEmbeddedRequest();
 	}
 
 	/*
@@ -514,14 +544,18 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#getRequests(eu.europeana.uim.store
 	 * .MetaDataRecord)
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<Request<String>> getRequests(MetaDataRecord<String> mdr)
 			throws StorageEngineException {
+		
+		mdr = (MetaDataRecord<String>) ensureConsistency(mdr);
+		
 		List<Request<String>> requests = new ArrayList<Request<String>>();
 		List<MongoRequestDecorator> results = ds.find(MongoRequestDecorator.class).filter(REQUESTRECORDS, mdr).asList();
 		for(MongoRequestDecorator res : results){
 		
-			requests.add(res);
+			requests.add(res.getEmbeddedRequest());
 		}
 		return requests;
 	}
@@ -542,7 +576,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 		MongoMetadataRecordDecorator<String> mdr = new MongoMetadataRecordDecorator<String>(
 				(MongoCollectionDecorator<String>) collection, identifier);
 		ds.save(mdr);
-		return mdr;
+		mdr.getEmebeddedMdr().addValue(MONGOID, mdr.getMongoId().toString());
+		ds.merge(mdr);
+		return mdr.getEmebeddedMdr();
 	}
 
 	/*
@@ -552,14 +588,15 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#addRequestRecord(eu.europeana.uim.
 	 * store.Request, eu.europeana.uim.store.MetaDataRecord)
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void addRequestRecord(Request<String> request,
 			MetaDataRecord<String> record) throws StorageEngineException {
-
-		MongoRequestDecorator<String> req = (MongoRequestDecorator<String>) request;
-
-		req.getRequestrecords().add(
-				(MongoMetadataRecordDecorator<String>) record);
+		MongoRequestDecorator<String> req = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
+				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
+		
+		record = (MongoMetadataRecordDecorator)ensureConsistency(record);
+		req.getRequestrecords().add((MongoMetadataRecordDecorator<String>) record);
 
 		ds.merge(req);
 	}
@@ -571,9 +608,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#updateMetaDataRecord(eu.europeana.
 	 * uim.store.MetaDataRecord)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updateMetaDataRecord(MetaDataRecord<String> record)
 			throws StorageEngineException {
+		record = (MongoMetadataRecordDecorator<String>)ensureConsistency(record);
 		ds.merge(record);
 	}
 
@@ -584,14 +623,17 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#createExecution(eu.europeana.uim.store
 	 * .UimDataSet, java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Execution<String> createExecution(UimDataSet<String> entity,
 			String workflow) throws StorageEngineException {
 		MongoExecutionDecorator<String> me = new MongoExecutionDecorator<String>();
+		
+		entity = (UimDataSet<String>) ensureConsistency(entity);
 		me.setDataSet(entity);
 		me.setWorkflow(workflow);
 		ds.save(me);
-		return me;
+		return me.getEmbeddedExecution();
 	}
 
 	/*
@@ -601,9 +643,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#updateExecution(eu.europeana.uim.store
 	 * .Execution)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updateExecution(Execution<String> execution)
 			throws StorageEngineException {
+		execution = (MongoExecutionDecorator<String>)ensureConsistency(execution);
 		ds.merge(execution);
 	}
 
@@ -615,9 +659,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public List<Execution<String>> getAllExecutions() {
 		List<Execution<String>> res = new ArrayList<Execution<String>>();
-		for (Execution<String> e : ds.find(MongoExecutionDecorator.class)
+		for (MongoExecutionDecorator<String> e : ds.find(MongoExecutionDecorator.class)
 				.asList()) {
-			res.add(e);
+			res.add(e.getEmbeddedExecution());
 		}
 		return res;
 	}
@@ -659,16 +703,23 @@ public class MongoStorageEngine extends AbstractEngine implements
 		MongoMetadataRecordDecorator<String> request = ds
 				.find(MongoMetadataRecordDecorator.class)
 				.filter(RECORDUIDFIELD, id).get();
-		return request;
+		
+		MetaDataRecord<String> returnRecord = (request == null)?null:request.getEmebeddedMdr();
+		
+		return returnRecord;
 	}
 
+	
+	
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.StorageEngine#getByRequest(eu.europeana.uim.store.Request)
 	 */
 	@Override
 	public String[] getByRequest(Request<String> request) {
 
-		MongoRequestDecorator<String> cast = (MongoRequestDecorator<String>) request;
+		@SuppressWarnings("unchecked")
+		MongoRequestDecorator<String> cast = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
+				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
 		HashSet<MongoMetadataRecordDecorator<String>> reqrecords = cast
 				.getRequestrecords();
 		String[] res = new String[reqrecords.size()];
@@ -762,19 +813,21 @@ public class MongoStorageEngine extends AbstractEngine implements
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.StorageEngine#getTotalByRequest(eu.europeana.uim.store.Request)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public int getTotalByRequest(Request<String> request) {
-		MongoRequestDecorator<String> req = (MongoRequestDecorator<String>) request;
-
+		 MongoRequestDecorator<String> req = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
+				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
 		return req.getRequestrecords().size();
 	}
 
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.StorageEngine#getTotalByCollection(eu.europeana.uim.store.Collection)
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public int getTotalByCollection(Collection<String> collection) {
+		collection = (Collection<String>) ensureConsistency(collection);
 		List<MongoMetadataRecordDecorator> records = ds
 				.find(MongoMetadataRecordDecorator.class)
 				.filter("collection", collection).asList();
@@ -786,10 +839,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.StorageEngine#getTotalByProvider(eu.europeana.uim.store.Provider, boolean)
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public int getTotalByProvider(Provider<String> provider, boolean recursive) {
-
+		provider = (Provider<String>) ensureConsistency(provider);
 		int recordcounter = 0;
 
 		List<MongoCollectionDecorator> mongoCollections = ds
@@ -815,12 +868,14 @@ public class MongoStorageEngine extends AbstractEngine implements
 	/* (non-Javadoc)
 	 * @see eu.europeana.uim.api.StorageEngine#getExecution(java.lang.Object)
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Execution<String> getExecution(String id)
 			throws StorageEngineException {
-		return ds.find(MongoExecutionDecorator.class, LOCALIDFIELD,
+		MongoExecutionDecorator exec = ds.find(MongoExecutionDecorator.class, LOCALIDFIELD,
 				new ObjectId(id)).get();
+		
+		return exec.getEmbeddedExecution();
 	}
 
 }

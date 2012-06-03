@@ -154,6 +154,14 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I>
 	public MetaDataRecordBean<String> getEmebeddedMdr() {
 		return emebeddedMdr;
 	}
+	
+	
+	/**
+	 * @param mdr
+	 */
+	public void  setEmebeddedMdr(MetaDataRecordBean<String> mdr){
+		this.emebeddedMdr = mdr;
+	}
 
 	/*
 	 * Overridden (decorator-specific) methods

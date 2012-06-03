@@ -144,6 +144,31 @@ public class MongoExecutionDecorator<I> extends MongoAbstractEntity<String>
 		return embeddedExecution;
 	}
 
+	/**
+	 * Auxiliary method that sets the embedded ExecutionBean type of this
+	 * Decorator
+	 * @param exbean the ExecutionBean object
+	 */
+	public void setEmbeddedExecution(ExecutionBean<String> exbean){
+		this.embeddedExecution = exbean;
+	}
+	
+	
+	/**
+	 * @return the datasetRefrerence
+	 */
+	public UimDataSet<String> getDatasetRefrerence() {
+		return datasetRefrerence;
+	}
+
+	/**
+	 * @param datasetRefrerence the datasetRefrerence to set
+	 */
+	public void setDatasetRefrerence(UimDataSet<String> datasetRefrerence) {
+		this.datasetRefrerence = datasetRefrerence;
+	}
+	
+	
 	/*
 	 * Overridden (decorator-specific) methods
 	 */
