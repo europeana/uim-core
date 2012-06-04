@@ -34,7 +34,7 @@ import org.theeuropeanlibrary.model.tel.LabeledText;
 import org.theeuropeanlibrary.model.tel.Metadata;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.theeuropeanlibrary.repository.convert.Converter;
-
+import eu.europeana.uim.model.europeana.EuropeanaLink;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -410,6 +410,9 @@ public final class ObjectModelConverterFactory implements ConverterFactory {
 				subjectConverter.setSerializer(actualSubjectConverter); 
 			}
 			
+			//TODO:is it worth having another dedicated converter class for Europeana Specific elements? 
+			put(EuropeanaLink.class, new AnnotationBasedByteConverter<EuropeanaLink>(EuropeanaLink.class,
+					null));
 		}
 	};
 
