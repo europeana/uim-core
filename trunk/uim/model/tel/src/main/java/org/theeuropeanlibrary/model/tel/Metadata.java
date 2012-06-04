@@ -3,7 +3,6 @@ package org.theeuropeanlibrary.model.tel;
 
 import org.theeuropeanlibrary.model.common.FieldId;
 
-
 /**
  * A metadata record represented as a XML string. Used to store the original record from the data
  * provider, and possibly other metadata records during ingestion
@@ -100,6 +99,5 @@ public class Metadata {
         } else if (!recordInXml.equals(other.recordInXml)) return false;
         return true;
     }
-    
-    
+
 }
