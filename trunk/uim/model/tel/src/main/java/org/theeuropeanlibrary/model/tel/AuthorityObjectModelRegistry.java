@@ -24,6 +24,7 @@ import org.theeuropeanlibrary.model.tel.authority.PersonNameForm;
 import org.theeuropeanlibrary.model.tel.authority.TopicNameForm;
 import org.theeuropeanlibrary.model.tel.authority.UpdateFromDataSource;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
+import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
 import org.theeuropeanlibrary.model.tel.qualifier.SpatialIdentifierRelation;
 import org.theeuropeanlibrary.model.tel.qualifier.SpatialNameQualifier;
@@ -135,6 +136,14 @@ public final class AuthorityObjectModelRegistry {
                                                                                                              "coordinates",
                                                                                                              Coordinates.class);
 
+    /**
+     * raw data format
+     */
+    public static final TKey<AuthorityObjectModelRegistry, Metadata>             METADATA            = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "metadata",
+                                                                                                             Metadata.class);
+
     private static final Map<Class<?>, TKey<?, ?>>                               tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
     private static final Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>    validQualifiers     = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>();
@@ -174,11 +183,15 @@ public final class AuthorityObjectModelRegistry {
                 add(KnowledgeOrganizationSystem.class);
             }
         });
-
         validQualifiers.put(NAMED_PLACE_FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(SpatialNameQualifier.class);
                 add(Language.class);
+            }
+        });
+        validQualifiers.put(METADATA, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(FieldSource.class);
             }
         });
 
