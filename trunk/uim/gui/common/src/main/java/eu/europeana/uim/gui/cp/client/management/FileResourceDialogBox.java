@@ -88,7 +88,7 @@ public class FileResourceDialogBox extends DialogBox {
 
         cellList = new CellList<String>(new TextCell(), new SimpleKeyProvider<String>());
         cellList.setSize("100%", "100%");
-        cellList.setPageSize(30);
+        cellList.setPageSize(1000);
         cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
         cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
         cellList.setTitle("File Resource List");
