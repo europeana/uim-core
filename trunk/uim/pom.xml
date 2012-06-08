@@ -467,6 +467,9 @@
 				<!-- the standard orchestration implementation module -->
 				<module>orchestration/basic</module>
 
+				<!-- UIM Model Definitions -->
+				<module>model</module>
+
 				<!-- the uim standard in memory storage implementation -->
 				<module>storage/memory</module>
 
@@ -475,10 +478,7 @@
 
 				<!-- simplistic in-memory logging -->
 				<module>logging/memory</module>
-
-				<!-- UIM Model Definitions -->
-				<module>model</module>
-
+				
 				<!-- UIM gui common module -->
 				<module>gui/common</module>
 
