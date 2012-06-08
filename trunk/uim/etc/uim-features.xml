@@ -87,7 +87,10 @@
     
     <feature name="uim-europeana-workflows-plugins" version="1.3.1.SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-plugin-solr3/1.3.0-SNAPSHOT</bundle>  
-        <bundle>mvn:eu.europeana/europeana-uim-plugin-linkchecker/1.3.1-SNAPSHOT</bundle>      
+        <!--  
+        <bundle>mvn:eu.europeana/europeana-uim-plugin-linkchecker/1.3.1-SNAPSHOT</bundle> 
+        --> 
+        <bundle>mvn:org.theeuropeanlibrary/tel-uim-plugin-check-link/1.3.0-SNAPSHOT</bundle>    
         <bundle>mvn:eu.europeana/europeana-uim-plugin-solrosgi/1.3.1-SNAPSHOT</bundle>
     </feature>   
     
