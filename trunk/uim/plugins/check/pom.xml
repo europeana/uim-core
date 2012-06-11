@@ -23,4 +23,9 @@
     </modules>
 
     <build />
+
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/check</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/check</developerConnection>
+    </scm>
 </project>
