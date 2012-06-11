@@ -18,4 +18,9 @@
         <module>model</module>
         <module>engine</module>
     </modules>
+
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</developerConnection>
+    </scm>
 </project>
