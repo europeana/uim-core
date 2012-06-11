@@ -42,14 +42,6 @@
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                    <preparationGoals>clean compile test-compile source:jar install</preparationGoals>
-                </configuration>
-            </plugin>
         </plugins>
 
         <resources>

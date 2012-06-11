@@ -23,4 +23,17 @@
         <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</connection>
         <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</developerConnection>
     </scm>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
+                    <preparationGoals>clean hibernate3:hbm2dao generate-sources compile test-compile source:jar install</preparationGoals>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
