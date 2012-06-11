@@ -3,12 +3,11 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.theeuropeanlibrary</groupId>
     <artifactId>tel-uim-plugin-check</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Unified Ingestion Manager: TEL Check Plugins</name>
     <description>Plugins doing all kinds of checking for the European Library central ingestion framework</description>
