@@ -85,10 +85,8 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -Ptel
-                        -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</preparationGoals>
-                    <goals>clean compile generate-sources compile test-compile source:jar install deploy -Ptel
-                        -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</goals>
+                    <preparationGoals>clean compile install -Ptel -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</preparationGoals>
+                    <goals>clean compile source:jar deploy site:site -Ptel -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</goals>
                 </configuration>
             </plugin>
         </plugins>
