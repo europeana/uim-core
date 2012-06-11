@@ -44,19 +44,19 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-tel</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
         </dependency>
 
         <dependency>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -82,14 +82,14 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${project.parent.version}</version>
+            <version>1.3.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
