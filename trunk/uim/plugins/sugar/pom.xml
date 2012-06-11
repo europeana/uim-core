@@ -10,7 +10,7 @@
     <artifactId>europeana-uim-plugin-sugar</artifactId>
     <name>Unified Ingestion Manager: Sugar Integration Plugin</name>
     <packaging>bundle</packaging>
-    <version>1.3.0</version>
+    <version>1.3.0-SNAPSHOT</version>
 
     <build>
         <plugins>
@@ -84,7 +84,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -Ptel -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</preparationGoals>
+                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -Ptel</preparationGoals>
                 </configuration>
             </plugin>
         </plugins>
