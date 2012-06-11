@@ -29,7 +29,6 @@ import eu.europeana.uim.sugarcrm.SugarException;
  * @since Feb 5, 2012
  */
 public class SugarServiceImplTest {
-
     private static String           username;
     private static String           password;
     private static Properties       properties;
@@ -69,16 +68,15 @@ public class SugarServiceImplTest {
 
         service = new SugarServiceImpl(client, new PropertiesSugarMapping(properties));
     }
-    
+
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @AfterClass
     public static void logout() throws SugarException {
         service.logout();
     }
-
 
     /**
      * @throws SugarException
@@ -91,7 +89,7 @@ public class SugarServiceImplTest {
     }
 
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
@@ -100,33 +98,31 @@ public class SugarServiceImplTest {
     }
 
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
     public void testListCollections() throws SugarException {
-        List<Map<String,String>> alllist = service.listCollections(false);
+        List<Map<String, String>> alllist = service.listCollections(false);
         List<Map<String, String>> active = service.listCollections(true);
-        
+
         assertTrue(alllist.size() >= active.size());
     }
 
-
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
     public void testListProviders() throws SugarException {
-        List<Map<String,String>> alllist = service.listProviders(false);
+        List<Map<String, String>> alllist = service.listProviders(false);
         List<Map<String, String>> active = service.listProviders(true);
-        
+
         assertTrue(alllist.size() >= active.size());
     }
 
-    
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
@@ -136,58 +132,55 @@ public class SugarServiceImplTest {
 
         ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic(pMne);
-        
+
         CollectionBean<Long> collection = new CollectionBean<Long>(2L, provider);
         collection.setMnemonic(cMne);
-        
+
         boolean update = service.synchronizeProvider(provider);
         assertTrue(update);
-        
-        
+
         update = service.synchronizeCollection(collection);
         assertTrue(update);
     }
-    
+
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
     public void testUpdateSugarProvider() throws SugarException {
         String pMne = properties.getProperty("test.provider.mnemonic");
-        
+
         ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic(pMne);
 
         service.synchronizeProvider(provider);
-        
+
         // so, now we do have sugar values
         String oldname = provider.getName();
         String newname = "JUnit Test";
-        
+
         provider.setName(newname);
         service.updateProvider(provider);
-        
-        
+
         ProviderBean<Long> provider2 = new ProviderBean<Long>(1L);
         provider2.setMnemonic(provider.getMnemonic());
-        
+
         service.synchronizeProvider(provider2);
-        
+
         assertEquals(provider2.getName(), provider.getName());
         assertEquals(provider2.getName(), newname);
-        
+
         provider2.setName(oldname);
         service.updateProvider(provider2);
-        
+
         service.synchronizeProvider(provider);
         assertEquals(provider.getName(), provider2.getName());
         assertEquals(provider.getName(), oldname);
     }
-    
-    
+
     /**
-     * @throws SugarException 
+     * @throws SugarException
      * 
      */
     @Test
@@ -197,37 +190,34 @@ public class SugarServiceImplTest {
 
         ProviderBean<Long> provider = new ProviderBean<Long>(1L);
         provider.setMnemonic(pMne);
-        
+
         CollectionBean<Long> collection = new CollectionBean<Long>(2L, provider);
         collection.setMnemonic(cMne);
-        
+
         service.synchronizeProvider(provider);
         service.synchronizeCollection(collection);
 
-        
         // so, now we do have sugar values
         String oldname = provider.getName();
         String newname = "JUnit Test";
-        
+
         collection.setName(newname);
         service.updateCollection(collection);
-        
-        
+
         CollectionBean<Long> collection2 = new CollectionBean<Long>(2L, provider);
         collection2.setMnemonic(collection.getMnemonic());
-        
+
         service.synchronizeCollection(collection2);
-        
+
         assertEquals(collection2.getName(), collection.getName());
         assertEquals(collection2.getName(), newname);
-        
+
         collection2.setName(oldname);
         service.updateCollection(collection2);
-        
+
         service.synchronizeCollection(collection);
         assertEquals(collection.getName(), collection2.getName());
         assertEquals(collection.getName(), oldname);
     }
-    
 
 }
