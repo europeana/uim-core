@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.europeana</groupId>
@@ -84,7 +85,8 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -Ptel</preparationGoals>
+                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -Ptel
+                        -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</preparationGoals>
                 </configuration>
             </plugin>
         </plugins>
