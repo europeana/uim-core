@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.europeana</groupId>
-        <artifactId>europeana-uim-logging-database</artifactId>
+        <artifactId>europeana-uim-logging-database-parent</artifactId>
         <version>1.3.0-SNAPSHOT</version>
     </parent>
 
