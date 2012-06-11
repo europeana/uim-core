@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.core.version>3.0.5.RELEASE</spring.core.version>
         <karaf.version>2.2.0</karaf.version>
-        <europeana.uim.version>${pom.version}</europeana.uim.version>
+        <europeana.uim.version>1.3.1-SNAPSHOT</europeana.uim.version>
     </properties>
 
     <modules>
