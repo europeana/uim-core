@@ -5,8 +5,9 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim-logging-database-parent</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
+    <version>1.3.0-SNAPSHOT</version>
 
 	<artifactId>europeana-uim-logging-database</artifactId>
 	<name>Unified Ingestion Manager: API Database Logging</name>
@@ -83,10 +84,11 @@
 			<version>1.3.0</version>
 			<scope>provided</scope>
 		</dependency>
+        
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-logging-database-model</artifactId>
-			<version>${pom.version}</version>
+			<version>1.3.0</version>
 		</dependency>
 
 		<dependency>
