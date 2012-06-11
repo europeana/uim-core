@@ -80,6 +80,14 @@
                     </instrumentation>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
+                    <preparationGoals>clean compile generate-sources compile test-compile source:jar install -DargLine="-Dsugar.username=synchronisation -Dsugar.password=t5y6u7Sync"</preparationGoals>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
