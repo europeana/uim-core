@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.europeana</groupId>
@@ -10,7 +9,7 @@
 
     <artifactId>europeana-uim-plugin-solr3</artifactId>
     <name>Unified Ingestion Manager: Solr 3.x Commons Plugin</name>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <packaging>bundle</packaging>
 
     <build>
@@ -145,7 +144,7 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr3</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr3</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-solr3-1.3.0</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-solr3-1.3.0</developerConnection>
     </scm>
 </project>
