@@ -29,13 +29,13 @@ import eu.europeana.uim.sugarcrm.SugarException;
  */
 public class SugarSoapClientImplTest {
 
-    private static String username;
-    private static String password;
+    private static String     username;
+    private static String     password;
     private static Properties properties;
-    
-    private SugarClient client;
-    private String session;
-    
+
+    private SugarClient       client;
+    private String            session;
+
     /**
      * Setup of the connection manager
      * 
@@ -47,20 +47,20 @@ public class SugarSoapClientImplTest {
         password = System.getProperty("sugar.password");
 
         if (username == null || password == null) { throw new IllegalStateException(
-                "No credentials configured! sugar.username, sugar.password " +
-                "must be set via system property for tests."); } 
-        
+                "No credentials configured! sugar.username, sugar.password "
+                        + "must be set via system property for tests."); }
+
         properties = new Properties();
         properties.load(SugarSoapClientImplTest.class.getResourceAsStream("/sugarcrm.properties"));
     }
-    
+
     /**
      * @throws SugarException
      */
     @Before
-    public void login() throws SugarException{
+    public void login() throws SugarException {
         String endpoint = properties.getProperty("sugar.endpoint");
-        
+
         String providerModul = properties.getProperty("sugar.provider");
         String providerMnemonic = properties.getProperty("sugar.provider.mnemonic");
 
@@ -68,12 +68,12 @@ public class SugarSoapClientImplTest {
         String collectionMnemonic = properties.getProperty("sugar.collection.mnemonic");
 
         String contactModul = properties.getProperty("sugar.contact");
-        
-        client = new SugarSoapClientImpl(endpoint, username, password, providerModul, providerMnemonic, collectionModul, collectionMnemonic, contactModul);
+
+        client = new SugarSoapClientImpl(endpoint, username, password, providerModul,
+                providerMnemonic, collectionModul, collectionMnemonic, contactModul);
         session = client.login();
     }
 
-    
     /**
      * 
      */
@@ -81,28 +81,28 @@ public class SugarSoapClientImplTest {
     public void logout() {
         client.logout(session);
     }
-    
+
     /**
      * 
      */
     @Test
     public void testLogin() {
         assertNotNull(session);
-        
+
         List<String> modules = client.getAvailableModules(session);
-        
+
         assertTrue(modules.contains(((SugarSoapClientImpl)client).getProviderModule()));
         assertTrue(modules.contains(((SugarSoapClientImpl)client).getCollectionModule()));
         assertTrue(modules.contains(((SugarSoapClientImpl)client).getContactModule()));
     }
-    
+
     /**
      * 
      */
     @Test
     public void testListCollections() {
-        List<Map<String,String>> collections = client.getCollections(session, null, 12);
-        assertEquals(12 , collections.size());
+        List<Map<String, String>> collections = client.getCollections(session, null, 12);
+        assertEquals(12, collections.size());
     }
 
     /**
@@ -111,12 +111,12 @@ public class SugarSoapClientImplTest {
     @Test
     public void testGetCollection() {
         String mnemonic = properties.getProperty("test.collection.mnemonic");
-        Map<String,String> collection = client.getCollection(session, mnemonic);
+        Map<String, String> collection = client.getCollection(session, mnemonic);
         assertNotNull(collection.get("id"));
-        
+
         String sugarid = collection.get(((SugarSoapClientImpl)client).getCollectionMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
-        
+
         String provider = client.getProviderForCollection(session, mnemonic);
         String pMnemonic = properties.getProperty("test.provider.mnemonic");
         assertEquals(provider, pMnemonic);
@@ -128,12 +128,12 @@ public class SugarSoapClientImplTest {
     @Test
     public void testUpdateCollection() {
         String mnemonic = properties.getProperty("test.collection.mnemonic");
-        Map<String,String> collection = client.getCollection(session, mnemonic);
+        Map<String, String> collection = client.getCollection(session, mnemonic);
         assertNotNull(collection.get("id"));
 
         String oldname = collection.get("name");
         String newname = "Unit Test" + hashCode();
-        
+
         Map<String, String> update = Collections.singletonMap("name", newname);
         client.updateCollection(session, mnemonic, update);
 
@@ -146,39 +146,38 @@ public class SugarSoapClientImplTest {
         collection = client.getCollection(session, mnemonic);
         assertEquals(collection.get("name"), oldname);
     }
-    
+
     /**
      * 
      */
     @Test
     public void testListProvider() {
-        List<Map<String,String>> providers = client.getProviders(session, null, 12);
-        assertEquals(12 , providers.size());
+        List<Map<String, String>> providers = client.getProviders(session, null, 12);
+        assertEquals(12, providers.size());
     }
-    
+
     /**
      * 
      */
     @Test
     public void testGetProvider() {
         String mnemonic = properties.getProperty("test.provider.mnemonic");
-        Map<String,String> provider = client.getProvider(session, mnemonic);
+        Map<String, String> provider = client.getProvider(session, mnemonic);
         assertNotNull(provider.get("id"));
-        
+
         String sugarid = provider.get(((SugarSoapClientImpl)client).getProviderMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
-        
-        List<Map<String,String>> contacts = client.getProviderContacts(session, mnemonic);
+
+        List<Map<String, String>> contacts = client.getProviderContacts(session, mnemonic);
         assertFalse(contacts.isEmpty());
     }
-    
+
     /**
      * 
      */
     @Test
     public void testListContacts() {
-        List<Map<String,String>> contacts = client.getContacts(session, null, 12);
-        assertEquals(12 , contacts.size());
+        List<Map<String, String>> contacts = client.getContacts(session, null, 12);
+        assertEquals(12, contacts.size());
     }
-    
 }
