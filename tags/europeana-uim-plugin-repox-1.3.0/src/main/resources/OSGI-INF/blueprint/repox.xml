@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+    <bp:reference id="registry" interface="eu.europeana.uim.api.Registry" />
+
+    <bean id="rcf" class="eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl" />
+    <bean id="xof" class="eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory" />
+
+    <bean id="rs" class="eu.europeana.uim.repox.rest.RepoxServiceImpl">
+        <property name="clientfactory" ref="rcf" />
+        <property name="xmlFactory" ref="xof" />
+    </bean>
+
+    <service id="repoxService" ref="rs" interface="eu.europeana.uim.repox.RepoxService" />
+
+    <reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService" availability="optional">
+        <reference-listener bind-method="setSugarService" unbind-method="unsetSugarService" ref="repoxServlet">
+        </reference-listener>
+    </reference>
+
+    <bean id="repoxServlet" class="eu.europeana.uim.repox.rest.servlet.RepoxServlet">
+        <argument index="0" ref="registry" />
+        <property name="repoxService" ref="rs" />
+    </bean>
+
+    <service id="repoxServletService" ref="repoxServlet" interface="javax.servlet.http.HttpServlet">
+        <service-properties>
+            <entry key="alias" value="/repox" />
+        </service-properties>
+    </service>
+</blueprint>
