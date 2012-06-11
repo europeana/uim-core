@@ -165,8 +165,8 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-sugar-1.3.0</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-plugin-sugar-1.3.0</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/sugar</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/sugar</developerConnection>
     </scm>
 
     <profiles>
