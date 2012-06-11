@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
         <version>1.3.0</version>
     </parent>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
 
     <artifactId>europeana-uim-logging-database-parent</artifactId>
     <packaging>pom</packaging>
@@ -20,7 +19,7 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-logging-database-parent-1.3.0</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-logging-database-parent-1.3.0</developerConnection>
     </scm>
 </project>
