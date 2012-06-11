@@ -5,10 +5,11 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.0</version>
     </parent>
 
     <artifactId>europeana-uim-integration</artifactId>
+    <version>1.3.0-SNAPSHOT</version>
 
     <name>Unified Ingestion Manager: Integration Tests</name>
 
@@ -25,14 +26,14 @@
             <plugin>
                 <groupId>org.ops4j.pax.exam</groupId>
                 <artifactId>maven-paxexam-plugin</artifactId>
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <id>generate-config</id> -->
-<!--                         <goals> -->
-<!--                             <goal>generate-depends-file</goal> -->
-<!--                         </goals> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
+                <!-- <executions> -->
+                <!-- <execution> -->
+                <!-- <id>generate-config</id> -->
+                <!-- <goals> -->
+                <!-- <goal>generate-depends-file</goal> -->
+                <!-- </goals> -->
+                <!-- </execution> -->
+                <!-- </executions> -->
             </plugin>
         </plugins>
     </build>
