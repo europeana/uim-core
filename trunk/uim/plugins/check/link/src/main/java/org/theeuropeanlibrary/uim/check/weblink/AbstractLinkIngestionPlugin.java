@@ -92,11 +92,11 @@ public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugi
      * Container holding all execution specific information for the validation plugin.
      */
     protected static class Data implements Serializable {
-        int             ignored    = 0;
-        int             submitted  = 0;
+        public int             ignored    = 0;
+        public int             submitted  = 0;
 
         // Set<TKey<?, String>> checkurls = new HashSet<TKey<?, String>>();
-        Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
-        File            directory;
+        public Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
+        public File            directory;
     }
 }
