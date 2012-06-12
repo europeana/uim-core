@@ -5,7 +5,7 @@
         <artifactId>europeana-uim</artifactId>
         <version>1.3.0</version>
     </parent>
-    <version>1.3.0</version>
+    <version>1.3.1-SNAPSHOT</version>
 
     <artifactId>europeana-uim-gui</artifactId>
 
@@ -48,7 +48,7 @@
     </build>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-gui-1.3.0</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-gui-1.3.0</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</developerConnection>
     </scm>
 </project>
