@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>eu.europeana</groupId>
-        <artifactId>europeana-uim</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <artifactId>europeana-uim-gui</artifactId>
+        <version>1.3.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>europeana-uim-gui-common</artifactId>
@@ -38,6 +38,11 @@
         </resources>
     </build>
 
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/common</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/common</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -50,13 +55,13 @@
             <artifactId>gwt-incubator</artifactId>
             <version>20101117-r1766</version>
         </dependency>
-        
-       <dependency>
+
+        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
         </dependency>
- 
+
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
@@ -82,15 +87,15 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
-   	<!-- ================================================ -->
-	<!-- Repository Configuration -->
-	<!-- ================================================ -->
-	<repositories>
-      <repository>
-          <id>europeanalabs.eu</id>
-          <name>europeanalabs.eu-releases</name>
-          <url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
-      </repository>  
-	</repositories>
+
+    <!-- ================================================ -->
+    <!-- Repository Configuration -->
+    <!-- ================================================ -->
+    <repositories>
+        <repository>
+            <id>europeanalabs.eu</id>
+            <name>europeanalabs.eu-releases</name>
+            <url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
+        </repository>
+    </repositories>
 </project>
