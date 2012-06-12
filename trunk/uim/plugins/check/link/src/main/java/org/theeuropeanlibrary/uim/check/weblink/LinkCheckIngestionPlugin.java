@@ -7,9 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,11 +26,6 @@ import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.model.adapters.AdapterFactory;
-import eu.europeana.uim.model.adapters.MetadataRecordAdapter;
-import eu.europeana.uim.model.adapters.QValueAdapterStrategy;
-import eu.europeana.uim.model.adapters.europeana.EuropeanaLinkAdapterStrategy;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -188,17 +181,16 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA);
 
-        // Adapter that ensures compatibility with the europeana datamodel 
-		Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies =  new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
-		
-		strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
-		
-		 MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(mdr, strategies);
+//        // Adapter that ensures compatibility with the europeana datamodel 
+//		Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies =  new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
+//		
+//		strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
+//		
+//		 MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(mdr, strategies);
         
         // get all links
-        List<QualifiedValue<Link>> linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
-        
-        
+        List<QualifiedValue<Link>> linkList = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+
         int index = 0;
         for (QualifiedValue<Link> linkQv : linkList) {
             boolean disjoint = (linkQv.getQualifiers() == null)? false : Collections.disjoint(linkQv.getQualifiers(), value.checktypes);
@@ -218,7 +210,7 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
             try {
                 final LoggingEngine<I> loggingEngine = context.getLoggingEngine();
                 WeblinkLinkchecker.getShared().offer(
-                        new GuardedMetaDataRecordUrl<I>(context.getExecution(), mdrad, link, index++,
+                        new GuardedMetaDataRecordUrl<I>(context.getExecution(), mdr, link, index++,
                                 new URL(link.getUrl())) {
                             @SuppressWarnings("unchecked")
                             @Override

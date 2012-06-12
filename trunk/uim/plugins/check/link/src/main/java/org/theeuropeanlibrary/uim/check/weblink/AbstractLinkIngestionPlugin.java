@@ -69,7 +69,8 @@ public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugi
 
     @Override
     public void shutdown() {
-        HttpClientSetup.getHttpClient().getConnectionManager().closeIdleConnections(2, TimeUnit.SECONDS);
+        HttpClientSetup.getHttpClient().getConnectionManager().closeIdleConnections(2,
+                TimeUnit.SECONDS);
     }
 
     @Override
@@ -92,11 +93,11 @@ public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugi
      * Container holding all execution specific information for the validation plugin.
      */
     protected static class Data implements Serializable {
-        public int             ignored    = 0;
-        public int             submitted  = 0;
+        int             ignored    = 0;
+        int             submitted  = 0;
 
         // Set<TKey<?, String>> checkurls = new HashSet<TKey<?, String>>();
-        public Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
-        public File            directory;
+        Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
+        File            directory;
     }
 }
