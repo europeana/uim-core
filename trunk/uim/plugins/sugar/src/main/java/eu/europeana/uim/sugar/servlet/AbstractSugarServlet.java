@@ -134,6 +134,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
             final String id) throws ServletException {
 
         Runnable async = new Runnable() {
+            @Override
             public void run() {
                 if ("update".equals(action)) {
                     try {
@@ -157,6 +158,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
 
                                 log.info(" DONE comlete provider update:" + providers.size());
                             } else {
+                                @SuppressWarnings("unused")
                                 boolean update = updateProvider(id, null);
                                 log.info("Updated/Synched provider with sugar:" + id);
                             }
@@ -180,6 +182,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
 
                                 log.info(" DONE complete collection update:" + collections.size());
                             } else {
+                                @SuppressWarnings("unused")
                                 boolean update = updateCollection(id, null);
                                 log.info("Updated/Synched collection with sugar:" + id);
                             }
