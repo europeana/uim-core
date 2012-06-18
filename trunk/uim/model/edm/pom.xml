@@ -8,7 +8,6 @@
     </parent>
 
 	<artifactId>europeana-uim-model-edm</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
 	<name>Unified Ingestion Manager: EDM Internal Model</name>
 
     <properties>
