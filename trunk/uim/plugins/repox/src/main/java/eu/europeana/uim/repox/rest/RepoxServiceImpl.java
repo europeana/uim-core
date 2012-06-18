@@ -139,7 +139,7 @@ public class RepoxServiceImpl implements RepoxService {
 
         if (retDs == null) {
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
-            jaxbProv.setId(providerId);
+            jaxbProv.setId(provider.getMnemonic());
 
             Aggregator aggr = new Aggregator();
             aggr.setId(aggregatorId);
