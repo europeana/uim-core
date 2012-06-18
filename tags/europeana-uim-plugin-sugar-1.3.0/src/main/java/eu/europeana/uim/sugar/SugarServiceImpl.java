@@ -30,7 +30,6 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  * @date Aug 15, 2011
  */
 public class SugarServiceImpl implements SugarService {
-
     private Date         sessionCreate = null;
     private String       sessionID     = null;
 
@@ -467,7 +466,6 @@ public class SugarServiceImpl implements SugarService {
             sessionID = client.login();
         }
         if (sessionID == null) { throw new SugarException("Could not find a valid session!"); }
-        
 
         return client;
     }
@@ -475,68 +473,56 @@ public class SugarServiceImpl implements SugarService {
     /**
      * lazy loading of sugar crm manager.
      * 
-     * @return the sugarClien
+     * @return sugar client
      */
     public SugarClient getSugarClient() {
         return sugarClient;
     }
 
     /**
-     * Sets the sugarClient to the given value.
+     * lazy loading of sugar crm manager.
      * 
      * @param sugarClient
-     *            the sugarClient to set
      */
     public void setSugarClient(SugarClient sugarClient) {
         this.sugarClient = sugarClient;
     }
 
     /**
-     * Returns the sugarMapping.
-     * 
-     * @return the sugarMapping
+     * @return sugar mapping
      */
     public SugarMapping getSugarMapping() {
         return sugarMapping;
     }
 
     /**
-     * Sets the sugarMapping to the given value.
-     * 
      * @param sugarMapping
-     *            the sugarMapping to set
      */
     public void setSugarMapping(SugarMapping sugarMapping) {
         this.sugarMapping = sugarMapping;
     }
 
     /**
-     * Returns the sugarMappingClass.
-     * 
-     * @return the sugarMappingClass
+     * @return sugar mapping class
      */
     public String getSugarMappingClass() {
         return sugarMappingClass;
     }
 
     /**
-     * Sets the sugarMappingClass to the given value.
-     * 
      * @param sugarMappingClass
-     *            the sugarMappingClass to set
      */
     public void setSugarMappingClass(String sugarMappingClass) {
-        this.sugarMappingClass = sugarMappingClass;
-
         try {
             Class<?> mapping = Class.forName(sugarMappingClass, true,
                     SugarServiceImpl.class.getClassLoader());
             setSugarMapping((SugarMapping)mapping.newInstance());
+            
+            this.sugarMappingClass = sugarMappingClass;
         } catch (Throwable e) {
-            throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
-                    e);
+            // ignore for the moment (default spring configuration should come up at least)
+//            throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
+//                    e);
         }
-
     }
-
 }
