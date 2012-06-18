@@ -31,8 +31,6 @@
                             org.theeuropeanlibrary.model.common,
                             org.theeuropeanlibrary.model.common.qualifier,
 							org.theeuropeanlibrary.model.tel,
-							eu.europeana.uim.model.europeana,
-							eu.europeana.uim.model.adapters.*,
 							org.osgi.service.blueprint,
 							org.apache.commons.io,
 							javax.net.ssl,
