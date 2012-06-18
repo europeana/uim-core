@@ -14,6 +14,7 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         
 		<dependency>
