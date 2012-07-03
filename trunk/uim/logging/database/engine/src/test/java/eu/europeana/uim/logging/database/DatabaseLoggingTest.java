@@ -15,6 +15,7 @@ public class DatabaseLoggingTest extends AbstractLoggingEngineTest {
     @Override
     protected LoggingEngine<Long> getLoggingEngine() {
         DatabaseLoggingEngine loggingEngine = new DatabaseLoggingEngine();
-        return loggingEngine;
+        return null;
+        //return loggingEngine;
     }
 }

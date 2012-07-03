@@ -98,8 +98,8 @@ public class DatabaseEntityTest {
     @Test
     public void testLogEntryFailed() {
         Date date = new Date();
-        TLogEntryFailed entry = new TLogEntryFailed(1L, Level.WARNING, "module", "stacktrace",
-                date, 2L, "a", "b", "c");
+        TLogEntryFailed entry = new TLogEntryFailed("1L", Level.WARNING, "module", "stacktrace",
+        		 "2L",date, "a", "b", "c");
 
         logFailedHome.insert(entry);
         Long oid = entry.getOid();
@@ -144,7 +144,7 @@ public class DatabaseEntityTest {
     @Test
     public void testLogEntryLink() {
         Date date = new Date();
-        TLogEntryLink entry = new TLogEntryLink(1L, "module", 2L, "link", date, 200, "a", "b", "c");
+        TLogEntryLink entry = new TLogEntryLink("1L", "module", "2L", "link", date, 200, "a", "b", "c");
 
         logLinkHome.insert(entry);
         Long oid = entry.getOid();
@@ -189,7 +189,7 @@ public class DatabaseEntityTest {
     @Test
     public void testDurationDatabaseEntity() {
         Date date = new Date();
-        TLogEntryDuration entry = new TLogEntryDuration(1L, "module", date, 5L);
+        TLogEntryDuration entry = new TLogEntryDuration("1L", "module", date, 5L);
 
         logDurationHome.insert(entry);
         long oid = entry.getOid();
@@ -217,7 +217,7 @@ public class DatabaseEntityTest {
     @Test
     public void testLogEntryField() {
         Date date = new Date();
-        TLogEntryField entry = new TLogEntryField(1L, "module", 2L, "field", "qualifier", date, 200,
+        TLogEntryField entry = new TLogEntryField("1L", "module", "2L", "field", "qualifier", date, 200,
                 "a", "b", "c");
 
         logFieldHome.insert(entry);

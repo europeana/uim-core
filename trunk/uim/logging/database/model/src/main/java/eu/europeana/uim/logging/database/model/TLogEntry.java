@@ -29,7 +29,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntry;
 @Table(name = "uim_logentry")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
-public class TLogEntry implements LogEntry<Long> {
+public class TLogEntry implements LogEntry<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
@@ -39,10 +39,10 @@ public class TLogEntry implements LogEntry<Long> {
     private String   module;
 
     @Column
-    private Long     execution;
+    private String     execution;
 
     @Column
-    private Long     metaDataRecord;
+    private String     metaDataRecord;
 
     @Column
     private String   level;
@@ -124,7 +124,7 @@ public class TLogEntry implements LogEntry<Long> {
      * @param messages
      *            the list of messages
      */
-    public TLogEntry(Long execution, Level level, String module, Date date, String... messages) {
+    public TLogEntry(String execution, Level level, String module, Date date, String... messages) {
         super();
         this.execution = execution;
         this.level = level.getName();
@@ -169,7 +169,7 @@ public class TLogEntry implements LogEntry<Long> {
     }
 
     @Override
-    public Long getExecution() {
+    public String getExecution() {
         return execution;
     }
 
@@ -177,7 +177,7 @@ public class TLogEntry implements LogEntry<Long> {
      * @param execution
      *            for which execution
      */
-    public void setExecution(Long execution) {
+    public void setExecution(String execution) {
         this.execution = execution;
     }
 
@@ -197,7 +197,7 @@ public class TLogEntry implements LogEntry<Long> {
     /**
      * @return the metadata record id
      */
-    public Long getMetaDataRecord() {
+    public String getMetaDataRecord() {
         return metaDataRecord;
     }
 
@@ -205,7 +205,7 @@ public class TLogEntry implements LogEntry<Long> {
      * @param metaDataRecord
      *            metadata record ID
      */
-    public void setMetaDataRecord(Long metaDataRecord) {
+    public void setMetaDataRecord(String metaDataRecord) {
         this.metaDataRecord = metaDataRecord;
     }
 

@@ -7,19 +7,19 @@
     <query name="eu.europeana.uim.logging.database.model.TLogEntry.findByExecution">
         FROM TLogEntry s
         WHERE s.execution = :executionId
-        <query-param name="executionId" type="java.lang.Long" />
+        <query-param name="executionId" type="java.lang.String" />
     </query>
 
     <query name="eu.europeana.uim.logging.database.model.TLogEntryFailed.findByExecution">
         FROM TLogEntryFailed s
         WHERE s.execution = :executionId
-        <query-param name="executionId" type="java.lang.Long" />
+        <query-param name="executionId" type="java.lang.String" />
     </query>
 
     <query name="eu.europeana.uim.logging.database.model.TLogEntryLink.findByExecution">
         FROM TLogEntryLink s
         WHERE s.execution = :executionId
-        <query-param name="executionId" type="java.lang.Long" />
+        <query-param name="executionId" type="java.lang.String" />
     </query>
 
     <query name="eu.europeana.uim.logging.database.model.TLogEntryDuration.findByPlugin">

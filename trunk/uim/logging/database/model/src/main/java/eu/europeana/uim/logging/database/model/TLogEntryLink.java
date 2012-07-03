@@ -34,7 +34,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
 @Table(name = "uim_logentry_link")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_LINK", sequenceName = "seq_uim_logentry_link")
-public class TLogEntryLink implements LogEntryLink<Long> {
+public class TLogEntryLink implements LogEntryLink<String> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_LINK")
@@ -44,10 +44,10 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     private String module;
 
     @Column
-    private Long   execution;
+    private String   execution;
 
     @Column
-    private Long   metaDataRecord;
+    private String   metaDataRecord;
 
     @Column(length = 4000)
     private String link;
@@ -127,7 +127,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
      * @param status
      * @param messages
      */
-    public TLogEntryLink(Long execution, String module, Long mdr, String link, Date date, int status, String... messages) {
+    public TLogEntryLink(String execution, String module, String mdr, String link, Date date, int status, String... messages) {
         super();
         this.execution = execution;
         this.status = status;
@@ -179,7 +179,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
     @Override
-    public Long getExecution() {
+    public String getExecution() {
         return execution;
     }
 
@@ -187,7 +187,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
      * @param execution
      *            for which execution
      */
-    public void setExecution(Long execution) {
+    public void setExecution(String execution) {
         this.execution = execution;
     }
 
@@ -205,7 +205,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
     }
 
     @Override
-    public Long getMetaDataRecord() {
+    public String getMetaDataRecord() {
         return metaDataRecord;
     }
 
@@ -213,7 +213,7 @@ public class TLogEntryLink implements LogEntryLink<Long> {
      * @param metaDataRecord
      *            metadata record ID
      */
-    public void setMetaDataRecord(Long metaDataRecord) {
+    public void setMetaDataRecord(String metaDataRecord) {
         this.metaDataRecord = metaDataRecord;
     }
 

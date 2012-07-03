@@ -30,7 +30,7 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 31, 2011
  */
-public class DatabaseLoggingEngine implements LoggingEngine<Long> {
+public class DatabaseLoggingEngine implements LoggingEngine<String> {
     /** int _500 */
     private static final int        BATCH_SIZE    = 500;
 
@@ -93,13 +93,13 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void log(Execution<Long> execution, Level level, String modul, String... messages) {
+    public void log(Execution<String> execution, Level level, String modul, String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, modul, new Date(), messages);
         insert(entry, false);
     }
 
     @Override
-    public void log(Execution<Long> execution, Level level, IngestionPlugin plugin,
+    public void log(Execution<String> execution, Level level, IngestionPlugin plugin,
             String... messages) {
         TLogEntry entry = new TLogEntry(execution.getId(), level, plugin.getIdentifier(),
                 new Date(), messages);
@@ -120,7 +120,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logFailed(Execution<Long> execution, Level level, String modul,
+    public void logFailed(Execution<String> execution, Level level, String modul,
             Throwable throwable, String... messages) {
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
@@ -128,23 +128,23 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logFailed(Execution<Long> execution, Level level, IngestionPlugin plugin,
+    public void logFailed(Execution<String> execution, Level level, IngestionPlugin plugin,
             Throwable throwable, String... messages) {
         logFailed(execution, level, plugin.getIdentifier(), throwable, messages);
     }
 
     @Override
-    public void logFailed(Execution<Long> execution, Level level, String modul,
-            Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
+    public void logFailed(Execution<String> execution, Level level, String modul,
+            Throwable throwable, MetaDataRecord<String> mdr, String... messages) {
 
         TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
-                LoggingEngineAdapter.getStackTrace(throwable), new Date(), mdr != null ? mdr.getId() : null, messages);
+                LoggingEngineAdapter.getStackTrace(throwable), mdr != null ? mdr.getId() : null, new Date(), messages);
         insert(entry, false);
     }
 
     @Override
-    public void logFailed(Execution<Long> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, MetaDataRecord<Long> mdr, String... messages) {
+    public void logFailed(Execution<String> execution, Level level, IngestionPlugin plugin,
+            Throwable throwable, MetaDataRecord<String> mdr, String... messages) {
         logFailed(execution, level, plugin.getIdentifier(), throwable, mdr, messages);
     }
 
@@ -155,7 +155,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logLink(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
+    public void logLink(Execution<String> execution, String modul, MetaDataRecord<String> mdr,
             String link, int status, String... messages) {
         TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr != null ? mdr.getId() : null, link,
                 new Date(), status, messages);
@@ -163,8 +163,8 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logLink(Execution<Long> execution, IngestionPlugin plugin,
-            MetaDataRecord<Long> mdr, String link, int status, String... messages) {
+    public void logLink(Execution<String> execution, IngestionPlugin plugin,
+            MetaDataRecord<String> mdr, String link, int status, String... messages) {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, messages);
     }
 
@@ -177,7 +177,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logField(Execution<Long> execution, String modul, MetaDataRecord<Long> mdr,
+    public void logField(Execution<String> execution, String modul, MetaDataRecord<String> mdr,
             String field, String qualifier, int status, String... messages) {
         TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr != null ? mdr.getId() : null, field,
                 qualifier, new Date(), status, messages);
@@ -185,28 +185,28 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void logField(Execution<Long> execution, IngestionPlugin plugin,
-            MetaDataRecord<Long> mdr, String field, String qualifier, int status,
+    public void logField(Execution<String> execution, IngestionPlugin plugin,
+            MetaDataRecord<String> mdr, String field, String qualifier, int status,
             String... messages) {
         logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, messages);
     }
 
     @Override
-    public void logDuration(Execution<Long> execution, String modul, Long duration) {
+    public void logDuration(Execution<String> execution, String modul, Long duration) {
         TLogEntryDuration entry = new TLogEntryDuration(modul, new Date(), duration);
         insert(entry, false);
     }
 
     @Override
-    public void logDuration(Execution<Long> execution, IngestionPlugin plugin, Long duration) {
+    public void logDuration(Execution<String> execution, IngestionPlugin plugin, Long duration) {
         logDuration(execution, plugin.getIdentifier(), duration);
     }
 
     @Override
-    public List<LoggingEngine.LogEntry<Long>> getLogs(Execution<Long> execution) {
+    public List<LoggingEngine.LogEntry<String>> getLogs(Execution<String> execution) {
         flush();
 
-        List<LoggingEngine.LogEntry<Long>> result = new ArrayList<LoggingEngine.LogEntry<Long>>();
+        List<LoggingEngine.LogEntry<String>> result = new ArrayList<LoggingEngine.LogEntry<String>>();
         List<TLogEntry> entries = storage.getLogHome().findByExecution(execution.getId());
         for (TLogEntry entry : entries) {
             result.add(entry);
@@ -215,10 +215,10 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryFailed<Long>> getFailedLogs(Execution<Long> execution) {
+    public List<LoggingEngine.LogEntryFailed<String>> getFailedLogs(Execution<String> execution) {
         flush();
 
-        List<LoggingEngine.LogEntryFailed<Long>> result = new ArrayList<LoggingEngine.LogEntryFailed<Long>>();
+        List<LoggingEngine.LogEntryFailed<String>> result = new ArrayList<LoggingEngine.LogEntryFailed<String>>();
         List<TLogEntryFailed> entries = storage.getLogFailedHome().findByExecution(
                 execution.getId());
         for (TLogEntryFailed entry : entries) {
@@ -228,10 +228,10 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryLink<Long>> getLinkLogs(Execution<Long> execution) {
+    public List<LoggingEngine.LogEntryLink<String>> getLinkLogs(Execution<String> execution) {
         flush();
 
-        List<LoggingEngine.LogEntryLink<Long>> result = new ArrayList<LoggingEngine.LogEntryLink<Long>>();
+        List<LoggingEngine.LogEntryLink<String>> result = new ArrayList<LoggingEngine.LogEntryLink<String>>();
         List<TLogEntryLink> entries = storage.getLogLinkHome().findByExecution(execution.getId());
         for (TLogEntryLink entry : entries) {
             result.add(entry);
@@ -294,7 +294,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<Long> {
     }
 
     @Override
-    public void completed(ExecutionContext<Long> execution) {
+    public void completed(ExecutionContext<String> execution) {
         flush();
     }
 

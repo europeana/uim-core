@@ -22,13 +22,13 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryDuration;
 @Entity
 @Table(name = "uim_logentry_duration")
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_DURATION", sequenceName = "seq_uim_logentry_duration")
-public class TLogEntryDuration implements LogEntryDuration<Long> {
+public class TLogEntryDuration implements LogEntryDuration<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_DURATION")
     private Long   oid;
 
     @Column
-    private Long   execution;
+    private String   execution;
 
     @Column
     private String module;
@@ -67,7 +67,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
      * @param date
      * @param duration
      */
-    public TLogEntryDuration(Long execution, String module, Date date, Long duration) {
+    public TLogEntryDuration(String execution, String module, Date date, Long duration) {
         super();
         this.execution = execution;
         this.module = module;
@@ -124,7 +124,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
     }
 
     @Override
-    public Long getExecution() {
+    public String getExecution() {
         return execution;
     }
 
@@ -134,7 +134,7 @@ public class TLogEntryDuration implements LogEntryDuration<Long> {
      * @param execution
      *            the execution to set
      */
-    public void setExecution(Long execution) {
+    public void setExecution(String execution) {
         this.execution = execution;
     }
 

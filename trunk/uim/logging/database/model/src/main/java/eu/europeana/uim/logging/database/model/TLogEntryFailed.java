@@ -34,7 +34,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryFailed;
 @Table(name = "uim_logentry_failed")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FAILED", sequenceName = "seq_uim_logentry_failed")
-public class TLogEntryFailed implements LogEntryFailed<Long> {
+public class TLogEntryFailed implements LogEntryFailed<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FAILED")
@@ -44,10 +44,10 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     private String   module;
 
     @Column
-    private Long     execution;
+    private String     execution;
 
     @Column
-    private Long     metaDataRecord;
+    private String     metaDataRecord;
 
     @Column(length = 4000)
     private String   stacktrace;
@@ -127,7 +127,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      * @param mdr
      * @param messages
      */
-    public TLogEntryFailed(Level level, String module, String stacktrace, Date date, Long mdr,
+    public TLogEntryFailed(Level level, String module, String stacktrace, Date date, String mdr,
                            String... messages) {
         super();
         this.level = level.getName();
@@ -148,7 +148,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      * @param date
      * @param messages
      */
-    public TLogEntryFailed(Long execution, Level level, String module, String stacktrace,
+    public TLogEntryFailed(String execution, Level level, String module, String stacktrace,
                            Date date, String... messages) {
         super();
         this.execution = execution;
@@ -171,8 +171,8 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      * @param mdr
      * @param messages
      */
-    public TLogEntryFailed(Long execution, Level level, String module, String stacktrace,
-                           Date date, Long mdr, String... messages) {
+    public TLogEntryFailed(String execution, Level level, String module, String stacktrace,
+    		String mdr, Date date,  String... messages) {
         super();
         this.execution = execution;
         this.level = level.getName();
@@ -218,7 +218,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     }
 
     @Override
-    public Long getExecution() {
+    public String getExecution() {
         return execution;
     }
 
@@ -226,7 +226,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      * @param execution
      *            for which execution
      */
-    public void setExecution(Long execution) {
+    public void setExecution(String execution) {
         this.execution = execution;
     }
 
@@ -259,7 +259,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
     }
 
     @Override
-    public Long getMetaDataRecord() {
+    public String getMetaDataRecord() {
         return metaDataRecord;
     }
 
@@ -267,7 +267,7 @@ public class TLogEntryFailed implements LogEntryFailed<Long> {
      * @param metaDataRecord
      *            metadata record ID
      */
-    public void setMetaDataRecord(Long metaDataRecord) {
+    public void setMetaDataRecord(String metaDataRecord) {
         this.metaDataRecord = metaDataRecord;
     }
 

@@ -34,7 +34,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryField;
 @Table(name = "uim_logentry_field")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FIELD", sequenceName = "seq_uim_logentry_field")
-public class TLogEntryField implements LogEntryField<Long> {
+public class TLogEntryField implements LogEntryField<String> {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FIELD")
@@ -44,10 +44,10 @@ public class TLogEntryField implements LogEntryField<Long> {
     private String module;
 
     @Column
-    private Long   execution;
+    private String   execution;
 
     @Column
-    private Long   metaDataRecord;
+    private String   metaDataRecord;
 
     @Column
     private String field;
@@ -133,7 +133,7 @@ public class TLogEntryField implements LogEntryField<Long> {
      * @param status
      * @param messages
      */
-    public TLogEntryField(Long execution, String module, Long mdr, String field, String qualifier, Date date, int status, String... messages) {
+    public TLogEntryField(String execution, String module,String mdr, String field, String qualifier, Date date, int status, String... messages) {
         super();
         this.execution = execution;
         this.status = status;
@@ -186,7 +186,7 @@ public class TLogEntryField implements LogEntryField<Long> {
     }
 
     @Override
-    public Long getExecution() {
+    public String getExecution() {
         return execution;
     }
 
@@ -194,7 +194,7 @@ public class TLogEntryField implements LogEntryField<Long> {
      * @param execution
      *            for which execution
      */
-    public void setExecution(Long execution) {
+    public void setExecution(String execution) {
         this.execution = execution;
     }
 
@@ -212,7 +212,7 @@ public class TLogEntryField implements LogEntryField<Long> {
     }
 
     @Override
-    public Long getMetaDataRecord() {
+    public String getMetaDataRecord() {
         return metaDataRecord;
     }
 
@@ -220,7 +220,7 @@ public class TLogEntryField implements LogEntryField<Long> {
      * @param metaDataRecord
      *            metadata record ID
      */
-    public void setMetaDataRecord(Long metaDataRecord) {
+    public void setMetaDataRecord(String metaDataRecord) {
         this.metaDataRecord = metaDataRecord;
     }
 
