@@ -12,6 +12,7 @@ import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.party.Party;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
 import org.theeuropeanlibrary.model.common.qualifier.PartyRelation;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
@@ -37,7 +38,6 @@ import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
  * @since Jun 10, 2011
  */
 public final class ObjectModelUtils {
-
     /**
      * Private constructor as this is a utility function class.
      */
@@ -50,9 +50,11 @@ public final class ObjectModelUtils {
      * 
      * @param <T>
      * @param qualifiedValues
+     * @param unique
      * @return values
      */
-    public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues, boolean unique) {
+    public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues,
+            boolean unique) {
         List<T> values = new ArrayList<T>(qualifiedValues.size());
         for (QualifiedValue<? extends T> value : qualifiedValues) {
             if (unique) {
@@ -60,7 +62,7 @@ public final class ObjectModelUtils {
                     values.add(value.getValue());
                 }
             } else {
-            values.add(value.getValue());
+                values.add(value.getValue());
             }
         }
         return values;
@@ -296,20 +298,49 @@ public final class ObjectModelUtils {
 
     /**
      * @param record
+     * @param preferredLanguage
      * @return display string with publish information about the record
      */
-    public static String displayPublisher(MetaDataRecord<?> record) {
-
+    public static String displayPublisher(MetaDataRecord<?> record, Language preferredLanguage) {
         // places
         String publisher = StringUtils.join(getPlaces(record, SpatialRelation.PUBLICATION), ",");
 
         // publishers and times
         List<Object> partiesAndTemporals = new ArrayList<Object>();
         partiesAndTemporals.addAll(getParties(record, PartyRelation.PUBLISHER));
-        partiesAndTemporals.addAll(getTemporals(record, TemporalRelation.PUBLICATION,
-                TemporalRelation.CREATION, TemporalRelation.CREATION_OR_AVAILABILITY));
 
-        String parties = StringUtils.join(partiesAndTemporals, ",");
+        List<Temporal> temporals = null;
+
+        if (preferredLanguage != null) {
+            // try to get
+            temporals = getTemporals(record, TemporalRelation.PUBLICATION, preferredLanguage);
+
+            if (temporals.isEmpty()) {
+                temporals = getTemporals(record, TemporalRelation.CREATION, preferredLanguage);
+            }
+
+            if (temporals.isEmpty()) {
+                temporals = getTemporals(record, TemporalRelation.CREATION_OR_AVAILABILITY,
+                        preferredLanguage);
+            }
+        }
+
+        if (temporals == null || temporals.isEmpty()) {
+            temporals = getTemporals(record, TemporalRelation.PUBLICATION);
+        }
+
+        if (temporals.isEmpty()) {
+            temporals = getTemporals(record, TemporalRelation.CREATION);
+
+        }
+
+        if (temporals.isEmpty()) {
+            temporals = getTemporals(record, TemporalRelation.CREATION_OR_AVAILABILITY);
+        }
+
+        partiesAndTemporals.addAll(temporals);
+
+        String parties = StringUtils.join(partiesAndTemporals, ", ");
         if (publisher.length() > 0) {
             if (parties.length() > 0) {
                 publisher += ": " + parties;
