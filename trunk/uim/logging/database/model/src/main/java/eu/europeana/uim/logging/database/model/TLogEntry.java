@@ -33,7 +33,7 @@ public class TLogEntry implements LogEntry<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
-    private Long     oid;
+    private String     oid;
 
     @Column
     private String   module;
@@ -138,7 +138,7 @@ public class TLogEntry implements LogEntry<String> {
      * @return unique identifier used as primary key on database (is automatically set when
      *         persisted)
      */
-    public Long getOid() {
+    public String getOid() {
         return oid;
     }
 

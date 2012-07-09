@@ -72,7 +72,7 @@ public class ${declarationName}Home {
 
 
     @${pojo.importType("org.springframework.transaction.annotation.Transactional")}
-    public ${declarationName} findByOid(Long oid) {
+    public ${declarationName} findByOid(String oid) {
     	if (oid == null) return null;
         try {
             return getEntityManager().find(${declarationName}.class, oid);
