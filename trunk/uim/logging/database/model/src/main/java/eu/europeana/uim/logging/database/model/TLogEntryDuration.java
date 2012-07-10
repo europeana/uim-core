@@ -22,13 +22,13 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryDuration;
 @Entity
 @Table(name = "uim_logentry_duration")
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_DURATION", sequenceName = "seq_uim_logentry_duration")
-public class TLogEntryDuration implements LogEntryDuration<String> {
+public class TLogEntryDuration implements LogEntryDuration {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_DURATION")
     private Long   oid;
 
     @Column
-    private String execution;
+    private String stringExecutionId;
 
     @Column
     private String module;
@@ -62,14 +62,14 @@ public class TLogEntryDuration implements LogEntryDuration<String> {
     /**
      * Creates a new instance of this class.
      * 
-     * @param execution
+     * @param stringExecutionId
      * @param module
      * @param date
      * @param duration
      */
-    public TLogEntryDuration(String execution, String module, Date date, Long duration) {
+    public TLogEntryDuration(String stringExecutionId, String module, Date date, Long duration) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.module = module;
         this.date = date;
         this.duration = duration;
@@ -124,17 +124,17 @@ public class TLogEntryDuration implements LogEntryDuration<String> {
     }
 
     @Override
-    public String getExecution() {
-        return execution;
+    public String getStringExecutionId() {
+        return stringExecutionId;
     }
 
     /**
-     * Sets the execution to the given value.
+     * Sets the stringExecutionId to the given value.
      * 
-     * @param execution
-     *            the execution to set
+     * @param stringExecutionId
+     *            the stringExecutionId to set
      */
-    public void setExecution(String execution) {
-        this.execution = execution;
+    public void setStringExecutionId(String stringExecutionId) {
+        this.stringExecutionId = stringExecutionId;
     }
 }

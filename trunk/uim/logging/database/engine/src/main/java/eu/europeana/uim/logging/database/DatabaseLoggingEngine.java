@@ -26,12 +26,14 @@ import eu.europeana.uim.store.MetaDataRecord;
 /**
  * Database backend of {@link LoggingEngine} using JPA for object relational mapping.
  * 
+ * @param <I>
+ *            generic ID type
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 31, 2011
  */
-public class DatabaseLoggingEngine implements LoggingEngine<String> {
-    /** int _500 */
+public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
     private static final int        BATCH_SIZE    = 500;
 
     private static final Logger     log           = Logger.getLogger(DatabaseLoggingEngine.class.getName());
@@ -93,15 +95,14 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public void log(Execution<String> execution, Level level, String modul, String... messages) {
-        TLogEntry entry = new TLogEntry(execution.getId(), level, modul, new Date(), messages);
+    public void log(Execution<I> execution, Level level, String modul, String... messages) {
+        TLogEntry entry = new TLogEntry(execution.getId().toString(), level, modul, new Date(), messages);
         insert(entry, false);
     }
 
     @Override
-    public void log(Execution<String> execution, Level level, IngestionPlugin plugin,
-            String... messages) {
-        TLogEntry entry = new TLogEntry(execution.getId(), level, plugin.getIdentifier(),
+    public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... messages) {
+        TLogEntry entry = new TLogEntry(execution.getId().toString(), level, plugin.getIdentifier(),
                 new Date(), messages);
         insert(entry, false);
     }
@@ -120,31 +121,32 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public void logFailed(Execution<String> execution, Level level, String modul,
-            Throwable throwable, String... messages) {
-        TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
+    public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
+            String... messages) {
+        TLogEntryFailed entry = new TLogEntryFailed(execution.getId().toString(), level, modul,
                 LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
         insert(entry, false);
     }
 
     @Override
-    public void logFailed(Execution<String> execution, Level level, IngestionPlugin plugin,
+    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
             Throwable throwable, String... messages) {
         logFailed(execution, level, plugin.getIdentifier(), throwable, messages);
     }
 
     @Override
-    public void logFailed(Execution<String> execution, Level level, String modul,
-            Throwable throwable, MetaDataRecord<String> mdr, String... messages) {
+    public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
+            MetaDataRecord<I> mdr, String... messages) {
 
-        TLogEntryFailed entry = new TLogEntryFailed(execution.getId(), level, modul,
-                LoggingEngineAdapter.getStackTrace(throwable), mdr != null ? mdr.getId() : null, new Date(), messages);
+        TLogEntryFailed entry = new TLogEntryFailed(execution.getId().toString(), level, modul,
+                LoggingEngineAdapter.getStackTrace(throwable), mdr != null ? mdr.getId().toString() : null,
+                new Date(), messages);
         insert(entry, false);
     }
 
     @Override
-    public void logFailed(Execution<String> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, MetaDataRecord<String> mdr, String... messages) {
+    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
+            Throwable throwable, MetaDataRecord<I> mdr, String... messages) {
         logFailed(execution, level, plugin.getIdentifier(), throwable, mdr, messages);
     }
 
@@ -155,16 +157,16 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public void logLink(Execution<String> execution, String modul, MetaDataRecord<String> mdr,
+    public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr,
             String link, int status, String... messages) {
-        TLogEntryLink entry = new TLogEntryLink(execution.getId(), modul, mdr != null ? mdr.getId() : null, link,
-                new Date(), status, messages);
+        TLogEntryLink entry = new TLogEntryLink(execution.getId().toString(), modul, mdr != null ? mdr.getId().toString()
+                : null, link, new Date(), status, messages);
         insert(entry, false);
     }
 
     @Override
-    public void logLink(Execution<String> execution, IngestionPlugin plugin,
-            MetaDataRecord<String> mdr, String link, int status, String... messages) {
+    public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
+            String link, int status, String... messages) {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, messages);
     }
 
@@ -177,37 +179,37 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public void logField(Execution<String> execution, String modul, MetaDataRecord<String> mdr,
+    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr,
             String field, String qualifier, int status, String... messages) {
-        TLogEntryField entry = new TLogEntryField(execution.getId(), modul, mdr != null ? mdr.getId() : null, field,
-                qualifier, new Date(), status, messages);
+        TLogEntryField entry = new TLogEntryField(execution.getId().toString(), modul, mdr != null && mdr.getId() != null
+                ? mdr.getId().toString() : null, field, qualifier, new Date(), status, messages);
         insert(entry, false);
     }
 
     @Override
-    public void logField(Execution<String> execution, IngestionPlugin plugin,
-            MetaDataRecord<String> mdr, String field, String qualifier, int status,
+    public void logField(Execution<I> execution, IngestionPlugin plugin,
+            MetaDataRecord<I> mdr, String field, String qualifier, int status,
             String... messages) {
         logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, messages);
     }
 
     @Override
-    public void logDuration(Execution<String> execution, String modul, Long duration) {
+    public void logDuration(Execution<I> execution, String modul, Long duration) {
         TLogEntryDuration entry = new TLogEntryDuration(modul, new Date(), duration);
         insert(entry, false);
     }
 
     @Override
-    public void logDuration(Execution<String> execution, IngestionPlugin plugin, Long duration) {
+    public void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration) {
         logDuration(execution, plugin.getIdentifier(), duration);
     }
 
     @Override
-    public List<LoggingEngine.LogEntry<String>> getLogs(Execution<String> execution) {
+    public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         flush();
 
-        List<LoggingEngine.LogEntry<String>> result = new ArrayList<LoggingEngine.LogEntry<String>>();
-        List<TLogEntry> entries = storage.getLogHome().findByExecution(execution.getId());
+        List<LoggingEngine.LogEntry> result = new ArrayList<LoggingEngine.LogEntry>();
+        List<TLogEntry> entries = storage.getLogHome().findByExecution(execution.getId().toString());
         for (TLogEntry entry : entries) {
             result.add(entry);
         }
@@ -215,12 +217,12 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryFailed<String>> getFailedLogs(Execution<String> execution) {
+    public List<LoggingEngine.LogEntryFailed> getFailedLogs(Execution<I> execution) {
         flush();
 
-        List<LoggingEngine.LogEntryFailed<String>> result = new ArrayList<LoggingEngine.LogEntryFailed<String>>();
+        List<LoggingEngine.LogEntryFailed> result = new ArrayList<LoggingEngine.LogEntryFailed>();
         List<TLogEntryFailed> entries = storage.getLogFailedHome().findByExecution(
-                execution.getId());
+                execution.getId().toString());
         for (TLogEntryFailed entry : entries) {
             result.add(entry);
         }
@@ -228,11 +230,12 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryLink<String>> getLinkLogs(Execution<String> execution) {
+    public List<LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
         flush();
 
-        List<LoggingEngine.LogEntryLink<String>> result = new ArrayList<LoggingEngine.LogEntryLink<String>>();
-        List<TLogEntryLink> entries = storage.getLogLinkHome().findByExecution(execution.getId());
+        List<LoggingEngine.LogEntryLink> result = new ArrayList<LoggingEngine.LogEntryLink>();
+        List<TLogEntryLink> entries = storage.getLogLinkHome().findByExecution(
+                execution.getId().toString());
         for (TLogEntryLink entry : entries) {
             result.add(entry);
         }
@@ -294,7 +297,7 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
     }
 
     @Override
-    public void completed(ExecutionContext<String> execution) {
+    public void completed(ExecutionContext<I> execution) {
         flush();
     }
 
@@ -305,5 +308,4 @@ public class DatabaseLoggingEngine implements LoggingEngine<String> {
         insert((TLogEntryLink)null, true);
         insert((TLogEntryDuration)null, true);
     }
-
 }

@@ -186,8 +186,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntry<I>> result = new ArrayList<LoggingEngine.LogEntry<I>>();
+    public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
+        List<LoggingEngine.LogEntry> result = new ArrayList<LoggingEngine.LogEntry>();
         for (LogEntry entry : entries) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -197,8 +197,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntryFailed<I>> result = new ArrayList<LoggingEngine.LogEntryFailed<I>>();
+    public List<LoggingEngine.LogEntryFailed> getFailedLogs(Execution<I> execution) {
+        List<LoggingEngine.LogEntryFailed> result = new ArrayList<LoggingEngine.LogEntryFailed>();
         for (FailedEntry entry : failed) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -208,8 +208,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntryLink<I>> result = new ArrayList<LoggingEngine.LogEntryLink<I>>();
+    public List<LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
+        List<LoggingEngine.LogEntryLink> result = new ArrayList<LoggingEngine.LogEntryLink>();
         for (LinkEntry entry : linklogs) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -218,7 +218,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         return result;
     }
 
-    private class LogEntry implements LoggingEngine.LogEntry<I> {
+    private class LogEntry implements LoggingEngine.LogEntry {
         private final Level        level;
         private final String       module;
         private final Date         date;
@@ -266,12 +266,12 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public I getExecution() {
-            return execution.getId();
+        public String getStringExecutionId() {
+            return execution != null ? execution.getId().toString() : null;
         }
     }
 
-    private class FailedEntry implements LoggingEngine.LogEntryFailed<I> {
+    private class FailedEntry implements LoggingEngine.LogEntryFailed {
         private final Level             level;
         private final String            module;
         private final MetaDataRecord<I> mdr;
@@ -342,18 +342,18 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public I getExecution() {
-            return execution != null ? execution.getId() : null;
+        public String getStringExecutionId() {
+            return execution != null ? execution.getId().toString() : null;
         }
 
         @Override
-        public I getMetaDataRecord() {
-            return mdr != null ? mdr.getId() : null;
+        public String getStringMetaDataRecordId() {
+            return mdr != null ? mdr.getId().toString() : null;
         }
 
     }
 
-    private class LinkEntry implements LogEntryLink<I> {
+    private class LinkEntry implements LogEntryLink {
         private final String            module;
         private final String            link;
         private final Date              date;
@@ -413,17 +413,17 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public I getExecution() {
-            return execution != null ? execution.getId() : null;
+        public String getStringExecutionId() {
+            return execution != null ? execution.getId().toString() : null;
         }
 
         @Override
-        public I getMetaDataRecord() {
-            return mdr != null ? mdr.getId() : null;
+        public String getStringMetaDataRecordId() {
+            return mdr != null ? mdr.getId().toString() : null;
         }
     }
 
-    private class FieldEntry implements LogEntryField<I> {
+    private class FieldEntry implements LogEntryField {
         private final String            module;
         private final String            field;
         private final String            qualifier;
@@ -492,13 +492,13 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public I getExecution() {
-            return execution != null ? execution.getId() : null;
+        public String getStringExecutionId() {
+            return execution != null ? execution.getId().toString() : null;
         }
 
         @Override
-        public I getMetaDataRecord() {
-            return mdr != null ? mdr.getId() : null;
+        public String getStringMetaDataRecordId() {
+            return mdr != null ? mdr.getId().toString() : null;
         }
     }
 

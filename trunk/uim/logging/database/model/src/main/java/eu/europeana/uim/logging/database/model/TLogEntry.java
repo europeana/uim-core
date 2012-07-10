@@ -29,7 +29,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntry;
 @Table(name = "uim_logentry")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
-public class TLogEntry implements LogEntry<String> {
+public class TLogEntry implements LogEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
     private Long     oid;
@@ -38,10 +38,10 @@ public class TLogEntry implements LogEntry<String> {
     private String   module;
 
     @Column
-    private String   execution;
+    private String   stringExecutionId;
 
     @Column
-    private String   metaDataRecord;
+    private String   stringMetaDataRecordId;
 
     @Column
     private String   level;
@@ -110,10 +110,10 @@ public class TLogEntry implements LogEntry<String> {
     }
 
     /**
-     * Creates a new instance of this class with main fields and execution information.
+     * Creates a new instance of this class with main fields and stringExecutionId information.
      * 
-     * @param execution
-     *            the execution in which the log message occured
+     * @param stringExecutionId
+     *            the stringExecutionId in which the log message occured
      * @param level
      *            the level of the log message
      * @param module
@@ -123,9 +123,10 @@ public class TLogEntry implements LogEntry<String> {
      * @param messages
      *            the list of messages
      */
-    public TLogEntry(String execution, Level level, String module, Date date, String... messages) {
+    public TLogEntry(String stringExecutionId, Level level, String module, Date date,
+                     String... messages) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.level = level.getName();
         this.module = module;
         this.date = date;
@@ -168,16 +169,16 @@ public class TLogEntry implements LogEntry<String> {
     }
 
     @Override
-    public String getExecution() {
-        return execution;
+    public String getStringExecutionId() {
+        return stringExecutionId;
     }
 
     /**
-     * @param execution
-     *            for which execution
+     * @param stringExecutionId
+     *            for which stringExecutionId
      */
-    public void setExecution(String execution) {
-        this.execution = execution;
+    public void setStringExecutionId(String stringExecutionId) {
+        this.stringExecutionId = stringExecutionId;
     }
 
     @Override
@@ -196,16 +197,16 @@ public class TLogEntry implements LogEntry<String> {
     /**
      * @return the metadata record id
      */
-    public String getMetaDataRecord() {
-        return metaDataRecord;
+    public String getStringMetaDataRecordId() {
+        return stringMetaDataRecordId;
     }
 
     /**
-     * @param metaDataRecord
+     * @param stringMetaDataRecordId
      *            metadata record ID
      */
-    public void setMetaDataRecord(String metaDataRecord) {
-        this.metaDataRecord = metaDataRecord;
+    public void setStringstringMetaDataRecordIdId(String stringMetaDataRecordId) {
+        this.stringMetaDataRecordId = stringMetaDataRecordId;
     }
 
     @Override

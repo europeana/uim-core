@@ -33,7 +33,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
 @Table(name = "uim_logentry_link")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_LINK", sequenceName = "seq_uim_logentry_link")
-public class TLogEntryLink implements LogEntryLink<String> {
+public class TLogEntryLink implements LogEntryLink {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_LINK")
     private Long     oid;
@@ -42,10 +42,10 @@ public class TLogEntryLink implements LogEntryLink<String> {
     private String   module;
 
     @Column
-    private String   execution;
+    private String   stringExecutionId;
 
     @Column
-    private String   metaDataRecord;
+    private String   stringMetaDataRecordId;
 
     @Column(length = 4000)
     private String   link;
@@ -116,7 +116,7 @@ public class TLogEntryLink implements LogEntryLink<String> {
     /**
      * Creates a new instance of this class.
      * 
-     * @param execution
+     * @param stringExecutionId
      * @param module
      * @param mdr
      * @param link
@@ -124,13 +124,13 @@ public class TLogEntryLink implements LogEntryLink<String> {
      * @param status
      * @param messages
      */
-    public TLogEntryLink(String execution, String module, String mdr, String link, Date date,
+    public TLogEntryLink(String stringExecutionId, String module, String mdr, String link, Date date,
                          int status, String... messages) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.status = status;
         this.module = module;
-        this.metaDataRecord = mdr;
+        this.stringMetaDataRecordId = mdr;
         this.link = link;
         this.date = date;
 
@@ -174,16 +174,16 @@ public class TLogEntryLink implements LogEntryLink<String> {
     }
 
     @Override
-    public String getExecution() {
-        return execution;
+    public String getStringExecutionId() {
+        return stringExecutionId;
     }
 
     /**
-     * @param execution
-     *            for which execution
+     * @param stringExecutionId
+     *            for which stringExecutionId
      */
-    public void setExecution(String execution) {
-        this.execution = execution;
+    public void setStringExecutionId(String stringExecutionId) {
+        this.stringExecutionId = stringExecutionId;
     }
 
     @Override
@@ -200,16 +200,16 @@ public class TLogEntryLink implements LogEntryLink<String> {
     }
 
     @Override
-    public String getMetaDataRecord() {
-        return metaDataRecord;
+    public String getStringMetaDataRecordId() {
+        return stringMetaDataRecordId;
     }
 
     /**
-     * @param metaDataRecord
+     * @param stringMetaDataRecordId
      *            metadata record ID
      */
-    public void setMetaDataRecord(String metaDataRecord) {
-        this.metaDataRecord = metaDataRecord;
+    public void setStringMetaDataRecord(String stringMetaDataRecordId) {
+        this.stringMetaDataRecordId = stringMetaDataRecordId;
     }
 
     @Override

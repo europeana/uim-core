@@ -29,7 +29,6 @@ import eu.europeana.uim.workflow.Workflow;
  * @date Oct 24, 2011
  */
 public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements LoggingEngine<I> {
-
     private final Execution<I>              execution;
     private final UimDataSet<I>             dataset;
     private final Workflow                  workflow;
@@ -63,8 +62,9 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     public void beginTask(String name, int work) {
         try {
             super.beginTask(name, work);
-            
-            delegateLogFileWriter.log(execution, Level.INFO, "Start Workflow:" + workflow.getName() + " on " + dataset.toString());
+
+            delegateLogFileWriter.log(execution, Level.INFO,
+                    "Start Workflow:" + workflow.getName() + " on " + dataset.toString());
             delegateLogFileWriter.log(execution, Level.INFO, "Command:" + generateCommandLine());
         } catch (IOException e) {
             throw new RuntimeException("Could not write to logfile", e);
@@ -309,28 +309,25 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return delegateLoggingEngine.getLogs(execution);
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed<I>> getFailedLogs(
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed> getFailedLogs(
             Execution<I> execution) {
         return delegateLoggingEngine.getFailedLogs(execution);
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink<I>> getLinkLogs(
-            Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
         return delegateLoggingEngine.getLinkLogs(execution);
     }
-    
 
     @Override
     public void completed(ExecutionContext<I> execution) {
         delegateLoggingEngine.completed(execution);
     }
-
 
     private String generateStacktrace(Throwable t) {
         if (t == null) { return ""; }
@@ -371,8 +368,7 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
             b.append(" ");
             b.append(p.toString());
         }
-        
-        return b.toString();
 
+        return b.toString();
     }
 }

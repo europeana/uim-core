@@ -77,8 +77,8 @@ public class DatabaseEntityTest {
         assertEquals("c", storedEntry.getMessages()[2]);
         assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
 
-        assertNull(storedEntry.getExecution());
-        assertNull(storedEntry.getMetaDataRecord());
+        assertNull(storedEntry.getStringExecutionId());
+        assertNull(storedEntry.getStringMetaDataRecordId());
 
         storedEntry.setModule("MODULE");
         storedEntry.setMessage(new String[] {});
@@ -123,8 +123,8 @@ public class DatabaseEntityTest {
         assertEquals("c", storedEntry.getMessages()[2]);
         assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
 
-        assertNotNull(storedEntry.getExecution());
-        assertNotNull(storedEntry.getMetaDataRecord());
+        assertNotNull(storedEntry.getStringExecutionId());
+        assertNotNull(storedEntry.getStringMetaDataRecordId());
 
         storedEntry.setModule("MODULE");
         storedEntry.setMessage(new String[] {});
@@ -168,8 +168,8 @@ public class DatabaseEntityTest {
         assertEquals(200, storedEntry.getStatus());
         assertEquals(entry.getStatus(), storedEntry.getStatus());
 
-        assertNotNull(storedEntry.getExecution());
-        assertNotNull(storedEntry.getMetaDataRecord());
+        assertNotNull(storedEntry.getStringExecutionId());
+        assertNotNull(storedEntry.getStringMetaDataRecordId());
 
         storedEntry.setModule("MODULE");
         storedEntry.setMessage(new String[] {});
@@ -245,8 +245,8 @@ public class DatabaseEntityTest {
         assertEquals(200, storedEntry.getStatus());
         assertEquals(entry.getStatus(), storedEntry.getStatus());
 
-        assertNotNull(storedEntry.getExecution());
-        assertNotNull(storedEntry.getMetaDataRecord());
+        assertNotNull(storedEntry.getStringExecutionId());
+        assertNotNull(storedEntry.getStringMetaDataRecordId());
 
         storedEntry.setModule("MODULE");
         storedEntry.setMessage(new String[] {});

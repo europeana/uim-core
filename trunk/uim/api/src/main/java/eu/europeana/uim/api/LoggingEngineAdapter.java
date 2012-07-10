@@ -116,19 +116,18 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed<I>> getFailedLogs(
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed> getFailedLogs(
             Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink<I>> getLinkLogs(
-            Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
@@ -150,5 +149,4 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         throwable.printStackTrace(printWriter);
         return result.toString();
     }
-
 }

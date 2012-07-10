@@ -33,7 +33,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryField;
 @Table(name = "uim_logentry_field")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FIELD", sequenceName = "seq_uim_logentry_field")
-public class TLogEntryField implements LogEntryField<String> {
+public class TLogEntryField implements LogEntryField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FIELD")
     private Long     oid;
@@ -42,10 +42,10 @@ public class TLogEntryField implements LogEntryField<String> {
     private String   module;
 
     @Column
-    private String   execution;
+    private String   stringExecutionId;
 
     @Column
-    private String   metaDataRecord;
+    private String   stringMetaDataRecordId;
 
     @Column
     private String   field;
@@ -122,7 +122,7 @@ public class TLogEntryField implements LogEntryField<String> {
     /**
      * Creates a new instance of this class.
      * 
-     * @param execution
+     * @param stringExecutionId
      * @param module
      * @param mdr
      * @param field
@@ -131,13 +131,13 @@ public class TLogEntryField implements LogEntryField<String> {
      * @param status
      * @param messages
      */
-    public TLogEntryField(String execution, String module, String mdr, String field,
+    public TLogEntryField(String stringExecutionId, String module, String mdr, String field,
                           String qualifier, Date date, int status, String... messages) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.status = status;
         this.module = module;
-        this.metaDataRecord = mdr;
+        this.stringMetaDataRecordId = mdr;
         this.field = field;
         this.qualifier = qualifier;
         this.date = date;
@@ -182,16 +182,16 @@ public class TLogEntryField implements LogEntryField<String> {
     }
 
     @Override
-    public String getExecution() {
-        return execution;
+    public String getStringExecutionId() {
+        return stringExecutionId;
     }
 
     /**
-     * @param execution
-     *            for which execution
+     * @param stringExecutionId
+     *            for which stringExecutionId
      */
-    public void setExecution(String execution) {
-        this.execution = execution;
+    public void setStringExecutionId(String stringExecutionId) {
+        this.stringExecutionId = stringExecutionId;
     }
 
     @Override
@@ -208,16 +208,16 @@ public class TLogEntryField implements LogEntryField<String> {
     }
 
     @Override
-    public String getMetaDataRecord() {
-        return metaDataRecord;
+    public String getStringMetaDataRecordId() {
+        return stringMetaDataRecordId;
     }
 
     /**
-     * @param metaDataRecord
+     * @param stringMetaDataRecordId
      *            metadata record ID
      */
-    public void setMetaDataRecord(String metaDataRecord) {
-        this.metaDataRecord = metaDataRecord;
+    public void setStringMetaDataRecord(String stringMetaDataRecordId) {
+        this.stringMetaDataRecordId = stringMetaDataRecordId;
     }
 
     @Override

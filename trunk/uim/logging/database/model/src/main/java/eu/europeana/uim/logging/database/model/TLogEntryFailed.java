@@ -34,7 +34,7 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryFailed;
 @Table(name = "uim_logentry_failed")
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FAILED", sequenceName = "seq_uim_logentry_failed")
-public class TLogEntryFailed implements LogEntryFailed<String> {
+public class TLogEntryFailed implements LogEntryFailed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FAILED")
     private Long     oid;
@@ -43,10 +43,10 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     private String   module;
 
     @Column
-    private String   execution;
+    private String   stringExecutionId;
 
     @Column
-    private String   metaDataRecord;
+    private String   stringMetaDataRecordId;
 
     @Column(length = 4000)
     private String   stacktrace;
@@ -140,17 +140,17 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     /**
      * Creates a new instance of this class.
      * 
-     * @param execution
+     * @param stringExecutionId
      * @param level
      * @param module
      * @param stacktrace
      * @param date
      * @param messages
      */
-    public TLogEntryFailed(String execution, Level level, String module, String stacktrace,
+    public TLogEntryFailed(String stringExecutionId, Level level, String module, String stacktrace,
                            Date date, String... messages) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.level = level.getName();
         this.module = module;
         this.stacktrace = stacktrace;
@@ -162,7 +162,7 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     /**
      * Creates a new instance of this class.
      * 
-     * @param execution
+     * @param stringExecutionId
      * @param level
      * @param module
      * @param stacktrace
@@ -170,15 +170,15 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
      * @param mdr
      * @param messages
      */
-    public TLogEntryFailed(String execution, Level level, String module, String stacktrace,
+    public TLogEntryFailed(String stringExecutionId, Level level, String module, String stacktrace,
                            String mdr, Date date, String... messages) {
         super();
-        this.execution = execution;
+        this.stringExecutionId = stringExecutionId;
         this.level = level.getName();
         this.module = module;
         this.stacktrace = stacktrace;
         this.date = date;
-        this.metaDataRecord = mdr;
+        this.stringMetaDataRecordId = mdr;
         setMessage(messages);
     }
 
@@ -217,16 +217,16 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     }
 
     @Override
-    public String getExecution() {
-        return execution;
+    public String getStringExecutionId() {
+        return stringExecutionId;
     }
 
     /**
-     * @param execution
-     *            for which execution
+     * @param stringExecutionId
+     *            for which stringExecutionId
      */
-    public void setExecution(String execution) {
-        this.execution = execution;
+    public void setStringExecutionId(String stringExecutionId) {
+        this.stringExecutionId = stringExecutionId;
     }
 
     @Override
@@ -258,16 +258,16 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     }
 
     @Override
-    public String getMetaDataRecord() {
-        return metaDataRecord;
+    public String getStringMetaDataRecordId() {
+        return stringMetaDataRecordId;
     }
 
     /**
-     * @param metaDataRecord
+     * @param stringMetaDataRecordId
      *            metadata record ID
      */
-    public void setMetaDataRecord(String metaDataRecord) {
-        this.metaDataRecord = metaDataRecord;
+    public void setStringMetaDataRecord(String stringMetaDataRecordId) {
+        this.stringMetaDataRecordId = stringMetaDataRecordId;
     }
 
     @Override

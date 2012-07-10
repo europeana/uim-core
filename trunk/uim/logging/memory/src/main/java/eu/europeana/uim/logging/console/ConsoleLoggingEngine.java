@@ -14,10 +14,8 @@ import eu.europeana.uim.api.LoggingEngine;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
-
 /**
- * Implementation of logging engine to std err.
- * Used during test and development.
+ * Implementation of logging engine to std err. Used during test and development.
  * 
  * @param <I>
  *            generic identifier
@@ -26,7 +24,6 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @date 26 de Jan de 2012
  */
 public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
-
     @Override
     public String getIdentifier() {
         return ConsoleLoggingEngine.class.getSimpleName();
@@ -34,133 +31,130 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void log(Level level, String modul, String... message) {
-    	print(level+"-"+modul, message);
+        print(level + "-" + modul, message);
     }
 
     @Override
     public void log(Level level, IngestionPlugin plugin, String... message) {
-    	print(level+"-"+plugin.getIdentifier(), message);
+        print(level + "-" + plugin.getIdentifier(), message);
     }
 
     @Override
     public void log(Execution<I> execution, Level level, String modul, String... message) {
-    	print(execution.getId()+"-"+level+"-"+modul, message);
+        print(execution.getId() + "-" + level + "-" + modul, message);
     }
 
     @Override
     public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message) {
-    	print(execution.getId()+"-"+level+"-"+plugin.getIdentifier(), message);
+        print(execution.getId() + "-" + level + "-" + plugin.getIdentifier(), message);
     }
 
     @Override
     public void logFailed(Level level, String modul, Throwable throwable, String... message) {
-    	print("Failed "+level+"-"+modul, throwable, message);
+        print("Failed " + level + "-" + modul, throwable, message);
     }
 
-
-	@Override
+    @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
             MetaDataRecord<I> mdr, String... message) {
-    	print("Failed "+level+"-"+modul, throwable, message);
+        print("Failed " + level + "-" + modul, throwable, message);
     }
 
     @Override
     public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
             Throwable throwable, MetaDataRecord<I> mdr, String... message) {
-    	print("Failed "+level+"-"+plugin.getIdentifier(), throwable, message);
+        print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
     @Override
     public void logFailed(Level level, IngestionPlugin plugin, Throwable throwable,
             String... message) {
-    	print("Failed "+level+"-"+plugin.getIdentifier(), throwable, message);
+        print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
     @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
             String... message) {
-    	print("Failed "+level+"-"+modul, throwable, message);
+        print("Failed " + level + "-" + modul, throwable, message);
     }
 
     @Override
     public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
             Throwable throwable, String... message) {
-    	print("Failed "+level+"-"+plugin.getIdentifier(), throwable, message);
+        print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
     @Override
     public void logLink(String modul, String link, int status, String... message) {
-    	print("Link "+link+":"+status+"-"+modul, message);
+        print("Link " + link + ":" + status + "-" + modul, message);
     }
 
     @Override
     public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
             int status, String... message) {
-    	print("Link "+link+":"+status+"-"+modul, message);
+        print("Link " + link + ":" + status + "-" + modul, message);
     }
 
     @Override
     public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String link, int status, String... message) {
-    	print("Link "+link+":"+status+"-"+plugin.getIdentifier(), message);
+        print("Link " + link + ":" + status + "-" + plugin.getIdentifier(), message);
     }
 
     @Override
     public void logField(String modul, String field, String qualifier, int status,
             String... message) {
-    	print("Field "+field+":"+qualifier+"-"+status, message);
+        print("Field " + field + ":" + qualifier + "-" + status, message);
     }
 
     @Override
     public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
             String qualifier, int status, String... message) {
-    	print("Field "+field+":"+qualifier+"-"+status, message);
+        print("Field " + field + ":" + qualifier + "-" + status, message);
     }
 
     @Override
     public void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
             String field, String qualifier, int status, String... message) {
-    	print("Field "+field+":"+qualifier+"-"+status, message);
+        print("Field " + field + ":" + qualifier + "-" + status, message);
     }
 
     @Override
     public void logDuration(Execution<I> execution, String module, Long duration) {
-    	print("Duration "+execution.getId()+":"+module, duration.toString());
+        print("Duration " + execution.getId() + ":" + module, duration.toString());
     }
 
     @Override
     public void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration) {
-    	print("Duration "+execution.getId()+":"+plugin.getIdentifier(), duration.toString());
+        print("Duration " + execution.getId() + ":" + plugin.getIdentifier(), duration.toString());
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed<I>> getFailedLogs(
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed> getFailedLogs(
             Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink<I>> getLinkLogs(
-            Execution<I> execution) {
+    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
     private void print(String prefix, String... message) {
-    	for(String s:message)
-    		System.err.printf("%s: %s\n", prefix, s);
+        for (String s : message)
+            System.err.printf("%s: %s\n", prefix, s);
     }
 
-	private void print(String prefix, Throwable throwable, String... message) {
-		print(prefix, message);
-	   	System.err.printf("%s\n",getStackTrace(throwable));
+    private void print(String prefix, Throwable throwable, String... message) {
+        print(prefix, message);
+        System.err.printf("%s\n", getStackTrace(throwable));
     }
 
-    
     /**
      * utility method to serialize a throwable to a string
      * 

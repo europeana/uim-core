@@ -14,8 +14,7 @@ import eu.europeana.uim.api.LoggingEngine;
 public class DatabaseLoggingTest extends AbstractLoggingEngineTest {
     @Override
     protected LoggingEngine<Long> getLoggingEngine() {
-        DatabaseLoggingEngine loggingEngine = new DatabaseLoggingEngine();
-        return null;
-        //return loggingEngine;
+        DatabaseLoggingEngine<Long> loggingEngine = new DatabaseLoggingEngine<Long>();
+        return loggingEngine;
     }
 }

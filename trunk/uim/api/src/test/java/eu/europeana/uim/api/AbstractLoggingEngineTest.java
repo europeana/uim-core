@@ -91,7 +91,7 @@ public abstract class AbstractLoggingEngineTest {
         engine.logDuration(execution, "modul", 100l);
         engine.logDuration(execution, plugin, 100l);
 
-        List<LogEntry<Long>> logs = engine.getLogs(execution);
+        List<LogEntry> logs = engine.getLogs(execution);
         Assert.assertEquals(5, logs.size());
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractLoggingEngineTest {
         engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), mdr, "a2", "d",
                 "e");
 
-        List<LogEntryFailed<Long>> failedLogs = engine.getFailedLogs(execution);
+        List<LogEntryFailed> failedLogs = engine.getFailedLogs(execution);
         Assert.assertEquals(7, failedLogs.size());
     }
 
@@ -153,7 +153,7 @@ public abstract class AbstractLoggingEngineTest {
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "b", "c");
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "d", "e");
 
-        List<LogEntryLink<Long>> linkLogs = engine.getLinkLogs(execution);
+        List<LogEntryLink> linkLogs = engine.getLinkLogs(execution);
         Assert.assertEquals(5, linkLogs.size());
     }
 }

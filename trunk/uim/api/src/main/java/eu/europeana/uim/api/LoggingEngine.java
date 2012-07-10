@@ -347,27 +347,25 @@ public interface LoggingEngine<I> {
      * @param execution
      * @return the list of failed log entries for the execution
      */
-    List<LogEntry<I>> getLogs(Execution<I> execution);
+    List<LogEntry> getLogs(Execution<I> execution);
 
     /**
      * @param execution
      * @return the list of failed log entries for the execution
      */
-    List<LogEntryFailed<I>> getFailedLogs(Execution<I> execution);
+    List<LogEntryFailed> getFailedLogs(Execution<I> execution);
 
     /**
      * @param execution
      * @return the list of failed log entries for the execution
      */
-    List<LogEntryLink<I>> getLinkLogs(Execution<I> execution);
+    List<LogEntryLink> getLinkLogs(Execution<I> execution);
 
     /**
-     * @param <I>
-     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 19, 2011
      */
-    public interface LogEntry<I> {
+    public interface LogEntry {
         /**
          * @return the log level
          */
@@ -389,18 +387,16 @@ public interface LoggingEngine<I> {
         String[] getMessages();
 
         /**
-         * @return the execution identifier
+         * @return the execution identifier as string
          */
-        I getExecution();
+        String getStringExecutionId();
     }
 
     /**
-     * @param <I>
-     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 19, 2011
      */
-    public interface LogEntryDuration<I> {
+    public interface LogEntryDuration {
         /**
          * @return the module
          */
@@ -417,18 +413,16 @@ public interface LoggingEngine<I> {
         Long getDuration();
 
         /**
-         * @return the execution identifier
+         * @return the execution identifier as string
          */
-        I getExecution();
+        String getStringExecutionId();
     }
 
     /**
-     * @param <I>
-     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 19, 2011
      */
-    public interface LogEntryFailed<I> {
+    public interface LogEntryFailed {
         /**
          * @return the log level
          */
@@ -455,23 +449,21 @@ public interface LoggingEngine<I> {
         String[] getMessages();
 
         /**
-         * @return the execution identifier
+         * @return the execution identifier as string
          */
-        I getExecution();
-
+        String getStringExecutionId();
+        
         /**
-         * @return the meta data record identifier
+         * @return the meta data record identifier as string
          */
-        I getMetaDataRecord();
+        String getStringMetaDataRecordId();
     }
 
     /**
-     * @param <I>
-     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 19, 2011
      */
-    public interface LogEntryLink<I> {
+    public interface LogEntryLink {
         /**
          * @return the module
          */
@@ -498,23 +490,21 @@ public interface LoggingEngine<I> {
         String[] getMessages();
 
         /**
-         * @return the execution identifier
+         * @return the execution identifier as string
          */
-        I getExecution();
+        String getStringExecutionId();
 
         /**
-         * @return the meta data record identifier
+         * @return the meta data record identifier as string
          */
-        I getMetaDataRecord();
+        String getStringMetaDataRecordId();
     }
 
     /**
-     * @param <I>
-     * 
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Jul 19, 2011
      */
-    public interface LogEntryField<I> {
+    public interface LogEntryField {
         /**
          * @return the module
          */
@@ -546,13 +536,13 @@ public interface LoggingEngine<I> {
         String[] getMessages();
 
         /**
-         * @return the execution identifier
+         * @return the execution identifier as string
          */
-        I getExecution();
-
+        String getStringExecutionId();
+        
         /**
-         * @return the meta data record identifier
+         * @return the meta data record identifier as string
          */
-        I getMetaDataRecord();
+        String getStringMetaDataRecordId();
     }
 }
