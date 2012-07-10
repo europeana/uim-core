@@ -14,7 +14,7 @@
 
     <modules>
         <module>model</module>
-<!--         <module>engine</module> -->
+        <module>engine</module>
     </modules>
 
     <scm>
