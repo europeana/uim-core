@@ -59,9 +59,9 @@ public class DatabaseEntityTest {
         TLogEntry entry = new TLogEntry(Level.WARNING, "module", date, "a", "b", "c");
 
         logHome.insert(entry);
-        String oid = entry.getOid();
+        Long oid = entry.getOid();
 
-        TLogEntry storedEntry = logHome.findByOid(oid.toString());
+        TLogEntry storedEntry = logHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -84,7 +84,7 @@ public class DatabaseEntityTest {
         storedEntry.setMessage(new String[] {});
 
         logHome.update(storedEntry);
-        storedEntry = logHome.findByOid(oid.toString());
+        storedEntry = logHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -104,7 +104,7 @@ public class DatabaseEntityTest {
         logFailedHome.insert(entry);
         Long oid = entry.getOid();
 
-        TLogEntryFailed storedEntry = logFailedHome.findByOid(oid.toString());
+        TLogEntryFailed storedEntry = logFailedHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -130,7 +130,7 @@ public class DatabaseEntityTest {
         storedEntry.setMessage(new String[] {});
 
         logFailedHome.update(storedEntry);
-        storedEntry = logFailedHome.findByOid(oid.toString());
+        storedEntry = logFailedHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -149,7 +149,7 @@ public class DatabaseEntityTest {
         logLinkHome.insert(entry);
         Long oid = entry.getOid();
 
-        TLogEntryLink storedEntry = logLinkHome.findByOid(oid.toString());
+        TLogEntryLink storedEntry = logLinkHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -175,7 +175,7 @@ public class DatabaseEntityTest {
         storedEntry.setMessage(new String[] {});
 
         logLinkHome.update(storedEntry);
-        storedEntry = logLinkHome.findByOid(oid.toString());
+        storedEntry = logLinkHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -194,7 +194,7 @@ public class DatabaseEntityTest {
         logDurationHome.insert(entry);
         Long oid = entry.getOid();
 
-        TLogEntryDuration storedEntry = logDurationHome.findByOid(oid.toString());
+        TLogEntryDuration storedEntry = logDurationHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getModule(), storedEntry.getModule());
         assertEquals(entry.getDate(), storedEntry.getDate());
@@ -204,7 +204,7 @@ public class DatabaseEntityTest {
         storedEntry.setModule("MODULE");
 
         logDurationHome.update(storedEntry);
-        storedEntry = logDurationHome.findByOid(oid.toString());
+        storedEntry = logDurationHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -223,7 +223,7 @@ public class DatabaseEntityTest {
         logFieldHome.insert(entry);
         Long oid = entry.getOid();
 
-        TLogEntryField storedEntry = logFieldHome.findByOid(oid.toString());
+        TLogEntryField storedEntry = logFieldHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
@@ -252,12 +252,11 @@ public class DatabaseEntityTest {
         storedEntry.setMessage(new String[] {});
 
         logFieldHome.update(storedEntry);
-        storedEntry = logFieldHome.findByOid(oid.toString());
+        storedEntry = logFieldHome.findByOid(oid);
         assertNotNull(storedEntry);
         assertEquals(entry.getDate(), storedEntry.getDate());
 
         assertEquals("MODULE", storedEntry.getModule());
         assertEquals(3, storedEntry.getMessages().length);
     }
-
 }

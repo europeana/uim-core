@@ -18,12 +18,11 @@ import javax.persistence.Transient;
 import eu.europeana.uim.api.LoggingEngine.LogEntryField;
 
 /**
- * Implementation of failed log entry using JPA to persist the logging information 
- * to a data base.
+ * Implementation of failed log entry using JPA to persist the logging information to a data base.
  * 
- * This is to large parts a duplication of @see {@field TLogEntry}. Given the expected 
- * high numbers of log entries these tables/entities are not derived from each other.
- *  
+ * This is to large parts a duplication of @see {@field TLogEntry}. Given the expected high
+ * numbers of log entries these tables/entities are not derived from each other.
+ * 
  * They a kept separate to reduce the number of rows per table.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
@@ -35,13 +34,12 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryField;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FIELD", sequenceName = "seq_uim_logentry_field")
 public class TLogEntryField implements LogEntryField<String> {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FIELD")
-    private Long   oid;
+    private Long     oid;
 
     @Column
-    private String module;
+    private String   module;
 
     @Column
     private String   execution;
@@ -50,16 +48,16 @@ public class TLogEntryField implements LogEntryField<String> {
     private String   metaDataRecord;
 
     @Column
-    private String field;
+    private String   field;
 
     @Column
-    private String qualifier;
+    private String   qualifier;
 
     @Column
-    private Date   date;
+    private Date     date;
 
     @Column
-    private int  status;
+    private int      status;
 
     @Column(length = 4000)
     private String   message0;
@@ -93,47 +91,48 @@ public class TLogEntryField implements LogEntryField<String> {
 
     @Transient
     private String[] messages;
-    
-    
+
     /**
      * Creates a new instance of this class.
      */
     public TLogEntryField() {
     }
 
-
     /**
      * Creates a new instance of this class.
+     * 
      * @param module
      * @param field
-     * @param qualifier 
+     * @param qualifier
      * @param date
      * @param status
      * @param messages
      */
-    public TLogEntryField(String module, String field, String qualifier, Date date, int status, String... messages) {
+    public TLogEntryField(String module, String field, String qualifier, Date date, int status,
+                          String... messages) {
         super();
         this.module = module;
         this.field = field;
         this.qualifier = qualifier;
         this.date = date;
-        
+
         setMessage(messages);
     }
 
-
     /**
      * Creates a new instance of this class.
+     * 
      * @param execution
      * @param module
      * @param mdr
      * @param field
-     * @param qualifier 
+     * @param qualifier
      * @param date
      * @param status
      * @param messages
      */
-    public TLogEntryField(String execution, String module,String mdr, String field, String qualifier, Date date, int status, String... messages) {
+    public TLogEntryField(String execution, String module, String mdr, String field,
+                          String qualifier, Date date, int status, String... messages) {
         super();
         this.execution = execution;
         this.status = status;
@@ -142,10 +141,9 @@ public class TLogEntryField implements LogEntryField<String> {
         this.field = field;
         this.qualifier = qualifier;
         this.date = date;
-        
+
         setMessage(messages);
     }
-
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -155,22 +153,20 @@ public class TLogEntryField implements LogEntryField<String> {
         return oid;
     }
 
-
     @Override
     public int getStatus() {
         return status;
     }
 
-
-
     /**
      * Sets the status to the given value.
-     * @param status the status to set
+     * 
+     * @param status
+     *            the status to set
      */
     public void setStatus(int status) {
         this.status = status;
     }
-
 
     @Override
     public Date getDate() {
@@ -229,10 +225,11 @@ public class TLogEntryField implements LogEntryField<String> {
         return field;
     }
 
-
     /**
      * Sets the field to the given value.
-     * @param field the field to set
+     * 
+     * @param field
+     *            the field to set
      */
     public void setField(String field) {
         this.field = field;
@@ -240,6 +237,7 @@ public class TLogEntryField implements LogEntryField<String> {
 
     /**
      * Returns the qualifier.
+     * 
      * @return the qualifier
      */
     @Override
@@ -247,15 +245,15 @@ public class TLogEntryField implements LogEntryField<String> {
         return qualifier;
     }
 
-
     /**
      * Sets the qualifier to the given value.
-     * @param qualifier the qualifier to set
+     * 
+     * @param qualifier
+     *            the qualifier to set
      */
     public void setQualifier(String qualifier) {
         this.qualifier = qualifier;
     }
-
 
     @Override
     public String[] getMessages() {
@@ -296,8 +294,7 @@ public class TLogEntryField implements LogEntryField<String> {
         }
         return messages;
     }
-    
-    
+
     /**
      * @param messages
      *            string messages, note that only maximum 10 messages are supported by this entry

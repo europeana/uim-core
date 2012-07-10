@@ -28,7 +28,7 @@ public class TLogEntryDuration implements LogEntryDuration<String> {
     private Long   oid;
 
     @Column
-    private String   execution;
+    private String execution;
 
     @Column
     private String module;
@@ -137,5 +137,4 @@ public class TLogEntryDuration implements LogEntryDuration<String> {
     public void setExecution(String execution) {
         this.execution = execution;
     }
-
 }

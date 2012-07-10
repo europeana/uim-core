@@ -30,19 +30,18 @@ import eu.europeana.uim.api.LoggingEngine.LogEntry;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY", sequenceName = "seq_uim_logentry")
 public class TLogEntry implements LogEntry<String> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY")
-    private String     oid;
+    private Long     oid;
 
     @Column
     private String   module;
 
     @Column
-    private String     execution;
+    private String   execution;
 
     @Column
-    private String     metaDataRecord;
+    private String   metaDataRecord;
 
     @Column
     private String   level;
@@ -50,34 +49,34 @@ public class TLogEntry implements LogEntry<String> {
     @Column
     private Date     date;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message0;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message1;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message2;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message3;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message4;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message5;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message6;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message7;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message8;
 
-    @Column(length=4000)
+    @Column(length = 4000)
     private String   message9;
 
     @Transient
@@ -138,7 +137,7 @@ public class TLogEntry implements LogEntry<String> {
      * @return unique identifier used as primary key on database (is automatically set when
      *         persisted)
      */
-    public String getOid() {
+    public Long getOid() {
         return oid;
     }
 

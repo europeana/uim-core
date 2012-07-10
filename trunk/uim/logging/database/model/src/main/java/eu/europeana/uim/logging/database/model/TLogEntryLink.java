@@ -18,12 +18,11 @@ import javax.persistence.Transient;
 import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
 
 /**
- * Implementation of failed log entry using JPA to persist the logging information 
- * to a data base.
+ * Implementation of failed log entry using JPA to persist the logging information to a data base.
  * 
- * This is to large parts a duplication of @see {@link TLogEntry}. Given the expected 
- * high numbers of log entries these tables/entities are not derived from each other.
- *  
+ * This is to large parts a duplication of @see {@link TLogEntry}. Given the expected high numbers
+ * of log entries these tables/entities are not derived from each other.
+ * 
  * They a kept separate to reduce the number of rows per table.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
@@ -35,13 +34,12 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_LINK", sequenceName = "seq_uim_logentry_link")
 public class TLogEntryLink implements LogEntryLink<String> {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_LINK")
-    private Long   oid;
+    private Long     oid;
 
     @Column
-    private String module;
+    private String   module;
 
     @Column
     private String   execution;
@@ -50,13 +48,13 @@ public class TLogEntryLink implements LogEntryLink<String> {
     private String   metaDataRecord;
 
     @Column(length = 4000)
-    private String link;
+    private String   link;
 
     @Column
-    private Date   date;
+    private Date     date;
 
     @Column
-    private int  status;
+    private int      status;
 
     @Column(length = 4000)
     private String   message0;
@@ -90,17 +88,16 @@ public class TLogEntryLink implements LogEntryLink<String> {
 
     @Transient
     private String[] messages;
-    
-    
+
     /**
      * Creates a new instance of this class.
      */
     public TLogEntryLink() {
     }
 
-
     /**
      * Creates a new instance of this class.
+     * 
      * @param module
      * @param link
      * @param date
@@ -112,13 +109,13 @@ public class TLogEntryLink implements LogEntryLink<String> {
         this.module = module;
         this.link = link;
         this.date = date;
-        
+
         setMessage(messages);
     }
 
-
     /**
      * Creates a new instance of this class.
+     * 
      * @param execution
      * @param module
      * @param mdr
@@ -127,7 +124,8 @@ public class TLogEntryLink implements LogEntryLink<String> {
      * @param status
      * @param messages
      */
-    public TLogEntryLink(String execution, String module, String mdr, String link, Date date, int status, String... messages) {
+    public TLogEntryLink(String execution, String module, String mdr, String link, Date date,
+                         int status, String... messages) {
         super();
         this.execution = execution;
         this.status = status;
@@ -135,10 +133,9 @@ public class TLogEntryLink implements LogEntryLink<String> {
         this.metaDataRecord = mdr;
         this.link = link;
         this.date = date;
-        
+
         setMessage(messages);
     }
-
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -148,22 +145,20 @@ public class TLogEntryLink implements LogEntryLink<String> {
         return oid;
     }
 
-
     @Override
     public int getStatus() {
         return status;
     }
 
-
-
     /**
      * Sets the status to the given value.
-     * @param status the status to set
+     * 
+     * @param status
+     *            the status to set
      */
     public void setStatus(int status) {
         this.status = status;
     }
-
 
     @Override
     public Date getDate() {
@@ -222,15 +217,15 @@ public class TLogEntryLink implements LogEntryLink<String> {
         return link;
     }
 
-
     /**
      * Sets the link to the given value.
-     * @param link the link to set
+     * 
+     * @param link
+     *            the link to set
      */
     public void setLink(String link) {
         this.link = link;
     }
-
 
     @Override
     public String[] getMessages() {
@@ -271,8 +266,7 @@ public class TLogEntryLink implements LogEntryLink<String> {
         }
         return messages;
     }
-    
-    
+
     /**
      * @param messages
      *            string messages, note that only maximum 10 messages are supported by this entry

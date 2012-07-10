@@ -35,7 +35,6 @@ import eu.europeana.uim.api.LoggingEngine.LogEntryFailed;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_FAILED", sequenceName = "seq_uim_logentry_failed")
 public class TLogEntryFailed implements LogEntryFailed<String> {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_FAILED")
     private Long     oid;
@@ -44,10 +43,10 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
     private String   module;
 
     @Column
-    private String     execution;
+    private String   execution;
 
     @Column
-    private String     metaDataRecord;
+    private String   metaDataRecord;
 
     @Column(length = 4000)
     private String   stacktrace;
@@ -172,7 +171,7 @@ public class TLogEntryFailed implements LogEntryFailed<String> {
      * @param messages
      */
     public TLogEntryFailed(String execution, Level level, String module, String stacktrace,
-    		String mdr, Date date,  String... messages) {
+                           String mdr, Date date, String... messages) {
         super();
         this.execution = execution;
         this.level = level.getName();
