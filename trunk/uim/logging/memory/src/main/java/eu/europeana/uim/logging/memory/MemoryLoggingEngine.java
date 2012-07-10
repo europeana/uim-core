@@ -189,7 +189,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public List<LoggingEngine.LogEntry<I>> getLogs(Execution<I> execution) {
         List<LoggingEngine.LogEntry<I>> result = new ArrayList<LoggingEngine.LogEntry<I>>();
         for (LogEntry entry : entries) {
-            if (entry.execution!= null && entry.execution.equals(execution)) {
+            if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
             }
         }
@@ -200,7 +200,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public List<LoggingEngine.LogEntryFailed<I>> getFailedLogs(Execution<I> execution) {
         List<LoggingEngine.LogEntryFailed<I>> result = new ArrayList<LoggingEngine.LogEntryFailed<I>>();
         for (FailedEntry entry : failed) {
-            if (entry.execution!= null && entry.execution.equals(execution)) {
+            if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
             }
         }
@@ -211,7 +211,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     public List<LoggingEngine.LogEntryLink<I>> getLinkLogs(Execution<I> execution) {
         List<LoggingEngine.LogEntryLink<I>> result = new ArrayList<LoggingEngine.LogEntryLink<I>>();
         for (LinkEntry entry : linklogs) {
-            if (entry.execution!= null && entry.execution.equals(execution)) {
+            if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
             }
         }
@@ -269,7 +269,6 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         public I getExecution() {
             return execution.getId();
         }
-
     }
 
     private class FailedEntry implements LoggingEngine.LogEntryFailed<I> {
@@ -505,6 +504,6 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void completed(ExecutionContext<I> execution) {
-        // 
+        //
     }
 }
