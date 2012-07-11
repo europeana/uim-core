@@ -186,6 +186,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
         return aggregator;
     }
+
     @Override
     public Aggregator retrieveAggregatorByNameCode(String mnemonic) throws RepoxException {
         Aggregator aggregator = null;
@@ -215,13 +216,13 @@ public class RepoxRestClientImpl implements RepoxRestClient {
 
         aggregatorId.append("aggregatorId=");
         aggregatorId.append(agr.getId());
-        
+
         providerId.append("dataProviderId=");
         providerId.append(prov.getId());
-        
+
         name.append("name=");
         name.append(prov.getName());
-        
+
         description.append("description=");
         if (prov.getDescription() != null) {
             description.append(prov.getDescription());
@@ -254,9 +255,9 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         }
 
         Response resp = invokeRestCall("/dataProviders/create", Response.class,
-                aggregatorId.toString(), providerId.toString(), name.toString(), description.toString(),
-                country.toString(), nameCode.toString(), homepage.toString(),
-                datasetType.toString());
+                aggregatorId.toString(), providerId.toString(), name.toString(),
+                description.toString(), country.toString(), nameCode.toString(),
+                homepage.toString(), datasetType.toString());
 
         if (resp.getProvider() == null) {
             if (resp.getError() != null) {
@@ -1538,7 +1539,6 @@ public class RepoxRestClientImpl implements RepoxRestClient {
                     recordIdPolicy.toString(), idXpath.toString(), namespacePrefix.toString(),
                     namespaceUri.toString(), recordXPath.toString(), url.toString());
         }
-
     }
 
     private Response createUpdateDSFolder(String action, Source ds, Provider prov)
