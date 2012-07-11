@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.europeana.uim.repox.rest.RepoxTestUtils;
@@ -642,6 +643,7 @@ public class RepoxRestClientTest {
      * 
      * @throws Exception
      */
+    @Ignore
     @Test
     public void testCreateUpdateDeleteHttpDataSource() throws Exception {
         try {
