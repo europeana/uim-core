@@ -79,7 +79,7 @@ public class RepoxServlet extends HttpServlet {
                     resp.getWriter().write(builder.toString());
                     resp.getWriter().write(" DONE:" + collections.size());
                 } else {
-                    Collection<Serializable> coll = storageEngine.getCollection(id);
+                    Collection<Serializable> coll = storageEngine.findCollection(id);
                     boolean updated = synchronizeCollection(coll);
                     if (updated) {
                         storageEngine.updateCollection(coll);
