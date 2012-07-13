@@ -121,6 +121,14 @@ public final class AuthorityObjectModelRegistry {
                                                                                                              FeatureClass.class);
 
     /**
+     * geographic feature class
+     */
+    public static final TKey<AuthorityObjectModelRegistry, String>               FEATURE_CODE        = TKey.register(
+                                                                                                             AuthorityObjectModelRegistry.class,
+                                                                                                             "feature code",
+                                                                                                             String.class);
+
+    /**
      * For spatial records - Population
      */
     public static final TKey<AuthorityObjectModelRegistry, Long>                 POPULATION          = TKey.register(
@@ -152,11 +160,25 @@ public final class AuthorityObjectModelRegistry {
         validQualifiers.put(PERSON_FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(NameFormRelation.class);
+                add(Language.class);
             }
         });
         validQualifiers.put(ORGANIZATION_FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(NameFormRelation.class);
+                add(Language.class);
+            }
+        });
+        validQualifiers.put(TOPIC_FORM, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(KnowledgeOrganizationSystem.class);
+                add(Language.class);
+            }
+        });
+        validQualifiers.put(NAMED_PLACE_FORM, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(SpatialNameQualifier.class);
+                add(Language.class);
             }
         });
         validQualifiers.put(DISAMBIGUATION_DATA, new ArrayList<Class<? extends Enum<?>>>() {
@@ -175,18 +197,6 @@ public final class AuthorityObjectModelRegistry {
         validQualifiers.put(LINK, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(LinkTarget.class);
-            }
-        });
-        validQualifiers.put(TOPIC_FORM, new ArrayList<Class<? extends Enum<?>>>() {
-            {
-                add(Language.class);
-                add(KnowledgeOrganizationSystem.class);
-            }
-        });
-        validQualifiers.put(NAMED_PLACE_FORM, new ArrayList<Class<? extends Enum<?>>>() {
-            {
-                add(SpatialNameQualifier.class);
-                add(Language.class);
             }
         });
         validQualifiers.put(METADATA, new ArrayList<Class<? extends Enum<?>>>() {

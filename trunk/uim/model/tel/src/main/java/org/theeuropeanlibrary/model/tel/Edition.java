@@ -3,7 +3,6 @@ package org.theeuropeanlibrary.model.tel;
 
 import org.theeuropeanlibrary.model.common.FieldId;
 
-
 /**
  * The edition of a resource, represented as a number and/or as a textual statement (revised
  * edition, commented edition, etc)
@@ -122,6 +121,4 @@ public class Edition {
         } else if (!statement.equals(other.statement)) return false;
         return true;
     }
-    
-    
 }

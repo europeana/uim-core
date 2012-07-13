@@ -135,12 +135,11 @@ public enum Country implements Translatable {
       }
     }};
 
-
-    private final String iso3;
-    private final String marc;
-    private final String name;
-    private final Locale locale;
-    private final String translationKey;
+    private final String                               iso3;
+    private final String                               marc;
+    private final String                               name;
+    private final Locale                               locale;
+    private final String                               translationKey;
 
     Country(String iso2, String iso3, String marc, String name) {
         this.iso3 = iso3;
@@ -178,14 +177,13 @@ public enum Country implements Translatable {
     public String getName() {
         return name;
     }
-    
+
     @Override
     public String translate(Locale locale) {
-    	return getName(locale);
+        return getName(locale);
     }
 
     /**
-     * 
      * @param name
      *            of the country returned in specified language
      * @return
@@ -207,9 +205,7 @@ public enum Country implements Translatable {
      * @return country as enum looked up by name
      */
     public static Country getByName(String name) {
-        if (name != null) {
-            return textLookup.get(name.toLowerCase());
-        }
+        if (name != null) { return textLookup.get(name.toLowerCase()); }
         return null;
     }
 
@@ -219,9 +215,7 @@ public enum Country implements Translatable {
      * @return country as enum looked up by iso2
      */
     public static Country getByIso2(String iso2) {
-        if (iso2 != null) {
-            return iso2Lookup.get(iso2.toLowerCase());
-        }
+        if (iso2 != null) { return iso2Lookup.get(iso2.toLowerCase()); }
         return null;
     }
 
@@ -231,9 +225,7 @@ public enum Country implements Translatable {
      * @return country as enum looked up by iso3
      */
     public static Country getByIso3(String iso3) {
-        if (iso3 != null) {
-            return iso3Lookup.get(iso3.toLowerCase());
-        }
+        if (iso3 != null) { return iso3Lookup.get(iso3.toLowerCase()); }
         return null;
     }
 
@@ -243,9 +235,7 @@ public enum Country implements Translatable {
      * @return country as enum looked up by MARC
      */
     public static Country getByMarc(String marc) {
-        if (marc != null) {
-            return marcLookup.get(marc.toLowerCase());
-        }
+        if (marc != null) { return marcLookup.get(marc.toLowerCase()); }
         return null;
     }
 

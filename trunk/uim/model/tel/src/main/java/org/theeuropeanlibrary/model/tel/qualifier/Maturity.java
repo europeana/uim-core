@@ -16,17 +16,14 @@ public enum Maturity {
      * is accepted
      */
     WEAK_ACCEPT,
-    
     /**
      * is accepted
      */
     BORDERLINE,
-    
     /**
      * is accepted
      */
     WEAK_REJECT,
-    
     /**
      * is rejected
      */

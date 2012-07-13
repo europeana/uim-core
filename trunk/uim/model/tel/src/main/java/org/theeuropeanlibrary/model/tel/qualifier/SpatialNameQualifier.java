@@ -12,17 +12,14 @@ public enum SpatialNameQualifier {
 	 * The name is the primary name of the toponym		
 	 */
 	MAIN,
-
 	/** 
 	 * The name is an alternative name of the toponym
 	 */
 	ALTERNATIVE,
-	
 	/** 
 	 * The name is a short name of the toponym
 	 */
 	SHORT,
-	
 	/** 
 	 * The name is an official name of the toponym
 	 */

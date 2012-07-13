@@ -21,7 +21,7 @@ public class Person extends Party {
     private Period lifePeriod;
 
     /**
-     * A period when the person was active . These are used in library data when the life period is
+     * A period when the person was active. These are used in library data when the life period is
      * not known
      */
     @FieldId(4)

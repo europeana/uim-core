@@ -504,5 +504,4 @@ public final class ObjectModelRegistry {
         }
         return qualifiers;
     }
-
 }
