@@ -15,7 +15,7 @@
         <bundle>mvn:eu.europeana/europeana-uim-plugin-basic/1.3.0-SNAPSHOT</bundle>
         
         <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/1.3.0-SNAPSHOT</bundle>
-        <!-- Uncomment this if you want to use memory engine instead  
+        <!-- Uncomment this if you want to use memory storage engine instead (for debugging purposes)  
         <bundle>mvn:eu.europeana/europeana-uim-storage-memory/1.3.0-SNAPSHOT</bundle>
          -->
         <bundle>mvn:eu.europeana/europeana-uim-logging-memory/1.3.0-SNAPSHOT</bundle>
@@ -27,10 +27,16 @@
         <bundle>mvn:eu.europeana/europeana-uim-plugin-basic/1.3.1-SNAPSHOT</bundle>
         
         <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/1.3.1-SNAPSHOT</bundle>
+        
         <!-- Uncomment this if you want to use memory engine instead  
         <bundle>mvn:eu.europeana/europeana-uim-storage-memory/1.3.1-SNAPSHOT</bundle>
          -->
+         
+        <bundle>mvn:eu.europeana/europeana-uim-logging-database/1.3.1-SNAPSHOT</bundle>
+        
+        <!-- Uncomment this if you want to use memory logging engine instead (for debugging purposes)          
         <bundle>mvn:eu.europeana/europeana-uim-logging-memory/1.3.1-SNAPSHOT</bundle>
+        -->
     </feature>
 
 
@@ -87,10 +93,7 @@
     
     <feature name="uim-europeana-workflows-plugins" version="1.3.1.SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-plugin-solr3/1.3.0-SNAPSHOT</bundle>  
-        <!--  
         <bundle>mvn:eu.europeana/europeana-uim-plugin-linkchecker/1.3.1-SNAPSHOT</bundle> 
-        --> 
-        <bundle>mvn:org.theeuropeanlibrary/tel-uim-plugin-check-link/1.3.0-SNAPSHOT</bundle>    
         <bundle>mvn:eu.europeana/europeana-uim-plugin-solrosgi/1.3.1-SNAPSHOT</bundle>
     </feature>   
     
