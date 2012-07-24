@@ -276,7 +276,6 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                                        subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else {
-                
                 if (records.length > 0) {
                     I i = records[0];
                     if (i instanceof Comparable) {
