@@ -34,7 +34,7 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @since Jan 23, 2012
  */
 public class RepoxServiceImpl implements RepoxService {
-    private static final Logger    logger = Logger.getLogger(RepoxServiceImpl.class.getName());
+    private static final Logger    log = Logger.getLogger(RepoxServiceImpl.class.getName());
 
     /**
      * factory to retrieve (implicitly create) repox rest clients for specific repox locations
@@ -101,6 +101,8 @@ public class RepoxServiceImpl implements RepoxService {
 
     @Override
     public void updateProvider(Provider<?> provider) throws RepoxException {
+        log.info("Calling updateProvider for '" + provider + "'!");
+
         if (provider.isAggregator()) { throw new RepoxException(
                 "The requested object is not a Provider"); }
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
@@ -209,6 +211,8 @@ public class RepoxServiceImpl implements RepoxService {
 
     @Override
     public void deleteProvider(Provider<?> provider) throws RepoxException {
+        log.info("Calling deleteProvider for '" + provider + "'!");
+
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
 
         String id = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
@@ -222,6 +226,8 @@ public class RepoxServiceImpl implements RepoxService {
 
     @Override
     public void synchronizeProvider(Provider<?> provider) throws RepoxException {
+        log.info("Calling synchronizeProvider for '" + provider + "'!");
+
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
 
         String id = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
@@ -239,12 +245,16 @@ public class RepoxServiceImpl implements RepoxService {
                 provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_XML, xmlProvider);
                 provider.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
                         new Date(System.currentTimeMillis()).toString());
+
+                log.info("Stored xml for '" + provider + "' is '" + storedXml + "'!");
             }
         }
     }
 
     @Override
     public void updateCollection(Collection<?> collection) throws RepoxException {
+        log.info("Calling updateCollection for '" + collection + "'!");
+
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
         RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
@@ -257,7 +267,7 @@ public class RepoxServiceImpl implements RepoxService {
             htypeString = htypeString.replaceAll("\\s", "_");
             harvestingtype = DatasourceType.valueOf(htypeString);
         } catch (Throwable t) {
-            logger.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
+            log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
         }
 
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
@@ -329,6 +339,8 @@ public class RepoxServiceImpl implements RepoxService {
 
     @Override
     public void deleteCollection(Collection<?> collection) throws RepoxException {
+        log.info("Calling deleteCollection for '" + collection + "'!");
+
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
@@ -341,6 +353,8 @@ public class RepoxServiceImpl implements RepoxService {
 
     @Override
     public void synchronizeCollection(Collection<?> collection) throws RepoxException {
+        log.info("Calling synchronizeCollection for '" + collection + "'!");
+
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
@@ -374,6 +388,8 @@ public class RepoxServiceImpl implements RepoxService {
                         status.getStatus());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
                         new Date(System.currentTimeMillis()).toString());
+
+                log.info("Status for '" + collection + "' is '" + storedStatus + "'!");
             }
 
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
@@ -383,12 +399,18 @@ public class RepoxServiceImpl implements RepoxService {
                         status.getRecords());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
                         new Date(System.currentTimeMillis()).toString());
+
+                log.info("Status for '" + collection + "' is '" + storedRecords + "'!");
             }
+        } else {
+            log.warning("Missing repox identifier for '" + collection + "'!");
         }
     }
 
     @Override
     public String getHarvestLog(Collection<?> collection) throws RepoxException {
+        log.info("Calling getHarvestLog for '" + collection + "'!");
+
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return null; }
 
         StringBuffer sb = new StringBuffer();
@@ -401,12 +423,19 @@ public class RepoxServiceImpl implements RepoxService {
             for (String ln : linelist) {
                 sb.append(ln);
             }
+
+            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
+        } else {
+            log.warning("Missing repox identifier for '" + collection + "'!");
         }
+
         return sb.toString();
     }
 
     @Override
     public List<String> getActiveHarvestings(String url) throws RepoxException {
+        log.info("Calling getActiveHarvestings for '" + url + "'!");
+
         if (url == null || url.length() == 0) { return null; }
 
         RepoxRestClient client = clientfactory.getInstance(url);
