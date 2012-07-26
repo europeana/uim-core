@@ -172,6 +172,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             log.log(Level.SEVERE, "Storage connection is null!");
             return res;
         }
+        
+        RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+        if (repoxService == null) {
+            
+        }
 
         Provider<Serializable> p = null;
         try {
@@ -476,11 +481,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         try {
             repoxService.updateCollection(collection);
         } catch (RepoxException e) {
+            log.severe("Could not update collection to repox! " + e);
             throw new RuntimeException("Could not update collection to repox!", e);
         }
         try {
             repoxService.synchronizeCollection(collection);
         } catch (RepoxException e) {
+            log.severe("Could not synchronize collection to repox! " + e);
             throw new RuntimeException("Could not synchronize collection to repox!", e);
         }
 

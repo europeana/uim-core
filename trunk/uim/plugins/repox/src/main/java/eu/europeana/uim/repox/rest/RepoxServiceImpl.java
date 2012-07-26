@@ -335,6 +335,9 @@ public class RepoxServiceImpl implements RepoxService {
             if (retsource == null) { throw new RepoxException(
                     "Could not update source for collection '" + collection.getMnemonic() + "'!"); }
         }
+        
+        log.info("Collection REPOX id is '" + collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID) + "'!");
+        log.info("Provider REPOX id is '" + collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_XML) + "'!");
     }
 
     @Override
