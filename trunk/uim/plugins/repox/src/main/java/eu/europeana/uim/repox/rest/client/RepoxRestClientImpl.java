@@ -22,6 +22,7 @@ package eu.europeana.uim.repox.rest.client;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -29,6 +30,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
 
 import eu.europeana.uim.repox.RepoxException;
@@ -996,7 +998,16 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         try {
             response = responseClass.cast(u.unmarshal(new InputStreamReader(conn.getInputStream())));
         } catch (Exception e) {
-            throw new RepoxException("Could not unmarshall rest response!", e);
+            // TODO: REMOVE
+            StringWriter writer = new StringWriter();
+            try {
+                IOUtils.copy(conn.getInputStream(), writer, "UTF-8");
+            } catch (Exception e1) {
+                throw new RepoxException("Could not read stream!", e1);
+            }
+            String out = writer.toString();
+
+            throw new RepoxException("Could not unmarshall rest response '" + out + "'!", e);
         }
         return response;
     }
