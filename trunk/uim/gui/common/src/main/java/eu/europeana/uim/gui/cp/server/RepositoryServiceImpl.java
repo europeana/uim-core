@@ -172,11 +172,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             log.log(Level.SEVERE, "Storage connection is null!");
             return res;
         }
-        
-        RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
-        if (repoxService == null) {
-            
-        }
 
         Provider<Serializable> p = null;
         try {
