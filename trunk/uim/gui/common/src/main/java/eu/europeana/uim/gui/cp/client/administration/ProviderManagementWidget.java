@@ -112,7 +112,7 @@ public class ProviderManagementWidget extends IngestionWidget {
                 collection.setProvider(provider);
                 collectionForm.setCollection(collection);
 
-// synchronizeProvider(provider);
+//                synchronizeProvider(provider);
             }
         });
 
@@ -135,24 +135,24 @@ public class ProviderManagementWidget extends IngestionWidget {
         return widget;
     }
 
-// private void synchronizeProvider(ProviderDTO provider) {
-// repositoryService.synchronizeRepoxProvider(provider.getId(),
-// new AsyncCallback<ProviderDTO>() {
-// @Override
-// public void onFailure(Throwable caught) {
-// caught.printStackTrace();
-// }
+//    private void synchronizeProvider(ProviderDTO provider) {
+//        repositoryService.synchronizeRepoxProvider(provider.getId(),
+//                new AsyncCallback<ProviderDTO>() {
+//                    @Override
+//                    public void onFailure(Throwable caught) {
+//                        caught.printStackTrace();
+//                    }
 //
-// @Override
-// public void onSuccess(ProviderDTO result) {
-// if (result != null) {
-// if (providerForm.getProvider().getId().equals(result.getId())) {
-// providerForm.setProvider(result);
-// }
-// }
-// }
-// });
-// }
+//                    @Override
+//                    public void onSuccess(ProviderDTO result) {
+//                        if (result != null) {
+//                            if (providerForm.getProvider().getId().equals(result.getId())) {
+//                                providerForm.setProvider(result);
+//                            }
+//                        }
+//                    }
+//                });
+//    }
 
     private void updateProviders() {
         repositoryService.getProviders(new AsyncCallback<List<ProviderDTO>>() {
@@ -221,7 +221,7 @@ public class ProviderManagementWidget extends IngestionWidget {
                     public void onSuccess(List<CollectionDTO> result) {
                         collections.clear();
                         collectionBox.clear();
-                        
+
                         Collections.sort(result, new Comparator<CollectionDTO>() {
                             @Override
                             public int compare(CollectionDTO o1, CollectionDTO o2) {
