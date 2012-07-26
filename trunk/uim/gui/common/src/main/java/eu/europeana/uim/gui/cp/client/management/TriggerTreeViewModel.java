@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.gwt.gen2.logging.shared.Log;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -33,7 +34,6 @@ public class TriggerTreeViewModel implements TreeViewModel {
     private final MultiSelectionModel<BrowserObject> selectionModel;
     private final BrowserObjectCell                  browserObjectCell;
 
-    
     /**
      * provides keys for browser objects
      */
@@ -91,6 +91,21 @@ public class TriggerTreeViewModel implements TreeViewModel {
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {
+        repositoryService.synchronizeRepox(new AsyncCallback<Boolean>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                throwable.printStackTrace();
+                // TODO: panic
+            }
+
+            @Override
+            public void onSuccess(Boolean success) {
+                if (!success) {
+                    Log.warning("Synchronization with REPOX did not work!");
+                }
+            }
+        });
+
         repositoryService.getProviders(new AsyncCallback<List<ProviderDTO>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -103,7 +118,9 @@ public class TriggerTreeViewModel implements TreeViewModel {
                 List<BrowserObject> providerList = providersDataProvider.getList();
                 providerList.clear();
                 for (ProviderDTO p : providers) {
-                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() + ": " + p.getName();
+                    String name = p.getCountry() == null ? "XX: " + p.getName() : p.getCountry() +
+                                                                                  ": " +
+                                                                                  p.getName();
                     providerList.add(new BrowserObject(name, p));
                 }
                 Collections.sort(providerList, new Comparator<BrowserObject>() {
@@ -112,7 +129,6 @@ public class TriggerTreeViewModel implements TreeViewModel {
                         return o1.getName().compareTo(o2.getName());
                     }
                 });
-
             }
         });
     }
@@ -130,13 +146,14 @@ public class TriggerTreeViewModel implements TreeViewModel {
             public void onSuccess(List<CollectionDTO> collections) {
                 List<BrowserObject> collectionList = collectionsDataProvider.getList();
                 collectionList.clear();
-//                if (collections.size() > 0) {
-//                    CollectionDTO fakeCollection = new CollectionDTO();
-//                    fakeCollection.setName(ALL_COLLECTIONS);
-//                    collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
-//                }
+// if (collections.size() > 0) {
+// CollectionDTO fakeCollection = new CollectionDTO();
+// fakeCollection.setName(ALL_COLLECTIONS);
+// collectionList.add(new BrowserObject(ALL_COLLECTIONS, fakeCollection));
+// }
                 for (CollectionDTO collection : collections) {
-                    collectionList.add(new BrowserObject(collection.getMnemonic() + ": " + collection.getName(), collection));
+                    collectionList.add(new BrowserObject(collection.getMnemonic() + ": " +
+                                                         collection.getName(), collection));
                 }
                 Collections.sort(collectionList, new Comparator<BrowserObject>() {
                     @Override
@@ -170,7 +187,6 @@ public class TriggerTreeViewModel implements TreeViewModel {
                         return o1.getName().compareTo(o2.getName());
                     }
                 });
-
             }
         });
     }
