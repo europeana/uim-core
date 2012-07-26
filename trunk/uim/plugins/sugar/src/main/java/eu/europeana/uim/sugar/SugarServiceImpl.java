@@ -223,7 +223,6 @@ public class SugarServiceImpl implements SugarService {
 
             if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
-
             } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
                 if (!StringUtils.equals(value, collection.getName())) {
                     updates.put(field.getFieldId(), collection.getName());
@@ -258,7 +257,6 @@ public class SugarServiceImpl implements SugarService {
             @SuppressWarnings("unused")
             boolean changed = client.updateCollection(sessionID, mnemonic, updates);
         }
-
     }
 
     @Override
@@ -517,12 +515,12 @@ public class SugarServiceImpl implements SugarService {
             Class<?> mapping = Class.forName(sugarMappingClass, true,
                     SugarServiceImpl.class.getClassLoader());
             setSugarMapping((SugarMapping)mapping.newInstance());
-            
+
             this.sugarMappingClass = sugarMappingClass;
         } catch (Throwable e) {
             // ignore for the moment (default spring configuration should come up at least)
-//            throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
-//                    e);
+// throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
+// e);
         }
     }
 }
