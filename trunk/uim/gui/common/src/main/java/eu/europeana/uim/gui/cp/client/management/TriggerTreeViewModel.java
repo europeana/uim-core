@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.gwt.gen2.logging.shared.Log;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -74,6 +74,22 @@ public class TriggerTreeViewModel implements TreeViewModel {
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider, browserObjectCell,
                     selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
+            repositoryService.synchronizeRepoxCollection(
+                    ((CollectionDTO)((BrowserObject)value).getWrappedObject()).getId(),
+                    new AsyncCallback<CollectionDTO>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+
+                        @Override
+                        public void onSuccess(CollectionDTO result) {
+                           if (result == null) {
+                               Window.alert("Synchronization with REPOX did not work!");
+                           }
+                        }
+                    });
+
             ListDataProvider<BrowserObject> workflowsDataProvider = new ListDataProvider<BrowserObject>();
             loadWorkflows(workflowsDataProvider);
             return new DefaultNodeInfo<BrowserObject>(workflowsDataProvider, browserObjectCell,
@@ -91,20 +107,20 @@ public class TriggerTreeViewModel implements TreeViewModel {
     }
 
     private void loadProviders(final ListDataProvider<BrowserObject> providersDataProvider) {
-        repositoryService.synchronizeRepox(new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                throwable.printStackTrace();
-                // TODO: panic
-            }
-
-            @Override
-            public void onSuccess(Boolean success) {
-                if (!success) {
-                    Log.warning("Synchronization with REPOX did not work!");
-                }
-            }
-        });
+//        repositoryService.synchronizeRepox(new AsyncCallback<Boolean>() {
+//            @Override
+//            public void onFailure(Throwable throwable) {
+//                throwable.printStackTrace();
+//                // TODO: panic
+//            }
+//
+//            @Override
+//            public void onSuccess(Boolean success) {
+//                if (!success) {
+//                    Window.alert("Synchronization with REPOX did not work!");
+//                }
+//            }
+//        });
 
         repositoryService.getProviders(new AsyncCallback<List<ProviderDTO>>() {
             @Override
