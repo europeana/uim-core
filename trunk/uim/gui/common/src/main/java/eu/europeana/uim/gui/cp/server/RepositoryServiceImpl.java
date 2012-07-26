@@ -444,6 +444,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public CollectionDTO synchronizeRepoxCollection(Serializable collectionId) {
+        log.info("Synchronization with REPOX for collection '" + collectionId + "' was triggered!");
+        
         CollectionDTO coll = null;
         if (getEngine() instanceof RepoxEngine) {
             RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
