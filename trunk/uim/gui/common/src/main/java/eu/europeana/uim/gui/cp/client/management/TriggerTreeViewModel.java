@@ -84,9 +84,9 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
                         @Override
                         public void onSuccess(CollectionDTO result) {
-                           if (result == null) {
-                               Window.alert("Synchronization with REPOX did not work!");
-                           }
+//                           if (result == null) {
+//                               Window.alert("Synchronization with REPOX did not work!");
+//                           }
                         }
                     });
 
