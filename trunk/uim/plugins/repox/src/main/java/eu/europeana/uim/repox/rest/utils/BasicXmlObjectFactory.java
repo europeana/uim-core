@@ -56,8 +56,8 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
         if (countrystr != null) {
             Country country = Country.lookupCountry(countrystr.toLowerCase(), false);
-            if (country != null) {
-                jaxbProvider.setCountry(country.getIso2());
+            if (country != null && !country.getIso2().toLowerCase().equals(jaxbProvider.getCountry())) {
+                jaxbProvider.setCountry(country.getIso2().toLowerCase());
             }
         }
 
@@ -82,8 +82,8 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
         if (countrystr != null) {
             Country country = Country.lookupCountry(countrystr.toLowerCase(), false);
-            if (country != null && !country.getIso2().equals(jaxbProvider.getCountry())) {
-                jaxbProvider.setCountry(country.getIso2());
+            if (country != null && !country.getIso2().toLowerCase().equals(jaxbProvider.getCountry())) {
+                jaxbProvider.setCountry(country.getIso2().toLowerCase());
                 changed = true;
             }
         }
