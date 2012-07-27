@@ -122,28 +122,29 @@ public class RepoxServiceImpl implements RepoxService {
             providerId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
         }
 
-        eu.europeana.uim.repox.rest.client.xml.Provider retDs;
+        eu.europeana.uim.repox.rest.client.xml.Provider retProv;
         if (providerId == null) {
-            retDs = client.retrieveProvider(provider.getMnemonic());
+            retProv = client.retrieveProvider(provider.getMnemonic());
 
-            if (retDs == null) {
-                retDs = client.retrieveProviderByNameCode(provider.getMnemonic());
+            if (retProv == null) {
+                retProv = client.retrieveProviderByNameCode(provider.getMnemonic());
             }
 
-            if (retDs != null) {
-                providerId = retDs.getId();
+            if (retProv != null) {
+                providerId = retProv.getId();
 
                 if (collection != null) {
-                    collection.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
+                    collection.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID,
+                            retProv.getId());
                 } else {
-                    provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retDs.getId());
+                    provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retProv.getId());
                 }
             }
         } else {
-            retDs = client.retrieveProvider(providerId);
+            retProv = client.retrieveProvider(providerId);
         }
 
-        if (retDs == null) {
+        if (retProv == null) {
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
             jaxbProv.setId(provider.getMnemonic());
 
@@ -160,9 +161,11 @@ public class RepoxServiceImpl implements RepoxService {
                 provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, providerId);
             }
         } else {
-            xmlFactory.updateProvider(provider, retDs);
-            retDs.setId(providerId);
-            client.updateProvider(retDs);
+            boolean update = xmlFactory.updateProvider(provider, retProv);
+            if (update) {
+                retProv.setId(providerId);
+                client.updateProvider(retProv);
+            }
         }
     }
 
@@ -323,33 +326,38 @@ public class RepoxServiceImpl implements RepoxService {
                 retsource = client.createDatasourceFolder(ds, jibxProv);
                 break;
             }
+
             if (retsource == null) { throw new RepoxException(
                     "Could not create source for collection '" + collection.getMnemonic() + "'!"); }
 
             collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retsource.getId());
         } else {
-            xmlFactory.updateDataSource(collection, retDs);
+            boolean update = xmlFactory.updateDataSource(collection, retDs);
 
-            Source retsource = null;
-            switch (harvestingtype) {
-            case oai_pmh:
-                retsource = client.updateDatasourceOAI(retDs);
-                break;
-            case z39_50:
-                retsource = client.updateDatasourceZ3950Timestamp(retDs);
-                break;
-            case ftp:
-                retsource = client.updateDatasourceFtp(retDs);
-                break;
-            case http:
-                retsource = client.updateDatasourceHttp(retDs);
-                break;
-            case folder:
-                retsource = client.updateDatasourceFolder(retDs);
-                break;
+            if (update) {
+                Source retsource = null;
+                switch (harvestingtype) {
+                case oai_pmh:
+                    retsource = client.updateDatasourceOAI(retDs);
+                    break;
+                case z39_50:
+                    retsource = client.updateDatasourceZ3950Timestamp(retDs);
+                    break;
+                case ftp:
+                    retsource = client.updateDatasourceFtp(retDs);
+                    break;
+                case http:
+                    retsource = client.updateDatasourceHttp(retDs);
+                    break;
+                case folder:
+                    retsource = client.updateDatasourceFolder(retDs);
+                    break;
+                }
+
+                if (retsource == null) { throw new RepoxException(
+                        "Could not update source for collection '" + collection.getMnemonic() +
+                                "'!"); }
             }
-            if (retsource == null) { throw new RepoxException(
-                    "Could not update source for collection '" + collection.getMnemonic() + "'!"); }
         }
 
         log.info("Collection REPOX id is '" +

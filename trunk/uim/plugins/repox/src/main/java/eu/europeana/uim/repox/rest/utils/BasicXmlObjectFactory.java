@@ -65,18 +65,30 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
     }
 
     @Override
-    public void updateProvider(Provider<?> provider,
+    public boolean updateProvider(Provider<?> provider,
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider) {
-        jaxbProvider.setName(provider.getName());
-        jaxbProvider.setNameCode(provider.getMnemonic());
+        boolean changed = false;
+
+        if (!provider.getMnemonic().equals(jaxbProvider.getNameCode())) {
+            jaxbProvider.setNameCode(provider.getMnemonic());
+            changed = true;
+        }
+
+        if (provider.getName() != null && !provider.getName().equals(jaxbProvider.getName())) {
+            jaxbProvider.setName(provider.getName());
+            changed = true;
+        }
 
         String countrystr = provider.getValue(StandardControlledVocabulary.COUNTRY);
         if (countrystr != null) {
             Country country = Country.lookupCountry(countrystr.toLowerCase(), false);
-            if (country != null) {
+            if (country != null && !country.getIso2().equals(jaxbProvider.getCountry())) {
                 jaxbProvider.setCountry(country.getIso2());
+                changed = true;
             }
         }
+
+        return changed;
     }
 
     @Override
@@ -89,9 +101,24 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
     }
 
     @Override
-    public void updateDataSource(Collection<?> collection, Source jaxbSource) {
-        jaxbSource.setId(collection.getMnemonic());
-        jaxbSource.setNameCode(collection.getMnemonic());
-        jaxbSource.setName(collection.getName());
+    public boolean updateDataSource(Collection<?> collection, Source jaxbSource) {
+        boolean changed = false;
+
+        if (!collection.getMnemonic().equals(jaxbSource.getId())) {
+            jaxbSource.setId(collection.getMnemonic());
+            changed = true;
+        }
+
+        if (!collection.getMnemonic().equals(jaxbSource.getNameCode())) {
+            jaxbSource.setNameCode(collection.getMnemonic());
+            changed = true;
+        }
+
+        if (collection.getName() != null && !collection.getName().equals(jaxbSource.getName())) {
+            jaxbSource.setName(collection.getName());
+            changed = true;
+        }
+
+        return changed;
     }
 }

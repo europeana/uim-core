@@ -42,8 +42,9 @@ public interface XmlObjectFactory {
      * 
      * @param provider
      * @param jaxbProvider
+     * @return changed?
      */
-    void updateProvider(Provider<?> provider,
+    boolean updateProvider(Provider<?> provider,
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProvider);
 
     /**
@@ -59,6 +60,7 @@ public interface XmlObjectFactory {
      * 
      * @param collection
      * @param jaxbSource
+     * @return changed?
      */
-    void updateDataSource(Collection<?> collection, Source jaxbSource);
+    boolean updateDataSource(Collection<?> collection, Source jaxbSource);
 }
