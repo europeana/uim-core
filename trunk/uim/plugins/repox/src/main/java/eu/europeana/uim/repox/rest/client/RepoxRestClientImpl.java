@@ -1007,7 +1007,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
             }
             String out = writer.toString();
 
-            throw new RepoxException("Could not unmarshall rest response '" + out + "'!", e);
+            throw new RepoxException("Could not unmarshall rest response '" + out + "' for url '" + urlStr + "'!", e);
         }
         return response;
     }
