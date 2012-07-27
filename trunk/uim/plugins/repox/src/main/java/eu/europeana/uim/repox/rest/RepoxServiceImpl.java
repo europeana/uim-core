@@ -265,7 +265,7 @@ public class RepoxServiceImpl implements RepoxService {
         DatasourceType harvestingtype = DatasourceType.oai_pmh;
         try {
             htypeString = htypeString.replaceAll("\\s", "_");
-            harvestingtype = DatasourceType.valueOf(htypeString);
+            harvestingtype = DatasourceType.valueOf(htypeString.toLowerCase());
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
         }
