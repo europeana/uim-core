@@ -73,7 +73,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
             return new DefaultNodeInfo<BrowserObject>(collectionsDataProvider, browserObjectCell,
                     selectionModel, null);
         } else if (((BrowserObject)value).getWrappedObject() instanceof CollectionDTO) {
-            repositoryService.synchronizeRepoxCollection(
+            repositoryService.synchronizeCollectionExternalServices(
                     ((CollectionDTO)((BrowserObject)value).getWrappedObject()).getId(),
                     new AsyncCallback<CollectionDTO>() {
                         @Override
@@ -83,9 +83,7 @@ public class TriggerTreeViewModel implements TreeViewModel {
 
                         @Override
                         public void onSuccess(CollectionDTO result) {
-//                           if (result == null) {
-//                               Window.alert("Synchronization with REPOX did not work!");
-//                           }
+                            // ignore
                         }
                     });
 

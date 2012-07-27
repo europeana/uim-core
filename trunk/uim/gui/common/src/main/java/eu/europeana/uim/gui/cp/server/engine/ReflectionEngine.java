@@ -7,6 +7,7 @@ import eu.europeana.uim.api.Registry;
 import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.repox.RepoxService;
+import eu.europeana.uim.sugarcrm.SugarService;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 
@@ -22,10 +23,11 @@ import eu.europeana.uim.workflow.Workflow;
  * @since May 11, 2011
  */
 @SuppressWarnings("rawtypes")
-public class ReflectionEngine extends RepoxEngine {
+public class ReflectionEngine extends ExternalServiceEngine {
     private Registry        registry;
     private Orchestrator    ochestrator;
     private RepoxService    repoxService;
+    private SugarService    sugarService;
 
     private static String   configuredStorageEngine = "MemoryStorageEngine";
 
@@ -58,6 +60,9 @@ public class ReflectionEngine extends RepoxEngine {
 
             Class<?> repoxServiceClazz = Class.forName("eu.europeana.uim.repox.rest.RepoxServiceImpl");
             repoxService = (RepoxService)repoxServiceClazz.newInstance();
+
+            Class<?> sugarServiceClazz = Class.forName("eu.europeana.uim.Sugar.SugarServiceImpl");
+            sugarService = (SugarService)sugarServiceClazz.newInstance();
         } catch (Throwable e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -178,5 +183,10 @@ public class ReflectionEngine extends RepoxEngine {
     @Override
     public RepoxService getRepoxService() {
         return repoxService;
+    }
+
+    @Override
+    public SugarService getSugarService() {
+        return sugarService;
     }
 }

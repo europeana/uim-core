@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
-import eu.europeana.uim.gui.cp.server.engine.RepoxEngine;
+import eu.europeana.uim.gui.cp.server.engine.ExternalServiceEngine;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
@@ -30,6 +30,8 @@ import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
+import eu.europeana.uim.sugarcrm.SugarException;
+import eu.europeana.uim.sugarcrm.SugarService;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -52,17 +54,22 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     @Override
-    public Boolean synchronizeRepox() {
+    public Boolean synchronizeExternalServices() {
         boolean success = false;
-        if (getEngine() instanceof RepoxEngine) {
-            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
-            if (repoxService != null) {
-                StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+        if (getEngine() instanceof ExternalServiceEngine) {
+            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            if (repoxService != null || sugarService != null) {
+                StorageEngine<Serializable> storage = getStorageEngine();
+                storage.command("repository.clearcache");
 
                 try {
                     List<Provider<Serializable>> providers = storage.getAllProviders();
                     for (Provider<Serializable> provider : providers) {
-                        boolean update = synchronizeProvider(repoxService, provider);
+                        boolean update = repoxService != null ? synchronizeProviderWithRepox(
+                                repoxService, provider) : false;
+                        update = sugarService != null ? synchronizeProviderWithSugar(sugarService,
+                                provider) : false;
                         if (update) {
                             storage.updateProvider(provider);
                         }
@@ -70,14 +77,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     List<Collection<Serializable>> collections = storage.getAllCollections();
                     for (Collection<Serializable> collection : collections) {
-                        boolean update = synchronizeCollection(repoxService, collection);
+                        boolean update = repoxService != null ? synchronizeCollectionWithRepox(
+                                repoxService, collection) : false;
+                        update = sugarService != null ? synchronizeCollectionWithSugar(
+                                sugarService, collection) : false;
                         if (update) {
                             storage.updateCollection(collection);
                         }
                     }
-                } catch (StorageEngineException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(
-                            "Could not synchronize providers and collections with repox!", e);
+                            "Could not synchronize providers and collections with repox/sugar!", e);
                 }
             }
         }
@@ -126,11 +136,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<ProviderDTO> getProviders() {
         List<ProviderDTO> res = new ArrayList<ProviderDTO>();
 
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return res;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return res; }
 
         List<Provider<Serializable>> providers = null;
         try {
@@ -143,8 +150,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             for (Provider<Serializable> p : providers) {
                 try {
                     ProviderDTO provider = getWrappedProviderDTO(p);
-                    if (provider != null)
-                        res.add(provider);
+                    if (provider != null) res.add(provider);
                 } catch (Throwable t) {
                     log.log(Level.WARNING, "Error in copy data to DTO of provider!", t);
                 }
@@ -167,11 +173,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<CollectionDTO> getCollections(Serializable provider) {
         List<CollectionDTO> res = new ArrayList<CollectionDTO>();
 
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return res;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return res; }
 
         Provider<Serializable> p = null;
         try {
@@ -192,8 +195,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             if (cols != null) {
                 for (Collection<Serializable> col : cols) {
                     CollectionDTO collDTO = getWrappedCollectionDTO(col);
-                    if (collDTO != null)
-                        res.add(collDTO);
+                    if (collDTO != null) res.add(collDTO);
                 }
 
                 Collections.sort(res, new Comparator<CollectionDTO>() {
@@ -212,7 +214,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     private ProviderDTO getWrappedProviderDTO(Provider<Serializable> pro) {
         if (pro == null) return null;
-        
+
         ProviderDTO provDTO = new ProviderDTO(pro.getId());
         provDTO.setName(pro.getName());
         provDTO.setMnemonic(pro.getMnemonic());
@@ -224,7 +226,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     private CollectionDTO getWrappedCollectionDTO(Collection<Serializable> col) {
         if (col == null) return null;
-        
+
         CollectionDTO collDTO = new CollectionDTO(col.getId());
         collDTO.setName(col.getName());
         collDTO.setMnemonic(col.getMnemonic());
@@ -242,11 +244,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Integer getCollectionTotal(Serializable collection) {
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return 0;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return 0; }
 
         int num = 0;
         try {
@@ -274,11 +273,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Boolean clearProviderValues(ProviderDTO provider) {
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return false;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return false; }
 
         Provider<Serializable> prov;
         try {
@@ -296,11 +292,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Boolean updateProvider(ProviderDTO provider) {
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return false;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return false; }
 
         Provider<Serializable> prov;
         try {
@@ -331,11 +324,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public Boolean clearCollectionValues(CollectionDTO collection) {
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return false;
-        }
+        StorageEngine<Serializable> storage = getStorageEngine();
+        if (storage == null) { return false; }
 
         Collection<Serializable> coll;
         try {
@@ -390,16 +380,16 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     }
 
     @Override
-    public ProviderDTO synchronizeRepoxProvider(Serializable providerId) {
+    public ProviderDTO synchronizeProviderExternalServices(Serializable providerId) {
         ProviderDTO prov = null;
-        if (getEngine() instanceof RepoxEngine) {
-            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+        if (getEngine() instanceof ExternalServiceEngine) {
+            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
             if (repoxService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
                     Provider<Serializable> provider = storage.getProvider(providerId);
 
-                    boolean update = synchronizeProvider(repoxService, provider);
+                    boolean update = synchronizeProviderWithRepox(repoxService, provider);
                     if (update) {
                         storage.updateProvider(provider);
                     }
@@ -414,7 +404,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return prov;
     }
 
-    private boolean synchronizeProvider(RepoxService repoxService, Provider<Serializable> provider) {
+    private boolean synchronizeProviderWithRepox(RepoxService repoxService,
+            Provider<Serializable> provider) {
         Map<String, String> beforeValues = new HashMap<String, String>(provider.values());
 
         try {
@@ -442,19 +433,36 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return update;
     }
 
+    private boolean synchronizeProviderWithSugar(SugarService sugarService,
+            Provider<Serializable> provider) {
+        boolean update = false;
+        try {
+            sugarService.updateProvider(provider);
+        } catch (SugarException e) {
+            throw new RuntimeException("Could not update provider to repox!", e);
+        }
+        try {
+            update = sugarService.synchronizeProvider(provider);
+        } catch (SugarException e) {
+            throw new RuntimeException("Could not synchronize provider to repox!", e);
+        }
+
+        return update;
+    }
+
     @Override
-    public CollectionDTO synchronizeRepoxCollection(Serializable collectionId) {
+    public CollectionDTO synchronizeCollectionExternalServices(Serializable collectionId) {
         log.info("Synchronization with REPOX for collection '" + collectionId + "' was triggered!");
-        
+
         CollectionDTO coll = null;
-        if (getEngine() instanceof RepoxEngine) {
-            RepoxService repoxService = ((RepoxEngine)getEngine()).getRepoxService();
+        if (getEngine() instanceof ExternalServiceEngine) {
+            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
             if (repoxService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
                     Collection<Serializable> collection = storage.getCollection(collectionId);
 
-                    boolean update = synchronizeCollection(repoxService, collection);
+                    boolean update = synchronizeCollectionWithRepox(repoxService, collection);
                     if (update) {
                         storage.updateCollection(collection);
                     }
@@ -469,7 +477,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return coll;
     }
 
-    private boolean synchronizeCollection(RepoxService repoxService,
+    private boolean synchronizeCollectionWithRepox(RepoxService repoxService,
             Collection<Serializable> collection) {
         Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
 
@@ -500,5 +508,36 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
 
         return update;
+    }
+
+    private boolean synchronizeCollectionWithSugar(SugarService sugarService,
+            Collection<Serializable> collection) {
+        boolean update = false;
+        try {
+            sugarService.updateCollection(collection);
+        } catch (SugarException e) {
+            throw new RuntimeException("Could not update collection to sugar!", e);
+        }
+        try {
+            update = sugarService.synchronizeCollection(collection);
+        } catch (SugarException e) {
+            throw new RuntimeException("Could not synchronize collection to sugar!", e);
+        }
+
+        return update;
+    }
+
+    private StorageEngine<Serializable> getStorageEngine() {
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+        if (storage == null) {
+            log.log(Level.SEVERE, "Storage connection is null!");
+        } else {
+            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            if (repoxService == null && sugarService == null) {
+                storage.command("repository.clearcache");
+            }
+        }
+        return storage;
     }
 }

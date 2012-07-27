@@ -81,24 +81,24 @@ public interface RepositoryService extends RemoteService {
      * 
      * @param providerId
      *            identifier of provider in UIM
-     * @return not null, if update of repox provider was successfull (null, also if there is no
+     * @return not null, if update of repox/sugar provider was successfull (null, also if there is no
      *         configured repox)
      */
-    ProviderDTO synchronizeRepoxProvider(Serializable providerId);
+    ProviderDTO synchronizeProviderExternalServices(Serializable providerId);
 
     /**
      * Update repox provider using data
      * 
      * @param collectionId
      *            identifier of collection in UIm
-     * @return not null, if update of repox collection was successfull (null, also if there is no
+     * @return not null, if update of repox/sugar collection was successfull (null, also if there is no
      *         configured repox)
      */
-    CollectionDTO synchronizeRepoxCollection(Serializable collectionId);
+    CollectionDTO synchronizeCollectionExternalServices(Serializable collectionId);
 
     /**
-     * @return true, if update of repox provider was successfull (false, also if there is no
+     * @return true, if update of repox/sugar was successfull (false, also if there is no
      *         configured repox)
      */
-    Boolean synchronizeRepox();
+    Boolean synchronizeExternalServices();
 }

@@ -88,10 +88,11 @@ public interface RepositoryServiceAsync {
      * @param providerId
      *            identifier of provider in UIM
      * @param async
-     *            not null, if update of repox provider was successfull (null, also if there is no
+     *            not null, if update of repox/sugar provider was successfull (null, also if there is no
      *            configured repox)
      */
-    void synchronizeRepoxProvider(Serializable providerId, AsyncCallback<ProviderDTO> async);
+    void synchronizeProviderExternalServices(Serializable providerId,
+            AsyncCallback<ProviderDTO> async);
 
     /**
      * Update repox provider using data
@@ -99,14 +100,15 @@ public interface RepositoryServiceAsync {
      * @param collectionId
      *            identifier of collection in UIm
      * @param async
-     *            not null, if update of repox collection was successfull (null, also if there is no
+     *            not null, if update of repox/sugar collection was successfull (null, also if there is no
      *            configured repox)
      */
-    void synchronizeRepoxCollection(Serializable collectionId, AsyncCallback<CollectionDTO> async);
+    void synchronizeCollectionExternalServices(Serializable collectionId,
+            AsyncCallback<CollectionDTO> async);
 
     /**
      * @param async
-     *            true, if synchronization with repox was successfull
+     *            true, if synchronization with repox/sugar was successfull
      */
-    void synchronizeRepox(AsyncCallback<Boolean> async);
+    void synchronizeExternalServices(AsyncCallback<Boolean> async);
 }

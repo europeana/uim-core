@@ -18,6 +18,13 @@
             <table cellspacing='5' cellpadding='5' style='width:100%;'>
                 <tr>
                     <td valign='top'>
+                        <g:Button ui:field='synchronizeButton' addStyleNames='{style.box}'>
+                            <ui:msg key='synchronizeButton'>Synchronize everything</ui:msg>
+                        </g:Button>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign='top'>
                         <g:ListBox ui:field='providerBox' addStyleNames='{style.box}' />
                     </td>
                     <td valign='top'>
