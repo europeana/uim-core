@@ -57,11 +57,11 @@ import eu.europeana.uim.repox.rest.client.xml.Source;
  */
 public class RepoxRestClientImpl implements RepoxRestClient {
     private final static Logger log = Logger.getLogger(RepoxRestClientImpl.class.getName());
-    
+
     /**
      * base uri specifying the repox installation
      */
-    private String uri;
+    private String              uri;
 
     /**
      * Creates a new instance of this class.
@@ -186,17 +186,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         id.append(aggrID);
 
         Response resp = invokeRestCall("/aggregators/getAggregator", Response.class, id.toString());
-
-        if (resp.getAggregator() == null) {
-            if (resp.getError() != null) {
-                throw new RepoxException("Could not retrieve aggregator! Reason: " +
-                                         resp.getError().getCause());
-            } else {
-                throw new RepoxException("Unidentified repox error during retrieving of aggregator!");
-            }
-        } else {
-            return resp.getAggregator();
-        }
+        return resp.getAggregator();
     }
 
     @Override
@@ -391,18 +381,9 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         id.append("id=");
         id.append(provId);
 
-        Response resp = invokeRestCall("/dataProviders/getDataProvider", Response.class, id.toString());
-
-        if (resp.getProvider() == null) {
-            if (resp.getError() != null) {
-                throw new RepoxException("Could not retrieve provider! Reason: " +
-                                         resp.getError().getCause());
-            } else {
-                throw new RepoxException("Unidentified repox error during retrieving of provider!");
-            }
-        } else {
-            return resp.getProvider();
-        }
+        Response resp = invokeRestCall("/dataProviders/getDataProvider", Response.class,
+                id.toString());
+        return resp.getProvider();
     }
 
     @Override
@@ -424,21 +405,11 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     @Override
     public DataSources retrieveDataSources() throws RepoxException {
         Response resp = invokeRestCall("/dataSources/list", Response.class);
-
-        if (resp.getDataSources() == null) {
-            if (resp.getError() != null) {
-                throw new RepoxException("Could not retrieving sources! Reason: " +
-                                         resp.getError().getCause());
-            } else {
-                throw new RepoxException("Unidentified repox error during retrieving of sources!");
-            }
-        } else {
-            return resp.getDataSources();
-        }
+        return resp.getDataSources();
     }
 
     @Override
-    public Source retrieveDataSource(String dsid) throws RepoxException { 
+    public Source retrieveDataSource(String dsid) throws RepoxException {
         StringBuffer id = new StringBuffer();
         id.append("id=");
         id.append(dsid);
@@ -450,7 +421,8 @@ public class RepoxRestClientImpl implements RepoxRestClient {
                 throw new RepoxException("Could not retrieve data source! Reason: " +
                                          resp.getError().getCause());
             } else {
-                throw new RepoxException("Unidentified repox error during retrieving of data source!");
+                throw new RepoxException(
+                        "Unidentified repox error during retrieving of data source!");
             }
         } else {
             return resp.getSource();
@@ -1034,7 +1006,8 @@ public class RepoxRestClientImpl implements RepoxRestClient {
             }
             String out = writer.toString();
 
-            throw new RepoxException("Could not unmarshall rest response '" + out + "' for url '" + urlStr + "'!", e);
+            throw new RepoxException("Could not unmarshall rest response '" + out + "' for url '" +
+                                     urlStr + "'!", e);
         }
         return response;
     }
