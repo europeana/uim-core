@@ -28,6 +28,7 @@ import eu.europeana.uim.store.Provider;
  * This is the main interface for the OSGI based SugarCrm plugin OSGI service.
  * 
  * @author Georgios Markakis
+ * @since Jan 27, 2012
  */
 public interface SugarService {
     /**
