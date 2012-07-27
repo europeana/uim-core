@@ -61,7 +61,7 @@ public class ReflectionEngine extends ExternalServiceEngine {
             Class<?> repoxServiceClazz = Class.forName("eu.europeana.uim.repox.rest.RepoxServiceImpl");
             repoxService = (RepoxService)repoxServiceClazz.newInstance();
 
-            Class<?> sugarServiceClazz = Class.forName("eu.europeana.uim.Sugar.SugarServiceImpl");
+            Class<?> sugarServiceClazz = Class.forName("eu.europeana.uim.sugar.SugarServiceImpl");
             sugarService = (SugarService)sugarServiceClazz.newInstance();
         } catch (Throwable e) {
             // TODO Auto-generated catch block
