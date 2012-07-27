@@ -438,9 +438,11 @@ public class RepoxRestClientImpl implements RepoxRestClient {
 
     @Override
     public Source retrieveDataSourceByNameCode(String mnemonic) throws RepoxException {
+        log.info("Search mnemonic is " + mnemonic);
         Source source = null;
         DataSources sources = retrieveDataSources();
         for (Source src : sources.getSource()) {
+            log.info(src.getNameCode() + "|" + src.getName());
             if (src.getNameCode().equals(mnemonic)) {
                 source = src;
                 break;
