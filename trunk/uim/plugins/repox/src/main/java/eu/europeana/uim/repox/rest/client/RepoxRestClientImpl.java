@@ -405,7 +405,17 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     @Override
     public DataSources retrieveDataSources() throws RepoxException {
         Response resp = invokeRestCall("/dataSources/list", Response.class);
-        return resp.getDataSources();
+
+        if (resp.getDataSources() == null) {
+            if (resp.getError() != null) {
+                throw new RepoxException("Could not retrieving sources! Reason: " +
+                                         resp.getError().getCause());
+            } else {
+                throw new RepoxException("Unidentified repox error during retrieving of sources!");
+            }
+        } else {
+            return resp.getDataSources();
+        }
     }
 
     @Override
@@ -415,18 +425,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         id.append(dsid);
 
         Response resp = invokeRestCall("/dataSources/getDataSource", Response.class, id.toString());
-
-        if (resp.getSource() == null) {
-            if (resp.getError() != null) {
-                throw new RepoxException("Could not retrieve data source! Reason: " +
-                                         resp.getError().getCause());
-            } else {
-                throw new RepoxException(
-                        "Unidentified repox error during retrieving of data source!");
-            }
-        } else {
-            return resp.getSource();
-        }
+        return resp.getSource();
     }
 
     @Override
