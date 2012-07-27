@@ -276,9 +276,9 @@ public class RepoxServiceImpl implements RepoxService {
         updateProvider(client, collection.getProvider(), collection);
 
         String htypeString = collection.getValue(RepoxControlledVocabulary.HARVESTING_TYPE);
-        DatasourceType harvestingtype = DatasourceType.oai_pmh;
+        DatasourceType harvestingtype = DatasourceType.OAI_PMH;
         try {
-            htypeString = htypeString.replaceAll("\\s", "_");
+            htypeString = htypeString.replaceAll("[.]", "_");
             harvestingtype = DatasourceType.valueOf(htypeString.toLowerCase());
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
@@ -310,19 +310,19 @@ public class RepoxServiceImpl implements RepoxService {
 
             Source retsource = null;
             switch (harvestingtype) {
-            case oai_pmh:
+            case OAI_PMH:
                 retsource = client.createDatasourceOAI(ds, jibxProv);
                 break;
-            case z39_50:
+            case Z39_50:
                 retsource = client.createDatasourceZ3950Timestamp(ds, jibxProv);
                 break;
-            case ftp:
+            case FTP:
                 retsource = client.createDatasourceFtp(ds, jibxProv);
                 break;
-            case http:
+            case HTTP:
                 retsource = client.createDatasourceHttp(ds, jibxProv);
                 break;
-            case folder:
+            case FILE:
                 retsource = client.createDatasourceFolder(ds, jibxProv);
                 break;
             }
@@ -337,19 +337,19 @@ public class RepoxServiceImpl implements RepoxService {
             if (update) {
                 Source retsource = null;
                 switch (harvestingtype) {
-                case oai_pmh:
+                case OAI_PMH:
                     retsource = client.updateDatasourceOAI(retDs);
                     break;
-                case z39_50:
+                case Z39_50:
                     retsource = client.updateDatasourceZ3950Timestamp(retDs);
                     break;
-                case ftp:
+                case FTP:
                     retsource = client.updateDatasourceFtp(retDs);
                     break;
-                case http:
+                case HTTP:
                     retsource = client.updateDatasourceHttp(retDs);
                     break;
-                case folder:
+                case FILE:
                     retsource = client.updateDatasourceFolder(retDs);
                     break;
                 }

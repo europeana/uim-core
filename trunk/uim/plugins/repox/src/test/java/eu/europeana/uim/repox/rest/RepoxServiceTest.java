@@ -112,7 +112,7 @@ public class RepoxServiceTest {
         collection.setOaiBaseUrl(repoxUri);
         collection.putValue(StandardControlledVocabulary.COUNTRY, "de");
         collection.putValue(RepoxControlledVocabulary.HARVESTING_TYPE,
-                DatasourceType.oai_pmh.name());
+                DatasourceType.OAI_PMH.name());
 
         engine.updateCollection(collection);
         service.updateCollection(collection);

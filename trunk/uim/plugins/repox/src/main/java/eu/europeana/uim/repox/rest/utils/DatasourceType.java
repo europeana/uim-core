@@ -30,21 +30,21 @@ public enum DatasourceType {
     /**
      * oai_pmh
      */
-    oai_pmh, 
+    OAI_PMH, 
     /**
      * z39_50
      */
-    z39_50,
+    Z39_50,
     /**
      * ftp
      */
-    ftp,
+    FTP,
     /**
      * http
      */
-    http,
+    HTTP,
     /**
-     * folder
+     * files from a folder
      */
-    folder
+    FILE
 }
