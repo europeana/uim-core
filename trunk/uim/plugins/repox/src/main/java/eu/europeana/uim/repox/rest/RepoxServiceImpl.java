@@ -390,6 +390,8 @@ public class RepoxServiceImpl implements RepoxService {
         if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
 
+            String dateString = new Date(System.currentTimeMillis()).toString();
+
             Source jaxbColl = client.retrieveDataSource(id);
             if (jaxbColl != null) {
                 String xmlCollection;
@@ -403,8 +405,7 @@ public class RepoxServiceImpl implements RepoxService {
                 if (storedXml == null || !storedXml.equals(xmlCollection)) {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
                             xmlCollection);
-                    collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                            new Date(System.currentTimeMillis()).toString());
+                    collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
                 }
             }
 
@@ -415,10 +416,9 @@ public class RepoxServiceImpl implements RepoxService {
                 (storedStatus != null && !storedStatus.equals(status.getStatus()))) {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
                         status.getStatus());
-                collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                        new Date(System.currentTimeMillis()).toString());
+                collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Status for '" + collection + "' is '" + storedStatus + "'!");
+                log.info("Status for '" + collection + "' is '" + status.getStatus() + "'!");
             }
 
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
@@ -426,10 +426,9 @@ public class RepoxServiceImpl implements RepoxService {
                 (storedRecords != null && !storedRecords.equals(status.getRecords()))) {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
                         status.getRecords());
-                collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
-                        new Date(System.currentTimeMillis()).toString());
+                collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Status for '" + collection + "' is '" + storedRecords + "'!");
+                log.info("Status for '" + collection + "' is '" + status.getRecords() + "'!");
             }
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
