@@ -279,7 +279,7 @@ public class RepoxServiceImpl implements RepoxService {
         DatasourceType harvestingtype = DatasourceType.OAI_PMH;
         try {
             htypeString = htypeString.replaceAll("[.]", "_");
-            harvestingtype = DatasourceType.valueOf(htypeString.toLowerCase());
+            harvestingtype = DatasourceType.valueOf(htypeString);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
         }
