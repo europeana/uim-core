@@ -55,11 +55,11 @@ public class OsgiEngineActivator implements BundleActivator {
             Thread.sleep(1000);
         }
 
-        if (repoxService != null || sugarService != null) {
-            engine = new ExternalServiceOsgiEngine(registry, sugarService, repoxService);
-        } else {
+//        if (repoxService != null || sugarService != null) {
+//            engine = new ExternalServiceOsgiEngine(registry, sugarService, repoxService);
+//        } else {
             engine = new OsgiEngine(registry);
-        }
+//        }
         Engine.setEngine(engine);
     }
 
