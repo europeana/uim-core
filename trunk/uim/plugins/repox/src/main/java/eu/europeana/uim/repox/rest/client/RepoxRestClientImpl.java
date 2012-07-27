@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -55,6 +56,8 @@ import eu.europeana.uim.repox.rest.client.xml.Source;
  * @author Yorgos Mamakis
  */
 public class RepoxRestClientImpl implements RepoxRestClient {
+    private final static Logger log = Logger.getLogger(RepoxRestClientImpl.class.getName());
+    
     /**
      * base uri specifying the repox installation
      */
@@ -978,6 +981,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         } catch (Exception e) {
             throw new RepoxException("Could not creat url of '" + urlStr + "'!", e);
         }
+        log.info("Invoking rest call for '" + urlStr + "'!");
 
         HttpURLConnection conn;
         try {
