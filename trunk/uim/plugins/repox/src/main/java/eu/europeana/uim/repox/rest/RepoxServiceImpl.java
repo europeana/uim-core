@@ -190,7 +190,7 @@ public class RepoxServiceImpl implements RepoxService {
                             rtAggregator.getId());
                 }
             }
-        }
+        } 
 
         if (aggregatorId == null) {
             aggregator.setId(aggregatorId);

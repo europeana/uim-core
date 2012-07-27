@@ -181,15 +181,22 @@ public class RepoxRestClientImpl implements RepoxRestClient {
 
     @Override
     public Aggregator retrieveAggregator(String aggrID) throws RepoxException {
-        Aggregator aggregator = null;
-        Aggregators aggregators = retrieveAggregators();
-        for (Aggregator aggr : aggregators.getAggregator()) {
-            if (aggr.getId().equals(aggrID)) {
-                aggregator = aggr;
-                break;
+        StringBuffer id = new StringBuffer();
+        id.append("id=");
+        id.append(aggrID);
+
+        Response resp = invokeRestCall("/aggregators/getAggregator", Response.class, id.toString());
+
+        if (resp.getAggregator() == null) {
+            if (resp.getError() != null) {
+                throw new RepoxException("Could not retrieve aggregator! Reason: " +
+                                         resp.getError().getCause());
+            } else {
+                throw new RepoxException("Unidentified repox error during retrieving of aggregator!");
             }
+        } else {
+            return resp.getAggregator();
         }
-        return aggregator;
     }
 
     @Override
@@ -379,16 +386,23 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     }
 
     @Override
-    public Provider retrieveProvider(String id) throws RepoxException {
-        Provider provider = null;
-        DataProviders providers = retrieveProviders();
-        for (Provider prov : providers.getProvider()) {
-            if (prov.getId().equals(id)) {
-                provider = prov;
-                break;
+    public Provider retrieveProvider(String provId) throws RepoxException {
+        StringBuffer id = new StringBuffer();
+        id.append("id=");
+        id.append(provId);
+
+        Response resp = invokeRestCall("/dataProviders/getDataProvider", Response.class, id.toString());
+
+        if (resp.getProvider() == null) {
+            if (resp.getError() != null) {
+                throw new RepoxException("Could not retrieve provider! Reason: " +
+                                         resp.getError().getCause());
+            } else {
+                throw new RepoxException("Unidentified repox error during retrieving of provider!");
             }
+        } else {
+            return resp.getProvider();
         }
-        return provider;
     }
 
     @Override
@@ -424,16 +438,23 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     }
 
     @Override
-    public Source retrieveDataSource(String id) throws RepoxException {
-        Source source = null;
-        DataSources sources = retrieveDataSources();
-        for (Source src : sources.getSource()) {
-            if (src.getId().equals(id)) {
-                source = src;
-                break;
+    public Source retrieveDataSource(String dsid) throws RepoxException { 
+        StringBuffer id = new StringBuffer();
+        id.append("id=");
+        id.append(dsid);
+
+        Response resp = invokeRestCall("/dataSources/getDataSource", Response.class, id.toString());
+
+        if (resp.getSource() == null) {
+            if (resp.getError() != null) {
+                throw new RepoxException("Could not retrieve data source! Reason: " +
+                                         resp.getError().getCause());
+            } else {
+                throw new RepoxException("Unidentified repox error during retrieving of data source!");
             }
+        } else {
+            return resp.getSource();
         }
-        return source;
     }
 
     @Override
