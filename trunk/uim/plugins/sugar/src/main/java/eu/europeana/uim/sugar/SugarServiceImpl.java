@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
@@ -30,13 +31,15 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  * @date Aug 15, 2011
  */
 public class SugarServiceImpl implements SugarService {
-    private Date         sessionCreate = null;
-    private String       sessionID     = null;
+    private static final Logger log           = Logger.getLogger(SugarServiceImpl.class.getName());
 
-    private SugarClient  sugarClient;
-    private SugarMapping sugarMapping;
+    private Date                sessionCreate = null;
+    private String              sessionID     = null;
 
-    private String       sugarMappingClass;
+    private SugarClient         sugarClient;
+    private SugarMapping        sugarMapping;
+
+    private String              sugarMappingClass;
 
     /**
      * Creates a new instance of this class.
@@ -209,6 +212,7 @@ public class SugarServiceImpl implements SugarService {
 
     @Override
     public void updateCollection(Collection<?> collection) throws SugarException {
+        log.info("Update sugar for collection '" + collection.getMnemonic() + "!");
         SugarClient client = validateConnection();
 
         String mnemonic = collection.getMnemonic();
@@ -262,8 +266,10 @@ public class SugarServiceImpl implements SugarService {
     @Override
     public boolean synchronizeCollection(Collection<?> collection) throws SugarException {
         if (collection == null || collection.getMnemonic() == null ||
-            collection.getMnemonic().isEmpty())
-            throw new NullPointerException("Collection and collection mnemonic must not be null.");
+            collection.getMnemonic().isEmpty()) { throw new NullPointerException(
+                "Collection and collection mnemonic must not be null."); }
+
+        log.info("Synchronize sugar for collection '" + collection.getMnemonic() + "!");
 
         SugarClient client = validateConnection();
         Map<String, String> sugarprovider = client.getCollection(sessionID,
