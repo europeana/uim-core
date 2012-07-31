@@ -62,7 +62,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = getStorageEngine();
                 storage.command("repository.clearcache");
-                storage.checkpoint(); 
+                storage.checkpoint();
 
                 try {
                     List<Provider<Serializable>> providers = storage.getAllProviders();
@@ -86,8 +86,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                             storage.updateCollection(collection);
                         }
                     }
-                    
-                    storage.checkpoint(); 
+
+                    storage.checkpoint();
                 } catch (Exception e) {
                     throw new RuntimeException(
                             "Could not synchronize providers and collections with repox/sugar!", e);
@@ -387,12 +387,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         ProviderDTO prov = null;
         if (getEngine() instanceof ExternalServiceEngine) {
             RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            if (repoxService != null) {
+            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
                     Provider<Serializable> provider = storage.getProvider(providerId);
 
-                    boolean update = synchronizeProviderWithRepox(repoxService, provider);
+                    boolean update = repoxService != null ? synchronizeProviderWithRepox(
+                            repoxService, provider) : false;
+                    update = sugarService != null ? synchronizeProviderWithSugar(sugarService,
+                            provider) : false;
+
                     if (update) {
                         storage.updateProvider(provider);
                     }
@@ -460,12 +465,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         CollectionDTO coll = null;
         if (getEngine() instanceof ExternalServiceEngine) {
             RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            if (repoxService != null) {
+            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
                     Collection<Serializable> collection = storage.getCollection(collectionId);
 
-                    boolean update = synchronizeCollectionWithRepox(repoxService, collection);
+                    boolean update = repoxService != null ? synchronizeCollectionWithRepox(
+                            repoxService, collection) : false;
+                    update = sugarService != null ? synchronizeCollectionWithSugar(sugarService,
+                            collection) : false;
+
                     if (update) {
                         storage.updateCollection(collection);
                     }
@@ -533,14 +543,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
-        } 
-//        else {
-//            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-//            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
-//            if (repoxService == null && sugarService == null) {
-//                storage.command("repository.clearcache");
-//            }
-//        }
+        }
+// else {
+// RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+// SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+// if (repoxService == null && sugarService == null) {
+// storage.command("repository.clearcache");
+// }
+// }
         return storage;
     }
 }
