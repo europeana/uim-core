@@ -43,7 +43,14 @@ public final class EuropeanaModelRegistry {
     		                                                                 EuropeanaModelRegistry.class,
                                                                              "edmrecord",
                                                                              String.class);
-    
+	/**
+	 * The key for a dereferenced EDM Record
+	 */
+	public static final TKey<EuropeanaModelRegistry, String> EDMDEREFERENCEDRECORD = TKey
+			.register(EuropeanaModelRegistry.class, "edmdereferencedrecord",
+					String.class);
+	
+	
     /** The key for a full EDM Record representation
      */
     public static final TKey<EuropeanaModelRegistry, String>  UIMINGESTIONDATE  = TKey.register(
