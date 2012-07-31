@@ -106,7 +106,7 @@ public interface RepoxRestClient {
      * @return aggregator for ID or null if not existing
      * @throws RepoxException
      */
-    Aggregator retrieveAggregatorByNameCode(String mnemonic) throws RepoxException;
+    Aggregator retrieveAggregatorByMetadata(String mnemonic) throws RepoxException;
 
     /**
      * Creates a provider in Repox and assigns it to the specific Aggregator
@@ -161,7 +161,7 @@ public interface RepoxRestClient {
      * @return specific provider
      * @throws RepoxException
      */
-    eu.europeana.uim.repox.rest.client.xml.Provider retrieveProviderByNameCode(String mnemonic)
+    eu.europeana.uim.repox.rest.client.xml.Provider retrieveProviderByMetadata(String mnemonic)
             throws RepoxException;
 
     /**
@@ -184,7 +184,7 @@ public interface RepoxRestClient {
      * @return specific data source
      * @throws RepoxException
      */
-    Source retrieveDataSourceByNameCode(String mnemonic) throws RepoxException;
+    Source retrieveDataSourceByMetadata(String mnemonic) throws RepoxException;
 
     /**
      * Creates an OAI DataSource. It accesses the following REST Interface:

@@ -117,7 +117,7 @@ public class RepoxServiceTest {
         engine.updateCollection(collection);
         service.updateCollection(collection);
 
-        Source source = factory.getInstance(repoxUri).retrieveDataSourceByNameCode(
+        Source source = factory.getInstance(repoxUri).retrieveDataSourceByMetadata(
                 collection.getMnemonic());
         Assert.assertEquals(collection.getName(), source.getName());
 
@@ -128,7 +128,7 @@ public class RepoxServiceTest {
         engine.updateCollection(collection);
         service.updateCollection(collection);
 
-        source = factory.getInstance(repoxUri).retrieveDataSourceByNameCode(
+        source = factory.getInstance(repoxUri).retrieveDataSourceByMetadata(
                 collection.getMnemonic());
         Assert.assertEquals(collection.getName(), source.getName());
 

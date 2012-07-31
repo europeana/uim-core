@@ -131,7 +131,7 @@ public class RepoxServiceImpl implements RepoxService {
             retProv = client.retrieveProvider(provider.getMnemonic());
 
             if (retProv == null) {
-                retProv = client.retrieveProviderByNameCode(provider.getMnemonic());
+                retProv = client.retrieveProviderByMetadata(provider.getMnemonic());
             }
 
             if (retProv != null) {
@@ -195,7 +195,7 @@ public class RepoxServiceImpl implements RepoxService {
             rtAggregator = client.retrieveAggregator(aggregator.getNameCode());
 
             if (rtAggregator == null) {
-                rtAggregator = client.retrieveAggregatorByNameCode(aggregator.getNameCode());
+                rtAggregator = client.retrieveAggregatorByMetadata(aggregator.getNameCode());
             }
 
             if (rtAggregator != null) {
@@ -303,7 +303,7 @@ public class RepoxServiceImpl implements RepoxService {
             retDs = client.retrieveDataSource(collection.getMnemonic());
 
             if (retDs == null) {
-                retDs = client.retrieveDataSourceByNameCode(collection.getMnemonic());
+                retDs = client.retrieveDataSourceByMetadata(collection.getMnemonic());
             }
 
             if (retDs != null) {

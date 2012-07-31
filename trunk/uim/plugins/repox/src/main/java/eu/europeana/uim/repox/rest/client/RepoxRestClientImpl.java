@@ -190,11 +190,16 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     }
 
     @Override
-    public Aggregator retrieveAggregatorByNameCode(String mnemonic) throws RepoxException {
+    public Aggregator retrieveAggregatorByMetadata(String mnemonic) throws RepoxException {
         Aggregator aggregator = null;
         Aggregators aggregators = retrieveAggregators();
         for (Aggregator aggr : aggregators.getAggregator()) {
-            if (aggr.getNameCode().equals(mnemonic)) {
+            if (aggr.getNameCode() != null && aggr.getNameCode().length() > 0 && aggr.getNameCode().equals(mnemonic)) {
+                aggregator = aggr;
+                break;
+            }
+            
+            if (aggr.getName() != null && aggr.getName().length() > 0 && aggr.getName().equals(mnemonic)) {
                 aggregator = aggr;
                 break;
             }
@@ -387,11 +392,21 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     }
 
     @Override
-    public Provider retrieveProviderByNameCode(String mnemonic) throws RepoxException {
+    public Provider retrieveProviderByMetadata(String mnemonic) throws RepoxException {
         Provider provider = null;
         DataProviders providers = retrieveProviders();
         for (Provider prov : providers.getProvider()) {
-            if (prov.getNameCode() != null && prov.getNameCode().equals(mnemonic)) {
+            if (prov.getNameCode() != null && prov.getNameCode().length() > 0 && prov.getNameCode().equals(mnemonic)) {
+                provider = prov;
+                break;
+            }
+            
+            if (prov.getName() != null && prov.getName().length() > 0 && prov.getName().equals(mnemonic)) {
+                provider = prov;
+                break;
+            }
+            
+            if (prov.getDescription() != null && prov.getDescription().length() > 0 && prov.getDescription().equals(mnemonic)) {
                 provider = prov;
                 break;
             }
@@ -429,13 +444,24 @@ public class RepoxRestClientImpl implements RepoxRestClient {
     }
 
     @Override
-    public Source retrieveDataSourceByNameCode(String mnemonic) throws RepoxException {
+    public Source retrieveDataSourceByMetadata(String mnemonic) throws RepoxException {
         log.info("Search mnemonic is " + mnemonic);
         Source source = null;
         DataSources sources = retrieveDataSources();
         for (Source src : sources.getSource()) {
             log.info(src.getNameCode() + "|" + src.getName());
-            if (src.getNameCode().equals(mnemonic)) {
+
+            if (src.getNameCode()!= null && src.getNameCode().length() > 0 && src.getNameCode().equals(mnemonic)) {
+                source = src;
+                break;
+            }
+            
+            if (src.getName()!= null && src.getName().length() > 0 && src.getName().equals(mnemonic)) {
+                source = src;
+                break;
+            }
+            
+            if (src.getDescription()!= null && src.getDescription().length() > 0 && src.getDescription().equals(mnemonic)) {
                 source = src;
                 break;
             }
