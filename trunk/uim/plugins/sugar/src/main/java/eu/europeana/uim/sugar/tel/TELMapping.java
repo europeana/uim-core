@@ -12,7 +12,6 @@ import eu.europeana.uim.sugarcrm.model.UpdatableField;
  * @since Feb 5, 2012
  */
 public class TELMapping implements SugarMapping {
-
     @Override
     public RetrievableField[] getProviderRetrievableFields() {
         return new RetrievableField[]{
@@ -46,7 +45,6 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.HARVESTING_METHOD
         };
     }
-    
 
     @Override
     public UpdatableField[] getCollectionUpdateableFields() {
@@ -81,5 +79,4 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.FIELDCHECK_EXECUTION
         };
     }
-
 }
