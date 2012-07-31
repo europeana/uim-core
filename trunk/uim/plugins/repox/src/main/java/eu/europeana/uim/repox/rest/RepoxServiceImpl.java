@@ -113,8 +113,6 @@ public class RepoxServiceImpl implements RepoxService {
 
     private void updateProvider(RepoxRestClient client, Provider<?> provider,
             Collection<?> collection) throws RepoxException {
-        String aggregatorId = updateAggregator(client, provider, collection);
-
         String providerId;
         if (collection != null) {
             providerId = collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
@@ -150,6 +148,8 @@ public class RepoxServiceImpl implements RepoxService {
             eu.europeana.uim.repox.rest.client.xml.Provider jaxbProv = xmlFactory.createProvider(provider);
             jaxbProv.setId(provider.getMnemonic());
 
+            String aggregatorId = updateAggregator(client, provider, collection);
+            
             Aggregator aggr = new Aggregator();
             aggr.setId(aggregatorId);
 
