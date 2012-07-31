@@ -456,7 +456,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         } catch (SugarException e) {
             throw new RuntimeException("Could not synchronize provider to repox!", e);
         }
-
         return update;
     }
 
