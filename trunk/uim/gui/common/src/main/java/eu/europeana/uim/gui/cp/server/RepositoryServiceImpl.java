@@ -460,7 +460,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public CollectionDTO synchronizeCollectionExternalServices(Serializable collectionId) {
-        log.info("Synchronization with REPOX for collection '" + collectionId + "' was triggered!");
+        log.info("Synchronization with external services for collection '" + collectionId + "' was triggered!");
 
         CollectionDTO coll = null;
         if (getEngine() instanceof ExternalServiceEngine) {
