@@ -462,8 +462,6 @@ public class RepoxServiceImpl implements RepoxService {
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
             String records = status.getRecords();
             if (records != null) {
-                log.info("Number of records for '" + collection + "' from REPOX is '" + records + "'!");
-                
                 String[] splits = records.split("/");
                 if (splits.length == 2) {
                     records = splits[1];
