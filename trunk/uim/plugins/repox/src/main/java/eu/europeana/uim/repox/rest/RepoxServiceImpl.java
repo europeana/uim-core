@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBException;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
+import eu.europeana.uim.repox.model.HarvestingState;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
@@ -287,6 +288,7 @@ public class RepoxServiceImpl implements RepoxService {
         DatasourceType harvestingtype = DatasourceType.OAI_PMH;
         try {
             htypeString = htypeString.replaceAll("[.]", "_");
+            htypeString = htypeString.replaceAll("//s", "_");
             harvestingtype = DatasourceType.valueOf(htypeString);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
@@ -423,29 +425,64 @@ public class RepoxServiceImpl implements RepoxService {
 
             HarvestingStatus status = client.getHarvestingStatus(id);
 
+            String uimStatus = null;
+            HarvestingState statusEnum = HarvestingState.valueOf(status.getStatus());
+            if (statusEnum != null) {
+                switch (statusEnum) {
+                case CANCELED:
+                    uimStatus = "Harvesting failed";
+                    break;
+                case ERROR:
+                    uimStatus = "Harvesting failed";
+                    break;
+                case OK:
+                    uimStatus = "Fully Harvested";
+                    break;
+                case RUNNING:
+                    uimStatus = "Not harvested";
+                    break;
+                case WARNING:
+                    uimStatus = "Not harvested";
+                    break;
+                case undefined:
+                    break;
+                }
+            }
+            
+            
             String storedStatus = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE);
-            if ((storedStatus == null && status.getStatus() != null) ||
-                (storedStatus != null && !storedStatus.equals(status.getStatus()))) {
+
+            if ((storedStatus == null && uimStatus != null) ||
+                (storedStatus != null && !storedStatus.equals(uimStatus))) {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
-                        status.getStatus());
+                        uimStatus);
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Status for '" + collection + "' is '" + status.getStatus() + "'!");
+                log.info("Status for '" + collection + "' is '" + uimStatus + "'!");
             }
 
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
-            if ((storedRecords == null && status.getRecords() != null) ||
-                (storedRecords != null && !storedRecords.equals(status.getRecords()))) {
-                collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
-                        status.getRecords());
+            String records = status.getRecords();
+            if (records != null) {
+                log.info("Number of records for '" + collection + "' from REPOX is '" + records + "'!");
+                
+                String[] splits = records.split("/");
+                if (splits.length == 2) {
+                    records = splits[1];
+                } else {
+                    records = null;
+                }
+            }
+            if ((storedRecords == null && records != null) ||
+                (storedRecords != null && !storedRecords.equals(records))) {
+                collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS, records);
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Number of records for '" + collection + "' is '" + status.getRecords() +
-                         "'!");
+                log.info("Number of records for '" + collection + "' is '" + records + "'!");
             }
 
-//            String harvestLog = getHarvestLog(collection);
-//            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
+// String harvestLog = getHarvestLog(collection);
+// log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
         }
