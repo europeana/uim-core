@@ -444,8 +444,8 @@ public class RepoxServiceImpl implements RepoxService {
                          "'!");
             }
 
-            String harvestLog = getHarvestLog(collection);
-            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
+//            String harvestLog = getHarvestLog(collection);
+//            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
         }
