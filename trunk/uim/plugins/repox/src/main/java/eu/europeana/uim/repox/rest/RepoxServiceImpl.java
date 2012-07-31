@@ -416,6 +416,13 @@ public class RepoxServiceImpl implements RepoxService {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
                             xmlCollection);
                     collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
+                    
+                    log.info("Stored xml for '" + collection + "' is '" + storedXml + "'!");
+                }
+                
+                String lastIngest = jaxbColl.getLastIngest();
+                if (lastIngest != null) {
+                    log.info("Last ingest for '" + collection + "' is '" + lastIngest + "'!");
                 }
             }
 
@@ -438,7 +445,7 @@ public class RepoxServiceImpl implements RepoxService {
                         status.getRecords());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Status for '" + collection + "' is '" + status.getRecords() + "'!");
+                log.info("Number of records for '" + collection + "' is '" + status.getRecords() + "'!");
             }
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
