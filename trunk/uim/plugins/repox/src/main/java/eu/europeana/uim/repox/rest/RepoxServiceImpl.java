@@ -449,9 +449,7 @@ public class RepoxServiceImpl implements RepoxService {
                 }
             }
             
-            
             String storedStatus = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE);
-
             if ((storedStatus == null && uimStatus != null) ||
                 (storedStatus != null && !storedStatus.equals(uimStatus))) {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE,
