@@ -122,8 +122,12 @@ public class RepoxServiceImpl implements RepoxService {
             providerId = provider.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID);
         }
 
-        eu.europeana.uim.repox.rest.client.xml.Provider retProv;
-        if (providerId == null) {
+        eu.europeana.uim.repox.rest.client.xml.Provider retProv = null;
+        if (providerId != null) {
+            retProv = client.retrieveProvider(providerId);
+        }
+        if (retProv == null) {
+            providerId = null;
             retProv = client.retrieveProvider(provider.getMnemonic());
 
             if (retProv == null) {
@@ -140,8 +144,6 @@ public class RepoxServiceImpl implements RepoxService {
                     provider.putValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID, retProv.getId());
                 }
             }
-        } else {
-            retProv = client.retrieveProvider(providerId);
         }
 
         if (retProv == null) {
@@ -183,8 +185,14 @@ public class RepoxServiceImpl implements RepoxService {
         }
         Aggregator aggregator = xmlFactory.createAggregator(provider);
 
-        if (aggregatorId == null) {
-            Aggregator rtAggregator = client.retrieveAggregator(aggregator.getNameCode());
+        Aggregator rtAggregator = null;
+        if (aggregatorId != null) {
+            rtAggregator = client.retrieveAggregator(aggregator.getNameCode());
+        }
+        if (rtAggregator == null) {
+            aggregatorId = null;
+
+            rtAggregator = client.retrieveAggregator(aggregator.getNameCode());
 
             if (rtAggregator == null) {
                 rtAggregator = client.retrieveAggregatorByNameCode(aggregator.getNameCode());
@@ -286,8 +294,12 @@ public class RepoxServiceImpl implements RepoxService {
 
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
 
-        Source retDs;
-        if (collectionId == null) {
+        Source retDs = null;
+        if (collectionId != null) {
+            retDs = client.retrieveDataSource(collectionId);
+        }
+        if (retDs == null) {
+            collectionId = null;
             retDs = client.retrieveDataSource(collection.getMnemonic());
 
             if (retDs == null) {
@@ -298,8 +310,6 @@ public class RepoxServiceImpl implements RepoxService {
                 collectionId = retDs.getId();
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID, retDs.getId());
             }
-        } else {
-            retDs = client.retrieveDataSource(collectionId);
         }
 
         if (retDs == null) {
