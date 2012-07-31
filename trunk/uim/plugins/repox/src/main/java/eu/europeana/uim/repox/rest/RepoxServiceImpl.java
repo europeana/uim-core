@@ -149,7 +149,7 @@ public class RepoxServiceImpl implements RepoxService {
             jaxbProv.setId(provider.getMnemonic());
 
             String aggregatorId = updateAggregator(client, provider, collection);
-            
+
             Aggregator aggr = new Aggregator();
             aggr.setId(aggregatorId);
 
@@ -416,10 +416,10 @@ public class RepoxServiceImpl implements RepoxService {
                     collection.putValue(RepoxControlledVocabulary.COLLECTION_REPOX_XML,
                             xmlCollection);
                     collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
-                    
+
                     log.info("Stored xml for '" + collection + "' is '" + storedXml + "'!");
                 }
-                
+
                 String lastIngest = jaxbColl.getLastIngest();
                 if (lastIngest != null) {
                     log.info("Last ingest for '" + collection + "' is '" + lastIngest + "'!");
@@ -445,8 +445,12 @@ public class RepoxServiceImpl implements RepoxService {
                         status.getRecords());
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Number of records for '" + collection + "' is '" + status.getRecords() + "'!");
+                log.info("Number of records for '" + collection + "' is '" + status.getRecords() +
+                         "'!");
             }
+
+            String harvestLog = getHarvestLog(collection);
+            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
         }
@@ -469,7 +473,7 @@ public class RepoxServiceImpl implements RepoxService {
                 sb.append(ln);
             }
 
-            log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
+            log.info("Harvesting log for '" + collection + "' is '" + sb.toString() + "'!");
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
         }
