@@ -533,13 +533,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
-        } else {
-            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
-            if (repoxService == null && sugarService == null) {
-                storage.command("repository.clearcache");
-            }
-        }
+        } 
+//        else {
+//            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+//            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+//            if (repoxService == null && sugarService == null) {
+//                storage.command("repository.clearcache");
+//            }
+//        }
         return storage;
     }
 }
