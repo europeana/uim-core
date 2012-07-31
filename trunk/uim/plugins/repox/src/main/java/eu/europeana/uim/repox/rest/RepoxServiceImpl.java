@@ -419,11 +419,6 @@ public class RepoxServiceImpl implements RepoxService {
 
                     log.info("Stored xml for '" + collection + "' is '" + storedXml + "'!");
                 }
-
-                String lastIngest = jaxbColl.getLastIngest();
-                if (lastIngest != null) {
-                    log.info("Last ingest for '" + collection + "' is '" + lastIngest + "'!");
-                }
             }
 
             HarvestingStatus status = client.getHarvestingStatus(id);
