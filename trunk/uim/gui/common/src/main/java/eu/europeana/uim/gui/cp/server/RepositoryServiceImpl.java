@@ -85,6 +85,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                             storage.updateCollection(collection);
                         }
                     }
+                    
+                    storage.checkpoint();
                 } catch (Exception e) {
                     throw new RuntimeException(
                             "Could not synchronize providers and collections with repox/sugar!", e);
