@@ -89,7 +89,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     storage.checkpoint();
                 } catch (Exception e) {
-                    log.severe("Could not synchronize providers and collections with repox/sugar! " + e);
+                    log.severe("Could not synchronize providers and collections with repox/sugar! " +
+                               e);
                     throw new RuntimeException(
                             "Could not synchronize providers and collections with repox/sugar!", e);
                 }
@@ -405,7 +406,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     prov = getWrappedProviderDTO(provider);
                 } catch (StorageEngineException e) {
-                    log.severe("Could not synchronize provider '" + providerId + "' with repox/sugar! " + e);
+                    log.severe("Could not synchronize provider '" + providerId +
+                               "' with repox/sugar! " + e);
                     throw new RuntimeException("Could not read/write provider '" + providerId +
                                                "'!", e);
                 }
@@ -462,7 +464,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
     @Override
     public CollectionDTO synchronizeCollectionExternalServices(Serializable collectionId) {
-        log.info("Synchronization with external services for collection '" + collectionId + "' was triggered!");
+        log.info("Synchronization with external services for collection '" + collectionId +
+                 "' was triggered!");
 
         CollectionDTO coll = null;
         if (getEngine() instanceof ExternalServiceEngine) {
@@ -475,6 +478,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     boolean update = repoxService != null ? synchronizeCollectionWithRepox(
                             repoxService, collection) : false;
+                    log.info("Synchronization with repox lead to update '" + update + "'!");
+                    
                     update = sugarService != null ? synchronizeCollectionWithSugar(sugarService,
                             collection) : false;
 
@@ -484,7 +489,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     coll = getWrappedCollectionDTO(collection);
                 } catch (StorageEngineException e) {
-                    log.severe("Could not synchronize collection '" + collectionId + "' with repox/sugar! " + e);
+                    log.severe("Could not synchronize collection '" + collectionId +
+                               "' with repox/sugar! " + e);
                     throw new RuntimeException("Could not read/write collection '" + collectionId +
                                                "'!", e);
                 }
@@ -496,6 +502,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     private boolean synchronizeCollectionWithRepox(RepoxService repoxService,
             Collection<Serializable> collection) {
         Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+        log.info("Before values are '" + beforeValues + "'!");
 
         try {
             repoxService.updateCollection(collection);
@@ -503,14 +510,18 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             log.severe("Could not update collection to repox! " + e);
             throw new RuntimeException("Could not update collection to repox!", e);
         }
+        log.info("Update with repox finished!");
+        
         try {
             repoxService.synchronizeCollection(collection);
         } catch (RepoxException e) {
             log.severe("Could not synchronize collection to repox! " + e);
             throw new RuntimeException("Could not synchronize collection to repox!", e);
         }
+        log.info("Synchronization with repox finished!");
 
         Map<String, String> afterValues = collection.values();
+        log.info("After values are '" + afterValues + "'!");
 
         boolean update = beforeValues.size() != afterValues.size();
         if (!update) {
