@@ -14,8 +14,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
-
 import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
@@ -436,7 +434,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
-                if (StringUtils.equals(beforeValue, entry.getValue())) {
+                if (!(beforeValue == null ? entry.getValue() == null : beforeValue.equals(entry.getValue()))) {
                     update = true;
                     break;
                 }
@@ -519,20 +517,15 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         Map<String, String> afterValues = collection.values();
 
         boolean update = beforeValues.size() != afterValues.size();
-        try {
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
-                if (!StringUtils.equals(beforeValue, entry.getValue())) {
+                if (!(beforeValue == null ? entry.getValue() == null : beforeValue.equals(entry.getValue()))) {
                     update = true;
                     break;
                 }
             }
         }
-        } catch (Throwable t) {
-            log.severe("failed comparison" + t);
-        }
-        log.info("Finished comparison!");
 
         return update;
     }
