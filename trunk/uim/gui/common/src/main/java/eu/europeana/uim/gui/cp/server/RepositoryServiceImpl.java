@@ -89,6 +89,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     storage.checkpoint();
                 } catch (Exception e) {
+                    log.severe("Could not synchronize providers and collections with repox/sugar! " + e);
                     throw new RuntimeException(
                             "Could not synchronize providers and collections with repox/sugar!", e);
                 }
@@ -404,6 +405,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     prov = getWrappedProviderDTO(provider);
                 } catch (StorageEngineException e) {
+                    log.severe("Could not synchronize provider '" + providerId + "' with repox/sugar! " + e);
                     throw new RuntimeException("Could not read/write provider '" + providerId +
                                                "'!", e);
                 }
@@ -482,6 +484,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
                     coll = getWrappedCollectionDTO(collection);
                 } catch (StorageEngineException e) {
+                    log.severe("Could not synchronize collection '" + collectionId + "' with repox/sugar! " + e);
                     throw new RuntimeException("Could not read/write collection '" + collectionId +
                                                "'!", e);
                 }
