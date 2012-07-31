@@ -502,7 +502,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     private boolean synchronizeCollectionWithRepox(RepoxService repoxService,
             Collection<Serializable> collection) {
         Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
-        log.info("Before values are '" + beforeValues + "'!");
 
         try {
             repoxService.updateCollection(collection);
@@ -510,20 +509,17 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             log.severe("Could not update collection to repox! " + e);
             throw new RuntimeException("Could not update collection to repox!", e);
         }
-        log.info("Update with repox finished!");
-        
         try {
             repoxService.synchronizeCollection(collection);
         } catch (RepoxException e) {
             log.severe("Could not synchronize collection to repox! " + e);
             throw new RuntimeException("Could not synchronize collection to repox!", e);
         }
-        log.info("Synchronization with repox finished!");
 
         Map<String, String> afterValues = collection.values();
-        log.info("After values are '" + afterValues + "'!");
 
         boolean update = beforeValues.size() != afterValues.size();
+        try {
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
@@ -533,6 +529,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 }
             }
         }
+        } catch (Throwable t) {
+            log.severe("failed comparison" + t);
+        }
+        log.info("Finished comparison!");
 
         return update;
     }
