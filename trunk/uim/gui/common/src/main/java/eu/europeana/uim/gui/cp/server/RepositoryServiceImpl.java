@@ -529,11 +529,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         try {
             sugarService.updateCollection(collection);
         } catch (SugarException e) {
+            log.severe("Could not update collection to sugar! " + e);
             throw new RuntimeException("Could not update collection to sugar!", e);
         }
         try {
             update = sugarService.synchronizeCollection(collection);
         } catch (SugarException e) {
+            log.severe("Could not synchronize collection to sugar! " + e);
             throw new RuntimeException("Could not synchronize collection to sugar!", e);
         }
         return update;
