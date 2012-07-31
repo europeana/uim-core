@@ -21,13 +21,13 @@ public class BasicXmlObjectFactory implements XmlObjectFactory {
         String countryCode = provider.getValue(StandardControlledVocabulary.COUNTRY);
         String countryName = null;
         if (countryCode == null) {
-            countryCode = "eu";
-            countryName = "European Union";
+            countryCode = "EU";
+            countryName = "Europe";
         } else {
             countryCode = countryCode.toLowerCase();
             if (countryCode.equals("xxx")) {
-                countryCode = "eu";
-                countryName = "European Union";
+                countryCode = "EU";
+                countryName = "Europe";
             } else {
                 Country country = Country.lookupCountry(countryCode, false);
                 if (country != null) {
