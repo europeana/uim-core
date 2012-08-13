@@ -97,17 +97,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>4.0-SNAPSHOT</version>
-        </dependency>
-
+        
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-core</artifactId>
-            <version>4.0-SNAPSHOT</version>
+            <version>4.0.0-BETA</version>
         </dependency>
 
         <!-- Stax -->
@@ -151,8 +145,17 @@
     <repositories>
         <repository>
             <id>solr.snapshot</id>
-            <name>SOLR 4.0 SNAPSHOT repository</name>
-            <url>https://builds.apache.org//job/Lucene-Solr-Maven-trunk/lastSuccessfulBuild/artifact/maven_artifacts/</url>
+            <name>SOLR SNAPSHOT repository</name>
+            <url>https://repository.apache.org/content/groups/snapshots/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>solr.snapshot</id>
+            <name>SOLR staging repository</name>
+            <url>https://repository.apache.org/content/groups/staging/</url>
             <layout>default</layout>
             <snapshots>
                 <enabled>true</enabled>
