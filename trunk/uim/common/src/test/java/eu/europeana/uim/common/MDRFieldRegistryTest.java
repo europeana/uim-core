@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 /**
  * Tests implictly the {@link TKey} and the fields on {@link MDRFieldRegistry}.
  * 

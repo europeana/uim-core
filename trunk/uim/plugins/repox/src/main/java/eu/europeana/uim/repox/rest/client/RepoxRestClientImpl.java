@@ -999,6 +999,7 @@ public class RepoxRestClientImpl implements RepoxRestClient {
         try {
             url = new URL(urlStr);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RepoxException("Could not creat url of '" + urlStr + "'!", e);
         }
         log.info("Invoking rest call for '" + urlStr + "'!");

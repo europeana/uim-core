@@ -6,17 +6,18 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
 /**
- * 
+ * Tests basic operations on implementation {@link CollectionBean} for {@link Collection}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class CollectionBeanTest {
     /**
-     * 
+     * Tests creating of bean and all getter and setter methods on it.
      */
     @Test
     public void testCollectionSetterGetter() {
@@ -51,15 +52,15 @@ public class CollectionBeanTest {
     }
 
     /**
-     * 
+     * Tests putting arbitrary string values on bean and retrieving them.
      */
     @Test
-    public void testProviderValues() {
+    public void testCollectionValues() {
         CollectionBean<Long> bean = new CollectionBean<Long>(1L, null);
         bean.putValue("a", null);
         assertEquals(1, bean.values().size());
         assertNull(bean.getValue("a"));
-        
+
         bean.putValue("a", "a");
         assertEquals(1, bean.values().size());
         assertEquals("a", bean.getValue("a"));

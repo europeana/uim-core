@@ -203,4 +203,166 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             return 0;
         }
     }
+
+    // modeling structural information between qualified values
+    /**
+     * Adds a relation between the source and the target values to model structural information.
+     * 
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param source
+     *            a qualified value determining the start point of the relation
+     * @param target
+     *            a qualified value determining the end point of the relation
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     */
+    <S, T> void addRelation(QualifiedValue<S> source, QualifiedValue<T> target,
+            Enum<?>... qualifiers);
+
+    /**
+     * Deletes all relations known starting or ending in the provided qualified value.
+     * 
+     * @param <T>
+     *            the runtime type of the values for this field
+     * @param value
+     *            a qualified value determining start or end point of all the relations to be
+     *            removed
+     * @param qualifiers
+     *            optional qualifiers, if true only matching relations will be removed
+     */
+    <T> void deleteRelations(QualifiedValue<T> value, Enum<?>... qualifiers);
+
+    /**
+     * Retrieves as list the qualified field values which are end points of a relation starting at
+     * the given source value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param source
+     *            a qualified value determining the start point of the relation
+     * @param targetKey
+     *            typed key which holds namespace, name and type information that the target values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified values
+     */
+    <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers);
+
+    /**
+     * Retrieves as list the qualified field values which are start points of a relation ending in
+     * the given target value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param target
+     *            a qualified value determining the end point of the relation
+     * @param sourceKey
+     *            typed key which holds namespace, name and type information that the source values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified values
+     */
+    <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
+            TKey<N, S> sourceKey, Enum<?>... qualifiers);
+
+    /**
+     * Small class holding information of relations including qualification.
+     * 
+     * @param <S>
+     *            generic type of source value
+     * @param <T>
+     *            generic type of target value
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @since Aug 13, 2012
+     */
+    public class QualifiedRelation<S, T> implements Serializable {
+        private static final long       serialVersionUID = 1L;
+
+        /**
+         * a qualified value determining the start point of the relation
+         */
+        private final QualifiedValue<S> source;
+        /**
+         * a qualified value determining the end point of the relation
+         */
+        private final QualifiedValue<T> target;
+        /**
+         * how the given value has been qualified
+         */
+        private final Set<Enum<?>>      qualifiers;
+
+        /**
+         * Creates a new instance of this class.
+         * 
+         * @param source
+         *            a qualified value determining the start point of the relation
+         * @param target
+         *            a qualified value determining the end point of the relation
+         * @param qualifiers
+         *            how the relation has been qualified
+         */
+        public QualifiedRelation(QualifiedValue<S> source, QualifiedValue<T> target,
+                                 Set<Enum<?>> qualifiers) {
+            this.source = source;
+            this.target = target;
+            this.qualifiers = qualifiers;
+        }
+
+        /**
+         * @return a qualified value determining the start point of the relation
+         */
+        public QualifiedValue<S> getSource() {
+            return source;
+        }
+
+        /**
+         * @return a qualified value determining the end point of the relation
+         */
+        public QualifiedValue<T> getTarget() {
+            return target;
+        }
+
+        /**
+         * @return how the given value has been qualified
+         */
+        public Set<Enum<?>> getQualifiers() {
+            return qualifiers;
+        }
+
+        /**
+         * @param <A>
+         *            The qualifier class to get
+         * @param qualifierType
+         *            The qualifier class to get
+         * @return the qualifier value, null if the qualifier is not present
+         */
+        @SuppressWarnings("unchecked")
+        public <A extends Enum<?>> A getQualifier(Class<A> qualifierType) {
+            if (qualifiers == null) return null;
+            for (Enum<?> qualifier : qualifiers) {
+                if (qualifier.getClass().equals(qualifierType)) return (A)qualifier;
+            }
+            return null;
+        }
+    }
 }

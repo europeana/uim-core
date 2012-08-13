@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import eu.europeana.uim.common.TKey;
@@ -172,7 +173,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     /**
-     * This should only be used during conversion, as in general addvalue is the way to fill a
+     * This should only be used during conversion, as in general addValue is the way to fill a
      * {@link MetaDataRecord}.
      * 
      * @param <N>
@@ -216,14 +217,11 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             }
         }
 
-        return result;
-    }
+        for (QualifiedValue<T> res : result) {
+            deleteRelations(res);
+        }
 
-    /**
-     * @return available keys
-     */
-    public Set<TKey<?, ?>> getAvailableKeys() {
-        return Collections.unmodifiableSet(new HashSet<TKey<?, ?>>(fields.keySet()));
+        return result;
     }
 
     private boolean checkQualifier(QualifiedValue<?> value, Enum<?>... qualifiers) {
@@ -236,4 +234,206 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         }
         return contained;
     }
+
+    // modeling structure information
+    /**
+     * holds relations starting from source nodes, giving back target nodes with connected
+     * qualifications
+     */
+    private HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> sourcesLookup = new HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>>();
+
+    /**
+     * holds relations ending in target nodes, giving back source nodes with connected
+     * qualifications
+     */
+    private HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> targetsLookup = new HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>>();
+
+    @Override
+    public <S, T> void addRelation(QualifiedValue<S> source, QualifiedValue<T> target,
+            Enum<?>... qualifiers) {
+        Set<Enum<?>> qualifierSet = new HashSet<Enum<?>>();
+        for (Enum<?> qualifier : qualifiers) {
+            qualifierSet.add(qualifier);
+        }
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        if (targetsMap == null) {
+            targetsMap = new HashMap<QualifiedValue<?>, Set<Enum<?>>>();
+            sourcesLookup.put(source, targetsMap);
+        }
+        targetsMap.put(target, qualifierSet);
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(source);
+        if (sourcesMap == null) {
+            sourcesMap = new HashMap<QualifiedValue<?>, Set<Enum<?>>>();
+            targetsLookup.put(target, sourcesMap);
+        }
+        sourcesMap.put(source, qualifierSet);
+    }
+
+    @Override
+    public <T> void deleteRelations(QualifiedValue<T> value, Enum<?>... qualifiers) {
+        clearMap(sourcesLookup, targetsLookup, value, qualifiers);
+        clearMap(targetsLookup, sourcesLookup, value, qualifiers);
+    }
+
+    private <T> void clearMap(
+            HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> startLookup,
+            HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> syncLookup,
+            QualifiedValue<T> value, Enum<?>... qualifiers) {
+        Set<QualifiedValue<?>> rems = new HashSet<QualifiedValue<?>>();
+        if (qualifiers.length > 0) {
+            rems.addAll(startLookup.remove(value).keySet());
+        } else {
+            HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = startLookup.get(value);
+            if (targetsMap != null) {
+                for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
+                    boolean contained = true;
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entryTargets.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                    if (contained) {
+                        rems.add(entryTargets.getKey());
+                        targetsMap.remove(entryTargets.getKey());
+                    }
+                }
+                if (targetsMap.isEmpty()) {
+                    startLookup.remove(value);
+                }
+            }
+        }
+
+        for (QualifiedValue<?> rem : rems) {
+            HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = syncLookup.get(rem);
+            sourcesMap.remove(value);
+            if (sourcesMap.isEmpty()) {
+                syncLookup.remove(rem);
+            }
+        }
+    }
+
+    @Override
+    public <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers) {
+        Set<QualifiedValue<T>> results = new HashSet<QualifiedValue<T>>();
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        if (targetsMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validTargets = fields.get(targetKey);
+                if (!validTargets.contains(entryTargets.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entryTargets.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    results.add((QualifiedValue<T>)entryTargets.getKey());
+                }
+            }
+        }
+
+        return results;
+
+    }
+
+    @Override
+    public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
+            TKey<N, S> sourceKey, Enum<?>... qualifiers) {
+        Set<QualifiedValue<S>> results = new HashSet<QualifiedValue<S>>();
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(target);
+        if (sourcesMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entrySources : sourcesMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validSources = fields.get(sourceKey);
+                if (!validSources.contains(entrySources.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entrySources.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    results.add((QualifiedValue<S>)entrySources.getKey());
+                }
+            }
+        }
+
+        return results;
+    }
+
+    /**
+     * @return available keys
+     */
+    public Set<TKey<?, ?>> getAvailableKeys() {
+        return Collections.unmodifiableSet(new HashSet<TKey<?, ?>>(fields.keySet()));
+    }
+
+    /**
+     * @return available relations
+     */
+    @SuppressWarnings("rawtypes")
+    public Set<QualifiedRelation<?, ?>> getAvailableRelations() {
+        Set<QualifiedRelation<?, ?>> relations = new HashSet<MetaDataRecord.QualifiedRelation<?, ?>>();
+        for (Entry<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> sourceEntry : sourcesLookup.entrySet()) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> targetEntry : sourceEntry.getValue().entrySet()) {
+                QualifiedRelation<?, ?> relation = new QualifiedRelation(sourceEntry.getKey(),
+                        targetEntry.getKey(), targetEntry.getValue());
+                relations.add(relation);
+
+            }
+        }
+        return relations;
+    }
+
+// /**
+// * Provides access to internal map for relations. NOTE, it should only be used by the data
+// * storage to provide a better way to store the data. Please use the interface methods for
+// * general access.
+// *
+// * @return source map for all relations with source as first lookup and target as inner map
+// * lookup
+// */
+// public HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> getSourceMap() {
+// return sourcesLookup;
+// }
+//
+// /**
+// * Provides access to internal map for relations. NOTE, it should only be used by the data
+// * storage to provide a better way to store the data. Please use the interface methods for
+// * general access.
+// *
+// * @return target map for all relations with target as first lookup and source as inner map
+// * lookup
+// */
+// public HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> getTargetMap() {
+// return targetsLookup;
+// }
+//
+// /**
+// * Provides access to internal map for field value lookups. NOTE, it should only be used by the
+// * data storage to provide a better way to store the data. Please use the interface methods for
+// * general access.
+// *
+// * @return map holding lookups for typed keys to values
+// */
+// public HashMap<TKey<?, ?>, List<QualifiedValue<?>>> getFields() {
+// return fields;
+// }
 }

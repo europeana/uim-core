@@ -11,14 +11,14 @@ import org.junit.Test;
 import eu.europeana.uim.store.Request;
 
 /**
- * 
+ * Tests basic operations on implementation {@link RequestBean} for {@link Request}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class RequestBeanTest {
     /**
-     * 
+     * Tests creating of bean and all getter and setter methods on it.
      */
     @Test
     public void testRequestSetterGetter() {
@@ -29,7 +29,7 @@ public class RequestBeanTest {
     }
 
     /**
-     * 
+     * Tests putting arbitrary string values on bean and retrieving them.
      */
     @Test
     public void testRequestValues() {

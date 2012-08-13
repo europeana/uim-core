@@ -16,7 +16,6 @@ import org.theeuropeanlibrary.model.common.qualifier.Language;
  */
 @SuppressWarnings("unused")
 public class ExtendedObjectTest {
-
     /**
      * Tests the conversion of Language
      * 
@@ -38,8 +37,6 @@ public class ExtendedObjectTest {
         Assert.assertEquals("some type", enc.getValue());
         Assert.assertEquals("dcmi.type", enc.getVocabulary());
     }
-
-
 
     /**
      * Tests the conversion of Edition
@@ -64,5 +61,4 @@ public class ExtendedObjectTest {
         Assert.assertEquals("revised", enc.getContent());
         Assert.assertEquals("label", enc.getLabel());
     }
-
 }

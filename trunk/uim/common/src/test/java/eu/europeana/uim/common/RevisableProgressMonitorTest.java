@@ -20,12 +20,12 @@ public class RevisableProgressMonitorTest {
         RevisableProgressMonitor revisableProgressMonitor = new RevisableProgressMonitor();
         RevisingProgressMonitor revisingProgressMonitor = new MemoryProgressMonitor();
         revisableProgressMonitor.addListener(revisingProgressMonitor);
-        
+
         revisableProgressMonitor.beginTask("Task name", 100);
-        for (int i=0;i<100;i++) {
-        revisableProgressMonitor.worked(1);
+        for (int i = 0; i < 100; i++) {
+            revisableProgressMonitor.worked(1);
         }
-        assertEquals(100,revisableProgressMonitor.getWorked());
+        assertEquals(100, revisableProgressMonitor.getWorked());
         assertEquals(100, revisingProgressMonitor.getWorked());
     }
 }
