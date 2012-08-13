@@ -9,14 +9,14 @@
 <config>
     <lib dir="./lib" />
 
-    <mainIndex>
+    <indexConfig>
         <!-- lucene options specific to the main on-disk lucene index -->
         <useCompoundFile>false</useCompoundFile>
         <mergeFactor>4</mergeFactor>
         <maxBufferedDocs>1000</maxBufferedDocs>
         <maxMergeDocs>2147483647</maxMergeDocs>
         <maxFieldLength>10000</maxFieldLength>
-    </mainIndex>
+    </indexConfig>
 
     <updateHandler class="solr.DirectUpdateHandler2">
         <maxPendingDeletes>1000</maxPendingDeletes>
@@ -84,5 +84,7 @@
     <admin>
         <defaultQuery>*:*</defaultQuery>
     </admin>
+    
+    <luceneMatchVersion>LUCENE_40</luceneMatchVersion>
 </config>
 
