@@ -10,10 +10,10 @@ import java.util.concurrent.ThreadFactory;
  * @since Mar 22, 2011
  */
 public class SimpleThreadFactory implements ThreadFactory {
-    private static long              id               = 0;
-    
-    private String                   groupname        = "anonymouse";
-    private String                   threadname       = "anonymouse";
+    private static long              id         = 0;
+
+    private String                   groupname  = "anonymouse";
+    private String                   threadname = "anonymouse";
 
     private ThreadGroup              threadgroup;
     private UncaughtExceptionHandler exceptionhandler;
@@ -32,7 +32,7 @@ public class SimpleThreadFactory implements ThreadFactory {
      */
     public SimpleThreadFactory(String threadname) {
         this.threadname = threadname;
-        
+
         threadgroup = new ThreadGroup(groupname);
     }
 
@@ -45,7 +45,7 @@ public class SimpleThreadFactory implements ThreadFactory {
     public SimpleThreadFactory(String groupname, String threadname) {
         this.groupname = groupname;
         this.threadname = threadname;
-        
+
         threadgroup = new ThreadGroup(groupname);
     }
 
@@ -56,7 +56,6 @@ public class SimpleThreadFactory implements ThreadFactory {
         return worker;
     }
 
-    
     /**
      * @return the groupname
      */
@@ -65,27 +64,23 @@ public class SimpleThreadFactory implements ThreadFactory {
     }
 
     /**
-     * @return the threadname
+     * @return name of thread
      */
     public String getThreadname() {
         return threadname;
     }
 
     /**
-     * Returns the exceptionhandler.
-     * @return the exceptionhandler
+     * @return handler for exceptions
      */
     public UncaughtExceptionHandler getExceptionHandler() {
         return exceptionhandler;
     }
 
     /**
-     * Sets the exceptionhandler to the given value.
-     * @param exceptionhandler the exceptionhandler to set
+     * @param exceptionhandler
      */
     public void setExceptionHandler(UncaughtExceptionHandler exceptionhandler) {
         this.exceptionhandler = exceptionhandler;
     }
-    
-    
 }
