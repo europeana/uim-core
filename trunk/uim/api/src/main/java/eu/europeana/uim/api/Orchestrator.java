@@ -8,7 +8,8 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Orchestrates the ingestion job execution.
- * @param <I> 
+ * 
+ * @param <I>
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
@@ -18,7 +19,7 @@ public interface Orchestrator<I> {
     /**
      * @return unique identifier of orchestrator
      */
-    public String getIdentifier();
+    String getIdentifier();
 
     /**
      * @param workflow
@@ -38,7 +39,8 @@ public interface Orchestrator<I> {
      *            arbitrary additional settings
      * @return an newly created active execution
      */
-    ActiveExecution<I> executeWorkflow(Workflow workflow, UimDataSet<I> dataset, Properties properties);
+    ActiveExecution<I> executeWorkflow(Workflow workflow, UimDataSet<I> dataset,
+            Properties properties);
 
     /**
      * @param id
