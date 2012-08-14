@@ -19,7 +19,7 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
     MNEMONIC("name_id_c", "accounts_cstm.name_id_c", StandardControlledVocabulary.MNEMONIC,
              "Mnemonic"),
 
-    NAME("name", "accounts_cstm.name_int_c", StandardControlledVocabulary.NAME, "Name"),
+    NAME("name_int_c", "accounts_cstm.name_int_c", StandardControlledVocabulary.NAME, "Name"),
 
     ALT_NAME("name_alt_c", "accounts_cstm.name_alt_c", null, "Alternate name"),
 
