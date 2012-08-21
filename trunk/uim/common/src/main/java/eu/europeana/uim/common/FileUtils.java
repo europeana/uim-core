@@ -6,13 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * 
+ * Utility functions for file manipulations.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Apr 30, 2012
  */
 public class FileUtils {
-
     /**
      * @param file
      * @param lines
@@ -59,10 +58,10 @@ public class FileUtils {
                     sb.append((char)readByte);
                 }
             }
-            
+
             if (result.size() < lines) {
                 // handle first line - we do not have
-               // a newline here.
+                // a newline here.
                 String l = sb.reverse().toString();
                 result.addFirst(l);
             }
