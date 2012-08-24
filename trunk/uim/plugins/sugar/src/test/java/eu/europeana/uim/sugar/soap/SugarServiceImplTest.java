@@ -12,6 +12,7 @@ import java.util.Properties;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.europeana.uim.store.bean.CollectionBean;
@@ -126,6 +127,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
+    @Ignore
     public void testSynchronize() throws SugarException {
         String pMne = properties.getProperty("test.provider.mnemonic");
         String cMne = properties.getProperty("test.collection.mnemonic");
@@ -148,6 +150,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
+    @Ignore
     public void testUpdateSugarProvider() throws SugarException {
         String pMne = properties.getProperty("test.provider.mnemonic");
 
@@ -184,6 +187,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
+    @Ignore
     public void testUpdateSugarCollection() throws SugarException {
         String pMne = properties.getProperty("test.provider.mnemonic");
         String cMne = properties.getProperty("test.collection.mnemonic");
