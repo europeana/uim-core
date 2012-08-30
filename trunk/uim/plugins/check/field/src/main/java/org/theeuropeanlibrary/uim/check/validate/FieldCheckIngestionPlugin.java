@@ -212,22 +212,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                         "Could not parse field specification in file <" + fieldSpecPath + ">");
             }
         }
-
-        Collection<?> collection = null;
-        UimDataSet<?> dataset = context.getDataSet();
-        if (dataset instanceof Collection) {
-            collection = (Collection<?>)dataset;
-        } else if (dataset instanceof Request<?>) {
-            collection = ((Request<?>)dataset).getCollection();
-        }
-
-        String time = df.format(new Date());
-        String mnem = collection != null ? collection.getMnemonic() : "NULL";
-        String name = collection != null ? collection.getName() : "No collection";
-
-        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "fieldcheck",
-                "initialize", mnem, name, time);
-
     }
 
     @Override
