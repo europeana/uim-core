@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +141,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         }
 
         value.start = 0;
-        value.fine = 0;
 
         Properties props = context.getProperties();
         String threshold = props.getProperty(KEY_THRESHOLD, "10");
@@ -253,9 +251,17 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         List<Link> links = mdr.getValues(ObjectModelRegistry.LINK);
         if (links == null || links.isEmpty()) {
             mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.REJECT);
+            synchronized (value) {
+                value.reject++;
+            }
+
         } else {
             if (sum == 0) {
                 mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.REJECT);
+                synchronized (value) {
+                    value.reject++;
+                }
+
             } else if (sum < value.threshold) {
                 mdr.addValue(ObjectModelRegistry.MATURITY, Maturity.WEAK_REJECT);
             } else if (sum == value.threshold) {
@@ -298,15 +304,18 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
             }
         }
 
-        synchronized (value) {
-            value.fine++;
-        }
         return true;
     }
 
     @Override
     public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
+        if (value.reject > 0) {
+            context.getLoggingEngine().log(Level.INFO, this, "No rejected records.");
+        } else {
+            context.getLoggingEngine().log(Level.WARNING, this, "Rejected records:" + value.reject);
+        }
+        
 
         Collection<I> collection = null;
         UimDataSet<I> dataset = context.getDataSet();
@@ -315,13 +324,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         } else if (dataset instanceof Request<?>) {
             collection = ((Request<I>)dataset).getCollection();
         }
-
-        String time = df.format(new Date());
-        String mnem = collection != null ? collection.getMnemonic() : "NULL";
-        String name = collection != null ? collection.getName() : "No collection";
-        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "fieldcheck",
-                "completed", mnem, name, "" + value.start, "" + value.fine, time);
-
         try {
             if (value.populate) {
                 synchronized (value.batch) {
@@ -368,7 +370,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     // Container holding all execution specific information for the validation plugin.
     static class Data implements Serializable {
         private int                                 start     = 0;
-        private int                                 fine      = 0;
+        private int                                 reject      = 0;
         private int                                 threshold = 10;
         private boolean                             populate  = true;
 
