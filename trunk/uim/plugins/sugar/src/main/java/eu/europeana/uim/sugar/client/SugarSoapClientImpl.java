@@ -31,6 +31,7 @@ import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
 
+import eu.europeana.uim.sugar.tel.TELCollectionTranslationFields;
 import eu.europeana.uim.sugar.utils.SugarUtil;
 import eu.europeana.uim.sugarcrm.SugarException;
 
@@ -770,7 +771,7 @@ public class SugarSoapClientImpl implements SugarClient {
                    if (langugageDesc==null||langugageDesc.length()<3) {
                        log.warning("Could not find appropriate language string for ISO code extraction, tried string: " +langugageDesc);
                    } else {
-                       singleEntry.put("language_iso3",langugageDesc.substring(0, 3));
+                       singleEntry.put(TELCollectionTranslationFields.LANGUAGE.getFieldId(),langugageDesc.substring(0, 3));
                    }
                    
                    result.add(singleEntry);
