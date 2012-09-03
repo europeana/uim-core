@@ -58,6 +58,9 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private String               contactModule;
     private String               contactMnemonicField;
+    
+    private String               collectionTranslationModule;
+    
 
     private int                  timeout = TIMEOUT;
 
@@ -79,7 +82,7 @@ public class SugarSoapClientImpl implements SugarClient {
     public SugarSoapClientImpl(String endPointUrl, String username, String password,
                                String providerModule, String providerMnemonic,
                                String collectionModule, String collectionMnemonic,
-                               String contactModule) {
+                               String contactModule, String collectionTranslationModule) {
         setEndPointUrl(endPointUrl);
         setUsername(username);
         setPassword(password);
@@ -88,6 +91,7 @@ public class SugarSoapClientImpl implements SugarClient {
         setCollectionModule(collectionModule);
         setCollectionMnemonicField(collectionMnemonic);
         setContactModule(contactModule);
+        setCollectionTranslationModule(collectionTranslationModule);
     }
 
     private void initializeWSDLBinding() {
@@ -744,6 +748,56 @@ public class SugarSoapClientImpl implements SugarClient {
      */
     public void setEndPointUrl(String endPointUrl) {
         this.endPointUrl = endPointUrl;
+    }
+
+    @Override
+    public List<Map<String,String>> getTranslationsForCollection(String session, String mnemonic) {
+        Map<String, String> collection = getCollection(session, mnemonic);
+
+        System.out.println("Collection "+collection.get("id"));
+        List<String> relationsships = getRelationsships(session, getCollectionModule(),
+                collection.get("id"), getCollectionTranslationModule(), "");
+
+        List<Map<String,String>> result=new LinkedList<Map<String,String>>();
+        if (!relationsships.isEmpty()) {
+
+           for (String relationship:relationsships) {
+               Map<String, String> singleEntry = getSingleEntryFromInternalId(session,
+                       getCollectionTranslationModule(), relationship);
+               if (singleEntry!=null) {
+                   //add ISO3 code from relationsship name instead of loading the language seperately
+                   String langugageDesc = singleEntry.get("telda_tel_collection_descriptions_telda_tel_iso639_3_languages_name");
+                   if (langugageDesc==null||langugageDesc.length()<3) {
+                       log.warning("Could not find appropriate language string for ISO code extraction, tried string: " +langugageDesc);
+                   } else {
+                       singleEntry.put("language_iso3",langugageDesc.substring(0, 3));
+                   }
+                   
+                   result.add(singleEntry);
+               }
+           }
+           return result;
+            
+        } else {
+            // could not find any relevant translations for this.
+            return result;
+        }
+    }
+
+    /**
+     * Sets the collectionTranslationModule to the given value.
+     * @param collectionTranslationModule the collectionTranslationModule to set
+     */
+    public void setCollectionTranslationModule(String collectionTranslationModule) {
+        this.collectionTranslationModule = collectionTranslationModule;
+    }
+
+    /**
+     * Returns the collectionTranslationModule.
+     * @return the collectionTranslationModule
+     */
+    public String getCollectionTranslationModule() {
+        return collectionTranslationModule;
     }
 
 }

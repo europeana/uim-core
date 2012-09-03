@@ -17,7 +17,8 @@
 			<cm:property name="collectionMnemonicField" value="" />
 
 			<cm:property name="contactModule" value="" />
-
+            <cm:property name="collectionTranslationModule" value="" />
+            
 			<cm:property name="sugarMappingClass" value="" />
 		</cm:default-properties>
 	</cm:property-placeholder>
@@ -33,6 +34,7 @@
 		<argument index="5" value="${collectionModule}" />
 		<argument index="6" value="${collectionMnemonicField}" />
 		<argument index="7" value="${contactModule}" />
+        <argument index="8" value="${collectionTranslationModule}" />
 	</bean>
 
 	<reference id="repox" interface="eu.europeana.uim.repox.RepoxService"

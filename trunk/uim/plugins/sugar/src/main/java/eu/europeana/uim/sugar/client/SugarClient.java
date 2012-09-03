@@ -237,6 +237,13 @@ public interface SugarClient {
     public String getProviderForCollection(String session, String collectionid);
 
     /**
+     * @param session
+     * @param mnemonic
+     * @return
+     */
+    public List<Map<String, String>> getTranslationsForCollection(String session,String mnemonic);
+    
+    /**
      * Get all relationsships between a single entry in a module and entries in another
      * 
      * @param session

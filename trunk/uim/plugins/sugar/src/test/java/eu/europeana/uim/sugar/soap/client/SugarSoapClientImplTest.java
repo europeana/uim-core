@@ -69,9 +69,10 @@ public class SugarSoapClientImplTest {
         String collectionMnemonic = properties.getProperty("sugar.collection.mnemonic");
 
         String contactModul = properties.getProperty("sugar.contact");
-
+        String collectionTranslationModul=properties.getProperty("sugar.collectiontranslation");
+        
         client = new SugarSoapClientImpl(endpoint, username, password, providerModul,
-                providerMnemonic, collectionModul, collectionMnemonic, contactModul);
+                providerMnemonic, collectionModul, collectionMnemonic, contactModul,collectionTranslationModul);
         session = client.login();
     }
 
@@ -180,5 +181,18 @@ public class SugarSoapClientImplTest {
     public void testListContacts() {
         List<Map<String, String>> contacts = client.getContacts(session, null, 12);
         assertEquals(12, contacts.size());
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testCollectionTranslation() {
+
+        String mnemonic = properties.getProperty("test.collection.mnemonic");
+        List<Map<String, String>> translationsForCollection = client.getTranslationsForCollection(
+                session, mnemonic);
+        assertEquals(2,translationsForCollection.size());
+       
     }
 }

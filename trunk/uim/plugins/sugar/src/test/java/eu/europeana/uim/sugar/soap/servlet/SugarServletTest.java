@@ -61,9 +61,10 @@ public class SugarServletTest {
         String collectionMnemonic = properties.getProperty("sugar.collection.mnemonic");
 
         String contactModul = properties.getProperty("sugar.contact");
+        String collectionTranslationModul=properties.getProperty("sugar.collectiontranslation");
 
         client = new SugarSoapClientImpl(endpoint, username, password, providerModul,
-                providerMnemonic, collectionModul, collectionMnemonic, contactModul);
+                providerMnemonic, collectionModul, collectionMnemonic, contactModul,collectionTranslationModul);
 
         service = new SugarServiceImpl(client, new PropertiesSugarMapping(properties));
     }
