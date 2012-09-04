@@ -270,7 +270,7 @@ public class PartyObjectTest {
         assertEquals("sub", person.getFirstNames());
         assertNotNull(person.getFullName());
         assertEquals("sub main", person.getFullName());
-        assertEquals("main sub", person.getFullNameInverted());
+        assertEquals("main, sub", person.getFullNameInverted());
         assertEquals("sm", person.getNameInitials());
         
         assertEquals(new Person("main", "sub"), person);
