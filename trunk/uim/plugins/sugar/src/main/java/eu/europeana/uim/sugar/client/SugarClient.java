@@ -4,6 +4,8 @@ package eu.europeana.uim.sugar.client;
 import java.util.List;
 import java.util.Map;
 
+import org.theeuropeanlibrary.model.common.qualifier.Language;
+
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
@@ -278,4 +280,14 @@ public interface SugarClient {
      * @return
      */
     boolean createRelationsship(String session, String module1, String module1id, String module2, String module2id);
+
+    /**
+     * @param session
+     * @param mnemonic
+     * @param language
+     * @param title
+     * @param description
+     */
+    void createCollectionTranslation(String session, String mnemonic, Language language,
+            String title, String description);
 }

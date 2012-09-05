@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import org.sugarcrm.soap.Set_relationship_value;
 import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
+import org.theeuropeanlibrary.model.common.qualifier.Language;
 
 import eu.europeana.uim.sugar.tel.TELCollectionTranslationFields;
 import eu.europeana.uim.sugar.utils.SugarUtil;
@@ -60,9 +62,8 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private String               contactModule;
     private String               contactMnemonicField;
-    
+
     private String               collectionTranslationModule;
-    
 
     private int                  timeout = TIMEOUT;
 
@@ -325,14 +326,12 @@ public class SugarSoapClientImpl implements SugarClient {
                                   " idfield: " + idfield, e);
             return false;
         }
-        
+
         return true;
     }
-    
+
     @Override
-    public String createEntry(String session, String module, 
-            Map<String, String> values) {
-   
+    public String createEntry(String session, String module, Map<String, String> values) {
 
         ArrayList<Name_value> nameValues = new ArrayList<Name_value>();
 
@@ -345,56 +344,51 @@ public class SugarSoapClientImpl implements SugarClient {
         }
         Set_entry_result set_entry;
         try {
-             set_entry = binding.set_entry(session, module, nameValues.toArray(new Name_value[0]));
+            set_entry = binding.set_entry(session, module, nameValues.toArray(new Name_value[0]));
         } catch (RemoteException e) {
             log.log(Level.SEVERE, "Could not create the record. Module " + module, e);
             return null;
         }
-        
-        if (set_entry!=null) {
-            return set_entry.getId();
-        }
+
+        if (set_entry != null) { return set_entry.getId(); }
         return null;
     }
-    
 
-    
     @Override
-    public boolean createRelationsship(String session,String module1,String module1id,String module2,String module2id) {
-        
-        
+    public boolean createRelationsship(String session, String module1, String module1id,
+            String module2, String module2id) {
+
         Map<String, String> singleEntry1 = getSingleEntryFromInternalId(session, module1, module1id);
         if (singleEntry1 == null) {
-            log.severe("Could not get record to create relationship: " + module1 + " id: " + module1id );
+            log.severe("Could not get record to create relationship: " + module1 + " id: " +
+                       module1id);
             return false;
         }
-        
-        
+
         Map<String, String> singleEntry2 = getSingleEntryFromInternalId(session, module1, module1id);
-        
-        
-   
+
         if (singleEntry2 == null) {
-            log.severe("Could not get record to create relationship: " + module2 + " id: " + module2id);
+            log.severe("Could not get record to create relationship: " + module2 + " id: " +
+                       module2id);
             return false;
         }
-        
-//        String sugarid1 = singleEntry1.get("id");
-//        if (sugarid1 == null) {
-//            log.severe("Could not get internal SugarCRM id to update: module: " + module1 + " id: " +
-//                       module1id );
-//            return false;
-//        }
-//        String sugarid2 = singleEntry2.get("id");
-//        if (sugarid2 == null) {
-//            log.severe("Could not get internal SugarCRM id to update: module: " + module2 + " id: " +
-//                       module2id);
-//            return false;
-//        }
-        
-        Set_relationship_value relationshipValue=new Set_relationship_value(module1,module1id,module2,module2id);
-        
-        
+
+// String sugarid1 = singleEntry1.get("id");
+// if (sugarid1 == null) {
+// log.severe("Could not get internal SugarCRM id to update: module: " + module1 + " id: " +
+// module1id );
+// return false;
+// }
+// String sugarid2 = singleEntry2.get("id");
+// if (sugarid2 == null) {
+// log.severe("Could not get internal SugarCRM id to update: module: " + module2 + " id: " +
+// module2id);
+// return false;
+// }
+
+        Set_relationship_value relationshipValue = new Set_relationship_value(module1, module1id,
+                module2, module2id);
+
         try {
             binding.set_relationship(session, relationshipValue);
         } catch (RemoteException e) {
@@ -403,7 +397,7 @@ public class SugarSoapClientImpl implements SugarClient {
         }
         return true;
     }
-    
+
     /**
      * Returns a list of all available SugarCRM modules
      * 
@@ -452,17 +446,17 @@ public class SugarSoapClientImpl implements SugarClient {
             log.log(Level.SEVERE, "Could not get entry list.", e);
             return null;
         }
-        
+
         // Getting the fields for entry we got.
         LinkedList<Map<String, String>> result = new LinkedList<Map<String, String>>();
-        Entry_value[] entryList = getEntryListResponse.getEntry_list(); 
+        Entry_value[] entryList = getEntryListResponse.getEntry_list();
         for (int k = 0; k < entryList.length; k++) {
             Entry_value entry = entryList[k];
             Name_value[] entryNameValueList = entry.getName_value_list();
             HashMap<String, String> recordMap = new HashMap<String, String>();
-            
-            //add special id field
-            recordMap.put("id",entry.getId());
+
+            // add special id field
+            recordMap.put("id", entry.getId());
             for (int j = 0; j < entryNameValueList.length; j++) {
                 Name_value entryNameValue = entryNameValueList[j];
                 // Outputting only non empty fields
@@ -551,7 +545,6 @@ public class SugarSoapClientImpl implements SugarClient {
         }
     }
 
-    
     /**
      * Get the full records of the contact belonging to an organization
      * 
@@ -832,33 +825,36 @@ public class SugarSoapClientImpl implements SugarClient {
     }
 
     @Override
-    public List<Map<String,String>> getTranslationsForCollection(String session, String mnemonic) {
+    public List<Map<String, String>> getTranslationsForCollection(String session, String mnemonic) {
         Map<String, String> collection = getCollection(session, mnemonic);
 
-        System.out.println("Collection "+collection.get("id"));
+        System.out.println("Collection " + collection.get("id"));
         List<String> relationsships = getRelationsships(session, getCollectionModule(),
                 collection.get("id"), getCollectionTranslationModule(), "");
 
-        List<Map<String,String>> result=new LinkedList<Map<String,String>>();
+        List<Map<String, String>> result = new LinkedList<Map<String, String>>();
         if (!relationsships.isEmpty()) {
 
-           for (String relationship:relationsships) {
-               Map<String, String> singleEntry = getSingleEntryFromInternalId(session,
-                       getCollectionTranslationModule(), relationship);
-               if (singleEntry!=null) {
-                   //add ISO3 code from relationsship name instead of loading the language seperately
-                   String langugageDesc = singleEntry.get("telda_tel_collection_descriptions_telda_tel_iso639_3_languages_name");
-                   if (langugageDesc==null||langugageDesc.length()<3) {
-                       log.warning("Could not find appropriate language string for ISO code extraction, tried string: " +langugageDesc);
-                   } else {
-                       singleEntry.put(TELCollectionTranslationFields.LANGUAGE.getFieldId(),langugageDesc.substring(0, 3));
-                   }
-                   
-                   result.add(singleEntry);
-               }
-           }
-           return result;
-            
+            for (String relationship : relationsships) {
+                Map<String, String> singleEntry = getSingleEntryFromInternalId(session,
+                        getCollectionTranslationModule(), relationship);
+                if (singleEntry != null) {
+                    // add ISO3 code from relationsship name instead of loading the language
+// seperately
+                    String langugageDesc = singleEntry.get("telda_tel_collection_descriptions_telda_tel_iso639_3_languages_name");
+                    if (langugageDesc == null || langugageDesc.length() < 3) {
+                        log.warning("Could not find appropriate language string for ISO code extraction, tried string: " +
+                                    langugageDesc);
+                    } else {
+                        singleEntry.put(TELCollectionTranslationFields.LANGUAGE.getFieldId(),
+                                langugageDesc.substring(0, 3));
+                    }
+
+                    result.add(singleEntry);
+                }
+            }
+            return result;
+
         } else {
             // could not find any relevant translations for this.
             return result;
@@ -867,7 +863,9 @@ public class SugarSoapClientImpl implements SugarClient {
 
     /**
      * Sets the collectionTranslationModule to the given value.
-     * @param collectionTranslationModule the collectionTranslationModule to set
+     * 
+     * @param collectionTranslationModule
+     *            the collectionTranslationModule to set
      */
     public void setCollectionTranslationModule(String collectionTranslationModule) {
         this.collectionTranslationModule = collectionTranslationModule;
@@ -875,10 +873,52 @@ public class SugarSoapClientImpl implements SugarClient {
 
     /**
      * Returns the collectionTranslationModule.
+     * 
      * @return the collectionTranslationModule
      */
     public String getCollectionTranslationModule() {
         return collectionTranslationModule;
+    }
+
+    /**
+     * @param session
+     * @param mnemonic
+     * @param language
+     * @param title
+     * @param description
+     */
+    @Override
+    public void createCollectionTranslation(String session, String mnemonic, Language language,
+            String title, String description) {
+        Map<String, String> values = new LinkedHashMap<String, String>();
+        values.put(TELCollectionTranslationFields.TITLE.getFieldId(), title);
+        values.put(TELCollectionTranslationFields.DESCRIPTION.getFieldId(), description);
+        String id = createEntry(session, getCollectionTranslationModule(), values);
+
+        if (id == null) { throw new IllegalStateException(
+                "Could not create new collection translation for  " + language.getIso3() + " " +
+                        title + " " + description); }
+
+        Map<String, String> languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
+                language.getIso3().toLowerCase(), "code");
+        if (languageEntry == null || languageEntry.isEmpty()) { throw new IllegalStateException(
+                "Could not find language entry for language " + language.getIso3()); }
+        boolean languageToTranslation = createRelationsship(session,
+                "telda_TEL_iso639_3_languages", languageEntry.get("id"),
+                getCollectionTranslationModule(), id);
+
+        if (!languageToTranslation) { throw new IllegalStateException(
+                "Could create relationship between language " + language.getIso3() + " and " +
+                        title + " " + description); }
+
+        Map<String, String> collection = getCollection(session, mnemonic);
+
+        boolean collectionToTranslation = createRelationsship(session, getCollectionModule(),
+                collection.get("id"), getCollectionTranslationModule(), id);
+
+        if (!collectionToTranslation) { throw new IllegalStateException(
+                "Could create relationship between collection " + collection.get("id") + " and " +
+                        title + " " + description); }
     }
 
 }

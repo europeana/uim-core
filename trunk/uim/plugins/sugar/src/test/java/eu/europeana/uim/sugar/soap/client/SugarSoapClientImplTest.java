@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,8 +21,6 @@ import org.theeuropeanlibrary.model.common.qualifier.Language;
 
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
-import eu.europeana.uim.sugar.tel.TELCollectionFields;
-import eu.europeana.uim.sugar.tel.TELCollectionTranslationFields;
 import eu.europeana.uim.sugarcrm.SugarException;
 
 /**
@@ -201,47 +198,22 @@ public class SugarSoapClientImplTest {
 
     }
 
+    /**
+     * 
+     */
     @Test
     @Ignore
     public void testCreatingCollectionTranslation() {
+        
+        
         String mnemonic = properties.getProperty("test.collection.mnemonic");
         Language language= Language.LIT;
         String title="Test Title";
         String description="Test Description";
+        ((SugarSoapClientImpl) client).createCollectionTranslation(session,mnemonic, language, title, description);
         
-        
-        createCollectionTranslation(mnemonic, language, title, description);
 
     }
 
-    /**
-     * @param mnemonic
-     * @param language
-     * @param title
-     * @param description
-     */
-    private void createCollectionTranslation(String mnemonic, Language language, String title,
-            String description) {
-        Map<String, String> values = new LinkedHashMap<String, String>();
-        values.put(TELCollectionTranslationFields.TITLE.getFieldId(), title);
-        values.put(TELCollectionTranslationFields.DESCRIPTION.getFieldId(), description);
-        String id = client.createEntry(session,
-                ((SugarSoapClientImpl)client).getCollectionTranslationModule(), values);
 
-        Map<String, String> languageEntry = client.getSingleEntry(session, "telda_TEL_iso639_3_languages",language.getIso3().toLowerCase(),"code");
-        //assertNotNull(id);
-        boolean languageToTranslation = client.createRelationsship(session,
-                "telda_TEL_iso639_3_languages",languageEntry.get("id"),
-                ((SugarSoapClientImpl)client).getCollectionTranslationModule(), id);
-        
-        //assertTrue(collectionToTranslation);
-        
-        Map<String, String> collection = client.getCollection(session, mnemonic);
-        
-        boolean collectionToTranslation = client.createRelationsship(session,
-                ((SugarSoapClientImpl)client).getCollectionModule(), collection.get("id"),
-                ((SugarSoapClientImpl)client).getCollectionTranslationModule(), id);
-        
-        //assertTrue(collectionToTranslation);
-    }
 }
