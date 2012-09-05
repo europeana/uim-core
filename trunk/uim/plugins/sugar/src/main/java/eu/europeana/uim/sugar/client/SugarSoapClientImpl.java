@@ -901,8 +901,16 @@ public class SugarSoapClientImpl implements SugarClient {
 
         Map<String, String> languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
                 language.getIso3().toLowerCase(), "code");
+        
+        if ( languageEntry == null || languageEntry.isEmpty()) {
+            //not found, try alias
+            languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
+                    language.getAlias().toLowerCase(), "code"); 
+        }
+        
         if (languageEntry == null || languageEntry.isEmpty()) { throw new IllegalStateException(
                 "Could not find language entry for language " + language.getIso3()); }
+   
         boolean languageToTranslation = createRelationsship(session,
                 "telda_TEL_iso639_3_languages", languageEntry.get("id"),
                 getCollectionTranslationModule(), id);
