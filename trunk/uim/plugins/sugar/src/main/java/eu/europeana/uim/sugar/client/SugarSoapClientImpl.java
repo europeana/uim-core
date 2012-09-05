@@ -899,18 +899,30 @@ public class SugarSoapClientImpl implements SugarClient {
                 "Could not create new collection translation for  " + language.getIso3() + " " +
                         title + " " + description); }
 
-        Map<String, String> languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
-                language.getIso3().toLowerCase(), "code");
-        
-        if ( languageEntry == null || languageEntry.isEmpty()) {
-            //not found, try alias
-            languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
-                    language.getAlias().toLowerCase(), "code"); 
+        String iso3primary = language.getIso3().toLowerCase();
+
+        // Hack, should go to Language class
+        if (iso3primary.equals("mac")) {
+            iso3primary = "mkd";
         }
-        
+
+        //Not ancient greek -> modern greek
+        if (iso3primary.equals("gre")) {
+            iso3primary = "ell";
+        }
+
+        Map<String, String> languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
+                iso3primary, "code");
+
+        if (languageEntry == null || languageEntry.isEmpty()) {
+            // not found, try alias
+            languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
+                    language.getAlias().toLowerCase(), "code");
+        }
+
         if (languageEntry == null || languageEntry.isEmpty()) { throw new IllegalStateException(
                 "Could not find language entry for language " + language.getIso3()); }
-   
+
         boolean languageToTranslation = createRelationsship(session,
                 "telda_TEL_iso639_3_languages", languageEntry.get("id"),
                 getCollectionTranslationModule(), id);
@@ -920,7 +932,11 @@ public class SugarSoapClientImpl implements SugarClient {
                         title + " " + description); }
 
         Map<String, String> collection = getCollection(session, mnemonic);
-
+        
+        if (collection==null||collection.isEmpty()) {
+            log.warning("Collection not found. Leaving relationship empty: "+mnemonic);
+            return;
+        }
         boolean collectionToTranslation = createRelationsship(session, getCollectionModule(),
                 collection.get("id"), getCollectionTranslationModule(), id);
 
