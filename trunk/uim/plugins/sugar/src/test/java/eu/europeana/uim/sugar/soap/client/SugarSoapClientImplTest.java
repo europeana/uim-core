@@ -194,7 +194,7 @@ public class SugarSoapClientImplTest {
         String mnemonic = properties.getProperty("test.collection.mnemonic");
         List<Map<String, String>> translationsForCollection = client.getTranslationsForCollection(
                 session, mnemonic);
-        assertEquals(2, translationsForCollection.size());
+        assertTrue(0 < translationsForCollection.size());
 
     }
 
