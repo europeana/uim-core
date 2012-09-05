@@ -256,4 +256,26 @@ public interface SugarClient {
 
     public List<String> getRelationsships(String session, String module, String moduleid,
             String relatedModule, String relatedModuleQuery);
+
+    /**
+     * Create a new entry 
+     * @param session
+     * @param module
+     * @param values
+     * @return true, if the entry could be created
+     */
+    String createEntry(String session, String module, 
+            Map<String, String> values);
+
+    /**
+     * @param session
+     * @param module1
+     * @param module1id
+     * @param module1idfield
+     * @param module2
+     * @param module2id
+     * @param module2idfield
+     * @return
+     */
+    boolean createRelationsship(String session, String module1, String module1id, String module2, String module2id);
 }

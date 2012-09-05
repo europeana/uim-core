@@ -27,6 +27,7 @@ import org.sugarcrm.soap.Id_mod;
 import org.sugarcrm.soap.Module_list;
 import org.sugarcrm.soap.Name_value;
 import org.sugarcrm.soap.Set_entry_result;
+import org.sugarcrm.soap.Set_relationship_value;
 import org.sugarcrm.soap.SugarsoapBindingStub;
 import org.sugarcrm.soap.SugarsoapLocator;
 import org.sugarcrm.soap.User_auth;
@@ -324,9 +325,85 @@ public class SugarSoapClientImpl implements SugarClient {
                                   " idfield: " + idfield, e);
             return false;
         }
+        
         return true;
     }
+    
+    @Override
+    public String createEntry(String session, String module, 
+            Map<String, String> values) {
+   
 
+        ArrayList<Name_value> nameValues = new ArrayList<Name_value>();
+
+        for (Entry<String, String> entry : values.entrySet()) {
+            if (entry.getValue() != null) {
+                nameValues.add(new Name_value(entry.getKey(), entry.getValue()));
+            } else {
+                log.warning("Key:" + entry.getKey() + " has NULL value.");
+            }
+        }
+        Set_entry_result set_entry;
+        try {
+             set_entry = binding.set_entry(session, module, nameValues.toArray(new Name_value[0]));
+        } catch (RemoteException e) {
+            log.log(Level.SEVERE, "Could not create the record. Module " + module, e);
+            return null;
+        }
+        
+        if (set_entry!=null) {
+            return set_entry.getId();
+        }
+        return null;
+    }
+    
+
+    
+    @Override
+    public boolean createRelationsship(String session,String module1,String module1id,String module2,String module2id) {
+        
+        
+        Map<String, String> singleEntry1 = getSingleEntryFromInternalId(session, module1, module1id);
+        if (singleEntry1 == null) {
+            log.severe("Could not get record to create relationship: " + module1 + " id: " + module1id );
+            return false;
+        }
+        
+        
+        Map<String, String> singleEntry2 = getSingleEntryFromInternalId(session, module1, module1id);
+        
+        
+   
+        if (singleEntry2 == null) {
+            log.severe("Could not get record to create relationship: " + module2 + " id: " + module2id);
+            return false;
+        }
+        
+//        String sugarid1 = singleEntry1.get("id");
+//        if (sugarid1 == null) {
+//            log.severe("Could not get internal SugarCRM id to update: module: " + module1 + " id: " +
+//                       module1id );
+//            return false;
+//        }
+//        String sugarid2 = singleEntry2.get("id");
+//        if (sugarid2 == null) {
+//            log.severe("Could not get internal SugarCRM id to update: module: " + module2 + " id: " +
+//                       module2id);
+//            return false;
+//        }
+        
+        Set_relationship_value relationshipValue=new Set_relationship_value(module1,module1id,module2,module2id);
+        
+        
+        try {
+            binding.set_relationship(session, relationshipValue);
+        } catch (RemoteException e) {
+            log.log(Level.SEVERE, "Could not create the relationship. ", e);
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * Returns a list of all available SugarCRM modules
      * 
@@ -375,14 +452,17 @@ public class SugarSoapClientImpl implements SugarClient {
             log.log(Level.SEVERE, "Could not get entry list.", e);
             return null;
         }
-
+        
         // Getting the fields for entry we got.
         LinkedList<Map<String, String>> result = new LinkedList<Map<String, String>>();
-        Entry_value[] entryList = getEntryListResponse.getEntry_list();
+        Entry_value[] entryList = getEntryListResponse.getEntry_list(); 
         for (int k = 0; k < entryList.length; k++) {
             Entry_value entry = entryList[k];
             Name_value[] entryNameValueList = entry.getName_value_list();
             HashMap<String, String> recordMap = new HashMap<String, String>();
+            
+            //add special id field
+            recordMap.put("id",entry.getId());
             for (int j = 0; j < entryNameValueList.length; j++) {
                 Name_value entryNameValue = entryNameValueList[j];
                 // Outputting only non empty fields
@@ -464,7 +544,6 @@ public class SugarSoapClientImpl implements SugarClient {
                 log.severe("Record does not have an internal SugarCRM id!");
                 return null;
             }
-
             return resultInListView;
 
         } else {
@@ -472,6 +551,7 @@ public class SugarSoapClientImpl implements SugarClient {
         }
     }
 
+    
     /**
      * Get the full records of the contact belonging to an organization
      * 
