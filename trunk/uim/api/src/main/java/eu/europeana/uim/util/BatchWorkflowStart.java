@@ -133,7 +133,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                         List<Request<I>> requests = storage.getRequests(coll);
                         for (Request<I> candidate : requests) {
                             if (request == null ||
-                                request.getDataFrom().before(candidate.getDataFrom())) {
+                                request.getDate().before(candidate.getDate())) {
                                 request = candidate;
                             }
                         }
