@@ -5,14 +5,15 @@ import java.util.Queue;
 
 /**
  * This class extends Runnable to create new tasks.
- * @param <I> 
+ * 
+ * @param <I>
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Feb 28, 2011
  */
 public abstract class TaskCreator<I> implements Runnable {
-    private boolean     done = false;
+    private boolean        done = false;
     private Queue<Task<I>> queue;
 
     /**
