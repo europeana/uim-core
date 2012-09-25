@@ -257,6 +257,9 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                                                     if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
                                                         ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
                                                     }
+                                                    
+                                                    //FIXME: misuse of api
+                                                    loggingEngine.completed(null);
                                                 }
                                             } catch (StorageEngineException e) {
                                                 throw new RuntimeException(
