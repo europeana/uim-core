@@ -223,7 +223,15 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         provDTO.setMnemonic(pro.getMnemonic());
         provDTO.setOaiBaseUrl(pro.getOaiBaseUrl());
         provDTO.setOaiMetadataPrefix(pro.getOaiMetadataPrefix());
-        provDTO.setCountry(pro.getValue(StandardControlledVocabulary.COUNTRY));
+        
+        String providercountry = pro.getValue(StandardControlledVocabulary.COUNTRY);
+        
+        //Check for a europeana specific value
+        if(providercountry == null){
+        	providercountry = pro.getValue("providerCountry");
+        }
+        
+        provDTO.setCountry(providercountry);
         return provDTO;
     }
 
