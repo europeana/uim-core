@@ -144,7 +144,7 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
