@@ -1,0 +1,9 @@
+# comment line
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/link=org.theeuropeanlibrary.model.common.Link;org.theeuropeanlibrary.model.common.qualifier.LinkTarget.DIGITAL_OBJECT;2
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/link=org.theeuropeanlibrary.model.common.Link;org.theeuropeanlibrary.model.common.qualifier.LinkTarget.THUMBNAIL;2
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/link=org.theeuropeanlibrary.model.common.Link;org.theeuropeanlibrary.model.common.qualifier.LinkTarget.RIGHTS;2
+
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/title=org.theeuropeanlibrary.model.common.Title;;5
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/instant=org.theeuropeanlibrary.model.common.time.Instant;;2
+org.theeuropeanlibrary.model.tel.ObjectModelRegistry/place=org.theeuropeanlibrary.model.common.spatial.NamedPlace;;2
+

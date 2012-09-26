@@ -1,0 +1,147 @@
+// SIP-Creator Mapping file
+
+// ## RecordRoot {http://www.europeana.eu/schemas/ese/}record 996
+
+// ConstantField collectionId 92035
+// ConstantField europeana_provider 
+// ConstantField europeana_language mul
+// ConstantField europeana_country europe
+
+output.record {
+
+//<<<dc_contributor
+input.dc_contributor.each {
+dc.contributor it
+}
+//>>>
+
+//<<<dc_creator
+input.dc_creator.each {
+dc.creator it
+}
+//>>>
+
+//<<<dc_date
+input.dc_date.each {
+dc.date extractYear(it)
+}
+//>>>
+
+//<<<dc_description
+input.dc_description.each {
+dc.description it
+}
+//>>>
+
+//<<<dc_format
+input.dc_format.each {
+dc.format it
+}
+//>>>
+
+//<<<dc_identifier
+input.dc_identifier.each {
+dc.identifier it
+}
+//>>>
+
+//<<<dc_language
+input.dc_language.each {
+dc.language it
+}
+//>>>
+
+//<<<dc_publisher
+input.dc_publisher.each {
+dc.publisher it
+}
+//>>>
+
+//<<<dc_rights
+input.dc_rights.each {
+dc.rights it
+}
+//>>>
+
+//<<<dc_source
+input.dc_source.each {
+dc.source it
+}
+//>>>
+
+//<<<dc_subject
+input.dc_subject.each {
+dc.subject it
+}
+//>>>
+
+//<<<dc_title
+input.dc_title.each {
+dc.title it
+}
+//>>>
+
+//<<<dc_type
+input.dc_type.each {
+dc.type it
+}
+//>>>
+
+//<<<europeana_country
+europeana.country europeana_country
+//>>>
+
+//<<<europeana_isShownAt
+input.europeana_isShownAt.each {
+europeana.isShownAt it
+}
+//>>>
+
+//<<<europeana_isShownBy
+input.europeana_isShownBy.each {
+europeana.isShownBy it
+}
+//>>>
+
+//<<<europeana_language
+europeana.language europeana_language
+//>>>
+
+//<<<europeana_object
+input.europeana_object.each {
+europeana.object it
+}
+//>>>
+
+//<<<europeana_type
+europeana.type input.europeana_type[0]
+//>>>
+
+//<<<europeana_provider
+europeana.provider input.europeana_provider[0]
+//>>>
+
+//<<<europeana_year
+input.dc_date.each {
+for (part in extractYear(it)) {
+europeana.year part
+}
+}
+//>>>
+
+//<<<europeana_rights
+europeana.rights 'http://www.europeana.eu/rights/rr-f/'
+//>>>
+
+//<<<europeana_uri
+europeana.uri createEuropeanaURI(input.europeana_isShownAt[0])
+//>>>
+
+//<<<europeana_dataProvider
+if (input.dc_source[0]) {
+input.dc_source[0].each{
+europeana.dataProvider it
+}
+}
+//>>>
+}

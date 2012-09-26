@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+    <!-- Property place holder -->
+    <bean id="linkcheckPlugin" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckIngestionPlugin">
+    </bean>
+    <service id="linkChecker" ref="linkcheckPlugin" interface="eu.europeana.uim.api.IngestionPlugin" />
+
+
+    <bean id="lcw" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckWorkflow" />
+    <service id="linkCheckingWorkflow" ref="lcw" interface="eu.europeana.uim.workflow.Workflow" />
+
+    <reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService" availability="optional">
+        <reference-listener bind-method="setSugarService" unbind-method="unsetSugarService" ref="linkcheckPlugin">
+        </reference-listener>
+    </reference>
+
+</blueprint>

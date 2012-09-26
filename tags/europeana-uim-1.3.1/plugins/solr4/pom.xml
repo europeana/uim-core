@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim</artifactId>
+        <version>1.3.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>europeana-uim-plugin-solr4</artifactId>
+    <name>Unified Ingestion Manager: Solr 4.x Commons Plugin</name>
+    <packaging>bundle</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            eu.europeana.uim.common,
+                            javax.naming.*,
+                            javax.xml.*,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.apache.commons.io,
+                            !*
+                        </Import-Package>
+                        <Export-Package>
+                            eu.europeana.uim.solr3,
+                            org.apache.lucene.*;version="3.3.0",
+                            org.apache.solr.*;version="3.3.0"
+						</Export-Package>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
+                        <Embed-StripVersion>true</Embed-StripVersion>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy todir="target/solr/">
+                                    <fileset dir="src/test/resources/">
+                                        <include name="**/*.xml" />
+                                        <include name="**/*.txt" />
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
+                    <preparationGoals>clean source:jar install</preparationGoals>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-core</artifactId>
+            <version>4.0.0-BETA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+            <version>4.0.0-BETA</version>
+        </dependency>
+
+        <!-- Stax -->
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>stax</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr4</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr4</developerConnection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>solr.snapshot</id>
+            <name>SOLR SNAPSHOT repository</name>
+            <url>https://repository.apache.org/content/groups/snapshots/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>solr.staging</id>
+            <name>SOLR staging repository</name>
+            <url>https://repository.apache.org/content/groups/staging/</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>
