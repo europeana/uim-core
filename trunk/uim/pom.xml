@@ -32,15 +32,11 @@
         <!-- simplistic in-memory logging -->
         <module>logging/memory</module>
 
-        <!-- UIM Model Definitions -->
-        <!-- <module>model</module> -->
+        <!-- UIM gui module -->
+        <module>gui</module>
 
-        <!-- UIM gui common module -->
-        <!-- <module>gui/common</module> -->
-
-        <!-- UIM Solr 1.4-3 OSGI support -->
-        <!-- <module>plugins/solr14</module> -->
-        <!-- <module>plugins/solr3</module> -->
+        <!-- UIM Integration -->
+<!--         <module>integration</module> -->
     </modules>
 
     <build>
