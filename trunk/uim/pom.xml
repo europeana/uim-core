@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>eu.europeana</groupId>
     <artifactId>europeana-uim</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.1</version>
     <packaging>pom</packaging>
     <name>Unified Ingestion Manager</name>
 
@@ -13,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.core.version>3.0.5.RELEASE</spring.core.version>
         <karaf.version>2.2.0</karaf.version>
-        <europeana.uim.version>1.3.1-SNAPSHOT</europeana.uim.version>
+        <europeana.uim.version>1.3.1</europeana.uim.version>
     </properties>
 
     <modules>
@@ -512,7 +511,7 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-1.3.1</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/tags/europeana-uim-1.3.1</developerConnection>
     </scm>
 </project>
