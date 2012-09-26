@@ -89,24 +89,24 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${europeana.uim.version}</version>
             <scope>test</scope>
         </dependency>
 
