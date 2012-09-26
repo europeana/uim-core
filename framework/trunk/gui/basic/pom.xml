@@ -145,9 +145,4 @@
             <version>${pom.version}</version>
         </dependency>
     </dependencies>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/basic</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/basic</developerConnection>
-    </scm>
 </project>

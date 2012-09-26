@@ -508,7 +508,7 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</developerConnection>
     </scm>
 </project>

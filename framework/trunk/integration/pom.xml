@@ -102,9 +102,4 @@
             <version>${europeana.uim.version}</version>
         </dependency>
     </dependencies>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/integration</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/integration</developerConnection>
-    </scm>
 </project>

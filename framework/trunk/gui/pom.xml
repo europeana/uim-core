@@ -49,7 +49,7 @@
     </build>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/gui</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/gui</developerConnection>
     </scm>
 </project>

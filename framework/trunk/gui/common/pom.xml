@@ -38,11 +38,6 @@
         </resources>
     </build>
 
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/common</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/common</developerConnection>
-    </scm>
-
     <dependencies>
         <dependency>
             <groupId>com.google.gwt</groupId>
