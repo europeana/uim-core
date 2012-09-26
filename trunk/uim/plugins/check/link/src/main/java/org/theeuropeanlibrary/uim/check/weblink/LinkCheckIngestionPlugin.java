@@ -188,16 +188,19 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA);
 
-        // Adapter that ensures compatibility with the europeana datamodel
-        Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
+        List<QualifiedValue<Link>> linkList = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+        if (linkList.size() == 0) {
+            // Adapter that ensures compatibility with the europeana datamodel
+            Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
 
-        strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
+            strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
 
-        MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
-                mdr, strategies);
+            MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
+                    mdr, strategies);
 
-        // get all links
-        List<QualifiedValue<Link>> linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
+            // get all links
+            linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
+        }
 
         int index = 0;
         for (QualifiedValue<Link> linkQv : linkList) {
