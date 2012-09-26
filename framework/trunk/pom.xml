@@ -33,7 +33,7 @@
         <module>logging/memory</module>
 
         <!-- UIM gui module -->
-        <module>gui</module>
+<!--         <module>gui</module> -->
 
         <!-- UIM Integration -->
 <!--         <module>integration</module> -->
