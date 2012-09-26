@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
@@ -75,27 +74,22 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${europeana.uim.version}</version>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-logging-memory</artifactId>
-            <version>${europeana.uim.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-logging-database</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>

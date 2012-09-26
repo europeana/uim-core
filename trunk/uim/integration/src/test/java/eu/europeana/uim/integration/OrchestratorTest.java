@@ -20,11 +20,11 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.common.MemoryProgressMonitor;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.common.progress.MemoryProgressMonitor;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -58,8 +58,8 @@ public class OrchestratorTest extends AbstractIntegrationTest {
                 // rhaa
                 // systemProperty("integrationDir").value(System.getProperty("integrationDir")),
 
-//                 PaxRunnerOptions.vmOption(
-//                 "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
+// PaxRunnerOptions.vmOption(
+// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
@@ -112,15 +112,16 @@ public class OrchestratorTest extends AbstractIntegrationTest {
 
         // Initialize workflow
         System.out.println("WORKFLOWS " + registry.getWorkflows());
-        Workflow workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+        Workflow<MetaDataRecord<Long>, Long> workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
         int wait = 0;
         while (workflow == null && wait++ < 10) {
-            workflow = registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+            workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
             Thread.sleep(1000);
         }
         Assert.assertNotNull(workflow);
 
-        ActiveExecution<Long> execution = (ActiveExecution<Long>)o.executeWorkflow(workflow, c);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution = (ActiveExecution<MetaDataRecord<Long>, Long>)o.executeWorkflow(
+                workflow, c);
         execution.getMonitor().addListener(monitor);
 
         execution.waitUntilFinished();

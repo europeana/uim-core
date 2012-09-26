@@ -16,8 +16,8 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.logging.LoggingEngine;
 
 /**
  * Integration test for UIM commands<br/>
@@ -65,6 +65,6 @@ public class LoggingDatabaseTest extends AbstractIntegrationTest {
             logging = registry.getLoggingEngine();
             Thread.sleep(500);
         }
-        logging.log( Level.INFO, "module", null, "test", "tst tst");
+        logging.log(Level.INFO, "module", null, "test", "tst tst");
     }
 }
