@@ -81,7 +81,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${project.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
