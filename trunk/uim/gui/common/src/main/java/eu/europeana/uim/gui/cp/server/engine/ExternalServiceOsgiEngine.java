@@ -1,8 +1,8 @@
 package eu.europeana.uim.gui.cp.server.engine;
 
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.Registry;
 import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugar.SugarService;
 
 /**
  * OSGI based implementation of engine.

@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.FileUtils;
+import eu.europeana.uim.common.utils.FileUtils;
 import eu.europeana.uim.gui.cp.server.engine.Engine;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Execution;
 
 /**

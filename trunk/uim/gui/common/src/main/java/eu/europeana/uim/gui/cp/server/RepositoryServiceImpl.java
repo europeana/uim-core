@@ -14,8 +14,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
 import eu.europeana.uim.gui.cp.server.engine.ExternalServiceEngine;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
@@ -25,11 +23,13 @@ import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.sugarcrm.SugarException;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugar.SugarException;
+import eu.europeana.uim.sugar.SugarService;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -100,7 +100,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public List<WorkflowDTO> getWorkflows() {
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
-        List<Workflow> workflows = getEngine().getRegistry().getWorkflows();
+        List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
             List<String> blackListKey = new ArrayList<String>() {
                 {
@@ -113,7 +113,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             List<String> blacklist = globalResources.get(blackListKey.get(0));
             Set<String> blackSet = blacklist != null && blacklist.size() > 0 ? new HashSet<String>(
                     blacklist) : null;
-            for (Workflow w : workflows) {
+            for (Workflow<?, ?> w : workflows) {
                 if (blackSet != null && blackSet.contains(w.getIdentifier())) {
                     continue;
                 }
@@ -223,15 +223,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         provDTO.setMnemonic(pro.getMnemonic());
         provDTO.setOaiBaseUrl(pro.getOaiBaseUrl());
         provDTO.setOaiMetadataPrefix(pro.getOaiMetadataPrefix());
-        
+
         String providercountry = pro.getValue(StandardControlledVocabulary.COUNTRY);
-        
-        //Check for a europeana specific value
-        if(providercountry == null){
-        	providercountry = pro.getValue("providerCountry");
+        // Check for a europeana specific value
+        if (providercountry == null) {
+            providercountry = pro.getValue("providerCountry");
         }
-        
         provDTO.setCountry(providercountry);
+
         return provDTO;
     }
 
@@ -442,7 +441,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
-                if (!(beforeValue == null ? entry.getValue() == null : beforeValue.equals(entry.getValue()))) {
+                if (!(beforeValue == null ? entry.getValue() == null
+                        : beforeValue.equals(entry.getValue()))) {
                     update = true;
                     break;
                 }
@@ -484,7 +484,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     boolean update = repoxService != null ? synchronizeCollectionWithRepox(
                             repoxService, collection) : false;
                     log.info("Synchronization with repox lead to update '" + update + "'!");
-                    
+
                     update = sugarService != null ? synchronizeCollectionWithSugar(sugarService,
                             collection) : false;
 
@@ -527,7 +527,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
-                if (!(beforeValue == null ? entry.getValue() == null : beforeValue.equals(entry.getValue()))) {
+                if (!(beforeValue == null ? entry.getValue() == null
+                        : beforeValue.equals(entry.getValue()))) {
                     update = true;
                     break;
                 }

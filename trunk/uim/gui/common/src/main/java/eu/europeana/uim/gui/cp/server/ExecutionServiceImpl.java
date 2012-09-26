@@ -15,14 +15,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.gui.cp.client.services.ExecutionService;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 import eu.europeana.uim.gui.cp.shared.ProgressDTO;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
@@ -54,14 +54,14 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public List<ExecutionDTO> getActiveExecutions() {
         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
 
-        java.util.Collection<ActiveExecution<Serializable>> activeExecutions = null;
+        java.util.Collection<ActiveExecution<?, Serializable>> activeExecutions = null;
         try {
             Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
             if (orchestrator == null) return r;
-            
+
             activeExecutions = orchestrator.getActiveExecutions();
             if (activeExecutions != null) {
-                for (ActiveExecution<Serializable> activeExecution : activeExecutions) {
+                for (ActiveExecution<?, Serializable> activeExecution : activeExecutions) {
                     if (activeExecution != null && activeExecution.getExecution().getId() != null) {
                         Execution<Serializable> execution = activeExecution.getExecution();
                         try {
@@ -79,11 +79,10 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             } else {
                 log.log(Level.WARNING, "Active executions are null!");
             }
-            
+
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Could not query active execution!", t);
         }
-
 
         return r;
     }
@@ -116,7 +115,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                 HashSet<Serializable> active = new HashSet<Serializable>();
                 try {
                     Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
-                    for (ActiveExecution<Serializable> ae : orchestrator.getActiveExecutions()) {
+                    for (ActiveExecution<?, Serializable> ae : orchestrator.getActiveExecutions()) {
                         active.add(ae.getExecution().getId());
                     }
                 } catch (Throwable t) {
@@ -164,8 +163,8 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     }
 
     @Override
-    public Boolean startCollection(String workflow, Serializable collection,
-            String executionName, Set<ParameterDTO> parameters) {
+    public Boolean startCollection(String workflow, Serializable collection, String executionName,
+            Set<ParameterDTO> parameters) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
         if (storage == null) {
             log.log(Level.SEVERE, "Storage connection is null!");
@@ -186,8 +185,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
         eu.europeana.uim.workflow.Workflow w = getWorkflow(workflow);
 
-
-        ActiveExecution<Serializable> ae;
+        ActiveExecution<?, Serializable> ae;
         if (parameters != null) {
             Properties properties = prepareProperties(parameters);
             ae = orchestrator.executeWorkflow(w, c, properties);
@@ -234,13 +232,15 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 // GWTProgressMonitor monitor = new GWTProgressMonitor(execution);
 
 // FIXME
-// ActiveExecution<Serializable> ae;
+// ActiveExecution<?, Serializable> ae;
 // if (parameters != null) {
 // Properties properties = prepareProperties(parameters);
-// ae = (ActiveExecution<Serializable>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+// ae = (ActiveExecution<?,
+// Serializable>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
 // w, p, properties);
 // } else {
-// ae = (ActiveExecution<Serializable>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
+// ae = (ActiveExecution<?,
+// Serializable>)getEngine().getRegistry().getOrchestrator().executeWorkflow(
 // w, p);
 // }
 // ae.setName(executionName);
@@ -255,7 +255,6 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 // return null;
     }
 
-
     @Override
     public ExecutionDTO getExecution(Serializable id) {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
@@ -266,7 +265,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
 
         ExecutionDTO exec = null;
-        ActiveExecution<Serializable> ae = orchestrator.getActiveExecution(id);
+        ActiveExecution<?, Serializable> ae = orchestrator.getActiveExecution(id);
         if (ae != null && ae.getExecution() != null) {
             exec = getWrappedExecutionDTO(ae.getExecution().getId(), ae.getExecution(), ae);
         } else {
@@ -281,8 +280,8 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return exec;
     }
 
-    private synchronized ExecutionDTO getWrappedExecutionDTO(Serializable id, Execution<Serializable> e,
-            ActiveExecution<Serializable> ae) {
+    private synchronized ExecutionDTO getWrappedExecutionDTO(Serializable id,
+            Execution<Serializable> e, ActiveExecution<?, Serializable> ae) {
         ExecutionDTO wrapped = wrappedExecutionDTOs.get(id);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
@@ -304,8 +303,9 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
             wrapped.setWorkflow(getWorkflowName(e.getWorkflow()));
             wrapped.setProgress(new ProgressDTO());
             wrappedExecutionDTOs.put(id, wrapped);
-            
-            log.info("Created new execution DTO for id:" +  id + ", now we have " + wrappedExecutionDTOs.size() + " elements in map.");
+
+            log.info("Created new execution DTO for id:" + id + ", now we have " +
+                     wrappedExecutionDTOs.size() + " elements in map.");
         }
         // update what may have changed
         wrapped.setActive(e.isActive());
@@ -357,7 +357,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean pauseExecution(Serializable execution) {
         Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Serializable> ae = orchestrator.getActiveExecution(execution);
+        ActiveExecution<?, Serializable> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.pause(ae);
             return ae.isPaused();
@@ -370,7 +370,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean resumeExecution(Serializable execution) {
         Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Serializable> ae = orchestrator.getActiveExecution(execution);
+        ActiveExecution<?, Serializable> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.resume(ae);
             return !ae.isPaused();
@@ -383,7 +383,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     public Boolean cancelExecution(Serializable execution) {
         Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
 
-        ActiveExecution<Serializable> ae = orchestrator.getActiveExecution(execution);
+        ActiveExecution<?, Serializable> ae = orchestrator.getActiveExecution(execution);
         if (ae != null) {
             orchestrator.cancel(ae);
             return ae.getExecution().isCanceled();
@@ -395,7 +395,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
     private String getWorkflowName(String workflow) {
         synchronized (workflowNames) {
             if (workflowNames.isEmpty()) {
-                List<Workflow> workflows = getEngine().getRegistry().getWorkflows();
+                List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
                 for (Workflow wf : workflows) {
                     workflowNames.put(wf.getIdentifier(), wf.getName());
                 }

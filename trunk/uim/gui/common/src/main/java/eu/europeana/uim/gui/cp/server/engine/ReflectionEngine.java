@@ -1,13 +1,13 @@
 package eu.europeana.uim.gui.cp.server.engine;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.sugar.SugarService;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
 

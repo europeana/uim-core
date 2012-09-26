@@ -4,9 +4,9 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.Registry;
 import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugar.SugarService;
 
 /**
  * This bundle activator serves as a dependency provisioning mechanism to the GWT RemoteServices. We

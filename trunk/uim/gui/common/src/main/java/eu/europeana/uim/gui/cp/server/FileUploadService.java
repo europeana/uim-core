@@ -17,8 +17,8 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import eu.europeana.uim.api.ResourceEngine;
 import eu.europeana.uim.gui.cp.server.engine.Engine;
+import eu.europeana.uim.resource.ResourceEngine;
 
 /**
  * Servlet used for file upload.

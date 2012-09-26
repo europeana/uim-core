@@ -1,6 +1,6 @@
 package eu.europeana.uim.gui.cp.server.engine;
 
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.Registry;
 
 /**
  * OSGI based implementation of engine.

@@ -11,15 +11,15 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
 import eu.europeana.uim.gui.cp.client.services.ResourceService;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.plugin.source.WorkflowStart;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Orchestration service implementation.
@@ -46,16 +46,16 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
 
         if (workflow != null) {
-            Workflow w = getEngine().getRegistry().getWorkflow(workflow);
+            Workflow<?, ?> w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
                 log.log(Level.WARNING, "Workflows are null!");
                 return res;
             }
 
             List<String> params = new ArrayList<String>();
-            WorkflowStart start = w.getStart();
+            WorkflowStart<?, ?> start = w.getStart();
             params.addAll(start.getParameters());
-            for (IngestionPlugin i : w.getSteps()) {
+            for (IngestionPlugin<?, ?> i : w.getSteps()) {
                 params.addAll(i.getParameters());
             }
 
@@ -147,7 +147,7 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         }
 
         if (collection == null && provider == null && workflow != null) {
-            Workflow wf = getEngine().getRegistry().getWorkflow(workflow);
+            Workflow<?, ?> wf = getEngine().getRegistry().getWorkflow(workflow);
             if (wf == null) {
                 log.log(Level.WARNING, "Workflows are null!");
             } else {
