@@ -57,13 +57,13 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>europeana-uim-common</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 		</dependency>        
 		
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>europeana-uim-storage-memory</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 		</dependency>  
 		
 		
@@ -71,7 +71,7 @@
 		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
+            <version>${europeana.uim.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -80,28 +80,28 @@
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-api</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-model-common</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-model-tel</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-model-europeana</artifactId>
-			<version>${project.version}</version>
+			<version>${europeana.uim.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
