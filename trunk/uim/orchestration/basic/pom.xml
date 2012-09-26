@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
@@ -8,7 +10,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-plugin-basic</artifactId>
+    <artifactId>europeana-uim-orchestration-basic</artifactId>
     <name>Unified Ingestion Manager: API Standard Orchestrator</name>
     <packaging>bundle</packaging>
 
@@ -22,6 +24,14 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
+                            eu.europeana.uim, 
+                            eu.europeana.uim.common.progress, 
+                            eu.europeana.uim.logging, 
+                            eu.europeana.uim.plugin,
+                            eu.europeana.uim.plugin.ingestion, 
+                            eu.europeana.uim.plugin.source,
+                            eu.europeana.uim.resource, 
+                            eu.europeana.uim.storage,
                             eu.europeana.uim.common,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
@@ -73,19 +83,20 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
+            <version>${pom.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${project.version}</version>
+            <version>${pom.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-common</artifactId>
+            <version>${pom.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>

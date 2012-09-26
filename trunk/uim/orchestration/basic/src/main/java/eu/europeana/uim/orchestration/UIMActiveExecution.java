@@ -19,60 +19,61 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.common.RevisableProgressMonitor;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.common.progress.RevisableProgressMonitor;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.plugin.ExecutionPlugin;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.plugin.source.Task;
+import eu.europeana.uim.plugin.source.WorkflowStart;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.workflow.Task;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.WorkflowStart;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
  * Active execution implementation specific for UIM workflow.
  * 
+ * @param <U>
+ *            uim data set type
  * @param <I>
  *            generic ID
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class UIMActiveExecution<I> implements ActiveExecution<I> {
+public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExecution<U, I> {
     /**
      * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY if set to true, the directory with the
      * temporary files is not deleted after the execution.
      **/
-    public static String                         KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
+    public static String                            KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
 
-    private static Logger                        log                                = Logger.getLogger(UIMActiveExecution.class.getName());
+    private static Logger                           log                                = Logger.getLogger(UIMActiveExecution.class.getName());
 
-    private HashMap<String, LinkedList<Task<I>>> success                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
-    private HashMap<String, LinkedList<Task<I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<I>>>();
-    private HashMap<String, HashSet<Task<I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<I>>>();
+    private HashMap<String, LinkedList<Task<U, I>>> success                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
+    private HashMap<String, LinkedList<Task<U, I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
+    private HashMap<String, HashSet<Task<U, I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<U, I>>>();
 
-    private HashMap<TKey<?, ?>, Object>          values                             = new HashMap<TKey<?, ?>, Object>();
+    private HashMap<TKey<?, ?>, Object>             values                             = new HashMap<TKey<?, ?>, Object>();
 
-    private final StorageEngine<I>               storageEngine;
-    private final LoggingEngine<I>               loggingEngine;
-    private final ResourceEngine                 resourceEngine;
+    private final StorageEngine<I>                  storageEngine;
+    private final LoggingEngine<I>                  loggingEngine;
+    private final ResourceEngine                    resourceEngine;
 
-    private final Execution<I>                   execution;
-    private final Workflow                       workflow;
-    private final Properties                     properties;
-    private final RevisableProgressMonitor       monitor;
+    private final Execution<I>                      execution;
+    private final Workflow<U, I>                    workflow;
+    private final Properties                        properties;
+    private final RevisableProgressMonitor          monitor;
 
-    private boolean                              paused;
-    private boolean                              initialized;
-    private Throwable                            throwable;
+    private boolean                                 paused;
+    private boolean                                 initialized;
+    private Throwable                               throwable;
 
-    private int                                  scheduled                          = 0;
-    private int                                  completed                          = 0;
+    private int                                     scheduled                          = 0;
+    private int                                     completed                          = 0;
 
     /**
      * Creates a new instance of this class.
@@ -85,7 +86,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
      * @param properties
      * @param monitor
      */
-    public UIMActiveExecution(Execution<I> execution, Workflow workflow,
+    public UIMActiveExecution(Execution<I> execution, Workflow<U, I> workflow,
                               StorageEngine<I> storageEngine, LoggingEngine<I> loggingEngine,
                               ResourceEngine resourceEngine, Properties properties,
                               RevisableProgressMonitor monitor) {
@@ -97,15 +98,15 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         this.properties = properties;
         this.monitor = monitor;
 
-        WorkflowStart start = workflow.getStart();
-        success.put(start.getIdentifier(), new LinkedList<Task<I>>());
-        failure.put(start.getIdentifier(), new LinkedList<Task<I>>());
-        assigned.put(start.getIdentifier(), new HashSet<Task<I>>());
+        WorkflowStart<U, I> start = workflow.getStart();
+        success.put(start.getIdentifier(), new LinkedList<Task<U, I>>());
+        failure.put(start.getIdentifier(), new LinkedList<Task<U, I>>());
+        assigned.put(start.getIdentifier(), new HashSet<Task<U, I>>());
 
-        for (IngestionPlugin step : workflow.getSteps()) {
-            success.put(step.getIdentifier(), new LinkedList<Task<I>>());
-            failure.put(step.getIdentifier(), new LinkedList<Task<I>>());
-            assigned.put(step.getIdentifier(), new HashSet<Task<I>>());
+        for (IngestionPlugin<U, I> step : workflow.getSteps()) {
+            success.put(step.getIdentifier(), new LinkedList<Task<U, I>>());
+            failure.put(step.getIdentifier(), new LinkedList<Task<U, I>>());
+            assigned.put(step.getIdentifier(), new HashSet<Task<U, I>>());
         }
     }
 
@@ -135,7 +136,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public Workflow getWorkflow() {
+    public Workflow<U, I> getWorkflow() {
         return workflow;
     }
 
@@ -180,17 +181,17 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public Queue<Task<I>> getSuccess(String identifier) {
+    public Queue<Task<U, I>> getSuccess(String identifier) {
         return success.get(identifier);
     }
 
     @Override
-    public Queue<Task<I>> getFailure(String identifier) {
+    public Queue<Task<U, I>> getFailure(String identifier) {
         return failure.get(identifier);
     }
 
     @Override
-    public Set<Task<I>> getAssigned(String identifier) {
+    public Set<Task<U, I>> getAssigned(String identifier) {
         return assigned.get(identifier);
     }
 
@@ -202,10 +203,10 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     @Override
     public int getProgressSize() {
         int size = 0;
-        WorkflowStart start = workflow.getStart();
+        WorkflowStart<U, I> start = workflow.getStart();
         size += getProgressSize(start.getIdentifier());
 
-        for (IngestionPlugin step : workflow.getSteps()) {
+        for (IngestionPlugin<U, I> step : workflow.getSteps()) {
             size += getProgressSize(step.getIdentifier());
         }
         return size;
@@ -213,11 +214,11 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     private int getProgressSize(String name) {
         int size = 0;
-        LinkedList<Task<I>> list = success.get(name);
+        LinkedList<Task<U, I>> list = success.get(name);
         synchronized (list) {
             size += list.size();
 
-            HashSet<Task<I>> set = assigned.get(name);
+            HashSet<Task<U, I>> set = assigned.get(name);
             size += set.size();
         }
         return size;
@@ -227,7 +228,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     public int getFailureSize() {
         // count elements in failure queues
         int size = 0;
-        for (LinkedList<Task<I>> tasks : failure.values()) {
+        for (LinkedList<Task<U, I>> tasks : failure.values()) {
             size += tasks.size();
         }
         return size;
@@ -246,7 +247,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 int totalProgress = 0;
                 StringBuilder builder = new StringBuilder();
 
-                WorkflowStart start = workflow.getStart();
+                WorkflowStart<U, I> start = workflow.getStart();
                 int startSize = getProgressSize(start.getIdentifier());
                 totalProgress += startSize;
                 builder.append(start.getIdentifier());
@@ -254,7 +255,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
                 builder.append(startSize);
                 builder.append(", ");
 
-                for (IngestionPlugin step : workflow.getSteps()) {
+                for (IngestionPlugin<U, I> step : workflow.getSteps()) {
                     int stepSize = getProgressSize(step.getIdentifier());
                     totalProgress += stepSize;
                     builder.append(step.getIdentifier());
@@ -297,7 +298,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
         boolean cancelled = getMonitor().isCancelled();
 
-        boolean finished = workflow.getStart().isFinished(this, getStorageEngine());
+        boolean finished = workflow.getStart().isFinished(this);
 
         boolean processed = getScheduledSize() == getFailureSize() + getCompletedSize();
 
@@ -313,18 +314,18 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public List<WorkflowStepStatus> getStepStatus() {
-        List<WorkflowStepStatus> status = new ArrayList<WorkflowStepStatus>();
-        for (IngestionPlugin step : workflow.getSteps()) {
+    public List<WorkflowStepStatus<U, I>> getStepStatus() {
+        List<WorkflowStepStatus<U, I>> status = new ArrayList<WorkflowStepStatus<U, I>>();
+        for (IngestionPlugin<U, I> step : workflow.getSteps()) {
             status.add(getStepStatus(step));
         }
         return status;
     }
 
     @Override
-    public WorkflowStepStatus getStepStatus(IngestionPlugin step) {
-        Queue<Task<I>> success = getSuccess(step.getIdentifier());
-        Queue<Task<I>> failure = getFailure(step.getIdentifier());
+    public WorkflowStepStatus<U, I> getStepStatus(ExecutionPlugin<U, I> step) {
+        Queue<Task<U, I>> success = getSuccess(step.getIdentifier());
+        Queue<Task<U, I>> failure = getFailure(step.getIdentifier());
 
         int successSize = 0;
         synchronized (success) {
@@ -332,16 +333,16 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
         }
 
         int failureSize = 0;
-        Map<MetaDataRecord<?>, Throwable> exceptions = new HashMap<MetaDataRecord<?>, Throwable>();
+        Map<U, Throwable> exceptions = new HashMap<U, Throwable>();
         synchronized (failure) {
             failureSize = failure.size();
-            for (Task<I> task : failure) {
-                exceptions.put(task.getMetaDataRecord(), task.getThrowable());
+            for (Task<U, I> task : failure) {
+                exceptions.put(task.getDataset(), task.getThrowable());
             }
         }
 
-        WorkflowStepStatus status = new UIMWorkflowStepStatus(step, successSize, failureSize,
-                exceptions);
+        WorkflowStepStatus<U, I> status = new UIMWorkflowStepStatus<U, I>(step, successSize,
+                failureSize, exceptions);
         return status;
     }
 
@@ -397,7 +398,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public File getWorkingDirectory(IngestionPlugin plugin) {
+    public File getWorkingDirectory(IngestionPlugin<U, I> plugin) {
         String workDirSuffix = workflow.getName() + File.separator + execution.getId() +
                                File.separator + plugin.getIdentifier();
         File workingDirectory = new File(resourceEngine.getWorkingDirectory(), workDirSuffix);
@@ -411,7 +412,7 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
     }
 
     @Override
-    public File getTmpDirectory(IngestionPlugin plugin) {
+    public File getTmpDirectory(IngestionPlugin<U, I> plugin) {
         String tmpDirSuffix = workflow.getName() + File.separator + execution.getId() +
                               File.separator + plugin.getIdentifier();
         File tmpDirectory = new File(resourceEngine.getTemporaryDirectory(), tmpDirSuffix);
@@ -435,9 +436,9 @@ public class UIMActiveExecution<I> implements ActiveExecution<I> {
 
     @Override
     public synchronized void cleanup() {
-//        values.clear();
-//        values = null;
-        
+// values.clear();
+// values = null;
+
         if (!"true".equals(getProperties().getProperty(KEEP_TMP_FILES_AFTER_EXECUTION_KEY, "false"))) {
             if (resourceEngine != null) {
                 String tmpExecutionDirSuffix = workflow.getName() + File.separator +

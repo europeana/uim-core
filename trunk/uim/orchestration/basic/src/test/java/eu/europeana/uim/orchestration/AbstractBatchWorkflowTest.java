@@ -5,8 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Date;
 import java.util.Properties;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -61,14 +60,14 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
      * @throws InterruptedException
      * @throws StorageEngineException
      */
-    protected Execution<Long> executeWorkflow(Workflow w, int count) throws InterruptedException,
-            StorageEngineException {
+    protected Execution<Long> executeWorkflow(Workflow<?, Long> w, int count)
+            throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
         Request<Long> request = createTestData(count);
         afterTestData(request);
 
-        ActiveExecution<Long> execution = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<?, Long> execution = orchestrator.executeWorkflow(w, request);
         execution.waitUntilFinished();
 
         assertEquals(count, execution.getCompletedSize());
@@ -95,13 +94,13 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
      * @throws InterruptedException
      * @throws StorageEngineException
      */
-    protected Execution<Long> executeWorkflow(Workflow w, int count, Properties properties)
+    protected Execution<Long> executeWorkflow(Workflow<?, Long> w, int count, Properties properties)
             throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
         Request<Long> request = createTestData(count);
 
-        ActiveExecution<Long> execution;
+        ActiveExecution<?, Long> execution;
         if (properties != null) {
             execution = orchestrator.executeWorkflow(w, request, properties);
         } else {

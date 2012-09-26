@@ -1,7 +1,7 @@
 package eu.europeana.uim.workflows;
 
-import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.util.BatchWorkflowStart;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.util.CollectionBatchWorkflowStart;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
 /**
@@ -13,11 +13,11 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class SyserrWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
+public class CollectionSyserrWorkflow<I> extends AbstractWorkflow<Collection<I>, I> {
     /**
      * Creates a new instance of this class.
      */
-    public SyserrWorkflow() {
+    public CollectionSyserrWorkflow() {
         this(250, true);
     }
 
@@ -27,11 +27,11 @@ public class SyserrWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
      * @param batchSize
      * @param randsleep
      */
-    public SyserrWorkflow(int batchSize, boolean randsleep) {
+    public CollectionSyserrWorkflow(int batchSize, boolean randsleep) {
         super("XT: Syserr Workflow",
                 "Simple workflow which uses a SyserrPlugins to fail all records");
-        setStart(new BatchWorkflowStart<I>());
-        addStep(new SyserrPlugin<MetaDataRecord<I>, I>());
+        setStart(new CollectionBatchWorkflowStart<I>());
+        addStep(new SyserrPlugin<Collection<I>, I>());
     }
 
     @Override

@@ -9,7 +9,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.ActiveExecution;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Registration for task executors to keep track of them implemented as singleton.
@@ -54,23 +55,33 @@ public class TaskExecutorRegistry {
         }
     }
 
-    /** execute the given task on the named executor. This method
-     * checks if the executor is still alive and if not the executor is 
-     * restarted (recreated)
+    /**
+     * execute the given task on the named executor. This method checks if the executor is still
+     * alive and if not the executor is restarted (recreated)
      * 
+     * @param <U>
+     *            uim data set type
      * @param <I>
+     *            generic ID
+     * 
      * @param execution
+     *            active execution
      * @param name
+     *            name of execution
      * @param task
+     *            runnable to be executed
      */
-    public <I> void execute(ActiveExecution<I> execution, String name, Runnable task) {
+    public <U extends UimDataSet<I>, I> void execute(ActiveExecution<U, I> execution, String name,
+            Runnable task) {
         TaskExecutor executor = executors.get(name);
         try {
             executor.execute(task);
         } catch (IllegalThreadStateException t) {
-            log.log(Level.SEVERE, "Thread pool <" + name + "> is for execution " +execution.getExecution().getId() + " is dead. Starting a new pool.");
+            log.log(Level.SEVERE, "Thread pool <" + name + "> is for execution " +
+                                  execution.getExecution().getId() +
+                                  " is dead. Starting a new pool.");
             executor.shutdownNow();
-            
+
             initialize(name, executor.getCorePoolSize(), executor.getMaximumPoolSize());
             executor = executors.get(name);
             executor.execute(task);

@@ -5,20 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Simple plugin to write to system out.
  * 
+ * @param <U>
+ *            uim data set type
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class SysoutPlugin extends AbstractIngestionPlugin {
+public class SysoutPlugin<U extends UimDataSet<I>, I> extends AbstractIngestionPlugin<U, I> {
+    @SuppressWarnings("rawtypes")
     private static TKey<SysoutPlugin, Data> DATA_KEY     = TKey.register(SysoutPlugin.class,
                                                                  "data", Data.class);
 
@@ -75,9 +81,9 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
-            throws IngestionPluginFailedException, CorruptedMetadataRecordException {
-        Object identifier = mdr.getId();
+    public boolean process(U dataset, ExecutionContext<U, I> context)
+            throws IngestionPluginFailedException, CorruptedDatasetException {
+        Object identifier = dataset.getId();
         Data data = context.getValue(DATA_KEY);
 
         if (data.randsleep) {
@@ -97,7 +103,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context) {
+    public void initialize(ExecutionContext<U, I> context) {
         Data data = new Data();
         context.putValue(DATA_KEY, data);
 
@@ -115,7 +121,7 @@ public class SysoutPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) {
+    public void completed(ExecutionContext<U, I> context) {
     }
 
     @Override

@@ -1,7 +1,8 @@
 package eu.europeana.uim.workflows;
 
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.util.BatchWorkflowStart;
+import eu.europeana.uim.util.CollectionBatchWorkflowStart;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
 /**
@@ -13,11 +14,11 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class MixedWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
+public class CollectionMixedWorkflow<I> extends AbstractWorkflow<Collection<I>, I> {
     /**
      * Creates a new instance of this class.
      */
-    public MixedWorkflow() {
+    public CollectionMixedWorkflow() {
         this(250, true);
     }
 
@@ -27,13 +28,13 @@ public class MixedWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
      * @param batchSize
      * @param randsleep
      */
-    public MixedWorkflow(int batchSize, boolean randsleep) {
+    public CollectionMixedWorkflow(int batchSize, boolean randsleep) {
         super("XT: Sysout/Syserr Workflow",
                 "Simple workflow which uses several SysoutPlugins to report to the console about processing");
-        setStart(new BatchWorkflowStart<I>());
+        setStart(new CollectionBatchWorkflowStart<I>());
 
-        addStep(new SysoutPlugin<MetaDataRecord<I>, I>());
-        addStep(new SyserrPlugin<MetaDataRecord<I>, I>());
+        addStep(new SysoutPlugin<Collection<I>, I>());
+        addStep(new SyserrPlugin<Collection<I>, I>());
     }
 
     @Override

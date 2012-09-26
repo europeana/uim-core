@@ -6,15 +6,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.IngestionPluginFailedException;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.SimpleThreadFactory;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.plugin.source.Task;
+import eu.europeana.uim.plugin.source.TaskStatus;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.workflow.Task;
-import eu.europeana.uim.workflow.TaskStatus;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
         super.beforeExecute(t, r);
 
         if (r instanceof Task) {
-            beforeExecuteTask((Task<?>)r);
+            beforeExecuteTask((Task<?, ?>)r);
         }
     }
 
@@ -60,24 +60,24 @@ public class TaskExecutor extends ThreadPoolExecutor {
         super.afterExecute(r, t);
 
         if (r instanceof Task) {
-            afterExecuteTask((Task<?>)r, t);
+            afterExecuteTask((Task<?, ?>)r, t);
         }
     }
 
-    private <I> void beforeExecuteTask(Task<I> task) {
+    private <U extends UimDataSet<I>, I> void beforeExecuteTask(Task<U, I> task) {
         task.setUp();
         task.setStatus(TaskStatus.PROCESSING);
     }
 
-    private <I> void afterExecuteTask(Task<I> task, Throwable t) {
+    private <U extends UimDataSet<I>, I> void afterExecuteTask(Task<U, I> task, Throwable t) {
         boolean success = true;
         LoggingEngine<I> loggingEngine = task.getExecutionContext().getLoggingEngine();
         Execution<I> execution = task.getExecutionContext().getExecution();
-        MetaDataRecord<I> metaDataRecord = task.getMetaDataRecord();
+        U metaDataRecord = task.getDataset();
 
         if (t != null) {
             success = false;
-            if (t instanceof CorruptedMetadataRecordException) {
+            if (t instanceof CorruptedDatasetException) {
                 if (loggingEngine != null) {
                     loggingEngine.logFailed(execution, Level.WARNING, task.getStep(), t,
                             metaDataRecord, "Taskexecution",
@@ -123,7 +123,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 if (task.isSavepoint()) {
                     task.save();
                 }
-                
+
                 synchronized (task.getOnSuccess()) {
                     task.getOnSuccess().add(task);
 
@@ -141,7 +141,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                             metaDataRecord, "StorageFailed",
                             "Major error in the storage execution must be stopped!");
                 }
-                
+
                 synchronized (task.getOnFailure()) {
                     task.getOnFailure().add(task);
                     // within same synch block!!
@@ -179,5 +179,4 @@ public class TaskExecutor extends ThreadPoolExecutor {
 
         task.tearDown();
     }
-
 }

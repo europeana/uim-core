@@ -11,16 +11,15 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.RevisableProgressMonitor;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.common.progress.RevisableProgressMonitor;
+import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.plugin.source.WorkflowStart;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -30,7 +29,6 @@ import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.util.ExecutionLogFileWriter;
 import eu.europeana.uim.util.LoggingFacadeEngine;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Orchestrates the ingestion job execution. The orchestrator keeps a map of WorkflowProcessors, one
@@ -43,12 +41,12 @@ import eu.europeana.uim.workflow.WorkflowStart;
  * @since Mar 22, 2011
  */
 public class UIMOrchestrator<I> implements Orchestrator<I> {
-    private static Logger                  log     = Logger.getLogger(UIMOrchestrator.class.getName());
+    private static Logger                     log     = Logger.getLogger(UIMOrchestrator.class.getName());
 
-    private final Registry                 registry;
-    private final UIMWorkflowProcessor<I>  processor;
+    private final Registry                    registry;
+    private final UIMWorkflowProcessor<I>     processor;
 
-    private final List<ActiveExecution<I>> startup = new ArrayList<ActiveExecution<I>>();
+    private final List<ActiveExecution<?, I>> startup = new ArrayList<ActiveExecution<?, I>>();
 
     /**
      * Creates a new instance of this class.
@@ -74,15 +72,16 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      * exists for this workflow. Note, this method queries the registered resource engine for
      * properties known to the plugins of the workflow.
      * 
-     * @param w
+     * @param workflow
      *            the workflow to execute
      * @param dataset
      *            the data set on which this Execution runs
      * @return a new ActiveExecution for this execution request
      */
     @Override
-    public ActiveExecution<I> executeWorkflow(Workflow w, UimDataSet<I> dataset) {
-        return executeWorkflow(w, dataset, new Properties());
+    public <U extends UimDataSet<I>> ActiveExecution<U, I> executeWorkflow(Workflow<U, I> workflow,
+            UimDataSet<I> dataset) {
+        return executeWorkflow(workflow, dataset, new Properties());
     }
 
     /**
@@ -91,7 +90,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      * properties known to the plugins of the workflow for all not given properties, but necessary
      * for the plugins.
      * 
-     * @param w
+     * @param workflow
      *            the workflow to execute
      * @param dataset
      *            the data set on which this Execution runs
@@ -99,9 +98,9 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public ActiveExecution<I> executeWorkflow(Workflow w, UimDataSet<I> dataset,
-            Properties properties) {
-        setupProperties(w, dataset, properties);
+    public <U extends UimDataSet<I>> ActiveExecution<U, I> executeWorkflow(Workflow<U, I> workflow,
+            UimDataSet<I> dataset, Properties properties) {
+        setupProperties(workflow, dataset, properties);
 
         RevisableProgressMonitor monitor = new RevisableProgressMonitor();
 
@@ -126,8 +125,8 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
                     workingDirectory);
 
-            Execution<I> e = storageEngine.createExecution(dataset, w.getIdentifier());
-            e.setName(w.getName() +
+            Execution<I> e = storageEngine.createExecution(dataset, workflow.getIdentifier());
+            e.setName(workflow.getName() +
                       "/" +
                       (dataset instanceof Collection ? ((Collection)dataset).getMnemonic()
                               : dataset.toString()));
@@ -137,15 +136,16 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             // must update to get the id filled.
             storageEngine.updateExecution(e);
 
-            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset, w,
-                    properties, loggingEngine, executionLogFileWriter);
+            LoggingFacadeEngine<I> loggingFacadeEngine = new LoggingFacadeEngine<I>(e, dataset,
+                    workflow, properties, loggingEngine, executionLogFileWriter);
             monitor.addListener(loggingFacadeEngine);
-            monitor.beginTask(w.getName(), 1);
+            monitor.beginTask(workflow.getName(), 1);
 
             try {
                 e.setLogFile(executionLogFileWriter.getLogFile(e).getCanonicalPath());
-                UIMActiveExecution<I> activeExecution = new UIMActiveExecution<I>(e, w,
-                        storageEngine, loggingFacadeEngine, resourceEngine, properties, monitor);
+                UIMActiveExecution<U, I> activeExecution = new UIMActiveExecution<U, I>(e,
+                        workflow, storageEngine, loggingFacadeEngine, resourceEngine, properties,
+                        monitor);
                 synchronized (startup) {
                     startup.add(activeExecution);
                 }
@@ -171,7 +171,7 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
         return null;
     }
 
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private void setupProperties(Workflow w, UimDataSet<?> dataset, Properties properties) {
         ResourceEngine resourceEngine = this.registry.getResourceEngine();
         if (resourceEngine != null) {
@@ -191,7 +191,8 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
             List<String> params = new ArrayList<String>();
             WorkflowStart start = w.getStart();
             params.addAll(start.getParameters());
-            for (IngestionPlugin i : w.getSteps()) {
+            List<IngestionPlugin<?, I>> steps = w.getSteps();
+            for (IngestionPlugin<?, I> i : steps) {
                 params.addAll(i.getParameters());
             }
 
@@ -252,9 +253,9 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
     }
 
     @Override
-    public List<ActiveExecution<I>> getActiveExecutions() {
+    public List<ActiveExecution<?, I>> getActiveExecutions() {
         synchronized (startup) {
-            List<ActiveExecution<I>> result = new ArrayList<ActiveExecution<I>>(
+            List<ActiveExecution<?, I>> result = new ArrayList<ActiveExecution<?, I>>(
                     processor.getExecutions());
             result.addAll(startup);
             return result;
@@ -262,25 +263,25 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
     }
 
     @Override
-    public ActiveExecution<I> getActiveExecution(I id) {
-        for (ActiveExecution<I> ae : processor.getExecutions()) {
+    public ActiveExecution<?, I> getActiveExecution(I id) {
+        for (ActiveExecution<?, I> ae : processor.getExecutions()) {
             if (ae.getExecution().getId().equals(id)) { return ae; }
         }
         return null;
     }
 
     @Override
-    public void pause(ActiveExecution<I> execution) {
+    public void pause(ActiveExecution<?, I> execution) {
         execution.setPaused(true);
     }
 
     @Override
-    public void resume(ActiveExecution<I> execution) {
+    public void resume(ActiveExecution<?, I> execution) {
         execution.setPaused(false);
     }
 
     @Override
-    public void cancel(ActiveExecution<I> execution) {
+    public void cancel(ActiveExecution<?, I> execution) {
         execution.getMonitor().setCancelled(true);
     }
 

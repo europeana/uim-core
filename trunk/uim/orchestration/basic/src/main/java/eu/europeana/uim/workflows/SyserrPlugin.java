@@ -5,20 +5,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Simple plugin to write to system error.
  * 
+ * @param <U>
+ *            uim data set type
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class SyserrPlugin extends AbstractIngestionPlugin {
+public class SyserrPlugin<U extends UimDataSet<I>, I> extends AbstractIngestionPlugin<U, I> {
+    @SuppressWarnings("rawtypes")
     private static TKey<SyserrPlugin, Data> DATA_KEY = TKey.register(SyserrPlugin.class, "data",
                                                              Data.class);
 
@@ -55,8 +61,8 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
-            throws IngestionPluginFailedException, CorruptedMetadataRecordException {
+    public boolean process(U mdr, ExecutionContext<U, I> context)
+            throws IngestionPluginFailedException, CorruptedDatasetException {
         Object identifier = mdr.getId();
         Data data = context.getValue(DATA_KEY);
 
@@ -79,8 +85,7 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
 
         if (data.processed % data.errorrate == 0) {
             if (data.corrupted) {
-                throw new CorruptedMetadataRecordException("Failed plugin at record: " +
-                                                           data.processed);
+                throw new CorruptedDatasetException("Failed plugin at record: " + data.processed);
             } else {
                 throw new NullPointerException("Failed plugin at record: " + data.processed);
             }
@@ -90,7 +95,7 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void initialize(ExecutionContext<U, I> context) throws IngestionPluginFailedException {
         Data data = new Data();
         context.putValue(DATA_KEY, data);
 
@@ -124,7 +129,7 @@ public class SyserrPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<U, I> context) throws IngestionPluginFailedException {
         // nothing to do
     }
 

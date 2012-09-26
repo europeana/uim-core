@@ -4,10 +4,10 @@ import static org.mockito.Mockito.spy;
 
 import org.junit.Before;
 
+import eu.europeana.uim.Registry;
 import eu.europeana.uim.UIMRegistry;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.store.memory.MemoryResourceEngine;
 import eu.europeana.uim.store.memory.MemoryStorageEngine;
 

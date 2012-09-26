@@ -15,15 +15,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.workflow.Workflow;
+import eu.europeana.uim.workflows.CollectionSysoutWorkflow;
 import eu.europeana.uim.workflows.MixedWorkflow;
 import eu.europeana.uim.workflows.SyserrWorkflow;
 import eu.europeana.uim.workflows.SysoutPlugin;
@@ -52,9 +52,10 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new SysoutWorkflow();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
         execution0.waitUntilFinished();
 
         // each delivered metadata record is saved
@@ -77,22 +78,28 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
         Request<Long> request = createTestData(engine, 1);
 
-        Workflow w = new SysoutWorkflow();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
 
         Properties properties = new Properties();
         properties.setProperty(SysoutPlugin.RANDOM_SLEEP, "true");
         properties.setProperty(SysoutPlugin.SLEEP_RANGES, "500-1000");
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request, properties);
-        ActiveExecution<Long> execution1 = orchestrator.executeWorkflow(w, request, properties);
-        ActiveExecution<Long> execution2 = orchestrator.executeWorkflow(w, request, properties);
-        ActiveExecution<Long> execution3 = orchestrator.executeWorkflow(w, request, properties);
-        ActiveExecution<Long> execution4 = orchestrator.executeWorkflow(w, request, properties);
-        ActiveExecution<Long> execution5 = orchestrator.executeWorkflow(w, request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution1 = orchestrator.executeWorkflow(w,
+                request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution2 = orchestrator.executeWorkflow(w,
+                request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution3 = orchestrator.executeWorkflow(w,
+                request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution4 = orchestrator.executeWorkflow(w,
+                request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution5 = orchestrator.executeWorkflow(w,
+                request, properties);
 
         Assert.assertEquals(6, orchestrator.getActiveExecutions().size());
         int countPaused = 0;
-        for (ActiveExecution<Long> activeExecution : orchestrator.getActiveExecutions()) {
+        for (ActiveExecution<?, Long> activeExecution : orchestrator.getActiveExecutions()) {
             if (activeExecution.isPaused()) {
                 countPaused++;
             }
@@ -105,7 +112,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         execution3.waitUntilFinished();
         execution4.waitUntilFinished();
         execution5.waitUntilFinished();
-        
+
         Assert.assertEquals(0, orchestrator.getActiveExecutions().size());
     }
 
@@ -123,9 +130,10 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 21 times the update method.
         verify(engine, times(21)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new SyserrWorkflow(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new SyserrWorkflow<Long>(7, true);
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 21 + original count of 21
@@ -149,9 +157,10 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new MixedWorkflow(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<Long>(7, true);
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 30 + original count of 30
@@ -176,12 +185,13 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new MixedWorkflow(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<Long>(7, true);
 
         Properties properties = new Properties();
         properties.setProperty("syserr.fullfailure", "true");
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request, properties);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request, properties);
         execution0.waitUntilFinished();
 
         // each failed metadata record is saved once 30 + original count of 30
@@ -207,7 +217,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new SysoutWorkflow();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
 
         LinkedHashMap<String, List<String>> resources = new LinkedHashMap<String, List<String>>();
         ArrayList<String> list = new ArrayList<String>();
@@ -215,7 +225,8 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         resources.put("sysout.random.sleep", list);
         resource.setGlobalResources(resources);
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
         execution0.waitUntilFinished();
         Assert.assertEquals("true", execution0.getProperties().get("sysout.random.sleep"));
 
@@ -257,9 +268,10 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow w = new SysoutWorkflow();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
 
-        ActiveExecution<Long> execution0 = orchestrator.executeWorkflow(w, request);
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
         execution0.waitUntilFinished();
 
         // each delivered metadata record is saved once per plugin (only one plugin in the
@@ -299,5 +311,31 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     @Override
     protected void fillRecord(MetaDataRecord<Long> record, int count) {
         record.addValue(MDRFieldRegistry.rawrecord, "title " + count);
+    }
+
+    /**
+     * Tests success of basic setup of orchestrator.o
+     * 
+     * @throws InterruptedException
+     * @throws StorageEngineException
+     */
+    @Test
+    public void testCollectionSuccessSetup() throws InterruptedException, StorageEngineException {
+        assertEquals(0, orchestrator.getActiveExecutions().size());
+
+        Request<Long> request = createTestData(engine, 1);
+        verify(engine, times(1)).updateCollection(any(Collection.class));
+
+        Workflow<Collection<Long>, Long> w = new CollectionSysoutWorkflow<Long>();
+
+        ActiveExecution<Collection<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request.getCollection());
+        execution0.waitUntilFinished();
+
+        verify(engine, times(2)).updateCollection(any(Collection.class));
+
+        assertEquals(1, execution0.getCompletedSize());
+        assertEquals(0, execution0.getFailureSize());
+        assertEquals(1, execution0.getScheduledSize());
     }
 }
