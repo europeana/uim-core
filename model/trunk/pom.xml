@@ -19,7 +19,7 @@
         <module>edm</module>
         <module>tel</module>
         <module>europeana</module>
-<!--         <module>adapters</module> -->
+        <module>adapters</module>
     </modules>
 
     <build>
