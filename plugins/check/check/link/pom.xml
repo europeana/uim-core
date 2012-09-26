@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.theeuropeanlibrary</groupId>
+        <artifactId>tel-uim-plugin-check</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tel-uim-plugin-check-link</artifactId>
+    <name>Unified Ingestion Manager: TEL Link Validation Plugin</name>
+    <packaging>bundle</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            eu.europeana.uim.api,
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.util,
+                            eu.europeana.uim.sugarcrm,
+                            eu.europeana.uim.workflow,
+                            org.theeuropeanlibrary.collections.guarded,
+                            org.theeuropeanlibrary.model.common,
+                            org.theeuropeanlibrary.model.common.qualifier,
+                            org.theeuropeanlibrary.model.tel,
+                            eu.europeana.uim.model.europeana,
+                            eu.europeana.uim.model.adapters.*,
+                            org.osgi.service.blueprint,
+                            org.apache.commons.io,
+                            javax.net.ssl,
+                            !*
+                        </Import-Package>
+                        <Export-Package>org.theeuropeanlibrary.uim.check.weblink</Export-Package>
+                        <Embed-Dependency>commons-logging,commons-codec,httpcore,httpclient,commons-httpclient</Embed-Dependency>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-common</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-tel</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-adapters</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-external-sugar-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-storage-memory</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
