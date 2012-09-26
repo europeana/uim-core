@@ -21,7 +21,7 @@
         <module>common</module>
 
         <!-- the uim api module -->
-<!--         <module>api</module> -->
+        <module>api</module>
 
         <!-- the standard orchestration implementation module -->
 <!--         <module>orchestration/basic</module> -->
