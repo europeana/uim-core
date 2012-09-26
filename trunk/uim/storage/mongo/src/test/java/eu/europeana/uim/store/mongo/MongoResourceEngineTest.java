@@ -22,102 +22,105 @@ package eu.europeana.uim.store.mongo;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.net.UnknownHostException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+
 import eu.europeana.uim.api.AbstractResourceEngineTest;
-import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
- * MongoDB ResourceEngine JUnit Tests. 
+ * MongoDB ResourceEngine JUnit Tests.
  * 
  * @author Georgios Markakis (gwarkx@hotmail.com)
  * @since Jan 6 2012
  * @see eu.europeana.uim.store.memory.ResourceStorageEngineTest
  */
-public class MongoResourceEngineTest extends AbstractResourceEngineTest<String>{
+public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> {
+    private MongoResourceEngine mongoEngine        = null;
 
-	private MongoResourceEngine mongoEngine = null;
+    private MongoStorageEngine  mongostorageEngine = null;
 
-	private MongoStorageEngine mongostorageEngine = null;
-	
-    private Mongo m = null;	
-	    
-    
-	/**
-	 * Run before each test
-	 */
-	@Before
-    public void setupTest(){
-		
-		try {
-			m = new Mongo();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (MongoException e) {
-			e.printStackTrace();
-		}
-	}
-    
-	/**
-	 * Run after each test
-	 */
-	@After
-    public void cleanup(){
-		m.dropDatabase("UIMTEST");
-	}
-    
-    
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#getResourceEngine()
-	 */
-	@Override
-	protected ResourceEngine getResourceEngine() {
-		   if (mongoEngine == null) {
-			      try {
-			    	m = new Mongo();
-			        MongoResourceEngine engine = new MongoResourceEngine("UIMTEST");
-			        
-			        MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST");
-			        
-			        m.dropDatabase("UIMTEST");
-			        engine.initialize();
-			        storageEngine.initialize();
-			        mongoEngine = engine;
-			        mongostorageEngine = storageEngine;
-			      }
-			      catch(Exception e) {
-			          e.printStackTrace();
-			      }
-			    }
-			    else {
-			      return mongoEngine;
-			    }
-		   return mongoEngine;
-	}
+    private Mongo               m                  = null;
 
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#nextID()
-	 */
-	@Override
-	protected String nextID() {
+    /**
+     * Run before each test
+     */
+    @Before
+    public void setupTest() {
+
+        try {
+            m = new Mongo();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Run after each test
+     */
+    @After
+    public void cleanup() {
+        m.dropDatabase("UIMTEST");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.europeana.uim.api.AbstractResourceEngineTest#getResourceEngine()
+     */
+    @Override
+    protected ResourceEngine getResourceEngine() {
+        if (mongoEngine == null) {
+            try {
+                m = new Mongo();
+                MongoResourceEngine engine = new MongoResourceEngine("UIMTEST");
+
+                MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST");
+
+                m.dropDatabase("UIMTEST");
+                engine.initialize();
+                storageEngine.initialize();
+                mongoEngine = engine;
+                mongostorageEngine = storageEngine;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return mongoEngine;
+        }
+        return mongoEngine;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.europeana.uim.api.AbstractResourceEngineTest#nextID()
+     */
+    @Override
+    protected String nextID() {
         return new String();
-	}
+    }
 
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateWorkflow()
-	 */
-	@Override
-	protected Workflow testGenerateWorkflow() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateWorkflow()
+     */
+    @Override
+    protected Workflow testGenerateWorkflow() {
         Workflow workflow = mock(Workflow.class);
 
         when(workflow.getIdentifier()).thenAnswer(new Answer() {
@@ -126,35 +129,31 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String>{
                 return "Workflow";
             }
         });
-        
+
         return workflow;
-	}
+    }
 
-	
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateProvider()
-	 */
-	@Override
-	protected Provider<String> testGenerateProvider() {
-		
-		return mongostorageEngine.createProvider();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateProvider()
+     */
+    @Override
+    protected Provider<String> testGenerateProvider() {
 
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateCollection(eu.europeana.uim.store.Provider)
-	 */
-	@Override
-	protected Collection<String> testGenerateCollection(Provider<String> provider) {
+        return mongostorageEngine.createProvider();
+    }
 
-		return mongostorageEngine.createCollection(provider);
-	}
-	
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateCollection(eu.europeana.uim.store
+     * .Provider)
+     */
+    @Override
+    protected Collection<String> testGenerateCollection(Provider<String> provider) {
 
-    
-    
-	
-
+        return mongostorageEngine.createCollection(provider);
+    }
 }

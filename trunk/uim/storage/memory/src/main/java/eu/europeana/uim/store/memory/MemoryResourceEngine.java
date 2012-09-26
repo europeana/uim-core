@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import eu.europeana.uim.api.EngineStatus;
-import eu.europeana.uim.api.ResourceEngine;
+import eu.europeana.uim.EngineStatus;
+import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
@@ -82,7 +82,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     }
 
     @Override
-    public void setWorkflowResources(Workflow workflow,
+    public void setWorkflowResources(Workflow<?, ?> workflow,
             LinkedHashMap<String, List<String>> resources) {
         if (resources == null) {
             // clean up and remove id entry from resources
@@ -107,7 +107,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     }
 
     @Override
-    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow workflow,
+    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow<?, ?> workflow,
             List<String> keys) {
         LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
         LinkedHashMap<String, List<String>> workflowMap = workflowResources.get(workflow.getIdentifier());

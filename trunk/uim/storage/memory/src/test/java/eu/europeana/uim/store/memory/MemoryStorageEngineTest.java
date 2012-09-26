@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import eu.europeana.uim.api.AbstractStorageEngineTest;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.storage.StorageEngine;
 
 /**
  * Storage tests using memory implementation of it.

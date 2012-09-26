@@ -7,9 +7,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import eu.europeana.uim.api.AbstractMetaDataRecordTest;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 

@@ -21,14 +21,17 @@
 package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+
 import eu.europeana.uim.api.AbstractStorageEngineTest;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.storage.StorageEngine;
 
 /**
  * Configuration class for MongoDB StorageEngineTests
@@ -40,58 +43,53 @@ import eu.europeana.uim.api.StorageEngine;
 
 @RunWith(JUnit4.class)
 public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
+    private MongoStorageEngine mongoEngine = null;
 
-	private MongoStorageEngine mongoEngine = null;
+    private Mongo              m           = null;
 
-    private Mongo m = null;	
-	
-	/**
-	 * Run before each test
-	 */
-	@Before
-    public void setupTest(){
-		
-		try {
-			m = new Mongo();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (MongoException e) {
-			e.printStackTrace();
-		}
-	}
-    
-	/**
-	 * Run after each test
-	 */
-	@After
-    public void cleanup(){
-		m.dropDatabase("UIMTEST");
-	}
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
-	 */
-	@Override
-	protected StorageEngine<String> getStorageEngine() {
-		   if (mongoEngine == null) {
-			      try {
-			    	m = new Mongo();
-			        MongoStorageEngine engine = new MongoStorageEngine("UIMTEST");
-			        m.dropDatabase("UIMTEST");
-			        engine.initialize();
-			        mongoEngine = engine;
-			      }
-			      catch(Exception e) {
-			          e.printStackTrace();
-			      }
-			    }
-			    else {
-			      return mongoEngine;
-			    }
-		   return mongoEngine;
-	}
-	
-	
-	
+    /**
+     * Run before each test
+     */
+    @Before
+    public void setupTest() {
 
+        try {
+            m = new Mongo();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (MongoException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Run after each test
+     */
+    @After
+    public void cleanup() {
+        m.dropDatabase("UIMTEST");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
+     */
+    @Override
+    protected StorageEngine<String> getStorageEngine() {
+        if (mongoEngine == null) {
+            try {
+                m = new Mongo();
+                MongoStorageEngine engine = new MongoStorageEngine("UIMTEST");
+                m.dropDatabase("UIMTEST");
+                engine.initialize();
+                mongoEngine = engine;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            return mongoEngine;
+        }
+        return mongoEngine;
+    }
 }

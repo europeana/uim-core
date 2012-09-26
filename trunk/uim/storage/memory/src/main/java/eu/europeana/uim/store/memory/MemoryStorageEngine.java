@@ -1,22 +1,9 @@
 package eu.europeana.uim.store.memory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
-
-import org.apache.commons.lang.ArrayUtils;
-
-import eu.europeana.uim.api.EngineStatus;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.EngineStatus;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -33,6 +20,19 @@ import gnu.trove.TLongLongIterator;
 import gnu.trove.TLongObjectHashMap;
 import gnu.trove.TLongObjectIterator;
 import gnu.trove.TObjectLongHashMap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
+
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * An in-memory implementation of the {@link StorageEngine} using Longs as IDs.
@@ -95,7 +95,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public void completed(ExecutionContext<Long> context) {
+    public void completed(ExecutionContext<?, Long> context) {
     }
 
     @Override
