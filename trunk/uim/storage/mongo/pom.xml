@@ -115,6 +115,10 @@
 
 	</dependencies>
 
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/storage/mongo</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/storage/mongo</developerConnection>
+    </scm>
 
 	<build>
 		<plugins>
