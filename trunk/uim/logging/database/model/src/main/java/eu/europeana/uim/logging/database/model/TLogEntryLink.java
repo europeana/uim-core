@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
+import eu.europeana.uim.logging.LoggingEngine.LogEntryLink;
 
 /**
  * Implementation of failed log entry using JPA to persist the logging information to a data base.
@@ -45,7 +45,7 @@ public class TLogEntryLink implements LogEntryLink {
     private String   stringExecutionId;
 
     @Column
-    private String   stringMetaDataRecordId;
+    private String   stringUimDatasetId;
 
     @Column(length = 4000)
     private String   link;
@@ -124,13 +124,13 @@ public class TLogEntryLink implements LogEntryLink {
      * @param status
      * @param messages
      */
-    public TLogEntryLink(String stringExecutionId, String module, String mdr, String link, Date date,
-                         int status, String... messages) {
+    public TLogEntryLink(String stringExecutionId, String module, String mdr, String link,
+                         Date date, int status, String... messages) {
         super();
         this.stringExecutionId = stringExecutionId;
         this.status = status;
         this.module = module;
-        this.stringMetaDataRecordId = mdr;
+        this.stringUimDatasetId = mdr;
         this.link = link;
         this.date = date;
 
@@ -200,16 +200,16 @@ public class TLogEntryLink implements LogEntryLink {
     }
 
     @Override
-    public String getStringMetaDataRecordId() {
-        return stringMetaDataRecordId;
+    public String getStringUimDatasetId() {
+        return stringUimDatasetId;
     }
 
     /**
-     * @param stringMetaDataRecordId
-     *            metadata record ID
+     * @param stringUimDatasetId
+     *            data set ID
      */
-    public void setStringMetaDataRecord(String stringMetaDataRecordId) {
-        this.stringMetaDataRecordId = stringMetaDataRecordId;
+    public void setStringUimDatasetId(String stringUimDatasetId) {
+        this.stringUimDatasetId = stringUimDatasetId;
     }
 
     @Override

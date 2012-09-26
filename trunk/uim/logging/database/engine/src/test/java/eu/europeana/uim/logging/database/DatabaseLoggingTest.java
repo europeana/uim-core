@@ -3,7 +3,7 @@ package eu.europeana.uim.logging.database;
 import org.osgi.service.log.LogEntry;
 
 import eu.europeana.uim.api.AbstractLoggingEngineTest;
-import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngine;
 
 /**
  * Tests {@link DatabaseLoggingEngine} and {@link LogEntry} implementations used for it.

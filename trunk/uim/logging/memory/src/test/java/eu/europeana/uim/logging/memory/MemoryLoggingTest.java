@@ -1,7 +1,7 @@
 package eu.europeana.uim.logging.memory;
 
 import eu.europeana.uim.api.AbstractLoggingEngineTest;
-import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngine;
 
 /**
  * Tests {@link MemoryLoggingEngine} implementations used for it.

@@ -8,11 +8,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.Plugin;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Implementation of logging engine to std err. Used during test and development.
@@ -35,7 +35,7 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void log(Level level, IngestionPlugin plugin, String... message) {
+    public void log(Level level, Plugin plugin, String... message) {
         print(level + "-" + plugin.getIdentifier(), message);
     }
 
@@ -45,7 +45,7 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message) {
+    public void log(Execution<I> execution, Level level, Plugin plugin, String... message) {
         print(execution.getId() + "-" + level + "-" + plugin.getIdentifier(), message);
     }
 
@@ -56,19 +56,18 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable throwable,
-            MetaDataRecord<I> mdr, String... message) {
+            UimDataSet<I> mdr, String... message) {
         print("Failed " + level + "-" + modul, throwable, message);
     }
 
     @Override
-    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, MetaDataRecord<I> mdr, String... message) {
+    public void logFailed(Execution<I> execution, Level level, Plugin plugin, Throwable throwable,
+            UimDataSet<I> mdr, String... message) {
         print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
     @Override
-    public void logFailed(Level level, IngestionPlugin plugin, Throwable throwable,
-            String... message) {
+    public void logFailed(Level level, Plugin plugin, Throwable throwable, String... message) {
         print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
@@ -79,8 +78,8 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, String... message) {
+    public void logFailed(Execution<I> execution, Level level, Plugin plugin, Throwable throwable,
+            String... message) {
         print("Failed " + level + "-" + plugin.getIdentifier(), throwable, message);
     }
 
@@ -90,14 +89,14 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
+    public void logLink(Execution<I> execution, String modul, UimDataSet<I> mdr, String link,
             int status, String... message) {
         print("Link " + link + ":" + status + "-" + modul, message);
     }
 
     @Override
-    public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
-            String link, int status, String... message) {
+    public void logLink(Execution<I> execution, Plugin plugin, UimDataSet<I> mdr, String link,
+            int status, String... message) {
         print("Link " + link + ":" + status + "-" + plugin.getIdentifier(), message);
     }
 
@@ -108,14 +107,14 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
+    public void logField(Execution<I> execution, String modul, UimDataSet<I> mdr, String field,
             String qualifier, int status, String... message) {
         print("Field " + field + ":" + qualifier + "-" + status, message);
     }
 
     @Override
-    public void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
-            String field, String qualifier, int status, String... message) {
+    public void logField(Execution<I> execution, Plugin plugin, UimDataSet<I> mdr, String field,
+            String qualifier, int status, String... message) {
         print("Field " + field + ":" + qualifier + "-" + status, message);
     }
 
@@ -125,23 +124,22 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration) {
+    public void logDuration(Execution<I> execution, Plugin plugin, Long duration) {
         print("Duration " + execution.getId() + ":" + plugin.getIdentifier(), duration.toString());
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
+    public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryFailed> getFailedLogs(
-            Execution<I> execution) {
+    public List<LoggingEngine.LogEntryFailed> getFailedLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
     @Override
-    public List<eu.europeana.uim.api.LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
+    public List<LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
 
@@ -171,6 +169,6 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void completed(ExecutionContext<I> execution) {
+    public void completed(ExecutionContext<?, I> execution) {
     }
 }

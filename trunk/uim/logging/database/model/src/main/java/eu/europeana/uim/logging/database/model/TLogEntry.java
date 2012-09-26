@@ -16,7 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.api.LoggingEngine.LogEntry;
+import eu.europeana.uim.logging.LoggingEngine.LogEntry;
 
 /**
  * Implementation of simple log entry using JPA to persist the logging information to a data base.

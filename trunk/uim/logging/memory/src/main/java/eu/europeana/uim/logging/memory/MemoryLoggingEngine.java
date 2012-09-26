@@ -11,12 +11,12 @@ import java.util.logging.Level;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.LoggingEngineAdapter;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.Plugin;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Memory based logging engine.
@@ -57,7 +57,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void log(Level level, IngestionPlugin plugin, String... message) {
+    public void log(Level level, Plugin plugin, String... message) {
         entries.add(new LogEntry(level, plugin.getIdentifier(), new Date(), message));
         if (entries.size() > maxentries) {
             entries.removeFirst();
@@ -73,7 +73,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void log(Execution<I> execution, Level level, IngestionPlugin plugin, String... message) {
+    public void log(Execution<I> execution, Level level, Plugin plugin, String... message) {
         log(execution, level, plugin.getIdentifier(), message);
     }
 
@@ -86,14 +86,13 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logFailed(Level level, IngestionPlugin plugin, Throwable throwable,
-            String... message) {
+    public void logFailed(Level level, Plugin plugin, Throwable throwable, String... message) {
         logFailed(level, plugin.getIdentifier(), throwable, message);
     }
 
     @Override
     public void logFailed(Execution<I> execution, Level level, String modul, Throwable t,
-            MetaDataRecord<I> mdr, String... message) {
+            UimDataSet<I> mdr, String... message) {
         failed.add(new FailedEntry(execution, level, modul, t, mdr, new Date(), message));
         if (failed.size() > maxentries) {
             failed.removeFirst();
@@ -101,8 +100,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin, Throwable t,
-            MetaDataRecord<I> mdr, String... message) {
+    public void logFailed(Execution<I> execution, Level level, Plugin plugin, Throwable t,
+            UimDataSet<I> mdr, String... message) {
         logFailed(execution, level, plugin.getIdentifier(), t, mdr, message);
     }
 
@@ -116,8 +115,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logFailed(Execution<I> execution, Level level, IngestionPlugin plugin,
-            Throwable throwable, String... message) {
+    public void logFailed(Execution<I> execution, Level level, Plugin plugin, Throwable throwable,
+            String... message) {
         logFailed(execution, level, plugin.getIdentifier(), throwable, message);
     }
 
@@ -130,7 +129,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logLink(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String link,
+    public void logLink(Execution<I> execution, String modul, UimDataSet<I> mdr, String link,
             int status, String... message) {
         linklogs.add(new LinkEntry(execution, modul, mdr, link, new Date(), status, message));
         if (linklogs.size() > maxentries) {
@@ -139,8 +138,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logLink(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
-            String link, int status, String... message) {
+    public void logLink(Execution<I> execution, Plugin plugin, UimDataSet<I> mdr, String link,
+            int status, String... message) {
         logLink(execution, plugin.getIdentifier(), mdr, link, status, message);
     }
 
@@ -154,7 +153,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logField(Execution<I> execution, String modul, MetaDataRecord<I> mdr, String field,
+    public void logField(Execution<I> execution, String modul, UimDataSet<I> mdr, String field,
             String qualifier, int status, String... message) {
         fieldlogs.add(new FieldEntry(execution, modul, mdr, field, qualifier, new Date(), status,
                 message));
@@ -164,8 +163,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logField(Execution<I> execution, IngestionPlugin plugin, MetaDataRecord<I> mdr,
-            String field, String qualifier, int status, String... message) {
+    public void logField(Execution<I> execution, Plugin plugin, UimDataSet<I> mdr, String field,
+            String qualifier, int status, String... message) {
         logField(execution, plugin.getIdentifier(), mdr, field, qualifier, status, message);
     }
 
@@ -181,7 +180,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
-    public void logDuration(Execution<I> execution, IngestionPlugin plugin, Long duration) {
+    public void logDuration(Execution<I> execution, Plugin plugin, Long duration) {
         logDuration(execution, plugin.getIdentifier(), duration);
     }
 
@@ -272,13 +271,13 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class FailedEntry implements LoggingEngine.LogEntryFailed {
-        private final Level             level;
-        private final String            module;
-        private final MetaDataRecord<I> mdr;
-        private final Date              date;
-        private final String[]          message;
-        private final Execution<I>      execution;
-        private final Throwable         throwable;
+        private final Level         level;
+        private final String        module;
+        private final UimDataSet<I> mdr;
+        private final Date          date;
+        private final String[]      message;
+        private final Execution<I>  execution;
+        private final Throwable     throwable;
 
         public FailedEntry(Level level, String module, Throwable throwable, Date date,
                            String[] message) {
@@ -305,7 +304,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           MetaDataRecord<I> mdr, Date date, String[] message) {
+                           UimDataSet<I> mdr, Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -347,21 +346,20 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public String getStringMetaDataRecordId() {
+        public String getStringUimDatasetId() {
             return mdr != null ? mdr.getId().toString() : null;
         }
-
     }
 
     private class LinkEntry implements LogEntryLink {
-        private final String            module;
-        private final String            link;
-        private final Date              date;
-        private final int               status;
-        private final String[]          message;
+        private final String        module;
+        private final String        link;
+        private final Date          date;
+        private final int           status;
+        private final String[]      message;
 
-        private final MetaDataRecord<I> mdr;
-        private final Execution<I>      execution;
+        private final UimDataSet<I> mdr;
+        private final Execution<I>  execution;
 
         public LinkEntry(String module, String link, int status, Date date, String[] message) {
             super();
@@ -375,7 +373,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             this.execution = null;
         }
 
-        public LinkEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr, String link,
+        public LinkEntry(Execution<I> execution, String module, UimDataSet<I> mdr, String link,
                          Date date, int status, String[] message) {
             super();
             this.execution = execution;
@@ -418,21 +416,21 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public String getStringMetaDataRecordId() {
+        public String getStringUimDatasetId() {
             return mdr != null ? mdr.getId().toString() : null;
         }
     }
 
     private class FieldEntry implements LogEntryField {
-        private final String            module;
-        private final String            field;
-        private final String            qualifier;
-        private final Date              date;
-        private final int               status;
-        private final String[]          message;
+        private final String        module;
+        private final String        field;
+        private final String        qualifier;
+        private final Date          date;
+        private final int           status;
+        private final String[]      message;
 
-        private final MetaDataRecord<I> mdr;
-        private final Execution<I>      execution;
+        private final UimDataSet<I> mdr;
+        private final Execution<I>  execution;
 
         public FieldEntry(String module, String field, String qualifier, int status, Date date,
                           String[] message) {
@@ -448,8 +446,8 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
             this.execution = null;
         }
 
-        public FieldEntry(Execution<I> execution, String module, MetaDataRecord<I> mdr,
-                          String field, String qualifier, Date date, int status, String[] message) {
+        public FieldEntry(Execution<I> execution, String module, UimDataSet<I> mdr, String field,
+                          String qualifier, Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
@@ -497,13 +495,13 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         @Override
-        public String getStringMetaDataRecordId() {
+        public String getStringUimDatasetId() {
             return mdr != null ? mdr.getId().toString() : null;
         }
     }
 
     @Override
-    public void completed(ExecutionContext<I> execution) {
+    public void completed(ExecutionContext<?, I> execution) {
         //
     }
 }

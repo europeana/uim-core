@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import eu.europeana.uim.api.LoggingEngine.LogEntryDuration;
+import eu.europeana.uim.logging.LoggingEngine.LogEntryDuration;
 
 /**
  * An entity representing a log entry concerning the duration of a plugin.

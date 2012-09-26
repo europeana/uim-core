@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.api.LoggingEngine.LogEntryField;
+import eu.europeana.uim.logging.LoggingEngine.LogEntryField;
 
 /**
  * Implementation of failed log entry using JPA to persist the logging information to a data base.
@@ -45,7 +45,7 @@ public class TLogEntryField implements LogEntryField {
     private String   stringExecutionId;
 
     @Column
-    private String   stringMetaDataRecordId;
+    private String   stringUimDatasetId;
 
     @Column
     private String   field;
@@ -137,7 +137,7 @@ public class TLogEntryField implements LogEntryField {
         this.stringExecutionId = stringExecutionId;
         this.status = status;
         this.module = module;
-        this.stringMetaDataRecordId = mdr;
+        this.stringUimDatasetId = mdr;
         this.field = field;
         this.qualifier = qualifier;
         this.date = date;
@@ -208,16 +208,16 @@ public class TLogEntryField implements LogEntryField {
     }
 
     @Override
-    public String getStringMetaDataRecordId() {
-        return stringMetaDataRecordId;
+    public String getStringUimDatasetId() {
+        return stringUimDatasetId;
     }
 
     /**
-     * @param stringMetaDataRecordId
-     *            metadata record ID
+     * @param stringUimDatasetId
+     *            data set ID
      */
-    public void setStringMetaDataRecord(String stringMetaDataRecordId) {
-        this.stringMetaDataRecordId = stringMetaDataRecordId;
+    public void setStringUimDatasetId(String stringUimDatasetId) {
+        this.stringUimDatasetId = stringUimDatasetId;
     }
 
     @Override
