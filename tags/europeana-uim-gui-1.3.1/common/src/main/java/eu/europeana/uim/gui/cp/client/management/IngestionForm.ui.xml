@@ -1,0 +1,90 @@
+<!DOCTYPE ui:UiBinder SYSTEM 'http://dl.google.com/gwt/DTD/xhtml.ent'>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder' xmlns:g='urn:import:com.google.gwt.user.client.ui'
+    xmlns:d='urn:import:com.google.gwt.user.datepicker.client' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+    ui:generateLocales='default'>
+
+    <ui:style>
+        .header {
+        	font-size: 110%;
+        	font-weight: bold;
+        	color: #555
+        }
+        
+        .label {
+        	width: 100px;
+        	font-weight: bold;
+        }
+        
+        .value {
+        	width: 99%;
+        }
+        
+        .decorator {
+        	height: 100%;
+        	width: 99%;
+        	min-width: 500px;
+        	border: 4px solid #d0e4f6;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames='{style.decorator}'>
+        <table cellspacing='5' cellpadding='5' style='width:100%;'>
+            <tr>
+                <td colspan='2' align='center' class='{style.header}'>
+                    <ui:msg key='executionFormTitle'>Ingestion Activity Settings</ui:msg>
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionFormName'>Name</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='nameBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionFormProvider'>Provider</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='providerBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionFormCollection'>Collection</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='collectionBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionFormWorkflow'>Workflow</ui:msg>
+                </td>
+                <td>
+                    <g:TextBox addStyleNames='{style.value}' ui:field='workflowBox' />
+                </td>
+            </tr>
+            <tr>
+                <td class='{style.label}'>
+                    <ui:msg key='executionFormCommandLine'>Commandline</ui:msg>
+                </td>
+                <td>
+                    <g:TextArea addStyleNames='{style.value}' ui:field='commandLineBox' />
+                </td>
+            </tr>
+            <tr>
+                <td colspan='2' align='center'>
+                    <g:Button ui:field='commitButton'>
+                        <ui:msg key='executionFormCommitButton'>Commit</ui:msg>
+                    </g:Button>
+                    &nbsp;
+                    <g:Button ui:field='cancelButton'>
+                        <ui:msg key='executionFormCancelButton'>Cancel</ui:msg>
+                    </g:Button>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>
