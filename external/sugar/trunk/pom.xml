@@ -18,7 +18,7 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/external/sugar</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/external/sugar</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/external/sugar/trunk/</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/external/sugar/trunk/</developerConnection>
     </scm>
 </project>

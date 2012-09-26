@@ -18,7 +18,7 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/external/repox</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/external/repox</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/external/repox/trunk/</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/external/repox/trunk/</developerConnection>
     </scm>
 </project>
