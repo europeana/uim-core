@@ -19,8 +19,8 @@
     </modules>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/logging/database</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/logging/database/trunk</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/logging/database/trunk</developerConnection>
     </scm>
 
     <build>
