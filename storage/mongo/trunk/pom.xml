@@ -114,7 +114,11 @@
 
 	</dependencies>
 
-
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</developerConnection>
+    </scm>
+    
 	<build>
 		<plugins>
 
