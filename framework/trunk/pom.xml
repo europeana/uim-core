@@ -24,13 +24,13 @@
         <module>api</module>
 
         <!-- the standard orchestration implementation module -->
-<!--         <module>orchestration/basic</module> -->
+        <module>orchestration/basic</module>
 
         <!-- the uim standard in memory storage implementation -->
-<!--         <module>storage/memory</module> -->
+        <module>storage/memory</module>
 
         <!-- simplistic in-memory logging -->
-<!--         <module>logging/memory</module> -->
+        <module>logging/memory</module>
 
         <!-- UIM gui module -->
 <!--         <module>gui</module> -->
