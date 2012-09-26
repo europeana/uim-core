@@ -5,11 +5,12 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.1F</version>
     </parent>
 
     <artifactId>europeana-uim-plugin-solr4</artifactId>
     <name>Unified Ingestion Manager: Solr 4.x Commons Plugin</name>
+        <version>1.3.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <build>
