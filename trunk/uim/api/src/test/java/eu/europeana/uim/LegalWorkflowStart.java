@@ -4,19 +4,22 @@ package eu.europeana.uim;
 import java.util.Collections;
 import java.util.List;
 
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.workflow.AbstractWorkflowStart;
-import eu.europeana.uim.workflow.TaskCreator;
-import eu.europeana.uim.workflow.WorkflowStartFailedException;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.source.AbstractWorkflowStart;
+import eu.europeana.uim.plugin.source.TaskCreator;
+import eu.europeana.uim.plugin.source.WorkflowStartFailedException;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This is a minimal workflow start. This should not throw an exception.
  * 
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
-public class LegalWorkflowStart extends AbstractWorkflowStart {
+public class LegalWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<I>, I> {
     /**
      * Creates a new instance of this class.
      */
@@ -40,29 +43,35 @@ public class LegalWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> TaskCreator<I> createLoader(ExecutionContext<I> context, StorageEngine<I> storage)
+    public TaskCreator<MetaDataRecord<I>, I> createLoader(ExecutionContext<MetaDataRecord<I>, I> context)
             throws WorkflowStartFailedException {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage) {
+    public boolean isFinished(ExecutionContext<MetaDataRecord<I>, I> context) {
         return false;
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context, StorageEngine<I> storage)
-            throws WorkflowStartFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage)
-            throws WorkflowStartFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
     }
 
     @Override
-    public <I> int getTotalSize(ExecutionContext<I> context) {
+    public int getTotalSize(ExecutionContext<MetaDataRecord<I>, I> context) {
         return 0;
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void shutdown() {
     }
 }

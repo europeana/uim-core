@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import eu.europeana.uim.LegalIngestionWorkflow;
 import eu.europeana.uim.UIMRegistry;
-import eu.europeana.uim.api.Orchestrator;
+import eu.europeana.uim.orchestration.Orchestrator;
 
 /**
  * Tests concerning executions.
@@ -38,7 +38,7 @@ public class UIMExecutionTest {
         Orchestrator<?> orchestrator = mock(Orchestrator.class);
         registry.setOrchestrator(orchestrator);
 
-        LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();
+        LegalIngestionWorkflow<Long> workflow = new LegalIngestionWorkflow<Long>();
         registry.addWorkflow(workflow);
         assertFalse(registry.getWorkflows().isEmpty());
 

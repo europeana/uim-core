@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;

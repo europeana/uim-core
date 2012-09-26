@@ -14,11 +14,11 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
-import eu.europeana.uim.common.LoggingProgressMonitor;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.common.progress.LoggingProgressMonitor;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
@@ -135,7 +135,7 @@ public class UIMExecution implements Action {
     }
 
     private void status(PrintStream out) {
-        ActiveExecution<?> execution = getOrListExecution(out, "status");
+        ActiveExecution<?, ?> execution = getOrListExecution(out, "status");
         if (execution != null) {
             execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO, 2500));
         } else {
@@ -144,7 +144,7 @@ public class UIMExecution implements Action {
     }
 
     private void pause(PrintStream out) {
-        ActiveExecution<?> execution = getOrListExecution(out, "pause");
+        ActiveExecution<?, ?> execution = getOrListExecution(out, "pause");
         if (execution != null) {
             execution.setPaused(true);
             // orchestrator.pause();
@@ -154,7 +154,7 @@ public class UIMExecution implements Action {
     }
 
     private void resume(PrintStream out) {
-        ActiveExecution<?> execution = getOrListExecution(out, "resume");
+        ActiveExecution<?, ?> execution = getOrListExecution(out, "resume");
         if (execution != null) {
             execution.setPaused(false);
             // orchestrator.pause();
@@ -164,7 +164,7 @@ public class UIMExecution implements Action {
     }
 
     private void cancel(PrintStream out) {
-        ActiveExecution<?> execution = getOrListExecution(out, "cancel");
+        ActiveExecution<?, ?> execution = getOrListExecution(out, "cancel");
         if (execution != null) {
             execution.getMonitor().setCancelled(true);
 
@@ -174,19 +174,19 @@ public class UIMExecution implements Action {
 
     }
 
-    private ActiveExecution<?> getOrListExecution(PrintStream out, String command) {
+    private ActiveExecution<?, ?> getOrListExecution(PrintStream out, String command) {
         if (argument0 == null || argument0.length() == 0) {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
-            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
+            for (ActiveExecution<?, ?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format("Execution %d: Workflow %s, data set %s",
                         e.getExecution().getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
             return null;
         } else {
-            ActiveExecution<?> execution = null;
-            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
+            ActiveExecution<?, ?> execution = null;
+            for (ActiveExecution<?, ?> e : registry.getOrchestrator().getActiveExecutions()) {
                 if (e.getExecution().getId().equals(Long.parseLong(argument0))) {
                     execution = e;
                     break;
@@ -211,7 +211,6 @@ public class UIMExecution implements Action {
 
         if (workflow == null) {
             printWorfklows(out, registry.getWorkflows());
-
         } else if (collection == null) {
             printCollections(out, storage, storage.getAllCollections());
 
@@ -231,7 +230,8 @@ public class UIMExecution implements Action {
             out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
                         collection.getMnemonic() + "' (" + collection.getName() +
                         ") with properties:" + properties.toString());
-            ActiveExecution<?> execution = registry.getOrchestrator().executeWorkflow(workflow,
+
+            ActiveExecution<?, ?> execution = registry.getOrchestrator().executeWorkflow(workflow,
                     collection, properties);
             execution.getMonitor().addListener(new LoggingProgressMonitor(Level.INFO));
 
@@ -261,10 +261,10 @@ public class UIMExecution implements Action {
         }
     }
 
-    private void printWorfklows(PrintStream out, List<Workflow> workflows) {
+    private void printWorfklows(PrintStream out, List<Workflow<?,?>> workflows) {
         out.println("No workflow specified. Possible choices are:");
         for (int i = 0; i < workflows.size(); i++) {
-            Workflow w = workflows.get(i);
+            Workflow<?, ?> w = workflows.get(i);
             out.println(i + ") " + w.getName() + " - " + w.getDescription());
         }
     }
@@ -274,7 +274,7 @@ public class UIMExecution implements Action {
         if (registry.getOrchestrator().getActiveExecutions().isEmpty()) {
             out.println("No active executions.");
         } else {
-            for (ActiveExecution<?> e : registry.getOrchestrator().getActiveExecutions()) {
+            for (ActiveExecution<?, ?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
                         "Execution %d: Workflow %s, data set %s, started=" +
                                 df.format(e.getExecution().getStartTime()) + ", active=" +

@@ -9,30 +9,32 @@ import java.util.logging.Level;
 import org.junit.Test;
 
 import eu.europeana.uim.UIMRegistry;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * 
+ * Tests for {@link LoggingEngineAdapter}.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 17, 2011
  */
 public class LoggingEngineAdapterTest {
-
     /**
-     * 
+     * Tests loggin engine adapter with long IDs.
      */
     @SuppressWarnings("unchecked")
     @Test
     public void testLongAdapter() {
         UIMRegistry registry = new UIMRegistry();
-        
+
         Execution<Long> execution = mock(Execution.class);
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?, ?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
-        
+
         LoggingEngine<Long> engine = (LoggingEngine<Long>)registry.getLoggingEngine();
         engine.log(Level.INFO, "test", "a", "b", "c");
         engine.log(execution, Level.INFO, "test", "a", "b", "c");
@@ -42,5 +44,4 @@ public class LoggingEngineAdapterTest {
         engine.logLink(execution, "uuuu", mdr, "http:...", 200, "a", "b");
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "b");
     }
-    
 }

@@ -11,9 +11,11 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.api.LoggingEngine.LogEntry;
-import eu.europeana.uim.api.LoggingEngine.LogEntryFailed;
-import eu.europeana.uim.api.LoggingEngine.LogEntryLink;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngine.LogEntry;
+import eu.europeana.uim.logging.LoggingEngine.LogEntryFailed;
+import eu.europeana.uim.logging.LoggingEngine.LogEntryLink;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -52,7 +54,7 @@ public abstract class AbstractLoggingEngineTest {
      */
     @Test
     public void testSimpleLogging() {
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?, ?> plugin = mock(IngestionPlugin.class);
 
         engine.log(Level.INFO, "test", "a", "b", "c");
         engine.log(Level.INFO, "test", "a", "d", "e");
@@ -73,7 +75,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingExecution() {
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?,?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
 
         engine.log(execution, Level.INFO, "test", "a0", "b", "c");
@@ -103,7 +105,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingFailed() {
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?,?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
 
@@ -138,7 +140,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingLink() {
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?, ?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
 

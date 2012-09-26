@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.LoggingEngineAdapter;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.adapter.UimDatasetAdapter;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.plugin.Plugin;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -27,24 +27,26 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
-    private static Logger                 log            = Logger.getLogger(UIMRegistry.class.getName());
+    private static Logger                  log            = Logger.getLogger(UIMRegistry.class.getName());
 
-    private String                        configuredStorageEngine;
-    private StorageEngine<?>              activeStorage  = null;
-    private Map<String, StorageEngine<?>> storages       = new HashMap<String, StorageEngine<?>>();
+    private String                         configuredStorageEngine;
+    private StorageEngine<?>               activeStorage  = null;
+    private Map<String, StorageEngine<?>>  storages       = new HashMap<String, StorageEngine<?>>();
 
-    private String                        configuredLoggingEngine;
-    private LoggingEngine<?>              activeLogging  = null;
-    private Map<String, LoggingEngine<?>> loggers        = new HashMap<String, LoggingEngine<?>>();
+    private String                         configuredLoggingEngine;
+    private LoggingEngine<?>               activeLogging  = null;
+    private Map<String, LoggingEngine<?>>  loggers        = new HashMap<String, LoggingEngine<?>>();
 
-    private String                        configuredResourceEngine;
-    private ResourceEngine                activeResource = null;
-    private Map<String, ResourceEngine>   resources      = new HashMap<String, ResourceEngine>();
+    private String                         configuredResourceEngine;
+    private ResourceEngine                 activeResource = null;
+    private Map<String, ResourceEngine>    resources      = new HashMap<String, ResourceEngine>();
 
-    private Map<String, IngestionPlugin>  plugins        = new HashMap<String, IngestionPlugin>();
-    private Map<String, Workflow>         workflows      = new HashMap<String, Workflow>();
+    private Map<String, Plugin>            plugins        = new HashMap<String, Plugin>();
+    private Map<String, Workflow<?, ?>>    workflows      = new HashMap<String, Workflow<?, ?>>();
 
-    private Orchestrator<?>               orchestrator   = null;
+    private Orchestrator<?>                orchestrator   = null;
+
+    private Map<String, UimDatasetAdapter> adapters       = new HashMap<String, UimDatasetAdapter>();
 
     /**
      * Creates a new instance of this class.
@@ -89,17 +91,17 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public List<Workflow> getWorkflows() {
-        return new ArrayList<Workflow>(workflows.values());
+    public List<Workflow<?, ?>> getWorkflows() {
+        return new ArrayList<Workflow<?, ?>>(workflows.values());
     }
 
     @Override
-    public Workflow getWorkflow(String identifier) {
+    public Workflow<?, ?> getWorkflow(String identifier) {
         return workflows.get(identifier);
     }
 
     @Override
-    public void addPlugin(IngestionPlugin plugin) {
+    public void addPlugin(Plugin plugin) {
         if (plugin != null) {
             checkPluginForNonStaticMemberVariables(plugin);
 
@@ -116,7 +118,7 @@ public class UIMRegistry implements Registry {
      * 
      * @param plugin
      */
-    private void checkPluginForNonStaticMemberVariables(IngestionPlugin plugin) {
+    private void checkPluginForNonStaticMemberVariables(Plugin plugin) {
         log.info("Checking for non-static member-fields: " + plugin.getIdentifier());
         StringBuffer nonStaticMembers = new StringBuffer();
 
@@ -132,17 +134,17 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public IngestionPlugin getPlugin(String identifier) {
+    public Plugin getPlugin(String identifier) {
         return plugins.get(identifier);
     }
 
     @Override
-    public List<IngestionPlugin> getPlugins() {
-        return new ArrayList<IngestionPlugin>(plugins.values());
+    public List<Plugin> getPlugins() {
+        return new ArrayList<Plugin>(plugins.values());
     }
 
     @Override
-    public void removePlugin(IngestionPlugin plugin) {
+    public void removePlugin(Plugin plugin) {
         if (plugin != null) {
             log.info("Removed plugin: " + plugin.getIdentifier());
             plugins.remove(plugin.getIdentifier());
@@ -186,7 +188,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addWorkflow(Workflow workflow) {
+    public void addWorkflow(Workflow<?, ?> workflow) {
         if (workflow != null) {
             log.info("Added workflow: " + workflow.getName());
             if (!workflows.containsKey(workflow.getIdentifier()))
@@ -195,7 +197,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeWorkflow(Workflow workflow) {
+    public void removeWorkflow(Workflow<?, ?> workflow) {
         if (workflow != null) {
             log.info("Removed workflow: " + workflow.getName());
             workflows.remove(workflow.getIdentifier());
@@ -351,10 +353,6 @@ public class UIMRegistry implements Registry {
         return activeResource;
     }
 
-
-
-    
-    
     @Override
     public Orchestrator<?> getOrchestrator() {
         return orchestrator;
@@ -379,7 +377,7 @@ public class UIMRegistry implements Registry {
         if (plugins.isEmpty()) {
             builder.append("\n\tNo plugins. ");
         } else {
-            for (IngestionPlugin plugin : plugins.values()) {
+            for (Plugin plugin : plugins.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\tPlugin:");
                 }
@@ -393,7 +391,7 @@ public class UIMRegistry implements Registry {
         if (plugins.isEmpty()) {
             builder.append("\n\tNo workflows. ");
         } else {
-            for (Workflow worfklow : workflows.values()) {
+            for (Workflow<?, ?> worfklow : workflows.values()) {
                 if (builder.length() > 0) {
                     builder.append("\n\tWorkflow:");
                 }
@@ -470,4 +468,21 @@ public class UIMRegistry implements Registry {
         return builder.toString();
     }
 
+    @Override
+    public void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter) {
+        if (adapter != null) {
+            log.info("Added adapter: " + pluginIdentifier);
+            if (!adapters.containsKey(pluginIdentifier)) {
+                this.adapters.put(pluginIdentifier, adapter);
+            }
+        }
+    }
+
+    @Override
+    public void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter) {
+        if (adapter != null) {
+            log.info("Removed adapter: " + pluginIdentifier);
+            this.adapters.remove(pluginIdentifier);
+        }
+    }
 }

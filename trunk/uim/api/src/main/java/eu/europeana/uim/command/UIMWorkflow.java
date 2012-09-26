@@ -8,11 +8,11 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.plugin.source.WorkflowStart;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflow.WorkflowStart;
 
 /**
  * Workflow for the UIM process.
@@ -75,8 +75,9 @@ public class UIMWorkflow implements Action {
      * @param storage
      * @param out
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void listWorkflows(StorageEngine<?> storage, PrintStream out) {
-        List<Workflow> workflows = getRegistry().getWorkflows();
+        List<Workflow<?, ?>> workflows = getRegistry().getWorkflows();
 
         StringBuilder builder = new StringBuilder();
         for (Workflow workflow : workflows) {
@@ -84,9 +85,9 @@ public class UIMWorkflow implements Action {
                 builder.append("\n\tWorkflow:");
             }
             builder.append(workflow.getName());
-            WorkflowStart start = workflow.getStart();
+            WorkflowStart<?, ?> start = workflow.getStart();
             builder.append("\n\t\t  " + start.getClass().getSimpleName());
-            List<IngestionPlugin> steps = workflow.getSteps();
+            List<IngestionPlugin<?, ?>> steps = workflow.getSteps();
             for (IngestionPlugin step : steps) {
                 builder.append("n\t\t  " + step.getClass().getSimpleName());
             }

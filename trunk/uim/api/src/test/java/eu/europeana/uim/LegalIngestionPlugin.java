@@ -4,20 +4,23 @@ package eu.europeana.uim;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This is a minimal plugin. This should not throw an exception.
  * 
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
-public class LegalIngestionPlugin extends AbstractIngestionPlugin {
+public class LegalIngestionPlugin<I> extends AbstractIngestionPlugin<MetaDataRecord<I>, I> {
     private static String constantConstant = "This is okay";
 
     /**
@@ -68,17 +71,17 @@ public class LegalIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context) throws IngestionPluginFailedException {
 
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context) {
+    public boolean process(MetaDataRecord<I> mdr, ExecutionContext<MetaDataRecord<I>, I> context) {
         return true;
     }
 }

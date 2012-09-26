@@ -10,11 +10,10 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineAdapter;
-import eu.europeana.uim.workflow.Task;
-import eu.europeana.uim.workflow.TaskStatus;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.plugin.source.Task;
+import eu.europeana.uim.plugin.source.TaskStatus;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Tests task management (setup and workflow).
@@ -28,21 +27,18 @@ public class UIMTaskTest {
      */
     @Test
     public void testTaskSetup() {
-        StorageEngine<Long> engine = new StorageEngineAdapter<Long>() {
-        };
-
-        Task<Long> task = new Task<Long>(null, engine, null);
+        Task<MetaDataRecord<Long>, Long> task = new Task<MetaDataRecord<Long>, Long>(null, null);
 
         assertNull(task.getStep());
-        assertNull(task.getMetaDataRecord());
+        assertNull(task.getDataset());
         assertNull(task.getOnFailure());
         assertNull(task.getOnSuccess());
         assertNull(task.getThrowable());
 
         assertEquals(TaskStatus.NEW, task.getStatus());
 
-        task.setOnFailure(new LinkedList<Task<Long>>());
-        task.setOnSuccess(new LinkedList<Task<Long>>());
+        task.setOnFailure(new LinkedList<Task<MetaDataRecord<Long>, Long>>());
+        task.setOnSuccess(new LinkedList<Task<MetaDataRecord<Long>, Long>>());
         task.setThrowable(new Exception());
 
         assertNotNull(task.getOnFailure());
@@ -53,17 +49,18 @@ public class UIMTaskTest {
     /**
      * test method to test simple workflow handling.
      */
+    @SuppressWarnings("unchecked")
     @Test
     public void testTaskWorkflow() {
-        Task<Long> task = new Task<Long>(null, null, null);
+        Task<MetaDataRecord<Long>, Long> task = new Task<MetaDataRecord<Long>, Long>(null, null);
 
         assertEquals(TaskStatus.NEW, task.getStatus());
 
-        IngestionPlugin plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<MetaDataRecord<Long>, Long> plugin = mock(IngestionPlugin.class);
         task.setStep(plugin, false);
         task.run();
 
-        task.setOnFailure(new LinkedList<Task<Long>>());
-        task.setOnSuccess(new LinkedList<Task<Long>>());
+        task.setOnFailure(new LinkedList<Task<MetaDataRecord<Long>, Long>>());
+        task.setOnSuccess(new LinkedList<Task<MetaDataRecord<Long>, Long>>());
     }
 }

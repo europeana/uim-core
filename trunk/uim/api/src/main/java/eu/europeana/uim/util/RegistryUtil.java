@@ -1,5 +1,4 @@
-
- /**
+/**
  * Licensed under the EUPL, Version 1.1 or - as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -20,8 +19,8 @@
 
 package eu.europeana.uim.util;
 
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -31,7 +30,6 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Aug 11, 2011
  */
 public class RegistryUtil {
-
     /**
      * Tries to get a workflow from the registry
      * 
@@ -40,9 +38,9 @@ public class RegistryUtil {
      * @param maxwait
      * @return the workflow, null if not found
      */
-    public static Workflow getWorkflow(Registry registry, String identifier, long maxwait) {
-        Workflow workflow = registry.getWorkflow(identifier);
-        
+    public static Workflow<?, ?> getWorkflow(Registry registry, String identifier, long maxwait) {
+        Workflow<?, ?> workflow = registry.getWorkflow(identifier);
+
         long waited = 0;
         while (workflow == null && maxwait > waited) {
             try {
@@ -56,9 +54,9 @@ public class RegistryUtil {
         return workflow;
     }
 
-    
     /**
      * Tries to get the storage engine
+     * 
      * @param <I>
      * @param registry
      * @param identifier
@@ -66,7 +64,7 @@ public class RegistryUtil {
      * @return the storage engine, null if not found
      */
     @SuppressWarnings("unchecked")
-    public static <I> StorageEngine<I> getStorage (Registry registry, String identifier, long maxwait) {
+    public static <I> StorageEngine<I> getStorage(Registry registry, String identifier, long maxwait) {
         StorageEngine<I> storage = (StorageEngine<I>)registry.getStorageEngine(identifier);
         long waited = 0;
         while (storage == null && maxwait > waited) {
@@ -75,11 +73,9 @@ public class RegistryUtil {
                 waited += 100;
             } catch (InterruptedException e) {
             }
-            
+
             storage = (StorageEngine<I>)registry.getStorageEngine(identifier);
         }
         return storage;
     }
-    
-
 }

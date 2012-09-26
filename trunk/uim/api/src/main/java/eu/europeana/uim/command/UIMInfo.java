@@ -10,7 +10,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
 
-import eu.europeana.uim.api.Registry;
+import eu.europeana.uim.Registry;
 
 /**
  * Infos during execution.

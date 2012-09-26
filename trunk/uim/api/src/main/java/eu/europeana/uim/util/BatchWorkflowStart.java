@@ -16,28 +16,32 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.source.AbstractWorkflowStart;
+import eu.europeana.uim.plugin.source.Task;
+import eu.europeana.uim.plugin.source.TaskCreator;
+import eu.europeana.uim.plugin.source.WorkflowStartFailedException;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
-import eu.europeana.uim.workflow.AbstractWorkflowStart;
-import eu.europeana.uim.workflow.Task;
-import eu.europeana.uim.workflow.TaskCreator;
-import eu.europeana.uim.workflow.WorkflowStartFailedException;
 
 /**
  * Loads batches from the storage and pulls them into as tasks.
  * 
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 14, 2011
  */
-public class BatchWorkflowStart extends AbstractWorkflowStart {
+@SuppressWarnings("hiding")
+public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<I>, I> {
     private static final Logger                   log                     = Logger.getLogger(BatchWorkflowStart.class.getName());
 
     /** String BATCH_SUBSET */
@@ -101,9 +105,10 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <I> void initialize(ExecutionContext<I> context, StorageEngine<I> storage)
-            throws WorkflowStartFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
         try {
+            StorageEngine<I> storage = context.getStorageEngine();
+
             long start = System.currentTimeMillis();
             Collection<I> coll = null;
             I[] records = null;
@@ -132,8 +137,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                         // retrieve the "last" request
                         List<Request<I>> requests = storage.getRequests(coll);
                         for (Request<I> candidate : requests) {
-                            if (request == null ||
-                                request.getDate().before(candidate.getDate())) {
+                            if (request == null || request.getDate().before(candidate.getDate())) {
                                 request = candidate;
                             }
                         }
@@ -288,7 +292,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                         });
                     }
                 }
-                
+
                 addArray(context, records);
                 data.total = records.length;
 
@@ -303,7 +307,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @SuppressWarnings("unchecked")
-    private <I> void addArray(ExecutionContext<I> context, Object[] ids) {
+    private <I> void addArray(ExecutionContext<MetaDataRecord<I>, I> context, Object[] ids) {
         if (ids.length > BATCH_SIZE) {
             int batches = (int)Math.ceil(1.0 * ids.length / BATCH_SIZE);
             for (int i = 0; i < batches; i++) {
@@ -330,9 +334,9 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> TaskCreator<I> createLoader(final ExecutionContext<I> context,
-            final StorageEngine<I> storage) {
-        if (!isFinished(context, storage)) { return new TaskCreator<I>() {
+    public TaskCreator<MetaDataRecord<I>, I> createLoader(final ExecutionContext<MetaDataRecord<I>, I> context)
+            throws WorkflowStartFailedException {
+        if (!isFinished(context)) { return new TaskCreator<MetaDataRecord<I>, I>() {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public void run() {
@@ -340,7 +344,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                     Data container = context.getValue(DATA_KEY);
                     I[] poll = (I[])container.batches.poll(500, TimeUnit.MILLISECONDS);
                     if (poll != null) {
-                        List<MetaDataRecord<I>> metaDataRecords = storage.getMetaDataRecords(Arrays.asList(poll));
+                        List<MetaDataRecord<I>> metaDataRecords = context.getStorageEngine().getMetaDataRecords(
+                                Arrays.asList(poll));
                         MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
 
                         if (mdrs.length != poll.length) {
@@ -357,7 +362,8 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
                                     ((MetaDataRecordBean)mdr).setCollection(container.collection);
                                 }
 
-                                Task<I> task = new Task<I>(mdr, storage, context);
+                                Task<MetaDataRecord<I>, I> task = new Task<MetaDataRecord<I>, I>(
+                                        mdr, context);
                                 synchronized (getQueue()) {
                                     getQueue().offer(task);
                                 }
@@ -378,7 +384,7 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> int getTotalSize(ExecutionContext<I> context) {
+    public int getTotalSize(ExecutionContext<MetaDataRecord<I>, I> context) {
         @SuppressWarnings("unchecked")
         Data<I> value = context.getValue(DATA_KEY);
         if (value != null) {
@@ -389,15 +395,14 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
     }
 
     @Override
-    public <I> boolean isFinished(ExecutionContext<I> context, StorageEngine<I> storage) {
+    public boolean isFinished(ExecutionContext<MetaDataRecord<I>, I> context) {
         @SuppressWarnings("unchecked")
         Data<I> value = context.getValue(DATA_KEY);
         return value.initialized && value.batches.isEmpty();
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context, StorageEngine<I> storage)
-            throws WorkflowStartFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
         context.getValue(DATA_KEY).batches.clear();
     }
 
@@ -420,5 +425,15 @@ public class BatchWorkflowStart extends AbstractWorkflowStart {
 
         /** collection */
         public Collection<?>      collection  = null;
+    }
+
+    @Override
+    public void initialize() {
+        // nothing to do
+    }
+
+    @Override
+    public void shutdown() {
+        // nothing to do
     }
 }

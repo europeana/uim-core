@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -87,7 +87,8 @@ public class SampleProperties {
                     }
                 } else if (split[0].startsWith("collection")) {
                     String[] arguments = split[1].split("\\|");
-                    createCollection(storage, arguments[3], arguments[0], arguments[1], arguments[2]);
+                    createCollection(storage, arguments[3], arguments[0], arguments[1],
+                            arguments[2]);
                 } else if (split[0].startsWith("oai.collurl")) {
                     String[] arguments = split[1].split("\\|");
                     Collection collection = storage.findCollection(arguments[0]);

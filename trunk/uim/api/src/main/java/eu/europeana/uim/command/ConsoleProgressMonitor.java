@@ -2,7 +2,7 @@ package eu.europeana.uim.command;
 
 import java.io.PrintStream;
 
-import eu.europeana.uim.common.RevisingProgressMonitor;
+import eu.europeana.uim.common.progress.RevisingProgressMonitor;
 
 /**
  * Prints out progress to the console.

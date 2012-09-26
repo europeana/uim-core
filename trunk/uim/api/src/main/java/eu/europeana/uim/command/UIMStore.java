@@ -19,11 +19,11 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.Registry;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.util.SampleProperties;
@@ -216,7 +216,7 @@ public class UIMStore implements Action {
      */
     private <I> void listGlobalResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) {
-        List<Workflow> workflows = new ArrayList<Workflow>();
+        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();
@@ -243,7 +243,7 @@ public class UIMStore implements Action {
      */
     private <I> void listProviderResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
-        List<Workflow> workflows = new ArrayList<Workflow>();
+        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();
@@ -268,7 +268,8 @@ public class UIMStore implements Action {
     private List<String> getParameters(Workflow current) {
         List<String> keys = new ArrayList<String>();
         keys.addAll(current.getStart().getParameters());
-        for (IngestionPlugin plugin : current.getSteps()) {
+        List<IngestionPlugin<?, ?>> steps = current.getSteps();
+        for (IngestionPlugin plugin : steps) {
             keys.addAll(plugin.getParameters());
         }
         return keys;
@@ -281,7 +282,7 @@ public class UIMStore implements Action {
      */
     private <I> void listCollectionResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
-        List<Workflow> workflows = new ArrayList<Workflow>();
+        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();

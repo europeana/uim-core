@@ -8,7 +8,7 @@ import java.io.PrintStream;
 
 import org.junit.Test;
 
-import eu.europeana.uim.common.RevisableProgressMonitor;
+import eu.europeana.uim.common.progress.RevisableProgressMonitor;
 
 /**
  * Tests monitoring of progress using console output.

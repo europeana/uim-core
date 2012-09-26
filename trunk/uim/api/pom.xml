@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.europeana</groupId>
@@ -21,11 +22,12 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
+                            eu.europeana.uim.api,
                             eu.europeana.uim.common,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
-                            eu.europeana.uim.sugarcrm.model,
-                            eu.europeana.uim.repox.model,
+                            eu.europeana.uim.common.progress,
+                            eu.europeana.uim.common.utils,
                             org.apache.commons.lang,
                             org.apache.felix.gogo.commands,
                             org.apache.felix.service.command,
@@ -39,10 +41,13 @@
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim,
-                            eu.europeana.uim.api,
+                            eu.europeana.uim.adapter,
                             eu.europeana.uim.command,
-                            eu.europeana.uim.sugarcrm,
-                            eu.europeana.uim.repox,
+                            eu.europeana.uim.logging,
+                            eu.europeana.uim.orchestration,
+                            eu.europeana.uim.plugin,
+                            eu.europeana.uim.resource,
+                            eu.europeana.uim.storage,
                             eu.europeana.uim.util,
                             eu.europeana.uim.workflow
 						</Export-Package>
@@ -96,7 +101,7 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>

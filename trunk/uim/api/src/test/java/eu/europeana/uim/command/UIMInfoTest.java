@@ -33,7 +33,7 @@ public class UIMInfoTest {
 
         UIMRegistry registry = new UIMRegistry();
 
-        LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();
+        LegalIngestionWorkflow<Long> workflow = new LegalIngestionWorkflow<Long>();
         registry.addWorkflow(workflow);
         assertFalse(registry.getWorkflows().isEmpty());
 

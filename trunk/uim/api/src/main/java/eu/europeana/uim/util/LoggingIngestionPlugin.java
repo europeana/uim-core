@@ -7,20 +7,27 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
 import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Simple logging plugin which logs which {@link MetaDataRecord} is just be processed.
  * 
+ * @param <U>
+ *            uim data set type
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 25, 2011
  */
-public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
+public class LoggingIngestionPlugin<U extends UimDataSet<I>, I> extends
+        AbstractIngestionPlugin<U, I> {
     /** property name to define logging stepsie */
     public static final String                        LOGGING_STEPSIZE = "logging.stepsize";
 
@@ -39,6 +46,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
 
     private static final Logger                       log              = Logger.getLogger(LoggingIngestionPlugin.class.getName());
 
+    @SuppressWarnings("rawtypes")
     private static TKey<LoggingIngestionPlugin, Data> DATA_KEY         = TKey.register(
                                                                                LoggingIngestionPlugin.class,
                                                                                "data", Data.class);
@@ -82,8 +90,8 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
-            throws IngestionPluginFailedException, CorruptedMetadataRecordException {
+    public boolean process(U mdr, ExecutionContext<U, I> context)
+            throws IngestionPluginFailedException, CorruptedDatasetException {
         Data value = context.getValue(DATA_KEY);
 
         if (value == null) { throw new IngestionPluginFailedException(
@@ -98,7 +106,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void initialize(ExecutionContext<U, I> context) throws IngestionPluginFailedException {
         Data data = new Data();
 
         Properties properties = context.getProperties();
@@ -113,7 +121,7 @@ public class LoggingIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<U, I> context) throws IngestionPluginFailedException {
         // nothing to do
     }
 

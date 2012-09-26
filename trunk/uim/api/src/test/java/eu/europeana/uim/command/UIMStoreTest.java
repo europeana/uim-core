@@ -14,7 +14,7 @@ import org.apache.felix.service.command.CommandSession;
 import org.junit.Test;
 
 import eu.europeana.uim.UIMRegistry;
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;

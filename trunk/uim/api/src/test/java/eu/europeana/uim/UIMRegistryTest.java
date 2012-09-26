@@ -10,14 +10,14 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import eu.europeana.uim.api.IngestionPlugin;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.LoggingEngineAdapter;
-import eu.europeana.uim.api.Orchestrator;
-import eu.europeana.uim.api.ResourceEngine;
-import eu.europeana.uim.api.ResourceEngineAdapter;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineAdapter;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.plugin.Plugin;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.resource.ResourceEngineAdapter;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineAdapter;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -45,9 +45,9 @@ public class UIMRegistryTest {
         ResourceEngineAdapter resource = new ResourceEngineAdapter() {
         };
         registry.addResourceEngine(resource);
-        LegalIngestionPlugin plugin = new LegalIngestionPlugin();
+        LegalIngestionPlugin<Long> plugin = new LegalIngestionPlugin<Long>();
         registry.addPlugin(plugin);
-        LegalIngestionWorkflow workflow = new LegalIngestionWorkflow();
+        LegalIngestionWorkflow<Long> workflow = new LegalIngestionWorkflow<Long>();
         registry.addWorkflow(workflow);
         Orchestrator orchestrator = mock(Orchestrator.class);
         registry.setOrchestrator(orchestrator);
@@ -123,7 +123,7 @@ public class UIMRegistryTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testPluginMemberFieldCheckToFail() {
-        registry.addPlugin(new IllegalIngestionPlugin());
+        registry.addPlugin(new IllegalIngestionPlugin<Long>());
     }
 
     /**
@@ -131,7 +131,7 @@ public class UIMRegistryTest {
      */
     @Test
     public void testPluginMemberFieldCheckToSucceed() {
-        registry.addPlugin(new LegalIngestionPlugin());
+        registry.addPlugin(new LegalIngestionPlugin<Long>());
     }
 
     /**
@@ -141,14 +141,14 @@ public class UIMRegistryTest {
     public void testPluginRoundTrip() {
         assertTrue(registry.getPlugins().isEmpty());
 
-        LegalIngestionPlugin plugin = new LegalIngestionPlugin();
+        LegalIngestionPlugin<Long> plugin = new LegalIngestionPlugin<Long>();
         registry.addPlugin(plugin);
         assertFalse(registry.getPlugins().isEmpty());
 
-        IngestionPlugin plugin2 = registry.getPlugin(plugin.getIdentifier());
+        Plugin plugin2 = registry.getPlugin(plugin.getIdentifier());
         assertSame(plugin, plugin2);
 
-        plugin2 = registry.getPlugin(new LegalIngestionPlugin().getIdentifier());
+        plugin2 = registry.getPlugin(new LegalIngestionPlugin<Long>().getIdentifier());
         assertSame(plugin, plugin2);
     }
 
@@ -159,14 +159,14 @@ public class UIMRegistryTest {
     public void testWorkflowRoundTrip() {
         assertTrue(registry.getWorkflows().isEmpty());
 
-        LegalIngestionWorkflow plugin = new LegalIngestionWorkflow();
+        LegalIngestionWorkflow<Long> plugin = new LegalIngestionWorkflow<Long>();
         registry.addWorkflow(plugin);
         assertFalse(registry.getWorkflows().isEmpty());
 
-        Workflow plugin2 = registry.getWorkflow(plugin.getIdentifier());
+        Workflow<?, ?> plugin2 = registry.getWorkflow(plugin.getIdentifier());
         assertSame(plugin, plugin2);
 
-        plugin2 = registry.getWorkflow(new LegalIngestionWorkflow().getIdentifier());
+        plugin2 = registry.getWorkflow(new LegalIngestionWorkflow<Long>().getIdentifier());
         assertSame(plugin, plugin2);
     }
 
