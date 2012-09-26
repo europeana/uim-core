@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.theeuropeanlibrary</groupId>
         <artifactId>tel-uim-plugin-check</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.1</version>
     </parent>
 
     <artifactId>tel-uim-plugin-check-field</artifactId>
