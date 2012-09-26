@@ -23,25 +23,25 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-edm</artifactId>
-            <version>${parent.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-tel</artifactId>
-            <version>${parent.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-europeana</artifactId>
-            <version>${parent.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
