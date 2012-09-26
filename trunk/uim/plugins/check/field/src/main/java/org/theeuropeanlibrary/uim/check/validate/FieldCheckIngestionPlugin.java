@@ -4,7 +4,6 @@ package org.theeuropeanlibrary.uim.check.validate;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,7 +40,6 @@ import eu.europeana.uim.sugarcrm.SugarService;
  * @since Mar 15, 2011
  */
 public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
-
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -81,8 +79,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                                                                                  }
                                                                              };
 
-    private final static SimpleDateFormat                      df            = new SimpleDateFormat(
-                                                                                     "yyyy-MM-dd HH:mm:ss");
+// private final static SimpleDateFormat df = new SimpleDateFormat(
+// "yyyy-MM-dd HH:mm:ss");
 
     private static SugarService                                sugarService;
 
@@ -315,7 +313,6 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
         } else {
             context.getLoggingEngine().log(Level.WARNING, this, "Rejected records:" + value.reject);
         }
-        
 
         Collection<I> collection = null;
         UimDataSet<I> dataset = context.getDataSet();
@@ -370,7 +367,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     // Container holding all execution specific information for the validation plugin.
     static class Data implements Serializable {
         private int                                 start     = 0;
-        private int                                 reject      = 0;
+        private int                                 reject    = 0;
         private int                                 threshold = 10;
         private boolean                             populate  = true;
 
