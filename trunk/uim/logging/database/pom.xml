@@ -32,8 +32,7 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
                     <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                    <preparationGoals>clean compile process-classes test-compile test jar:test-jar source:jar install
-                        -Ptel</preparationGoals>
+                    <preparationGoals>clean compile process-classes test-compile test jar:test-jar source:jar install -Ptel</preparationGoals>
                     <goals>clean compile process-classes test-compile test jar:test-jar source:jar install deploy -Ptel</goals>
                 </configuration>
             </plugin>
