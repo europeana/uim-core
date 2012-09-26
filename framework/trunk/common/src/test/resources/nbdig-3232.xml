@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<metadata xmlns="http://www.europeana.eu/schemas/ese/" xmlns:europeana="http://www.europeana.eu/schemas/ese/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.europeana.eu/schemas/ese/
+http://www.europeana.eu/schemas/ese/ESE-V3.2.xsd"
+xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+	<record>
+  <dc:title xml:lang="ger">Ein köstlich new Kochbuch von allerhand Speisen an Gemüsen, Obs, Fleisch, Geflügel, Wildpret, Fischen und Gebachens : nicht allein für Gesunde, sondern auch und fürnemlich für Krancke in allerley Kanckheiten und Gebresten, auch schwangere Weiber, Kindbetterinnen und alte schwache Leuthe, künstlich und nutzlich zuzurichten und zugebrauchen : erstlich in vier underschiedlichen Büchern mit Fleiss beschrieben</dc:title>
+      <dc:title xml:lang="eng">A delicious new cookbook with all sorts of dishes of vegetables, fruit meat, poultry, game, fish and baked food: not only for healthy people, but also for those who are unwell</dc:title>
+      <dc:creator>Wecker, Anna</dc:creator>
+    <dc:type>Text</dc:type>
+    <dc:publisher>Basel, in Verlegung Ludwig Königs</dc:publisher>
+    <dc:date>1609-01-01</dc:date>
+    <dc:language>ger</dc:language>
+    <dc:description xml:lang="ger">Dieses Werk, hier in 2. Auflage, ist wahrscheinlich eines der ältesten, von einer Frau geschriebenen deutschsprachigen Kochbücher</dc:description>
+    <dc:description xml:lang="fre">Cet ouvrage, ici dans sa deuxième édition, constitue vraisemblablement l'un des plus anciens livres de cuisine en langue allemande écrit par une femme</dc:description>
+    <dc:description xml:lang="eng">This title (of which this is the second edition) is probably one of the oldest cookery books in German written by a woman</dc:description>
+            <dc:subject xml:lang="eng">Meals &amp; table service</dc:subject>
+ <dc:subject xml:lang="ger">Kochbuch</dc:subject>
+	    <dc:format>pdf</dc:format>
+   <dc:source xml:lang="ger">Schweizerische Nationalbibliothek</dc:source>
+   <dc:source xml:lang="eng">Swiss National Library</dc:source>
+   <dc:relation/>
+   <dc:identifier>nbdig-3232</dc:identifier>
+    <europeana:object>nbdig-3232</europeana:object>
+    <europeana:provider/>
+ <europeana:type>TEXT</europeana:type>
+   <europeana:isShownBy>nbdig-3232</europeana:isShownBy>
+   <europeana:isShownAt></europeana:isShownAt>
+   <europeana:year>1609</europeana:year>
+   </record>
+   </metadata>
+
