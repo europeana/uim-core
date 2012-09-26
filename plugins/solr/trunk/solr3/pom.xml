@@ -143,7 +143,7 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr3</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr3</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/solr/trunk/solr3</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/solr/trunk/solr3</developerConnection>
     </scm>
 </project>

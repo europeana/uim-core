@@ -145,7 +145,7 @@
 	</dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr14</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr14</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/solr/trunk/solr14</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/solr/trunk/solr14</developerConnection>
     </scm>
 </project>

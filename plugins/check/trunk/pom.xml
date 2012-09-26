@@ -23,7 +23,7 @@
     <build />
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/check</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/check</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/check</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/plugins/check</developerConnection>
     </scm>
 </project>
