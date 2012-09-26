@@ -31,6 +31,8 @@
                             org.theeuropeanlibrary.model.common,
                             org.theeuropeanlibrary.model.common.qualifier,
 							org.theeuropeanlibrary.model.tel,
+							eu.europeana.uim.model.europeana,
+							eu.europeana.uim.model.adapters.*,
 							org.osgi.service.blueprint,
 							org.apache.commons.io,
 							javax.net.ssl,
@@ -60,6 +62,12 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-tel</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-adapters</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
