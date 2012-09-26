@@ -35,7 +35,7 @@
     </build>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/model</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/model</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/model/trunk</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/model/trunk</developerConnection>
     </scm>
 </project>
