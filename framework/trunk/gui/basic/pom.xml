@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim-gui</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>europeana-uim-gui-basic</artifactId>
+    <packaging>war</packaging>
+    <name>Unified Ingestion Manager: Basic Ingestion Control Panel GUI</name>
+
+    <properties>
+        <gwtVersion>2.3.0</gwtVersion>
+        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    </properties>
+
+    <build>
+        <!-- Generate compiled stuff in the folder used for developing mode -->
+        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
+        <plugins>
+            <!-- GWT Maven Plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.3.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>test</goal>
+                            <!-- <goal>i18n</goal> -->
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <runTarget>UimIngestionControlPanel.html</runTarget>
+                    <hostedWebapp>${webappDirectory}</hostedWebapp>
+                    <!-- <i18nMessagesBundle>eu.europeana.uim.gui.cp.client.Messages</i18nMessagesBundle> -->
+
+                    <!-- Additional configuration to be able to run the development mode against the webapp deployed on the 
+                        OSGI platform -->
+                    <port>8181</port>
+                    <noServer>true</noServer>
+                    <runTarget>uim/UimIngestionControlPanel.html</runTarget>
+                    <!-- custom argument to tell the AbstractOSGIRemoteServiceServlet that it can trust this environment -->
+                    <!-- note the whitespace, I suppose this is due to the maven-gwt-plugin already providing some additional 
+                        VM arguments -->
+                    <extraJvmArgs> -Ddevmode=true </extraJvmArgs>
+                </configuration>
+            </plugin>
+
+            <!-- Copy static web files before executing gwt:run -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <!-- <goal>exploded</goal> -->
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <webappDirectory>${webappDirectory}</webappDirectory>
+                    <outputFileNameMapping>@{artifactId}@.@{extension}@</outputFileNameMapping>
+                    <archive>
+                        <!-- add the generated manifest to the war -->
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.1.0</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>bundle-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <supportedProjectTypes>
+                        <supportedProjectType>jar</supportedProjectType>
+                        <supportedProjectType>bundle</supportedProjectType>
+                        <supportedProjectType>war</supportedProjectType>
+                    </supportedProjectTypes>
+                    <instructions>
+                        <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
+                        <Bundle-Activator>eu.europeana.uim.gui.cp.server.engine.OsgiEngineActivator</Bundle-Activator>
+                        <Embed-Directory>WEB-INF/lib</Embed-Directory>
+                        <Embed-Dependency>
+                            europeana-uim-gui-common,gwt-servlet,gwt-incubator,commons-fileupload,
+                            <!-- tel-uim-evaluation-normalize,jaxb-api -->
+                        </Embed-Dependency>
+                        <Embed-Transitive>false</Embed-Transitive>
+                        <Embed-StripVersion>true</Embed-StripVersion>
+                        <Import-Package>
+
+                        </Import-Package>
+
+                        <!-- OSGi spec config option -->
+                        <Web-ContextPath>uim</Web-ContextPath>
+                        <!-- Pax Web Extender knows this option -->
+                        <Webapp-Context>uim</Webapp-Context>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <wtpversion>2.0</wtpversion>
+                    <wtpContextName>${project.artifactId}</wtpContextName>
+                    <additionalProjectnatures>
+                        <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
+                    </additionalProjectnatures>
+                    <classpathContainers>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                        <classpathContainer>com.google.gwt.eclipse.core.GWT_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-gui-common</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+    </dependencies>
+
+    <scm>
+        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/basic</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/gui/basic</developerConnection>
+    </scm>
+</project>

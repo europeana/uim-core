@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>repositoryService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.RepositoryServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>resourceService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.ResourceServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>executionService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.ExecutionServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>repositoryService</servlet-name>
+        <url-pattern>/TelIngestionControlPanel/repository</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>resourceService</servlet-name>
+        <url-pattern>/TelIngestionControlPanel/resource</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>executionService</servlet-name>
+        <url-pattern>/TelIngestionControlPanel/execution</url-pattern>
+    </servlet-mapping>
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>UimIngestionControlPanel.html</welcome-file>
+    </welcome-file-list>
+</web-app>
