@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='TelIngestionControlPanel'>
+    <inherits name='eu.europeana.uim.gui.cp.IngestionControlPanel' />
+
+    <!-- Other module inherits -->
+    <entry-point class='eu.europeana.uim.gui.cp.basic.client.UimIngestionControlPanel' />
+
+    <!-- Specify the paths for translatable code -->
+    <source path='client' />
+    <source path='shared' />
+
+    <stylesheet src="UimIngestionControlPanel.css" />
+</module>
