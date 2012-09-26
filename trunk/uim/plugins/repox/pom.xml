@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-        <version>1.3.1</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>europeana-uim-plugin-repox</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
     <name>Unified Ingestion Manager: Repox Integration Plugin</name>
     <packaging>bundle</packaging>
 
@@ -79,25 +80,25 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${europeana.uim.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${parent.version}</version>
+            <version>${europeana.uim.version}</version>
             <scope>test</scope>
         </dependency>
 
