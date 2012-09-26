@@ -144,8 +144,8 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr4</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/solr4</developerConnection>
+        <connection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr4</connection>
+        <developerConnection>scm:svn:https://europeanalabs.eu/svn/plugins/solr/trunk/solr4</developerConnection>
     </scm>
 
     <repositories>
