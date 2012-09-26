@@ -11,8 +11,8 @@ import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.orchestration.AbstractBatchWorkflowTest;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
@@ -32,14 +32,12 @@ public class ValidateFieldWorkflowTest extends AbstractBatchWorkflowTest {
     @Test
     public void testSimpleValidation() throws IOException, InterruptedException,
             StorageEngineException {
-
         LinkedHashMap<String, List<String>> map = new LinkedHashMap<String, List<String>>();
         map.put(FieldCheckIngestionPlugin.KEY_FIELDSPEC,
                 Arrays.asList("./src/test/resources/fieldspec.txt"));
         registry.getResourceEngine().setGlobalResources(map);
 
-        executeWorkflow(new FieldCheckWorkflow(), 1);
-
+        executeWorkflow(new FieldCheckWorkflow<Long>(), 1);
     }
 
     @Override

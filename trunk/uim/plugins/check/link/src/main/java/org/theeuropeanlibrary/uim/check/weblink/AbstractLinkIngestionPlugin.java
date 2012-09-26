@@ -11,19 +11,24 @@ import java.util.logging.Logger;
 import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.theeuropeanlibrary.uim.check.weblink.http.HttpClientSetup;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Base class for linking and thumbnail checking.
+ * 
+ * @param <I>
+ *            generic identifier
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 20, 2011
  */
-public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugin {
+public abstract class AbstractLinkIngestionPlugin<I> extends
+        AbstractIngestionPlugin<MetaDataRecord<I>, I> {
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -32,6 +37,7 @@ public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugi
     /**
      * typed key to retrieve the container holding all execution dependent variables
      */
+    @SuppressWarnings("rawtypes")
     protected static final TKey<AbstractLinkIngestionPlugin, Data> DATA = TKey.register(
                                                                                 AbstractLinkIngestionPlugin.class,
                                                                                 "data", Data.class);
@@ -84,7 +90,8 @@ public abstract class AbstractLinkIngestionPlugin extends AbstractIngestionPlugi
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
         log.info("Submitted:" + value.submitted + ", Ignored: " + value.ignored);
     }

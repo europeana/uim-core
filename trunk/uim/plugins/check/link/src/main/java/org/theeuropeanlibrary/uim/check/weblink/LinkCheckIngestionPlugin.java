@@ -21,34 +21,37 @@ import org.theeuropeanlibrary.uim.check.weblink.http.GuardedMetaDataRecordUrl;
 import org.theeuropeanlibrary.uim.check.weblink.http.Submission;
 import org.theeuropeanlibrary.uim.check.weblink.http.WeblinkLinkchecker;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.StorageEngine;
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.model.adapters.AdapterFactory;
 import eu.europeana.uim.model.adapters.MetadataRecordAdapter;
 import eu.europeana.uim.model.adapters.QValueAdapterStrategy;
 import eu.europeana.uim.model.adapters.europeana.EuropeanaLinkAdapterStrategy;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.sugarcrm.SugarControlledVocabulary;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
+import eu.europeana.uim.sugar.SugarService;
 
 /**
  * This plugin check links and adds/updates status information onto the {@link Link} object.
  * 
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 20, 2011
  */
-public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
+public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> {
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -101,7 +104,8 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
     }
 
     @Override
-    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException {
         Data value = new Data();
 
         if (Boolean.parseBoolean(context.getProperties().getProperty(THUMBNAIL))) {
@@ -138,7 +142,8 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
 
         Collection<I> collection = null;
@@ -169,7 +174,8 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                 collection.putValue(SugarControlledVocabulary.COLLECTION_LINK_VALIDATION,
                         "" + context.getExecution().getId());
 
-                ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
+                ((ActiveExecution<MetaDataRecord<I>, I>)context).getStorageEngine().updateCollection(
+                        collection);
 
                 if (getSugarService() != null) {
                     getSugarService().updateCollection(collection);
@@ -184,8 +190,8 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
-            throws IngestionPluginFailedException, CorruptedMetadataRecordException {
+    public boolean process(MetaDataRecord<I> mdr, ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException, CorruptedDatasetException {
         Data value = context.getValue(DATA);
 
         List<QualifiedValue<Link>> linkList = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
@@ -269,10 +275,10 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                                                     if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
                                                         ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
                                                     }
-
-                                                    // FIXME: misuse of api
-                                                    loggingEngine.completed(null);
                                                 }
+
+                                                // FIXME: misuse of api
+                                                loggingEngine.completed(null);
                                             } catch (StorageEngineException e) {
                                                 throw new RuntimeException(
                                                         "Caused by StorageEngineException", e);

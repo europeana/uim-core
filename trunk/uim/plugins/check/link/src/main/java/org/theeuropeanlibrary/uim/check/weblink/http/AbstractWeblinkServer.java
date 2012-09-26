@@ -14,10 +14,11 @@ import org.theeuropeanlibrary.collections.guarded.Guarded;
 import org.theeuropeanlibrary.collections.guarded.GuardedQueue;
 import org.theeuropeanlibrary.collections.guarded.TimedDifferenceCondition;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.ExecutionContext;
 import eu.europeana.uim.common.SimpleThreadFactory;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the
@@ -70,11 +71,11 @@ public abstract class AbstractWeblinkServer {
      * @param context
      */
     public synchronized <I> void offer(GuardedMetaDataRecordUrl<I> guarded,
-            ExecutionContext<I> context) {
+            ExecutionContext<MetaDataRecord<I>, I> context) {
         synchronized (submissions) {
             if (!submissions.containsKey(context.getExecution().getId())) {
                 submissions.put(context.getExecution().getId(), new Submission(
-                        ((ActiveExecution<?>)context).getStorageEngine(), guard));
+                        ((ActiveExecution<MetaDataRecord<I>, I>)context).getStorageEngine(), guard));
             }
         }
 
@@ -151,13 +152,15 @@ public abstract class AbstractWeblinkServer {
                                 sleep--;
                             }
                         } catch (IllegalThreadStateException t) {
-                            log.log(Level.SEVERE, "Linkchecker thread pool is dead. Starting a new pool.");
+                            log.log(Level.SEVERE,
+                                    "Linkchecker thread pool is dead. Starting a new pool.");
                             executor.shutdownNow();
-                            
+
                             executor = new ThreadPoolExecutor(25, 50, 60L, TimeUnit.SECONDS,
-                                    new SynchronousQueue<Runnable>(), new SimpleThreadFactory("weblink", "linkcheck"));
+                                    new SynchronousQueue<Runnable>(), new SimpleThreadFactory(
+                                            "weblink", "linkcheck"));
                             executor.execute(task);
-                            
+
                         } catch (RejectedExecutionException exc) {
                             // we ran out of worker threads
                             // slow down a bit ...

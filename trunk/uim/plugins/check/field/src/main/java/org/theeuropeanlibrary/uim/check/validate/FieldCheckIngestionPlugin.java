@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.uim.check.validate;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,26 +21,29 @@ import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 
-import eu.europeana.uim.api.AbstractIngestionPlugin;
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.CorruptedMetadataRecordException;
-import eu.europeana.uim.api.ExecutionContext;
-import eu.europeana.uim.api.IngestionPluginFailedException;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
+import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
+import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.sugarcrm.SugarControlledVocabulary;
-import eu.europeana.uim.sugarcrm.SugarService;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
+import eu.europeana.uim.sugar.SugarService;
 
 /**
  * Validate fields, does nothing to alter the metadata record.
  * 
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 15, 2011
  */
-public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
+public class FieldCheckIngestionPlugin<I> extends AbstractIngestionPlugin<MetaDataRecord<I>, I> {
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -59,6 +63,7 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     /**
      * typed key to retrieve the container holding all execution dependent variables
      */
+    @SuppressWarnings("rawtypes")
     private static final TKey<FieldCheckIngestionPlugin, Data> DATA          = TKey.register(
                                                                                      FieldCheckIngestionPlugin.class,
                                                                                      "data",
@@ -79,8 +84,9 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                                                                                  }
                                                                              };
 
-// private final static SimpleDateFormat df = new SimpleDateFormat(
-// "yyyy-MM-dd HH:mm:ss");
+    @SuppressWarnings("unused")
+    private final static SimpleDateFormat                      df            = new SimpleDateFormat(
+                                                                                     "yyyy-MM-dd HH:mm:ss");
 
     private static SugarService                                sugarService;
 
@@ -131,7 +137,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public <I> void initialize(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
         if (value == null) {
             value = new Data();
@@ -211,8 +218,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> boolean processRecord(MetaDataRecord<I> mdr, ExecutionContext<I> context)
-            throws IngestionPluginFailedException, CorruptedMetadataRecordException {
+    public boolean process(MetaDataRecord<I> mdr, ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException, CorruptedDatasetException {
         Data value = context.getValue(DATA);
         if (value.total.isEmpty()) {
             // not configured... just pass by
@@ -306,7 +313,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
     }
 
     @Override
-    public <I> void completed(ExecutionContext<I> context) throws IngestionPluginFailedException {
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
         if (value.reject > 0) {
             context.getLoggingEngine().log(Level.INFO, this, "No rejected records.");
@@ -347,7 +355,8 @@ public class FieldCheckIngestionPlugin extends AbstractIngestionPlugin {
                     collection.putValue(SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
                             "" + context.getExecution().getId());
 
-                    ((ActiveExecution<I>)context).getStorageEngine().updateCollection(collection);
+                    ((ActiveExecution<MetaDataRecord<I>, I>)context).getStorageEngine().updateCollection(
+                            collection);
 
                     if (getSugarService() != null) {
                         getSugarService().updateCollection(collection);

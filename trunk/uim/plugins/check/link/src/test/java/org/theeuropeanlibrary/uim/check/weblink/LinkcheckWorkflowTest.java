@@ -14,8 +14,8 @@ import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.theeuropeanlibrary.uim.check.weblink.http.Submission;
 import org.theeuropeanlibrary.uim.check.weblink.http.WeblinkLinkchecker;
 
-import eu.europeana.uim.api.StorageEngineException;
 import eu.europeana.uim.orchestration.AbstractBatchWorkflowTest;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -43,8 +43,8 @@ public class LinkcheckWorkflowTest extends AbstractBatchWorkflowTest {
         });
         registry.getResourceEngine().setGlobalResources(map);
 
-        Execution<Long> execution = executeWorkflow(new LinkCheckWorkflow(), 1);
-        
+        Execution<Long> execution = executeWorkflow(new LinkCheckWorkflow<Long>(), 1);
+
         Submission submission = WeblinkLinkchecker.getShared().getSubmission(execution);
         submission.waitUntilFinished();
 

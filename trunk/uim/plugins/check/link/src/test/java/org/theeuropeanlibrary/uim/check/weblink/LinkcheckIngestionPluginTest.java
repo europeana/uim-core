@@ -18,10 +18,10 @@ import org.theeuropeanlibrary.uim.check.weblink.http.HttpClientSetup;
 import org.theeuropeanlibrary.uim.check.weblink.http.Submission;
 import org.theeuropeanlibrary.uim.check.weblink.http.WeblinkLinkchecker;
 
-import eu.europeana.uim.api.ActiveExecution;
-import eu.europeana.uim.api.LoggingEngine;
-import eu.europeana.uim.api.LoggingEngineAdapter;
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ExecutionBean;
@@ -53,7 +53,7 @@ public class LinkcheckIngestionPluginTest {
 
         LoggingEngine logging = LoggingEngineAdapter.LONG;
 
-        ActiveExecution<Long> context = mock(ActiveExecution.class);
+        ActiveExecution<MetaDataRecord<Long>, Long> context = mock(ActiveExecution.class);
         when(context.getProperties()).thenReturn(properties);
         when(context.getExecution()).thenReturn(execution);
         when(context.getLoggingEngine()).thenReturn(logging);
@@ -91,9 +91,8 @@ public class LinkcheckIngestionPluginTest {
                 linkTypeQualifier);
 
         mdr.addValue(ObjectModelRegistry.LINK, new Link(
-        "http://www.theeuropeanlibrary.org/exhibition-reading-europe/detail.html?id=XY"),
-        linkTypeQualifier);
-
+                "http://www.theeuropeanlibrary.org/exhibition-reading-europe/detail.html?id=XY"),
+                linkTypeQualifier);
 
         mdr.addValue(
                 ObjectModelRegistry.LINK,
@@ -101,11 +100,11 @@ public class LinkcheckIngestionPluginTest {
                         "http://www.theeuropeanlibrary.org/exhibition-reading-europe/object.html?id=97923"),
                 linkTypeQualifier);
 
-//        mdr.addValue(
-//                ObjectModelRegistry.LINK,
-//                new Link(
-//                        "http://www.theeuropeanlibrary.org/exhibition-reading-europe/object.html?id=105256"),
-//                linkTypeQualifier);
+// mdr.addValue(
+// ObjectModelRegistry.LINK,
+// new Link(
+// "http://www.theeuropeanlibrary.org/exhibition-reading-europe/object.html?id=105256"),
+// linkTypeQualifier);
 
         mdr.addValue(
                 ObjectModelRegistry.LINK,
@@ -137,7 +136,7 @@ public class LinkcheckIngestionPluginTest {
         when(context.getValue((TKey<?, Data>)any())).thenReturn(data);
 
         plugin.initialize(context);
-        plugin.processRecord(mdr, context);
+        plugin.process(mdr, context);
         plugin.completed(context);
 
         Submission submission = WeblinkLinkchecker.getShared().getSubmission(context.getExecution());

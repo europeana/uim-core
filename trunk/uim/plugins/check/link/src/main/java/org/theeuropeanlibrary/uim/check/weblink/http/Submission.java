@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import org.theeuropeanlibrary.collections.guarded.GuardedQueue;
 
-import eu.europeana.uim.api.StorageEngine;
+import eu.europeana.uim.storage.StorageEngine;
 
 /**
  * 

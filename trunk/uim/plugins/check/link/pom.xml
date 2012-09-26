@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -50,25 +51,31 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-common</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-tel</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-model-adapters</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-external-sugar-api</artifactId>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
@@ -114,23 +121,23 @@
 
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${europeana.uim.version}</version>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-plugin-basic</artifactId>
-            <version>${europeana.uim.version}</version>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
