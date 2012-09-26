@@ -1,0 +1,34 @@
+=Introduction
+This document provides a description of the Internal Object Model of TEL, a technical solution for representing data of aggregated bibliographic records and digital objects within the TEL information systems.  
+It presents the motivations for having an internal model, its purpose, the major design decisions made, and how it is used by the TEL information system. It finalizes with the description of all data elements that comprise the model.
+
+=Why Internal?
+The model is called internal because it is intended to be used only within information systems of TEL. Its main purpose is to support the representation of resource description data for the technological solution existing in TEL. It is therefore constrained by practical requirements posed by the technologies used in TEL. 
+It is also named internal because it does not aim to be a standard for transferring data from data providers to TEL. 
+The need for an internal solution for managing data in TEL, derives mainly  by the needs of the technical of TEL needs to have the flexibility to adapt it whenever necessary in a very agile way, to meet technological and functional requirements.
+ 
+=Function and Purpose
+The Internal Object Model is a technical solution to support the encoding of data, regarding aggregated bibliographic records and digital objects, across the whole internal ingestion process, publication in the portal and in external APIs.
+It allows the representation of entities with different levels of semantic detail and structure. This aspect allows for: 
+- The different levels of semantic detail available in the original data formats from libraries can be represented in the model, from the general semantics of Dublin Core elements to the more structured and fine grained semantics of the MARC formats.
+- To allow the processes of data ingestion normalization on to improve the semantics and data structure. 
+For example, a person that is the author of a resource, may arrive to TEL represented in a Dublin Core creator element, or as a structured MARC field. While the creator element only provides a textual reference of the person (without even stating that it is a person and not an organization, for example), the MARC data provides a more structured representation that specifies that it is a person with structured data and providing first names, surnames, dates of birth and death. The internal object model allows both forms of representing the names to be supported throughout the ingestion process, and allows also enrichments steps of the ingestion process to improve the semantics and structure of the simpler Dublin core representation.
+This model also allows for the core of the TEL information system to function independently of the data formats used throughout the data providers, or other organizations that will use TEL data (as for example, in the provision of EDM to Europeana, publication as open data, search APIs, etc.).
+
+=Supported Data Formats
+Internal Object Model records can currently be fully represented (without information loss) in two formats:
+- In Java. In this case the records are encoded in the general UIM MetaDataRecord data container. This representation is used by Java applications.
+- In XML. In this case they are represented according to the XML schema of the Internal Object Model. This representation is used for allowing XSLT transformations during the ingestion process in UIM.
+In addition, implementations are available to convert the records to the old TEL application profile, and to EDM. The export to EDM is only partial, and is a work in progress.
+ 
+=Known Limitations
+The model is not yet fully comprehensive, and does not cover all the entities and attributes that exist in the MARC formats and FRBR. The model is constantly being improved to fulfil the data requirements posed by new functionalities, projects, etc.
+The model does not allow the structured representation of multiple works within a single record. This affects mainly FRBR and ARROW work clustering. 
+
+=About the Model's Structure
+The model was originally defined directly in Java, in order to fulfill requirements for data storage. 
+The underlying storage system of UIM handles data in a generic way. It aims to allow the storage of data independently of its semantics, but without loss of data structure. For this reason, the model is not documented according to a standard notation for logical data models, such as entity-relationship, UML, or RDF.
+It is designed by using classes and qualifiers. Classes are general units of data, which are somewhat independent of the semantics of the data they hold. The main function of the qualifiers is to provide the semantics attached to the data held in the classes.
+Each class has an associated set of allowed qualifiers.
+To illustrate the use of classes and qualifiers, we can describe an example of a record that describes a book. This  book was published in The Hague, and its contents describe the city of Amsterdam. In the internal object model, both "The Hague" and "Amsterdam" would be represented in "NamedPlace" classes, and the class holding the value "The Hague" whould have an associated qualifier "SpatialRelation.PUBLICATION", while the class holding the value "Amsterdam" would have an associated qualifier "SpatialRelation.SUBJECT".  
+
