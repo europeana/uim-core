@@ -100,5 +100,4 @@ public abstract class BlockingInitializer implements Runnable {
      * 
      */
     protected abstract void initializeInternal();
-
 }

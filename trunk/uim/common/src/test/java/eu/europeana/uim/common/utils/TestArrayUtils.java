@@ -1,11 +1,13 @@
 /* TestArrayUtils.java - created on Mar 20, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.utils;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import org.junit.Test;
+
+import eu.europeana.uim.common.utils.ArrayUtils;
 
 /**
  * Tests for the utility functions for separating arrays into batches

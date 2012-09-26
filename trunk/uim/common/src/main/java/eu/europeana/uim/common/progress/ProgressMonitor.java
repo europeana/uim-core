@@ -1,4 +1,4 @@
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
 /** IProgressMonitor motivated interface for progress monitoring.
  * 

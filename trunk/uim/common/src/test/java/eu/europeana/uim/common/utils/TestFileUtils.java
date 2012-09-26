@@ -1,5 +1,5 @@
 /* TestDateUtils.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.utils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +9,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
+
+import eu.europeana.uim.common.utils.FileUtils;
 
 /**
  * Test of functions in {@link FileUtils}.

@@ -1,7 +1,7 @@
 /* RevisingProgressMonitor.java - created on Mar 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
-import eu.europeana.uim.common.ProgressMonitor;
+import eu.europeana.uim.common.progress.ProgressMonitor;
 
 /**
  * 

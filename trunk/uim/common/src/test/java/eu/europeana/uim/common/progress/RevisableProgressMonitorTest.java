@@ -1,9 +1,13 @@
 /* RevisableProgressMonitorTest.java - created on May 31, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import eu.europeana.uim.common.progress.MemoryProgressMonitor;
+import eu.europeana.uim.common.progress.RevisableProgressMonitor;
+import eu.europeana.uim.common.progress.RevisingProgressMonitor;
 
 /**
  * Test for the revisable progress monitor

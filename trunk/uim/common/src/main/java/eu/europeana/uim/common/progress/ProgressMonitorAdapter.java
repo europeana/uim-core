@@ -1,4 +1,4 @@
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
 /**
  * Noop adapter implementation of a progress monitor.

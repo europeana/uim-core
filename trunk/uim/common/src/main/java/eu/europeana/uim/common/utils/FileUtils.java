@@ -1,5 +1,5 @@
 /* FileUtils.java - created on Apr 30, 2012, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.utils;
 
 import java.io.File;
 import java.util.LinkedList;

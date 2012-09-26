@@ -1,4 +1,4 @@
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;

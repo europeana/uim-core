@@ -1,4 +1,4 @@
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
 /** Simple memory based implementation of a ProgressMonitor. This class just
  * holds all information in fields and exposes the field values through getter methods.

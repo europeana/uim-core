@@ -1,11 +1,11 @@
 /* RevisableProgressMonitor.java - created on Mar 4, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.common;
+package eu.europeana.uim.common.progress;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europeana.uim.common.MemoryProgressMonitor;
-import eu.europeana.uim.common.ProgressMonitor;
+import eu.europeana.uim.common.progress.MemoryProgressMonitor;
+import eu.europeana.uim.common.progress.ProgressMonitor;
 
 /**
  * A progress monitor which can be monitored by another monitor. This is useful to make a hierarchy
