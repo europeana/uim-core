@@ -188,21 +188,21 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
             throws IngestionPluginFailedException, CorruptedMetadataRecordException {
         Data value = context.getValue(DATA);
 
+        // Adapter that ensures compatibility with the europeana datamodel
+        Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
 
-       // Adapter that ensures compatibility with the europeana datamodel 
-		Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies =  new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
-		
-		strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
-		
-		MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(mdr, strategies);
-        
+        strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
+
+        MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
+                mdr, strategies);
 
         // get all links
         List<QualifiedValue<Link>> linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
 
         int index = 0;
         for (QualifiedValue<Link> linkQv : linkList) {
-            boolean disjoint = (linkQv.getQualifiers() == null)? false : Collections.disjoint(linkQv.getQualifiers(), value.checktypes);
+            boolean disjoint = (linkQv.getQualifiers() == null) ? false : Collections.disjoint(
+                    linkQv.getQualifiers(), value.checktypes);
             if (disjoint) {
                 // link is not relevant.
                 synchronized (value) {
@@ -253,9 +253,9 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                                     synchronized (submission) {
                                         execution.putValue("linkcheck.processed",
                                                 "" + submission.getProcessed());
-                                        
+
                                         if (!execution.isActive()) {
-                                            
+
                                             // need to store our own
                                             try {
                                                 if (submission.getProcessed() % 500 == 0) {
@@ -266,8 +266,8 @@ public class LinkCheckIngestionPlugin extends AbstractLinkIngestionPlugin {
                                                     if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
                                                         ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
                                                     }
-                                                    
-                                                    //FIXME: misuse of api
+
+                                                    // FIXME: misuse of api
                                                     loggingEngine.completed(null);
                                                 }
                                             } catch (StorageEngineException e) {
