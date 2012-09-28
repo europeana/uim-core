@@ -11,7 +11,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import eu.europeana.uim.api.AbstractResourceEngineTest;
+import eu.europeana.uim.resource.AbstractResourceEngineTest;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;

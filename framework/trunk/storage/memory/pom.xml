@@ -24,7 +24,6 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim,
-                            eu.europeana.uim.api,
                             eu.europeana.uim.orchestration,
                             eu.europeana.uim.resource,
                             eu.europeana.uim.storage,
