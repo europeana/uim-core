@@ -11,7 +11,7 @@
 
     <artifactId>europeana-uim-external-repox-api</artifactId>
     <name>Unified Ingestion Manager: External Service Repox API</name>
-    <packaging>bundle</packaging>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
@@ -27,7 +27,8 @@
                             org.joda.time
                         </Import-Package>
                         <Export-Package>
-                            eu.europeana.uim.repox
+                            eu.europeana.uim.repox,
+                            eu.europeana.uim.repox.model
 						</Export-Package>
                     </instructions>
                 </configuration>
