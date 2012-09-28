@@ -30,7 +30,7 @@ import org.junit.runners.JUnit4;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-import eu.europeana.uim.api.AbstractStorageEngineTest;
+import eu.europeana.uim.storage.AbstractStorageEngineTest;
 import eu.europeana.uim.storage.StorageEngine;
 
 /**

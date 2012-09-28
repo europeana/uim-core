@@ -28,7 +28,7 @@ import org.junit.Before;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-import eu.europeana.uim.api.AbstractMetaDataRecordTest;
+import eu.europeana.uim.AbstractMetaDataRecordTest;
 import eu.europeana.uim.storage.StorageEngine;
 
 /**

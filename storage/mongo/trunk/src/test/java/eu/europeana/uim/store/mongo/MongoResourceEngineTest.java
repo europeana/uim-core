@@ -33,7 +33,7 @@ import org.mockito.stubbing.Answer;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
-import eu.europeana.uim.api.AbstractResourceEngineTest;
+import eu.europeana.uim.resource.AbstractResourceEngineTest;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
