@@ -1,4 +1,4 @@
-package eu.europeana.uim.api;
+package eu.europeana.uim.logging;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

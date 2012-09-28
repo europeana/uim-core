@@ -1,5 +1,5 @@
 /* StorageEngineAdapterTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.api;
+package eu.europeana.uim.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

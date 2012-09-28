@@ -1,4 +1,4 @@
-package eu.europeana.uim.api;
+package eu.europeana.uim.storage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

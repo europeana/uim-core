@@ -1,5 +1,5 @@
 /* LoggingEngineAdapterTest.java - created on Jul 17, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.api;
+package eu.europeana.uim.logging;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
