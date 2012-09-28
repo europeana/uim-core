@@ -1,4 +1,4 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import static org.mockito.Mockito.spy;
 
@@ -8,8 +8,8 @@ import eu.europeana.uim.Registry;
 import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.storage.StorageEngine;
-import eu.europeana.uim.store.memory.MemoryResourceEngine;
-import eu.europeana.uim.store.memory.MemoryStorageEngine;
+import eu.europeana.uim.storage.memory.MemoryResourceEngine;
+import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 
 /**
  * Abstract class for workflow tests. Setting up UIM framework and provides callback method to fill

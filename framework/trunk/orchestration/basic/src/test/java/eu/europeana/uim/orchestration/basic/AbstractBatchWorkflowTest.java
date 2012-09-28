@@ -1,10 +1,11 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 import java.util.Properties;
 
+import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;

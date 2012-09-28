@@ -32,6 +32,8 @@
                             org.osgi.service.blueprint,
                         </Import-Package>
                         <Export-Package>
+                            eu.europeana.uim.logging.console,
+                            eu.europeana.uim.logging.memory
                         </Export-Package>
                     </instructions>
                 </configuration>

@@ -1,4 +1,4 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +14,8 @@ import java.util.logging.Logger;
 import eu.europeana.uim.Registry;
 import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.basic.processing.TaskExecutorRegistry;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.plugin.source.Task;
 import eu.europeana.uim.plugin.source.TaskCreator;

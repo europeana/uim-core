@@ -12,25 +12,25 @@
         </cm:default-properties>
     </cm:property-placeholder>
 
-    <bean id="uimWorkflowProcessor" class="eu.europeana.uim.orchestration.UIMWorkflowProcessor">
+    <bean id="uimWorkflowProcessor" class="eu.europeana.uim.orchestration.basic.UIMWorkflowProcessor">
         <argument ref="registry" />
         <property name="maxInProgress" value="${maxInProgress}" />
         <property name="maxTotalProgress" value="${maxTotalProgress}" />
     </bean>
 
-    <bean id="uimOrchestrator" class="eu.europeana.uim.orchestration.UIMOrchestrator" scope="singleton">
+    <bean id="uimOrchestrator" class="eu.europeana.uim.orchestration.basic.UIMOrchestrator" scope="singleton">
         <argument ref="registry" />
         <argument ref="uimWorkflowProcessor" />
     </bean>
-    <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.api.Orchestrator" />
+    <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />
 
     <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin">
     </bean>
-    <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.api.IngestionPlugin" />
+    <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin">
     </bean>
-    <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.api.IngestionPlugin" />
+    <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow">
     </bean>

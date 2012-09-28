@@ -1,4 +1,4 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,9 @@ import java.util.logging.Logger;
 import eu.europeana.uim.Registry;
 import eu.europeana.uim.common.progress.RevisableProgressMonitor;
 import eu.europeana.uim.logging.LoggingEngine;
-import eu.europeana.uim.orchestration.processing.TaskExecutorRegistry;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.orchestration.basic.processing.TaskExecutorRegistry;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.plugin.source.WorkflowStart;
 import eu.europeana.uim.resource.ResourceEngine;

@@ -1,4 +1,4 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import java.io.File;
 import java.io.Serializable;
@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.common.progress.RevisableProgressMonitor;
 import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.plugin.ExecutionPlugin;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.plugin.source.Task;

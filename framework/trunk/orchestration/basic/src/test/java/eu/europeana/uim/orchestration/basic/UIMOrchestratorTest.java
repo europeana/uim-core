@@ -1,4 +1,4 @@
-package eu.europeana.uim.orchestration;
+package eu.europeana.uim.orchestration.basic;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -16,6 +16,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
