@@ -6,7 +6,7 @@
     <bp:reference id="registry" interface="eu.europeana.uim.Registry" />
 		   
 	<service interface="eu.europeana.uim.storage.StorageEngine" ranking="9">
-		<bean class="eu.europeana.uim.storages.memory.MemoryStorageEngine" />
+		<bean class="eu.europeana.uim.storage.memory.MemoryStorageEngine" />
 	</service>
     
     <service interface="eu.europeana.uim.resource.ResourceEngine" ranking="9">
