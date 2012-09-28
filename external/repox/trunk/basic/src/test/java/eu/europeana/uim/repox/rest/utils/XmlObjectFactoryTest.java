@@ -10,10 +10,10 @@ import org.theeuropeanlibrary.model.common.qualifier.Country;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.store.memory.MemoryStorageEngine;
 
 /**
  * Tests xml object factory functionality.

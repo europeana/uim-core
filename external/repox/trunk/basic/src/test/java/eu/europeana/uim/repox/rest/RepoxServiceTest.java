@@ -15,10 +15,10 @@ import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
+import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.store.memory.MemoryStorageEngine;
 
 /**
  * Tests functionality of service to Repox.
