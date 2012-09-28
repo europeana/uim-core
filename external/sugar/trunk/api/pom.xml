@@ -28,7 +28,8 @@
                             eu.europeana.uim.workflow
                         </Import-Package>
                         <Export-Package>
-                            eu.europeana.uim.sugar
+                            eu.europeana.uim.sugar,
+                            eu.europeana.uim.sugar.model
 						</Export-Package>
                     </instructions>
                 </configuration>
