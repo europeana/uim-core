@@ -22,7 +22,6 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.api,
                             eu.europeana.uim.common,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
