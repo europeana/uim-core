@@ -40,6 +40,7 @@
                         <Export-Package>
                             eu.europeana.uim.sugar.client,
                             eu.europeana.uim.sugar.impl,
+                            eu.europeana.uim.sugar.servlet,
                             eu.europeana.uim.sugar.utils,
                             eu.europeana.uim.sugar.tel,
 						</Export-Package>
