@@ -22,7 +22,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.api,
+                            eu.europeana.uim,
                             eu.europeana.uim.store,
                             eu.europeana.uim.logging,
                             eu.europeana.uim.orchestration,
