@@ -52,10 +52,10 @@
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.common,
+                            eu.europeana.uim.common.progress,
+                            eu.europeana.uim.common.utils,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
-                            eu.europeana.uim.sugarcrm.model,
-                            eu.europeana.uim.repox.model,
                             org.theeuropeanlibrary.repository.convert,
                             org.theeuropeanlibrary.translation,
                             org.theeuropeanlibrary.collections.guarded,
