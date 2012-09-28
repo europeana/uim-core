@@ -1,5 +1,5 @@
 /* SugarServiceImplTest.java - created on Feb 5, 2012, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.sugar.soap;
+package eu.europeana.uim.sugar.soap.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

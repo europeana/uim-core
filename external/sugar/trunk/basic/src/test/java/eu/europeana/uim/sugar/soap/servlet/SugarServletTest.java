@@ -19,7 +19,7 @@ import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
 import eu.europeana.uim.sugar.impl.SugarServiceImpl;
 import eu.europeana.uim.sugar.servlet.SugarServlet;
-import eu.europeana.uim.sugar.soap.SugarServiceImplTest;
+import eu.europeana.uim.sugar.soap.impl.SugarServiceImplTest;
 
 /**
  * Tests sugar servlet.
