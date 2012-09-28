@@ -18,10 +18,10 @@ import org.junit.Test;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.sugar.SugarException;
-import eu.europeana.uim.sugar.SugarServiceImpl;
 import eu.europeana.uim.sugar.client.PropertiesSugarMapping;
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
+import eu.europeana.uim.sugar.impl.SugarServiceImpl;
 
 /**
  * 

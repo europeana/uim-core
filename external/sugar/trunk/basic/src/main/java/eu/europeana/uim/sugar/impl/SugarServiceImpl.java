@@ -1,5 +1,5 @@
 /* SugarCRMServiceImpl.java - created on Aug 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
-package eu.europeana.uim.sugar;
+package eu.europeana.uim.sugar.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +16,8 @@ import org.theeuropeanlibrary.model.common.qualifier.Language;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
+import eu.europeana.uim.sugar.SugarException;
+import eu.europeana.uim.sugar.SugarService;
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarMapping;
 import eu.europeana.uim.sugar.model.RetrievableField;

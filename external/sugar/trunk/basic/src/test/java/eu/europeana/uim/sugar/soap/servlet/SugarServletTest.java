@@ -14,10 +14,10 @@ import eu.europeana.uim.UIMRegistry;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.sugar.SugarException;
-import eu.europeana.uim.sugar.SugarServiceImpl;
 import eu.europeana.uim.sugar.client.PropertiesSugarMapping;
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
+import eu.europeana.uim.sugar.impl.SugarServiceImpl;
 import eu.europeana.uim.sugar.servlet.SugarServlet;
 import eu.europeana.uim.sugar.soap.SugarServiceImplTest;
 
