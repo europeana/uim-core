@@ -34,7 +34,7 @@
                             org.apache.commons.lang
                         </Import-Package>
                         <Export-Package>
-                            eu.europeana.uim.store.memory,
+                            eu.europeana.uim.storage.memory,
                         </Export-Package>
                     </instructions>
                 </configuration>
