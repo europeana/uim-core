@@ -2,7 +2,7 @@ package eu.europeana.uim.logging.database;
 
 import org.osgi.service.log.LogEntry;
 
-import eu.europeana.uim.api.AbstractLoggingEngineTest;
+import eu.europeana.uim.logging.AbstractLoggingEngineTest;
 import eu.europeana.uim.logging.LoggingEngine;
 
 /**
