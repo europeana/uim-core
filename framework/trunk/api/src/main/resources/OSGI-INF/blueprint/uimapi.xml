@@ -48,10 +48,10 @@
         </reference-listener>
     </reference-list>
 
-    <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional">
-        <reference-listener bind-method="addUimDatasetAdapter" unbind-method="removeUimDatasetAdapter" ref="uimRegistry">
-        </reference-listener>
-    </reference-list>
+<!--     <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional"> -->
+<!--         <reference-listener bind-method="addUimDatasetAdapter" unbind-method="removeUimDatasetAdapter" ref="uimRegistry"> -->
+<!--         </reference-listener> -->
+<!--     </reference-list> -->
 
 
 
