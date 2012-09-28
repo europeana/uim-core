@@ -23,10 +23,10 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim.common,
-                            eu.europeana.uim.store,
-                            eu.europeana.uim.store.bean,
                             eu.europeana.uim.common.progress,
                             eu.europeana.uim.common.utils,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
                             org.apache.commons.lang,
                             org.apache.felix.gogo.commands,
                             org.apache.felix.service.command,
