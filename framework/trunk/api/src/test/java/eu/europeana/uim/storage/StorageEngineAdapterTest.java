@@ -7,10 +7,6 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import eu.europeana.uim.storage.StorageEngine;
-import eu.europeana.uim.storage.StorageEngineAdapter;
-import eu.europeana.uim.storage.StorageEngineException;
-
 /**
  * Tests dummy implementation of {@link StorageEngine}.
  * 

@@ -9,8 +9,6 @@ import java.util.logging.Level;
 import org.junit.Test;
 
 import eu.europeana.uim.UIMRegistry;
-import eu.europeana.uim.logging.LoggingEngine;
-import eu.europeana.uim.logging.LoggingEngineAdapter;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;

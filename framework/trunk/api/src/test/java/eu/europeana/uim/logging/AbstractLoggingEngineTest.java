@@ -11,7 +11,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.logging.LoggingEngine.LogEntry;
 import eu.europeana.uim.logging.LoggingEngine.LogEntryFailed;
 import eu.europeana.uim.logging.LoggingEngine.LogEntryLink;
