@@ -1,6 +1,6 @@
 package eu.europeana.uim.logging.memory;
 
-import eu.europeana.uim.api.AbstractLoggingEngineTest;
+import eu.europeana.uim.logging.AbstractLoggingEngineTest;
 import eu.europeana.uim.logging.LoggingEngine;
 
 /**
