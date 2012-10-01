@@ -71,8 +71,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
+            <version>${pom.version}</version>
         </dependency>
 
         <!-- Shared resources -->
