@@ -11,7 +11,7 @@ import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
-import eu.europeana.uim.orchestration.AbstractBatchWorkflowTest;
+import eu.europeana.uim.orchestration.basic.AbstractBatchWorkflowTest;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.MetaDataRecord;
 

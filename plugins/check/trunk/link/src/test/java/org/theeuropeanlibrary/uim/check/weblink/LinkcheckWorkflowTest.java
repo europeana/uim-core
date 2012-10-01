@@ -14,7 +14,7 @@ import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.theeuropeanlibrary.uim.check.weblink.http.Submission;
 import org.theeuropeanlibrary.uim.check.weblink.http.WeblinkLinkchecker;
 
-import eu.europeana.uim.orchestration.AbstractBatchWorkflowTest;
+import eu.europeana.uim.orchestration.basic.AbstractBatchWorkflowTest;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
