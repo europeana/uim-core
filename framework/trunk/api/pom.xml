@@ -45,6 +45,8 @@
                             eu.europeana.uim.logging,
                             eu.europeana.uim.orchestration,
                             eu.europeana.uim.plugin,
+                            eu.europeana.uim.plugin.ingestion,
+                            eu.europeana.uim.plugin.source,
                             eu.europeana.uim.resource,
                             eu.europeana.uim.storage,
                             eu.europeana.uim.util,
