@@ -65,7 +65,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-plugin-basic").versionAsInProject(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-orchestration-basic").versionAsInProject(),
 
                 felix(),
 
