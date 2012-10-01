@@ -81,13 +81,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
             <version>${pom.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
             <version>${pom.version}</version>
             <scope>test</scope>

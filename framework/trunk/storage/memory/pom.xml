@@ -44,15 +44,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>${pom.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
+            <version>${pom.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
