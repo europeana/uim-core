@@ -25,6 +25,7 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim,
+                            eu.europeana.uim.adapter,
                             eu.europeana.uim.orchestration,
                             eu.europeana.uim.common.progress,
                             eu.europeana.uim.logging,
