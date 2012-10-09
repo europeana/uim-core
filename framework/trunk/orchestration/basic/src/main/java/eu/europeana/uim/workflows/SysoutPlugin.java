@@ -10,6 +10,7 @@ import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
 import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
 import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.UimDataSet;
 
 /**
@@ -80,9 +81,18 @@ public class SysoutPlugin<U extends UimDataSet<I>, I> extends AbstractIngestionP
         return 10;
     }
 
+    /**
+     * If this key is set to true in the given mdr, the process method will return false.
+     */
+    @SuppressWarnings("rawtypes")
+    public static final TKey<SysoutPlugin, Boolean> FAILURE_KEY = TKey.register(SysoutPlugin.class,
+                                                                        "failure", Boolean.class);
+
     @Override
     public boolean process(U dataset, ExecutionContext<U, I> context)
             throws IngestionPluginFailedException, CorruptedDatasetException {
+        boolean success = true;
+
         Object identifier = dataset.getId();
         Data data = context.getValue(DATA_KEY);
 
@@ -99,7 +109,14 @@ public class SysoutPlugin<U extends UimDataSet<I>, I> extends AbstractIngestionP
             System.out.println(getClass().getSimpleName() + ": " + identifier);
         }
 
-        return true;
+        if (dataset instanceof MetaDataRecord) {
+            Boolean value = ((MetaDataRecord<?>)dataset).getFirstValue(FAILURE_KEY);
+            if (value != null) {
+                success = !value;
+            }
+        }
+
+        return success;
     }
 
     @Override

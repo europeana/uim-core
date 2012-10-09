@@ -15,6 +15,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import eu.europeana.uim.adapter.UimDatasetAdapter;
 import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.storage.StorageEngine;
@@ -338,5 +339,82 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         assertEquals(1, execution0.getCompletedSize());
         assertEquals(0, execution0.getFailureSize());
         assertEquals(1, execution0.getScheduledSize());
+    }
+
+    /**
+     * Dummy adapter to test adaptions for metadata records.
+     * 
+     * @author Markus Muhr (markus.muhr@kb.nl)
+     * @since Oct 9, 2012
+     */
+    private static class FailureAdapter implements UimDatasetAdapter<MetaDataRecord<Long>, Long> {
+        private int adaptionCount   = 0;
+        private int unadaptionCount = 0;
+
+        /**
+         * @return count of adaptions
+         */
+        public int getAdaptionCount() {
+            return adaptionCount;
+        }
+
+        /**
+         * @return count of unadaptions
+         */
+        public int getUnadaptionCount() {
+            return unadaptionCount;
+        }
+
+        @Override
+        public MetaDataRecord<Long> adapt(MetaDataRecord<Long> dataset) {
+            adaptionCount++;
+            dataset.addValue(SysoutPlugin.FAILURE_KEY, true);
+            return dataset;
+        }
+
+        @Override
+        public MetaDataRecord<Long> unadapt(MetaDataRecord<Long> dataset) {
+            unadaptionCount++;
+            dataset.deleteValues(SysoutPlugin.FAILURE_KEY);
+            return dataset;
+        }
+    }
+
+    /**
+     * Tests success of basic setup of orchestrator.o
+     * 
+     * @throws InterruptedException
+     * @throws StorageEngineException
+     */
+    @Test
+    public void testSimpleAdapterSetup() throws InterruptedException, StorageEngineException {
+        assertEquals(0, orchestrator.getActiveExecutions().size());
+
+        String identifier = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
+        FailureAdapter adapter = new FailureAdapter();
+        registry.addUimDatasetAdapter(identifier, adapter);
+
+        Request<Long> request = createTestData(engine, 1);
+
+        // creating the data calles 20 times the update method.
+        verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
+
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+
+        ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
+                request);
+        execution0.waitUntilFinished();
+
+        // each delivered metadata record is saved
+        verify(engine, times(2)).updateMetaDataRecord(any(MetaDataRecord.class));
+
+        assertEquals(1, execution0.getCompletedSize());
+        assertEquals(0, execution0.getFailureSize());
+        assertEquals(1, execution0.getScheduledSize());
+
+        assertEquals(1, adapter.getAdaptionCount());
+        assertEquals(1, adapter.getUnadaptionCount());
+
+        registry.removeUimDatasetAdapter(identifier, adapter);
     }
 }
