@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.Registry;
+import eu.europeana.uim.adapter.UimDatasetAdapter;
 import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.ActiveExecution;
@@ -183,6 +184,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                                         }
 
                                         isbusy |= true; // well there is something todo
+
+                                        UimDatasetAdapter adapter = registry.getUimDatasetAdapter(thisStep.getIdentifier());
+                                        task.setAdapter(adapter);
 
                                         task.setStep(thisStep, mandatory);
                                         task.setSavepoint(savepoint);

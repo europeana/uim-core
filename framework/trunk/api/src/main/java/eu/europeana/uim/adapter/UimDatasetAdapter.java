@@ -9,10 +9,15 @@ import eu.europeana.uim.store.UimDataSet;
  * plugins. Note, multiple services can be registered to fit different kinds of tasks. However,
  * limiting it to one might be faster.
  * 
+ * @param <U>
+ *            uim data set type
+ * @param <I>
+ *            generic identifier
+ * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Sep 19, 2012
  */
-public interface UimDatasetAdapter {
+public interface UimDatasetAdapter<U extends UimDataSet<I>, I> {
     /**
      * Method is called to adapt a given uim data set, so that it can serve as input to the plugin
      * specified by the plugin identifier.
@@ -22,7 +27,7 @@ public interface UimDatasetAdapter {
      * @return adapted {@link UimDataSet} to fit as input data for plugin specified by plugin
      *         identifier or null if not possible to adapt
      */
-    UimDataSet<?> adapt(UimDataSet<?> dataset);
+    U adapt(U dataset);
 
     /**
      * Method is called to unadapt an uim data set to be called before storage.
@@ -32,5 +37,5 @@ public interface UimDatasetAdapter {
      * @return unadapted {@link UimDataSet} holding only normalized data that can be used for
      *         storage
      */
-    UimDataSet<?> unadapt(UimDataSet<?> dataset);
+    U unadapt(U dataset);
 }

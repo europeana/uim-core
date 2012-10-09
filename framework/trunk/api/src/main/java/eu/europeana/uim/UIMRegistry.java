@@ -27,26 +27,26 @@ import eu.europeana.uim.workflow.Workflow;
  * @since Feb 16, 2011
  */
 public class UIMRegistry implements Registry {
-    private static Logger                  log            = Logger.getLogger(UIMRegistry.class.getName());
+    private static Logger                        log            = Logger.getLogger(UIMRegistry.class.getName());
 
-    private String                         configuredStorageEngine;
-    private StorageEngine<?>               activeStorage  = null;
-    private Map<String, StorageEngine<?>>  storages       = new HashMap<String, StorageEngine<?>>();
+    private String                               configuredStorageEngine;
+    private StorageEngine<?>                     activeStorage  = null;
+    private Map<String, StorageEngine<?>>        storages       = new HashMap<String, StorageEngine<?>>();
 
-    private String                         configuredLoggingEngine;
-    private LoggingEngine<?>               activeLogging  = null;
-    private Map<String, LoggingEngine<?>>  loggers        = new HashMap<String, LoggingEngine<?>>();
+    private String                               configuredLoggingEngine;
+    private LoggingEngine<?>                     activeLogging  = null;
+    private Map<String, LoggingEngine<?>>        loggers        = new HashMap<String, LoggingEngine<?>>();
 
-    private String                         configuredResourceEngine;
-    private ResourceEngine                 activeResource = null;
-    private Map<String, ResourceEngine>    resources      = new HashMap<String, ResourceEngine>();
+    private String                               configuredResourceEngine;
+    private ResourceEngine                       activeResource = null;
+    private Map<String, ResourceEngine>          resources      = new HashMap<String, ResourceEngine>();
 
-    private Map<String, Plugin>            plugins        = new HashMap<String, Plugin>();
-    private Map<String, Workflow<?, ?>>    workflows      = new HashMap<String, Workflow<?, ?>>();
+    private Map<String, Plugin>                  plugins        = new HashMap<String, Plugin>();
+    private Map<String, Workflow<?, ?>>          workflows      = new HashMap<String, Workflow<?, ?>>();
 
-    private Orchestrator<?>                orchestrator   = null;
+    private Orchestrator<?>                      orchestrator   = null;
 
-    private Map<String, UimDatasetAdapter> adapters       = new HashMap<String, UimDatasetAdapter>();
+    private Map<String, UimDatasetAdapter<?, ?>> adapters       = new HashMap<String, UimDatasetAdapter<?, ?>>();
 
     /**
      * Creates a new instance of this class.
@@ -469,7 +469,7 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter) {
+    public void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?, ?> adapter) {
         if (adapter != null) {
             log.info("Added adapter: " + pluginIdentifier);
             if (!adapters.containsKey(pluginIdentifier)) {
@@ -479,10 +479,15 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter) {
+    public void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?, ?> adapter) {
         if (adapter != null) {
             log.info("Removed adapter: " + pluginIdentifier);
             this.adapters.remove(pluginIdentifier);
         }
+    }
+
+    @Override
+    public UimDatasetAdapter<?, ?> getUimDatasetAdapter(String pluginIdentifier) {
+        return this.adapters.get(pluginIdentifier);
     }
 }

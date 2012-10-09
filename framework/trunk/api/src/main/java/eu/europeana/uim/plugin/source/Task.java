@@ -4,6 +4,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import eu.europeana.uim.adapter.UimDatasetAdapter;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
@@ -26,23 +27,25 @@ import eu.europeana.uim.store.UimDataSet;
  * @since Mar 4, 2011
  */
 public class Task<U extends UimDataSet<I>, I> implements Runnable {
-    private static Logger             log       = Logger.getLogger(Task.class.getName());
+    private static Logger                log       = Logger.getLogger(Task.class.getName());
 
-    private TaskStatus                status    = TaskStatus.NEW;
-    private Throwable                 throwable;
+    private TaskStatus                   status    = TaskStatus.NEW;
+    private Throwable                    throwable;
 
-    private Queue<Task<U, I>>         success   = null;
-    private Queue<Task<U, I>>         failure   = null;
+    private Queue<Task<U, I>>            success   = null;
+    private Queue<Task<U, I>>            failure   = null;
 
-    private Set<Task<U, I>>           assigned  = null;
+    private Set<Task<U, I>>              assigned  = null;
 
-    private boolean                   savepoint = false;
-    private boolean                   mandatory = false;
-    private IngestionPlugin<U, I>     step;
+    private boolean                      savepoint = false;
+    private boolean                      mandatory = false;
+    private IngestionPlugin<U, I>        step;
 
-    private final U                   dataset;
+    private UimDatasetAdapter<U, I>      adapter;
+
+    private U                            dataset;
     private final ExecutionContext<U, I> context;
-    private boolean                   successfulProcessing;
+    private boolean                      successfulProcessing;
 
     /**
      * Creates a new instance of this class.
@@ -58,7 +61,14 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
 
     @Override
     public void run() {
+        U localDataset = dataset;
+        if (adapter != null) {
+            localDataset = adapter.adapt(localDataset);
+        }
         successfulProcessing = step.process(dataset, context);
+        if (adapter != null) {
+            dataset = adapter.unadapt(localDataset);
+        }
     }
 
     /**
@@ -140,6 +150,23 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     public void setStep(IngestionPlugin<U, I> step, boolean mandatory) {
         this.step = step;
         this.mandatory = mandatory;
+    }
+
+    /**
+     * @return adapter used to adapt the given data set to the underlying plugin, null if no
+     *         adaption is necessary
+     */
+    public UimDatasetAdapter<U, I> getAdapter() {
+        return adapter;
+    }
+
+    /**
+     * @param adapter
+     *            adapter used to adapt the given data set to the underlying plugin, null if no
+     *            adaption is necessary
+     */
+    public void setAdapter(UimDatasetAdapter<U, I> adapter) {
+        this.adapter = adapter;
     }
 
     /**

@@ -193,7 +193,7 @@ public interface Registry {
      *            add adapter to registration used to adapt different implementations of plugins to
      *            use with different data
      */
-    void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter);
+    void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?,?> adapter);
 
     /**
      * @param pluginIdentifier
@@ -202,5 +202,12 @@ public interface Registry {
      *            remove adapter from registration used to adapt different implementations of
      *            plugins to use with different data
      */
-    void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter adapter);
+    void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?,?> adapter);
+
+    /**
+     * @param pluginIdentifier
+     *            identifier defining generic plugin
+     * @return adapter used to adapt data sets for the given plugin or null, if none is registered
+     */
+    UimDatasetAdapter<?,?> getUimDatasetAdapter(String pluginIdentifier);
 }
