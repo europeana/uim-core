@@ -16,15 +16,20 @@ import java.util.Map;
  * @since Dez 16, 2010
  */
 public final class TKey<NS, T> implements Comparable<TKey<NS, T>>, Serializable {
-    private static final long                  serialVersionUID = 1L;
+    private static final long                  serialVersionUID             = 1L;
+
+    /**
+     * separator between namespace and name representing full name
+     */
+    public static String                       FULL_NAMSPACE_NAME_SEPARATOR = "/";
 
     private final Class<T>                     type;
     private final String                       name;
     private final String                       full;
 
-    private static Map<TKey<?, ?>, TKey<?, ?>> registry         = new HashMap<TKey<?, ?>, TKey<?, ?>>();
+    private static Map<TKey<?, ?>, TKey<?, ?>> registry                     = new HashMap<TKey<?, ?>, TKey<?, ?>>();
 
-    private static Map<String, TKey<?, ?>>     lookup           = new HashMap<String, TKey<?, ?>>();
+    private static Map<String, TKey<?, ?>>     lookup                       = new HashMap<String, TKey<?, ?>>();
 
     private final Class<NS>                    namespace;
 
@@ -48,7 +53,7 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>, Serializable 
         this.name = name;
         this.type = type;
 
-        this.full = namespace.getName() + "/" + name;
+        this.full = namespace.getName() + FULL_NAMSPACE_NAME_SEPARATOR + name;
     }
 
     /**
@@ -192,10 +197,8 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>, Serializable 
                     return null;
                 }
             } else if (split.length == 2) {
-                if (lookup.containsKey(split[0])) {
-                    return lookup.get(split[0]);
-                }
-                
+                if (lookup.containsKey(split[0])) { return lookup.get(split[0]); }
+
                 String[] nn = split[0].split("/");
                 if (nn.length != 2) {
                     throw new IllegalArgumentException("Cannot split namespace and key for <" +
@@ -206,9 +209,9 @@ public final class TKey<NS, T> implements Comparable<TKey<NS, T>>, Serializable 
                     for (TKey<?, ?> key : registry.keySet()) {
                         if (key.getNamespace().getName().equals(nn[0])) {
                             namespace = key.getNamespace();
-                            if (key.getName().equals(nn[1])) { 
+                            if (key.getName().equals(nn[1])) {
                                 lookup.put(split[0], key);
-                                return key; 
+                                return key;
                             }
                         }
                     }
