@@ -22,6 +22,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
+                            eu.europeana.uim,
                             eu.europeana.uim.store,
                             eu.europeana.uim.common,
                             org.osgi.framework,
