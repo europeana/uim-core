@@ -25,6 +25,7 @@
                             eu.europeana.uim.common,
                             javax.naming.*,
                             javax.xml.*,
+                            javax.management.*,
                             org.w3c.dom,
                             org.xml.sax,
                             org.xml.sax.ext,
