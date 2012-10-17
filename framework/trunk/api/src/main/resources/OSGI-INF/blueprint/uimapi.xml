@@ -19,33 +19,27 @@
     </bean>
 
     <reference id="orchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" availability="optional">
-        <reference-listener bind-method="setOrchestrator" unbind-method="unsetOrchestrator" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="setOrchestrator" unbind-method="unsetOrchestrator" ref="uimRegistry" />
     </reference>
 
     <reference-list interface="eu.europeana.uim.plugin.Plugin" availability="optional">
-        <reference-listener bind-method="addPlugin" unbind-method="removePlugin" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="addPlugin" unbind-method="removePlugin" ref="uimRegistry" />
     </reference-list>
 
     <reference-list interface="eu.europeana.uim.storage.StorageEngine" availability="optional">
-        <reference-listener bind-method="addStorageEngine" unbind-method="removeStorageEngine" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="addStorageEngine" unbind-method="removeStorageEngine" ref="uimRegistry" />
     </reference-list>
 
     <reference-list interface="eu.europeana.uim.resource.ResourceEngine" availability="optional">
-        <reference-listener bind-method="addResourceEngine" unbind-method="removeResourceEngine" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="addResourceEngine" unbind-method="removeResourceEngine" ref="uimRegistry" />
     </reference-list>
 
     <reference-list interface="eu.europeana.uim.logging.LoggingEngine" availability="optional">
-        <reference-listener bind-method="addLoggingEngine" unbind-method="removeLoggingEngine" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="addLoggingEngine" unbind-method="removeLoggingEngine" ref="uimRegistry" />
     </reference-list>
 
     <reference-list interface="eu.europeana.uim.workflow.Workflow" availability="optional">
-        <reference-listener bind-method="addWorkflow" unbind-method="removeWorkflow" ref="uimRegistry">
-        </reference-listener>
+        <reference-listener bind-method="addWorkflow" unbind-method="removeWorkflow" ref="uimRegistry" />
     </reference-list>
 
     <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional">

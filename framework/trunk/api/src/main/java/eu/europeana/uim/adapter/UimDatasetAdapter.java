@@ -19,6 +19,11 @@ import eu.europeana.uim.store.UimDataSet;
  */
 public interface UimDatasetAdapter<U extends UimDataSet<I>, I> {
     /**
+     * @return identifier defining generic plugin
+     */
+    String getPluginIdentifier();
+
+    /**
      * Method is called to adapt a given uim data set, so that it can serve as input to the plugin
      * specified by the plugin identifier.
      * 

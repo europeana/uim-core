@@ -348,8 +348,9 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
      * @since Oct 9, 2012
      */
     private static class FailureAdapter implements UimDatasetAdapter<MetaDataRecord<Long>, Long> {
-        private int adaptionCount   = 0;
-        private int unadaptionCount = 0;
+        private String identifier      = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
+        private int    adaptionCount   = 0;
+        private int    unadaptionCount = 0;
 
         /**
          * @return count of adaptions
@@ -378,6 +379,11 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
             dataset.deleteValues(SysoutPlugin.FAILURE_KEY);
             return dataset;
         }
+
+        @Override
+        public String getPluginIdentifier() {
+            return identifier;
+        }
     }
 
     /**
@@ -390,9 +396,8 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testSimpleAdapterSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        String identifier = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
         FailureAdapter adapter = new FailureAdapter();
-        registry.addUimDatasetAdapter(identifier, adapter);
+        registry.addUimDatasetAdapter(adapter);
 
         Request<Long> request = createTestData(engine, 1);
 
@@ -415,6 +420,6 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         assertEquals(1, adapter.getAdaptionCount());
         assertEquals(1, adapter.getUnadaptionCount());
 
-        registry.removeUimDatasetAdapter(identifier, adapter);
+        registry.removeUimDatasetAdapter(adapter);
     }
 }

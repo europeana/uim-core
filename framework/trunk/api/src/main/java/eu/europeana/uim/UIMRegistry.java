@@ -469,8 +469,9 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void addUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?, ?> adapter) {
+    public void addUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter) {
         if (adapter != null) {
+            String pluginIdentifier = adapter.getPluginIdentifier();
             log.info("Added adapter: " + pluginIdentifier);
             if (!adapters.containsKey(pluginIdentifier)) {
                 this.adapters.put(pluginIdentifier, adapter);
@@ -479,8 +480,9 @@ public class UIMRegistry implements Registry {
     }
 
     @Override
-    public void removeUimDatasetAdapter(String pluginIdentifier, UimDatasetAdapter<?, ?> adapter) {
+    public void removeUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter) {
         if (adapter != null) {
+            String pluginIdentifier = adapter.getPluginIdentifier();
             log.info("Removed adapter: " + pluginIdentifier);
             this.adapters.remove(pluginIdentifier);
         }
