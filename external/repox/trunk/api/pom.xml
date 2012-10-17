@@ -11,7 +11,7 @@
 
     <artifactId>europeana-uim-external-repox-api</artifactId>
     <name>Unified Ingestion Manager: External Service Repox API</name>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
 
     <build>
         <plugins>
