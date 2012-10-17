@@ -35,6 +35,7 @@
                             javax.xml.*,
                             org.xml.sax.*,
                             org.w3c.dom,
+                            !*
 						</Import-Package>
                         <Export-Package>
                             eu.europeana.uim.sugar.client,
