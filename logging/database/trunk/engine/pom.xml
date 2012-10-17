@@ -30,8 +30,7 @@
                             org.osgi.service.cm,
                             javax.sql.*,
                             javax.naming.*,
-                            javax.management.*,
-                            !*
+                            javax.management.*
                         </Import-Package>
                         <Export-Package>
                         </Export-Package>
