@@ -183,5 +183,4 @@ public class RepoxServlet extends HttpServlet {
         this.sugarService = null;
         logger.info("Sugar service UNSET for repox servlet.");
     }
-
 }
