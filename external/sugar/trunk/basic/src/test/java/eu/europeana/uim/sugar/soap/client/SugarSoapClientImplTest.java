@@ -30,7 +30,6 @@ import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
  * @since Feb 5, 2012
  */
 public class SugarSoapClientImplTest {
-
     private static String     username;
     private static String     password;
     private static Properties properties;
@@ -190,12 +189,10 @@ public class SugarSoapClientImplTest {
      */
     @Test
     public void testCollectionTranslation() {
-
         String mnemonic = properties.getProperty("test.collection.mnemonic");
         List<Map<String, String>> translationsForCollection = client.getTranslationsForCollection(
                 session, mnemonic);
         assertTrue(0 < translationsForCollection.size());
-
     }
 
     /**
@@ -204,16 +201,11 @@ public class SugarSoapClientImplTest {
     @Test
     @Ignore
     public void testCreatingCollectionTranslation() {
-        
-        
         String mnemonic = properties.getProperty("test.collection.mnemonic");
-        Language language= Language.LIT;
-        String title="Test Title";
-        String description="Test Description";
-        ((SugarSoapClientImpl) client).createCollectionTranslation(session,mnemonic, language, title, description);
-        
-
+        Language language = Language.LIT;
+        String title = "Test Title";
+        String description = "Test Description";
+        ((SugarSoapClientImpl)client).createCollectionTranslation(session, mnemonic, language,
+                title, description);
     }
-
-
 }
