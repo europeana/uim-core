@@ -48,19 +48,15 @@
         </reference-listener>
     </reference-list>
 
-<!--     <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional"> -->
-<!--         <reference-listener bind-method="addUimDatasetAdapter" unbind-method="removeUimDatasetAdapter" ref="uimRegistry"> -->
-<!--         </reference-listener> -->
-<!--     </reference-list> -->
+    <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional">
+        <reference-listener bind-method="addUimDatasetAdapter" unbind-method="removeUimDatasetAdapter"
+            ref="uimRegistry">
+        </reference-listener>
+    </reference-list>
 
-
-
-    <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingIngestionPlugin">
-    </bean>
+    <bean id="loggingPlugin" class="eu.europeana.uim.util.LoggingIngestionPlugin" />
 
     <service id="loggingPluginService" ref="loggingPlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
-
-
 
     <shell:command-bundle>
         <shell:command name="uim/info">
