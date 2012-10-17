@@ -7,9 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,12 +19,7 @@ import org.theeuropeanlibrary.uim.check.weblink.http.GuardedMetaDataRecordUrl;
 import org.theeuropeanlibrary.uim.check.weblink.http.Submission;
 import org.theeuropeanlibrary.uim.check.weblink.http.WeblinkLinkchecker;
 
-import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.logging.LoggingEngine;
-import eu.europeana.uim.model.adapters.AdapterFactory;
-import eu.europeana.uim.model.adapters.MetadataRecordAdapter;
-import eu.europeana.uim.model.adapters.QValueAdapterStrategy;
-import eu.europeana.uim.model.adapters.europeana.EuropeanaLinkAdapterStrategy;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
@@ -195,18 +188,18 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         Data value = context.getValue(DATA);
 
         List<QualifiedValue<Link>> linkList = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
-        if (linkList.size() == 0) {
-            // Adapter that ensures compatibility with the europeana datamodel
-            Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
-
-            strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
-
-            MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
-                    mdr, strategies);
-
-            // get all links
-            linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
-        }
+//        if (linkList.size() == 0) {
+//            // Adapter that ensures compatibility with the europeana datamodel
+//            Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
+//
+//            strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
+//
+//            MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
+//                    mdr, strategies);
+//
+//            // get all links
+//            linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
+//        }
 
         int index = 0;
         for (QualifiedValue<Link> linkQv : linkList) {
