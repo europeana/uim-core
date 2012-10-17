@@ -5,12 +5,12 @@
 
     <bean id="validatePlugin" class="org.theeuropeanlibrary.uim.check.validate.FieldCheckIngestionPlugin">
     </bean>
-    <service id="validate" ref="validatePlugin" interface="eu.europeana.uim.api.IngestionPlugin" />
+    <service id="validate" ref="validatePlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="vfw" class="org.theeuropeanlibrary.uim.check.validate.FieldCheckWorkflow" />
     <service id="validateFieldsWorkflow" ref="vfw" interface="eu.europeana.uim.workflow.Workflow" />
 
-    <reference id="sugar" interface="eu.europeana.uim.sugarcrm.SugarService" availability="optional">
+    <reference id="sugar" interface="eu.europeana.uim.sugar.SugarService" availability="optional">
         <reference-listener bind-method="setSugarService" unbind-method="unsetSugarService" ref="validatePlugin">
         </reference-listener>
     </reference>

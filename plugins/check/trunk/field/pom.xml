@@ -23,11 +23,10 @@
                     <instructions>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Import-Package>
-                            eu.europeana.uim.api,
                             eu.europeana.uim.common,
                             eu.europeana.uim.store,
                             eu.europeana.uim.util,
-                            eu.europeana.uim.sugarcrm,
+                            eu.europeana.uim.sugar,
                             eu.europeana.uim.workflow,
                             org.apache.commons.io,
                             org.apache.commons.math.stat.descriptive,
