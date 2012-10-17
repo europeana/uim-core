@@ -22,11 +22,16 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.api,
+                            eu.europeana.uim.logging, 
+                            eu.europeana.uim.orchestration, 
+                            eu.europeana.uim.plugin, 
+                            eu.europeana.uim.plugin.ingestion,
+                            eu.europeana.uim.plugin.source, 
+                            eu.europeana.uim.storage, 
                             eu.europeana.uim.common,
                             eu.europeana.uim.store,
                             eu.europeana.uim.util,
-                            eu.europeana.uim.sugarcrm,
+                            eu.europeana.uim.sugar,
                             eu.europeana.uim.workflow,
                             org.theeuropeanlibrary.collections.guarded,
                             org.theeuropeanlibrary.model.common,
