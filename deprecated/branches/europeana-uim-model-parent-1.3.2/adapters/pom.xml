@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim-model-parent</artifactId>
+        <version>1.3.1</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <artifactId>europeana-uim-model-adapters</artifactId>
+    <name>Unified Ingestion Manager: Model Adapters</name>
+    <description>Model Adapters for converting from Europeana to TEL object model and vice versa</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+            <version>${europeana.uim.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-common</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-edm</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-tel</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-model-europeana</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
