@@ -28,11 +28,11 @@ import eu.europeana.uim.store.bean.ExecutionBean;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.store.bean.RequestBean;
-import gnu.trove.TLongLongHashMap;
-import gnu.trove.TLongLongIterator;
-import gnu.trove.TLongObjectHashMap;
-import gnu.trove.TLongObjectIterator;
-import gnu.trove.TObjectLongHashMap;
+import gnu.trove.iterator.TLongLongIterator;
+import gnu.trove.iterator.TLongObjectIterator;
+import gnu.trove.map.hash.TLongLongHashMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
 
 /**
  * An in-memory implementation of the {@link StorageEngine} using Longs as IDs.
