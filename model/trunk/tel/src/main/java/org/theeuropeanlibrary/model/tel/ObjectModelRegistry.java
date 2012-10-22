@@ -55,6 +55,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
+import org.theeuropeanlibrary.model.tel.qualifier.PartitionType;
 import org.theeuropeanlibrary.model.tel.qualifier.PrintType;
 
 import eu.europeana.uim.common.TKey;
@@ -79,6 +80,11 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "collection",
                                                                                                                            String.class);
+
+    public static final TKey<ObjectModelRegistry, Integer>                                     PARTITION           = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "partition",
+                                                                                                                           Integer.class);
 
 // public static final TKey<ObjectModelRegistry, String> STATEMENT_OF_RESPONSABILITY =
 // TKey.register(
@@ -294,10 +300,18 @@ public final class ObjectModelRegistry {
                 add(FieldSource.class);
             }
         });
+
         validQualifiers.put(TOPIC, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(KnowledgeOrganizationSystem.class);
+                add(FieldSource.class);
+            }
+        });
+
+        validQualifiers.put(PARTITION, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(PartitionType.class);
                 add(FieldSource.class);
             }
         });
