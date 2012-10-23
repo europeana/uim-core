@@ -30,7 +30,8 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.workflow,
-                            gnu.trove,
+                            gnu.trove.iterator, 
+                            gnu.trove.map.hash,
                             org.apache.commons.lang
                         </Import-Package>
                         <Export-Package>
