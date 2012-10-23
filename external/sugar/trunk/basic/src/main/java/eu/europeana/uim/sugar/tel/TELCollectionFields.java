@@ -158,7 +158,15 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                          SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
                          "Fieldcheck execution"),
 
-    DATE_MODIFIED("date_modified", "telda_tel_dataset.date_modified", null, "Date of Modification");
+    DATE_MODIFIED("date_modified", "telda_tel_dataset.date_modified", null, "Date of Modification"),
+
+    DESCRIPTION_LINK_ENGLISH("tel_description_link_english",
+                             "telda_tel_dataset.tel_description_link_english", null,
+                             "Link to the collection description in English"),
+
+    DESCRIPTION_LINK_NATIVE("tel_description_link_native",
+                            "telda_tel_dataset.tel_description_link_native", null,
+                            "Link to the collection description in the native language");
 
     private final String                       fieldId;
     private final String                       qualifiedFieldId;
