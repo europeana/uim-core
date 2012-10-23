@@ -79,6 +79,7 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
 
     DATE_MODIFIED("date_modified", "accounts.date_modified", null, "Date of Modification"),
 
+    TEL_MEMBER("tel_member_c", "accounts.tel_member_c", null, "Member of library"),
     ;
 
     private final String                       fieldId;
