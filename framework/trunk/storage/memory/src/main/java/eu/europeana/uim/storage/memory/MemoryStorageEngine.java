@@ -245,25 +245,23 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
 
     @Override
     public Request<Long> createRequest(Collection<Long> collection, Date date) {
-        return new RequestBean<Long>(requestId.getAndIncrement(), collection, date);
-    }
-
-    @Override
-    public void updateRequest(Request<Long> request) {
         TLongObjectIterator<Request<Long>> iterator = requests.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
             Request<Long> candidate = iterator.value();
-            if (request.getCollection().equals(candidate.getCollection())) {
-                if (request.getDate().equals(candidate.getDate())) {
-                    String unique = "REQUEST/" + request.getCollection().getMnemonic() + "/" +
-                                    request.getDate();
+            if (collection.equals(candidate.getCollection())) {
+                if (date.equals(candidate.getDate())) {
+                    String unique = "REQUEST/" + collection.getMnemonic() + "/" + date;
                     throw new IllegalStateException("Duplicate unique key for request: <" + unique +
                                                     ">");
                 }
             }
         }
+        return new RequestBean<Long>(requestId.getAndIncrement(), collection, date);
+    }
 
+    @Override
+    public void updateRequest(Request<Long> request) {
         requests.put(request.getId(), request);
     }
 
