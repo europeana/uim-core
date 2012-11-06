@@ -2,14 +2,14 @@
 package org.theeuropeanlibrary.model.tel.qualifier;
 
 /**
- * Known types/methods used for partitioning data.
+ * Types of hash codes.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Oct 22, 2012
  */
-public enum PartitionType {
+public enum HashType {
     /**
-     * bloom filter based partitioning using trigrams as feature
+     * simhash used for hashing values
      */
-    BLOOM_TRIGRAMS;
+    SIMHASH;
 }

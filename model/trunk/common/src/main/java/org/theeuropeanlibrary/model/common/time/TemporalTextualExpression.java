@@ -49,17 +49,18 @@ public class TemporalTextualExpression extends Temporal {
         if (text == null) { throw new IllegalArgumentException(
                 "Argument 'text' should not be null!"); }
         this.text = text;
-        if (identifiers == null)
+        if (identifiers == null) {
             this.identifiers = new ArrayList<Identifier>(1);
-        else
+        } else {
             this.identifiers = identifiers;
+        }
     }
 
     /**
      * Creates a new instance of this class.
      * 
      * @param text
-     * @param identifiers 
+     * @param identifiers
      */
     public TemporalTextualExpression(String text, Identifier... identifiers) {
         this(text, Arrays.asList(identifiers));
@@ -76,36 +77,29 @@ public class TemporalTextualExpression extends Temporal {
     }
 
     /**
-     * @return A time textual expression
+     * @return a time textual expression
      */
     public String getText() {
         return text;
     }
 
     /**
-     * Sets the text to the given value.
-     * 
      * @param text
-     *            the text to set
+     *            a time textual expression
      */
     public void setText(String text) {
         this.text = text;
     }
 
     /**
-     * Returns the identifiers.
-     * 
-     * @return the identifiers
+     * @return identifiers
      */
     public List<Identifier> getIdentifiers() {
         return identifiers;
     }
 
     /**
-     * Sets the identifiers to the given value.
-     * 
      * @param identifiers
-     *            the identifiers to set
      */
     public void setIdentifiers(List<Identifier> identifiers) {
         this.identifiers = identifiers;
@@ -133,12 +127,11 @@ public class TemporalTextualExpression extends Temporal {
         TemporalTextualExpression other = (TemporalTextualExpression)obj;
         if (identifiers == null) {
             if (other.identifiers != null) return false;
-        } else if (!CollectionUtils.isEqualCollection(identifiers,other.identifiers)) return false;
+        } else if (!CollectionUtils.isEqualCollection(identifiers, other.identifiers))
+            return false;
         if (text == null) {
             if (other.text != null) return false;
         } else if (!text.equals(other.text)) return false;
         return true;
     }
-    
-    
 }

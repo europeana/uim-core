@@ -1,8 +1,6 @@
 /* Time.java - created on Mar 21, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.common.time;
 
-
-
 import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.subject.Subject;
 
@@ -42,10 +40,7 @@ public abstract class Temporal {
      * @return a string representation of the period for end user display
      */
     public abstract String getDisplay();
-    
-    
-    
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -65,10 +60,9 @@ public abstract class Temporal {
         } else if (!subject.equals(other.subject)) return false;
         return true;
     }
-    
 
     @Override
     public String toString() {
-    	return getDisplay();
+        return getDisplay();
     }
 }

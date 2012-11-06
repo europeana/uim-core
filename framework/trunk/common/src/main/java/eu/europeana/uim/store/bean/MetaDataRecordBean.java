@@ -401,39 +401,4 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         }
         return relations;
     }
-
-// /**
-// * Provides access to internal map for relations. NOTE, it should only be used by the data
-// * storage to provide a better way to store the data. Please use the interface methods for
-// * general access.
-// *
-// * @return source map for all relations with source as first lookup and target as inner map
-// * lookup
-// */
-// public HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> getSourceMap() {
-// return sourcesLookup;
-// }
-//
-// /**
-// * Provides access to internal map for relations. NOTE, it should only be used by the data
-// * storage to provide a better way to store the data. Please use the interface methods for
-// * general access.
-// *
-// * @return target map for all relations with target as first lookup and source as inner map
-// * lookup
-// */
-// public HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> getTargetMap() {
-// return targetsLookup;
-// }
-//
-// /**
-// * Provides access to internal map for field value lookups. NOTE, it should only be used by the
-// * data storage to provide a better way to store the data. Please use the interface methods for
-// * general access.
-// *
-// * @return map holding lookups for typed keys to values
-// */
-// public HashMap<TKey<?, ?>, List<QualifiedValue<?>>> getFields() {
-// return fields;
-// }
 }

@@ -28,5 +28,4 @@ public enum ContributionType {
      * party contributed to the content of the work as an illustrator
      */
     FORMER_OWNER
-
 }

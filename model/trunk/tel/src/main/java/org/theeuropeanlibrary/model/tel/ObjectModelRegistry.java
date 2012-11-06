@@ -46,13 +46,17 @@ import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.common.time.HistoricalPeriod;
 import org.theeuropeanlibrary.model.common.time.Instant;
 import org.theeuropeanlibrary.model.common.time.Period;
+import org.theeuropeanlibrary.model.common.time.Temporal;
 import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
+import org.theeuropeanlibrary.model.tel.cluster.Hash;
+import org.theeuropeanlibrary.model.tel.cluster.Partition;
 import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
+import org.theeuropeanlibrary.model.tel.qualifier.HashType;
 import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 import org.theeuropeanlibrary.model.tel.qualifier.PartitionType;
@@ -81,10 +85,15 @@ public final class ObjectModelRegistry {
                                                                                                                            "collection",
                                                                                                                            String.class);
 
-    public static final TKey<ObjectModelRegistry, Integer>                                     PARTITION           = TKey.register(
+    public static final TKey<ObjectModelRegistry, Partition>                                   PARTITION           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "partition",
-                                                                                                                           Integer.class);
+                                                                                                                           Partition.class);
+
+    public static final TKey<ObjectModelRegistry, Hash>                                        HASH                = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "hash",
+                                                                                                                           Hash.class);
 
 // public static final TKey<ObjectModelRegistry, String> STATEMENT_OF_RESPONSABILITY =
 // TKey.register(
@@ -143,6 +152,10 @@ public final class ObjectModelRegistry {
                                                                                                                            "facet",
                                                                                                                            Facet.class);
 
+    public static final TKey<ObjectModelRegistry, Temporal>                                    TEMPORAL            = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "temporal",
+                                                                                                                           Temporal.class);
     public static final TKey<ObjectModelRegistry, Instant>                                     INSTANT             = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "instant",
@@ -265,6 +278,12 @@ public final class ObjectModelRegistry {
     private static final Map<TKey<?, ?>, Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>> validRelations      = new HashMap<TKey<?, ?>, Map<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>>();
 
     static {
+        validQualifiers.put(TEMPORAL, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(TemporalRelation.class);
+                add(FieldSource.class);
+            }
+        });
         validQualifiers.put(INSTANT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
@@ -312,6 +331,13 @@ public final class ObjectModelRegistry {
         validQualifiers.put(PARTITION, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(PartitionType.class);
+                add(FieldSource.class);
+            }
+        });
+
+        validQualifiers.put(HASH, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(HashType.class);
                 add(FieldSource.class);
             }
         });
