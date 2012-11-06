@@ -68,9 +68,5 @@ public enum KnowledgeOrganizationSystem {
     /**
      * Id in CERIF if mapped from
      */
-    CERIF,
-    /**
-     * Id in used to identify clusters of manifests
-     */
-    MANIFEST_GROUP, 
+    CERIF
 }
