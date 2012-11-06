@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>europeana-uim</artifactId>
 		<groupId>eu.europeana</groupId>
-        <version>2.0.0-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,6 @@
 
 
 	<dependencies>
-
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
@@ -29,6 +28,7 @@
 			<type>jar</type>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>com.thoughtworks.proxytoys</groupId>
 			<artifactId>proxytoys</artifactId>
@@ -36,6 +36,7 @@
 			<type>jar</type>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
@@ -47,6 +48,7 @@
 			<artifactId>org.osgi.core</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
@@ -57,25 +59,22 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>europeana-uim-common</artifactId>
 			<version>${project.version}</version>
-		</dependency>        
-		
+		</dependency>
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>europeana-uim-storage-memory</artifactId>
 			<version>${project.version}</version>
-		</dependency>  
-		
-		
+		</dependency>
 
 		<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>europeana-uim-api</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>europeana-uim-api</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
 
-        
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-api</artifactId>
@@ -104,21 +103,18 @@
 			<scope>provided</scope>
 		</dependency>
 
-
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-
-
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.3.0</version>
+		</dependency>
 	</dependencies>
 
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</developerConnection>
-    </scm>
-    
+	<scm>
+		<connection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</connection>
+		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/storage/mongo/trunk</developerConnection>
+	</scm>
+
 	<build>
 		<plugins>
 
@@ -128,42 +124,66 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-				       	<!--
-				       	    morphia has a class that uses com.google.gwt.user.client.rpc but 
+						<!-- morphia has a class that uses com.google.gwt.user.client.rpc but 
 							we do not need it yet the maven bundle plugin will generate an entry for 
-							it due to our Embed-Dependency directive 
-						 -->
+							it due to our Embed-Dependency directive -->
 						<Import-Package>
-							!com.google.gwt.user.client.rpc,
-							!net.sf.cglib.asm.util,
-							!org.apache.tools.ant.*,
-							!org.codehaus.aspectwerkz.hook,
-							!org.testng.*,
-							org.theeuropeanlibrary.repository.convert,
-                            org.theeuropeanlibrary.translation,
-                            org.theeuropeanlibrary.collections.guarded,
-							*
+						    !com.sun.javadoc, 
+						    !com.sun.tools.javadoc, 
+						    !net.sf.cglib.asm.util, 
+						    !org.apache.tools.ant, 
+						    !org.apache.tools.ant.types, 
+						    !org.testng, 
+						    !org.testng.annotations; version=0.0.0,
+							javax.xml.parsers; version=0.0.0,
+							javax.xml.transform; version=0.0.0,
+							javax.xml.transform.dom; version=0.0.0,
+							javax.xml.transform.stream; version=0.0.0,
+							org.w3c.dom; version=0.0.0,
+							org.apache.commons.collections; version=0.0.0,
+							org.apache.commons.io; version=0.0.0,
+							org.apache.commons.io.output; version=0.0.0,
+							javax.management; version=0.0.0,
+							javax.net; version=0.0.0,
+							javax.security.auth; version=0.0.0,
+							org.osgi.service.blueprint;
+							version=1.0.1,
+							eu.europeana.uim.common; version=0.0.0,
+							eu.europeana.uim.store; version=0.0.0,
+							eu.europeana.uim.store.bean; version=0.0.0,
+							org.theeuropeanlibrary.repository.convert; version=0.0.0,
+							org.theeuropeanlibrary.translation; version=0.0.0,
+							org.theeuropeanlibrary.collections.guarded; version=0.0.0,
+							org.apache.commons.lang; version=2.4.0,
+							gnu.trove.map.hash;
+							version=3.0.3,
+							gnu.trove.iterator; version=3.0.3,
+							eu.europeana.uim; version=0.0.0,
+							eu.europeana.uim.orchestration;
+							version=0.0.0,
+							eu.europeana.uim.resource; version=0.0.0,
+							eu.europeana.uim.storage; version=0.0.0,
+							eu.europeana.uim.workflow; version=0.0.0
 						</Import-Package>
 						<Embed-Dependency>
-							*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|europeana-uim-api|
-							europeana-uim-model-common|europeana-uim-model-tel|europeana-uim-model-europeana|commons-io|trove4j
+							cglib-nodep,proxytoys,mongo-java-driver,protobuf-java,morphia,europeana-uim-model-common,europeana-uim-model-tel,europeana-uim-model-europeana
 						</Embed-Dependency>
-						<Embed-Transitive>false</Embed-Transitive>
+						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
-   	<!-- ================================================ -->
+	<!-- ================================================ -->
 	<!-- Repository Configuration -->
 	<!-- ================================================ -->
 
 	<repositories>
-      <repository>
-          <id>europeanalabs.eu</id>
-          <name>europeanalabs.eu-snapshots</name>
-          <url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
-      </repository>  
+		<repository>
+			<id>europeanalabs.eu</id>
+			<name>europeanalabs.eu-snapshots</name>
+			<url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
+		</repository>
 	</repositories>
 </project>

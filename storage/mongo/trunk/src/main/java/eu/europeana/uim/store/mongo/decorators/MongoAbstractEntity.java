@@ -24,10 +24,6 @@ import org.bson.types.ObjectId;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-
-import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.store.UimEntity;
 
 /**
  * Abstract top base class for MongoDB decorators. It defines the ObjectId id

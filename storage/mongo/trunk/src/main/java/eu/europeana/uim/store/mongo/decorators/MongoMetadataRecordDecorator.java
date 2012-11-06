@@ -23,19 +23,16 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
-import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.store.mongo.converters.MongoDBEuropeanaMDRConverter;
 
