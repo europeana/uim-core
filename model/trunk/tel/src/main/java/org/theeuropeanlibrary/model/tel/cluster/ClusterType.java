@@ -1,5 +1,5 @@
 /* ClusterEdgeType.java - created on Oct 23, 2012, Copyright (c) 2011 The European Library, all rights reserved */
-package org.theeuropeanlibrary.model.common.cluster;
+package org.theeuropeanlibrary.model.tel.cluster;
 
 /**
  * Supported edge types representing clusters like manifest.
