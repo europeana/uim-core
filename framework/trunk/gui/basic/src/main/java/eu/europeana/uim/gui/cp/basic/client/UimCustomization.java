@@ -10,7 +10,7 @@ import eu.europeana.uim.gui.cp.client.IngestionCustomization;
  * Europeana specific implementation of dynamics.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
- * @since Jun 3, 2011
+ * @since Jun 4, 2011
  */
 public class UimCustomization implements IngestionCustomization {
     @Override
