@@ -71,5 +71,9 @@ public enum IdentifierType {
      * This identifier should not be displayed. If it is to be displayed, the identifier is
      * duplicated in another identifier object in the record.
      */
-    EOD
+    EOD,
+    /**
+     * identifier representing cluster group (detailed types are insided identifier)
+     */
+    CLUSTER
 }
