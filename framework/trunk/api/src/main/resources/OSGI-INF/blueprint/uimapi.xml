@@ -26,6 +26,14 @@
         <reference-listener bind-method="addPlugin" unbind-method="removePlugin" ref="uimRegistry" />
     </reference-list>
 
+    <reference-list interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" availability="optional">
+        <reference-listener bind-method="addPlugin" unbind-method="removePlugin" ref="uimRegistry" />
+    </reference-list>
+
+    <reference-list interface="eu.europeana.uim.plugin.source.WorkflowStart" availability="optional">
+        <reference-listener bind-method="addPlugin" unbind-method="removePlugin" ref="uimRegistry" />
+    </reference-list>
+
     <reference-list interface="eu.europeana.uim.storage.StorageEngine" availability="optional">
         <reference-listener bind-method="addStorageEngine" unbind-method="removeStorageEngine" ref="uimRegistry" />
     </reference-list>

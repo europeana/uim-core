@@ -24,23 +24,18 @@
     </bean>
     <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />
 
-    <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin">
-    </bean>
+    <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin" />
     <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
-    <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin">
-    </bean>
+    <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin" />
     <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
-    <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow">
-    </bean>
+    <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow" />
     <service id="mixedWorkflow" ref="mw" interface="eu.europeana.uim.workflow.Workflow" />
 
-    <bean id="ew" class="eu.europeana.uim.workflows.SyserrWorkflow">
-    </bean>
+    <bean id="ew" class="eu.europeana.uim.workflows.SyserrWorkflow" />
     <service id="syserrWorkflow" ref="ew" interface="eu.europeana.uim.workflow.Workflow" />
 
-    <bean id="ow" class="eu.europeana.uim.workflows.SysoutWorkflow">
-    </bean>
+    <bean id="ow" class="eu.europeana.uim.workflows.SysoutWorkflow" />
     <service id="sysoutWorkflow" ref="ow" interface="eu.europeana.uim.workflow.Workflow" />
 </blueprint>
