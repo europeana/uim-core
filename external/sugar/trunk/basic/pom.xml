@@ -28,7 +28,6 @@
                             eu.europeana.uim.sugar,
                             eu.europeana.uim.sugar.model,
                             eu.europeana.uim.repox,
-                            eu.europeana.uim.store,
                             eu.europeana.uim.workflow
                             org.theeuropeanlibrary.model.common.qualifier,
                             org.apache.commons.lang,
