@@ -36,8 +36,10 @@
                             javax.servlet.http,
                             javax.naming.*,
                             javax.xml.*,
+                            org.osgi.service.blueprint,
                             org.xml.sax.*,
                             org.w3c.dom,
+                            !*
 						</Import-Package>
                         <Export-Package>
                             eu.europeana.uim.sugar.client,
