@@ -23,6 +23,7 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
+                            eu.europeana.uim,
                             eu.europeana.uim.store,
                             eu.europeana.uim.sugar,
                             eu.europeana.uim.sugar.model,
