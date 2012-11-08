@@ -109,7 +109,25 @@
                         <Embed-Transitive>false</Embed-Transitive>
                         <Embed-StripVersion>true</Embed-StripVersion>
                         <Import-Package>
-
+                            eu.europeana.uim,
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
+                            eu.europeana.uim.storage,
+                            eu.europeana.uim.util,
+                            eu.europeana.uim.workflow,
+                            eu.europeana.uim.repox.model,
+                            eu.europeana.uim.repox,
+                            eu.europeana.uim.sugar,
+                            eu.europeana.uim.orchestration,
+                            javax.servlet.*,
+                            javax.xml.*,
+                            org.apache.commons.io,
+                            org.apache.solr.*,
+                            org.osgi.framework,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.helpers,
                         </Import-Package>
 
                         <!-- OSGi spec config option -->
