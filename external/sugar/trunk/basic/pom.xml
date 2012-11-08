@@ -28,6 +28,8 @@
                             eu.europeana.uim.sugar,
                             eu.europeana.uim.sugar.model,
                             eu.europeana.uim.repox,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.workflow
                             org.theeuropeanlibrary.model.common.qualifier,
                             org.apache.commons.lang,
                             javax.servlet,
@@ -36,7 +38,6 @@
                             javax.xml.*,
                             org.xml.sax.*,
                             org.w3c.dom,
-                            !*
 						</Import-Package>
                         <Export-Package>
                             eu.europeana.uim.sugar.client,
