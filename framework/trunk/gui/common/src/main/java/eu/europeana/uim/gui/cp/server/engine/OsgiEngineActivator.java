@@ -26,7 +26,7 @@ public class OsgiEngineActivator implements BundleActivator {
 
         int wait = 0;
         while (registry == null && wait++ < 10) {
-            ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.api.Registry");
+            ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.Registry");
             if (registryRef != null) {
                 registry = (Registry)bundleContext.getService(registryRef);
             }
