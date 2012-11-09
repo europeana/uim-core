@@ -20,8 +20,8 @@ import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 
 /**
- * Abstract Class for both Engines
  * @author geomark
+ *
  */
 public abstract class AbstractEngine {
 
@@ -64,6 +64,24 @@ public abstract class AbstractEngine {
 			
 			return requestDec;
 		}
+		/*
+		if (uimType instanceof MetaDataRecordBean) {
+			
+			MetaDataRecordBean<String> mdr = (MetaDataRecordBean<String>) uimType;
+			MongoCollectionDecorator<String> colldec = convertCollectionBean2Decorator((CollectionBean<String>) mdr.getCollection());
+			
+			
+			String mongoID = mdr.getFirstValue(MONGOID);
+			
+			MongoMetadataRecordDecorator<String> mdrdec = new MongoMetadataRecordDecorator<String>(colldec,mdr.getId()); 
+			ObjectId reqid = ObjectId.massageToObjectId(mongoID);
+			mdrdec.setMongoId(reqid);
+			mdrdec.setEmebeddedMdr(mdr);
+			
+			return mdrdec;
+			
+		}
+		*/
 		if (uimType instanceof ExecutionBean) {
 			ExecutionBean<String> exbean = (ExecutionBean<String>) uimType;
 			UimDataSet<String> dataset = (UimDataSet<String>) ensureConsistency(exbean.getDataSet());

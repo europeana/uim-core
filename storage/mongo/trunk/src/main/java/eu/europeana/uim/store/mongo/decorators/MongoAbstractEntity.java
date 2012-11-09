@@ -25,6 +25,7 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 
+
 /**
  * Abstract top base class for MongoDB decorators. It defines the ObjectId id
  * field which is set automatically upon saving an object within MongoDB.

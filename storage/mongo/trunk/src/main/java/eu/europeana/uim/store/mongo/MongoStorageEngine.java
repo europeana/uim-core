@@ -170,7 +170,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * ExecutionContext)
 	 */
 	@Override
-	public void completed(ExecutionContext<?, String> context) {
+	public void completed(ExecutionContext<?,String> context) {
 	}
 
 	/*
@@ -217,9 +217,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 		return p.getEmbeddedProvider();
 	}
 
-
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.storage.StorageEngine#updateProvider(eu.europeana.uim.store.Provider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#updateProvider(eu.europeana.uim.store
+	 * .Provider)
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

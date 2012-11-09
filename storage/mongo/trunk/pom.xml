@@ -128,47 +128,21 @@
 							we do not need it yet the maven bundle plugin will generate an entry for 
 							it due to our Embed-Dependency directive -->
 						<Import-Package>
-						    !com.sun.javadoc, 
-						    !com.sun.tools.javadoc, 
-						    !net.sf.cglib.asm.util, 
-						    !org.apache.tools.ant, 
-						    !org.apache.tools.ant.types, 
-						    !org.testng, 
-						    !org.testng.annotations; version=0.0.0,
-							javax.xml.parsers; version=0.0.0,
-							javax.xml.transform; version=0.0.0,
-							javax.xml.transform.dom; version=0.0.0,
-							javax.xml.transform.stream; version=0.0.0,
-							org.w3c.dom; version=0.0.0,
-							org.apache.commons.collections; version=0.0.0,
-							org.apache.commons.io; version=0.0.0,
-							org.apache.commons.io.output; version=0.0.0,
-							javax.management; version=0.0.0,
-							javax.net; version=0.0.0,
-							javax.security.auth; version=0.0.0,
-							org.osgi.service.blueprint;
-							version=1.0.1,
-							eu.europeana.uim.common; version=0.0.0,
-							eu.europeana.uim.store; version=0.0.0,
-							eu.europeana.uim.store.bean; version=0.0.0,
-							org.theeuropeanlibrary.repository.convert; version=0.0.0,
-							org.theeuropeanlibrary.translation; version=0.0.0,
-							org.theeuropeanlibrary.collections.guarded; version=0.0.0,
-							org.apache.commons.lang; version=2.4.0,
-							gnu.trove.map.hash;
-							version=3.0.3,
-							gnu.trove.iterator; version=3.0.3,
-							eu.europeana.uim; version=0.0.0,
-							eu.europeana.uim.orchestration;
-							version=0.0.0,
-							eu.europeana.uim.resource; version=0.0.0,
-							eu.europeana.uim.storage; version=0.0.0,
-							eu.europeana.uim.workflow; version=0.0.0
+							!com.google.gwt.user.client.rpc,
+							!net.sf.cglib.asm.util,
+							!org.apache.tools.ant.*,
+							!org.codehaus.aspectwerkz.hook,
+							!org.testng.*,
+							org.theeuropeanlibrary.repository.convert,
+                            org.theeuropeanlibrary.translation,
+                            org.theeuropeanlibrary.collections.guarded,
+							*
 						</Import-Package>
 						<Embed-Dependency>
-							cglib-nodep,proxytoys,mongo-java-driver,protobuf-java,morphia,europeana-uim-model-common,europeana-uim-model-tel,europeana-uim-model-europeana
+							*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|europeana-uim-api|
+							europeana-uim-model-common|europeana-uim-model-tel|europeana-uim-model-europeana|commons-io|trove4j
 						</Embed-Dependency>
-						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Transitive>false</Embed-Transitive>
 					</instructions>
 				</configuration>
 			</plugin>
