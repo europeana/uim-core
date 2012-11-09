@@ -16,6 +16,14 @@
         <servlet-name>executionService</servlet-name>
         <servlet-class>eu.europeana.uim.gui.cp.server.ExecutionServiceImpl</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>fileUploadService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.FileUploadService</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>logFileService</servlet-name>
+        <servlet-class>eu.europeana.uim.gui.cp.server.LogFileService</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>repositoryService</servlet-name>
@@ -29,7 +37,15 @@
         <servlet-name>executionService</servlet-name>
         <url-pattern>/UimIngestionControlPanel/execution</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>fileUploadService</servlet-name>
+        <url-pattern>/UimIngestionControlPanel/fileupload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>logFileService</servlet-name>
+        <url-pattern>/UimIngestionControlPanel/logfile</url-pattern>
+    </servlet-mapping>
+    
     <!-- Default page to serve -->
     <welcome-file-list>
         <welcome-file>UimIngestionControlPanel.html</welcome-file>
