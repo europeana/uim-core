@@ -60,13 +60,13 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
