@@ -111,12 +111,14 @@ public class IngestionControlPanelShell extends ResizeComposite {
 
         linkTable.setCellPadding(0);
         linkTable.setCellSpacing(0);
-        linkTable.resize(1, 2 * customs.links().length - 1);
-        int columnCounter = 0;
-        for (int i = 0; i < customs.links().length; i++) {
-            linkTable.setWidget(0, columnCounter++, customs.links()[i]);
-            if (i != customs.links().length - 1) {
-                linkTable.setHTML(0, columnCounter++, "&nbsp;|&nbsp;");
+        if (customs.links().length > 0) {
+            linkTable.resize(1, 2 * customs.links().length - 1);
+            int columnCounter = 0;
+            for (int i = 0; i < customs.links().length; i++) {
+                linkTable.setWidget(0, columnCounter++, customs.links()[i]);
+                if (i != customs.links().length - 1) {
+                    linkTable.setHTML(0, columnCounter++, "&nbsp;|&nbsp;");
+                }
             }
         }
 
@@ -144,7 +146,7 @@ public class IngestionControlPanelShell extends ResizeComposite {
      */
     public void setContent(final IngestionWidget content) {
         this.content = content;
-        
+
         if (content == null) {
             contentPanel.setWidget(null);
             return;
@@ -158,8 +160,8 @@ public class IngestionControlPanelShell extends ResizeComposite {
      */
     private void showContent() {
         if (content == null) { return; }
-//        content.ensureWidget();
-//        contentPanel.setWidget(content.getWidget());
+// content.ensureWidget();
+// contentPanel.setWidget(content.getWidget());
         contentPanel.setWidget(content);
     }
 }
