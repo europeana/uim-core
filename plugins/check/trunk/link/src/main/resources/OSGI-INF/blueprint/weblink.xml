@@ -4,8 +4,7 @@
     xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
 
     <!-- Property place holder -->
-    <bean id="linkcheckPlugin" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckIngestionPlugin">
-    </bean>
+    <bean id="linkcheckPlugin" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckIngestionPlugin" />
     <service id="linkChecker" ref="linkcheckPlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="lcw" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckWorkflow" />

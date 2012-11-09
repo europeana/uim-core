@@ -3,8 +3,7 @@
     xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
     xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
 
-    <bean id="validatePlugin" class="org.theeuropeanlibrary.uim.check.validate.FieldCheckIngestionPlugin">
-    </bean>
+    <bean id="validatePlugin" class="org.theeuropeanlibrary.uim.check.validate.FieldCheckIngestionPlugin" />
     <service id="validate" ref="validatePlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="vfw" class="org.theeuropeanlibrary.uim.check.validate.FieldCheckWorkflow" />
