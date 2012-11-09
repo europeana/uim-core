@@ -21,7 +21,8 @@ import eu.europeana.uim.gui.cp.client.services.ResourceService;
 import eu.europeana.uim.gui.cp.client.services.ResourceServiceAsync;
 
 /**
- * The European Library specific control panel for ingestion workflows.
+ * Basic control panel providing ways to trigger ingestions, view them and administrate providers
+ * and collections.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jun 3, 2011
