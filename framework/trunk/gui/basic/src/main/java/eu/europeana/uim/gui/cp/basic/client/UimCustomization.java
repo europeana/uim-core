@@ -31,6 +31,7 @@ public class UimCustomization implements IngestionCustomization {
 
     @Override
     public Anchor[] links() {
-        return new Anchor[] {};
+        return new Anchor[] { new Anchor("The European Library",
+                "http://search.theeuropeanlibrary.org/portal/en/index.html") };
     }
 }
