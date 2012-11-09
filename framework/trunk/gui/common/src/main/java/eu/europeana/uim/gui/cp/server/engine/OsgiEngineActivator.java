@@ -48,7 +48,7 @@ public class OsgiEngineActivator implements BundleActivator {
 
         wait = 0;
         while (sugarService == null && wait++ < 10) {
-            ServiceReference sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugarcrm.SugarService");
+            ServiceReference sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugar.SugarService");
             if (sugarServiceRef != null) {
                 sugarService = (SugarService)bundleContext.getService(sugarServiceRef);
             }
