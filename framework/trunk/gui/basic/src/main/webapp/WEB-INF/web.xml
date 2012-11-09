@@ -19,15 +19,15 @@
 
     <servlet-mapping>
         <servlet-name>repositoryService</servlet-name>
-        <url-pattern>/TelIngestionControlPanel/repository</url-pattern>
+        <url-pattern>/UimIngestionControlPanel/repository</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>resourceService</servlet-name>
-        <url-pattern>/TelIngestionControlPanel/resource</url-pattern>
+        <url-pattern>/UimIngestionControlPanel/resource</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>executionService</servlet-name>
-        <url-pattern>/TelIngestionControlPanel/execution</url-pattern>
+        <url-pattern>/UimIngestionControlPanel/execution</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serve -->
