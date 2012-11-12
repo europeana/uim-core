@@ -46,61 +46,29 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
 
         if (workflow != null) {
-            try {
-                getEngine().getRegistry().getWorkflow(workflow);
-            } catch (Throwable t) {
-                res.add(new ParameterDTO("no workflow lookup", new String[0]));
-                return res;
-            }
-
             Workflow<?, ?> w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
                 log.log(Level.WARNING, "Workflows are null!");
-                res.add(new ParameterDTO("no workflows", new String[0]));
                 return res;
             }
 
             List<String> params = new ArrayList<String>();
-            try {
-                WorkflowStart<?, ?> start = w.getStart();
-                params.addAll(start.getParameters());
-            } catch (Throwable t) {
-                res.add(new ParameterDTO("no start retrieving", new String[0]));
-                return res;
-            }
-            
-            try {
-                for (IngestionPlugin<?, ?> i : w.getSteps()) {
-                    params.addAll(i.getParameters());
-                }
-            } catch (Throwable t) {
-                res.add(new ParameterDTO("no parameter retrieving", new String[0]));
-                return res;
+            WorkflowStart<?, ?> start = w.getStart();
+            params.addAll(start.getParameters());
+            for (IngestionPlugin<?, ?> i : w.getSteps()) {
+                params.addAll(i.getParameters());
             }
 
             ResourceEngine resource = getEngine().getRegistry().getResourceEngine();
             if (resource == null) {
                 log.log(Level.SEVERE, "Resource engine is null!");
-                res.add(new ParameterDTO("no resource", new String[0]));
                 return res;
             }
 
-            try {
-                resource.getGlobalResources(params);
-            } catch (Throwable t) {
-                res.add(new ParameterDTO("no globals", new String[0]));
-                return res;
-            }
             LinkedHashMap<String, List<String>> globalResources = resource.getGlobalResources(params);
 
             LinkedHashMap<String, List<String>> workflowResources = resource.getWorkflowResources(
                     w, params);
-            try {
-                resource.getWorkflowResources(w, params);
-            } catch (Throwable t) {
-                res.add(new ParameterDTO("no workflows", new String[0]));
-                return res;
-            }
             if (workflowResources != null && workflowResources.size() > 0) {
                 for (Entry<String, List<String>> entry : workflowResources.entrySet()) {
                     if (entry.getValue() != null) {
