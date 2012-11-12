@@ -159,6 +159,8 @@ public class ResourceManagementWidget extends IngestionWidget {
                     @Override
                     public void onFailure(Throwable throwable) {
                         throwable.printStackTrace();
+                        activeParameters.clear();
+                        activeParameters.add(new ParameterDTO("FAILED", new String[0]));
                     }
 
                     @Override
