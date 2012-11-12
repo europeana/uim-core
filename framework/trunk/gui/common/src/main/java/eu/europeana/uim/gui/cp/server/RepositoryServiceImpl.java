@@ -101,6 +101,36 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public List<WorkflowDTO> getWorkflows() {
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
         List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
+
+        try {
+            if (getEngine() != null) {
+                res.add(new WorkflowDTO("ENGINE", "ENGINE", "ENGINE"));
+            }
+        } catch (Throwable t) {
+            res.add(new WorkflowDTO("ENGINE FAILED", "ENGINE FAILED", t.getLocalizedMessage()));
+            return res;
+        }
+
+        try {
+            if (getEngine().getRegistry() != null) {
+                res.add(new WorkflowDTO("REGISTRY", "REGISTRY", "REGISTRY"));
+            }
+        } catch (Throwable t) {
+            res.add(new WorkflowDTO("REGISTRY FAILED", "REGISTRY FAILED", t.getLocalizedMessage()));
+            return res;
+        }
+        
+
+        try {
+            if (getEngine().getRegistry().getWorkflows() != null) {
+                res.add(new WorkflowDTO("WORKFLOW", "WORKFLOW", "WORKFLOW"));
+            }
+        } catch (Throwable t) {
+            res.add(new WorkflowDTO("WORKFLOW FAILED", "WORKFLOW FAILED", t.getLocalizedMessage()));
+            return res;
+        }
+       
+
         if (workflows != null) {
             if (getEngine().getRegistry().getWorkflows().size() > 0) {
                 res.add(new WorkflowDTO("SOMETHING", "SOMETHING", "SOMETHING"));
