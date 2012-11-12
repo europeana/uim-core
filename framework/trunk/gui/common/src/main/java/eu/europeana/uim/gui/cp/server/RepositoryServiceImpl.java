@@ -120,10 +120,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             return res;
         }
 
-        if (true) {
-            return res;
-        }
-
         try {
             if (getEngine().getRegistry().getWorkflows() != null) {
                 res.add(new WorkflowDTO("WORKFLOW", "WORKFLOW", "WORKFLOW"));
@@ -140,6 +136,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 res.add(new WorkflowDTO("SOMETHING", "SOMETHING", "SOMETHING"));
             } else {
                 res.add(new WorkflowDTO("NOTHING", "NOTHING", "NOTHING"));
+            }
+            if (true) {
+                return res;
             }
             List<String> blackListKey = new ArrayList<String>() {
                 {
