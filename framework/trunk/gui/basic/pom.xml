@@ -110,6 +110,8 @@
                         <Import-Package>
                             eu.europeana.uim,
                             eu.europeana.uim.common,
+                            eu.europeana.uim.common.progress,
+                            eu.europeana.uim.common.utils,
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.storage,
