@@ -163,6 +163,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 StackTraceElement[] stackTrace = t.getStackTrace();
                 for (StackTraceElement st : stackTrace) {
                     builder.append(st.toString());
+                    builder.append("\n");
                 }
                 res.add(new WorkflowDTO("GLOBAL FAILED", "GLOBAL FAILED", builder.toString()));
                 return res;
