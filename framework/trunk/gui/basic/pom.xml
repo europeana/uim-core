@@ -113,6 +113,7 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.store.bean,
                             eu.europeana.uim.storage,
+                            eu.europeana.uim.resource,
                             eu.europeana.uim.util,
                             eu.europeana.uim.workflow,
                             eu.europeana.uim.repox.model,
