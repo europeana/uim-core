@@ -64,6 +64,12 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             try {
                 WorkflowStart<?, ?> start = w.getStart();
                 params.addAll(start.getParameters());
+            } catch (Throwable t) {
+                res.add(new ParameterDTO("no start retrieving", new String[0]));
+                return res;
+            }
+            
+            try {
                 for (IngestionPlugin<?, ?> i : w.getSteps()) {
                     params.addAll(i.getParameters());
                 }
