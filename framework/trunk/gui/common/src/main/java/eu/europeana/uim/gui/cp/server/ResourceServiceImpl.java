@@ -46,6 +46,13 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
         List<ParameterDTO> res = new ArrayList<ParameterDTO>();
 
         if (workflow != null) {
+            try {
+                getEngine().getRegistry().getWorkflow(workflow);
+            } catch (Throwable t) {
+                res.add(new ParameterDTO("no workflow lookup", new String[0]));
+                return res;
+            }
+
             Workflow<?, ?> w = getEngine().getRegistry().getWorkflow(workflow);
             if (w == null) {
                 log.log(Level.WARNING, "Workflows are null!");
@@ -54,10 +61,15 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             }
 
             List<String> params = new ArrayList<String>();
-            WorkflowStart<?, ?> start = w.getStart();
-            params.addAll(start.getParameters());
-            for (IngestionPlugin<?, ?> i : w.getSteps()) {
-                params.addAll(i.getParameters());
+            try {
+                WorkflowStart<?, ?> start = w.getStart();
+                params.addAll(start.getParameters());
+                for (IngestionPlugin<?, ?> i : w.getSteps()) {
+                    params.addAll(i.getParameters());
+                }
+            } catch (Throwable t) {
+                res.add(new ParameterDTO("no parameter retrieving", new String[0]));
+                return res;
             }
 
             ResourceEngine resource = getEngine().getRegistry().getResourceEngine();
@@ -78,8 +90,7 @@ public class ResourceServiceImpl extends AbstractOSGIRemoteServiceServlet implem
             LinkedHashMap<String, List<String>> workflowResources = resource.getWorkflowResources(
                     w, params);
             try {
-                resource.getWorkflowResources(
-                        w, params);
+                resource.getWorkflowResources(w, params);
             } catch (Throwable t) {
                 res.add(new ParameterDTO("no workflows", new String[0]));
                 return res;
