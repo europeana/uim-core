@@ -150,7 +150,7 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 // TODO: panic
                 List<BrowserObject> workflowList = workflowDataProvider.getList();
                 workflowList.clear();
-                workflowList.add(new BrowserObject("FAILURE", new WorkflowDTO("FAILURE","FAILURE","FAILURE")));
+                workflowList.add(new BrowserObject("FAILURE", new WorkflowDTO("FAILURE","FAILURE", throwable.getLocalizedMessage())));
             }
 
             @Override
