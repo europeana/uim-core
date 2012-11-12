@@ -168,7 +168,6 @@ public class ResourceTreeViewModel implements TreeViewModel {
                         return o1.getName().compareTo(o2.getName());
                     }
                 });
-
             }
         });
     }
