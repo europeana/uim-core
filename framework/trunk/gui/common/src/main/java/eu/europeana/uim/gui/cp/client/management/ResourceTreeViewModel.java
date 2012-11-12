@@ -137,6 +137,7 @@ public class ResourceTreeViewModel implements TreeViewModel {
                         return o1.getName().compareTo(o2.getName());
                     }
                 });
+
             }
         });
     }
@@ -147,9 +148,6 @@ public class ResourceTreeViewModel implements TreeViewModel {
             public void onFailure(Throwable throwable) {
                 throwable.printStackTrace();
                 // TODO: panic
-                List<BrowserObject> workflowList = workflowDataProvider.getList();
-                workflowList.clear();
-                workflowList.add(new BrowserObject("FAILURE", new WorkflowDTO("FAILURE","FAILURE", throwable.toString())));
             }
 
             @Override
@@ -158,9 +156,6 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 workflowList.clear();
                 for (WorkflowDTO w : workflows) {
                     workflowList.add(new BrowserObject(w.getName(), w));
-                }
-                if (workflows.size() == 0) {
-                    workflowList.add(new BrowserObject("EMPTY", new WorkflowDTO("EMPTY","EMPTY","EMPTY")));
                 }
                 Collections.sort(workflowList, new Comparator<BrowserObject>() {
                     @Override

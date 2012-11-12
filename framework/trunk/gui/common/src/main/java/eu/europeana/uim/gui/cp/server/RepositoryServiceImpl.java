@@ -100,78 +100,14 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public List<WorkflowDTO> getWorkflows() {
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
-        res.add(new WorkflowDTO("ALONG", "ALONG", "ALONG"));
-
-        try {
-            if (getEngine() != null) {
-                res.add(new WorkflowDTO("ENGINE", "ENGINE", "ENGINE"));
-            }
-        } catch (Throwable t) {
-            res.add(new WorkflowDTO("ENGINE FAILED", "ENGINE FAILED", t.getMessage()));
-            return res;
-        }
-
-        try {
-            if (getEngine().getRegistry() != null) {
-                res.add(new WorkflowDTO("REGISTRY", "REGISTRY", "REGISTRY"));
-            }
-        } catch (Throwable t) {
-            res.add(new WorkflowDTO("REGISTRY FAILED", "REGISTRY FAILED", t.getMessage()));
-            return res;
-        }
-
-        try {
-            if (getEngine().getRegistry().getWorkflows() != null) {
-                res.add(new WorkflowDTO("WORKFLOW", "WORKFLOW", "WORKFLOW"));
-            }
-        } catch (Throwable t) {
-            res.add(new WorkflowDTO("WORKFLOW FAILED", "WORKFLOW FAILED", t.getMessage()));
-            return res;
-        }
 
         List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
-            if (getEngine().getRegistry().getWorkflows().size() > 0) {
-                res.add(new WorkflowDTO("SOMETHING", "SOMETHING", "SOMETHING"));
-            } else {
-                res.add(new WorkflowDTO("NOTHING", "NOTHING", "NOTHING"));
-            }
             List<String> blackListKey = new ArrayList<String>() {
                 {
                     add("Workflow Blacklist");
                 }
             };
-
-            try {
-                if (getEngine().getRegistry().getResourceEngine() != null) {
-                    res.add(new WorkflowDTO("RESOURCE", "RESOURCE", "RESOURCE"));
-                }
-            } catch (Throwable t) {
-                res.add(new WorkflowDTO("RESOURCE FAILED", "RESOURCE FAILED", t.getMessage()));
-                return res;
-            }
-
-            try {
-                if (getEngine().getRegistry().getResourceEngine().getGlobalResources(blackListKey) != null) {
-                    res.add(new WorkflowDTO("GLOBAL", "GLOBAL", "GLOBAL"));
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
-                StringBuilder builder = new StringBuilder();
-                StackTraceElement[] stackTrace = t.getStackTrace();
-                for (StackTraceElement st : stackTrace) {
-                    builder.append(st.toString());
-                    builder.append("\n");
-                }
-                String identifier = "";
-                try {
-                    identifier = getEngine().getRegistry().getResourceEngine().getIdentifier();
-                } catch (Throwable t1) {
-                    identifier = "fuck it";
-                }
-                res.add(new WorkflowDTO(identifier, identifier, builder.toString()));
-                return res;
-            }
 
             LinkedHashMap<String, List<String>> globalResources = getEngine().getRegistry().getResourceEngine().getGlobalResources(
                     blackListKey);
@@ -196,8 +132,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             });
         } else {
             log.log(Level.WARNING, "Workflows are null!");
-            res.add(new WorkflowDTO("NULL", "NULL", "NULL"));
         }
+
         return res;
     }
 
