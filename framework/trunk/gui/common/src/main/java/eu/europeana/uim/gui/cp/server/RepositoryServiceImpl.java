@@ -156,6 +156,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 if (getEngine().getRegistry().getResourceEngine().getGlobalResources(
                         blackListKey) != null) {
                     res.add(new WorkflowDTO("GLOBAL", "GLOBAL", "GLOBAL"));
+                    res.add(new WorkflowDTO("FAIL", "FAIL", getEngine().getRegistry().getResourceEngine().getGlobalResources(
+                            blackListKey).get("FAILED").toString()));
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -165,7 +167,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     builder.append(st.toString());
                     builder.append("\n");
                 }
-                res.add(new WorkflowDTO("GLOBAL FAILED", "GLOBAL FAILED", builder.toString()));
+                res.add(new WorkflowDTO(getEngine().getRegistry().getResourceEngine().getIdentifier(), getEngine().getRegistry().getResourceEngine().getIdentifier(), builder.toString()));
                 return res;
             }
 
