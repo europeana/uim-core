@@ -102,6 +102,11 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
         List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
+            if (getEngine().getRegistry().getWorkflows().size() > 0) {
+                res.add(new WorkflowDTO("SOMETHING", "SOMETHING", "SOMETHING"));
+            } else {
+                res.add(new WorkflowDTO("NOTHING", "NOTHING", "NOTHING"));
+            }
             List<String> blackListKey = new ArrayList<String>() {
                 {
                     add("Workflow Blacklist");
@@ -131,6 +136,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             });
         } else {
             log.log(Level.WARNING, "Workflows are null!");
+            res.add(new WorkflowDTO("NULL", "NULL", "NULL"));
         }
         return res;
     }
