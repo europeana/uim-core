@@ -161,13 +161,16 @@ public class ResourceManagementWidget extends IngestionWidget {
                         throwable.printStackTrace();
                         activeParameters.clear();
                         activeParameters.add(new ParameterDTO("FAILED", new String[0]));
+                        cellTable.setRowData(0, activeParameters);
+                        cellTable.setRowCount(activeParameters.size());
+                        cellTable.setHeight((30 + 20 * 1) + "px");
                     }
 
                     @Override
                     public void onSuccess(List<ParameterDTO> parameters) {
                         activeParameters.clear();
                         if (parameters.size() == 0) {
-                            activeParameters.add(new ParameterDTO("EMPTY", new String[0]));
+                            parameters.add(new ParameterDTO("EMPTY", new String[0]));
                         }
                         activeParameters.addAll(parameters);
                         cellTable.setRowData(0, activeParameters);
