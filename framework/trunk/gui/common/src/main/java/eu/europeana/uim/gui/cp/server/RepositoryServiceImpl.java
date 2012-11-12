@@ -128,7 +128,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             res.add(new WorkflowDTO("WORKFLOW FAILED", "WORKFLOW FAILED", t.getMessage()));
             return res;
         }
-       
 
         List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
@@ -142,7 +141,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     add("Workflow Blacklist");
                 }
             };
-            
+
             try {
                 if (getEngine().getRegistry().getResourceEngine() != null) {
                     res.add(new WorkflowDTO("RESOURCE", "RESOURCE", "RESOURCE"));
@@ -151,13 +150,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 res.add(new WorkflowDTO("RESOURCE FAILED", "RESOURCE FAILED", t.getMessage()));
                 return res;
             }
-            
+
             try {
-                if (getEngine().getRegistry().getResourceEngine().getGlobalResources(
-                        blackListKey) != null) {
+                if (getEngine().getRegistry().getResourceEngine().getGlobalResources(blackListKey) != null) {
                     res.add(new WorkflowDTO("GLOBAL", "GLOBAL", "GLOBAL"));
-                    res.add(new WorkflowDTO("FAIL", "FAIL", getEngine().getRegistry().getResourceEngine().getGlobalResources(
-                            blackListKey).get("FAILED").toString()));
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -167,7 +163,13 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     builder.append(st.toString());
                     builder.append("\n");
                 }
-                res.add(new WorkflowDTO(getEngine().getRegistry().getResourceEngine().getIdentifier(), getEngine().getRegistry().getResourceEngine().getIdentifier(), builder.toString()));
+                String identifier = "";
+                try {
+                    identifier = getEngine().getRegistry().getResourceEngine().getIdentifier();
+                } catch (Throwable t1) {
+                    identifier = "fuck it";
+                }
+                res.add(new WorkflowDTO(identifier, identifier, builder.toString()));
                 return res;
             }
 
