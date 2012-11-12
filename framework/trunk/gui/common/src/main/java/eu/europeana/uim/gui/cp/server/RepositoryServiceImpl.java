@@ -107,7 +107,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 res.add(new WorkflowDTO("ENGINE", "ENGINE", "ENGINE"));
             }
         } catch (Throwable t) {
-            res.add(new WorkflowDTO("ENGINE FAILED", "ENGINE FAILED", t.getLocalizedMessage()));
+            res.add(new WorkflowDTO("ENGINE FAILED", "ENGINE FAILED", t.getMessage()));
             return res;
         }
 
@@ -116,7 +116,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 res.add(new WorkflowDTO("REGISTRY", "REGISTRY", "REGISTRY"));
             }
         } catch (Throwable t) {
-            res.add(new WorkflowDTO("REGISTRY FAILED", "REGISTRY FAILED", t.getLocalizedMessage()));
+            res.add(new WorkflowDTO("REGISTRY FAILED", "REGISTRY FAILED", t.getMessage()));
             return res;
         }
 
@@ -125,7 +125,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 res.add(new WorkflowDTO("WORKFLOW", "WORKFLOW", "WORKFLOW"));
             }
         } catch (Throwable t) {
-            res.add(new WorkflowDTO("WORKFLOW FAILED", "WORKFLOW FAILED", t.getLocalizedMessage()));
+            res.add(new WorkflowDTO("WORKFLOW FAILED", "WORKFLOW FAILED", t.getMessage()));
             return res;
         }
        
@@ -137,14 +137,30 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             } else {
                 res.add(new WorkflowDTO("NOTHING", "NOTHING", "NOTHING"));
             }
-            if (true) {
-                return res;
-            }
             List<String> blackListKey = new ArrayList<String>() {
                 {
                     add("Workflow Blacklist");
                 }
             };
+            
+            try {
+                if (getEngine().getRegistry().getResourceEngine() != null) {
+                    res.add(new WorkflowDTO("RESOURCE", "RESOURCE", "RESOURCE"));
+                }
+            } catch (Throwable t) {
+                res.add(new WorkflowDTO("RESOURCE FAILED", "RESOURCE FAILED", t.getMessage()));
+                return res;
+            }
+            
+            try {
+                if (getEngine().getRegistry().getResourceEngine().getGlobalResources(
+                        blackListKey) != null) {
+                    res.add(new WorkflowDTO("GLOBAL", "GLOBAL", "GLOBAL"));
+                }
+            } catch (Throwable t) {
+                res.add(new WorkflowDTO("GLOBAL FAILED", "GLOBAL FAILED", t.getMessage()));
+                return res;
+            }
 
             LinkedHashMap<String, List<String>> globalResources = getEngine().getRegistry().getResourceEngine().getGlobalResources(
                     blackListKey);
