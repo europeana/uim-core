@@ -72,8 +72,71 @@ public enum IdentifierType {
      * duplicated in another identifier object in the record.
      */
     EOD,
+    /** info:ark */
+    ARK,
+    /** info:arxiv/ */
+    ARXIV,
+    /** info:bibcode/ */
+    BIBCODE,
+    /** info:bnf/ */
+    BNF,
+    /** info:dlf/ Digital Library Federation Identifiers */
+    DLF,
+    /** info:eu-repo/  identifiers used by the European Repository Systems */
+    EU_REPO,
+    /**  Fedora Digital Objects and Disseminations */
+    FEDORA,
+    /** Handles */
+    HANDLE,
+    /** Repository of the LANL Research Library */
+    IANL,
+    /** Library of Congress Identifiers */
+    LC,
+    /** Library of Congress Control Numbers */
+    LCCN,
+    /** OCLC Worldcat Control Numbers */
+    OCLC_WORLDCAT,
+    /** PUBMED */
+    PMID,
+    /** PRONOM Unique Identifiers */
+    PRONOM,
+    /**  Registry Framework Architecture Identifiers (RFA) */
+    RFA,
+    /**  Patent Control Information */
+    PATENT_CONTROL,
+    /**  */
+    NATIONAL_BIBLIOGRAPHIC_AGENCY,
+    /**  */
+    COPYRIGHT_ARTICLE_FEE_CODE,
+    /** INTERNATIONAL_STANDARD_RECORDING_CODE */
+    ISRC,
+    /** UNIVERSAL_PRODUCT_CODE */
+    UNIVERSAL_PRODUCT_CODE,
+    /** ISMN International Standard Music Number*/
+    ISMN,
+    /** INTERNATIONAL_ARTICLE_NUMBER  */
+    INTERNATIONAL_ARTICLE_NUMBER,
+    /** SERIAL_ITEM_AND_CONTRIBUTION_IDENTIFIER */
+    SERIAL_ITEM_AND_CONTRIBUTION_IDENTIFIER,
+    /** Fingerprint Identifier  */
+    FINGERPRINT_IDENTIFIER,
+    /** Standard Technical Report Number */
+    STRN,
+    /** PUBLISHER_NUMBER */
+    PUBLISHER_NUMBER,
+    /** CODEN */
+    CODEN,
+    /** A control number in another system */
+    SYSTEM_CONTROL_NUMBER,
+    /** Original Study Number for Computer Data Files*/
+    ORIGINAL_STUDY_NUMBER_FOR_DATA_FILES,
+    /** Source of Acquisition */
+    SOURCE_OF_ACQUISITION,
+    /** GOVERNMENT_PUBLICATION_NUMBER */
+    GOVERNMENT_PUBLICATION_NUMBER,
     /**
      * identifier representing cluster group (detailed types are insided identifier)
      */
     CLUSTER
+
 }
