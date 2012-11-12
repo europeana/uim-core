@@ -323,6 +323,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         prov.setName(provider.getName());
         prov.setOaiBaseUrl(provider.getOaiBaseUrl());
         prov.setOaiMetadataPrefix(provider.getOaiMetadataPrefix());
+        if (provider.getCountry() != null) {
+            prov.putValue(StandardControlledVocabulary.COUNTRY, provider.getCountry());
+        }
 
         try {
             storage.updateProvider(prov);
@@ -380,6 +383,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         coll.setOaiBaseUrl(collection.getOaiBaseUrl(false));
         coll.setOaiMetadataPrefix(collection.getOaiMetadataPrefix(false));
         coll.setOaiSet(collection.getOaiSet());
+        if (collection.getCountry() != null) {
+            coll.putValue(StandardControlledVocabulary.COUNTRY, collection.getCountry());
+        }
 
         try {
             storage.updateCollection(coll);
