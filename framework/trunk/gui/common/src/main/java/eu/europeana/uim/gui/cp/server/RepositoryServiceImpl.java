@@ -100,7 +100,6 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     @Override
     public List<WorkflowDTO> getWorkflows() {
         List<WorkflowDTO> res = new ArrayList<WorkflowDTO>();
-        List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
 
         try {
             if (getEngine() != null) {
@@ -131,6 +130,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
        
 
+        List<Workflow<?, ?>> workflows = getEngine().getRegistry().getWorkflows();
         if (workflows != null) {
             if (getEngine().getRegistry().getWorkflows().size() > 0) {
                 res.add(new WorkflowDTO("SOMETHING", "SOMETHING", "SOMETHING"));
