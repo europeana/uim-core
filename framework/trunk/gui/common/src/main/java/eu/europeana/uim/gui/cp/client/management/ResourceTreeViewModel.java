@@ -137,7 +137,6 @@ public class ResourceTreeViewModel implements TreeViewModel {
                         return o1.getName().compareTo(o2.getName());
                     }
                 });
-
             }
         });
     }
@@ -150,7 +149,7 @@ public class ResourceTreeViewModel implements TreeViewModel {
                 // TODO: panic
                 List<BrowserObject> workflowList = workflowDataProvider.getList();
                 workflowList.clear();
-                workflowList.add(new BrowserObject("FAILURE", new WorkflowDTO("FAILURE","FAILURE", throwable.getLocalizedMessage())));
+                workflowList.add(new BrowserObject("FAILURE", new WorkflowDTO("FAILURE","FAILURE", throwable.toString())));
             }
 
             @Override

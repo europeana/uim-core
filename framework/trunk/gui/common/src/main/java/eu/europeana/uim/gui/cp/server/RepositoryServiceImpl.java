@@ -119,7 +119,10 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
             res.add(new WorkflowDTO("REGISTRY FAILED", "REGISTRY FAILED", t.getLocalizedMessage()));
             return res;
         }
-        
+
+        if (true) {
+            return res;
+        }
 
         try {
             if (getEngine().getRegistry().getWorkflows() != null) {
