@@ -11,28 +11,6 @@ import java.util.HashMap;
  */
 public enum ContributionType {
     /**
-     * party contributed to the content of the work with supplementary text Kept only for backward
-     * compatibility
-     */
-    @Deprecated
-    AUTHOR_OF_SUPPLEMENTARY_TEXT("Author of supplementary text"),
-    /**
-     * party contributed to the content of the work as a translator
-     */
-    TRANSLATOR("Translator"),
-    /**
-     * party contributed to the content of the work as an illustrator
-     */
-    ILLUSTRATOR("Illustrator"),
-    /**
-     * party contributed to the content of the work as an editor
-     */
-    EDITOR("Editor"),
-    /**
-     * party contributed to the content of the work as an illustrator
-     */
-    FORMER_OWNER("Former owner"),
-    /**
      * Actor
      */
     ACTOR("Actor"),
@@ -389,6 +367,10 @@ public enum ContributionType {
      */
     DUBIOUS_AUTHOR("Dubious author"),
     /**
+     * Editor
+     */
+    EDITOR("Editor"),
+    /**
      * Electrician
      */
     ELECTRICIAN("Electrician"),
@@ -437,6 +419,10 @@ public enum ContributionType {
      */
     FORGER("Forger"),
     /**
+     * Former owner
+     */
+    FORMER_OWNER("Former owner"),
+    /**
      * Funder
      */
     FUNDER("Funder"),
@@ -460,6 +446,10 @@ public enum ContributionType {
      * Illuminator
      */
     ILLUMINATOR("Illuminator"),
+    /**
+     * Illustrator
+     */
+    ILLUSTRATOR("Illustrator"),
     /**
      * Inscriber
      */
@@ -872,6 +862,10 @@ public enum ContributionType {
      * Transcriber
      */
     TRANSCRIBER("Transcriber"),
+    /**
+     * Translator
+     */
+    TRANSLATOR("Translator"),
     /**
      * Type designer
      */
