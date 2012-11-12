@@ -89,6 +89,7 @@ public class CollectionForm extends Composite {
                 collection.setOaiBaseUrl(oaiBaseUrlBox.getText());
                 collection.setOaiMetadataPrefix(oaiMetadataPrefixBox.getText());
                 collection.setOaiSet(oaiSetBox.getText());
+                collection.setCountry(countryBox.getText());
 
                 repositoryService.updateCollection(collection, new AsyncCallback<Boolean>() {
                     @Override

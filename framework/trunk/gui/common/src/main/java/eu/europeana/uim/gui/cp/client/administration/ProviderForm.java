@@ -74,6 +74,7 @@ public class ProviderForm extends Composite {
                 provider.setName(nameBox.getText());
                 provider.setOaiBaseUrl(oaiBaseUrlBox.getText());
                 provider.setOaiMetadataPrefix(oaiMetadataPrefixBox.getText());
+                provider.setCountry(countryBox.getText());
 
                 repositoryService.updateProvider(provider, new AsyncCallback<Boolean>() {
                     @Override
