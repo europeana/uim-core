@@ -158,7 +158,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                     res.add(new WorkflowDTO("GLOBAL", "GLOBAL", "GLOBAL"));
                 }
             } catch (Throwable t) {
-                res.add(new WorkflowDTO("GLOBAL FAILED", "GLOBAL FAILED", t.getMessage()));
+                res.add(new WorkflowDTO("GLOBAL FAILED", "GLOBAL FAILED", t.getStackTrace().toString()));
                 return res;
             }
 
