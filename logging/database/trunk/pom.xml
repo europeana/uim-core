@@ -38,4 +38,16 @@
             </plugin>
         </plugins>
     </build>
+    
+
+    <!-- Publicly available repository (europeanalabs)  -->
+    <repositories>
+		<repository>
+			<id>europeanalabs.eu</id>
+			<name>europeanalabs.eu-releases</name>
+			<url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
+		</repository>
+	</repositories>
+
+    
 </project>
