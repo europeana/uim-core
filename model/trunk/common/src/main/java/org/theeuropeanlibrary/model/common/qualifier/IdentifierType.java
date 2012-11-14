@@ -116,8 +116,6 @@ public enum IdentifierType {
     ISMN,
     /** INTERNATIONAL_ARTICLE_NUMBER  */
     INTERNATIONAL_ARTICLE_NUMBER,
-    /** SERIAL_ITEM_AND_CONTRIBUTION_IDENTIFIER */
-    SERIAL_ITEM_AND_CONTRIBUTION_IDENTIFIER,
     /** Fingerprint Identifier  */
     FINGERPRINT_IDENTIFIER,
     /** Standard Technical Report Number */

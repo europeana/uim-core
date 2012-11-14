@@ -240,25 +240,25 @@ public enum Country implements Translatable {
     }
 
     /**
-     * @param countryName
+     * @param countryNameOrCode
      *            iso3, iso2, marc or name
      * @return country as enum looked up implicitly recognized type of given string representation,
      *         or null
      */
-    public static Country lookupCountry(String countryName, boolean marc) {
-        if (countryName != null) {
+    public static Country lookupCountry(String countryNameOrCode, boolean marc) {
+        if (countryNameOrCode != null) {
             if (marc) {
-                Country country = Country.getByMarc(countryName);
+                Country country = Country.getByMarc(countryNameOrCode);
                 return country;
             } else {
-                if (countryName.length() == 2) {
-                    Country country = Country.getByIso2(countryName);
+                if (countryNameOrCode.length() == 2) {
+                    Country country = Country.getByIso2(countryNameOrCode);
                     return country;
-                } else if (countryName.length() == 3) {
-                    Country country = Country.getByIso3(countryName);
+                } else if (countryNameOrCode.length() == 3) {
+                    Country country = Country.getByIso3(countryNameOrCode);
                     return country;
                 } else {
-                    Country country = Country.getByName(countryName);
+                    Country country = Country.getByName(countryNameOrCode);
                     return country;
                 }
             }
