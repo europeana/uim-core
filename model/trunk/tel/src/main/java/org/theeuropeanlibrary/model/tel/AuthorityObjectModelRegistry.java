@@ -38,7 +38,6 @@ import eu.europeana.uim.common.TKey;
  * @author Nuno Freire <nfreire@gmail.com>
  * @since Mar 18, 2011
  */
-// @SuppressWarnings("rawtypes")
 @SuppressWarnings("rawtypes")
 public final class AuthorityObjectModelRegistry {
     /**
