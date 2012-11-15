@@ -20,7 +20,8 @@ public class LinkCheckWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I>
      * Creates a new instance of this class.
      */
     public LinkCheckWorkflow() {
-        super("C: Link Validation", "Workflow which is used to submit links to be checked.");
+        super("C: Link Validation",
+                "This workflow submit randomly selected links from records and checks their validity.");
 
         setStart(new BatchWorkflowStart<I>());
         addStep(new LinkCheckIngestionPlugin<I>());
