@@ -80,16 +80,12 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "metadatarecord",
                                                                                                                            MetaDataRecordBean.class);
-    public static final TKey<ObjectModelRegistry, String>                                      COLLECTION          = TKey.register(
+    
+    public static final TKey<ObjectModelRegistry, Provenance>                                  PROVENANCE          = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
-                                                                                                                           "collection",
-                                                                                                                           String.class);
-
-    public static final TKey<ObjectModelRegistry, String>                                      PROVIDER            = TKey.register(
-                                                                                                                           ObjectModelRegistry.class,
-                                                                                                                           "provider",
-                                                                                                                           String.class);
-
+                                                                                                                           "provenance",
+                                                                                                                           Provenance.class);
+    
     public static final TKey<ObjectModelRegistry, Partition>                                   PARTITION           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "partition",
@@ -99,17 +95,6 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "hash",
                                                                                                                            Hash.class);
-
-// public static final TKey<ObjectModelRegistry, String> STATEMENT_OF_RESPONSABILITY =
-// TKey.register(
-// ObjectModelRegistry.class,
-// "responsability",
-// String.class);
-//
-// public static final TKey<ObjectModelRegistry, String> SUBCOLLECTION = TKey.register(
-// ObjectModelRegistry.class,
-// "subcollection",
-// String.class);
 
     public static final TKey<ObjectModelRegistry, Identifier>                                  IDENTIFIER          = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
