@@ -85,6 +85,11 @@ public final class ObjectModelRegistry {
                                                                                                                            "collection",
                                                                                                                            String.class);
 
+    public static final TKey<ObjectModelRegistry, String>                                      PROVIDER            = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "provider",
+                                                                                                                           String.class);
+
     public static final TKey<ObjectModelRegistry, Partition>                                   PARTITION           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "partition",
