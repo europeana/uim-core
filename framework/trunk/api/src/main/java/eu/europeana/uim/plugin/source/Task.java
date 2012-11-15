@@ -65,7 +65,7 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
         if (adapter != null) {
             localDataset = adapter.adapt(localDataset);
         }
-        successfulProcessing = step.process(dataset, context);
+        successfulProcessing = step.process(localDataset, context);
         if (adapter != null) {
             dataset = adapter.unadapt(localDataset);
         }
