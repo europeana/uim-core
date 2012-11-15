@@ -19,7 +19,11 @@ public enum Status {
     /**
      * has been deleted
      */
-    DELETED;
+    DELETED,
+    /**
+     * has been cleaned from internal tracking
+     */
+    CLEANUP;
 
     /**
      * @param bibLevelCode
