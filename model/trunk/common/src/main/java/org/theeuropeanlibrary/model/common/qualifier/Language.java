@@ -293,20 +293,20 @@ public enum Language implements Translatable {
     }
     
     /**
-     * @param languageName
+     * @param languageNameOrCode
      *            iso3, iso2, marc or name
      * @return language as enum looked up implicitly recognized type of given string representation
      */
-    public static Language lookupLanguage(String languageName) {
-        if (languageName != null) {
-            if (languageName.length() == 2) {
-                Language language = Language.getByIso2(languageName);
+    public static Language lookupLanguage(String languageNameOrCode) {
+        if (languageNameOrCode != null) {
+            if (languageNameOrCode.length() == 2) {
+                Language language = Language.getByIso2(languageNameOrCode);
                 return language;
-            } else if (languageName.length() == 3) {
-                Language language = Language.getByIso3(languageName);
+            } else if (languageNameOrCode.length() == 3) {
+                Language language = Language.getByIso3(languageNameOrCode);
                 return language;
             } else {
-                Language language = Language.getByName(languageName);
+                Language language = Language.getByName(languageNameOrCode);
                 return language;
             }
         }

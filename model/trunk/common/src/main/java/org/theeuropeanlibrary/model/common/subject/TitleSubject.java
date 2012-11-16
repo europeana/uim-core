@@ -17,19 +17,19 @@ public class TitleSubject extends Subject {
     /**
      * Title dates (typically the date of publication)
      */
-    @FieldId(11)
+    @FieldId(5)
     private Temporal           titleDates;
 
     /**
      * any other information regarding the subject/title
      */
-    @FieldId(12)
+    @FieldId(6)
     private String             miscellaneousInformation;
 
     /**
      * Identifiers of the topic in external data sets
      */
-    @FieldId(13)
+    @FieldId(7)
     protected List<Identifier> identifiers;
 
     /**

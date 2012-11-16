@@ -16,22 +16,22 @@ public class Subject {
      * Form subdivision that designates a specific kind or genre of material as defined by the
      * thesaurus being used.
      */
-    @FieldId(7)
+    @FieldId(1)
     protected String        formSubdivision;
     /**
      * Subject subdivision that is not more appropriately contained in other subdivisions
      */
-    @FieldId(8)
+    @FieldId(2)
     protected String        generalSubdivision;
     /**
      * Subject subdivision that represents a period of time
      */
-    @FieldId(9)
+    @FieldId(3)
     protected Temporal      chronologicalSubdivision;
     /**
      * Geographic subject subdivision
      */
-    @FieldId(10)
+    @FieldId(4)
     protected SpatialEntity geographicSubdivision;
 
     /**

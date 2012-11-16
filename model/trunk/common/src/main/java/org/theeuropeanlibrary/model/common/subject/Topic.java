@@ -20,34 +20,39 @@ public class Topic extends Subject {
     /**
      * actual name of the topic
      */
-    @FieldId(1)
+    @FieldId(5)
     private String             topicName;
     /**
      * description of the topic
      */
-    @FieldId(2)
+    @FieldId(6)
     private String             topicDescription;
 
     /**
      * Topical term following the name entry element
      */
-    @FieldId(4)
+    @FieldId(7)
     private String             secondTopicTerm;
     /**
      * Location of event
      */
-    @FieldId(5)
+    @FieldId(8)
     private SpatialEntity      locationOfEvent;
     /**
      * Time period during which an event occurred
      */
-    @FieldId(6)
+    @FieldId(9)
     private Temporal           activeDates;
 
+
+    /** Edition/version of the kos system */
+    @FieldId(10)
+    private String             edition;
+    
     /**
      * Identifiers of the topic in external data sets
      */
-    @FieldId(3)
+    @FieldId(11)
     protected List<Identifier> identifiers;
 
     /**
@@ -166,6 +171,25 @@ public class Topic extends Subject {
         this.activeDates = activeDates;
     }
 
+    
+
+    /**
+     * Sets the edition
+     * @param edition the edition to set
+     */
+    public void setEdition(String edition) {
+        this.edition = edition;
+    }
+
+
+    /**
+     * Returns the edition.
+     * @return the edition
+     */
+    public String getEdition() {
+        return edition;
+    }
+    
     /**
      * @return identifiers of topics like TEL, MACS, LCSH, ...
      */
@@ -181,54 +205,8 @@ public class Topic extends Subject {
         this.identifiers = identifiers;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((activeDates == null) ? 0 : activeDates.hashCode());
-        result = prime * result + ((identifiers == null) ? 0 : identifiers.hashCode());
-        result = prime * result + ((locationOfEvent == null) ? 0 : locationOfEvent.hashCode());
-        result = prime * result + ((secondTopicTerm == null) ? 0 : secondTopicTerm.hashCode());
-        result = prime * result + ((topicDescription == null) ? 0 : topicDescription.hashCode());
-        result = prime * result + ((topicName == null) ? 0 : topicName.hashCode());
-        return result;
-    }
+    
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
-        Topic other = (Topic)obj;
-        if (activeDates == null) {
-            if (other.activeDates != null) return false;
-        } else if (!activeDates.equals(other.activeDates)) return false;
-        if (identifiers == null) {
-            if (other.identifiers != null) return false;
-        } else if (!identifiers.equals(other.identifiers)) return false;
-        if (locationOfEvent == null) {
-            if (other.locationOfEvent != null) return false;
-        } else if (!locationOfEvent.equals(other.locationOfEvent)) return false;
-        if (secondTopicTerm == null) {
-            if (other.secondTopicTerm != null) return false;
-        } else if (!secondTopicTerm.equals(other.secondTopicTerm)) return false;
-        if (topicDescription == null) {
-            if (other.topicDescription != null) return false;
-        } else if (!topicDescription.equals(other.topicDescription)) return false;
-        if (topicName == null) {
-            if (other.topicName != null) return false;
-        } else if (!topicName.equals(other.topicName)) return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Topic [topicName=" + topicName + ", secondTopicTerm=" + secondTopicTerm +
-               ", locationOfEvent=" + locationOfEvent + ", activeDates=" + activeDates +
-               ", formSubdivision=" + formSubdivision + ", generalSubdivision=" +
-               generalSubdivision + ", chronologicalSubdivision=" + chronologicalSubdivision +
-               ", geographicSubdivision=" + geographicSubdivision + "]";
-    }
 
     /**
      * @return displayable representation of the topic object
@@ -261,4 +239,70 @@ public class Topic extends Subject {
 
         return builder.toString();
     }
+
+
+    
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((activeDates == null) ? 0 : activeDates.hashCode());
+        result = prime * result + ((edition == null) ? 0 : edition.hashCode());
+        result = prime * result + ((identifiers == null) ? 0 : identifiers.hashCode());
+        result = prime * result + ((locationOfEvent == null) ? 0 : locationOfEvent.hashCode());
+        result = prime * result + ((secondTopicTerm == null) ? 0 : secondTopicTerm.hashCode());
+        result = prime * result + ((topicDescription == null) ? 0 : topicDescription.hashCode());
+        result = prime * result + ((topicName == null) ? 0 : topicName.hashCode());
+        return result;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Topic other = (Topic)obj;
+        if (activeDates == null) {
+            if (other.activeDates != null) return false;
+        } else if (!activeDates.equals(other.activeDates)) return false;
+        if (edition == null) {
+            if (other.edition != null) return false;
+        } else if (!edition.equals(other.edition)) return false;
+        if (identifiers == null) {
+            if (other.identifiers != null) return false;
+        } else if (!identifiers.equals(other.identifiers)) return false;
+        if (locationOfEvent == null) {
+            if (other.locationOfEvent != null) return false;
+        } else if (!locationOfEvent.equals(other.locationOfEvent)) return false;
+        if (secondTopicTerm == null) {
+            if (other.secondTopicTerm != null) return false;
+        } else if (!secondTopicTerm.equals(other.secondTopicTerm)) return false;
+        if (topicDescription == null) {
+            if (other.topicDescription != null) return false;
+        } else if (!topicDescription.equals(other.topicDescription)) return false;
+        if (topicName == null) {
+            if (other.topicName != null) return false;
+        } else if (!topicName.equals(other.topicName)) return false;
+        return true;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Topic [topicName=" + topicName + ", topicDescription=" + topicDescription +
+               ", secondTopicTerm=" + secondTopicTerm + ", locationOfEvent=" + locationOfEvent +
+               ", activeDates=" + activeDates + ", edition=" + edition + ", identifiers=" +
+               identifiers + ", formSubdivision=" + formSubdivision + ", generalSubdivision=" +
+               generalSubdivision + ", chronologicalSubdivision=" + chronologicalSubdivision +
+               ", geographicSubdivision=" + geographicSubdivision + "]";
+    }
+
+
+
+
+    
+
+
 }
