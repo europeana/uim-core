@@ -74,5 +74,9 @@ public enum TextRelation {
     /** 
      * see dc:relation
      */
-    RELATION,
+    RELATION, 
+    /** 
+     * see mods location
+     */
+    LOCATION,
 }
