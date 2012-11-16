@@ -3,22 +3,21 @@ package org.theeuropeanlibrary.model.tel;
 
 import org.theeuropeanlibrary.model.common.FieldId;
 
-
 /**
- * 
+ * Holding information about collection and provider!
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Nov 15, 2012
  */
 public class Provenance {
     /**
-     * the controlled value
+     * controller Id (mnemonic)
      * */
     @FieldId(1)
     private String collectionId;
 
     /**
-     * An identification of the vocabulary according to which the value is encoded
+     * provider Id (mnemonic)
      */
     @FieldId(2)
     private String providerId;
@@ -32,8 +31,11 @@ public class Provenance {
 
     /**
      * Creates a new instance of this class.
-     * @param providerid 
-     * @param collectionid 
+     * 
+     * @param providerid
+     *            proider Id (mnemonic)
+     * @param collectionid
+     *            controller Id (mnemonic)
      * 
      */
     public Provenance(String providerid, String collectionid) {
@@ -42,32 +44,30 @@ public class Provenance {
     }
 
     /**
-     * Returns the collectionId.
-     * @return the collectionId
+     * @return controller Id (mnemonic)
      */
     public String getCollectionId() {
         return collectionId;
     }
 
     /**
-     * Sets the collectionId to the given value.
-     * @param collectionId the collectionId to set
+     * @param collectionId
+     *            controller Id (mnemonic)
      */
     public void setCollectionId(String collectionId) {
         this.collectionId = collectionId;
     }
 
     /**
-     * Returns the providerId.
-     * @return the providerId
+     * @return provider Id (mnemonic)
      */
     public String getProviderId() {
         return providerId;
     }
 
     /**
-     * Sets the providerId to the given value.
-     * @param providerId the providerId to set
+     * @param providerId
+     *            provider Id (mnemonic)
      */
     public void setProviderId(String providerId) {
         this.providerId = providerId;
@@ -96,5 +96,9 @@ public class Provenance {
         } else if (!providerId.equals(other.providerId)) return false;
         return true;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Provenance [collectionId=" + collectionId + ", providerId=" + providerId + "]";
+    }
 }
