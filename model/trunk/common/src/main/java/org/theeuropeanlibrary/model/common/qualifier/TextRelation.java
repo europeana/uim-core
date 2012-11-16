@@ -69,5 +69,10 @@ public enum TextRelation {
     /**
      * The statement of responsibility of an object (the name of the authors as written in the cover of a book, for example) 
      */
-    STATEMENT_OF_RESPONSIBILITY
+    STATEMENT_OF_RESPONSIBILITY,
+
+    /** 
+     * see dc:relation
+     */
+    RELATION,
 }
