@@ -21,7 +21,7 @@ public class FieldCheckWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I
      * Creates a new instance of this class.
      */
     public FieldCheckWorkflow() {
-        super("C: Field Validation",
+        super("N: Field Validation",
                 "Workflow which is used to validate fields of stord meta data records.");
 
         setStart(new BatchWorkflowStart<I>());
