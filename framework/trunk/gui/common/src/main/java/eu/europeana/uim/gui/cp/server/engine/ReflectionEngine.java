@@ -31,9 +31,9 @@ public class ReflectionEngine extends ExternalServiceEngine {
 
     private static String   configuredStorageEngine = "MemoryStorageEngine";
 
-    private static String[] storage                 = new String[] { "eu.europeana.uim.store.memory.MemoryStorageEngine" };
+    private static String[] storage                 = new String[] { "eu.europeana.uim.storage.memory.MemoryStorageEngine" };
 
-    private static String[] resource                = new String[] { "eu.europeana.uim.store.memory.MemoryResourceEngine" };
+    private static String[] resource                = new String[] { "eu.europeana.uim.storage.memory.MemoryResourceEngine" };
 
     private static String[] logging                 = new String[] { "eu.europeana.uim.logging.memory.MemoryLoggingEngine" };
 
@@ -49,8 +49,8 @@ public class ReflectionEngine extends ExternalServiceEngine {
             Class<?> registryClazz = Class.forName("eu.europeana.uim.UIMRegistry");
             registry = (Registry)registryClazz.newInstance();
 
-            Class<?> orchestratorClazz = Class.forName("eu.europeana.uim.orchestration.UIMOrchestrator");
-            Class<?> workflowClazz = Class.forName("eu.europeana.uim.orchestration.UIMWorkflowProcessor");
+            Class<?> orchestratorClazz = Class.forName("eu.europeana.uim.orchestration.basic.UIMOrchestrator");
+            Class<?> workflowClazz = Class.forName("eu.europeana.uim.orchestration.basic.UIMWorkflowProcessor");
             Object workflowObject = workflowClazz.getConstructor(Registry.class).newInstance(
                     registry);
             ochestrator = (Orchestrator)orchestratorClazz.getConstructor(Registry.class,
@@ -61,7 +61,7 @@ public class ReflectionEngine extends ExternalServiceEngine {
             Class<?> repoxServiceClazz = Class.forName("eu.europeana.uim.repox.rest.RepoxServiceImpl");
             repoxService = (RepoxService)repoxServiceClazz.newInstance();
 
-            Class<?> sugarServiceClazz = Class.forName("eu.europeana.uim.sugar.SugarServiceImpl");
+            Class<?> sugarServiceClazz = Class.forName("eu.europeana.uim.sugar.impl.SugarServiceImpl");
             sugarService = (SugarService)sugarServiceClazz.newInstance();
         } catch (Throwable e) {
             // TODO Auto-generated catch block
