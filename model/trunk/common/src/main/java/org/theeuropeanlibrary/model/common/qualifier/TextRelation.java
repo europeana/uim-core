@@ -86,5 +86,13 @@ public enum TextRelation {
     /** 
      * Information about a thesis
      *  */
-    DISSERTATION_STATEMENT,
+    DISSERTATION_STATEMENT, 
+    /** 
+     * Scale of a map or visual material
+     *  */
+    SCALE, 
+    /** 
+     * Information known about the item that may be used to determine copyright status. 
+     * */
+    COPYRIGHT_STATUS,
 }
