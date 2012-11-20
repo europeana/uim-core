@@ -59,6 +59,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
 import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
+import org.theeuropeanlibrary.model.tel.qualifier.NoteType;
 import org.theeuropeanlibrary.model.tel.qualifier.PartitionType;
 import org.theeuropeanlibrary.model.tel.qualifier.PrintType;
 
@@ -336,6 +337,7 @@ public final class ObjectModelRegistry {
             {
                 add(Language.class);
                 add(TextRelation.class);
+                add(NoteType.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
             }
