@@ -79,4 +79,12 @@ public enum TextRelation {
      * see mods location
      */
     LOCATION,
+    /** 
+     * A note made by the cataloguer. See NoteType enum for the type of note.
+     */
+    NOTE, 
+    /** 
+     * Information about a thesis
+     *  */
+    DISSERTATION_STATEMENT,
 }
