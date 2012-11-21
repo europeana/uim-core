@@ -102,5 +102,21 @@ public enum TextRelation {
     /** 
      * Information known about the item that may be used to determine copyright status. 
      * */
-    COPYRIGHT_STATUS,
+    COPYRIGHT_STATUS, 
+    /** Cartographic MATHEMATICAL DATA, scale, projection, coordinates  */
+    CARTOGRAPHIC_DATA,
+    /** Cartographic projection  */
+    PROJECTION, 
+    /** Cartographic coordinates  */
+    COORDINATES, 
+    /** Cartographic zone for celestial charts*/
+    CELESTIAL_ZONE, 
+    /** Cartographic equiox  */
+    EQUINOX, 
+    /**  The numbering and/or dates of coverage of the first and last issues of a serial when the numbers and dates are known */
+    NUMBERING_SERIALS,
+    /**
+     * Series that the resource is part of
+     */
+    SERIES,
 }
