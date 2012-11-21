@@ -19,25 +19,25 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * The north limit in decimal degrees (WGS 84)
      */
     @FieldId(3)
-    private double northLimit;
+    private Double northLimit;
 
     /**
      * The south limit in decimal degrees (WGS 84)
      */
     @FieldId(4)
-    private double southLimit;
+    private Double southLimit;
 
     /**
      * The east limit in decimal degrees (WGS 84)
      */
     @FieldId(5)
-    private double eastLimit;
+    private Double eastLimit;
 
     /**
      * The west limit in decimal degrees (WGS 84)
      */
     @FieldId(6)
-    private double westLimit;
+    private Double westLimit;
 
     /**
      * The name of the projection used with any parameters required, such as ellipsoid parameters,
@@ -46,6 +46,19 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
     @FieldId(7)
     private String projection;
 
+    /** 
+     * The constant coordinate for the uppermost face or edge (in meters)
+     */
+    @FieldId(9)
+    private Double upLimit;
+    
+    /** 
+     * The constant coordinate for the lowermost face or edge (in meters)
+     */
+    @FieldId(10)
+    private Double downLimit;
+
+    
     /**
      * Creates a new instance of this class.
      */
@@ -68,15 +81,19 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      *            The east limit in decimal degrees (WGS 84)
      * @param westLimit
      *            The west limit in decimal degrees (WGS 84)
+     * @param upLimit The constant coordinate for the uppermost face or edge (in meters)
+     * @param downLimit The constant coordinate for the lowermost face or edge (in meters)
      */
     public BoundingBoxReferencedPlace(String placeName, List<Identifier> identifiers,
-                                      double northLimit, double southLimit, double eastLimit,
-                                      double westLimit) {
+            Double northLimit, Double southLimit, Double eastLimit,
+            Double westLimit, Double upLimit, Double downLimit) {
         super(placeName, identifiers);
         this.northLimit = northLimit;
         this.southLimit = southLimit;
         this.eastLimit = eastLimit;
         this.westLimit = westLimit;
+        this.upLimit = upLimit;
+        this.downLimit = downLimit;
     }
 
     /**
@@ -92,20 +109,24 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      *            The east limit in decimal degrees (WGS 84)
      * @param westLimit
      *            The west limit in decimal degrees (WGS 84)
+     * @param upLimit The constant coordinate for the uppermost face or edge (in meters)
+     * @param downLimit The constant coordinate for the lowermost face or edge (in meters)
      */
-    public BoundingBoxReferencedPlace(String placeName, double northLimit, double southLimit,
-                                      double eastLimit, double westLimit) {
+    public BoundingBoxReferencedPlace(String placeName, Double northLimit, Double southLimit,
+            Double eastLimit, Double westLimit, Double upLimit, Double downLimit) {
         super(placeName, new ArrayList<Identifier>());
         this.northLimit = northLimit;
         this.southLimit = southLimit;
         this.eastLimit = eastLimit;
         this.westLimit = westLimit;
+        this.upLimit = upLimit;
+        this.downLimit = downLimit;
     }
 
     /**
      * @return The north limit in decimal degrees (WGS 84)
      */
-    public double getNorthLimit() {
+    public Double getNorthLimit() {
         return northLimit;
     }
 
@@ -113,14 +134,14 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * @param northLimit
      *            The north limit in decimal degrees (WGS 84)
      */
-    public void setNorthLimit(double northLimit) {
+    public void setNorthLimit(Double northLimit) {
         this.northLimit = northLimit;
     }
 
     /**
      * @return The south limit in decimal degrees (WGS 84)
      */
-    public double getSouthLimit() {
+    public Double getSouthLimit() {
         return southLimit;
     }
 
@@ -128,14 +149,14 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * @param southLimit
      *            The south limit in decimal degrees (WGS 84)
      */
-    public void setSouthLimit(double southLimit) {
+    public void setSouthLimit(Double southLimit) {
         this.southLimit = southLimit;
     }
 
     /**
      * @return The east limit in decimal degrees (WGS 84)
      */
-    public double getEastLimit() {
+    public Double getEastLimit() {
         return eastLimit;
     }
 
@@ -143,14 +164,14 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * @param eastLimit
      *            The east limit in decimal degrees (WGS 84)
      */
-    public void setEastLimit(double eastLimit) {
+    public void setEastLimit(Double eastLimit) {
         this.eastLimit = eastLimit;
     }
 
     /**
      * @return The west limit in decimal degrees (WGS 84)
      */
-    public double getWestLimit() {
+    public Double getWestLimit() {
         return westLimit;
     }
 
@@ -158,7 +179,7 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      * @param westLimit
      *            The west limit in decimal degrees (WGS 84)
      */
-    public void setWestLimit(double westLimit) {
+    public void setWestLimit(Double westLimit) {
         this.westLimit = westLimit;
     }
 
@@ -179,20 +200,67 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
         this.projection = projection;
     }
 
+   
+    
+    /**
+     * @return a String readable by a human 
+     */
+    @Override
+    public String getDisplay() {
+        //TODO: use a friendly display for coordinates
+        String box="northLimit:"+northLimit + "southLimit:"+southLimit + "eastLimit:"+eastLimit + "westLimit:"+westLimit;
+        box+="upLimit:"+upLimit + "downLimit:"+downLimit;
+        if (projection!=null && !projection.isEmpty())
+            box += " projection:"+projection;
+            
+        if(getPlaceName()!=null)
+            return getPlaceName()+ "("+box+")";
+        return box;
+    }
+
+    /**
+     * Sets the upLimit
+     * @param upLimit the upLimit to set
+     */
+    public void setUpLimit(Double upLimit) {
+        this.upLimit = upLimit;
+    }
+
+    /**
+     * Returns the upLimit.
+     * @return the upLimit
+     */
+    public Double getUpLimit() {
+        return upLimit;
+    }
+
+    /**
+     * Sets the downLimit
+     * @param downLimit the downLimit to set
+     */
+    public void setDownLimit(Double downLimit) {
+        this.downLimit = downLimit;
+    }
+
+    /**
+     * Returns the downLimit.
+     * @return the downLimit
+     */
+    public Double getDownLimit() {
+        return downLimit;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        long temp;
-        temp = Double.doubleToLongBits(eastLimit);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(northLimit);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
+        result = prime * result + ((downLimit == null) ? 0 : downLimit.hashCode());
+        result = prime * result + ((eastLimit == null) ? 0 : eastLimit.hashCode());
+        result = prime * result + ((northLimit == null) ? 0 : northLimit.hashCode());
         result = prime * result + ((projection == null) ? 0 : projection.hashCode());
-        temp = Double.doubleToLongBits(southLimit);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(westLimit);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
+        result = prime * result + ((southLimit == null) ? 0 : southLimit.hashCode());
+        result = prime * result + ((upLimit == null) ? 0 : upLimit.hashCode());
+        result = prime * result + ((westLimit == null) ? 0 : westLimit.hashCode());
         return result;
     }
 
@@ -202,32 +270,35 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         BoundingBoxReferencedPlace other = (BoundingBoxReferencedPlace)obj;
-        if (Double.doubleToLongBits(eastLimit) != Double.doubleToLongBits(other.eastLimit))
-            return false;
-        if (Double.doubleToLongBits(northLimit) != Double.doubleToLongBits(other.northLimit))
-            return false;
+        if (downLimit == null) {
+            if (other.downLimit != null) return false;
+        } else if (!downLimit.equals(other.downLimit)) return false;
+        if (eastLimit == null) {
+            if (other.eastLimit != null) return false;
+        } else if (!eastLimit.equals(other.eastLimit)) return false;
+        if (northLimit == null) {
+            if (other.northLimit != null) return false;
+        } else if (!northLimit.equals(other.northLimit)) return false;
         if (projection == null) {
             if (other.projection != null) return false;
         } else if (!projection.equals(other.projection)) return false;
-        if (Double.doubleToLongBits(southLimit) != Double.doubleToLongBits(other.southLimit))
-            return false;
-        if (Double.doubleToLongBits(westLimit) != Double.doubleToLongBits(other.westLimit))
-            return false;
+        if (southLimit == null) {
+            if (other.southLimit != null) return false;
+        } else if (!southLimit.equals(other.southLimit)) return false;
+        if (upLimit == null) {
+            if (other.upLimit != null) return false;
+        } else if (!upLimit.equals(other.upLimit)) return false;
+        if (westLimit == null) {
+            if (other.westLimit != null) return false;
+        } else if (!westLimit.equals(other.westLimit)) return false;
         return true;
     }
-    
-    /**
-     * @return a String readable by a human 
-     */
+
     @Override
-    public String getDisplay() {
-        //TODO: use a friendly display for coordinates
-        String box="northLimit:"+northLimit + "southLimit:"+southLimit + "eastLimit:"+eastLimit + "westLimit:"+westLimit;
-        if (projection!=null && !projection.isEmpty())
-            box += " projection:"+projection;
-            
-        if(getPlaceName()!=null)
-            return getPlaceName()+ "("+box+")";
-        return box;
+    public String toString() {
+        return "BoundingBoxReferencedPlace [northLimit=" + northLimit + ", southLimit=" +
+               southLimit + ", eastLimit=" + eastLimit + ", westLimit=" + westLimit +
+               ", projection=" + projection + ", upLimit=" + upLimit + ", downLimit=" + downLimit +
+               "]";
     }
 }

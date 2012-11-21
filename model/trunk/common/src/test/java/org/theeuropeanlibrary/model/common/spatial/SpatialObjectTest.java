@@ -62,15 +62,17 @@ public class SpatialObjectTest {
      */
     @Test
     public void testBoundingBoxReferencedPlace() throws IOException {
-        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0);
+        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null);
         Assert.assertEquals("revised", enc.getPlaceName());
         Assert.assertEquals(1.0, enc.getNorthLimit());
         Assert.assertEquals(2.0, enc.getSouthLimit());
         Assert.assertEquals(3.0, enc.getEastLimit());
         Assert.assertEquals(4.0, enc.getWestLimit());
+        Assert.assertNull(enc.getUpLimit());
+        Assert.assertNull(enc.getDownLimit());
 
-        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0), enc);
-        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0).hashCode(), enc.hashCode());
+        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null), enc);
+        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null).hashCode(), enc.hashCode());
     }
 
     /**
