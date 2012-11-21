@@ -132,6 +132,8 @@ public enum IdentifierType {
     SOURCE_OF_ACQUISITION,
     /** GOVERNMENT_PUBLICATION_NUMBER */
     GOVERNMENT_PUBLICATION_NUMBER,
+    /** DISSERTATION IDENTIFIER (from marc21)*/
+    DISSERTATION,
     /**
      * identifier representing cluster group (detailed types are insided identifier)
      */

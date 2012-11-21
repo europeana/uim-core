@@ -86,7 +86,15 @@ public enum TextRelation {
     /** 
      * Information about a thesis
      *  */
-    DISSERTATION_STATEMENT, 
+    DISSERTATION_STATEMENT,
+    /** 
+     * Information about a thesis
+     *  */
+    DISSERTATION_DEGREE,
+    /** 
+     * Information about a thesis
+     *  */
+    DISSERTATION_DISCIPLINE, 
     /** 
      * Scale of a map or visual material
      *  */
