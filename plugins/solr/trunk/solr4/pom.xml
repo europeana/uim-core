@@ -114,6 +114,12 @@
             <version>4.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-analysis-extras</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
         <!-- Stax -->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
