@@ -27,6 +27,13 @@ public class GeoReferencedPlace extends NamedPlace {
     private double longitude;
 
     /**
+     * elevation in metres
+     */
+    @FieldId(9)
+    private Double elevation;
+    
+
+    /**
      * Creates a new instance of this class.
      */
     public GeoReferencedPlace() {
@@ -98,10 +105,32 @@ public class GeoReferencedPlace extends NamedPlace {
         this.longitude = longitude;
     }
 
+ 
+
+    /**
+     * @return a String readable by a human 
+     */
+    @Override
+    public String getDisplay() {
+        //TODO: use a friendly display for coordinates
+        if(getPlaceName()!=null)
+            return getPlaceName()+ "(latitude:"+latitude+" longitude:"+longitude+")";
+        return "latitude:"+latitude+" longitude:"+longitude;
+    }
+
+    public final Double getElevation() {
+        return elevation;
+    }
+
+    public final void setElevation(Double elevation) {
+        this.elevation = elevation;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
+        result = prime * result + ((elevation == null) ? 0 : elevation.hashCode());
         long temp;
         temp = Double.doubleToLongBits(latitude);
         result = prime * result + (int)(temp ^ (temp >>> 32));
@@ -116,22 +145,17 @@ public class GeoReferencedPlace extends NamedPlace {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         GeoReferencedPlace other = (GeoReferencedPlace)obj;
+        if (elevation == null) {
+            if (other.elevation != null) return false;
+        } else if (!elevation.equals(other.elevation)) return false;
         if (Double.doubleToLongBits(latitude) != Double.doubleToLongBits(other.latitude))
             return false;
         if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
             return false;
         return true;
     }
-    
 
-    /**
-     * @return a String readable by a human 
-     */
-    @Override
-    public String getDisplay() {
-        //TODO: use a friendly display for coordinates
-        if(getPlaceName()!=null)
-            return getPlaceName()+ "(latitude:"+latitude+" longitude:"+longitude+")";
-        return "latitude:"+latitude+" longitude:"+longitude;
-    }
+    
+    
+    
 }
