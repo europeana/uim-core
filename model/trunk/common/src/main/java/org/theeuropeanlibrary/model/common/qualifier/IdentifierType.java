@@ -95,7 +95,7 @@ public enum IdentifierType {
     /** Library of Congress Control Numbers */
     LCCN,
     /** OCLC Worldcat Control Numbers */
-    OCLC_WORLDCAT,
+    OCLC,
     /** PUBMED */
     PMID,
     /** PRONOM Unique Identifiers */
