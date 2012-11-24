@@ -10,6 +10,7 @@ import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
@@ -52,6 +53,11 @@ public interface ExecutionContext<U extends UimDataSet<I>, I> {
      * @return DataSet for this execution (provider, collection, ...)
      */
     UimDataSet<I> getDataSet();
+    
+    /**
+     * @return the collection iff the dataset is mdr, request, or collection. NULL for provider dataset.
+     */
+    Collection<I> getDataSetCollection();
 
     /**
      * @return progress monitor

@@ -29,7 +29,10 @@ import eu.europeana.uim.plugin.source.Task;
 import eu.europeana.uim.plugin.source.WorkflowStart;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflow.WorkflowStepStatus;
@@ -146,6 +149,20 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         return execution.getDataSet();
     }
 
+    @Override
+    public Collection<I> getDataSetCollection() {
+        Collection<I> collection = null;
+        UimDataSet<I> dataset = getDataSet();
+        if (dataset instanceof Collection) {
+            collection = (Collection<I>)dataset;
+        } else if (dataset instanceof Request<?>) {
+            collection = ((Request<I>)dataset).getCollection();
+        } else if (dataset instanceof MetaDataRecord<?>) {
+            collection = ((MetaDataRecord<I>)dataset).getCollection();
+        }
+        return collection;
+    }
+    
     @Override
     public RevisableProgressMonitor getMonitor() {
         return monitor;
