@@ -58,6 +58,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
 import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
+import org.theeuropeanlibrary.model.tel.qualifier.MaterialType;
 import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
 import org.theeuropeanlibrary.model.tel.qualifier.NoteType;
 import org.theeuropeanlibrary.model.tel.qualifier.PartitionType;
@@ -81,12 +82,12 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "metadatarecord",
                                                                                                                            MetaDataRecordBean.class);
-    
+
     public static final TKey<ObjectModelRegistry, Provenance>                                  PROVENANCE          = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "provenance",
                                                                                                                            Provenance.class);
-    
+
     public static final TKey<ObjectModelRegistry, Partition>                                   PARTITION           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "partition",
@@ -241,6 +242,11 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "print_type",
                                                                                                                            PrintType.class);
+
+    public static final TKey<ObjectModelRegistry, MaterialType>                                MATERIAL_TYPE       = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "material_type",
+                                                                                                                           MaterialType.class);
 
     public static final TKey<ObjectModelRegistry, Audience>                                    AUDIENCE            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
