@@ -98,7 +98,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                             "An uncatched throwable occured:" + t.getMessage());
                 }
             }
-            log.log(java.util.logging.Level.SEVERE, "Task failed on record " + metaDataRecord +
+            log.log(java.util.logging.Level.SEVERE, "Task failed on record " + metaDataRecord.getId() +
                                                     " in plugin " + task.getStep().getIdentifier(),
                     t);
         } else if (!task.isSuccessfulProcessing()) {
