@@ -15,9 +15,14 @@ public enum StandardControlledVocabulary implements ControlledVocabularyKeyValue
     MNEMONIC,
     
     /**
-     * name
+     * name (internal name, can be abbreviated)
      */
     NAME,
+    
+    /**
+     * name (full external name)
+     */
+    FULLNAME,
     
     /**
      * type of provider/collection
