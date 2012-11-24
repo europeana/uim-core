@@ -63,10 +63,6 @@ public enum TextRelation {
      */
     AUDIENCE,
     /**
-     * A subcollection within the Collection 8as used by TEL in UIM)
-     */
-    SUBCOLLECTION,
-    /**
      * The statement of responsibility of an object (the name of the authors as written in the cover of a book, for example) 
      */
     STATEMENT_OF_RESPONSIBILITY,
