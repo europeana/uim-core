@@ -300,7 +300,7 @@ public final class ObjectModelConverterFactory implements ConverterFactory {
 	
 				put(Metadata.class, new AnnotationBasedByteConverter<Metadata>(
 						Metadata.class, null));
-	
+	/*
 				put(Topic.class, new AnnotationBasedByteConverter<Topic>(
 						Topic.class,
 						new HashMap<Integer, FieldConverterInterface>() {
@@ -405,11 +405,11 @@ public final class ObjectModelConverterFactory implements ConverterFactory {
 								});
 							}
 						});
-	
-				titleSubjectConverter.setSerializer(actualTitleSubjectConverter); 
-				subjectConverter.setSerializer(actualSubjectConverter); 
+				*/
+				//titleSubjectConverter.setSerializer(actualTitleSubjectConverter); 
+				//subjectConverter.setSerializer(actualSubjectConverter); 
 			}
-			
+
 			//TODO:is it worth having another dedicated converter class for Europeana Specific elements? 
 			put(EuropeanaLink.class, new AnnotationBasedByteConverter<EuropeanaLink>(EuropeanaLink.class,
 					null));
