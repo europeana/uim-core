@@ -17,10 +17,14 @@ public enum TitleType {
 	 * uniform title for better transparency
 	 */
 	UNIFORM,
-	/**
-	 * another title holding alternative representation
-	 */
-	ALTERNATIVE,
+    /**
+     * another title holding alternative representation
+     */
+    ALTERNATIVE,
+    /**
+     * title of part/section
+     */
+    PART,
     /**
      * A title of another resource, which is the subject of this resource
      */
