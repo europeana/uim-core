@@ -20,18 +20,28 @@
  */
 package eu.europeana.uim.store.mongo;
 
+import static org.junit.Assert.assertEquals;
+
 import java.net.UnknownHostException;
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
+import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.storage.AbstractStorageEngineTest;
 import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.Request;
 
 /**
  * Configuration class for MongoDB StorageEngineTests
@@ -47,6 +57,10 @@ public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
 
     private Mongo              m           = null;
 
+    private enum TestEnum {
+        EN;
+    }
+    
     /**
      * Run before each test
      */
@@ -91,5 +105,71 @@ public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
             return mongoEngine;
         }
         return mongoEngine;
+    }
+    
+    
+    /**
+     * @throws StorageEngineException 
+     * 
+     */
+    @Test
+    public void testAggregators() throws StorageEngineException{
+        Provider<String> provider0 = engine.createProvider();
+        provider0.setMnemonic("TEL");
+        provider0.setName("The European Library");
+        engine.updateProvider(provider0);
+
+        Collection<String> collection0 = engine.createCollection(provider0);
+        collection0.setMnemonic("a0001");
+        collection0.setName("TEL's collection 001");
+        engine.updateCollection(collection0);
+
+        Request<String> request0 = engine.createRequest(collection0, new Date(0));
+        engine.updateRequest(request0);
+
+        assertEquals(0, engine.getTotalByRequest(request0));
+        assertEquals(0, engine.getTotalByCollection(collection0));
+
+        MetaDataRecord<String> record0 = engine.createMetaDataRecord(collection0, "abcd-1");
+        record0.addValue(MDRFieldRegistry.rawrecord, "title 01");
+        record0.addValue(MDRFieldRegistry.rawrecord, "title 02");
+        record0.addValue(MDRFieldRegistry.rawrecord, "title 03", TestEnum.EN);
+        record0.addValue(MDRFieldRegistry.rawformat, "MARC21");
+        engine.updateMetaDataRecord(record0);
+        engine.addRequestRecord(request0, record0);
+
+        assertEquals(1, engine.getTotalByRequest(request0));
+
+        MetaDataRecord<String> record1 = engine.createMetaDataRecord(collection0, "abcd-2");
+        record1.addValue(MDRFieldRegistry.rawrecord, "title 11");
+        record1.addValue(MDRFieldRegistry.rawrecord, "title 12");
+        record1.addValue(MDRFieldRegistry.rawrecord, "title 13", TestEnum.EN);
+        record1.addValue(MDRFieldRegistry.rawformat, "MARC21");
+        engine.updateMetaDataRecord(record1);
+        engine.addRequestRecord(request0, record1);
+
+        assertEquals(2, engine.getTotalByRequest(request0));
+
+        MetaDataRecord<String> record3 = engine.getMetaDataRecord(record0.getId());
+        assertEquals("title 01", record3.getFirstValue(MDRFieldRegistry.rawrecord));
+        assertEquals("title 03", record3.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
+
+        assertEquals(3, record3.getQualifiedValues(MDRFieldRegistry.rawrecord).size());
+        engine.checkpoint();
+
+        MetaDataRecord<String> record4 = engine.getMetaDataRecord(record0.getId());
+        assertEquals("title 01", record4.getFirstValue(MDRFieldRegistry.rawrecord));
+        assertEquals("title 03", record4.getValues(MDRFieldRegistry.rawrecord, TestEnum.EN).get(0));
+        assertEquals(request0.getCollection().getId(), record4.getCollection().getId());
+
+        assertEquals(2, engine.getTotalByRequest(request0));
+        assertEquals(2, engine.getTotalByCollection(collection0));
+
+        assertEquals(request0.getCollection().getId(), record1.getCollection().getId());
+        
+        mongoEngine.flushCollectionMDRS(collection0.getId());
+        
+        mongoEngine.flushRequestMDRS(request0.getId());
+        
     }
 }

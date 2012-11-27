@@ -69,7 +69,7 @@ public class MongoCollectionDecorator<I> extends
 	 * A searchable reference to the collection's Provider (not the object
 	 * itself)
 	 */
-	@Reference
+	@Reference(lazy = true)
 	private MongoProviderDecorator<String> provider;
 
 	/**

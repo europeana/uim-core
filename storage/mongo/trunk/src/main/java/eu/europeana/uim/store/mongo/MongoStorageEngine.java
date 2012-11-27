@@ -32,7 +32,6 @@ import org.bson.types.ObjectId;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ExecutionContext;
@@ -44,11 +43,16 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.mongo.aggregators.MDRPerCollectionAggregator;
+import eu.europeana.uim.store.mongo.aggregators.MDRPerRequestAggregator;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoExecutionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoMetadataRecordDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
+import gnu.trove.iterator.hash.TObjectHashIterator;
+import gnu.trove.map.hash.THashMap;
+import gnu.trove.set.hash.THashSet;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -65,11 +69,15 @@ public class MongoStorageEngine extends AbstractEngine implements
 	private static final String LOCALIDFIELD = "mongoId";
 	private static final String RECORDUIDFIELD = "uniqueID";
 	private static final String REQUESTRECORDS = "requestrecords";
-	
+
+	private static THashMap<String, MongoCollectionDecorator<String>> inmemoryCollections = new THashMap<String, MongoCollectionDecorator<String>>();
+
+	private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
+	private static THashMap<String, THashSet<String>> inmemoryRequestRecordIDs = new THashMap<String, THashSet<String>>();
 	
 	Mongo mongo = null;
 	private DB db = null;
-	private DBCollection records = null;
+
 	private Datastore ds = null;
 
 	private EngineStatus status = EngineStatus.STOPPED;
@@ -84,10 +92,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	}
 
 	/**
-     * Default constructor
-     */
+	 * Default constructor
+	 */
 	public MongoStorageEngine() {
-
+		this.dbName = "UIM";
 	}
 
 	/*
@@ -129,14 +137,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 			status = EngineStatus.BOOTING;
 			mongo = new Mongo();
 			db = mongo.getDB(dbName);
-			records = db.getCollection("records");
 			Morphia morphia = new Morphia();
-
 			morphia.map(MongoProviderDecorator.class)
 					.map(MongoExecutionDecorator.class)
 					.map(MongoCollectionDecorator.class)
-					.map(MongoRequestDecorator.class);
-
+					.map(MongoRequestDecorator.class)
+					.map(MDRPerCollectionAggregator.class)
+					.map(MDRPerRequestAggregator.class);
 			ds = morphia.createDatastore(mongo, dbName);
 			status = EngineStatus.RUNNING;
 
@@ -170,7 +177,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * ExecutionContext)
 	 */
 	@Override
-	public void completed(ExecutionContext<?,String> context) {
+	public void completed(ExecutionContext<?, String> context) {
 	}
 
 	/*
@@ -282,12 +289,14 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Provider<String> getProvider(String id) {
-		
-		MongoProviderDecorator<String> prov = ds.find(MongoProviderDecorator.class)
-		.filter(LOCALIDFIELD, new ObjectId(id)).get();
-		
-		Provider<String> retprov = prov != null? prov.getEmbeddedProvider(): null; 
-		
+
+		MongoProviderDecorator<String> prov = ds
+				.find(MongoProviderDecorator.class)
+				.filter(LOCALIDFIELD, new ObjectId(id)).get();
+
+		Provider<String> retprov = prov != null ? prov.getEmbeddedProvider()
+				: null;
+
 		return retprov;
 	}
 
@@ -299,11 +308,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Provider<String> findProvider(String mnemonic) {
-		MongoProviderDecorator<String> prov = ds.find(MongoProviderDecorator.class).field(MNEMONICFIELD)
+		MongoProviderDecorator<String> prov = ds
+				.find(MongoProviderDecorator.class).field(MNEMONICFIELD)
 				.equal(mnemonic).get();
-		
-		Provider<String> retprov = prov != null? prov.getEmbeddedProvider(): null; 
-		
+
+		Provider<String> retprov = prov != null ? prov.getEmbeddedProvider()
+				: null;
+
 		return retprov;
 	}
 
@@ -317,8 +328,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 		List<Provider<String>> res = new ArrayList<Provider<String>>();
 
 		@SuppressWarnings("rawtypes")
-		List<MongoProviderDecorator> decs = ds.find(MongoProviderDecorator.class).asList();
-		
+		List<MongoProviderDecorator> decs = ds.find(
+				MongoProviderDecorator.class).asList();
+
 		for (MongoProviderDecorator<String> p : decs) {
 			res.add(p.getEmbeddedProvider());
 		}
@@ -336,8 +348,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public Collection<String> createCollection(Provider<String> provider) {
 		provider = (Provider<String>) ensureConsistency(provider);
-		MongoCollectionDecorator<String> c = new MongoCollectionDecorator<String>(provider);
+		MongoCollectionDecorator<String> c = new MongoCollectionDecorator<String>(
+				provider);
 		ds.save(c);
+		inmemoryCollections.put(c.getId(), c);
 		return c.getEmbeddedCollection();
 	}
 
@@ -352,7 +366,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public void updateCollection(Collection<String> collection)
 			throws StorageEngineException {
-		
+
 		collection = (Collection<String>) ensureConsistency(collection);
 
 		ArrayList<MongoCollectionDecorator> allresults = new ArrayList<MongoCollectionDecorator>();
@@ -382,6 +396,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 			}
 
 		}
+		inmemoryCollections.put(collection.getId(),
+				(MongoCollectionDecorator<String>) collection);
 		ds.merge(collection);
 	}
 
@@ -393,12 +409,21 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<String> getCollection(String id) {
-		@SuppressWarnings("rawtypes")
-		MongoCollectionDecorator coll = ds.find(MongoCollectionDecorator.class)
-				.filter(LOCALIDFIELD, new ObjectId(id)).get();
-		
-		Collection<String> retcoll = (coll == null)? coll: coll.getEmbeddedCollection();
-		
+
+		Collection<String> retcoll = null;
+		synchronized (inmemoryCollections) {
+			MongoCollectionDecorator<String> coll = inmemoryCollections.get(id);
+
+			if (coll == null) {
+				ObjectId objid = ObjectId.massageToObjectId(id);
+				coll = ds.find(MongoCollectionDecorator.class)
+						.filter(LOCALIDFIELD, objid).get();
+
+				inmemoryCollections.put(coll.getId(), coll);
+			}
+			retcoll = (coll == null) ? coll : coll.getEmbeddedCollection();
+		}
+
 		return retcoll;
 	}
 
@@ -413,9 +438,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 		@SuppressWarnings("rawtypes")
 		MongoCollectionDecorator coll = ds.find(MongoCollectionDecorator.class)
 				.filter(MNEMONICFIELD, mnemonic).get();
-		
-		Collection<String> retcoll = (coll == null)? coll: coll.getEmbeddedCollection();
-		
+
+		Collection<String> retcoll = (coll == null) ? coll : coll
+				.getEmbeddedCollection();
+
+		inmemoryCollections.put(coll.getId(), coll);
 		return retcoll;
 	}
 
@@ -432,7 +459,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public List<Collection<String>> getCollections(Provider<String> provider) {
 		provider = (Provider<String>) ensureConsistency(provider);
 		List<Collection<String>> res = new ArrayList<Collection<String>>();
-		for (MongoCollectionDecorator<String> c : ds.find(MongoCollectionDecorator.class)
+		for (MongoCollectionDecorator<String> c : ds
+				.find(MongoCollectionDecorator.class)
 				.filter("provider", provider).asList()) {
 			res.add(c.getEmbeddedCollection());
 		}
@@ -447,8 +475,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public List<Collection<String>> getAllCollections() {
 		List<Collection<String>> res = new ArrayList<Collection<String>>();
-		for (MongoCollectionDecorator<String> c : ds.find(MongoCollectionDecorator.class)
-				.asList()) {
+		for (MongoCollectionDecorator<String> c : ds.find(
+				MongoCollectionDecorator.class).asList()) {
 			res.add(c.getEmbeddedCollection());
 		}
 		return res;
@@ -487,7 +515,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 		MongoRequestDecorator<String> request2 = (MongoRequestDecorator<String>) ensureConsistency(request);
 
 		for (MongoRequestDecorator<?> r : ds.find(MongoRequestDecorator.class)
-				.filter("collection", request2.getCollectionReference())
+				.filter("collectionID", request2.getCollectionID())
 				.asList()) {
 			if (r.getDate().equals(request.getDate())
 					&& !r.getId().equals(request2.getId())) {
@@ -515,8 +543,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 		collection = (Collection<String>) ensureConsistency(collection);
 
 		List<Request<String>> res = new ArrayList<Request<String>>();
-		for (MongoRequestDecorator<String> r : ds.find(MongoRequestDecorator.class)
-				.filter("collection", collection).asList()) {
+		for (MongoRequestDecorator<String> r : ds
+				.find(MongoRequestDecorator.class)
+				.filter("collectionID", collection.getId()).asList()) {
 			res.add(r.getEmbeddedRequest());
 		}
 		return res;
@@ -528,10 +557,17 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * @see eu.europeana.uim.api.StorageEngine#getRequest(java.lang.Object)
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Request<String> getRequest(String id) throws StorageEngineException {
 		MongoRequestDecorator<?> req = ds.find(MongoRequestDecorator.class)
 				.filter(LOCALIDFIELD, new ObjectId(id)).get();
+		
+		@SuppressWarnings("rawtypes")
+		MongoCollectionDecorator coll = (MongoCollectionDecorator<?>) ensureConsistency(getCollection(req.getCollectionID()));
+		
+		req.setCollectionReference(coll);
+		
 		return req.getEmbeddedRequest();
 	}
 
@@ -546,17 +582,46 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public List<Request<String>> getRequests(MetaDataRecord<String> mdr)
 			throws StorageEngineException {
-		
+
 		mdr = (MetaDataRecord<String>) ensureConsistency(mdr);
-		
+
 		List<Request<String>> requests = new ArrayList<Request<String>>();
-		List<MongoRequestDecorator> results = ds.find(MongoRequestDecorator.class).filter(REQUESTRECORDS, mdr).asList();
-		for(MongoRequestDecorator res : results){
-		
+		List<MongoRequestDecorator> results = ds
+				.find(MongoRequestDecorator.class).filter(REQUESTRECORDS, mdr)
+				.asList();
+		for (MongoRequestDecorator res : results) {
+
 			requests.add(res.getEmbeddedRequest());
 		}
 		return requests;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#addRequestRecord(eu.europeana.uim.
+	 * store.Request, eu.europeana.uim.store.MetaDataRecord)
+	 */
+	@Override
+	public void addRequestRecord(Request<String> request,
+			MetaDataRecord<String> record) throws StorageEngineException {
+
+		MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
+		
+	    synchronized (inmemoryRequestRecordIDs) {
+			THashSet<String> registeredRequestrecords = inmemoryRequestRecordIDs
+					.get(request.getId());
+			
+			if(registeredRequestrecords == null){
+				registeredRequestrecords = new THashSet<String>();
+				inmemoryRequestRecordIDs.put(request.getId(), registeredRequestrecords);
+			}
+			registeredRequestrecords.add(rec.getId());
+		}
+	}
+
+
 
 	/*
 	 * (non-Javadoc)
@@ -583,44 +648,30 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * eu.europeana.uim.api.StorageEngine#updateMetaDataRecord(eu.europeana.
 	 * uim.store.MetaDataRecord)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void updateMetaDataRecord(MetaDataRecord<String> record)
 			throws StorageEngineException {
 		MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
-		if(rec.getMongoId() == null){
+		if (rec.getMongoId() == null) {
 			ds.save(record);
-		}
-		else{
+		} else {
 			ds.merge(record);
 		}
-	}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * eu.europeana.uim.api.StorageEngine#addRequestRecord(eu.europeana.uim.
-	 * store.Request, eu.europeana.uim.store.MetaDataRecord)
-	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void addRequestRecord(Request<String> request,
-			MetaDataRecord<String> record) throws StorageEngineException {
-		
-		MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
-		if(rec.getMongoId() == null){
-			ds.save(record);
+
+		synchronized (inmemoryCollectionRecordIDs) {
+			THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
+					.get(rec.getCollectionID());
+			
+			if(registeredCollectionrecords == null){
+				registeredCollectionrecords = new THashSet<String>();
+				inmemoryCollectionRecordIDs.put(rec.getCollectionID(), registeredCollectionrecords);
+			}
+			registeredCollectionrecords.add(rec.getId());
 		}
-		MongoRequestDecorator<String> req = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
-				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
-		req.getRequestrecords().add((MongoMetadataRecordDecorator<String>) record);
-
-		ds.merge(req);
 	}
 
-
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -634,7 +685,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public Execution<String> createExecution(UimDataSet<String> entity,
 			String workflow) throws StorageEngineException {
 		MongoExecutionDecorator<String> me = new MongoExecutionDecorator<String>();
-		
+
 		entity = (UimDataSet<String>) ensureConsistency(entity);
 		me.setDataSet(entity);
 		me.setWorkflow(workflow);
@@ -653,7 +704,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public void updateExecution(Execution<String> execution)
 			throws StorageEngineException {
-		execution = (MongoExecutionDecorator<String>)ensureConsistency(execution);
+		execution = (MongoExecutionDecorator<String>) ensureConsistency(execution);
 		ds.merge(execution);
 	}
 
@@ -665,8 +716,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public List<Execution<String>> getAllExecutions() {
 		List<Execution<String>> res = new ArrayList<Execution<String>>();
-		for (MongoExecutionDecorator<String> e : ds.find(MongoExecutionDecorator.class)
-				.asList()) {
+		for (MongoExecutionDecorator<String> e : ds.find(
+				MongoExecutionDecorator.class).asList()) {
 			res.add(e.getEmbeddedExecution());
 		}
 		return res;
@@ -692,76 +743,121 @@ public class MongoStorageEngine extends AbstractEngine implements
 			} catch (StorageEngineException e) {
 				e.printStackTrace();
 			}
-
 		}
-
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getMetaDataRecord(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getMetaDataRecord(java.lang.Object)
 	 */
 	@Override
 	public MetaDataRecord<String> getMetaDataRecord(String id)
 			throws StorageEngineException {
 		@SuppressWarnings("unchecked")
-		MongoMetadataRecordDecorator<String> request = ds
+		MongoMetadataRecordDecorator<String> mdr = ds
 				.find(MongoMetadataRecordDecorator.class)
 				.filter(RECORDUIDFIELD, id).get();
-		return request;
+
+		if (mdr != null) {
+			@SuppressWarnings("unchecked")
+			MongoCollectionDecorator<String> coll = (MongoCollectionDecorator<String>) ensureConsistency(getCollection(mdr
+					.getCollectionID()));
+			mdr.setCollectionDecorator(coll);
+		}
+		return mdr;
 	}
 
-	
-	
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getByRequest(eu.europeana.uim.store.Request)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getByRequest(eu.europeana.uim.store
+	 * .Request)
 	 */
 	@Override
 	public String[] getByRequest(Request<String> request) {
 
-		@SuppressWarnings("unchecked")
-		MongoRequestDecorator<String> cast = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
-				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
-		HashSet<MongoMetadataRecordDecorator<String>> reqrecords = cast
-				.getRequestrecords();
-		String[] res = new String[reqrecords.size()];
+		inmemoryRequestRecordIDs.get(request.getId());
+		
+		String[] res = null;
 
-		int i = 0;
+		synchronized (inmemoryRequestRecordIDs) {
+			THashSet<String> idrefs = inmemoryRequestRecordIDs.get(request.getId());
 
-		for (MongoMetadataRecordDecorator<String> rec : reqrecords) {
+			if (idrefs != null) {
+				res = idrefs.toArray(new String[0]);   
+			} else {
+				MDRPerRequestAggregator aggregator = ds
+						.find(MDRPerRequestAggregator.class)
+						.filter("requestId", request.getId()).get();
 
-			res[i] = rec.getId();
+				if (aggregator != null) {
+					HashSet<String> entries = aggregator.getMdrIDs();
 
-			i++;
+					THashSet<String> idrefsnew = new THashSet<String>(entries);
+					inmemoryRequestRecordIDs.put(request.getId(), idrefsnew);
+
+					res =idrefsnew.toArray(new String[0]);
+				} else {
+					res = new String[0];
+				}
+
+			}
+
 		}
 
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getByCollection(eu.europeana.uim.store.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getByCollection(eu.europeana.uim.store
+	 * .Collection)
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public String[] getByCollection(Collection<String> collection) {
-		collection = (Collection<String>) ensureConsistency(collection);
-		List<MongoMetadataRecordDecorator> reqrecords = ds
-				.find(MongoMetadataRecordDecorator.class)
-				.filter("collection", collection).asList();
-		String[] res = new String[reqrecords.size()];
 
-		int i = 0;
-		for (MongoMetadataRecordDecorator<String> rec : reqrecords) {
+		String[] res = null;
 
-			res[i] = rec.getId();
+		synchronized (inmemoryCollectionRecordIDs) {
+			THashSet<String> idrefs = inmemoryCollectionRecordIDs.get(collection.getId());
 
-			i++;
+			if (idrefs != null) {
+				res = idrefs.toArray(new String[0]);   
+			} else {
+				MDRPerCollectionAggregator aggregator = ds
+						.find(MDRPerCollectionAggregator.class)
+						.filter("collectionId", collection.getId()).get();
+
+				if (aggregator != null) {
+					HashSet<String> entries = aggregator.getMdrIDs();
+
+					THashSet<String> idrefsnew = new THashSet<String>(entries);
+					inmemoryCollectionRecordIDs.put(collection.getId(), idrefsnew);
+
+					res =idrefsnew.toArray(new String[0]);
+				} else {
+					res = new String[0];
+				}
+
+			}
+
 		}
+
 		return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getByProvider(eu.europeana.uim.store.Provider, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getByProvider(eu.europeana.uim.store
+	 * .Provider, boolean)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -796,50 +892,59 @@ public class MongoStorageEngine extends AbstractEngine implements
 		return vals.toArray(new String[vals.size()]);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see eu.europeana.uim.api.StorageEngine#getAllIds()
 	 */
 	@Override
 	public String[] getAllIds() {
-		ArrayList<String> vals = new ArrayList<String>();
+		THashSet<String> results = new THashSet<String>(); 
 
-		for (MongoMetadataRecordDecorator<String> c : ds.find(
-				MongoMetadataRecordDecorator.class).asList()) {
-			vals.add(c.getId());
+		for (MongoCollectionDecorator<String> c : ds.find(
+				MongoCollectionDecorator.class).asList()) {
+
+			String[] res = getByCollection(c);
+			for(int i=0; i < res.length; i++ ){
+				results.add(res[i]);
+			}
 		}
 
-		return vals.toArray(new String[vals.size()]);
-
+		return results.toArray(new String[0]);
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getTotalByRequest(eu.europeana.uim.store.Request)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getTotalByRequest(eu.europeana.uim
+	 * .store.Request)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public int getTotalByRequest(Request<String> request) {
-		 MongoRequestDecorator<String> req = (MongoRequestDecorator<String>)ds.find(MongoRequestDecorator.class)
-				.filter(LOCALIDFIELD, new ObjectId(request.getId())).get();
-		return req.getRequestrecords().size();
+		String[] recs = getByRequest(request);
+		return recs.length;
 	}
 
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getTotalByCollection(eu.europeana.uim.store.Collection)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getTotalByCollection(eu.europeana.
+	 * uim.store.Collection)
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public int getTotalByCollection(Collection<String> collection) {
-		collection = (Collection<String>) ensureConsistency(collection);
-		List<MongoMetadataRecordDecorator> records = ds
-				.find(MongoMetadataRecordDecorator.class)
-				.filter("collection", collection).asList();
-
-		return records.size();
+		String[] recs = getByCollection(collection);
+		return recs.length;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.api.StorageEngine#getTotalByProvider(eu.europeana.uim.store.Provider, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * eu.europeana.uim.api.StorageEngine#getTotalByProvider(eu.europeana.uim
+	 * .store.Provider, boolean)
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
@@ -859,25 +964,99 @@ public class MongoStorageEngine extends AbstractEngine implements
 		return recordcounter;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see eu.europeana.uim.api.StorageEngine#getTotalForAllIds()
 	 */
 	@Override
 	public int getTotalForAllIds() {
-		return new Long(records.count()).intValue();
+		int recordcounter = 0;
+		
+		@SuppressWarnings("rawtypes")
+		List<MongoCollectionDecorator> mongoCollections = ds
+				.find(MongoCollectionDecorator.class).asList();
+		
+		for (MongoCollectionDecorator<String> p : mongoCollections) {
+			int tmp = getTotalByCollection(p);
+			recordcounter = recordcounter + tmp;
+		}
+
+		return recordcounter;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see eu.europeana.uim.api.StorageEngine#getExecution(java.lang.Object)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Execution<String> getExecution(String id)
 			throws StorageEngineException {
-		MongoExecutionDecorator exec = ds.find(MongoExecutionDecorator.class, LOCALIDFIELD,
-				new ObjectId(id)).get();
-		
+		MongoExecutionDecorator exec = ds.find(MongoExecutionDecorator.class,
+				LOCALIDFIELD, new ObjectId(id)).get();
+
 		return exec.getEmbeddedExecution();
+	}
+
+	/**
+	 * @param collectionID
+	 */
+	public void flushCollectionMDRS(String collectionID) {
+		synchronized (inmemoryCollectionRecordIDs) {
+			THashSet<String> recids = inmemoryCollectionRecordIDs.get(collectionID);
+			if (recids != null) {
+				HashSet<String> tmpset = new HashSet<String>();
+				TObjectHashIterator<String> it = recids.iterator();
+				while (it.hasNext()) {
+					tmpset.add(it.next());
+				}
+				MDRPerCollectionAggregator aggregator = ds
+						.find(MDRPerCollectionAggregator.class)
+						.filter("collectionId", collectionID).get();
+				if (aggregator == null) {
+					aggregator = new MDRPerCollectionAggregator();
+					aggregator.setCollectionId(collectionID);
+					aggregator.setMdrIDs(tmpset);
+					ds.save(aggregator);
+				} else {
+					aggregator.setMdrIDs(tmpset);
+					ds.merge(aggregator);
+				}
+			}
+
+		}
+	}
+	
+	
+	/**
+	 * @param collectionID
+	 */
+	public void flushRequestMDRS(String requestID) {
+		synchronized (inmemoryRequestRecordIDs) {
+			THashSet<String> recids = inmemoryRequestRecordIDs.get(requestID);
+			if (recids != null) {
+				HashSet<String> tmpset = new HashSet<String>();
+				TObjectHashIterator<String> it = recids.iterator();
+				while (it.hasNext()) {
+					tmpset.add(it.next());
+				}
+				MDRPerRequestAggregator aggregator = ds
+						.find(MDRPerRequestAggregator.class)
+						.filter("requestId", requestID).get();
+				if (aggregator == null) {
+					aggregator = new MDRPerRequestAggregator();
+					aggregator.setRequestId(requestID);
+					aggregator.setMdrIDs(tmpset);
+					ds.save(aggregator);
+				} else {
+					aggregator.setMdrIDs(tmpset);
+					ds.merge(aggregator);
+				}
+			}
+
+		}
 	}
 
 }

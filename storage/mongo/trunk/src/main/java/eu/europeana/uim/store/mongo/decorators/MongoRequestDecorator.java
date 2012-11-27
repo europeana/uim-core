@@ -21,7 +21,6 @@
 package eu.europeana.uim.store.mongo.decorators;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
@@ -29,7 +28,6 @@ import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PostPersist;
 import com.google.code.morphia.annotations.PrePersist;
-import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Request;
@@ -70,18 +68,21 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 	@Indexed
 	private Date searchDate;
 
+	
+    /**
+     * 
+     */
+    @Indexed (unique = false, dropDups = false)
+    private String collectionID;
+
+	
 	/**
 	 * A searchable reference to the requests related Collection (not the object
 	 * itself)
 	 */
-	@Reference
+	@NotSaved
 	private MongoCollectionDecorator<String> collection;
 
-	/**
-	 * A searchable reference to the request's related Records
-	 */
-	@Reference
-	private HashSet<MongoMetadataRecordDecorator<String>> requestrecords;
 
 	/**
 	 * The default constructor (required by Morphia but not used in this
@@ -103,7 +104,7 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 		this.embeddedRequest.setDate(date);
 		this.embeddedRequest.setCollection(collection.getEmbeddedCollection());
 		this.collection = collection;
-		this.requestrecords = new HashSet<MongoMetadataRecordDecorator<String>>();
+		this.collectionID = collection.getId();
 	}
 
 	/*
@@ -139,7 +140,6 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 	void postload() {
 		embeddedRequest = MongoDBRequestBeanBytesConverter.getInstance()
 				.decode(embeddedbinary);
-		embeddedRequest.setCollection(collection.getEmbeddedCollection());
 		embeddedRequest.setId(getMongoId().toString());
 	}
 
@@ -173,22 +173,14 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 		return collection;
 	}
 
-	/**
-	 * @param requestrecords
-	 *            the requestrecords to set
-	 */
-	public void setRequestrecords(
-			HashSet<MongoMetadataRecordDecorator<String>> requestrecords) {
-		this.requestrecords = requestrecords;
-	}
 
 	/**
-	 * @return the requestrecords
+	 * @param collection
 	 */
-	public HashSet<MongoMetadataRecordDecorator<String>> getRequestrecords() {
-		return requestrecords;
+	public void setCollectionReference(MongoCollectionDecorator<String> collection) {
+		this.collection = collection;
+		this.embeddedRequest.setCollection(collection.getEmbeddedCollection());
 	}
-
 
 	/*
 	 * Overridden (decorator-specific) methods
@@ -211,7 +203,21 @@ public class MongoRequestDecorator<I> extends MongoAbstractEntity<String>
 	 */
 	@Override
 	public Collection<String> getCollection() {
-		return collection; // embeddedRequest.getCollection();
+		return collection; 
+	}
+
+	/**
+	 * @return the collectionID
+	 */
+	public String getCollectionID() {
+		return collectionID;
+	}
+
+	/**
+	 * @param collectionID the collectionID to set
+	 */
+	public void setCollectionID(String collectionID) {
+		this.collectionID = collectionID;
 	}
 
 	/*
