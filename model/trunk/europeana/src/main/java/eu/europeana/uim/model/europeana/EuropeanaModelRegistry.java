@@ -21,6 +21,8 @@ package eu.europeana.uim.model.europeana;
  * permissions and limitations under the Licence.
  */
 
+import org.theeuropeanlibrary.model.common.qualifier.Status;
+
 import eu.europeana.uim.common.TKey;
 
 /**
@@ -57,7 +59,7 @@ public final class EuropeanaModelRegistry {
 	
 	
 	/**
-	 * The key for a full EDM Record representation
+	 * The key indicating the actual ingestion/update datde for a specific record
 	 */
 	public static final TKey<EuropeanaModelRegistry, String> UIMINGESTIONDATE = TKey
 			.register(EuropeanaModelRegistry.class, "uimingestiondate",
@@ -69,5 +71,14 @@ public final class EuropeanaModelRegistry {
 	public static final TKey<EuropeanaModelRegistry, EuropeanaLink> EUROPEANALINK = TKey
 			.register(EuropeanaModelRegistry.class, "europeanalink",
 					EuropeanaLink.class);
+	
+	
+    /**
+     * A key indicating the status for a specific record
+     */
+    public static final TKey<EuropeanaModelRegistry, Status> STATUS = TKey.register(
+    		EuropeanaModelRegistry.class,
+            "status",
+            Status.class);
 
 }
