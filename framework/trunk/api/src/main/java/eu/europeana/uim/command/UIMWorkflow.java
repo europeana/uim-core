@@ -92,6 +92,8 @@ public class UIMWorkflow implements Action {
                 builder.append("n\t\t  " + step.getClass().getSimpleName());
             }
         }
+
+        out.println("UIM Workflows: " + builder.toString());
     }
 
     /**
