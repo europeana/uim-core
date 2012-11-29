@@ -42,6 +42,11 @@ final class GuardedKeyHost implements GuardedKey<Long> {
     public int compareTo(GuardedKey<Long> o) {
         return getConditionValue().compareTo(o.getConditionValue());
     }
+    
+    @Override
+    public String toString() {
+        return "Host: <" + host + "> condition:" + getConditionValue();
+    }
 
     
     @Override
