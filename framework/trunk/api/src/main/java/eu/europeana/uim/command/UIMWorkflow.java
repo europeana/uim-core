@@ -57,9 +57,11 @@ public class UIMWorkflow implements Action {
         PrintStream out = session.getConsole();
 
         if (operation == null) {
-            out.println("Please specify an operation with the '-o' option. Possible values are:");
-            out.println("  listWorkflows\t\t\t\t\t\tlists the workflows");
-            return null;
+            if (out != null) {
+                out.println("Please specify an operation with the '-o' option. Possible values are:");
+                out.println("  listWorkflows\t\t\t\t\t\tlists the workflows");
+                return null;
+            }
         }
 
         StorageEngine<?> storage = registry.getStorageEngine();
@@ -93,7 +95,7 @@ public class UIMWorkflow implements Action {
             }
         }
 
-        out.println("UIM Workflows: " + builder.toString());
+        if (out != null) out.println("UIM Workflows: " + builder.toString());
     }
 
     /**
