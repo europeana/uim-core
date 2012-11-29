@@ -82,6 +82,31 @@ public class SpatialEntity {
         this.subject = subject;
     }
 
+
+    /**
+     * @param coordInDecimalDegrees
+     * @param isLongitude ture it is longitude, false it is latitude
+     * @return coordinate in DMS - Degrees-Minutes-Seconds
+     */
+    protected String convertDecimalDegreesToDms(double coordInDecimalDegrees, boolean isLongitude) {
+        char dir;
+        if(isLongitude) {
+            dir=coordInDecimalDegrees>=0 ? 'E' : 'W';
+        }else {
+            dir=coordInDecimalDegrees>=0 ? 'N' : 'S';
+        }
+        double coord=Math.abs(coordInDecimalDegrees);
+        int deg=(int)Math.floor(coord);
+        int min=(int)Math.floor((coord-deg) * 60);
+        int sec=(int)Math.round(((coord-deg) * 60 - min) * 60);
+        if(sec==0) {
+            if(min==0) 
+                return String.format("%s %dº", dir, deg);
+            return String.format("%s %dº%d'", dir, deg, min);            
+        }
+        return String.format("%s %dº%d'%d\"", dir, deg, min, sec);
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;

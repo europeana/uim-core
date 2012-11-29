@@ -112,10 +112,16 @@ public class GeoReferencedPlace extends NamedPlace {
      */
     @Override
     public String getDisplay() {
-        //TODO: use a friendly display for coordinates
+        String box="";
+        box += convertDecimalDegreesToDms(latitude, false);
+        box += ", ";
+        box += convertDecimalDegreesToDms(longitude, true);
+        if(elevation!=null) 
+            box=String.format("%s ; %1.0f m", box, elevation);
+
         if(getPlaceName()!=null)
-            return getPlaceName()+ "(latitude:"+latitude+" longitude:"+longitude+")";
-        return "latitude:"+latitude+" longitude:"+longitude;
+            return getPlaceName()+ " ; ";
+        return box; 
     }
 
     public final Double getElevation() {

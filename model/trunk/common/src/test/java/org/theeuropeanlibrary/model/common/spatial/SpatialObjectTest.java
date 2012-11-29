@@ -97,4 +97,14 @@ public class SpatialObjectTest {
         
         
     }
+
+    @Test
+    public void testCoordinatesDisplay() throws IOException {
+        BoundingBoxReferencedPlace b=new BoundingBoxReferencedPlace("Test place", 87.728055, 83d, -10.60, -5.9880, 300d, 0d);
+        b.setProjection("projection...");
+        org.junit.Assert.assertTrue(b.getDisplay().contains("W 5º59'17\" - W 10º35'60\" / N 87º43'41\" - N 83º"));
+        
+        GeoReferencedPlace p=new GeoReferencedPlace(null, 38.809722, -9.231111111111112);
+        org.junit.Assert.assertEquals("N 38º48'35\", W 9º13'52\"", p.getDisplay());
+    }
 }

@@ -207,14 +207,40 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
      */
     @Override
     public String getDisplay() {
-        //TODO: use a friendly display for coordinates
-        String box="northLimit:"+northLimit + "southLimit:"+southLimit + "eastLimit:"+eastLimit + "westLimit:"+westLimit;
-        box+="upLimit:"+upLimit + "downLimit:"+downLimit;
-        if (projection!=null && !projection.isEmpty())
-            box += " projection:"+projection;
-            
+        String box="";
+        if(westLimit!=null) {
+            box += convertDecimalDegreesToDms(westLimit, true);
+        }
+        if(eastLimit!=null) {
+            if(!box.isEmpty())
+                box+=" - ";
+            box += convertDecimalDegreesToDms(eastLimit, true);
+        }
+        if(!box.isEmpty() && (northLimit!=null || southLimit!=null))
+            box+=" / ";
+        if(northLimit!=null) {
+            box += convertDecimalDegreesToDms(northLimit, false);
+        }
+        if(southLimit!=null) {
+            if(!box.isEmpty())
+                box+=" - ";
+            box += convertDecimalDegreesToDms(southLimit, false);
+        }
+        
+        if(downLimit!=null) {
+            if(upLimit!=null) {
+                box=String.format("%s ; %1.0f-%1.0f m", box, downLimit, upLimit);
+            }else
+                box=String.format("%s ; %1.0f m", box, downLimit);
+        }else if(upLimit!=null) 
+            box=String.format("%s ; %1.0f m", box, upLimit);
+        
+        if(projection!=null) {
+            box=box+" ; "+ projection;            
+        }
+
         if(getPlaceName()!=null)
-            return getPlaceName()+ "("+box+")";
+            return getPlaceName()+ " ; " + box;
         return box;
     }
 
@@ -301,4 +327,8 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
                ", projection=" + projection + ", upLimit=" + upLimit + ", downLimit=" + downLimit +
                "]";
     }
+    
+    
 }
+
+

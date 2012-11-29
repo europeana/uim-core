@@ -34,5 +34,13 @@ public enum CertaintyLevel {
     /**
      * enriched value is just a candidate to be a correct guess
      */
-    CANDIDATE
+    CANDIDATE;
+
+    /**
+     * @param otherLevel 
+     * @return true of false
+     */
+    public boolean isMoreCertainThan(CertaintyLevel otherLevel) {
+        return ordinal()<otherLevel.ordinal();
+    }
 }
