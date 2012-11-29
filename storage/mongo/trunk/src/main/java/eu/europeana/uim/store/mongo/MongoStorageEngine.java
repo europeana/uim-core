@@ -419,8 +419,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 				coll = ds.find(MongoCollectionDecorator.class)
 						.filter(LOCALIDFIELD, objid).get();
 
+				
+			}
+			else{
 				inmemoryCollections.put(coll.getId(), coll);
 			}
+			
 			retcoll = (coll == null) ? coll : coll.getEmbeddedCollection();
 		}
 
@@ -442,7 +446,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 		Collection<String> retcoll = (coll == null) ? coll : coll
 				.getEmbeddedCollection();
 
+		if (coll != null) {
 		inmemoryCollections.put(coll.getId(), coll);
+		}
+		
 		return retcoll;
 	}
 
