@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
-    <property name="createdBy">Eclipse BIRT Designer Version 3.7.1.v20110905 Build &lt;3.7.1.v20110905-1820></property>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 3.7.2.v20120213 Build &lt;3.7.2.v20120214-1408></property>
     <property name="units">in</property>
     <method name="beforeRender"><![CDATA[reportContext.getRenderOption().setOption("ChartDpi",600);]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
@@ -11,7 +11,7 @@
             <text-property name="promptText">Execution ID:</text-property>
             <property name="valueType">static</property>
             <property name="isRequired">true</property>
-            <property name="dataType">decimal</property>
+            <property name="dataType">string</property>
             <property name="distinct">true</property>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
@@ -50,131 +50,99 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">oid</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">oid</text-property>
                     <text-property name="heading">oid</text-property>
-                    <property name="displayLength">20</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">date</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">date</text-property>
                     <text-property name="heading">date</text-property>
-                    <property name="displayLength">29</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
-                </structure>
-                <structure>
-                    <property name="columnName">execution</property>
-                    <text-property name="displayName">execution</text-property>
-                    <text-property name="heading">execution</text-property>
-                    <property name="displayLength">20</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">level</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">level</text-property>
                     <text-property name="heading">level</text-property>
-                    <property name="displayLength">255</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message0</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message0</text-property>
                     <text-property name="heading">message0</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message1</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message1</text-property>
                     <text-property name="heading">message1</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message2</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message2</text-property>
                     <text-property name="heading">message2</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message3</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message3</text-property>
                     <text-property name="heading">message3</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message4</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message4</text-property>
                     <text-property name="heading">message4</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message5</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message5</text-property>
                     <text-property name="heading">message5</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message6</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message6</text-property>
                     <text-property name="heading">message6</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message7</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message7</text-property>
                     <text-property name="heading">message7</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message8</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message8</text-property>
                     <text-property name="heading">message8</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">message9</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">message9</text-property>
                     <text-property name="heading">message9</text-property>
-                    <property name="displayLength">4000</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
-                </structure>
-                <structure>
-                    <property name="columnName">metadatarecord</property>
-                    <text-property name="displayName">metadatarecord</text-property>
-                    <text-property name="heading">metadatarecord</text-property>
-                    <property name="displayLength">20</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
                 </structure>
                 <structure>
                     <property name="columnName">module</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">module</text-property>
                     <text-property name="heading">module</text-property>
-                    <property name="displayLength">255</property>
-                    <property name="horizontalAlign">justify</property>
-                    <property name="wordWrap">false</property>
+                </structure>
+                <structure>
+                    <property name="columnName">stringexecutionid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">stringexecutionid</text-property>
+                    <text-property name="heading">stringexecutionid</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">stringmetadatarecordid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">stringmetadatarecordid</text-property>
+                    <text-property name="heading">stringmetadatarecordid</text-property>
                 </structure>
             </list-property>
             <list-property name="filter">
@@ -195,11 +163,11 @@
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">execution</property>
+                    <property name="name">stringexecutionid</property>
                     <property name="paramName">execution</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">1</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
@@ -219,72 +187,72 @@
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">execution</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
                         <property name="name">level</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">5</property>
+                        <property name="position">4</property>
                         <property name="name">message0</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">5</property>
                         <property name="name">message1</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">7</property>
+                        <property name="position">6</property>
                         <property name="name">message2</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">8</property>
+                        <property name="position">7</property>
                         <property name="name">message3</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">9</property>
+                        <property name="position">8</property>
                         <property name="name">message4</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">10</property>
+                        <property name="position">9</property>
                         <property name="name">message5</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">11</property>
+                        <property name="position">10</property>
                         <property name="name">message6</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">12</property>
+                        <property name="position">11</property>
                         <property name="name">message7</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">13</property>
+                        <property name="position">12</property>
                         <property name="name">message8</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">message9</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
+                        <property name="position">14</property>
+                        <property name="name">module</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
                         <property name="position">15</property>
-                        <property name="name">metadatarecord</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">stringexecutionid</property>
+                        <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">module</property>
+                        <property name="name">stringmetadatarecordid</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -296,124 +264,146 @@
                     <property name="name">oid</property>
                     <property name="nativeName">oid</property>
                     <property name="dataType">decimal</property>
+                    <property name="nativeDataType">-5</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">date</property>
                     <property name="nativeName">date</property>
                     <property name="dataType">date-time</property>
+                    <property name="nativeDataType">93</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">execution</property>
-                    <property name="nativeName">execution</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
                     <property name="name">level</property>
                     <property name="nativeName">level</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                     <property name="name">message0</property>
                     <property name="nativeName">message0</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">5</property>
                     <property name="name">message1</property>
                     <property name="nativeName">message1</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                     <property name="name">message2</property>
                     <property name="nativeName">message2</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                     <property name="name">message3</property>
                     <property name="nativeName">message3</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">8</property>
                     <property name="name">message4</property>
                     <property name="nativeName">message4</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">9</property>
                     <property name="name">message5</property>
                     <property name="nativeName">message5</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">10</property>
                     <property name="name">message6</property>
                     <property name="nativeName">message6</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">11</property>
                     <property name="name">message7</property>
                     <property name="nativeName">message7</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">12</property>
                     <property name="name">message8</property>
                     <property name="nativeName">message8</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">13</property>
                     <property name="name">message9</property>
                     <property name="nativeName">message9</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
-                    <property name="name">metadatarecord</property>
-                    <property name="nativeName">metadatarecord</property>
-                    <property name="dataType">decimal</property>
-                </structure>
-                <structure>
-                    <property name="position">16</property>
+                    <property name="position">14</property>
                     <property name="name">module</property>
                     <property name="nativeName">module</property>
                     <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">stringexecutionid</property>
+                    <property name="nativeName">stringexecutionid</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">stringmetadatarecordid</property>
+                    <property name="nativeName">stringmetadatarecordid</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select *
 from public.uim_logentry
-where execution = ?]]></xml-property>
+where stringexecutionid = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name></design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
-        <design:precision>0</design:precision>
-        <design:scale>0</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name></design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>0</design:precision>
+          <design:scale>0</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>oid</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>oid</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
             <design:precision>19</design:precision>
             <design:scale>0</design:scale>
@@ -431,8 +421,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>date</design:name>
-            <design:position>2</design:position>
+            <design:identifier>
+              <design:name>date</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>93</design:nativeDataTypeCode>
             <design:precision>29</design:precision>
             <design:scale>6</design:scale>
@@ -450,8 +442,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>execution</design:name>
-            <design:position>3</design:position>
+            <design:identifier>
+              <design:name>execution</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
             <design:precision>19</design:precision>
             <design:scale>0</design:scale>
@@ -469,8 +463,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>link</design:name>
-            <design:position>4</design:position>
+            <design:identifier>
+              <design:name>link</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -488,8 +484,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message0</design:name>
-            <design:position>5</design:position>
+            <design:identifier>
+              <design:name>message0</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -507,8 +505,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message1</design:name>
-            <design:position>6</design:position>
+            <design:identifier>
+              <design:name>message1</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -526,8 +526,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message2</design:name>
-            <design:position>7</design:position>
+            <design:identifier>
+              <design:name>message2</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -545,8 +547,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message3</design:name>
-            <design:position>8</design:position>
+            <design:identifier>
+              <design:name>message3</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -564,8 +568,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message4</design:name>
-            <design:position>9</design:position>
+            <design:identifier>
+              <design:name>message4</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -583,8 +589,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message5</design:name>
-            <design:position>10</design:position>
+            <design:identifier>
+              <design:name>message5</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -602,8 +610,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message6</design:name>
-            <design:position>11</design:position>
+            <design:identifier>
+              <design:name>message6</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -621,8 +631,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message7</design:name>
-            <design:position>12</design:position>
+            <design:identifier>
+              <design:name>message7</design:name>
+              <design:position>12</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -640,8 +652,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message8</design:name>
-            <design:position>13</design:position>
+            <design:identifier>
+              <design:name>message8</design:name>
+              <design:position>13</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -659,8 +673,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>message9</design:name>
-            <design:position>14</design:position>
+            <design:identifier>
+              <design:name>message9</design:name>
+              <design:position>14</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -678,8 +694,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>metadatarecord</design:name>
-            <design:position>15</design:position>
+            <design:identifier>
+              <design:name>metadatarecord</design:name>
+              <design:position>15</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
             <design:precision>19</design:precision>
             <design:scale>0</design:scale>
@@ -697,8 +715,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>module</design:name>
-            <design:position>16</design:position>
+            <design:identifier>
+              <design:name>module</design:name>
+              <design:position>16</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
             <design:precision>255</design:precision>
             <design:scale>0</design:scale>
@@ -716,8 +736,10 @@ where execution = ?]]></xml-property>
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>status</design:name>
-            <design:position>17</design:position>
+            <design:identifier>
+              <design:name>status</design:name>
+              <design:position>17</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>4</design:nativeDataTypeCode>
             <design:precision>10</design:precision>
             <design:scale>0</design:scale>
@@ -760,10 +782,10 @@ where execution = ?]]></xml-property>
                     <text-property name="heading">qualifier</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">execution</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">execution</text-property>
-                    <text-property name="heading">execution</text-property>
+                    <property name="columnName">stringexecutionid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">stringexecutionid</text-property>
+                    <text-property name="heading">stringexecutionid</text-property>
                 </structure>
             </list-property>
             <list-property name="filter">
@@ -777,13 +799,12 @@ where execution = ?]]></xml-property>
             </list-property>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
+                    <property name="name">stringexecutionid</property>
                     <property name="paramName">execution</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -807,8 +828,8 @@ where execution = ?]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">execution</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">stringexecutionid</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -838,19 +859,19 @@ where execution = ?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">execution</property>
-                    <property name="nativeName">execution</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="name">stringexecutionid</property>
+                    <property name="nativeName">stringexecutionid</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select sum(message0::integer), 
        field, 
        qualifier, 
-       execution
+       stringexecutionid
   from uim_logentry_field
- where execution = ?
- group by field, qualifier, execution
+ where stringexecutionid = ?
+ group by field, qualifier, stringexecutionid
  order by field]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -864,7 +885,7 @@ where execution = ?]]></xml-property>
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1260,26 +1281,26 @@ where execution = ?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="columnName">message0</property>
+                    <property name="analysis">measure</property>
                     <text-property name="displayName">message0</text-property>
                     <text-property name="heading">message0</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">execution</property>
-                    <property name="analysis">measure</property>
-                    <text-property name="displayName">execution</text-property>
-                    <text-property name="heading">execution</text-property>
+                    <property name="columnName">stringexecutionid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">stringexecutionid</text-property>
+                    <text-property name="heading">stringexecutionid</text-property>
                 </structure>
             </list-property>
             <list-property name="filter"/>
             <list-property name="parameters">
                 <structure>
-                    <property name="name">param_1</property>
+                    <property name="name">stringexecutionid</property>
                     <property name="paramName">execution</property>
                     <property name="nativeName"></property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                     <property name="position">1</property>
-                    <property name="isOptional">false</property>
                     <property name="isInput">true</property>
                     <property name="isOutput">false</property>
                 </structure>
@@ -1308,8 +1329,8 @@ where execution = ?]]></xml-property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">execution</property>
-                        <property name="dataType">decimal</property>
+                        <property name="name">stringexecutionid</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -1346,20 +1367,20 @@ where execution = ?]]></xml-property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
-                    <property name="name">execution</property>
-                    <property name="nativeName">execution</property>
-                    <property name="dataType">decimal</property>
-                    <property name="nativeDataType">-5</property>
+                    <property name="name">stringexecutionid</property>
+                    <property name="nativeName">stringexecutionid</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select sum(message1::integer) as count, 
        field, 
        qualifier, 
        message0::integer,
-       execution
+       stringexecutionid
   from uim_logentry_field 
- where execution = ? 
- group by field, qualifier, message0, execution]]></xml-property>
+ where stringexecutionid = ? 
+ group by field, qualifier, message0, stringexecutionid]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1372,7 +1393,7 @@ where execution = ?]]></xml-property>
             <design:name></design:name>
             <design:position>1</design:position>
           </design:identifier>
-          <design:nativeDataTypeCode>-5</design:nativeDataTypeCode>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
           <design:precision>0</design:precision>
           <design:scale>0</design:scale>
           <design:nullability>Unknown</design:nullability>
@@ -1975,7 +1996,7 @@ where execution = ?]]></xml-property>
                     <property name="textAlign">center</property>
                     <extended-item extensionName="Chart" id="599">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -3111,9 +3132,9 @@ where execution = ?]]></xml-property>
                                 <property name="dataType">integer</property>
                             </structure>
                             <structure>
-                                <property name="name">execution</property>
-                                <expression name="expression">dataSetRow["execution"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="name">stringexecutionid</property>
+                                <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                <property name="dataType">string</property>
                             </structure>
                         </list-property>
                     </extended-item>
@@ -3137,7 +3158,7 @@ where execution = ?]]></xml-property>
                     <property name="textAlign">center</property>
                     <extended-item extensionName="Chart" id="600">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -4284,9 +4305,9 @@ where execution = ?]]></xml-property>
                                 <property name="dataType">integer</property>
                             </structure>
                             <structure>
-                                <property name="name">execution</property>
-                                <expression name="expression">dataSetRow["execution"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="name">stringexecutionid</property>
+                                <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                <property name="dataType">string</property>
                             </structure>
                         </list-property>
                     </extended-item>
@@ -4306,7 +4327,7 @@ where execution = ?]]></xml-property>
                     <property name="borderTopWidth">1px</property>
                     <extended-item extensionName="Chart" id="1488">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -5453,9 +5474,9 @@ where execution = ?]]></xml-property>
                                 <property name="dataType">integer</property>
                             </structure>
                             <structure>
-                                <property name="name">execution</property>
-                                <expression name="expression">dataSetRow["execution"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="name">stringexecutionid</property>
+                                <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                <property name="dataType">string</property>
                             </structure>
                         </list-property>
                     </extended-item>
@@ -5541,7 +5562,7 @@ where execution = ?]]></xml-property>
                     <property name="textAlign">center</property>
                     <extended-item extensionName="Chart" id="602">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -6689,9 +6710,9 @@ where execution = ?]]></xml-property>
                                 <property name="dataType">integer</property>
                             </structure>
                             <structure>
-                                <property name="name">execution</property>
-                                <expression name="expression">dataSetRow["execution"]</expression>
-                                <property name="dataType">decimal</property>
+                                <property name="name">stringexecutionid</property>
+                                <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                <property name="dataType">string</property>
                             </structure>
                         </list-property>
                     </extended-item>
@@ -6720,7 +6741,7 @@ where execution = ?]]></xml-property>
                             <cell id="623">
                                 <extended-item extensionName="Chart" id="603">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -7846,6 +7867,7 @@ where execution = ?]]></xml-property>
                                             <simple-property-list name="value1">
                                                 <value>"[CATALOGUE_RECORD]"</value>
                                             </simple-property-list>
+                                            <property name="updateAggregation">true</property>
                                         </structure>
                                     </list-property>
                                     <property name="inheritColumns">false</property>
@@ -7874,9 +7896,9 @@ where execution = ?]]></xml-property>
                                             <property name="dataType">integer</property>
                                         </structure>
                                         <structure>
-                                            <property name="name">execution</property>
-                                            <expression name="expression">dataSetRow["execution"]</expression>
-                                            <property name="dataType">decimal</property>
+                                            <property name="name">stringexecutionid</property>
+                                            <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                            <property name="dataType">string</property>
                                         </structure>
                                     </list-property>
                                 </extended-item>
@@ -7884,7 +7906,7 @@ where execution = ?]]></xml-property>
                             <cell id="624">
                                 <extended-item extensionName="Chart" id="626">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -9038,9 +9060,9 @@ where execution = ?]]></xml-property>
                                             <property name="dataType">integer</property>
                                         </structure>
                                         <structure>
-                                            <property name="name">execution</property>
-                                            <expression name="expression">dataSetRow["execution"]</expression>
-                                            <property name="dataType">decimal</property>
+                                            <property name="name">stringexecutionid</property>
+                                            <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                            <property name="dataType">string</property>
                                         </structure>
                                     </list-property>
                                 </extended-item>
@@ -9048,7 +9070,7 @@ where execution = ?]]></xml-property>
                             <cell id="625">
                                 <extended-item extensionName="Chart" id="627">
                                     <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">
-  <Version>2.5.1</Version>
+  <Version>2.5.3</Version>
   <Type>Tube Chart</Type>
   <SubType>Side-by-side</SubType>
   <Block>
@@ -10202,9 +10224,9 @@ where execution = ?]]></xml-property>
                                             <property name="dataType">integer</property>
                                         </structure>
                                         <structure>
-                                            <property name="name">execution</property>
-                                            <expression name="expression">dataSetRow["execution"]</expression>
-                                            <property name="dataType">decimal</property>
+                                            <property name="name">stringexecutionid</property>
+                                            <expression name="expression">dataSetRow["stringexecutionid"]</expression>
+                                            <property name="dataType">string</property>
                                         </structure>
                                     </list-property>
                                 </extended-item>
