@@ -205,7 +205,7 @@ public class TLogEntry implements LogEntry {
      * @param stringMetaDataRecordId
      *            metadata record ID
      */
-    public void setStringstringMetaDataRecordIdId(String stringMetaDataRecordId) {
+    public void setStringMetaDataRecordId(String stringMetaDataRecordId) {
         this.stringMetaDataRecordId = stringMetaDataRecordId;
     }
 
