@@ -10,10 +10,11 @@ import java.util.logging.Logger;
  * @author andreas.juffinger@kb.nl
  */
 public class LoggingProgressMonitor extends MemoryProgressMonitor {
-    private final static Logger log    = Logger.getLogger(LoggingProgressMonitor.class.getName());
+    private final static Logger log         = Logger.getLogger(LoggingProgressMonitor.class.getName());
 
     private Level               level;
-    private int                 logfrq = 1000;
+    private int                 logfrq      = 1000;
+    private Long                windowStart = null;
 
     /**
      * Creates a new instance of this class logging progress with the defined logging level.
@@ -49,10 +50,18 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
             long period = System.currentTimeMillis() - getStart();
             double persec = getWorked() * 1000.0 / period;
 
+            double windowPersec;
+            if (windowStart != null) {
+                long windowPeriod = System.currentTimeMillis() - windowStart;
+                windowPersec = logfrq * 1000.0 / windowPeriod;
+            } else {
+                windowPersec = persec;
+            }
+
             String st = getSubtask() != null ? "(" + getSubtask() + ")" : "";
             log.log(level, String.format("%d units worked. So far %d done in %.3f sec <" + st +
-                                         ">. Average %.3f/sec", logfrq, getWorked(),
-                    period / 1000.0, persec));
+                                         ">. Average %.3f/sec (%.3f/sec)", logfrq, getWorked(),
+                    period / 1000.0, persec, windowPersec));
         }
     }
 
