@@ -118,5 +118,7 @@ public enum TextRelation {
     /**
      * Series that the resource is part of
      */
-    SERIES,
+    SERIES, 
+    /** contains a term or terms indicating the form, genre and/or physical characteristics of the item being described */
+    GENRE_FORM,
 }
