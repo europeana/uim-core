@@ -21,7 +21,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
                 <configuration>
                     <target>1.6</target>
                     <source>1.6</source>
@@ -30,7 +29,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.1</version>
                 <configuration>
                     <tagBase>https://europeanalabs.eu/svn/europeana/releases</tagBase>
                 </configuration>
@@ -38,7 +36,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.1.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
