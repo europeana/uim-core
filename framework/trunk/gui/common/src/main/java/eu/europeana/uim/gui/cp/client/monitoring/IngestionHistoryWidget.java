@@ -271,9 +271,9 @@ public class IngestionHistoryWidget extends IngestionWidget {
                 new TextCell()) {
             @Override
             public String getValue(ExecutionDTO object) {
-                String createdValue = object.getValue("Created Records");
-                String updatedValue = object.getValue("Updated Records");
-                String deletedValue = object.getValue("Deleted Records");
+                String createdValue = object.getValue("Created");
+                String updatedValue = object.getValue("Updated");
+                String deletedValue = object.getValue("Deleted");
 
                 StringBuilder builder = new StringBuilder();
                 if (createdValue != null) {
