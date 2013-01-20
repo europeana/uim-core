@@ -10,8 +10,8 @@ import java.net.MalformedURLException;
 import org.junit.Test;
 
 import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.bean.ExecutionBean;
 
 /**
@@ -28,7 +28,7 @@ public class GuardedMetaDataRecordUrlTest {
     @Test
     public void addSingleHostRecords() throws MalformedURLException {
         Execution<Long> execution = new ExecutionBean<Long>(1L);
-        ActiveExecution<MetaDataRecord<Long>, Long> context = mock(ActiveExecution.class);
+        ActiveExecution<Collection<Long>, Long> context = mock(ActiveExecution.class);
         when(context.getExecution()).thenReturn(execution);
 
         GuardedMetaDataRecordUrl<Long> url1 = new GuardedMetaDataRecordUrl<Long>(
@@ -77,11 +77,11 @@ public class GuardedMetaDataRecordUrlTest {
     public void addTwoHostRecords() throws MalformedURLException {
         Execution<Long> execution2 = new ExecutionBean<Long>(2L);
         Execution<Long> execution3 = new ExecutionBean<Long>(3L);
-        ActiveExecution<MetaDataRecord<Long>, Long> context2 = mock(ActiveExecution.class);
+        ActiveExecution<Collection<Long>, Long> context2 = mock(ActiveExecution.class);
 
         when(context2.getExecution()).thenReturn(execution2);
 
-        ActiveExecution<MetaDataRecord<Long>, Long> context3 = mock(ActiveExecution.class);
+        ActiveExecution<Collection<Long>, Long> context3 = mock(ActiveExecution.class);
         when(context3.getExecution()).thenReturn(execution3);
 
         GuardedMetaDataRecordUrl<Long> url1 = new GuardedMetaDataRecordUrl<Long>(

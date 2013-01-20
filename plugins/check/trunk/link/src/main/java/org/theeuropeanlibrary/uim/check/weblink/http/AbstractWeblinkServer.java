@@ -17,6 +17,7 @@ import org.theeuropeanlibrary.collections.guarded.TimedDifferenceCondition;
 import eu.europeana.uim.common.SimpleThreadFactory;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -71,11 +72,11 @@ public abstract class AbstractWeblinkServer {
      * @param context
      */
     public synchronized <I> void offer(GuardedMetaDataRecordUrl<I> guarded,
-            ExecutionContext<MetaDataRecord<I>, I> context) {
+            ExecutionContext<Collection<I>, I> context) {
         synchronized (submissions) {
             if (!submissions.containsKey(context.getExecution().getId())) {
                 submissions.put(context.getExecution().getId(), new Submission(
-                        ((ActiveExecution<MetaDataRecord<I>, I>)context).getStorageEngine(), guard));
+                        ((ActiveExecution<Collection<I>, I>)context).getStorageEngine(), guard));
             }
         }
 

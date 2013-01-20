@@ -3,8 +3,12 @@
     xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
     xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
 
+	<reference id="registry" interface="eu.europeana.uim.Registry" />
+
     <!-- Property place holder -->
-    <bean id="linkcheckPlugin" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckIngestionPlugin" />
+    <bean id="linkcheckPlugin" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckIngestionPlugin">
+      <argument ref="registry" />
+    </bean>
     <service id="linkChecker" ref="linkcheckPlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
 
     <bean id="lcw" class="org.theeuropeanlibrary.uim.check.weblink.LinkCheckWorkflow" />

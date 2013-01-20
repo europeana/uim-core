@@ -7,6 +7,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
@@ -33,6 +34,7 @@ public class LinkcheckWorkflowTest extends AbstractBatchWorkflowTest {
      * @throws StorageEngineException
      * @throws InterruptedException
      */
+    @Ignore
     @Test
     public void testSimpleCheck() throws InterruptedException, StorageEngineException {
         LinkedHashMap<String, List<String>> map = new LinkedHashMap<String, List<String>>();
