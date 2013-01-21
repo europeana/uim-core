@@ -143,23 +143,27 @@ public class LogFileService extends HttpServlet {
                 if (fullResponse) {
                     BufferedReader bufferedReader = new BufferedReader(new FileReader(
                             logFileHandler));
-                    String thisLine = bufferedReader.readLine();
-                    while (thisLine != null) {
-                        if (htmlOutput) {
-                            colorizedLogEntry(out, thisLine);
-                        } else {
-                            out.write(thisLine + "\n");
-                        }
-                        thisLine = bufferedReader.readLine();
-                    }
 
+                    try {
+                        String thisLine = bufferedReader.readLine();
+                        while (thisLine != null) {
+                            if (htmlOutput) {
+                                colorizedLogEntry(out, thisLine);
+                            } else {
+                                out.write(thisLine + "\n");
+                            }
+                            thisLine = bufferedReader.readLine();
+                        }
+                    } finally {
+                        bufferedReader.close();
+                    }
                 } else {
                     List<String> tail = FileUtils.tail(logFileHandler, 1000);
                     if (tail.size() >= 1000) {
                         colorizedLogEntry(out, "<------------------ SKIPPED ------------->\n\r");
                         colorizedLogEntry(out, "\n\r");
                     }
-                    
+
                     for (String thisLine : tail) {
                         if (htmlOutput) {
                             colorizedLogEntry(out, thisLine);
