@@ -18,6 +18,7 @@
     <modules>
         <module>field</module>
         <module>link</module>
+        <module>link-collection</module>
     </modules>
 
     <build />
