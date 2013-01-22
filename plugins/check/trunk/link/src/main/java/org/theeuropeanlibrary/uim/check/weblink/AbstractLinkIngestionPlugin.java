@@ -15,7 +15,6 @@ import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.ingestion.AbstractIngestionPlugin;
 import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
-import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
@@ -29,7 +28,7 @@ import eu.europeana.uim.store.MetaDataRecord;
  * @since Mar 20, 2011
  */
 public abstract class AbstractLinkIngestionPlugin<I> extends
-        AbstractIngestionPlugin<Collection<I>,I> {
+        AbstractIngestionPlugin<MetaDataRecord<I>, I> {
     /**
      * Set the Logging variable to use logging within this class
      */
@@ -91,7 +90,7 @@ public abstract class AbstractLinkIngestionPlugin<I> extends
     }
 
     @Override
-    public void completed(ExecutionContext<Collection<I>,I> context)
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context)
             throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
         log.info("Submitted:" + value.submitted + ", Ignored: " + value.ignored);
@@ -100,12 +99,12 @@ public abstract class AbstractLinkIngestionPlugin<I> extends
     /**
      * Container holding all execution specific information for the validation plugin.
      */
-     public static class Data implements Serializable {
-        public int             ignored    = 0;
-        public int             submitted  = 0;
+    protected static class Data implements Serializable {
+        int             ignored    = 0;
+        int             submitted  = 0;
 
         // Set<TKey<?, String>> checkurls = new HashSet<TKey<?, String>>();
-        public Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
-        public File            directory;
+        Set<LinkTarget> checktypes = new HashSet<LinkTarget>();
+        File            directory;
     }
 }

@@ -79,17 +79,6 @@ public class Submission {
             return !remaining.isEmpty();
         }
     }
-    
-    
-    /**
-     * @return
-     */
-    public int getRemaining() {
-    	
-        synchronized(remaining) {
-            return remaining.size();
-        }
-    }
 
     /**
      * @return processed
