@@ -31,7 +31,6 @@ public class GeoReferencedPlace extends NamedPlace {
      */
     @FieldId(9)
     private Double elevation;
-    
 
     /**
      * Creates a new instance of this class.
@@ -105,29 +104,31 @@ public class GeoReferencedPlace extends NamedPlace {
         this.longitude = longitude;
     }
 
- 
-
     /**
-     * @return a String readable by a human 
+     * @return a String readable by a human
      */
     @Override
     public String getDisplay() {
-        String box="";
+        String box = "";
         box += convertDecimalDegreesToDms(latitude, false);
         box += ", ";
         box += convertDecimalDegreesToDms(longitude, true);
-        if(elevation!=null) 
-            box=String.format("%s ; %1.0f m", box, elevation);
+        if (elevation != null) box = String.format("%s ; %1.0f m", box, elevation);
 
-        if(getPlaceName()!=null)
-            return getPlaceName()+ " ; ";
-        return box; 
+        if (getPlaceName() != null) return getPlaceName() + " ; ";
+        return box;
     }
 
+    /**
+     * @return elevation
+     */
     public final Double getElevation() {
         return elevation;
     }
 
+    /**
+     * @param elevation
+     */
     public final void setElevation(Double elevation) {
         this.elevation = elevation;
     }
@@ -161,7 +162,4 @@ public class GeoReferencedPlace extends NamedPlace {
         return true;
     }
 
-    
-    
-    
 }

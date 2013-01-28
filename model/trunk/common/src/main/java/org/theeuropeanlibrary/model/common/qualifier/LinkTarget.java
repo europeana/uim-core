@@ -14,7 +14,7 @@ public enum LinkTarget {
     THUMBNAIL,
     /**
      * A link to the bibliographic record display in a catalogue (same as tel:seeOnline or
-     * europeana:isShownAt
+     * europeana:isShownAt)
      */
     CATALOGUE_RECORD,
     /**
@@ -41,5 +41,10 @@ public enum LinkTarget {
     /**
      * A link to a resource to which we want give attribution
      */
-    ATTRIBUTION
+    ATTRIBUTION,
+
+    /**
+     * A link to a resource holding full text
+     */
+    FULL_TEXT
 }
