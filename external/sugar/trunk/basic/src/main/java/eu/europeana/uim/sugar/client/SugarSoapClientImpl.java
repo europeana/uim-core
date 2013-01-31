@@ -37,6 +37,7 @@ import org.theeuropeanlibrary.model.common.qualifier.Language;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.tel.TELCollectionTranslationFields;
 import eu.europeana.uim.sugar.utils.SugarUtil;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * This manages all the connection to the TEL SugarCRM and delivers the result back using SOAP
@@ -155,8 +156,7 @@ public class SugarSoapClientImpl implements SugarClient {
      * Login to SugarCRM and return the session ID.
      * 
      * @return the session id
-     * @throws SugarException
-     *             if login was not successful
+     * @throws SugarException if login was not successful
      */
     @Override
     public String login() throws SugarException {
@@ -166,13 +166,10 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Login to SugarCRM and return the session ID.
      * 
-     * @param username
-     *            the SugarCRM username
-     * @param password
-     *            the SugarCRM password
+     * @param username the SugarCRM username
+     * @param password the SugarCRM password
      * @return the session id
-     * @throws SugarException
-     *             if login was not successful
+     * @throws SugarException if login was not successful
      */
     @Override
     public String login(String username, String password) throws SugarException {
@@ -206,8 +203,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Logout from SugarCRM
      * 
-     * @param session
-     *            the session id
+     * @param session the session id
      */
     @Override
     public void logout(String session) {
@@ -222,10 +218,8 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Get the full record for a single collection
      * 
-     * @param session
-     *            the session id
-     * @param id
-     *            the record id
+     * @param session the session id
+     * @param id the record id
      * @return the full record: null if none could be retrieved
      */
     @Override
@@ -374,18 +368,18 @@ public class SugarSoapClientImpl implements SugarClient {
             return false;
         }
 
-// String sugarid1 = singleEntry1.get("id");
-// if (sugarid1 == null) {
-// log.severe("Could not get internal SugarCRM id to update: module: " + module1 + " id: " +
-// module1id );
-// return false;
-// }
-// String sugarid2 = singleEntry2.get("id");
-// if (sugarid2 == null) {
-// log.severe("Could not get internal SugarCRM id to update: module: " + module2 + " id: " +
-// module2id);
-// return false;
-// }
+        // String sugarid1 = singleEntry1.get("id");
+        // if (sugarid1 == null) {
+        // log.severe("Could not get internal SugarCRM id to update: module: " + module1 + " id: " +
+        // module1id );
+        // return false;
+        // }
+        // String sugarid2 = singleEntry2.get("id");
+        // if (sugarid2 == null) {
+        // log.severe("Could not get internal SugarCRM id to update: module: " + module2 + " id: " +
+        // module2id);
+        // return false;
+        // }
 
         Set_relationship_value relationshipValue = new Set_relationship_value(module1, module1id,
                 module2, module2id);
@@ -402,8 +396,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Returns a list of all available SugarCRM modules
      * 
-     * @param session
-     *            the session id
+     * @param session the session id
      * @return all standard and custom modules in Sugarcrm
      */
 
@@ -423,14 +416,10 @@ public class SugarSoapClientImpl implements SugarClient {
      * Returns a list of all entries with the complete record. This call gets first a list of all
      * ids, and then queries again for each entry.
      * 
-     * @param session
-     *            the session id
-     * @param module
-     *            the module to be queried
-     * @param query
-     *            the query to perform. Empty string for all records.
-     * @param maxresults
-     *            the maximum number of results needed. 0 for all
+     * @param session the session id
+     * @param module the module to be queried
+     * @param query the query to perform. Empty string for all records.
+     * @param maxresults the maximum number of results needed. 0 for all
      * @return a list of full records
      */
     @Override
@@ -462,7 +451,8 @@ public class SugarSoapClientImpl implements SugarClient {
                 Name_value entryNameValue = entryNameValueList[j];
                 // Outputting only non empty fields
                 if (!entryNameValue.getValue().isEmpty()) {
-                    recordMap.put(entryNameValue.getName(), entryNameValue.getValue());
+                    recordMap.put(entryNameValue.getName(),
+                            StringEscapeUtils.unescapeHtml(entryNameValue.getValue()));
                 }
             }
             result.add(recordMap);
@@ -511,15 +501,11 @@ public class SugarSoapClientImpl implements SugarClient {
      * Returns a complete record from a module for a single id. The id field can be optionally
      * specified.
      * 
-     * @param session
-     *            the session id
-     * @param module
-     *            the module to get the the record from.
-     * @param id
-     *            the id of the record.
-     * @param idfield
-     *            if specified, the field to be used for the id. This field must be visible in the
-     *            list view of SugarCRM if null, the standard field ("id") is used.
+     * @param session the session id
+     * @param module the module to get the the record from.
+     * @param id the id of the record.
+     * @param idfield if specified, the field to be used for the id. This field must be visible in
+     *            the list view of SugarCRM if null, the standard field ("id") is used.
      * @return the full record, null if the record was not found
      */
 
@@ -656,8 +642,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the providerModule to the given value.
      * 
-     * @param providerModule
-     *            the providerModule to set
+     * @param providerModule the providerModule to set
      */
     public void setProviderModule(String providerModule) {
         this.providerModule = providerModule;
@@ -675,8 +660,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the collectionModule to the given value.
      * 
-     * @param collectionModule
-     *            the collectionModule to set
+     * @param collectionModule the collectionModule to set
      */
     public void setCollectionModule(String collectionModule) {
         this.collectionModule = collectionModule;
@@ -694,8 +678,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the contactModule to the given value.
      * 
-     * @param contactModule
-     *            the contactModule to set
+     * @param contactModule the contactModule to set
      */
     public void setContactModule(String contactModule) {
         this.contactModule = contactModule;
@@ -713,8 +696,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the timeout to the given value.
      * 
-     * @param timeout
-     *            the timeout to set
+     * @param timeout the timeout to set
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -741,8 +723,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the providerMnemonicField to the given value.
      * 
-     * @param providerMnemonicField
-     *            the providerMnemonicField to set
+     * @param providerMnemonicField the providerMnemonicField to set
      */
     public void setProviderMnemonicField(String providerMnemonicField) {
         this.providerMnemonicField = providerMnemonicField;
@@ -769,8 +750,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the collectionMnemonicField to the given value.
      * 
-     * @param collectionMnemonicField
-     *            the collectionMnemonicField to set
+     * @param collectionMnemonicField the collectionMnemonicField to set
      */
     public void setCollectionMnemonicField(String collectionMnemonicField) {
         this.collectionMnemonicField = collectionMnemonicField;
@@ -799,8 +779,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the contactMnemonicField to the given value.
      * 
-     * @param contactMnemonicField
-     *            the contactMnemonicField to set
+     * @param contactMnemonicField the contactMnemonicField to set
      */
     public void setContactMnemonicField(String contactMnemonicField) {
         this.contactMnemonicField = contactMnemonicField;
@@ -818,8 +797,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the endPointUrl to the given value.
      * 
-     * @param endPointUrl
-     *            the endPointUrl to set
+     * @param endPointUrl the endPointUrl to set
      */
     public void setEndPointUrl(String endPointUrl) {
         this.endPointUrl = endPointUrl;
@@ -841,7 +819,7 @@ public class SugarSoapClientImpl implements SugarClient {
                         getCollectionTranslationModule(), relationship);
                 if (singleEntry != null) {
                     // add ISO3 code from relationsship name instead of loading the language
-// seperately
+                    // seperately
                     String langugageDesc = singleEntry.get("telda_tel_collection_descriptions_telda_tel_iso639_3_languages_name");
                     if (langugageDesc == null || langugageDesc.length() < 3) {
                         log.warning("Could not find appropriate language string for ISO code extraction, tried string: " +
@@ -865,8 +843,7 @@ public class SugarSoapClientImpl implements SugarClient {
     /**
      * Sets the collectionTranslationModule to the given value.
      * 
-     * @param collectionTranslationModule
-     *            the collectionTranslationModule to set
+     * @param collectionTranslationModule the collectionTranslationModule to set
      */
     public void setCollectionTranslationModule(String collectionTranslationModule) {
         this.collectionTranslationModule = collectionTranslationModule;
