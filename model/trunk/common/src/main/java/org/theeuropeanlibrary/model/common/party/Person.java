@@ -330,4 +330,22 @@ public class Person extends Party {
         } else if (!title.equals(other.title)) return false;
         return true;
     }
+
+    /**
+     * @param unstructuredName 
+     */
+    public void parseAndSetNames(String unstructuredName) {
+        if(unstructuredName.contains(",")) {
+            surname=unstructuredName.substring(0, unstructuredName.indexOf(',')).trim();
+            firstNames=unstructuredName.substring(unstructuredName.indexOf(',')+1).trim();
+            if(firstNames.contains(","))
+                firstNames=firstNames.substring(0, firstNames.indexOf(',')).trim();                
+        }else if(unstructuredName.contains(" ")) {
+            int sepIdx = unstructuredName.trim().lastIndexOf(' ');
+            firstNames=unstructuredName.substring(0, sepIdx).trim();
+            surname=unstructuredName.substring(sepIdx+1).trim();
+        }else {
+            surname=unstructuredName;
+        }
+    }
 }
