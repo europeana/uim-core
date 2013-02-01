@@ -10,20 +10,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
-import org.theeuropeanlibrary.model.common.spatial.BoundingBoxReferencedPlace;
-import org.theeuropeanlibrary.model.common.spatial.GeoReferencedPlace;
-import org.theeuropeanlibrary.model.common.spatial.NamedPlace;
-import org.theeuropeanlibrary.model.common.spatial.SpatialEntity;
 
 /**
- * 
+ * Unit tests for spatial objects.
  * 
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Sep 30, 2011
  */
 public class SpatialObjectTest {
-
-
     /**
      * Tests the conversion of NamedPlace
      * 
@@ -36,7 +30,6 @@ public class SpatialObjectTest {
 
         assertEquals(new NamedPlace("revised"), enc);
         assertEquals(new NamedPlace("revised").hashCode(), enc.hashCode());
-
     }
 
     /**
@@ -50,7 +43,7 @@ public class SpatialObjectTest {
         Assert.assertEquals("revised", enc.getPlaceName());
         Assert.assertEquals(10.0, enc.getLatitude());
         Assert.assertEquals(20.0, enc.getLongitude());
-        
+
         assertEquals(new GeoReferencedPlace("revised", 10.0, 20.0), enc);
         assertEquals(new GeoReferencedPlace("revised", 10.0, 20.0).hashCode(), enc.hashCode());
     }
@@ -62,7 +55,8 @@ public class SpatialObjectTest {
      */
     @Test
     public void testBoundingBoxReferencedPlace() throws IOException {
-        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null);
+        BoundingBoxReferencedPlace enc = new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0,
+                4.0, null, null);
         Assert.assertEquals("revised", enc.getPlaceName());
         Assert.assertEquals(1.0, enc.getNorthLimit());
         Assert.assertEquals(2.0, enc.getSouthLimit());
@@ -72,7 +66,9 @@ public class SpatialObjectTest {
         Assert.assertNull(enc.getDownLimit());
 
         assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null), enc);
-        assertEquals(new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null).hashCode(), enc.hashCode());
+        assertEquals(
+                new BoundingBoxReferencedPlace("revised", 1.0, 2.0, 3.0, 4.0, null, null).hashCode(),
+                enc.hashCode());
     }
 
     /**
@@ -94,17 +90,23 @@ public class SpatialObjectTest {
             Assert.assertEquals(SpatialIdentifierType.values()[i],
                     SpatialIdentifierType.valueOf(enc.getIdentifiers().get(i).getScope()));
         }
-        
-        
+
     }
 
+    /**
+     * Tests display of coordinates!
+     * 
+     * @throws IOException
+     */
     @Test
     public void testCoordinatesDisplay() throws IOException {
-        BoundingBoxReferencedPlace b=new BoundingBoxReferencedPlace("Test place", 87.728055, 83d, -10.60, -5.9880, 300d, 0d);
+        BoundingBoxReferencedPlace b = new BoundingBoxReferencedPlace("Test place", 87.728055, 83d,
+                -10.60, -5.9880, 300d, 0d);
         b.setProjection("projection...");
-        org.junit.Assert.assertTrue(b.getDisplay().contains("W 5º59'17\" - W 10º35'60\" / N 87º43'41\" - N 83º"));
-        
-        GeoReferencedPlace p=new GeoReferencedPlace(null, 38.809722, -9.231111111111112);
+        org.junit.Assert.assertTrue(b.getDisplay().contains(
+                "W 5º59'17\" - W 10º35'60\" / N 87º43'41\" - N 83º"));
+
+        GeoReferencedPlace p = new GeoReferencedPlace(null, 38.809722, -9.231111111111112);
         org.junit.Assert.assertEquals("N 38º48'35\", W 9º13'52\"", p.getDisplay());
     }
 }
