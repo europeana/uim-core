@@ -7,9 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that a field should be persisted, and specifies the field
- * identifier within the class
- * Used by the AnnotationBasedConverter for persisting the Object Model objects into repositories
+ * Indicates that a field should be persisted, and specifies the field identifier within the class
+ * used by the AnnotationBasedConverter for persisting the Object Model objects into repository.
  * 
  * @author Nuno Freire (nfreire@gmail.com)
  * @date 27 de Abr de 2011
@@ -17,8 +16,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface FieldId {
-	/**
-	 * @return the field identifier within the class
-	 */
-	int value();
+    /**
+     * @return the field identifier within the class
+     */
+    int value();
 }
