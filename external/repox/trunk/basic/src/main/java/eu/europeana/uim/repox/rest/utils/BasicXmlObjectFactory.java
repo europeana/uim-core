@@ -1,7 +1,5 @@
 package eu.europeana.uim.repox.rest.utils;
 
-import org.theeuropeanlibrary.model.common.qualifier.Country;
-
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.store.Collection;
