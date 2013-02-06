@@ -130,11 +130,11 @@
             <version>${pom.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>europeana-uim-model-common</artifactId>
-            <version>${europeana.uim.version}</version>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>${project.groupId}</groupId> -->
+<!--             <artifactId>europeana-uim-model-common</artifactId> -->
+<!--             <version>${europeana.uim.version}</version> -->
+<!--         </dependency> -->
 
         <dependency>
             <groupId>${project.groupId}</groupId>
