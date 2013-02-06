@@ -5,10 +5,10 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.theeuropeanlibrary.model.common.qualifier.Country;
 
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.Source;
+import eu.europeana.uim.repox.rest.utils.Country;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.store.Collection;
