@@ -18,7 +18,7 @@ import org.theeuropeanlibrary.translation.Translations;
  * @since Mar 18, 2011
  */
 @SuppressWarnings("all")
-public enum Country implements Translatable {
+public enum Country {
 	AD("AD", "AND", "AN", "Andorra"), AE("AE", "ARE", "TS", "United Arab Emirates"), AF("AF", "AFG", "AF", "Afghanistan"), AG("AG", "ATG", "AQ", "Antigua and Barbuda"), AI("AI", "AIA", "AM", "Anguilla"), AL(
 			"AL", "ALB", "AA", "Albania"), AM("AM", "ARM", "AI", "Armenia"), AN("AN", "ANT", "NA", "Netherlands Antilles"), AO("AO", "AGO", "AO", "Angola"), AQ("AQ", "ATA", "AY", "Antarctica"), AR("AR",
 			"ARG", "AG", "Argentina"), AS("AS", "ASM", "AS", "American Samoa"), AT("AT", "AUT", "AU", "Austria"), AU("AU", "AUS", "AT", "Australia"), AW("AW", "ABW", "AW", "Aruba"), AX("AX", "ALA", "",
@@ -176,20 +176,6 @@ public enum Country implements Translatable {
      */
     public String getName() {
         return name;
-    }
-
-    @Override
-    public String translate(Locale locale) {
-        return getName(locale);
-    }
-
-    /**
-     * @param name
-     *            of the country returned in specified language
-     * @return
-     */
-    public String getName(Locale locale) {
-        return Translations.getTranslation(translationKey, locale);
     }
 
     /**
