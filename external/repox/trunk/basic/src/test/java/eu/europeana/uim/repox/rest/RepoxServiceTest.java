@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxService;
@@ -52,6 +53,7 @@ public class RepoxServiceTest {
      * 
      * @throws Exception
      */
+    @Ignore
     @Test
     public void testCreateUpdateDeleteProvider() throws Exception {
         Provider<Long> provider = engine.createProvider();
@@ -95,6 +97,7 @@ public class RepoxServiceTest {
      * 
      * @throws Exception
      */
+    @Ignore
     @Test
     public void testCreateUpdateDeleteCollection() throws Exception {
         Provider<Long> provider = engine.createProvider();
