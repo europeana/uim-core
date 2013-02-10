@@ -84,12 +84,13 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                       RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS,
                       "Number of harvested records"),
 
-    // TODO: should come from repox but doesn't
-    HARVESTING_DATE("tel_harvesting_date", "telda_tel_dataset.tel_harvesting_date", null,
+    HARVESTING_DATE("tel_harvesting_date", "telda_tel_dataset.tel_harvesting_date",
+                    RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE,
                     "Harvesting Date"),
 
     // TODO: should come from repox but doesn't
-    HARVESTING_UPDATE("tel_harvesting_update", "telda_tel_dataset.tel_harvesting_update", null,
+    HARVESTING_UPDATE("tel_harvesting_update", "telda_tel_dataset.tel_harvesting_update",
+                      RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE,
                       "Harvesting Update"),
 
     LAST_LOADED_DATE("tel_last_loading_date", "telda_tel_dataset.tel_last_loading_date",

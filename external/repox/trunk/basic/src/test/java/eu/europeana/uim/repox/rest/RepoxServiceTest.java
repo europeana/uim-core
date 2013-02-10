@@ -5,14 +5,14 @@ import static org.mockito.Mockito.spy;
 import junit.framework.Assert;
 
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
-import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
+import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
@@ -28,11 +28,11 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @since Jan 25, 2012
  */
 public class RepoxServiceTest {
-    private static MemoryStorageEngine        engine;
-    private static RepoxService               service;
-    private static String                     repoxUri;
-    private static String                     timeStamp;
-    private static RepoxRestClientFactoryImpl factory;
+    private static MemoryStorageEngine             engine;
+    private static RepoxService                    service;
+    private static String                          repoxUri;
+    private static String                          timeStamp;
+    private static CompositeRepoxRestClientFactory factory;
 
     /**
      * Initialize repox service.
@@ -43,7 +43,7 @@ public class RepoxServiceTest {
     public static void setupRepoxService() throws Exception {
         repoxUri = RepoxTestUtils.getUri(RepoxRestClientTest.class, "/config.properties");
         engine = spy(new MemoryStorageEngine());
-        factory = new RepoxRestClientFactoryImpl();
+        factory = new CompositeRepoxRestClientFactory();
         service = new RepoxServiceImpl(factory, new BasicXmlObjectFactory());
         timeStamp = Long.toString(System.nanoTime());
     }
@@ -140,11 +140,13 @@ public class RepoxServiceTest {
         Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
 
         service.synchronizeCollection(collection);
-//        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
         Assert.assertNotNull(collection.getValue(StandardControlledVocabulary.COUNTRY));
 
-        // Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
-        // Assert.assertNotNull(service.getHarvestLog(collection));
+        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
+        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE));
+        Assert.assertNotNull(collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
+
+        Assert.assertNotNull(service.getHarvestLog(collection));
 
         service.deleteCollection(collection);
 
@@ -155,15 +157,5 @@ public class RepoxServiceTest {
 
         RepoxRestClient client = factory.getInstance(repoxUri);
         client.deleteAggregator(provider.getValue(RepoxControlledVocabulary.AGGREGATOR_REPOX_ID));
-    }
-
-    /**
-     * Tests synchronization collections.
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testSynchronizeCollection() throws Exception {
-
     }
 }

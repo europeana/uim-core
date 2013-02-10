@@ -14,7 +14,7 @@ import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.model.HarvestingState;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
-import eu.europeana.uim.repox.rest.client.RepoxRestClientFactoryImpl;
+import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.HarvestingStatus;
 import eu.europeana.uim.repox.rest.client.xml.Log;
@@ -51,7 +51,7 @@ public class RepoxServiceImpl implements RepoxService {
      * Creates a new instance of this class.
      */
     public RepoxServiceImpl() {
-        this(new RepoxRestClientFactoryImpl(), new BasicXmlObjectFactory());
+        this(new CompositeRepoxRestClientFactory(), new BasicXmlObjectFactory());
     }
 
     /**
@@ -448,7 +448,7 @@ public class RepoxServiceImpl implements RepoxService {
                     break;
                 }
             }
-            
+
             String storedStatus = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE);
             if ((storedStatus == null && uimStatus != null) ||
                 (storedStatus != null && !storedStatus.equals(uimStatus))) {
@@ -460,15 +460,8 @@ public class RepoxServiceImpl implements RepoxService {
             }
 
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
-            String records = status.getRecords();
-            if (records != null) {
-                String[] splits = records.split("/");
-                if (splits.length == 2) {
-                    records = splits[1];
-                } else {
-                    records = null;
-                }
-            }
+            String records = client.retrieveRecordCount(id);
+
             if ((storedRecords == null && records != null) ||
                 (storedRecords != null && !storedRecords.equals(records))) {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS, records);
@@ -477,8 +470,21 @@ public class RepoxServiceImpl implements RepoxService {
                 log.info("Number of records for '" + collection + "' is '" + records + "'!");
             }
 
-// String harvestLog = getHarvestLog(collection);
-// log.info("Harvesting log for '" + collection + "' is '" + harvestLog + "'!");
+            String storedHarvestDate = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE);
+            String harvestDate = client.retrieveLastIngestionDate(id);
+            if (harvestDate != null) {
+                String[] ds = harvestDate.split(" ");
+                harvestDate = ds[0];
+            }
+
+            if ((storedHarvestDate == null && harvestDate != null) ||
+                (storedHarvestDate != null && !storedHarvestDate.equals(harvestDate))) {
+                collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE,
+                        harvestDate);
+                collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
+
+                log.info("Last harvesting date for '" + collection + "' is '" + harvestDate + "'!");
+            }
         } else {
             log.warning("Missing repox identifier for '" + collection + "'!");
         }

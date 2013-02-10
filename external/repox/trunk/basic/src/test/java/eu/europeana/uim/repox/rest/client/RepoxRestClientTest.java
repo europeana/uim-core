@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClient;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 
 /**
@@ -31,7 +32,7 @@ public class RepoxRestClientTest {
     @BeforeClass
     public static void setupRepoxClient() throws Exception {
         uri = "http://repox2.tel.ulcc.ac.uk/repox/rest";
-        repoxRestClient = new RepoxRestClientImpl(uri);
+        repoxRestClient = new CompositeRepoxRestClient(uri);
         timeStamp = Long.toString(System.nanoTime());
 
 //        Aggregators aggrs = repoxRestClient.retrieveAggregators();

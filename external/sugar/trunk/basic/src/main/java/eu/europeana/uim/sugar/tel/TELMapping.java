@@ -51,6 +51,8 @@ public class TELMapping implements SugarMapping {
         return new UpdatableField[]{
                 TELCollectionFields.HARVESTED_RECORDS,
                 TELCollectionFields.HARVESTING_STATUS,
+                TELCollectionFields.HARVESTING_DATE,
+                TELCollectionFields.HARVESTING_UPDATE,
                 TELCollectionFields.INDEXED_RECORDS,
                 TELCollectionFields.LOD_RECORDS,
                 
