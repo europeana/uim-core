@@ -34,8 +34,8 @@ import eu.europeana.uim.store.StandardControlledVocabulary;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jan 23, 2012
  */
-public class RepoxServiceImpl implements RepoxService {
-    private static final Logger    log = Logger.getLogger(RepoxServiceImpl.class.getName());
+public class BasicRepoxService implements RepoxService {
+    private static final Logger    log = Logger.getLogger(BasicRepoxService.class.getName());
 
     /**
      * factory to retrieve (implicitly create) repox rest clients for specific repox locations
@@ -50,7 +50,7 @@ public class RepoxServiceImpl implements RepoxService {
     /**
      * Creates a new instance of this class.
      */
-    public RepoxServiceImpl() {
+    public BasicRepoxService() {
         this(new CompositeRepoxRestClientFactory(), new BasicXmlObjectFactory());
     }
 
@@ -63,7 +63,7 @@ public class RepoxServiceImpl implements RepoxService {
      * @param xmlFactory
      *            factory to create xml objects from UIM objects
      */
-    public RepoxServiceImpl(RepoxRestClientFactory factory, XmlObjectFactory xmlFactory) {
+    public BasicRepoxService(RepoxRestClientFactory factory, XmlObjectFactory xmlFactory) {
         this.clientfactory = factory;
         this.xmlFactory = xmlFactory;
     }

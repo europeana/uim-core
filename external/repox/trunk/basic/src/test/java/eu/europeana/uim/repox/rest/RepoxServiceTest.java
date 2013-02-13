@@ -44,7 +44,7 @@ public class RepoxServiceTest {
         repoxUri = RepoxTestUtils.getUri(RepoxRestClientTest.class, "/config.properties");
         engine = spy(new MemoryStorageEngine());
         factory = new CompositeRepoxRestClientFactory();
-        service = new RepoxServiceImpl(factory, new BasicXmlObjectFactory());
+        service = new BasicRepoxService(factory, new BasicXmlObjectFactory());
         timeStamp = Long.toString(System.nanoTime());
     }
 

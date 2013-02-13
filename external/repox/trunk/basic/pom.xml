@@ -39,10 +39,7 @@
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox.rest,
-                            eu.europeana.uim.repox.rest.client,
-                            eu.europeana.uim.repox.rest.client.basic,
                             eu.europeana.uim.repox.rest.servlet,
-                            eu.europeana.uim.repox.rest.utils,
                         </Export-Package>
                         <!-- <Embed-Dependency></Embed-Dependency> -->
                         <!-- <Embed-Transitive>true</Embed-Transitive> -->
