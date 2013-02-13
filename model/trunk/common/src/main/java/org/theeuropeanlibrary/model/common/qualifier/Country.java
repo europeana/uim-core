@@ -133,6 +133,7 @@ public enum Country implements Translatable {
       for (Country country : Country.values()) {
         put(country.getName().toLowerCase(), country);
       }
+      put("Former Yugoslav Republic Of Macedonia".toLowerCase(), Country.MK);
     }};
 
     private final String                               iso3;
