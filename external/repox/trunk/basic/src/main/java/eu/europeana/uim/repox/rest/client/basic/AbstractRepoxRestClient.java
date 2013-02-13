@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

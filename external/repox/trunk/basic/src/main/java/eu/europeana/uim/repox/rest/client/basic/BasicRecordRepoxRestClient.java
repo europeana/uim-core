@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.rest.client.RecordRepoxRestClient;
@@ -31,12 +31,12 @@ import eu.europeana.uim.repox.rest.client.xml.Source;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since 10.02.2013
  */
-public class BaseRecordRepoxRestClient extends AbstractRepoxRestClient implements
+public class BasicRecordRepoxRestClient extends AbstractRepoxRestClient implements
         RecordRepoxRestClient {
     /**
      * Creates a new instance of this class.
      */
-    public BaseRecordRepoxRestClient() {
+    public BasicRecordRepoxRestClient() {
         this(null);
     }
 
@@ -46,7 +46,7 @@ public class BaseRecordRepoxRestClient extends AbstractRepoxRestClient implement
      * @param uri
      *            base uri specifying the repox installation
      */
-    public BaseRecordRepoxRestClient(String uri) {
+    public BasicRecordRepoxRestClient(String uri) {
         super(uri);
     }
 

@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.rest.client.AggregatorRepoxRestClient;
@@ -32,12 +32,12 @@ import eu.europeana.uim.repox.rest.client.xml.Response;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since 10.02.2013
  */
-public class BaseAggregatorRepoxRestClient extends AbstractRepoxRestClient implements
+public class BasicAggregatorRepoxRestClient extends AbstractRepoxRestClient implements
         AggregatorRepoxRestClient {
     /**
      * Creates a new instance of this class.
      */
-    public BaseAggregatorRepoxRestClient() {
+    public BasicAggregatorRepoxRestClient() {
         this(null);
     }
 
@@ -47,7 +47,7 @@ public class BaseAggregatorRepoxRestClient extends AbstractRepoxRestClient imple
      * @param uri
      *            base uri specifying the repox installation
      */
-    public BaseAggregatorRepoxRestClient(String uri) {
+    public BasicAggregatorRepoxRestClient(String uri) {
         super(uri);
     }
 

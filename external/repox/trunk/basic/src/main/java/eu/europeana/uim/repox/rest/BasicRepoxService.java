@@ -14,7 +14,7 @@ import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.model.HarvestingState;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientFactory;
-import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClientFactory;
+import eu.europeana.uim.repox.rest.client.basic.CompositeRepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Aggregator;
 import eu.europeana.uim.repox.rest.client.xml.HarvestingStatus;
 import eu.europeana.uim.repox.rest.client.xml.Log;

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClient;
+import eu.europeana.uim.repox.rest.client.basic.CompositeRepoxRestClient;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 
 /**

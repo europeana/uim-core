@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import org.joda.time.DateTime;
 
@@ -37,12 +37,12 @@ import eu.europeana.uim.repox.rest.client.xml.ScheduleTasks;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since 10.02.2013
  */
-public class BaseHarvestingRepoxRestClient extends AbstractRepoxRestClient implements
+public class BasicHarvestingRepoxRestClient extends AbstractRepoxRestClient implements
         HarvestingRepoxRestClient {
     /**
      * Creates a new instance of this class.
      */
-    public BaseHarvestingRepoxRestClient() {
+    public BasicHarvestingRepoxRestClient() {
         this(null);
     }
 
@@ -52,7 +52,7 @@ public class BaseHarvestingRepoxRestClient extends AbstractRepoxRestClient imple
      * @param uri
      *            base uri specifying the repox installation
      */
-    public BaseHarvestingRepoxRestClient(String uri) {
+    public BasicHarvestingRepoxRestClient(String uri) {
         super(uri);
     }
 

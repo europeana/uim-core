@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import java.util.logging.Logger;
 
@@ -35,14 +35,14 @@ import eu.europeana.uim.repox.rest.client.xml.Source;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since 10.02.2013
  */
-public class BaseDataSourceRepoxRestClient extends AbstractRepoxRestClient implements
+public class BasicDataSourceRepoxRestClient extends AbstractRepoxRestClient implements
         DataSourceRepoxRestClient {
-    private final static Logger log = Logger.getLogger(BaseDataSourceRepoxRestClient.class.getName());
+    private final static Logger log = Logger.getLogger(BasicDataSourceRepoxRestClient.class.getName());
 
     /**
      * Creates a new instance of this class.
      */
-    public BaseDataSourceRepoxRestClient() {
+    public BasicDataSourceRepoxRestClient() {
         this(null);
     }
 
@@ -52,7 +52,7 @@ public class BaseDataSourceRepoxRestClient extends AbstractRepoxRestClient imple
      * @param uri
      *            base uri specifying the repox installation
      */
-    public BaseDataSourceRepoxRestClient(String uri) {
+    public BasicDataSourceRepoxRestClient(String uri) {
         super(uri);
     }
 

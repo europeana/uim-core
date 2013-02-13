@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import org.joda.time.DateTime;
 
@@ -78,12 +78,12 @@ public class CompositeRepoxRestClient implements RepoxRestClient {
     public CompositeRepoxRestClient(String uri) {
         this.uri = uri;
 
-        aggClient = new BaseAggregatorRepoxRestClient(uri);
-        provClient = new BaseProviderRepoxRestClient(uri);
-        dsClient = new BaseDataSourceRepoxRestClient(uri);
-        recClient = new BaseRecordRepoxRestClient(uri);
-        harvClient = new BaseHarvestingRepoxRestClient(uri);
-        dsFuncClient = new BaseDataSourceFunctionsRepoxRestClient(uri);
+        aggClient = new BasicAggregatorRepoxRestClient(uri);
+        provClient = new BasicProviderRepoxRestClient(uri);
+        dsClient = new BasicDataSourceRepoxRestClient(uri);
+        recClient = new BasicRecordRepoxRestClient(uri);
+        harvClient = new BasicHarvestingRepoxRestClient(uri);
+        dsFuncClient = new BasicDataSourceFunctionsRepoxRestClient(uri);
     }
 
     @Override

@@ -18,7 +18,7 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox.rest.client.base;
+package eu.europeana.uim.repox.rest.client.basic;
 
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.rest.client.DataSourceFunctionsRepoxRestClient;
@@ -30,12 +30,12 @@ import eu.europeana.uim.repox.rest.client.xml.Response;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since 10.02.2013
  */
-public class BaseDataSourceFunctionsRepoxRestClient extends AbstractRepoxRestClient implements
+public class BasicDataSourceFunctionsRepoxRestClient extends AbstractRepoxRestClient implements
         DataSourceFunctionsRepoxRestClient {
     /**
      * Creates a new instance of this class.
      */
-    public BaseDataSourceFunctionsRepoxRestClient() {
+    public BasicDataSourceFunctionsRepoxRestClient() {
         this(null);
     }
 
@@ -45,7 +45,7 @@ public class BaseDataSourceFunctionsRepoxRestClient extends AbstractRepoxRestCli
      * @param uri
      *            base uri specifying the repox installation
      */
-    public BaseDataSourceFunctionsRepoxRestClient(String uri) {
+    public BasicDataSourceFunctionsRepoxRestClient(String uri) {
         super(uri);
     }
 

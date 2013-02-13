@@ -5,7 +5,7 @@
 
     <bp:reference id="registry" interface="eu.europeana.uim.Registry" />
 
-    <bean id="rcf" class="eu.europeana.uim.repox.rest.client.basic.RepoxRestClientFactoryImpl" />
+    <bean id="rcf" class="eu.europeana.uim.repox.rest.client.basic.CompositeRepoxRestClientFactory" />
     <bean id="xof" class="eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory" />
 
     <bean id="rs" class="eu.europeana.uim.repox.rest.BasicRepoxService">

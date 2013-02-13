@@ -12,7 +12,7 @@ import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.rest.client.RepoxRestClient;
 import eu.europeana.uim.repox.rest.client.RepoxRestClientTest;
-import eu.europeana.uim.repox.rest.client.base.CompositeRepoxRestClientFactory;
+import eu.europeana.uim.repox.rest.client.basic.CompositeRepoxRestClientFactory;
 import eu.europeana.uim.repox.rest.client.xml.Source;
 import eu.europeana.uim.repox.rest.utils.BasicXmlObjectFactory;
 import eu.europeana.uim.repox.rest.utils.DatasourceType;
