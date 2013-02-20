@@ -78,6 +78,8 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
 public final class ObjectModelRegistry {
     public static final String                                                                 XML_NAMESPACE       = "http://theeuropeanlibrary.org/internal_object_model";
 
+    // FIXME: new way of conversion
+// @FieldId(1)
     public static final TKey<ObjectModelRegistry, MetaDataRecordBean>                          METADATARECORD      = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "metadatarecord",
