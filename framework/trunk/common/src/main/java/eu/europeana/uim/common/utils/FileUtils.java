@@ -2,6 +2,7 @@
 package eu.europeana.uim.common.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,9 +20,10 @@ public class FileUtils {
      */
     public static List<String> tail(File file, int lines) {
         LinkedList<String> result = new LinkedList<String>();
-        try {
+        java.io.RandomAccessFile fileHandler = null;
 
-            java.io.RandomAccessFile fileHandler = new java.io.RandomAccessFile(file, "r");
+        try {
+            fileHandler = new java.io.RandomAccessFile(file, "r");
             long fileLength = file.length() - 1;
 
             StringBuilder sb = new StringBuilder();
@@ -70,6 +72,14 @@ public class FileUtils {
             e.printStackTrace();
         } catch (java.io.IOException e) {
             e.printStackTrace();
+        } finally {
+            if (fileHandler != null) {
+                try {
+                    fileHandler.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return result;
     }
