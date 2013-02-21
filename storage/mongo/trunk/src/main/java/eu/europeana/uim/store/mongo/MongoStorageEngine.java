@@ -418,14 +418,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 				ObjectId objid = ObjectId.massageToObjectId(id);
 				coll = ds.find(MongoCollectionDecorator.class)
 						.filter(LOCALIDFIELD, objid).get();
+				inmemoryCollections.put(coll.getId(), coll);				
+			}
 
-				
-			}
-			else{
-				synchronized (inmemoryCollections) {
-				inmemoryCollections.put(coll.getId(), coll);
-				}
-			}
 			
 			retcoll = (coll == null) ? coll : coll.getEmbeddedCollection();
 	
