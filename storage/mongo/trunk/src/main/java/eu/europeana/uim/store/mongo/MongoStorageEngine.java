@@ -411,7 +411,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public Collection<String> getCollection(String id) {
 
 		Collection<String> retcoll = null;
-		synchronized (inmemoryCollections) {
+		
 			MongoCollectionDecorator<String> coll = inmemoryCollections.get(id);
 
 			if (coll == null) {
@@ -422,11 +422,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 				
 			}
 			else{
+				synchronized (inmemoryCollections) {
 				inmemoryCollections.put(coll.getId(), coll);
+				}
 			}
 			
 			retcoll = (coll == null) ? coll : coll.getEmbeddedCollection();
-		}
+	
 
 		return retcoll;
 	}
@@ -447,7 +449,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 				.getEmbeddedCollection();
 
 		if (coll != null) {
+		synchronized (inmemoryCollections) {
 		inmemoryCollections.put(coll.getId(), coll);
+		}
 		}
 		
 		return retcoll;
@@ -616,16 +620,20 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 		MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
 		
-	    synchronized (inmemoryRequestRecordIDs) {
+
 			THashSet<String> registeredRequestrecords = inmemoryRequestRecordIDs
 					.get(request.getId());
 			
 			if(registeredRequestrecords == null){
 				registeredRequestrecords = new THashSet<String>();
+				
+			    synchronized (inmemoryRequestRecordIDs) {
 				inmemoryRequestRecordIDs.put(request.getId(), registeredRequestrecords);
+			    }
 			}
+			
 			registeredRequestrecords.add(rec.getId());
-		}
+		
 	}
 
 
@@ -665,7 +673,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 			ds.merge(record);
 		}
 
-		synchronized (inmemoryCollectionRecordIDs) {
+
 			THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
 					.get(rec.getCollectionID());
 			
@@ -673,6 +681,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 				registeredCollectionrecords = new THashSet<String>();
 				inmemoryCollectionRecordIDs.put(rec.getCollectionID(), registeredCollectionrecords);
 			}
+
+		synchronized (inmemoryCollectionRecordIDs) {
 			registeredCollectionrecords.add(rec.getId());
 		}
 	}
@@ -791,7 +801,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 		
 		String[] res = null;
 
-		synchronized (inmemoryRequestRecordIDs) {
+		
 			THashSet<String> idrefs = inmemoryRequestRecordIDs.get(request.getId());
 
 			if (idrefs != null) {
@@ -805,7 +815,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 					HashSet<String> entries = aggregator.getMdrIDs();
 
 					THashSet<String> idrefsnew = new THashSet<String>(entries);
+					synchronized (inmemoryRequestRecordIDs) {
 					inmemoryRequestRecordIDs.put(request.getId(), idrefsnew);
+					}
 
 					res =idrefsnew.toArray(new String[0]);
 				} else {
@@ -814,7 +826,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 			}
 
-		}
+		
 
 		return res;
 	}
@@ -831,7 +843,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 		String[] res = null;
 
-		synchronized (inmemoryCollectionRecordIDs) {
+
 			THashSet<String> idrefs = inmemoryCollectionRecordIDs.get(collection.getId());
 
 			if (idrefs != null) {
@@ -845,7 +857,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 					HashSet<String> entries = aggregator.getMdrIDs();
 
 					THashSet<String> idrefsnew = new THashSet<String>(entries);
+					synchronized (inmemoryCollectionRecordIDs) {
 					inmemoryCollectionRecordIDs.put(collection.getId(), idrefsnew);
+					}
 
 					res =idrefsnew.toArray(new String[0]);
 				} else {
@@ -854,7 +868,6 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 			}
 
-		}
 
 		return res;
 	}
@@ -1011,8 +1024,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * @param collectionID
 	 */
 	public void flushCollectionMDRS(String collectionID) {
+		
+		THashSet<String> recids;
 		synchronized (inmemoryCollectionRecordIDs) {
-			THashSet<String> recids = inmemoryCollectionRecordIDs.get(collectionID);
+			recids = inmemoryCollectionRecordIDs.get(collectionID);
+		    }
 			if (recids != null) {
 				HashSet<String> tmpset = new HashSet<String>();
 				TObjectHashIterator<String> it = recids.iterator();
@@ -1033,7 +1049,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 				}
 			}
 
-		}
+
 	}
 	
 	
@@ -1041,8 +1057,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * @param collectionID
 	 */
 	public void flushRequestMDRS(String requestID) {
-		synchronized (inmemoryRequestRecordIDs) {
-			THashSet<String> recids = inmemoryRequestRecordIDs.get(requestID);
+		THashSet<String> recids;
+		
+
+			recids = inmemoryRequestRecordIDs.get(requestID);
 			if (recids != null) {
 				HashSet<String> tmpset = new HashSet<String>();
 				TObjectHashIterator<String> it = recids.iterator();
@@ -1064,6 +1082,6 @@ public class MongoStorageEngine extends AbstractEngine implements
 			}
 
 		}
-	}
+	
 
 }
