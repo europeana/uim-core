@@ -6,7 +6,7 @@ INDEX
 3/ Test import from file
 4/ GWT Development mode
 5/ Configuration
-6/ Technologies in use
+6/ Technologies in use 
 
 
 #1 PROJECT STRUCTURE
