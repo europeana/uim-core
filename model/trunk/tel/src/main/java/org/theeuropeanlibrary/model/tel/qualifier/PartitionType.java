@@ -11,5 +11,5 @@ public enum PartitionType {
     /**
      * bloom filter based partitioning using unigrams as feature
      */
-    BLOOM_UNIGRAMS;
+    BLOOM;
 }
