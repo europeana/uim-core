@@ -9,7 +9,7 @@ package org.theeuropeanlibrary.model.tel.qualifier;
  */
 public enum PartitionType {
     /**
-     * bloom filter based partitioning using trigrams as feature
+     * bloom filter based partitioning using unigrams as feature
      */
-    BLOOM_TRIGRAMS;
+    BLOOM_UNIGRAMS;
 }
