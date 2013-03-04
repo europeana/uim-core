@@ -465,8 +465,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 		retcoll = (coll == null) ? null : coll.getEmbeddedCollection();
 
-		return coll;
-		// return retcoll;
+		return retcoll;
 	}
 
 	/*
