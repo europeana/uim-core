@@ -145,13 +145,13 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                              if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
                             	 validWorkflow = true;
                              }
-                             if(collmenmonic == null || (collmenmonic != null && collection.getMnemonic().equals(collmenmonic))){
+                             if(collmenmonic == null || collection.getMnemonic().equals(collmenmonic)){
                             	 validmenmonic = true;
                              }
-                             if(start == null || (start != null && start.before(execution.getStartTime()))){
+                             if(start == null || start.before(execution.getStartTime())){
                             	 validstartRange = true;
                              }
-                             if(end == null || (end != null && end.after(execution.getEndTime()))){
+                             if(end == null || end.after(execution.getEndTime())){
                             	 validendRange = true;
                              }
                              

@@ -417,7 +417,8 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
 		});
 
 		cellTable.addRangeChangeHandler(new RangeChangeEvent.Handler() {
-			@Override
+			@SuppressWarnings("unused")
+            @Override
 			public void onRangeChange(RangeChangeEvent arg0) {
 				if (collections.size() > 0
 						&& collectionBox.getSelectedIndex() >= 0
