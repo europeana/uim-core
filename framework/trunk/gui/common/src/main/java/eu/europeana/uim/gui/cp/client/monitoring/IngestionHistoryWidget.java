@@ -44,8 +44,8 @@ public class IngestionHistoryWidget extends IngestionWidget {
     interface Binder extends UiBinder<Widget, IngestionHistoryWidget> {
     }
 
-    private final ExecutionServiceAsync executionService;
-    private final List<ExecutionDTO>    pastExecutions = new ArrayList<ExecutionDTO>();
+    final ExecutionServiceAsync executionService;
+    final List<ExecutionDTO>    pastExecutions = new ArrayList<ExecutionDTO>();
 
     /**
      * The main CellTable.
@@ -97,12 +97,25 @@ public class IngestionHistoryWidget extends IngestionWidget {
 
         initTableColumns(selectionModel, sortHandler);
 
-        Binder uiBinder = GWT.create(Binder.class);
-        Widget widget = uiBinder.createAndBindUi(this);
+        Widget widget = postInitialize();
 
         return widget;
     }
 
+    
+    /**
+     * This method provides extra functionality for components that are meant to extend this one
+     * 
+     * @return widget
+     */
+    public Widget postInitialize() {
+        Binder uiBinder = GWT.create(Binder.class);
+        Widget widget = uiBinder.createAndBindUi(this);
+        return widget;
+    }
+    
+    
+    
     @Override
     protected void onLoad() {
         super.onLoad();
@@ -147,7 +160,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
     /**
      * Add the columns to the table.
      */
-    private void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
+     void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
         // ID
         Column<ExecutionDTO, String> idColumn = new Column<ExecutionDTO, String>(new TextCell()) {

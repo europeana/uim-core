@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -92,74 +93,111 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         return getPastExecutions(null);
     }
 
+    
+    @Override
+    public List<ExecutionDTO> getPastExecutions(String[] workflows,String collmenmonic,Date start, Date end) {
+    	 Set<String> filter = new HashSet<String>();
+         if (workflows != null) {
+             filter.addAll(Arrays.asList(workflows));
+         }
+
+         List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
+
+         StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
+         if (storage == null) {
+             log.log(Level.SEVERE, "Storage connection is null!");
+             return r;
+         }
+
+         List<Execution<Serializable>> executions = null;
+         try {
+             executions = storage.getAllExecutions();
+
+             if (executions != null) {
+                 HashSet<Serializable> active = new HashSet<Serializable>();
+                 try {
+                     Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
+                     for (ActiveExecution<?, Serializable> ae : orchestrator.getActiveExecutions()) {
+                         active.add(ae.getExecution().getId());
+                     }
+                 } catch (Throwable t) {
+                     log.log(Level.SEVERE, "Could not query active execution!", t);
+                 }
+
+                 // sometimes something goes wrong and the execuiton is not updated to be
+                 // inactive, even if its Serializable gone - thats why we need to check against
+                 // the current live executions.
+                 for (Execution<Serializable> execution : executions) {
+                 	
+                 	boolean validWorkflow = false;
+                 	
+                 	boolean validstartRange = false;
+                 	
+                 	boolean validendRange = false;
+                 	
+                 	boolean validmenmonic = false;
+                 	
+                 	Collection<Serializable> collection = (Collection<Serializable>) execution.getDataSet(); 
+                 	
+                 	
+                     if (!active.contains(execution.getId())) {
+                         try {
+                             if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
+                            	 validWorkflow = true;
+                             }
+                             if(collmenmonic == null || (collmenmonic != null && collection.getMnemonic().equals(collmenmonic))){
+                            	 validmenmonic = true;
+                             }
+                             if(start == null || (start != null && start.before(execution.getStartTime()))){
+                            	 validstartRange = true;
+                             }
+                             if(end == null || (end != null && end.after(execution.getEndTime()))){
+                            	 validendRange = true;
+                             }
+                             
+                             if(validWorkflow == true && validstartRange ==true 
+                            		 && validendRange == true && validmenmonic == true)
+                             {
+                                 ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
+                                         execution, null);
+                                 r.add(exec);
+                             }
+
+                             
+                         } catch (Throwable t) {
+                             log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
+                             wrappedExecutionDTOs.remove(execution.getId());
+                         }
+                     }
+                 }
+
+                 Collections.sort(r, new Comparator<ExecutionDTO>() {
+                     @Override
+                     public int compare(ExecutionDTO o1, ExecutionDTO o2) {
+                         if (o2.getEndTime() != null && o1.getEndTime() != null) {
+                             return o2.getEndTime().compareTo(o1.getEndTime());
+                         } else {
+                             if (o2.getEndTime() == null) { return o1.getEndTime() == null ? 0 : -1; }
+                             return o1.getEndTime() == null ? 1 : 0;
+                         }
+                     }
+
+                 });
+             } else {
+                 log.log(Level.WARNING, "Past executions are null!");
+             }
+
+         } catch (Throwable t) {
+             log.log(Level.SEVERE, "Could not query past execution!", t);
+         }
+         return r;
+    }
+    
+    
     @Override
     public List<ExecutionDTO> getPastExecutions(String[] workflows) {
-        Set<String> filter = new HashSet<String>();
-        if (workflows != null) {
-            filter.addAll(Arrays.asList(workflows));
-        }
 
-        List<ExecutionDTO> r = new ArrayList<ExecutionDTO>();
-
-        StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
-        if (storage == null) {
-            log.log(Level.SEVERE, "Storage connection is null!");
-            return r;
-        }
-
-        List<Execution<Serializable>> executions = null;
-        try {
-            executions = storage.getAllExecutions();
-
-            if (executions != null) {
-                HashSet<Serializable> active = new HashSet<Serializable>();
-                try {
-                    Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>)getEngine().getRegistry().getOrchestrator();
-                    for (ActiveExecution<?, Serializable> ae : orchestrator.getActiveExecutions()) {
-                        active.add(ae.getExecution().getId());
-                    }
-                } catch (Throwable t) {
-                    log.log(Level.SEVERE, "Could not query active execution!", t);
-                }
-
-                // sometimes something goes wrong and the execuiton is not updated to be
-                // inactive, even if its Serializable gone - thats why we need to check against
-                // the current live executions.
-                for (Execution<Serializable> execution : executions) {
-                    if (!active.contains(execution.getId())) {
-                        try {
-                            if (filter.isEmpty() || filter.contains(execution.getWorkflow())) {
-                                ExecutionDTO exec = getWrappedExecutionDTO(execution.getId(),
-                                        execution, null);
-                                r.add(exec);
-                            }
-                        } catch (Throwable t) {
-                            log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                            wrappedExecutionDTOs.remove(execution.getId());
-                        }
-                    }
-                }
-
-                Collections.sort(r, new Comparator<ExecutionDTO>() {
-                    @Override
-                    public int compare(ExecutionDTO o1, ExecutionDTO o2) {
-                        if (o2.getEndTime() != null && o1.getEndTime() != null) {
-                            return o2.getEndTime().compareTo(o1.getEndTime());
-                        } else {
-                            if (o2.getEndTime() == null) { return o1.getEndTime() == null ? 0 : -1; }
-                            return o1.getEndTime() == null ? 1 : 0;
-                        }
-                    }
-
-                });
-            } else {
-                log.log(Level.WARNING, "Past executions are null!");
-            }
-
-        } catch (Throwable t) {
-            log.log(Level.SEVERE, "Could not query past execution!", t);
-        }
-        return r;
+        return getPastExecutions(workflows,null,null,null);
     }
 
     @Override

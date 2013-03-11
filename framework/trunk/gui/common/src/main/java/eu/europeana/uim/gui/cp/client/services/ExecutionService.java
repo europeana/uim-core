@@ -1,6 +1,7 @@
 package eu.europeana.uim.gui.cp.client.services;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -74,6 +75,16 @@ public interface ExecutionService extends RemoteService {
      */
     List<ExecutionDTO> getPastExecutions(String[] workflows);
 
+    /**
+     * @param workflows  the list of workflows to be considered. Null means all.
+     * @param collmenmonic filter executions for a specific collection
+     * @param start filter executions after the given date
+     * @param end   filter executions before the given date
+     * @return list of completed executions for these criteria
+     */
+    List<ExecutionDTO> getPastExecutions(String[] workflows,String collmenmonic,Date start, Date end);
+    
+    
     /**
      * Pause the given execution (if it is paused or not running, nothing happens and false is
      * returned).
