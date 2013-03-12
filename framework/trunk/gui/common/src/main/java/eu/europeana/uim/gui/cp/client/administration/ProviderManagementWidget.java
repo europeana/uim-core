@@ -9,13 +9,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -45,12 +41,6 @@ public class ProviderManagementWidget extends IngestionWidget {
 
     private final List<ProviderDTO>      providers   = new ArrayList<ProviderDTO>();
     private final List<CollectionDTO>    collections = new ArrayList<CollectionDTO>();
-
-    /**
-     * Button to manually trigger synchronization of all collections/providers
-     */
-    @UiField
-    Button                               synchronizeButton;
 
     /**
      * Box with providers for selection
@@ -105,13 +95,6 @@ public class ProviderManagementWidget extends IngestionWidget {
 
         updateProviders();
 
-        synchronizeButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                synchronizeExertnalServices();
-            }
-        });
-
         providerBox.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
@@ -150,22 +133,6 @@ public class ProviderManagementWidget extends IngestionWidget {
         });
 
         return widget;
-    }
-
-    private void synchronizeExertnalServices() {
-        repositoryService.synchronizeExternalServices(new AsyncCallback<Boolean>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
-            }
-
-            @Override
-            public void onSuccess(Boolean result) {
-                if (result) {
-                    Window.alert("Synchronization of all provider and collection with Sugar and Repox is finished!");
-                }
-            }
-        });
     }
 
     private void updateProviders() {
