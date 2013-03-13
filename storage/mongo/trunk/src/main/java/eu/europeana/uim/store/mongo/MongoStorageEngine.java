@@ -296,7 +296,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 							.getMnemonic().equals(provider.getMnemonic()))
 					&& !p.getId().equals(provider.getId())) {
 				throw new StorageEngineException("Provider with name '"
-						+ provider.getMnemonic() + "' already exists");
+						+ provider.getName() + "' already exists");
 			}
 			if (p.getMnemonic() != null
 					&& p.getMnemonic().equals(provider.getMnemonic())
