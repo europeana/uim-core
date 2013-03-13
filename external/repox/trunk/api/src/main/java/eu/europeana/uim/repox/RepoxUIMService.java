@@ -277,4 +277,16 @@ public interface RepoxUIMService {
      */
     void initializeExport(Collection<?> col, int numberOfRecords)
             throws HarvestingOperationException;
+    
+    
+    /**
+     * An auxiliary method indicationg whether the type of the datasource has been changed or not
+     *      * @param col
+     * @return the UIM collection
+     * @throws DataSourceOperationException
+     */
+    boolean hasHarvestingTypeChanged(Collection<?> col) throws DataSourceOperationException;
+    
+    
+    
 }
