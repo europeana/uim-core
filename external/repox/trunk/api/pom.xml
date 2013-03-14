@@ -23,7 +23,6 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim.store,
-                            org.joda.time
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox,

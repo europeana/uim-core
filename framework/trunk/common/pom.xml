@@ -62,7 +62,7 @@
                             gnu.trove.*;version="3.0.3"
 <!--                             org.joda.*;version="1.6.2" -->
                         </Export-Package>
-                        <Embed-Dependency>commons-lang,commons-io,commons-math,trove4j,guava,joda-time</Embed-Dependency>
+                        <Embed-Dependency>commons-lang,commons-io,commons-math,trove4j,guava</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
                     </instructions>
                 </configuration>

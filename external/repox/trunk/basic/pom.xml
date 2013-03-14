@@ -33,7 +33,6 @@
                             javax.xml.namespace,
                             javax.servlet,
                             javax.servlet.http,
-                            org.joda.time,
                             org.osgi.service.blueprint,
                             org.apache.commons.io,
                         </Import-Package>
