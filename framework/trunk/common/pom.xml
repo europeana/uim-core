@@ -59,8 +59,8 @@
                             org.apache.commons.lang.*;version="2.4",
                             org.apache.commons.io.*;version="2.1",
                             org.apache.commons.math.*;version="1.2",
-                            gnu.trove.*;version="3.0.3",
-                            org.joda.*;version="1.6.2"
+                            gnu.trove.*;version="3.0.3"
+<!--                             org.joda.*;version="1.6.2" -->
                         </Export-Package>
                         <Embed-Dependency>commons-lang,commons-io,commons-math,trove4j,guava,joda-time</Embed-Dependency>
                         <Embed-StripVersion>true</Embed-StripVersion>
@@ -127,11 +127,11 @@
             <artifactId>guava</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>1.6.2</version>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>joda-time</groupId> -->
+<!--             <artifactId>joda-time</artifactId> -->
+<!--             <version>1.6.2</version> -->
+<!--         </dependency> -->
 
         <dependency>
             <groupId>junit</groupId>
