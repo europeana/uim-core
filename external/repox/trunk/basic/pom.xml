@@ -35,6 +35,7 @@
                             javax.servlet.http,
                             org.osgi.service.blueprint,
                             org.apache.commons.io,
+                            !*
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox.rest,
