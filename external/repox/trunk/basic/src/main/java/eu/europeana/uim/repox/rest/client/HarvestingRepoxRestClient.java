@@ -20,7 +20,7 @@
  */
 package eu.europeana.uim.repox.rest.client;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.model.IngestFrequency;
@@ -78,7 +78,7 @@ public interface HarvestingRepoxRestClient {
      * @return the harvesting processId
      * @throws RepoxException
      */
-    String scheduleHarvesting(String dsID, Date ingestionDate, IngestFrequency frequency,
+    String scheduleHarvesting(String dsID, DateTime ingestionDate, IngestFrequency frequency,
             boolean isfull) throws RepoxException;
 
     /**

@@ -43,7 +43,7 @@
                             eu.europeana.uim.repox.rest.servlet,
                             eu.europeana.uim.repox.rest.utils,
                         </Export-Package>
-                        <!-- <Embed-Dependency></Embed-Dependency> -->
+                        <Embed-Dependency>joda-time</Embed-Dependency>
                         <!-- <Embed-Transitive>true</Embed-Transitive> -->
                         <!-- <Embed-StripVersion>true</Embed-StripVersion> -->
                     </instructions>

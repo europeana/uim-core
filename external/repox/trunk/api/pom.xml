@@ -27,7 +27,8 @@
                         <Export-Package>
                             eu.europeana.uim.repox,
                             eu.europeana.uim.repox.model
-						</Export-Package>
+                        </Export-Package>
+                        <Embed-Dependency>joda-time</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
@@ -52,6 +53,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
             <version>${europeana.uim.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
         </dependency>
 
         <!-- Shared resources -->
