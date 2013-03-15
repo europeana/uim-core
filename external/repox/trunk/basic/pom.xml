@@ -35,7 +35,6 @@
                             javax.servlet.http,
                             org.osgi.service.blueprint,
                             org.apache.commons.io,
-                            !*
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox.rest,
@@ -76,7 +75,8 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
+                    build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -130,11 +130,11 @@
             <version>${pom.version}</version>
         </dependency>
 
-<!--         <dependency> -->
-<!--             <groupId>${project.groupId}</groupId> -->
-<!--             <artifactId>europeana-uim-model-common</artifactId> -->
-<!--             <version>${europeana.uim.version}</version> -->
-<!--         </dependency> -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>1.6.2</version>
+        </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
