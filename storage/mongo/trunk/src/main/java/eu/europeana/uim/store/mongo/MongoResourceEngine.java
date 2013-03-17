@@ -22,6 +22,7 @@ package eu.europeana.uim.store.mongo;
 
 import java.io.File;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,8 +125,7 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 	 */
 	@Override
 	public Map<String, String> getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<String, String>();
 	}
 
 	/*
