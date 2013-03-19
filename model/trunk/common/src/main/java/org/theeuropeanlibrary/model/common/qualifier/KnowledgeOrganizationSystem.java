@@ -68,5 +68,9 @@ public enum KnowledgeOrganizationSystem {
     /**
      * Id in CERIF if mapped from
      */
-    CERIF
+    CERIF,
+    /**
+     * Id in NACO authority file (http://www.loc.gov/standards/sourcelist/subject.html)
+     */
+    NAF
 }
