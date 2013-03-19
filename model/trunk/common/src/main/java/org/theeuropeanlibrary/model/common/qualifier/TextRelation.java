@@ -21,8 +21,8 @@ public enum TextRelation {
      */
     TABLE_OF_CONTENTS,
     /**
-     * Rights information. If encoded according to Europeana guidelines, the Link object (with LinkTarget.RIGHTS qualifier) should be
-     * used to encode the data, instead of this one
+     * Rights information. If encoded according to Europeana guidelines, the Link object (with
+     * LinkTarget.RIGHTS qualifier) should be used to encode the data, instead of this one
      */
     RIGHTS_UNCONTROLED,
     /**
@@ -45,7 +45,6 @@ public enum TextRelation {
      * see dc:extent
      */
     EXTENT,
-
     /**
      * see dc:source
      */
@@ -67,58 +66,74 @@ public enum TextRelation {
      */
     SUBCOLLECTION,
     /**
-     * The statement of responsibility of an object (the name of the authors as written in the cover of a book, for example) 
+     * The statement of responsibility of an object (the name of the authors as written in the cover
+     * of a book, for example)
      */
     STATEMENT_OF_RESPONSIBILITY,
-
-    /** 
+    /**
      * see dc:relation
      */
-    RELATION, 
-    /** 
+    RELATION,
+    /**
      * see mods location
      */
     LOCATION,
-    /** 
+    /**
      * A note made by the cataloguer. See NoteType enum for the type of note.
      */
-    NOTE, 
-    /** 
+    NOTE,
+    /**
      * Information about a thesis
-     *  */
-    DISSERTATION_STATEMENT,
-    /** 
-     * Information about a thesis
-     *  */
-    DISSERTATION_DEGREE,
-    /** 
-     * Information about a thesis
-     *  */
-    DISSERTATION_DISCIPLINE, 
-    /** 
-     * Scale of a map or visual material
-     *  */
-    SCALE, 
-    /** 
-     * Information known about the item that may be used to determine copyright status. 
      * */
-    COPYRIGHT_STATUS, 
-    /** Cartographic MATHEMATICAL DATA, scale, projection, coordinates  */
+    DISSERTATION_STATEMENT,
+    /**
+     * Information about a thesis
+     */
+    DISSERTATION_DEGREE,
+    /**
+     * Information about a thesis
+     */
+    DISSERTATION_DISCIPLINE,
+    /**
+     * Scale of a map or visual material
+     */
+    SCALE,
+    /**
+     * Information known about the item that may be used to determine copyright status.
+     **/
+    COPYRIGHT_STATUS,
+    /**
+     * Cartographic MATHEMATICAL DATA, scale, projection, coordinates
+     */
     CARTOGRAPHIC_DATA,
-    /** Cartographic projection  */
-    PROJECTION, 
-    /** Cartographic coordinates  */
-    COORDINATES, 
-    /** Cartographic zone for celestial charts*/
-    CELESTIAL_ZONE, 
-    /** Cartographic equiox  */
-    EQUINOX, 
-    /**  The numbering and/or dates of coverage of the first and last issues of a serial when the numbers and dates are known */
+    /**
+     * Cartographic projection
+     */
+    PROJECTION,
+    /**
+     * Cartographic coordinates
+     */
+    COORDINATES,
+    /**
+     * Cartographic zone for celestial charts
+     */
+    CELESTIAL_ZONE,
+    /**
+     * Cartographic equiox
+     */
+    EQUINOX,
+    /**
+     * The numbering and/or dates of coverage of the first and last issues of a serial when the
+     * numbers and dates are known
+     */
     NUMBERING_SERIALS,
     /**
      * Series that the resource is part of
      */
-    SERIES, 
-    /** contains a term or terms indicating the form, genre and/or physical characteristics of the item being described */
+    SERIES,
+    /**
+     * contains a term or terms indicating the form, genre and/or physical characteristics of the
+     * item being described
+     */
     GENRE_FORM,
 }
