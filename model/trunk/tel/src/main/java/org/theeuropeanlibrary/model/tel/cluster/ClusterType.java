@@ -15,7 +15,7 @@ public enum ClusterType {
     /**
      * similar clusters of works
      */
-    WORK_SIMILAR,
+    SIMILAR_WORK,
     /**
      * duplicate clusters
      */
