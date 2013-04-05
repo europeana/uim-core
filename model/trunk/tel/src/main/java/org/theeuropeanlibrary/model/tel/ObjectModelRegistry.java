@@ -204,9 +204,14 @@ public final class ObjectModelRegistry {
                                                                                                                            SpatialEntity.class);
 
     public static final TKey<ObjectModelRegistry, Metadata>                                    METADATA            = TKey.register(
+            ObjectModelRegistry.class,
+            "metadata",
+            Metadata.class);
+    
+    public static final TKey<ObjectModelRegistry, RelatedResource>                                    RELATED_RESOURCE    = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
-                                                                                                                           "metadata",
-                                                                                                                           Metadata.class);
+                                                                                                                           "related resource",
+                                                                                                                           RelatedResource.class);
 
     // ----------------------------------------- Qualifiers
 
@@ -486,6 +491,17 @@ public final class ObjectModelRegistry {
                 add(FieldSource.class);
             }
         });
+
+        validQualifiers.put(RELATED_RESOURCE, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(Language.class);
+                add(ResourceRelation.class);
+                add(FieldSource.class);
+                add(ContextLevel.class);
+            }
+        });
+        
+        
         validRelations.put(PERSON, new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>() {
             {
                 put(IDENTIFIER, new ArrayList<Class<? extends Enum<?>>>() {
