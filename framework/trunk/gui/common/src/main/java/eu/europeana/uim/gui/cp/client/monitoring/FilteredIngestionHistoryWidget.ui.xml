@@ -14,6 +14,12 @@
 		width: 200px;
 		margin-right: 4px;
 		}
+		.anchor {
+            text-decoration: underline;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+        }
 	</ui:style>
 
 	<g:HTMLPanel>

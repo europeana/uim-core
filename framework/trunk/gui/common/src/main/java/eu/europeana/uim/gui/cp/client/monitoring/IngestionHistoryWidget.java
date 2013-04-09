@@ -51,7 +51,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
      * The main CellTable.
      */
     @UiField(provided = true)
-    CellTable<ExecutionDTO>             cellTable;
+    protected CellTable<ExecutionDTO>             cellTable;
 
     /**
      * The pager used to change the range of data.
@@ -160,7 +160,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
     /**
      * Add the columns to the table.
      */
-     void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
+     protected void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
         // ID
         Column<ExecutionDTO, String> idColumn = new Column<ExecutionDTO, String>(new TextCell()) {
