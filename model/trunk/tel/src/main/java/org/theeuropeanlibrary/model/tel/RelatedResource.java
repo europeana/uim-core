@@ -15,34 +15,33 @@ import org.theeuropeanlibrary.model.common.Identifier;
  */
 public class RelatedResource {
     /**
-     * A brief text (typically a title, a names or one short sentence) describing the resource  
+     * A brief text (typically a title, a names or one short sentence) describing the resource
      */
     @FieldId(1)
-    private String description;
-    
+    private String           description;
+
     /**
-     * Identifiers of the resource in external data sets 
+     * Identifiers of the resource in external data sets
      */
     @FieldId(2)
     private List<Identifier> identifiers;
-    
+
     /**
-     * Identifier of the resource in the TEL repository 
+     * Identifier of the resource in the TEL repository
      */
     @FieldId(3)
-    private Long telIdentifier;
+    private Long             telIdentifier;
 
-    
     /**
      * Creates a new instance of this class.
      */
     public RelatedResource() {
         this.identifiers = new ArrayList<Identifier>(0);
     }
-    
-    
+
     /**
      * Creates a new instance of this class.
+     * 
      * @param description
      * @param identifiers
      */
@@ -56,54 +55,52 @@ public class RelatedResource {
         }
     }
 
-
     /**
-     * @return A brief text (typically a title, a names or one short sentence) describing the resource
+     * @return A brief text (typically a title, a names or one short sentence) describing the
+     *         resource
      */
     public final String getDescription() {
         return description;
     }
 
-
     /**
-     * @param description A brief text (typically a title, a names or one short sentence) describing the resource
+     * @param description
+     *            A brief text (typically a title, a names or one short sentence) describing the
+     *            resource
      */
     public final void setDescription(String description) {
         this.description = description;
     }
 
-
     /**
-     * @return Identifiers of the resource in external data sets 
+     * @return Identifiers of the resource in external data sets
      */
     public final List<Identifier> getIdentifiers() {
         return identifiers;
     }
 
-
     /**
-     * @param identifiers Identifiers of the resource in external data sets 
+     * @param identifiers
+     *            Identifiers of the resource in external data sets
      */
     public final void setIdentifiers(List<Identifier> identifiers) {
         this.identifiers = identifiers;
     }
 
-
     /**
-     * @return Identifier of the resource in the TEL repository 
+     * @return Identifier of the resource in the TEL repository
      */
     public final Long getTelIdentifier() {
         return telIdentifier;
     }
 
-
     /**
-     * @param telIdentifier Identifier of the resource in the TEL repository 
+     * @param telIdentifier
+     *            Identifier of the resource in the TEL repository
      */
     public final void setTelIdentifier(Long telIdentifier) {
         this.telIdentifier = telIdentifier;
     }
-
 
     @Override
     public int hashCode() {
@@ -114,7 +111,6 @@ public class RelatedResource {
         result = prime * result + ((telIdentifier == null) ? 0 : telIdentifier.hashCode());
         return result;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -133,6 +129,4 @@ public class RelatedResource {
         } else if (!telIdentifier.equals(other.telIdentifier)) return false;
         return true;
     }
-    
-    
 }
