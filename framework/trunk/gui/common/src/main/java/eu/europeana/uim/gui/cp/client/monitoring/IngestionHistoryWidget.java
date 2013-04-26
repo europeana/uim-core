@@ -44,20 +44,20 @@ public class IngestionHistoryWidget extends IngestionWidget {
     interface Binder extends UiBinder<Widget, IngestionHistoryWidget> {
     }
 
-    final ExecutionServiceAsync executionService;
-    final List<ExecutionDTO>    pastExecutions = new ArrayList<ExecutionDTO>();
+    final ExecutionServiceAsync       executionService;
+    final List<ExecutionDTO>          pastExecutions = new ArrayList<ExecutionDTO>();
 
     /**
      * The main CellTable.
      */
     @UiField(provided = true)
-    protected CellTable<ExecutionDTO>             cellTable;
+    protected CellTable<ExecutionDTO> cellTable;
 
     /**
      * The pager used to change the range of data.
      */
     @UiField(provided = true)
-    SimplePager                         pager;
+    SimplePager                       pager;
 
     /**
      * Creates a new instance of this class.
@@ -102,7 +102,6 @@ public class IngestionHistoryWidget extends IngestionWidget {
         return widget;
     }
 
-    
     /**
      * This method provides extra functionality for components that are meant to extend this one
      * 
@@ -113,9 +112,7 @@ public class IngestionHistoryWidget extends IngestionWidget {
         Widget widget = uiBinder.createAndBindUi(this);
         return widget;
     }
-    
-    
-    
+
     @Override
     protected void onLoad() {
         super.onLoad();
@@ -159,8 +156,11 @@ public class IngestionHistoryWidget extends IngestionWidget {
 
     /**
      * Add the columns to the table.
+     * 
+     * @param selectionModel
+     * @param sortHandler
      */
-     protected void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
+    protected void initTableColumns(final SelectionModel<ExecutionDTO> selectionModel,
             ListHandler<ExecutionDTO> sortHandler) {
         // ID
         Column<ExecutionDTO, String> idColumn = new Column<ExecutionDTO, String>(new TextCell()) {
