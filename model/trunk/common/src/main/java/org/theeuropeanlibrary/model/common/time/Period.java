@@ -80,12 +80,15 @@ public class Period extends Temporal {
     @Override
     public String getDisplay() {
         String ret;
-        if (start != null)
+        if (start != null) {
             ret = start.getDisplay();
-        else
+        } else {
             ret = "";
+        }
         ret += "-";
-        if (end != null) ret += end.getDisplay();
+        if (end != null) {
+            ret += end.getDisplay();
+        }
         return ret;
     }
 
