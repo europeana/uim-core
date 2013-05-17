@@ -255,9 +255,9 @@ public class Person extends Party {
             if (firstNames == null) {
                 return surname;
             } else {
-                if (surname != null) { return firstNames.trim() + " " + surname.trim()
-                    + numerals != null ? " "+numerals.trim() : ""; }
-                return firstNames + numerals != null ? " "+numerals.trim() : "";
+                if (surname != null) { return firstNames.trim() + " " + surname.trim() +
+                                              (numerals != null ? " " + numerals.trim() : ""); }
+                return firstNames + numerals != null ? " " + numerals.trim() : "";
             }
         }
     }
@@ -333,20 +333,20 @@ public class Person extends Party {
     }
 
     /**
-     * @param unstructuredName 
+     * @param unstructuredName
      */
     public void parseAndSetNames(String unstructuredName) {
-        if(unstructuredName.contains(",")) {
-            surname=unstructuredName.substring(0, unstructuredName.indexOf(',')).trim();
-            firstNames=unstructuredName.substring(unstructuredName.indexOf(',')+1).trim();
-            if(firstNames.contains(","))
-                firstNames=firstNames.substring(0, firstNames.indexOf(',')).trim();                
-        }else if(unstructuredName.contains(" ")) {
+        if (unstructuredName.contains(",")) {
+            surname = unstructuredName.substring(0, unstructuredName.indexOf(',')).trim();
+            firstNames = unstructuredName.substring(unstructuredName.indexOf(',') + 1).trim();
+            if (firstNames.contains(","))
+                firstNames = firstNames.substring(0, firstNames.indexOf(',')).trim();
+        } else if (unstructuredName.contains(" ")) {
             int sepIdx = unstructuredName.trim().lastIndexOf(' ');
-            firstNames=unstructuredName.substring(0, sepIdx).trim();
-            surname=unstructuredName.substring(sepIdx+1).trim();
-        }else {
-            surname=unstructuredName;
+            firstNames = unstructuredName.substring(0, sepIdx).trim();
+            surname = unstructuredName.substring(sepIdx + 1).trim();
+        } else {
+            surname = unstructuredName;
         }
     }
 }
