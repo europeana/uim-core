@@ -11,5 +11,9 @@ public enum HashType {
     /**
      * simhash used for hashing values
      */
+    MD5,
+    /**
+     * simhash used for hashing values
+     */
     SIMHASH;
 }
