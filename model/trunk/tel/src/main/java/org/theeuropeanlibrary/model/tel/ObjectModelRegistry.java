@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.theeuropeanlibrary.model.common.FullText;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Numbering;
@@ -185,6 +186,10 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "labeled text",
                                                                                                                            LabeledText.class);
+    public static final TKey<ObjectModelRegistry, FullText>                                    FULL_TEXT           = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "full text",
+                                                                                                                           FullText.class);
 
     public static final TKey<ObjectModelRegistry, NamedPlace>                                  PLACE               = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
@@ -204,11 +209,11 @@ public final class ObjectModelRegistry {
                                                                                                                            SpatialEntity.class);
 
     public static final TKey<ObjectModelRegistry, Metadata>                                    METADATA            = TKey.register(
-            ObjectModelRegistry.class,
-            "metadata",
-            Metadata.class);
-    
-    public static final TKey<ObjectModelRegistry, RelatedResource>                                    RELATED_RESOURCE    = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "metadata",
+                                                                                                                           Metadata.class);
+
+    public static final TKey<ObjectModelRegistry, RelatedResource>                             RELATED_RESOURCE    = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "related resource",
                                                                                                                            RelatedResource.class);
@@ -361,6 +366,12 @@ public final class ObjectModelRegistry {
                 add(FieldSource.class);
             }
         });
+        validQualifiers.put(FULL_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(Language.class);
+                add(FieldSource.class);
+            }
+        });
 
         validQualifiers.put(EDITION, new ArrayList<Class<? extends Enum<?>>>() {
             {
@@ -500,8 +511,7 @@ public final class ObjectModelRegistry {
                 add(ContextLevel.class);
             }
         });
-        
-        
+
         validRelations.put(PERSON, new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>() {
             {
                 put(IDENTIFIER, new ArrayList<Class<? extends Enum<?>>>() {
