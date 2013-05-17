@@ -255,8 +255,9 @@ public class Person extends Party {
             if (firstNames == null) {
                 return surname;
             } else {
-                if (surname != null) { return firstNames.trim() + " " + surname.trim(); }
-                return firstNames;
+                if (surname != null) { return firstNames.trim() + " " + surname.trim()
+                    + numerals != null ? " "+numerals.trim() : ""; }
+                return firstNames + numerals != null ? " "+numerals.trim() : "";
             }
         }
     }
