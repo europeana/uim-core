@@ -1,14 +1,13 @@
-/* Text.java - created on Mar 21, 2011, Copyright (c) 2011 The European Library, all rights reserved */
+/* FullText.java - created on May 17, 2013, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.common;
 
 /**
- * Any textual content, or textual description of a resource This object is generic, and requires
- * always a TextRelation qualifier that defines the entity type of the entity described in the text
+ * This entry represents full - text.
  * 
- * @author Nuno Freire <nfreire@gmail.com>
- * @since Mar 21, 2011
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since May 17, 2013
  */
-public class Text {
+public class FullText {
     /**
      * textual content
      */
@@ -18,7 +17,7 @@ public class Text {
     /**
      * Creates a new instance of this class.
      */
-    public Text() {
+    public FullText() {
         // nothing to do, for serialization purpose
     }
 
@@ -28,7 +27,7 @@ public class Text {
      * @param textualContent
      *            textual content
      */
-    public Text(String textualContent) {
+    public FullText(String textualContent) {
         if (textualContent == null) { throw new IllegalArgumentException(
                 "Argument 'textualContent' should not be null!"); }
         this.content = textualContent;
@@ -64,7 +63,7 @@ public class Text {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Text other = (Text)obj;
+        FullText other = (FullText)obj;
         if (content == null) {
             if (other.content != null) return false;
         } else if (!content.equals(other.content)) return false;
