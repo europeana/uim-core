@@ -9,10 +9,12 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.party.Party;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
+import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.theeuropeanlibrary.model.common.qualifier.PartyRelation;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
@@ -377,5 +379,51 @@ public final class ObjectModelUtils {
         }
 
         return result;
+    }
+    
+    
+    /**
+     * Changes all links in the MDR to be served by the data portal
+     * 
+     * @param mdr
+     */
+    public static void setupWebResourcesLinks(MetaDataRecord<?> mdr) {
+        setupWebResourcesLinks("http://data.theeuropeanlibrary.org", null, mdr);
+    }
+    
+    
+    /**
+     * Changes the urls in Link objects to be served by redirection through the data portal. 
+     * This is necessary for the RDF representation of data in LOD and EDM.
+     * 
+     * @param baseUrl
+     * @param source
+     * @param mdr
+     */
+    public static void setupWebResourcesLinks(String baseUrl, String source, MetaDataRecord<?> mdr) {
+        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.CATALOGUE_RECORD);
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.DIGITAL_OBJECT));
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.THUMBNAIL));
+        
+        for (int index = 0; index < catlinks.size(); index++) {
+            mdr.addValue(ObjectModelRegistry.LINK,
+                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
+                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
+                             source) ),
+                    catlinks.get(index).getQualifier(LinkTarget.class));
+        }
+    }
+    
+    /**
+     * Creates a hash for a link. Used for the WebResources links in the data portal
+     * 
+     * @param link
+     * @return hash of link
+     */
+    public static String getLinkHash(QualifiedValue<Link> link) {
+        return Integer.toHexString(link.getValue().getUrl().hashCode());
     }
 }
