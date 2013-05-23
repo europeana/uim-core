@@ -43,6 +43,9 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     TEL_ACTIVE_PORTAL("tel_inportal", "telda_tel_dataset.tel_inportal", null, "Active in portal"),
 
+    TEL_IS_EUROPEANA("enriched_for_europeana_ese", "telda_tel_dataset.enriched_for_europeana_ese",
+                     null, "To be delivered to  Europeana"),
+
     TEL_PORTAL_STATUS("tel_portal_status", "telda_tel_dataset.tel_portal_status", null,
                       "Portal status"),
 
@@ -85,8 +88,7 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                       "Number of harvested records"),
 
     HARVESTING_DATE("tel_harvesting_date", "telda_tel_dataset.tel_harvesting_date",
-                    RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE,
-                    "Harvesting Date"),
+                    RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE, "Harvesting Date"),
 
     // TODO: should come from repox but doesn't
     HARVESTING_UPDATE("tel_harvesting_update", "telda_tel_dataset.tel_harvesting_update",
