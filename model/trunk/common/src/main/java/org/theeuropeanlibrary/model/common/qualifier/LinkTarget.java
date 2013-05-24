@@ -46,5 +46,9 @@ public enum LinkTarget {
     /**
      * A link to a resource holding full text
      */
-    FULL_TEXT
+    FULL_TEXT,
+    /**
+     * A link to an image
+     */
+    IMAGE
 }
