@@ -4,6 +4,7 @@ package org.theeuropeanlibrary.model.tel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,7 +108,7 @@ public final class ObjectModelUtils {
         Collections.sort(result);
         return result;
     }
-
+    
     /**
      * @param record
      * @param qualifiers
@@ -115,6 +116,17 @@ public final class ObjectModelUtils {
      */
     public static List<Party> getParties(MetaDataRecord<?> record, Enum<?>... qualifiers) {
         return toValues(getQualifiedParties(record, qualifiers), true);
+    }
+
+    /**
+     * Returns parties that are creators or contributors, ordered
+     * 
+     * @param record
+     * @param qualifiers
+     * @return places
+     */
+    public static List<Party> getPartiesIntelectuallyResponsible(MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        return toValues(getQualifiedPartiesIntelectuallyResponsible(record, qualifiers), true);
     }
 
     /**
@@ -133,6 +145,31 @@ public final class ObjectModelUtils {
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.ORGANIZATION, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PARTY, qualifiers));
         Collections.sort(result);
+        return result;
+    }
+
+    /**
+     * Returns parties that are creators or contributors, ordered
+     * 
+     * @param record
+     * @param qualifiers
+     * @return all kinds of parties onto record
+     */
+    public static List<QualifiedValue<? extends Party>> getQualifiedPartiesIntelectuallyResponsible(
+            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        List<QualifiedValue<? extends Party>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends Party>>();
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERSON, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.MEETING, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.FAMILY, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.ORGANIZATION, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.PARTY, qualifiers));
+        Collections.sort(result);
+        for(Iterator<QualifiedValue<? extends Party>> it=result.iterator(); it.hasNext();) {
+            QualifiedValue<? extends Party> p = it.next();
+            PartyRelation pRel = p.getQualifier(PartyRelation.class);
+            if (!(pRel!=null && (pRel==PartyRelation.CREATOR || pRel==PartyRelation.CONTRIBUTOR))) 
+                it.remove();
+        }
         return result;
     }
 
