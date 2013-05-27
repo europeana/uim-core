@@ -15,5 +15,9 @@ public enum LanguageRelation {
     /**
      * The language used in cataloging, or in the creation of the metadata
      */
-    LANGUAGE_OF_CATALOGUING
+    LANGUAGE_OF_CATALOGUING,
+    /**
+     * The language of the original the resource (used in translations of works)
+     */
+    LANGUAGE_OF_ORIGINAL
 }
