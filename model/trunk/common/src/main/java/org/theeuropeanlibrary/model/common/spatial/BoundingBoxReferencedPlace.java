@@ -328,6 +328,23 @@ public class BoundingBoxReferencedPlace extends NamedPlace {
                "]";
     }
     
+    /**
+     * Gets the latitude of the center of the bounding box
+     * 
+     * @return coordinate
+     */
+    public double getCenterLatitude() {
+        return (getNorthLimit() + getSouthLimit()) / 2;
+    }
+    
+    /**
+     * Gets the longitude of the center of the bounding box
+     * 
+     * @return coordinate
+     */
+    public double getCenterLongitude() {
+        return (getEastLimit() + getWestLimit()) / 2;
+    }
     
 }
 
