@@ -23,8 +23,6 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
  * @since Apr 18, 2011
  */
 public class ObjectModelRegistryTest {
-
-
     /**
      * 
      */
@@ -37,16 +35,13 @@ public class ObjectModelRegistryTest {
 
         record.addValue(ObjectModelRegistry.LINK, new Link("http://ssome.reousec.eu"),
                 LinkTarget.THUMBNAIL);
-        
-        record.addValue(ObjectModelRegistry.LINK, new Link("http://cc0/rights"),
-                LinkTarget.RIGHTS);
-       
+
+        record.addValue(ObjectModelRegistry.LINK, new Link("http://cc0/rights"), LinkTarget.RIGHTS);
+
         List<QualifiedValue<Link>> list = record.getQualifiedValues(ObjectModelRegistry.LINK);
         assertEquals(2, list.size());
 
         list = record.getQualifiedValues(ObjectModelRegistry.LINK, LinkTarget.RIGHTS);
         assertEquals(1, list.size());
-
     }
-
 }

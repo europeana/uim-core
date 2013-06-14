@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.model.common.FullText;
 import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.Image;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Numbering;
 import org.theeuropeanlibrary.model.common.Text;
@@ -190,6 +191,10 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "full text",
                                                                                                                            FullText.class);
+    public static final TKey<ObjectModelRegistry, Image>                                       IMAGE               = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "image",
+                                                                                                                           Image.class);
 
     public static final TKey<ObjectModelRegistry, NamedPlace>                                  PLACE               = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
@@ -367,6 +372,12 @@ public final class ObjectModelRegistry {
             }
         });
         validQualifiers.put(FULL_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(Language.class);
+                add(FieldSource.class);
+            }
+        });
+        validQualifiers.put(IMAGE, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(FieldSource.class);
