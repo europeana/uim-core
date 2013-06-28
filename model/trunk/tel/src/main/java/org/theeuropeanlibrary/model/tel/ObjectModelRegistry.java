@@ -52,6 +52,7 @@ import org.theeuropeanlibrary.model.common.time.Temporal;
 import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 import org.theeuropeanlibrary.model.tel.cluster.Hash;
 import org.theeuropeanlibrary.model.tel.cluster.Partition;
+import org.theeuropeanlibrary.model.tel.cluster.Redirect;
 import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
@@ -229,6 +230,11 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "status",
                                                                                                                            Status.class);
+
+    public static final TKey<ObjectModelRegistry, Redirect>                                    REDIRECT            = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "redirect",
+                                                                                                                           Redirect.class);
 
     public static final TKey<ObjectModelRegistry, Language>                                    LANGUAGE            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
