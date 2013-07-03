@@ -33,7 +33,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param level
      *            the level of the message
      * @param message
@@ -46,7 +45,6 @@ public interface LoggingEngine<I> {
      * 
      * @param plugin
      *            the module which logs this messages
-     * 
      * @param level
      *            the level of the message
      * @param message
@@ -59,7 +57,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
@@ -88,7 +85,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
@@ -121,7 +117,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
@@ -139,7 +134,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
@@ -253,7 +247,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param level
      *            the level of the message
      * @param field
@@ -272,7 +265,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
