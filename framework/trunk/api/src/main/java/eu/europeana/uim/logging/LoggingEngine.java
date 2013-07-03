@@ -197,7 +197,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param level
      *            the level of the message
      * @param link
@@ -214,7 +213,6 @@ public interface LoggingEngine<I> {
      * 
      * @param modul
      *            the module which logs this messages
-     * 
      * @param execution
      *            the execution during which this log was issues
      * @param level
