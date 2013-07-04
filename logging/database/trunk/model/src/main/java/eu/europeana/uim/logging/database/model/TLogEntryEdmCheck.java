@@ -1,7 +1,6 @@
 package eu.europeana.uim.logging.database.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -90,22 +89,23 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
      */
     public TLogEntryEdmCheck() {
     }
-    
+
     /**
      * Creates a new instance of this class.
+     * 
      * @param stringExecutionId
      * @param module
      * @param stringMetaDataRecordId
      * @param messages
      */
-    public TLogEntryEdmCheck(String stringExecutionId, String module, String stringMetaDataRecordId, String... messages) {
+    public TLogEntryEdmCheck(String stringExecutionId, String module,
+                             String stringMetaDataRecordId, String... messages) {
         super();
         this.stringExecutionId = stringExecutionId;
         this.module = module;
         this.stringMetaDataRecordId = stringMetaDataRecordId;
         setMessage(messages);
     }
-
 
     /**
      * @return unique identifier used as primary key on database (is automatically set when
@@ -231,5 +231,4 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
             message9 = messages[9];
         }
     }
-
 }
