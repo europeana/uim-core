@@ -20,7 +20,8 @@ import eu.europeana.uim.store.UimDataSet;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 21, 2011
  */
-//FIXME: simplify logging eninge, backend should take care of using special tables for special loggings like link etc.
+// FIXME: simplify logging eninge, backend should take care of using special tables for special
+// loggings like link etc.
 public interface LoggingEngine<I> {
     /**
      * Gets the identifier of this LoggingEngine implementation
@@ -342,7 +343,7 @@ public interface LoggingEngine<I> {
      *            message strings
      */
     void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr, String... message);
-    
+
     /**
      * Logs a EDM validation message (message is related to the whole execution)
      * 
@@ -356,7 +357,7 @@ public interface LoggingEngine<I> {
      *            message strings
      */
     void logEdmCheck(Execution<I> execution, String modul, String... message);
-    
+
     /**
      * method to ensure flushing to disk at the end of workflows.
      * 
@@ -375,7 +376,7 @@ public interface LoggingEngine<I> {
      * @return the list of failed log entries for the execution
      */
     List<LogEntryFailed> getFailedLogs(Execution<I> execution);
-    
+
     /**
      * @param execution
      * @return the list of failed log entries for the execution
@@ -572,7 +573,7 @@ public interface LoggingEngine<I> {
          */
         String getStringUimDatasetId();
     }
-    
+
     /**
      * EDM validation messages
      * 
@@ -594,11 +595,11 @@ public interface LoggingEngine<I> {
          * @return the execution identifier as string
          */
         String getStringExecutionId();
-        
+
         /**
          * @return the execution identifier as string
          */
         String getStringMetaDataRecordId();
     }
-    
+
 }
