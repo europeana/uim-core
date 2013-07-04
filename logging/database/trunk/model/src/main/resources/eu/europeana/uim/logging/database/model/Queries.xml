@@ -28,4 +28,10 @@
         <query-param name="module" type="java.lang.String" />
     </query>
 
+    <query name="eu.europeana.uim.logging.database.model.TLogEntryEdmCheck.findByExecution">
+        FROM TLogEntryEdmCheck s
+        WHERE s.stringExecutionId = :executionId
+        <query-param name="executionId" type="java.lang.String" />
+    </query>
+
 </hibernate-mapping>

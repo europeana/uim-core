@@ -13,6 +13,7 @@
         <class>eu.europeana.uim.logging.database.model.TLogEntryLink</class>
         <class>eu.europeana.uim.logging.database.model.TLogEntryField</class>
         <class>eu.europeana.uim.logging.database.model.TLogEntryDuration</class>
+        <class>eu.europeana.uim.logging.database.model.TLogEntryEdmCheck</class>
         
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

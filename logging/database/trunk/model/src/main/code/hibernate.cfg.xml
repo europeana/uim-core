@@ -29,5 +29,6 @@
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryField" />
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryFailed" />
         <mapping class="eu.europeana.uim.logging.database.model.TLogEntryDuration" />
+        <mapping class="eu.europeana.uim.logging.database.model.TLogEntryEdmCheck" /> 
     </session-factory>
 </hibernate-configuration>

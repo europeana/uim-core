@@ -38,6 +38,9 @@ public class DatabaseEntityTest {
 
     @Autowired
     private TLogEntryDurationHome logDurationHome;
+    
+    @Autowired
+    private TLogEntryEdmCheckHome logEdmHome;
 
     /**
      * Truncates all tables.
@@ -210,6 +213,44 @@ public class DatabaseEntityTest {
         assertEquals(entry.getDate(), storedEntry.getDate());
 
         assertEquals("MODULE", storedEntry.getModule());
+    }
+    
+    /**
+     * Tests string message type log edm check entry.
+     */
+    @Test
+    public void testLogEntryEdmCheck() {
+        TLogEntryEdmCheck entry = new TLogEntryEdmCheck("1L", "module", "2L", "a", "b", "c");
+        
+        logEdmHome.insert(entry);
+        Long oid = entry.getOid();
+        
+        TLogEntryEdmCheck storedEntry = logEdmHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        
+        assertEquals("module", storedEntry.getModule());
+        assertEquals(entry.getModule(), storedEntry.getModule());
+        
+        assertEquals(3, storedEntry.getMessages().length);
+        assertEquals("a", storedEntry.getMessages()[0]);
+        assertEquals("b", storedEntry.getMessages()[1]);
+        assertEquals("c", storedEntry.getMessages()[2]);
+        assertArrayEquals(entry.getMessages(), storedEntry.getMessages());
+        
+        
+        assertNotNull(storedEntry.getStringExecutionId());
+        assertNotNull(storedEntry.getStringMetaDataRecordId());
+        
+        storedEntry.setModule("MODULE");
+        storedEntry.setMessage(new String[] {});
+        
+        logEdmHome.update(storedEntry);
+        storedEntry = logEdmHome.findByOid(oid);
+        assertNotNull(storedEntry);
+        assertEquals(entry.getStringMetaDataRecordId(), storedEntry.getStringMetaDataRecordId());
+        
+        assertEquals("MODULE", storedEntry.getModule());
+        assertEquals(3, storedEntry.getMessages().length);
     }
 
     /**
