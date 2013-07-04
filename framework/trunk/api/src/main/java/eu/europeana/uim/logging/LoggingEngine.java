@@ -601,5 +601,4 @@ public interface LoggingEngine<I> {
          */
         String getStringMetaDataRecordId();
     }
-
 }
