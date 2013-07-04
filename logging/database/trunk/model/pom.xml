@@ -49,7 +49,6 @@
                         <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
                         <ejb3>false</ejb3>
                         <jdk5>true</jdk5>
-
                         <drop>true</drop>
                         <format>true</format>
                         <export>false</export>
