@@ -20,6 +20,7 @@ import eu.europeana.uim.store.UimDataSet;
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 21, 2011
  */
+//FIXME: simplify logging eninge, backend should take care of using special tables for special loggings like link etc.
 public interface LoggingEngine<I> {
     /**
      * Gets the identifier of this LoggingEngine implementation
