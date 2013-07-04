@@ -32,6 +32,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
     private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
     private LinkedList<FieldEntry>         fieldlogs  = new LinkedList<FieldEntry>();
+    private LinkedList<EdmEntry>         edmlogs  = new LinkedList<EdmEntry>();
 
     private Map<String, SummaryStatistics> durations  = new HashMap<String, SummaryStatistics>();
 
@@ -158,7 +159,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         fieldlogs.add(new FieldEntry(execution, modul, mdr, field, qualifier, new Date(), status,
                 message));
         if (fieldlogs.size() > maxentries) {
-            entries.removeFirst();
+            fieldlogs.removeFirst();
         }
     }
 
@@ -184,6 +185,20 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         logDuration(execution, plugin.getIdentifier(), duration);
     }
 
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, String... message) {
+        logEdmCheck(execution, modul, null, message);
+    }
+    
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
+            String... message) {
+        edmlogs.add(new EdmEntry(execution, modul, mdr, message));
+        if (edmlogs.size() > maxentries) {
+            edmlogs.removeFirst();
+        }
+    }
+    
     @Override
     public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         List<LoggingEngine.LogEntry> result = new ArrayList<LoggingEngine.LogEntry>();
@@ -216,6 +231,19 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
         return result;
     }
+    
+    @Override
+    public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
+            Execution<I> execution) {
+        List<LoggingEngine.LogEntryEdmCheck> result = new ArrayList<LoggingEngine.LogEntryEdmCheck>();
+        for (EdmEntry entry : edmlogs) {
+            if (entry.execution != null && entry.execution.equals(execution)) {
+                result.add(entry);
+            }
+        }
+        return result;
+    }
+    
 
     private class LogEntry implements LoggingEngine.LogEntry {
         private final Level        level;
@@ -500,6 +528,52 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
     }
 
+
+    private class EdmEntry implements LoggingEngine.LogEntryEdmCheck {
+        private final String        module;
+        private final UimDataSet<I> mdr;
+        private final String[]      message;
+
+        private final Execution<I>  execution;
+
+        /**
+         * Creates a new instance of this class.
+         * @param execution
+         * @param module
+         * @param mdr
+         * @param message
+         */
+        public EdmEntry(Execution<I> execution, String module, UimDataSet<I> mdr,
+                                String... message) {
+            super();
+            this.execution = execution;
+            this.module = module;
+            this.mdr = mdr;
+            this.message = message;
+        }
+
+        @Override
+        public String getStringMetaDataRecordId() {
+            return mdr == null ? null : mdr.getId().toString();
+        }
+        
+        @Override
+        public String getModule() {
+            return module;
+        }
+
+
+        @Override
+        public String[] getMessages() {
+            return message;
+        }
+
+        @Override
+        public String getStringExecutionId() {
+            return execution != null ? execution.getId().toString() : null;
+        }
+    }
+    
     @Override
     public void completed(ExecutionContext<?, I> execution) {
         //

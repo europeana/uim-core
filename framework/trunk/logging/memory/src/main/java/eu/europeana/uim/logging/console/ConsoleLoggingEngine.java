@@ -129,6 +129,17 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     @Override
+    public void logEdmCheck(Execution<I> execution, String modul, String... message) {
+        logEdmCheck(execution, modul, null, message);
+    }
+    
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
+            String... message) {
+        print("EdmCheck " + execution.getId() + ":" + modul + (mdr==null ? "" : " ("+mdr.getId()+")"), message);
+    }
+    
+    @Override
     public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
@@ -140,6 +151,12 @@ public class ConsoleLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public List<LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
+        return Collections.emptyList();
+    }
+    
+    @Override
+    public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
+            Execution<I> execution) {
         return Collections.emptyList();
     }
 
