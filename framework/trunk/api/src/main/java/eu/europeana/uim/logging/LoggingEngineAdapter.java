@@ -117,6 +117,15 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
     }
 
     @Override
+    public void logEdmCheck(Execution<I> execution, String modul, String... message) {
+    }
+    
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
+            String... message) {
+    }
+    
+    @Override
     public List<eu.europeana.uim.logging.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
     }
@@ -133,6 +142,12 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
         return Collections.emptyList();
     }
 
+    @Override
+    public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
+            Execution<I> execution) {
+        return Collections.emptyList();
+    }
+    
     @Override
     public void completed(ExecutionContext<?, I> context) {
     }
