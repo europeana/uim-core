@@ -4,6 +4,7 @@ package eu.europeana.uim.logging.database;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import eu.europeana.uim.logging.database.model.TLogEntryDurationHome;
+import eu.europeana.uim.logging.database.model.TLogEntryEdmCheckHome;
 import eu.europeana.uim.logging.database.model.TLogEntryFailedHome;
 import eu.europeana.uim.logging.database.model.TLogEntryHome;
 import eu.europeana.uim.logging.database.model.TLogEntryLinkHome;
@@ -17,19 +18,22 @@ import eu.europeana.uim.logging.database.model.TLogEntryFieldHome;
  */
 public class DatabaseLoggingStorage {
     @Autowired
-    private TLogEntryHome logHome;
+    private TLogEntryHome         logHome;
 
     @Autowired
-    private TLogEntryFailedHome logFailedHome;
+    private TLogEntryFailedHome   logFailedHome;
 
     @Autowired
-    private TLogEntryLinkHome logLinkHome;
+    private TLogEntryLinkHome     logLinkHome;
 
     @Autowired
-    private TLogEntryFieldHome logFieldHome;
+    private TLogEntryFieldHome    logFieldHome;
 
     @Autowired
-    private TLogEntryDurationHome  logDurationHome;
+    private TLogEntryDurationHome logDurationHome;
+
+    @Autowired
+    private TLogEntryEdmCheckHome logEdmCheckHome;
 
     /**
      * Creates a new instance of this class.
@@ -39,6 +43,7 @@ public class DatabaseLoggingStorage {
 
     /**
      * Returns the logHome.
+     * 
      * @return the logHome
      */
     public TLogEntryHome getLogHome() {
@@ -47,7 +52,9 @@ public class DatabaseLoggingStorage {
 
     /**
      * Sets the logHome to the given value.
-     * @param logHome the logHome to set
+     * 
+     * @param logHome
+     *            the logHome to set
      */
     public void setLogHome(TLogEntryHome logHome) {
         this.logHome = logHome;
@@ -55,6 +62,7 @@ public class DatabaseLoggingStorage {
 
     /**
      * Returns the logFailedHome.
+     * 
      * @return the logFailedHome
      */
     public TLogEntryFailedHome getLogFailedHome() {
@@ -63,7 +71,9 @@ public class DatabaseLoggingStorage {
 
     /**
      * Sets the logFailedHome to the given value.
-     * @param logFailedHome the logFailedHome to set
+     * 
+     * @param logFailedHome
+     *            the logFailedHome to set
      */
     public void setLogFailedHome(TLogEntryFailedHome logFailedHome) {
         this.logFailedHome = logFailedHome;
@@ -71,6 +81,7 @@ public class DatabaseLoggingStorage {
 
     /**
      * Returns the logLinkHome.
+     * 
      * @return the logLinkHome
      */
     public TLogEntryLinkHome getLogLinkHome() {
@@ -79,6 +90,7 @@ public class DatabaseLoggingStorage {
 
     /**
      * Returns the logLinkHome.
+     * 
      * @return the logLinkHome
      */
     public TLogEntryFieldHome getLogFieldHome() {
@@ -87,7 +99,9 @@ public class DatabaseLoggingStorage {
 
     /**
      * Sets the logLinkHome to the given value.
-     * @param logLinkHome the logLinkHome to set
+     * 
+     * @param logLinkHome
+     *            the logLinkHome to set
      */
     public void setLogLinkHome(TLogEntryLinkHome logLinkHome) {
         this.logLinkHome = logLinkHome;
@@ -95,6 +109,7 @@ public class DatabaseLoggingStorage {
 
     /**
      * Returns the logDurationHome.
+     * 
      * @return the logDurationHome
      */
     public TLogEntryDurationHome getLogDurationHome() {
@@ -103,11 +118,31 @@ public class DatabaseLoggingStorage {
 
     /**
      * Sets the logDurationHome to the given value.
-     * @param logDurationHome the logDurationHome to set
+     * 
+     * @param logDurationHome
+     *            the logDurationHome to set
      */
     public void setLogDurationHome(TLogEntryDurationHome logDurationHome) {
         this.logDurationHome = logDurationHome;
     }
 
+    /**
+     * Returns the logEdmCheckHome.
+     * 
+     * @return the logEdmCheckHome
+     */
+    public final TLogEntryEdmCheckHome getLogEdmCheckHome() {
+        return logEdmCheckHome;
+    }
+
+    /**
+     * Sets the logEdmCheckHome
+     * 
+     * @param logEdmCheckHome
+     *            the logEdmCheckHome to set
+     */
+    public final void setLogEdmCheckHome(TLogEntryEdmCheckHome logEdmCheckHome) {
+        this.logEdmCheckHome = logEdmCheckHome;
+    }
 
 }

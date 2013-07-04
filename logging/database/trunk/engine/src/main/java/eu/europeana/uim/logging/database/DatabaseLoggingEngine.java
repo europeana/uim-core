@@ -15,6 +15,7 @@ import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.logging.LoggingEngineAdapter;
 import eu.europeana.uim.logging.database.model.TLogEntry;
 import eu.europeana.uim.logging.database.model.TLogEntryDuration;
+import eu.europeana.uim.logging.database.model.TLogEntryEdmCheck;
 import eu.europeana.uim.logging.database.model.TLogEntryFailed;
 import eu.europeana.uim.logging.database.model.TLogEntryField;
 import eu.europeana.uim.logging.database.model.TLogEntryLink;
@@ -45,6 +46,7 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
     private List<TLogEntryField>    batchField    = new LinkedList<TLogEntryField>();
     private List<TLogEntryLink>     batchLink     = new LinkedList<TLogEntryLink>();
     private List<TLogEntryDuration> batchDuration = new LinkedList<TLogEntryDuration>();
+    private List<TLogEntryEdmCheck> batchEdmCheck = new LinkedList<TLogEntryEdmCheck>();
 
     /**
      * Creates a new instance of this class. The default constructor is used to initialize the
@@ -203,6 +205,19 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
     public void logDuration(Execution<I> execution, Plugin plugin, Long duration) {
         logDuration(execution, plugin.getIdentifier(), duration);
     }
+    
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, String... message) {
+        logEdmCheck(execution, modul, null, message);
+    }
+
+    @Override
+    public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
+            String... message) {
+        TLogEntryEdmCheck entry = new TLogEntryEdmCheck(execution.getId().toString(), modul,
+                mdr == null ? null : mdr.getId().toString(), message);
+        insert(entry, false);
+    }
 
     @Override
     public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
@@ -242,6 +257,20 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
         return result;
     }
 
+    @Override
+    public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
+            Execution<I> execution) {
+        flush();
+        
+        List<LoggingEngine.LogEntryEdmCheck> result = new ArrayList<LoggingEngine.LogEntryEdmCheck>();
+        List<TLogEntryEdmCheck> entries = storage.getLogEdmCheckHome().findByExecution(
+                execution.getId().toString());
+        for (TLogEntryEdmCheck entry : entries) {
+            result.add(entry);
+        }
+        return result;
+    }
+    
     private void insert(TLogEntry entry, boolean flush) {
         synchronized (batchLog) {
             if (entry != null) batchLog.add(entry);
@@ -284,7 +313,7 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
             }
         }
     }
-
+    
     private void insert(TLogEntryDuration entry, boolean flush) {
         synchronized (batchDuration) {
             if (entry != null) batchDuration.add(entry);
@@ -292,6 +321,17 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
                 storage.getLogDurationHome().insert(
                         batchDuration.toArray(new TLogEntryDuration[batchDuration.size()]));
                 batchDuration.clear();
+            }
+        }
+    }
+
+    private void insert(TLogEntryEdmCheck entry, boolean flush) {
+        synchronized (batchEdmCheck) {
+            if (entry != null) batchEdmCheck.add(entry);
+            if (batchEdmCheck.size() > BATCH_SIZE || flush) {
+                storage.getLogEdmCheckHome().insert(
+                        batchEdmCheck.toArray(new TLogEntryEdmCheck[batchEdmCheck.size()]));
+                batchEdmCheck.clear();
             }
         }
     }
@@ -307,5 +347,6 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
         insert((TLogEntryField)null, true);
         insert((TLogEntryLink)null, true);
         insert((TLogEntryDuration)null, true);
+        insert((TLogEntryEdmCheck)null, true);
     }
 }
