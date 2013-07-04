@@ -20,6 +20,13 @@ public class Redirect {
 
     /**
      * Creates a new instance of this class.
+     */
+    public Redirect() {
+        super();
+    }
+
+    /**
+     * Creates a new instance of this class.
      * 
      * @param redirectId
      *            internal ID that is a replacement for a specific record
