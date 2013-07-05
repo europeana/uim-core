@@ -1,15 +1,9 @@
 /* LinkcheckIngestionPlugin.java - created on Mar 20, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.uim.check.edm;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,29 +15,19 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Validator;
 
 import org.theeuropeanlibrary.commons.export.edm.EdmXmlSerializer;
-import org.theeuropeanlibrary.commons.export.edm.ObjectModelToEdmConverter;
 import org.theeuropeanlibrary.commons.export.edm.model.ResourceMap;
-import org.theeuropeanlibrary.commons.export.iom.XmlUtil;
 import org.theeuropeanlibrary.model.common.Link;
-import org.theeuropeanlibrary.model.common.qualifier.LinkStatus;
-import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
-import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.ingestion.CorruptedDatasetException;
 import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
-import eu.europeana.uim.storage.StorageEngine;
-import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.sugar.SugarControlledVocabulary;
@@ -62,26 +46,27 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
     /**
      * Set the Logging variable to use logging within this class
      */
-    private static final Logger           log       = Logger.getLogger(EdmCheckIngestionPlugin.class.getName());
+    private static final Logger           log        = Logger.getLogger(EdmCheckIngestionPlugin.class.getName());
 
     /** Stop validating if maxerrors is reached */
     public static final String            MAX_ERRORS = "edmcheck.maxerrors";
 
-    private static final List<String>     PARAMETER = new ArrayList<String>() {
-                                                        {
-                                                            add(MAX_ERRORS);
-                                                        }
-                                                    };
+    private static final List<String>     PARAMETER  = new ArrayList<String>() {
+                                                         {
+                                                             add(MAX_ERRORS);
+                                                         }
+                                                     };
 
-    private final static SimpleDateFormat df        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static SimpleDateFormat df         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static SugarService           sugarService;
-    
+
     /**
      * Creates a new instance of this class.
      */
     public EdmCheckIngestionPlugin() {
-        super("EDM Checking Plugin", "Plugin which checks if the records are valid for conversion to EDM.");
+        super("EDM Checking Plugin",
+                "Plugin which checks if the records are valid for conversion to EDM.");
     }
 
     @Override
@@ -100,8 +85,9 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
     @Override
     public void initialize(ExecutionContext<MetaDataRecord<I>, I> context)
             throws IngestionPluginFailedException {
-        
-        ContextRunningData value = new ContextRunningData(context.getFileResource("check/xsd/edm/EDM_tel.xsd"));
+
+        ContextRunningData value = new ContextRunningData(
+                context.getFileResource("check/xsd/edm/EDM_tel.xsd"));
 
         context.putValue(DATA, value);
 
@@ -116,7 +102,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         String time = df.format(new Date());
         String mnem = collection != null ? collection.getMnemonic() : "NULL";
         String name = collection != null ? collection.getName() : "No collection";
-        
+
         context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck",
                 "initialize", mnem, name, time);
     }
@@ -137,8 +123,8 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         String time = df.format(new Date());
         String mnem = collection != null ? collection.getMnemonic() : "NULL";
         String name = collection != null ? collection.getName() : "No collection";
-        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck",
-                "completed", mnem, name, "" + value.submitted, "" + value.ignored, time);
+        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck", "completed",
+                mnem, name, "" + value.submitted, "" + value.ignored, time);
 
         context.getExecution().putValue("edmcheck.ignored", "" + value.ignored);
         context.getExecution().putValue("edmcheck.submitted", "" + value.submitted);
@@ -166,49 +152,49 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean process(MetaDataRecord<I> mdr, ExecutionContext<MetaDataRecord<I>, I> context)
             throws IngestionPluginFailedException, CorruptedDatasetException {
         ContextRunningData value = context.getValue(DATA);
 
-
-        if(value.maxErrors>0 && value.report.getInvalidRecords() >= value.maxErrors) {
+        if (value.maxErrors > 0 && value.report.getInvalidRecords() >= value.maxErrors) {
             value.ignored++;
             return true;
         }
         value.submitted++;
-        
-        ResourceMap edm = value.edmConverter.convert((MetaDataRecord<Long>)mdr);
-        
-        EdmXmlSerializer edmXmlSerializer=new EdmXmlSerializer();
-      
-      Document edmDom = edmXmlSerializer.toDom(edm);
-      
-      final ArrayList<String> validationError=new ArrayList<String>();
-      Validator validator = value.edmSchema.newValidator();
 
-      //this was being done in Europeana Libraries, but I do not know if it is really necessary
-//      edmDom = XmlUtil.parseDom(new StringReader(XmlUtil.writeDomToString(edmDom)));
-      Source source = new DOMSource(edmDom);
-      validator.setErrorHandler(new ErrorHandler() {
-            
+        ResourceMap edm = value.edmConverter.convert((MetaDataRecord<Long>)mdr);
+
+        EdmXmlSerializer edmXmlSerializer = new EdmXmlSerializer();
+
+        Document edmDom = edmXmlSerializer.toDom(edm);
+
+        final ArrayList<String> validationError = new ArrayList<String>();
+        Validator validator = value.edmSchema.newValidator();
+
+        // this was being done in Europeana Libraries, but I do not know if it is really necessary
+// edmDom = XmlUtil.parseDom(new StringReader(XmlUtil.writeDomToString(edmDom)));
+        Source source = new DOMSource(edmDom);
+        validator.setErrorHandler(new ErrorHandler() {
+
             @Override
             public void warning(SAXParseException e) throws SAXException {
                 validationError.add(e.getMessage());
             }
-            
+
             @Override
             public void fatalError(SAXParseException e) throws SAXException {
                 validationError.add(e.getMessage());
             }
-            
+
             @Override
             public void error(SAXParseException e) throws SAXException {
                 validationError.add(e.getMessage());
             }
-            
+
         });
-          
+
         try {
             validator.validate(source);
         } catch (SAXException e) {
@@ -216,14 +202,15 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-      if(!validationError.isEmpty()) {
-          value.report.addInvalidRecord(validationError);
-          //store the validation errors in the uim logging engine 
-          for (String valMsg: new HashSet<String>(validationError)) 
-              context.getLoggingEngine().logEdmCheck(context.getExecution(), "edmcheck", mdr, valMsg);
-      }else
-          value.report.addValidRecord();
-      
+        if (!validationError.isEmpty()) {
+            value.report.addInvalidRecord(validationError);
+            // store the validation errors in the uim logging engine
+            for (String valMsg : new HashSet<String>(validationError))
+                context.getLoggingEngine().logEdmCheck(context.getExecution(), "edmcheck", mdr,
+                        valMsg);
+        } else
+            value.report.addValidRecord();
+
         return true;
     }
 

@@ -3,16 +3,12 @@ package org.theeuropeanlibrary.uim.check.edm;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.theeuropeanlibrary.commons.export.edm.ObjectModelToEdmConverter;
-import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.xml.sax.SAXException;
 
 import eu.europeana.uim.common.TKey;
@@ -36,15 +32,16 @@ public abstract class AbstractEdmIngestionPlugin<I> extends
     /**
      * Set the Logging variable to use logging within this class
      */
-    private static final Logger                                    log  = Logger.getLogger(AbstractEdmIngestionPlugin.class.getName());
+    private static final Logger                                                 log  = Logger.getLogger(AbstractEdmIngestionPlugin.class.getName());
 
     /**
      * typed key to retrieve the container holding all execution dependent variables
      */
     @SuppressWarnings("rawtypes")
     protected static final TKey<AbstractEdmIngestionPlugin, ContextRunningData> DATA = TKey.register(
-                                                                                AbstractEdmIngestionPlugin.class,
-                                                                                "data", ContextRunningData.class);
+                                                                                             AbstractEdmIngestionPlugin.class,
+                                                                                             "data",
+                                                                                             ContextRunningData.class);
 
     /**
      * Creates a new instance of this class and initializes members.
@@ -102,25 +99,27 @@ public abstract class AbstractEdmIngestionPlugin<I> extends
      * Container holding all execution specific information for the validation plugin.
      */
     protected static class ContextRunningData implements Serializable {
-        Schema edmSchema = null;
+        Schema                    edmSchema = null;
         ObjectModelToEdmConverter edmConverter;
-        EdmValidationReport             report    = new EdmValidationReport();
-        int             maxErrors    = 0;
-        int             ignored    = 0;
-        int             submitted  = 0;
-        
+        EdmValidationReport       report    = new EdmValidationReport();
+        int                       maxErrors = 0;
+        int                       ignored   = 0;
+        int                       submitted = 0;
+
         /**
          * Creates a new instance of this class.
-         * @param edmXsdFile 
+         * 
+         * @param edmXsdFile
          */
         public ContextRunningData(File edmXsdFile) {
             try {
-                edmSchema = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema").newSchema(edmXsdFile);
+                edmSchema = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema").newSchema(
+                        edmXsdFile);
             } catch (SAXException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
-            edmConverter=new ObjectModelToEdmConverter();
+            edmConverter = new ObjectModelToEdmConverter();
         }
-        
+
     }
 }
