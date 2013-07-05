@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+    xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+    xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+    <!-- Property place holder -->
+    <bean id="edmcheckPlugin" class="org.theeuropeanlibrary.uim.check.edm.EdmCheckIngestionPlugin" />
+    <service id="edmChecker" ref="edmcheckPlugin" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
+
+    <bean id="lcw" class="org.theeuropeanlibrary.uim.check.edm.EdmCheckWorkflow" />
+    <service id="edmCheckingWorkflow" ref="lcw" interface="eu.europeana.uim.workflow.Workflow" />
+
+    <reference id="sugar" interface="eu.europeana.uim.sugar.SugarService" availability="optional">
+        <reference-listener bind-method="setSugarService" unbind-method="unsetSugarService" ref="edmcheckPlugin">
+        </reference-listener>
+    </reference>
+
+</blueprint>
