@@ -1553,7 +1553,7 @@ where stringexecutionid = ?]]></xml-property>
                             <row id="201">
                                 <cell id="204">
                                     <text-data id="276">
-                                        <expression name="valueExpr">"Linkchecker (" +row["oid"]+ ")"</expression>
+                                        <expression name="valueExpr">"EDMchecker (" +row["oid"]+ ")"</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
