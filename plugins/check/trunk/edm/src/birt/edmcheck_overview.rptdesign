@@ -241,95 +241,7 @@
                     <property name="isOutput">false</property>
                 </structure>
             </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">oid</property>
-                        <property name="dataType">decimal</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">date</property>
-                        <property name="dataType">date-time</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">link</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">message0</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">message1</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">message2</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">message3</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">message4</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">message5</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">message6</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">message7</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">message8</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">message9</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">module</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">status</property>
-                        <property name="dataType">integer</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">stringexecutionid</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
-                        <property name="name">stringmetadatarecordid</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
+            <structure name="cachedMetaData"/>
             <property name="rowFetchLimit">0</property>
             <property name="dataSource">KPIAnalyse</property>
             <xml-property name="queryText"><![CDATA[select *
@@ -1553,7 +1465,7 @@ where stringexecutionid = ?]]></xml-property>
                             <row id="201">
                                 <cell id="204">
                                     <text-data id="276">
-                                        <expression name="valueExpr">"EDMchecker (" +row["oid"]+ ")"</expression>
+                                        <expression name="valueExpr">"Collection: " + row["message2"] + " - " + row["message1"] + row["message8"]</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
@@ -1561,13 +1473,13 @@ where stringexecutionid = ?]]></xml-property>
                                     <property name="colSpan">2</property>
                                     <property name="rowSpan">1</property>
                                     <text-data id="307">
-                                        <expression name="valueExpr">row["message2"] + " (" + row["message1"] + ")"</expression>
+                                        <expression name="valueExpr">"Submitted:" + row["message3"] + " Ignored:" + row["message4"]</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
                                 <cell id="277">
                                     <text-data id="282">
-                                        <expression name="valueExpr">"Submitted:" + row["message3"] + " Ignored:" + row["message4"]</expression>
+                                        <expression name="valueExpr">"Valid:" + row["message5"] + "("+row["message7"] +"%)" + " Invalid:" + row["message6"]</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
@@ -1607,18 +1519,6 @@ where stringexecutionid = ?]]></xml-property>
                                 <text-property name="displayName">oid</text-property>
                                 <expression name="expression">dataSetRow["oid"]</expression>
                                 <property name="dataType">decimal</property>
-                            </structure>
-                            <structure>
-                                <property name="name">date</property>
-                                <text-property name="displayName">date</text-property>
-                                <expression name="expression">dataSetRow["date"]</expression>
-                                <property name="dataType">date-time</property>
-                            </structure>
-                            <structure>
-                                <property name="name">link</property>
-                                <text-property name="displayName">link</text-property>
-                                <expression name="expression">dataSetRow["link"]</expression>
-                                <property name="dataType">string</property>
                             </structure>
                             <structure>
                                 <property name="name">message0</property>
@@ -1687,16 +1587,10 @@ where stringexecutionid = ?]]></xml-property>
                                 <property name="dataType">string</property>
                             </structure>
                             <structure>
-                                <property name="name">status</property>
-                                <text-property name="displayName">status</text-property>
-                                <expression name="expression">dataSetRow["status"]</expression>
-                                <property name="dataType">integer</property>
-                            </structure>
-                            <structure>
                                 <property name="name">Aggregation</property>
                                 <property name="dataType">integer</property>
                                 <simple-property-list name="aggregateOn">
-                                    <value>StatusCodeGroup</value>
+                                    <value>MdrGroup</value>
                                 </simple-property-list>
                                 <property name="aggregateFunction">COUNT</property>
                                 <list-property name="arguments">
@@ -1706,8 +1600,8 @@ where stringexecutionid = ?]]></xml-property>
                                 </list-property>
                             </structure>
                             <structure>
-                                <property name="name">stringuimdatasetid</property>
-                                <text-property name="displayName">stringuimdatasetid</text-property>
+                                <property name="name">stringmetadatarecordid</property>
+                                <text-property name="displayName">stringmetadatarecordid</text-property>
                                 <expression name="expression">dataSetRow["stringuimdatasetid"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
@@ -1807,12 +1701,12 @@ where stringexecutionid = ?]]></xml-property>
                             </row>
                         </header>
                         <group id="283">
-                            <property name="groupName">StatusCodeGroup</property>
+                            <property name="groupName">MdrGroup</property>
                             <property name="interval">none</property>
                             <property name="sortDirection">asc</property>
-                            <expression name="keyExpr">row["status"]</expression>
+                            <expression name="keyExpr" type="javascript">row["stringmetadatarecordid"]</expression>
                             <structure name="toc">
-                                <expression name="expressionValue">row["status"]</expression>
+                                <expression name="expressionValue" type="javascript">row["stringmetadatarecordid"]</expression>
                             </structure>
                             <property name="repeatHeader">true</property>
                             <property name="hideDetail">false</property>
@@ -1838,7 +1732,7 @@ where stringexecutionid = ?]]></xml-property>
                                         <property name="rowSpan">1</property>
                                         <property name="backgroundColor">silver</property>
                                         <text-data id="295">
-                                            <expression name="valueExpr">"Status Code: " + row["status"]</expression>
+                                            <expression name="valueExpr">"Record: " + row["stringmetadatarecordid"]</expression>
                                             <property name="contentType">html</property>
                                         </text-data>
                                     </cell>
@@ -1899,25 +1793,7 @@ where stringexecutionid = ?]]></xml-property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">1px</property>
                                     <data id="308">
-                                        <property name="resultSetColumn">stringuimdatasetid</property>
-                                    </data>
-                                </cell>
-                                <cell id="159">
-                                    <property name="borderBottomColor">#000000</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">1px</property>
-                                    <property name="borderLeftColor">#000000</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">1px</property>
-                                    <property name="borderRightColor">#000000</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">1px</property>
-                                    <property name="borderTopColor">#000000</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">1px</property>
-                                    <data id="80">
-                                        <property name="whiteSpace">nowrap</property>
-                                        <property name="resultSetColumn">status</property>
+                                        <property name="resultSetColumn">stringmetadatarecordid</property>
                                     </data>
                                 </cell>
                                 <cell id="53">
@@ -1934,43 +1810,15 @@ where stringexecutionid = ?]]></xml-property>
                                     <property name="borderTopStyle">solid</property>
                                     <property name="borderTopWidth">1px</property>
                                     <text-data id="116">
-                                        <expression name="valueExpr">if (row["link"].length >= 80) {
-  (row[0] + 1) + ": &lt;a href=" +row["link"]+ ">..." + BirtStr.right(row["link"], 75) + "&lt;/a>"
+                                        <expression name="valueExpr">if (row["message0"].length >= 80) {
+  (row[0] + 1) + ": ..." + BirtStr.right(row["message0"], 75) 
 } else {
-  (row[0] + 1) + ": &lt;a href=" +row["link"]+ ">" + row["link"]+ "&lt;/a>"
+  (row[0] + 1) + ": " + row["message0"]
 }</expression>
                                         <property name="contentType">html</property>
                                     </text-data>
                                 </cell>
-                            </row>
-                            <row id="301">
-                                <list-property name="visibility">
-                                    <structure>
-                                        <property name="format">all</property>
-                                        <expression name="valueExpr">row["status"] == 200</expression>
-                                    </structure>
-                                </list-property>
-                                <cell id="302">
-                                    <property name="colSpan">4</property>
-                                    <property name="rowSpan">1</property>
-                                    <property name="borderBottomColor">#000000</property>
-                                    <property name="borderBottomStyle">solid</property>
-                                    <property name="borderBottomWidth">1px</property>
-                                    <property name="borderLeftColor">#000000</property>
-                                    <property name="borderLeftStyle">solid</property>
-                                    <property name="borderLeftWidth">1px</property>
-                                    <property name="borderRightColor">#000000</property>
-                                    <property name="borderRightStyle">solid</property>
-                                    <property name="borderRightWidth">1px</property>
-                                    <property name="borderTopColor">#000000</property>
-                                    <property name="borderTopStyle">solid</property>
-                                    <property name="borderTopWidth">1px</property>
-                                    <data id="306">
-                                        <property name="whiteSpace">nowrap</property>
-                                        <property name="resultSetColumn">message1</property>
-                                    </data>
-                                </cell>
-                            </row>
+                            </row>                           
                         </detail>
                     </table>
                 </cell>
