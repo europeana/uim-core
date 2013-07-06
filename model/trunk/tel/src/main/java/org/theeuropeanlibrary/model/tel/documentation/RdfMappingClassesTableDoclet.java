@@ -22,20 +22,20 @@ import eu.europeana.uim.common.TKey;
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 23 de Fev de 2012
  */
+@SuppressWarnings("restriction")
 public class RdfMappingClassesTableDoclet {
-
     /**
      * @param root
      * @return success
      */
     public static boolean start(RootDoc root) {
-        ObjectModelJavaDocs iomDocs=new ObjectModelJavaDocs(root);
-        StringBuffer csv=new StringBuffer();
-//      csv.append("Class;EDM-property;Non-EDM property\n");
+        ObjectModelJavaDocs iomDocs = new ObjectModelJavaDocs(root);
+        StringBuffer csv = new StringBuffer();
+// csv.append("Class;EDM-property;Non-EDM property\n");
         csv.append("Class;edm:ProvidedCHO;edm:WebResource;ore:Aggregation;EDM properties;edm:TimeSpan;edm:Place;edm:Agent;skos:Concept;EDM properties;Notes on mapping\n");
         for (ClassDoc cd : iomDocs.getAllClasses()) {
             if (isClassToDocument(cd, iomDocs.getSuperClasses())) {
-                if(cd.qualifiedName().contains(".qualifier."))
+                if (cd.qualifiedName().contains(".qualifier."))
                     qualifierToCsv(csv, cd);
                 else
                     classToCsv(csv, cd, iomDocs.getAllClasseNames());
@@ -50,7 +50,6 @@ public class RdfMappingClassesTableDoclet {
 
         return true;
     }
-
 
     private static boolean isClassToDocument(ClassDoc cls, HashSet<ClassDoc> superClasses) {
         TKey<ObjectModelRegistry, ?> tkey;
@@ -70,49 +69,50 @@ public class RdfMappingClassesTableDoclet {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
-        
-        if (cls.isAbstract()) {
-            return;
-        }
 
-        if(cls.name().equals("Numbering")) {
-            ArrayList<String> quals=new ArrayList<String>();
-            for (NumberingRelation rel:NumberingRelation.values())
+        if (cls.isAbstract()) { return; }
+
+        if (cls.name().equals("Numbering")) {
+            ArrayList<String> quals = new ArrayList<String>();
+            for (NumberingRelation rel : NumberingRelation.values())
                 quals.add(rel.toString());
             Collections.sort(quals);
-            for(String q: quals)
-                classToCsv(csv, cls, allClassNames, tkey, cls.name()+ " ("+q+")");
-        }else if(cls.name().equals("Text")) {
-            ArrayList<String> quals=new ArrayList<String>();
-            for (TextRelation rel:TextRelation.values())
+            for (String q : quals)
+                classToCsv(csv, cls, allClassNames, tkey, cls.name() + " (" + q + ")");
+        } else if (cls.name().equals("Text")) {
+            ArrayList<String> quals = new ArrayList<String>();
+            for (TextRelation rel : TextRelation.values())
                 quals.add(rel.toString());
             Collections.sort(quals);
-            for(String q: quals)
-                classToCsv(csv, cls, allClassNames, tkey, cls.name()+ " ("+q+")");
-        }else
+            for (String q : quals)
+                classToCsv(csv, cls, allClassNames, tkey, cls.name() + " (" + q + ")");
+        } else
             classToCsv(csv, cls, allClassNames, tkey, cls.name());
     }
-    private static void classToCsv(StringBuffer csv, ClassDoc cls, HashSet<String> allClasseNames, TKey<ObjectModelRegistry, ?> tkey, String overideClassName) {
-        csv.append(String.format("%s\n",overideClassName));
-        
-//        boolean hasSuperClass = cls.superclass() != null &&
-//        !cls.superclass().name().equals("Object") &&
-//        !cls.superclass().name().equals("Enum");
-        
-//        ArrayList<FieldDoc> allFields = TelInternalDocumentationDoclet.getAllFieldDocs(cls, hasSuperClass); 
-//        for (FieldDoc fd : allFields) {
-//            csv.append(String.format("%s;property;%s\n",overideClassName, fd.name()));
-//        }
-//        
-//        // allowed qualifiers
-//        List<Class<? extends Enum<?>>> validEnums = ObjectModelRegistry.getValidEnums(tkey);
-//        for (Class<? extends Enum<?>> q : validEnums) {
-//            csv.append(String.format("%s;qualifier;%s\n",overideClassName, q.getSimpleName()));
-//        }
+
+    private static void classToCsv(StringBuffer csv, ClassDoc cls, HashSet<String> allClasseNames,
+            TKey<ObjectModelRegistry, ?> tkey, String overideClassName) {
+        csv.append(String.format("%s\n", overideClassName));
+
+// boolean hasSuperClass = cls.superclass() != null &&
+// !cls.superclass().name().equals("Object") &&
+// !cls.superclass().name().equals("Enum");
+
+// ArrayList<FieldDoc> allFields = TelInternalDocumentationDoclet.getAllFieldDocs(cls,
+// hasSuperClass);
+// for (FieldDoc fd : allFields) {
+// csv.append(String.format("%s;property;%s\n",overideClassName, fd.name()));
+// }
+//
+// // allowed qualifiers
+// List<Class<? extends Enum<?>>> validEnums = ObjectModelRegistry.getValidEnums(tkey);
+// for (Class<? extends Enum<?>> q : validEnums) {
+// csv.append(String.format("%s;qualifier;%s\n",overideClassName, q.getSimpleName()));
+// }
     }
-    
+
     private static void qualifierToCsv(StringBuffer csv, ClassDoc cls) {
-        csv.append(String.format("%s;\n",cls.name()));
+        csv.append(String.format("%s;\n", cls.name()));
     }
 
 }

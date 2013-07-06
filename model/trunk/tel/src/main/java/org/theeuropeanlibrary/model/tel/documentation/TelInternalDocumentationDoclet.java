@@ -37,16 +37,24 @@ import eu.europeana.uim.common.TKey;
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 23 de Fev de 2012
  */
+@SuppressWarnings("restriction")
 public class TelInternalDocumentationDoclet {
-    private static final HashMap<String, String> TEXT_SECTIONS=new HashMap<String, String>();
-    
-    private static final HashMap<String, String> PACKAGE_DESCRIPTIONS=new HashMap<String, String>(){{
-        put("","General classes");
-        put("party","Party classes (Organizations, Persons, etc.)");
-        put("time","Temporal classes");
-        put("spatial","Spatial classes");
-        put("subject","Subject classes");
-    }};
+    private static final HashMap<String, String> TEXT_SECTIONS        = new HashMap<String, String>();
+
+    private static final HashMap<String, String> PACKAGE_DESCRIPTIONS = new HashMap<String, String>() {
+                                                                          {
+                                                                              put("",
+                                                                                      "General classes");
+                                                                              put("party",
+                                                                                      "Party classes (Organizations, Persons, etc.)");
+                                                                              put("time",
+                                                                                      "Temporal classes");
+                                                                              put("spatial",
+                                                                                      "Spatial classes");
+                                                                              put("subject",
+                                                                                      "Subject classes");
+                                                                          }
+                                                                      };
 
     static {
         try {
@@ -78,7 +86,7 @@ public class TelInternalDocumentationDoclet {
      * @return success
      */
     public static boolean start(RootDoc root) {
-        ObjectModelJavaDocs iomDocs=new ObjectModelJavaDocs(root);
+        ObjectModelJavaDocs iomDocs = new ObjectModelJavaDocs(root);
 
         DomBuilder html = new DomBuilder("html");
         html.addElement("head");
@@ -101,7 +109,7 @@ public class TelInternalDocumentationDoclet {
             html.addElementBellow("h2", PACKAGE_DESCRIPTIONS.get(group));
             for (ClassDoc cd : iomDocs.getClassesByGroup().get(group)) {
                 if (isClassToDocument(cd, iomDocs.getSuperClasses())) {
-                    if(cd.qualifiedName().contains(".qualifier."))
+                    if (cd.qualifiedName().contains(".qualifier."))
                         qualifierToDom(html, cd, true);
                     else
                         classToDom(html, cd, iomDocs.getAllClasseNames());
@@ -113,7 +121,7 @@ public class TelInternalDocumentationDoclet {
 
         html.addElementBellow("h2", "Qualifiers");
         for (ClassDoc cd : iomDocs.getQualifiers()) {
-            if(!iomDocs.isSupportedClass(cd.qualifiedName())) {
+            if (!iomDocs.isSupportedClass(cd.qualifiedName())) {
                 qualifierToDom(html, cd, false);
                 html.addEmptyElementBellow("br");
             }
@@ -141,7 +149,6 @@ public class TelInternalDocumentationDoclet {
 
         return true;
     }
-
 
     /**
      * @param html
@@ -348,15 +355,12 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
     }
 
-    
-    
-
     /**
      * @param cls
      * @param hasSuperClass
      * @return all fields of a class
      */
-    protected static ArrayList<FieldDoc> getAllFieldDocs(ClassDoc cls, boolean hasSuperClass){
+    protected static ArrayList<FieldDoc> getAllFieldDocs(ClassDoc cls, boolean hasSuperClass) {
         ArrayList<FieldDoc> allFields = new ArrayList<FieldDoc>();
         if (hasSuperClass) {
             for (FieldDoc fd : cls.superclass().fields()) {
@@ -376,9 +380,7 @@ public class TelInternalDocumentationDoclet {
         });
         return allFields;
     }
-    
-    
-    
+
     /**
      * @param dom
      * @param simpleTypeName
@@ -400,8 +402,8 @@ public class TelInternalDocumentationDoclet {
         dom.addElement("a");
         dom.setAttribute("name", cls.name());
         dom.addElementBellow("b", cls.name());
-//        if(asClass) 
-            dom.addTextNode(" (controled values)");
+// if(asClass)
+        dom.addTextNode(" (controled values)");
         dom.goToParent();
 
         dom.goToParent();
@@ -418,28 +420,26 @@ public class TelInternalDocumentationDoclet {
         dom.goToParent();
         dom.goToParent();
 
-        if(cls.fields().length>25) {
+        if (cls.fields().length > 25) {
             dom.addElement("tr");
             dom.addElement("td");
             dom.setAttribute("colspan", 2);
-            int col=0;
-            String text="";
+            int col = 0;
+            String text = "";
             for (FieldDoc fd : cls.fields()) {
-                if(!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
+                if (!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
                     continue;
-                if(col>0)
-                    text+="; ";
-                text+=fd.name();
-                if(!fd.commentText().isEmpty())
-                    text+=" ("+fd.commentText()+")";
+                if (col > 0) text += "; ";
+                text += fd.name();
+                if (!fd.commentText().isEmpty()) text += " (" + fd.commentText() + ")";
                 col++;
             }
             dom.setText(text);
             dom.goToParent();
             dom.goToParent();
-        }else {
+        } else {
             for (FieldDoc fd : cls.fields()) {
-                if(!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
+                if (!fd.isStatic() || !fd.type().simpleTypeName().equals(cls.simpleTypeName()))
                     continue;
                 dom.addElement("tr");
                 dom.addElementBellow("td", fd.name());
@@ -447,9 +447,8 @@ public class TelInternalDocumentationDoclet {
                 dom.goToParent();
             }
         }
-        
-        
-        if(asClass) {
+
+        if (asClass) {
             // allowed qualifiers
             TKey<ObjectModelRegistry, ?> tkey;
             try {
@@ -464,7 +463,7 @@ public class TelInternalDocumentationDoclet {
             dom.addElementBellow("b", "Qualifiers");
             dom.goToParent();
             dom.goToParent();
-            
+
             dom.addElement("tr");
             dom.addElement("td");
             dom.setAttribute("colspan", 2);
@@ -478,7 +477,7 @@ public class TelInternalDocumentationDoclet {
             }
             dom.goToParent();
             dom.goToParent();
-        }        
+        }
         dom.goToParent();// table
     }
 }

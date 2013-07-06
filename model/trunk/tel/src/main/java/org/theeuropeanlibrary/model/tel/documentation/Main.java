@@ -2,12 +2,13 @@
 package org.theeuropeanlibrary.model.tel.documentation;
 
 /**
- * Script to execute the generation of the doccumentations
- * It needs also project europeana-uim-model-common to be in the same eclipse workspace.
+ * Script to execute the generation of the doccumentations It needs also project
+ * europeana-uim-model-common to be in the same eclipse workspace.
  * 
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 23 de Fev de 2012
  */
+@SuppressWarnings("restriction")
 public class Main {
     /**
      * @param args
@@ -24,8 +25,7 @@ public class Main {
                 "org.theeuropeanlibrary.model.common.subject",
                 "org.theeuropeanlibrary.model.common.time" };
         com.sun.tools.javadoc.Main.execute(programName, defaultDocletClassName, javaDocParams);
-        
-        
+
         defaultDocletClassName = RdfMappingClassesTableDoclet.class.getCanonicalName();
         com.sun.tools.javadoc.Main.execute(programName, defaultDocletClassName, javaDocParams);
 

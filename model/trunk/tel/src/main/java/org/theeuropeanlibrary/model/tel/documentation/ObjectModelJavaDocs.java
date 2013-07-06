@@ -19,23 +19,23 @@ import com.sun.javadoc.RootDoc;
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 30 de Mar de 2012
  */
+@SuppressWarnings("restriction")
 public class ObjectModelJavaDocs {
     private HashMap<String, ArrayList<ClassDoc>> classesByGroup = new HashMap<String, ArrayList<ClassDoc>>();
-    private ArrayList<ClassDoc> allClasses = new ArrayList<ClassDoc>();
-    private ArrayList<ClassDoc> qualifiers = new ArrayList<ClassDoc>();
-    private HashSet<ClassDoc> superClasses = new HashSet<ClassDoc>();
-    private HashSet<String> allClasseNames = new HashSet<String>();
-    
-    
-    
+    private ArrayList<ClassDoc>                  allClasses     = new ArrayList<ClassDoc>();
+    private ArrayList<ClassDoc>                  qualifiers     = new ArrayList<ClassDoc>();
+    private HashSet<ClassDoc>                    superClasses   = new HashSet<ClassDoc>();
+    private HashSet<String>                      allClasseNames = new HashSet<String>();
+
     /**
      * Creates a new instance of this class.
+     * 
      * @param root
      */
     @SuppressWarnings("rawtypes")
     public ObjectModelJavaDocs(RootDoc root) {
         Set<Class<? extends Enum>> allSupportedQualifiers = ObjectModelRegistry.getAllSupportedQualifiers();
-        
+
         ClassDoc[] classes = root.classes();
         for (int i = 0; i < classes.length; ++i) {
             ClassDoc classDoc = classes[i];
@@ -43,7 +43,7 @@ public class ObjectModelJavaDocs {
             allClasseNames.add(classDoc.name());
             if (className.contains(".qualifier.")) {
                 try {
-                    if(!isSupportedClass(className))
+                    if (!isSupportedClass(className))
                         qualifiers.add(classDoc);
                     else {
                         ArrayList<ClassDoc> clsDocs = classesByGroup.get("");
@@ -53,7 +53,7 @@ public class ObjectModelJavaDocs {
                         }
                         clsDocs.add(classDoc);
                         allClasses.add(classDoc);
-                        if(allSupportedQualifiers.contains(Class.forName(className)))
+                        if (allSupportedQualifiers.contains(Class.forName(className)))
                             qualifiers.add(classDoc);
                     }
                 } catch (ClassNotFoundException e) {
@@ -95,14 +95,15 @@ public class ObjectModelJavaDocs {
                 return o1.name().compareTo(o2.name());
             }
         });
-        
-     // System.out.println(qualifiers);
-     // System.out.println(classesByGroup);
+
+        // System.out.println(qualifiers);
+        // System.out.println(classesByGroup);
 
     }
 
     /**
      * Returns the classesByGroup.
+     * 
      * @return the classesByGroup
      */
     public HashMap<String, ArrayList<ClassDoc>> getClassesByGroup() {
@@ -111,6 +112,7 @@ public class ObjectModelJavaDocs {
 
     /**
      * Returns the qualifiers.
+     * 
      * @return the qualifiers
      */
     public ArrayList<ClassDoc> getQualifiers() {
@@ -119,6 +121,7 @@ public class ObjectModelJavaDocs {
 
     /**
      * Returns the superClasses.
+     * 
      * @return the superClasses
      */
     public HashSet<ClassDoc> getSuperClasses() {
@@ -127,12 +130,13 @@ public class ObjectModelJavaDocs {
 
     /**
      * Returns the allClasseNames.
+     * 
      * @return the allClasseNames
      */
     public HashSet<String> getAllClasseNames() {
         return allClasseNames;
     }
-    
+
     /**
      * @param qualifiedClassName
      * @return true if a class is in the Object model registry
@@ -146,11 +150,10 @@ public class ObjectModelJavaDocs {
     }
 
     /**
-     * @return all classes' javadoc 
+     * @return all classes' javadoc
      */
     public ArrayList<ClassDoc> getAllClasses() {
         return allClasses;
     }
-    
-    
+
 }
