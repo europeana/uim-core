@@ -11,6 +11,10 @@ public enum ClusterType {
     /**
      * similar clusters
      */
+    CANDIDATE,
+    /**
+     * similar clusters
+     */
     SIMILAR,
     /**
      * similar clusters of works
