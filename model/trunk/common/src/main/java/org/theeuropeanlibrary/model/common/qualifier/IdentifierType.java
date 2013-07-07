@@ -138,5 +138,4 @@ public enum IdentifierType {
      * identifier representing cluster group (detailed types are insided identifier)
      */
     CLUSTER
-
 }
