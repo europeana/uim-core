@@ -19,7 +19,9 @@
         <module>field</module>
         <module>link</module>
         <module>link-collection</module>
+        <!--  
         <module>edm</module>
+        -->
     </modules>
 
     <build />
