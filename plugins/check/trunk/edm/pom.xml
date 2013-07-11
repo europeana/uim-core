@@ -35,12 +35,8 @@
                             eu.europeana.uim.workflow,
                             org.theeuropeanlibrary.commons.export.edm,
                             org.theeuropeanlibrary.commons.export.edm.model,
-                            javax.xml.transform,
-                            javax.xml.transform.dom,
-                            javax.xml.validation,
                             org.osgi.service.blueprint,
-                            org.w3c.dom,
-                            org.xml.sax,
+                            !*
                         </Import-Package>
                         <Export-Package>org.theeuropeanlibrary.uim.check.edm</Export-Package>
                     </instructions>
