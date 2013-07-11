@@ -22,25 +22,25 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.logging, 
-                            eu.europeana.uim.orchestration, 
-                            eu.europeana.uim.plugin, 
-                            eu.europeana.uim.plugin.ingestion,
-                            eu.europeana.uim.plugin.source, 
-                            eu.europeana.uim.storage, 
                             eu.europeana.uim.common,
+                            eu.europeana.uim.logging,
+                            eu.europeana.uim.orchestration,
+                            eu.europeana.uim.plugin,
+                            eu.europeana.uim.plugin.ingestion,
+                            eu.europeana.uim.plugin.source,
+                            eu.europeana.uim.storage,
                             eu.europeana.uim.store,
-                            eu.europeana.uim.util,
                             eu.europeana.uim.sugar,
+                            eu.europeana.uim.util,
                             eu.europeana.uim.workflow,
-                            org.theeuropeanlibrary.collections.guarded,
-                            org.theeuropeanlibrary.model.common,
-                            org.theeuropeanlibrary.model.common.qualifier,
-                            org.theeuropeanlibrary.model.tel,
+                            org.theeuropeanlibrary.commons.export.edm,
+                            org.theeuropeanlibrary.commons.export.edm.model,
+                            javax.xml.transform,
+                            javax.xml.transform.dom,
+                            javax.xml.validation,
                             org.osgi.service.blueprint,
-                            org.apache.commons.io,
-                            javax.net.ssl,
-                            !*
+                            org.w3c.dom,
+                            org.xml.sax,
                         </Import-Package>
                         <Export-Package>org.theeuropeanlibrary.uim.check.edm</Export-Package>
                     </instructions>
@@ -73,14 +73,13 @@
             <artifactId>europeana-uim-external-sugar-api</artifactId>
             <version>${pom.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.theeuropeanlibrary</groupId>
             <artifactId>tel-commons-export-xml</artifactId>
             <version>2.0.2-SNAPSHOT</version>
         </dependency>
 
-        
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
