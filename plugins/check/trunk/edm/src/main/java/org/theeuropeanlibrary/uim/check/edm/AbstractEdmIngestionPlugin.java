@@ -120,6 +120,5 @@ public abstract class AbstractEdmIngestionPlugin<I> extends
             }
             edmConverter = new ObjectModelToEdmConverter();
         }
-
     }
 }

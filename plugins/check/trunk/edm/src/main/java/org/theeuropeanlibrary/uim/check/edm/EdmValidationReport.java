@@ -17,11 +17,10 @@ import java.util.Map.Entry;
  * @since 20 de Ago de 2012
  */
 public class EdmValidationReport {
+    private int                      recordCount;
+    private int                      invalidRecords;
 
-    int                      recordCount;
-    int                      invalidRecords;
-
-    HashMap<String, Integer> errorMessagesCounts = new HashMap<String, Integer>();
+    private HashMap<String, Integer> errorMessagesCounts = new HashMap<String, Integer>();
 
     /**
      * A record was validated without errors
@@ -69,7 +68,7 @@ public class EdmValidationReport {
     }
 
     /**
-     * @return  overall error counts by message sorted by occurence
+     * @return overall error counts by message sorted by occurence
      */
     public List<Entry<String, Integer>> getErrorMessagesCountsSorted() {
         ArrayList<Entry<String, Integer>> entries = new ArrayList<Entry<String, Integer>>(
@@ -96,5 +95,4 @@ public class EdmValidationReport {
     public float getValidRecordsPercent() {
         return (float)getValidRecords() * 100 / recordCount;
     }
-
 }
