@@ -36,7 +36,11 @@
                             org.theeuropeanlibrary.commons.export.edm,
                             org.theeuropeanlibrary.commons.export.edm.model,
                             org.osgi.service.blueprint,
-                            !*
+                            javax.xml.*,
+                            org.w3c.dom,
+                            org.w3c.dom.ls,
+                            org.xml.sax,
+                            org.xml.sax.ext,
                         </Import-Package>
                         <Export-Package>org.theeuropeanlibrary.uim.check.edm</Export-Package>
                     </instructions>
