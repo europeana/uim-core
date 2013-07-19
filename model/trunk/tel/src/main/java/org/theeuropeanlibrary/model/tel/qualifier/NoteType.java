@@ -85,13 +85,4 @@ public enum NoteType {
      * 556 Information About Documentation Note 
      *  */
     DOCUMENTATION,
-    
-       
-    
-    
-    
-    
-    
-    
-    
 }
