@@ -9,6 +9,11 @@ package org.theeuropeanlibrary.model.common;
  */
 public class FullText extends Text {
     /**
+     * object representation of the full-text
+     */
+    private transient Object object;
+
+    /**
      * Creates a new instance of this class.
      */
     public FullText() {
@@ -23,5 +28,19 @@ public class FullText extends Text {
      */
     public FullText(String textualContent) {
         super(textualContent);
+    }
+
+    /**
+     * @return object
+     */
+    public Object getObject() {
+        return object;
+    }
+
+    /**
+     * @param object
+     */
+    public void setObject(Object object) {
+        this.object = object;
     }
 }
