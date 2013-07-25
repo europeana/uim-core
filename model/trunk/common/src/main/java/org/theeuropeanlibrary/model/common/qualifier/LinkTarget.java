@@ -50,5 +50,9 @@ public enum LinkTarget {
     /**
      * A link to an image
      */
-    IMAGE
+    IMAGE,
+    /**
+     * A link to an image on an image server
+     */
+    IMAGE_SERVER
 }
