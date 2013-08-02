@@ -78,7 +78,8 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.LAST_LOD_RECORDS,
                 
                 TELCollectionFields.LINKCHECK_EXECUTION,
-                TELCollectionFields.FIELDCHECK_EXECUTION
+                TELCollectionFields.FIELDCHECK_EXECUTION,
+                TELCollectionFields.EDMCHECK_EXECUTION
         };
     }
 }
