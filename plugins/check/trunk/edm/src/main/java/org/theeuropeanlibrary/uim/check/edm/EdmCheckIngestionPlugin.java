@@ -123,18 +123,13 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         String time = df.format(new Date());
         String mnem = collection != null ? collection.getMnemonic() : "NULL";
         String name = collection != null ? collection.getName() : "No collection";
-        
-        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck", 
-                "completed",
-                mnem, 
-                name, 
-                String.valueOf(value.submitted), 
-                String.valueOf(value.ignored), 
-                String.valueOf(value.report.getValidRecords()), 
+
+        context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck", "completed",
+                mnem, name, String.valueOf(value.submitted), String.valueOf(value.ignored),
+                String.valueOf(value.report.getValidRecords()),
                 String.valueOf(value.report.getInvalidRecords()),
-                String.valueOf(value.report.getValidRecordsPercent()), 
-                (value.ignored > 0 ? "(partial report - error limit reached)" : ""),
-                time);
+                String.valueOf(value.report.getValidRecordsPercent()),
+                (value.ignored > 0 ? "(partial report - error limit reached)" : ""), time);
 
         context.getExecution().putValue("edmcheck.ignored", "" + value.ignored);
         context.getExecution().putValue("edmcheck.submitted", "" + value.submitted);
@@ -143,7 +138,6 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
 
         try {
             if (collection != null) {
-
                 collection.putValue(SugarControlledVocabulary.COLLECTION_EDM_VALIDATION,
                         "" + context.getExecution().getId());
 
