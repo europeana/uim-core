@@ -25,12 +25,6 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     /** date of acceptance indexing finished */
     COLLECTION_LAST_TRANSFORM_DATE,
 
-    /** number of records indexed for acceptance in execution */
-    COLLECTION_LAST_CLUSTER_RECORDS,
-
-    /** date of acceptance indexing finished */
-    COLLECTION_LAST_CLUSTER_DATE,
-
     /** number of records enriched in execution */
     COLLECTION_LAST_ENRICH_RECORDS,
 
@@ -38,13 +32,16 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     COLLECTION_LAST_ENRICH_DATE,
 
     /** number of records indexed for acceptance in execution */
+    COLLECTION_LAST_CLUSTER_RECORDS,
+
+    /** date of acceptance indexing finished */
+    COLLECTION_LAST_CLUSTER_DATE,
+
+    /** number of records indexed for acceptance in execution */
     COLLECTION_LAST_ACCEPTANCE_RECORDS,
 
     /** date of acceptance indexing finished */
     COLLECTION_LAST_ACCEPTANCE_DATE,
-
-    /** number of total records indexed for collection */
-    COLLECTION_INDEXED_RECORDS,
 
     /** number of records modified in indexed execution */
     COLLECTION_LAST_INDEXED_RECORDS,
@@ -52,21 +49,42 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     /** date of indexing finished */
     COLLECTION_LAST_INDEXED_DATE,
 
-    /** number of total records in lod */
-    COLLECTION_LOD_RECORDS,
-
     /** number of records modified in lod execution */
     COLLECTION_LAST_LOD_RECORDS,
 
     /** date of lod finished */
     COLLECTION_LAST_LOD_DATE,
 
+    /** number of newspaper records processed into uim */
+    COLLECTION_LAST_NEWSPAPER_RECORDS,
+
+    /** when last time newspaper records processed into uim */
+    COLLECTION_LAST_NEWSPAPER_DATE,
+
+    /** number of total records indexed for collection */
+    COLLECTION_INDEXED_RECORDS,
+
+    /** number of total records in lod */
+    COLLECTION_LOD_RECORDS,
+
+    /** number of total records loaded for collection */
+    COLLECTION_LOADED_RECORDS,
+
+    /** number of total fulltext objects loaded for collection */
+    COLLECTION_FULLTEXT_OBJECTS,
+
+    /** number of total digital objects loaded for collection */
+    COLLECTION_DIGITAL_OBJECTS,
+
+    /** number of total digital objects stored at TEL */
+    COLLECTION_DIGITAL_STORED,
+
     /** execution id of validation run */
     COLLECTION_LINK_VALIDATION,
 
     /** execution id of validation run */
-    COLLECTION_FIELD_VALIDATION, 
-    
+    COLLECTION_FIELD_VALIDATION,
+
     /** execution id of validation run */
     COLLECTION_EDM_VALIDATION;
 
