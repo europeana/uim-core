@@ -76,7 +76,8 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     /**
      * default batch size
      */
-    public static int                             BATCH_SIZE              = 1000;
+    //FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
+    public static int                             BATCH_SIZE              = 100;
 
     /**
      * Creates a new instance of this class.

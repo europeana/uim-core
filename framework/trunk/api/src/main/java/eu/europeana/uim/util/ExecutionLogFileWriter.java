@@ -30,7 +30,7 @@ public class ExecutionLogFileWriter<I> {
      * Creates a new instance of this class.
      */
     public ExecutionLogFileWriter() {
-
+        // nothing to do
     }
 
     /**
@@ -78,8 +78,8 @@ public class ExecutionLogFileWriter<I> {
             fstream = new FileWriter(logFile, true);
             out = new BufferedWriter(fstream);
 
-           //put a tab on the second to last line from every message
-           String cleanedMessage = message.replace("\n", "\n\t");
+            // put a tab on the second to last line from every message
+            String cleanedMessage = message.replace("\n", "\n\t");
 
             out.write(dateFormat.format(new Date()) + "|" +
                       String.format("%1$#9s", level.getName()) + "|" + cleanedMessage + "\n");
@@ -87,7 +87,6 @@ public class ExecutionLogFileWriter<I> {
             if (out != null) out.close();
             if (fstream != null) fstream.close();
         }
-
     }
 
     /**
