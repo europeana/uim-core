@@ -136,4 +136,8 @@ public enum TextRelation {
      * item being described
      */
     GENRE_FORM,
+    /**
+     * contains a term indicating the script
+     */
+    SCRIPT
 }
