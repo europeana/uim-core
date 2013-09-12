@@ -72,5 +72,5 @@ public enum TemporalRelation {
     /**
      * date of an issue
      */
-    ISSUE,
+//    ISSUE,
 }
