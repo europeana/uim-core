@@ -147,16 +147,16 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     LAST_LOD_RECORDS("tel_last_lod_records", "telda_tel_dataset.tel_last_lod_records",
                      SugarControlledVocabulary.COLLECTION_LAST_LOD_RECORDS, "Number of lod records"),
 
-    LAST_NEWSPAPER_DATE("tel_last_newspaper_date_c", "telda_tel_dataset.tel_last_newspaper_date_c",
+    LAST_NEWSPAPER_DATE("tel_last_newspaper_date_c", "telda_tel_dataset_cstm.tel_last_newspaper_date_c",
                         SugarControlledVocabulary.COLLECTION_LAST_NEWSPAPER_DATE,
                         "Last Newspaper Date"),
 
     LAST_NEWSPAPER_RECORDS("tel_last_newspaper_records_c",
-                           "telda_tel_dataset.tel_last_newspaper_records_c",
+                           "telda_tel_dataset_cstm.tel_last_newspaper_records_c",
                            SugarControlledVocabulary.COLLECTION_LAST_NEWSPAPER_RECORDS,
                            "Number of newspaper records"),
 
-    LOAD_RECORDS("count_loaded_records_c", "telda_tel_dataset.count_loaded_records_c",
+    LOAD_RECORDS("count_loaded_records_c", "telda_tel_dataset_cstm.count_loaded_records_c",
                  SugarControlledVocabulary.COLLECTION_LAST_NEWSPAPER_RECORDS,
                  "Total number of indexed records"),
 
@@ -164,16 +164,16 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                     SugarControlledVocabulary.COLLECTION_INDEXED_RECORDS,
                     "Total number of indexed records"),
 
-    FULLTEXT_OBJECTS("count_fulltext_objects_c", "telda_tel_dataset.count_fulltext_objects_c",
+    FULLTEXT_OBJECTS("count_fulltext_objects_c", "telda_tel_dataset_cstm.count_fulltext_objects_c",
                      SugarControlledVocabulary.COLLECTION_FULLTEXT_OBJECTS,
                      "Total number of fulltext objects"),
 
-    DIGITAL_OBJECTS("count_digital_objects_c", "telda_tel_dataset.count_digital_objects_c",
+    DIGITAL_OBJECTS("count_digital_objects_c", "telda_tel_dataset_cstm.count_digital_objects_c",
                     SugarControlledVocabulary.COLLECTION_DIGITAL_OBJECTS,
                     "Total number of digital objects"),
 
     DIGITAL_STORED("count_digital_stored_objects_c",
-                   "telda_tel_dataset.count_digital_stored_objects_c",
+                   "telda_tel_dataset_cstm.count_digital_stored_objects_c",
                    SugarControlledVocabulary.COLLECTION_DIGITAL_STORED,
                    "Total number of digital objects stored"),
 
