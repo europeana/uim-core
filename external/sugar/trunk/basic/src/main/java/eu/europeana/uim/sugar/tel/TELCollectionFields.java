@@ -172,9 +172,9 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                     SugarControlledVocabulary.COLLECTION_DIGITAL_OBJECTS,
                     "Total number of digital objects"),
 
-    DIGITAL_STORED("count_digital_stored_objects_c",
+    DIGITAL_STORED_OBJECTS("count_digital_stored_objects_c",
                    "telda_tel_dataset_cstm.count_digital_stored_objects_c",
-                   SugarControlledVocabulary.COLLECTION_DIGITAL_STORED,
+                   SugarControlledVocabulary.COLLECTION_DIGITAL_STORED_OBJECTS,
                    "Total number of digital objects stored"),
 
     LOD_RECORDS("count_lod_records", "telda_tel_dataset.count_lod_records",
