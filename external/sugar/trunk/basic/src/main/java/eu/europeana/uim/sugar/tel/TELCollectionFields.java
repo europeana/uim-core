@@ -158,7 +158,7 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     LOAD_RECORDS("count_loaded_records_c", "telda_tel_dataset_cstm.count_loaded_records_c",
                  SugarControlledVocabulary.COLLECTION_LOADED_RECORDS,
-                 "Total number of indexed records"),
+                 "Total number of loaded records"),
 
     INDEXED_RECORDS("count_indexed_records", "telda_tel_dataset.count_indexed_records",
                     SugarControlledVocabulary.COLLECTION_INDEXED_RECORDS,
