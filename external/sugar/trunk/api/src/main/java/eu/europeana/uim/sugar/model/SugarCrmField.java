@@ -1,5 +1,4 @@
-
- /**
+/**
  * Licensed under the EUPL, Version 1.1 or - as soon they
  * will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -27,13 +26,11 @@ import eu.europeana.uim.store.ControlledVocabularyKeyValue;
  * @author Georgios Markakis
  */
 public interface SugarCrmField {
-
-    
     /**
      * @return the field id in the SugarCRM
      */
     public String getFieldId();
-    
+
     /**
      * @return the qualified field id in the SugarCRM
      */
@@ -43,10 +40,9 @@ public interface SugarCrmField {
      * @return the matching target controlled field in UIM
      */
     public ControlledVocabularyKeyValue getMappingField();
-    
-    
-	/**
-	 * @return the semantic meaning of the field
-	 */
-	public String getDescription();
+
+    /**
+     * @return the semantic meaning of the field
+     */
+    public String getDescription();
 }
