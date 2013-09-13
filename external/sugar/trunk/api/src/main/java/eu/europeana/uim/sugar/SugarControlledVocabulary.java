@@ -77,7 +77,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     COLLECTION_DIGITAL_OBJECTS,
 
     /** number of total digital objects stored at TEL */
-    COLLECTION_DIGITAL_STORED,
+    COLLECTION_DIGITAL_STORED_OBJECTS,
 
     /** execution id of validation run */
     COLLECTION_LINK_VALIDATION,
