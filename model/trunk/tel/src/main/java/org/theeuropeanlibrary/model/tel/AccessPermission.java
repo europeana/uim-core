@@ -35,4 +35,61 @@ public class AccessPermission {
      */
     @FieldId(2)
     protected Access access;
+
+    /**
+     * Returns the context.
+     * @return the context
+     */
+    public final String getContext() {
+        return context;
+    }
+
+    /**
+     * Sets the context
+     * @param context the context to set
+     */
+    public final void setContext(String context) {
+        this.context = context;
+    }
+
+    /**
+     * Returns the access.
+     * @return the access
+     */
+    public final Access getAccess() {
+        return access;
+    }
+
+    /**
+     * Sets the access
+     * @param access the access to set
+     */
+    public final void setAccess(Access access) {
+        this.access = access;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((access == null) ? 0 : access.hashCode());
+        result = prime * result + ((context == null) ? 0 : context.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        AccessPermission other = (AccessPermission)obj;
+        if (access != other.access) return false;
+        if (context == null) {
+            if (other.context != null) return false;
+        } else if (!context.equals(other.context)) return false;
+        return true;
+    }
+    
+    
+    
 }

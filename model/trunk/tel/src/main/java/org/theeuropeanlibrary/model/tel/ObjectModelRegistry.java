@@ -524,6 +524,12 @@ public final class ObjectModelRegistry {
             }
         });
 
+        validQualifiers.put(ACCESS_PERMISSION, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(FieldSource.class);
+            }
+        });
+        
         validRelations.put(PERSON, new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>() {
             {
                 put(IDENTIFIER, new ArrayList<Class<? extends Enum<?>>>() {
