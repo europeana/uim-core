@@ -17,6 +17,12 @@ import java.util.Map.Entry;
  * @since 20 de Ago de 2012
  */
 public class EdmValidationReport {
+    
+    /** used to transform xml schema validation messages into more human readable values*/
+    private static final Map<String, String> errorHints=new HashMap<String, String>(){{
+        put("cvc-complex-type.2.4.b: The content of element 'edm:ProvidedCHO' is not complete.", "Required element is missing: \"edm:type\"");
+    }};
+    
     private int                      recordCount;
     private int                      invalidRecords;
 
@@ -38,11 +44,23 @@ public class EdmValidationReport {
         recordCount++;
         invalidRecords++;
         for (String error : new HashSet<String>(errors)) {
-            Integer msgCount = errorMessagesCounts.get(error);
-            if (msgCount == null)
-                errorMessagesCounts.put(error, 1);
-            else
-                errorMessagesCounts.put(error, msgCount + 1);
+            String hint = null;
+            for(String messagePrefix: errorHints.keySet()) {
+                if(error.startsWith(messagePrefix)) {
+                    hint=messagePrefix;
+                    break;
+                }
+            }
+                    
+            if (hint!=null)
+                error=hint;
+            synchronized (this) {
+                Integer msgCount = errorMessagesCounts.get(error);
+                if (msgCount == null)
+                    errorMessagesCounts.put(error, 1);
+                else
+                    errorMessagesCounts.put(error, msgCount + 1);
+            }
         }
     }
 
