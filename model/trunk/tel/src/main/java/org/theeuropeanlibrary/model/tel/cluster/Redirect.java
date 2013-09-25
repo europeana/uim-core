@@ -8,6 +8,8 @@ import org.theeuropeanlibrary.model.common.FieldId;
  * can be used instead of this record. It should be used for deleted records for which a replacement
  * exists under a different ID.
  * 
+ * FIXME: This functionality should moved to related resources, and this class deprecated 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jun 28, 2013
  */

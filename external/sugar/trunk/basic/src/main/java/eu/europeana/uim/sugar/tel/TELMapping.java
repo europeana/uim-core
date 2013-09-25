@@ -53,7 +53,12 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.HARVESTING_STATUS,
                 TELCollectionFields.HARVESTING_DATE,
                 TELCollectionFields.HARVESTING_UPDATE,
+                
+                TELCollectionFields.LOAD_RECORDS,
                 TELCollectionFields.INDEXED_RECORDS,
+                TELCollectionFields.FULLTEXT_OBJECTS,
+                TELCollectionFields.DIGITAL_OBJECTS,
+                TELCollectionFields.DIGITAL_STORED_OBJECTS,
                 TELCollectionFields.LOD_RECORDS,
                 
                 TELCollectionFields.LAST_LOADED_DATE,
@@ -76,6 +81,9 @@ public class TELMapping implements SugarMapping {
                 
                 TELCollectionFields.LAST_LOD_DATE,
                 TELCollectionFields.LAST_LOD_RECORDS,
+                
+                TELCollectionFields.LAST_NEWSPAPER_DATE,
+                TELCollectionFields.LAST_NEWSPAPER_RECORDS,
                 
                 TELCollectionFields.LINKCHECK_EXECUTION,
                 TELCollectionFields.FIELDCHECK_EXECUTION,
