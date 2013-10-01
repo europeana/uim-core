@@ -59,9 +59,8 @@ public class Solr4Initializer extends BlockingInitializer {
             status = STATUS_BOOTING;
             if (url.startsWith("file://")) {
                 File home = new File(url.substring(7));
-                container = new CoreContainer(home.getAbsolutePath(), new File(home, "solr.xml"));
-// container = new CoreContainer.Initializer().initialize();
-// container.load(home.getAbsolutePath(), new File(home, "solr.xml"));
+                container = new CoreContainer(home.getAbsolutePath());
+                container.load();
                 server = new EmbeddedSolrServer(container, core);
             } else {
                 server = new HttpSolrServer(new URL(url) + core);
