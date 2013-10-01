@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.common.SolrException;
+import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.core.CoreContainer;
 
 import eu.europeana.uim.common.BlockingInitializer;
@@ -59,6 +61,9 @@ public class Solr4Initializer extends BlockingInitializer {
             status = STATUS_BOOTING;
             if (url.startsWith("file://")) {
                 File home = new File(url.substring(7));
+                if (!new File(home, "solr.xml").exists()) {
+                    throw new SolrException(ErrorCode.SERVICE_UNAVAILABLE, "Cannot open server at url '" + url + "'!");
+                }
                 container = new CoreContainer(home.getAbsolutePath());
                 container.load();
                 server = new EmbeddedSolrServer(container, core);
@@ -69,7 +74,6 @@ public class Solr4Initializer extends BlockingInitializer {
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to initialize repository at <" + url + ">", t);
             status = STATUS_FAILED;
-
             throw new RuntimeException("Failed to setup core <" + core + "> at <" + url + ">", t);
         }
     }
