@@ -47,13 +47,19 @@ public class EdmValidationReport {
             String hint = null;
             for(String messagePrefix: errorHints.keySet()) {
                 if(error.startsWith(messagePrefix)) {
-                    hint=messagePrefix;
+                    hint=errorHints.get(messagePrefix);
                     break;
                 }
             }
                     
-            if (hint!=null)
+            if (hint!=null) {
+                for(int i =0; i<errors.size(); i++) {
+                    String errInList=errors.get(i);
+                    if(errInList.equals(error))
+                        errors.set(i, hint);
+                }
                 error=hint;
+            }
             synchronized (this) {
                 Integer msgCount = errorMessagesCounts.get(error);
                 if (msgCount == null)

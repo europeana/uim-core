@@ -76,7 +76,7 @@ public class EdmCheckIngestionPluginTest {
 
         // TODO: assert validation errors
         Assert.assertTrue(data.submitted > 0);
-        Assert.assertTrue(data.submitted == data.report.getInvalidRecords());
+        Assert.assertTrue(data.submitted == data.report.getValidRecords());
 
         plugin.shutdown();
     }

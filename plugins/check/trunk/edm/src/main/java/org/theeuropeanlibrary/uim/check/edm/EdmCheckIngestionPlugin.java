@@ -209,7 +209,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         if (!validationError.isEmpty()) {
             value.report.addInvalidRecord(validationError);
             // store the validation errors in the uim logging engine
-            for (String valMsg : new HashSet<String>(validationError))
+            for (String valMsg : new HashSet<String>(validationError)) 
                 context.getLoggingEngine().logEdmCheck(context.getExecution(), "edmcheck", mdr,
                         valMsg);
         } else
