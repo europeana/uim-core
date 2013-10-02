@@ -22,14 +22,11 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim.common,
-                            javax.management.*,
                             javax.naming.*,
-                            javax.net.*,
                             javax.xml.*,
+                            javax.management.*,
+                            javax.net.*,
                             javax.annotation,
-                            javax.ws.rs,
-                            javax.ws.rs.core,
-                            javax.ws.rs.ext,
                             org.w3c.dom,
                             org.w3c.dom.ls,
                             org.xml.sax,
