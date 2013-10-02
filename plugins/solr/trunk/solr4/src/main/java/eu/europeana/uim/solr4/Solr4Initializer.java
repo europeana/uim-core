@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
@@ -71,8 +70,6 @@ public class Solr4Initializer extends BlockingInitializer {
             } else {
                 server = new HttpSolrServer(new URL(url) + core);
             }
-            // FIXME: dummy call
-            server.query(new SolrQuery("*:*")).getResults().getNumFound();
             status = STATUS_INITIALIZED;
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to initialize repository at <" + url + ">", t);
