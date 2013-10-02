@@ -21,16 +21,32 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-<!--                             eu.europeana.uim.common, -->
-<!--                             javax.naming.*, -->
-<!--                             javax.xml.*, -->
-<!--                             javax.management.*, -->
-<!--                             javax.net.*, -->
-<!--                             org.w3c.dom, -->
-<!--                             org.xml.sax, -->
-<!--                             org.xml.sax.ext, -->
-<!--                             org.apache.commons.io, -->
-<!--                             !* -->
+                            eu.europeana.uim.common,
+                            javax.management.*,
+                            javax.naming.*,
+                            javax.net.*,
+                            javax.xml.*,
+                            javax.annotation,
+                            javax.crypto,
+                            javax.crypto.spec,
+                            javax.jmdns,
+                            javax.jms,
+                            javax.mail,
+                            javax.mail.internet,
+                            javax.portlet,
+                            javax.script,
+                            javax.security.*,
+                            javax.sql,
+                            javax.ws.rs,
+                            javax.ws.rs.core,
+                            javax.ws.rs.ext,
+                            org.w3c.dom,
+                            org.w3c.dom.ls,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.xml.sax.helpers,
+                            org.apache.commons.io,
+                            !*
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.solr4,
@@ -131,23 +147,23 @@
         </dependency>
 
         <!-- Stax -->
-<!--         <dependency> -->
-<!--             <groupId>org.codehaus.woodstox</groupId> -->
-<!--             <artifactId>wstx-asl</artifactId> -->
-<!--             <version>3.2.9</version> -->
-<!--             <exclusions> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>stax</groupId> -->
-<!--                     <artifactId>stax-api</artifactId> -->
-<!--                 </exclusion> -->
-<!--             </exclusions> -->
-<!--         </dependency> -->
+        <!-- <dependency> -->
+        <!-- <groupId>org.codehaus.woodstox</groupId> -->
+        <!-- <artifactId>wstx-asl</artifactId> -->
+        <!-- <version>3.2.9</version> -->
+        <!-- <exclusions> -->
+        <!-- <exclusion> -->
+        <!-- <groupId>stax</groupId> -->
+        <!-- <artifactId>stax-api</artifactId> -->
+        <!-- </exclusion> -->
+        <!-- </exclusions> -->
+        <!-- </dependency> -->
 
-<!--         <dependency> -->
-<!--             <groupId>org.apache.geronimo.specs</groupId> -->
-<!--             <artifactId>geronimo-stax-api_1.0_spec</artifactId> -->
-<!--             <version>1.0.1</version> -->
-<!--         </dependency> -->
+        <!-- <dependency> -->
+        <!-- <groupId>org.apache.geronimo.specs</groupId> -->
+        <!-- <artifactId>geronimo-stax-api_1.0_spec</artifactId> -->
+        <!-- <version>1.0.1</version> -->
+        <!-- </dependency> -->
 
         <dependency>
             <groupId>javax.servlet</groupId>
