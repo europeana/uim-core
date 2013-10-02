@@ -12,7 +12,6 @@ import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.util.EmptyEntityResolver;
 
 import eu.europeana.uim.common.BlockingInitializer;
 
@@ -67,7 +66,6 @@ public class Solr4Initializer extends BlockingInitializer {
                 }
                 container = new CoreContainer(home.getAbsolutePath());
                 container.load();
-                EmptyEntityResolver resolver;
                 server = new EmbeddedSolrServer(container, core);
             } else {
                 server = new HttpSolrServer(new URL(url) + core);

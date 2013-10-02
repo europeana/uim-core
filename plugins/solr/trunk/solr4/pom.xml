@@ -21,16 +21,16 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-                            eu.europeana.uim.common,
-                            javax.naming.*,
-                            javax.xml.*,
-                            javax.management.*,
-                            javax.net.*,
-                            org.w3c.dom,
-                            org.xml.sax,
-                            org.xml.sax.ext,
-                            org.apache.commons.io,
-                            !*
+<!--                             eu.europeana.uim.common, -->
+<!--                             javax.naming.*, -->
+<!--                             javax.xml.*, -->
+<!--                             javax.management.*, -->
+<!--                             javax.net.*, -->
+<!--                             org.w3c.dom, -->
+<!--                             org.xml.sax, -->
+<!--                             org.xml.sax.ext, -->
+<!--                             org.apache.commons.io, -->
+<!--                             !* -->
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.solr4,
