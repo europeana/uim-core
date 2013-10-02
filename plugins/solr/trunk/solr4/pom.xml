@@ -36,6 +36,7 @@
                             eu.europeana.uim.solr4,
                             org.apache.lucene.*;version="4.4.0",
                             org.apache.solr.*;version="4.4.0",
+                            org.apache.solr.util.*;version="4.4.0",
                         </Export-Package>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common|commons-lang|commons-io|commons-math|trove4j</Embed-Dependency>
