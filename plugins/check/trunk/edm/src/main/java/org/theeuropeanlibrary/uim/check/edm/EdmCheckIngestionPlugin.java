@@ -17,6 +17,8 @@ import javax.xml.validation.Validator;
 import org.theeuropeanlibrary.commons.export.edm.EdmXmlSerializer;
 import org.theeuropeanlibrary.commons.export.edm.model.ResourceMap;
 import org.theeuropeanlibrary.model.common.Link;
+import org.theeuropeanlibrary.model.common.qualifier.Status;
+import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -125,14 +127,14 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         String name = collection != null ? collection.getName() : "No collection";
 
         context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck", "completed",
-                mnem, name, String.valueOf(value.submitted), String.valueOf(value.ignored),
+                mnem, name, String.valueOf(value.report.getRecordCount()), String.valueOf(value.ignored),
                 String.valueOf(value.report.getValidRecords()),
                 String.valueOf(value.report.getInvalidRecords()),
                 String.valueOf(value.report.getValidRecordsPercent()),
                 (value.ignored > 0 ? "(partial report - error limit reached)" : ""), time);
 
         context.getExecution().putValue("edmcheck.ignored", "" + value.ignored);
-        context.getExecution().putValue("edmcheck.submitted", "" + value.submitted);
+        context.getExecution().putValue("edmcheck.submitted", "" + value.report.getRecordCount());
         context.getExecution().putValue("edmcheck.invalid", "" + value.report.getInvalidRecords());
         context.getExecution().putValue("edmcheck.valid", "" + value.report.getValidRecords());
 
@@ -162,6 +164,10 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             throws IngestionPluginFailedException, CorruptedDatasetException {
         ContextRunningData value = context.getValue(DATA);
 
+        Status recStatus = mdr.getFirstValue(ObjectModelRegistry.STATUS);
+        if(recStatus!=null && recStatus==Status.DELETED)
+            return true;
+        
         if (value.maxErrors > 0 && value.report.getInvalidRecords() >= value.maxErrors) {
             value.ignored++;
             return true;

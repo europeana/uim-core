@@ -2262,7 +2262,8 @@ row["message0"]
                                         <property name="borderLeftStyle">solid</property>
                                         <property name="borderLeftWidth">1px</property>
                                         <text-data id="295">
-                                            <expression name="valueExpr">"Record: " + row["stringmetadatarecordid"]</expression>
+                                            <expression name="valueExpr">"Record: " + row["stringmetadatarecordid"] + " (&lt;a href=\"http://ingest2.tel.ulcc.ac.uk:8181/oaipmh?verb=GetRecord&amp;metadataPrefix=edm&amp;identifier=oai:org.theeuropeanlibrary:" +row["stringmetadatarecordid"] + "\" target=\"_blank\">EDM&lt;/a>) "&#13;
+ + " (&lt;a href=\"http://ingest2.tel.ulcc.ac.uk:8181/oaipmh?verb=GetRecord&amp;metadataPrefix=iom&amp;identifier=oai:org.theeuropeanlibrary:" +row["stringmetadatarecordid"] + "\" target=\"_blank\">TEL IOM&lt;/a>)"</expression>
                                             <property name="contentType">html</property>
                                         </text-data>
                                     </cell>
