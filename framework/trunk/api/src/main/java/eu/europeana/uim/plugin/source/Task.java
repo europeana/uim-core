@@ -2,6 +2,7 @@ package eu.europeana.uim.plugin.source;
 
 import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.adapter.UimDatasetAdapter;
@@ -65,7 +66,13 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
         if (adapter != null) {
             localDataset = adapter.adapt(localDataset);
         }
-        successfulProcessing = step.process(localDataset, context);
+        try {
+            successfulProcessing = step.process(localDataset, context);
+        } catch (Throwable e) {
+            log.log(Level.INFO, "Step error: "+ e.getMessage(), e);
+            throwable=e;
+            successfulProcessing=false;
+        }
         if (adapter != null) {
             dataset = adapter.unadapt(localDataset);
         }
