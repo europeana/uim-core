@@ -121,11 +121,21 @@ public enum Language implements Translatable {
 			"zen", "Zenaga", null), ZHA("zha", "Zhuang", new Locale("za")), ZND("znd", "Zande languages", null), ZUL("zul", "Zulu", new Locale("zu")), ZUN("zun", "Zuni", null), ZZA("zza", "Zaza", null),
 
 	;
+	
+
+    private static final HashMap<String, String>   iso2mapping = new HashMap<String, String>() {{
+        put("es", "sp");
+    }};
 
     private static final HashMap<String, Language> iso2Lookup = new HashMap<String, Language>() {{
     	for (Language language : Language.values()) {
-	        if (language.getLocale() != null)
+	        if (language.getLocale() != null) {
 	            put(language.getIso2().toLowerCase(), language);
+	        }
+	        
+	        if (iso2mapping.containsKey(language.getIso2())) {
+	            put(iso2mapping.get(language.getIso2()), language);
+	        }
 	    }	
     }};
 
