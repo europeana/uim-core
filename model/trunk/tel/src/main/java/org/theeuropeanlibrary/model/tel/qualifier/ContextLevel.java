@@ -17,4 +17,8 @@ public enum ContextLevel {
      * value is about the actual object (text, image, etc.)
      */
     CONTENT,
+    /**
+     * value is about the digital representation
+     */
+    DIGITAL_VERSION,
 }

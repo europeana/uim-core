@@ -35,6 +35,8 @@
                             eu.europeana.uim.workflow,
                             org.theeuropeanlibrary.commons.export.edm,
                             org.theeuropeanlibrary.commons.export.edm.model,
+                            org.theeuropeanlibrary.model.common.qualifier,
+                            org.theeuropeanlibrary.model.tel,
                             org.osgi.service.blueprint,
                             javax.xml.*,
                             org.w3c.dom,
