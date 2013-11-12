@@ -65,7 +65,6 @@ public final class EuropeanaModelRegistry {
 			.register(EuropeanaModelRegistry.class, "uimingestiondate",
 					String.class);
 
-	
 	/**
 	 * The key indicating the actual ingestion/update datde for a specific
 	 * record
@@ -73,7 +72,7 @@ public final class EuropeanaModelRegistry {
 	public static final TKey<EuropeanaModelRegistry, String> UIMUPDATEDDATE = TKey
 			.register(EuropeanaModelRegistry.class, "uimupdateddate",
 					String.class);
-	
+
 	/**
 	 * The key for a full EDM Record representation
 	 */
@@ -93,4 +92,22 @@ public final class EuropeanaModelRegistry {
 	public static final TKey<EuropeanaModelRegistry, Long> REMOVED = TKey
 			.register(EuropeanaModelRegistry.class, "removed", Long.class);
 
+	/**
+	 * A key indicating when a record was initially saved in the server index
+	 */
+	public static final TKey<EuropeanaModelRegistry, Long> INITIALSAVE = TKey
+			.register(EuropeanaModelRegistry.class, "initial", Long.class);
+
+	/**
+	 * A key indicating when a record was updated in the server index
+	 */
+	public static final TKey<EuropeanaModelRegistry, Long> UPDATEDSAVE = TKey
+			.register(EuropeanaModelRegistry.class, "updatedsave", Long.class);
+
+	/**
+	 * A key to represent the enriched EDM
+	 */
+	public static final TKey<EuropeanaModelRegistry, String> EDMENRICHEDRECORD = TKey
+			.register(EuropeanaModelRegistry.class, "edmenrichedrecord",
+					String.class);
 }
