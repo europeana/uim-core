@@ -65,6 +65,15 @@ public final class EuropeanaModelRegistry {
 			.register(EuropeanaModelRegistry.class, "uimingestiondate",
 					String.class);
 
+	
+	/**
+	 * The key indicating the actual ingestion/update datde for a specific
+	 * record
+	 */
+	public static final TKey<EuropeanaModelRegistry, String> UIMUPDATEDDATE = TKey
+			.register(EuropeanaModelRegistry.class, "uimupdateddate",
+					String.class);
+	
 	/**
 	 * The key for a full EDM Record representation
 	 */
