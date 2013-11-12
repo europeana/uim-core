@@ -370,12 +370,14 @@ public final class ObjectModelRegistry {
                 add(NoteType.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(ContextLevel.class);
             }
         });
         validQualifiers.put(LABELED_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(FieldSource.class);
+                add(ContextLevel.class);
             }
         });
         validQualifiers.put(FULL_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
@@ -416,6 +418,7 @@ public final class ObjectModelRegistry {
                 add(LinkTarget.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(ContextLevel.class);
             }
         });
 
