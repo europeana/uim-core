@@ -30,6 +30,10 @@ public enum LinkTarget {
      */
     DIGITAL_OBJECT,
     /**
+     * a link to the digital object shown in context (same as europeana:isShownAt)
+     */
+    DIGITAL_OBJECT_AT,
+    /**
      * A link, such as those specified in the Europeana Rights Guidelines
      */
     RIGHTS,
