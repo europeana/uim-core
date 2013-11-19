@@ -106,4 +106,33 @@ public enum Audience {
         }
         return null;
     }
+    
+    /**
+     * @return a label presentable to a person in a display or data
+     */
+    public String toHumanReadableLabel() {
+        switch (this) {
+        case UNKNOW:
+            return "Unkown";
+        case ADOLESCENT:
+            return "Adolescent";
+        case ADULT_GENERAL:
+            return "Adult, General";
+        case ADULT_SERIOUS:
+            return "Adult, Serious";
+        case CHILDREN:
+            return "Children";
+        case JUVENILE:
+            return "Juvenile";
+        case PRESCHOOL:
+            return "Preschool";
+        case PRIMARY:
+            return "Primary school";
+        case SPECIALIZED:
+            return "Specialized";
+        default:
+            throw new RuntimeException("Unimplemented");
+        }
+    }
+    
 }
