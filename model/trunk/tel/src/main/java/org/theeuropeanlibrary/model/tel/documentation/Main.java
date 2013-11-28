@@ -17,7 +17,7 @@ public class Main {
         String programName = "GenerateTelInternalDocumentationScript";
         String defaultDocletClassName = TelInternalDocumentationDoclet.class.getCanonicalName();
         String[] javaDocParams = new String[] { "-sourcepath",
-                "src/main/java;../europeana-uim-model-common/src/main/java", "-private",
+                "src/main/java;../common/src/main/java", "-private",
                 "org.theeuropeanlibrary.model.tel", "org.theeuropeanlibrary.model.tel.qualifier",
                 "org.theeuropeanlibrary.model.common", "org.theeuropeanlibrary.model.common.party",
                 "org.theeuropeanlibrary.model.common.qualifier",
