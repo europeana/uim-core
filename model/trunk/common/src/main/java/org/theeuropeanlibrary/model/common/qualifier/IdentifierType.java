@@ -134,6 +134,8 @@ public enum IdentifierType {
     GOVERNMENT_PUBLICATION_NUMBER,
     /** DISSERTATION IDENTIFIER (from marc21)*/
     DISSERTATION,
+    /** IdentifierType CALL_NUMBER */
+    CALL_NUMBER,
     /**
      * identifier representing cluster group (detailed types are insided identifier)
      */
