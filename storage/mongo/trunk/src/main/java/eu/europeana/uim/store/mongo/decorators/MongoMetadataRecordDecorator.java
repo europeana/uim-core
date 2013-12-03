@@ -264,6 +264,17 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
         return emebeddedMdr.deleteValues(key, qualifiers);
     }
 
+    
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.store.MetaDataRecord#deleteValue(eu.europeana.uim.common.TKey, eu.europeana.uim.store.MetaDataRecord.QualifiedValue)
+	 */
+	@Override
+	public <N, T> boolean deleteValue(TKey<N, T> key,
+			eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> remove) {
+		return emebeddedMdr.deleteValue(key, remove);
+	}
+    
+    
     @Override
     public <S, T> void addRelation(QualifiedValue<S> source, QualifiedValue<T> target,
             Enum<?>... qualifiers) {
@@ -290,4 +301,6 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
+
+
 }
