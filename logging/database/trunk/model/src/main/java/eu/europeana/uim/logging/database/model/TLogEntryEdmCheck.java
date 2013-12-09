@@ -104,7 +104,18 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
         this.stringExecutionId = stringExecutionId;
         this.module = module;
         this.stringMetaDataRecordId = stringMetaDataRecordId;
-        setMessage(messages);
+        
+        if (messages != null && messages.length > 0) {
+            String[] localMessages = new String[messages.length];
+            for (int i = 0; i < messages.length; i++) {
+                if (messages[i].length() < 4000) {
+                    localMessages[i] = messages[i];
+                } else {
+                    localMessages[i] = messages[i].substring(0, 3999);
+                }
+            }
+            setMessage(localMessages);
+        }
     }
 
     /**

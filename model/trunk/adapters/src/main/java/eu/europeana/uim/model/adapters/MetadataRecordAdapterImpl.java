@@ -213,6 +213,16 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
 
         executor.execute();
     }
+    
+	/* (non-Javadoc)
+	 * @see eu.europeana.uim.store.MetaDataRecord#deleteValue(eu.europeana.uim.common.TKey, eu.europeana.uim.store.MetaDataRecord.QualifiedValue)
+	 */
+	@Override
+	public <N, T> boolean deleteValue(TKey<N, T> key,
+			eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> value) {
+        
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+     };
 
     /*
      * (non-Javadoc)
@@ -245,6 +255,9 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         return executor.getResult();
     }
 
+
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -283,6 +296,12 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
 
         private RESTYPE result;
 
+        
+        public StrategyExecutor(TKey<N, T> key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+        
         public StrategyExecutor(TKey<N, T> key, T value, Enum<?>... qualifiers) {
             this.key = key;
             this.value = value;
@@ -372,7 +391,6 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
     public <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(
             QualifiedValue<S> source, TKey<N, T> targetKey,
             Enum<?>... qualifiers) {
-        // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
@@ -380,7 +398,10 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
     public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(
             QualifiedValue<T> target, TKey<N, S> sourceKey,
             Enum<?>... qualifiers) {
-        // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
+
+
+
+
 }

@@ -56,6 +56,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.Audience;
 import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
+import org.theeuropeanlibrary.model.tel.qualifier.DigitalObjectTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
@@ -416,6 +417,7 @@ public final class ObjectModelRegistry {
         validQualifiers.put(LINK, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(LinkTarget.class);
+                add(DigitalObjectTarget.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);

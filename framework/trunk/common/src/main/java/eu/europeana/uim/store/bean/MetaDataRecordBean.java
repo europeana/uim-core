@@ -224,6 +224,16 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         return result;
     }
 
+    @Override
+    public <N, T> boolean deleteValue(TKey<N, T> key, QualifiedValue<T> remove) {
+        List<QualifiedValue<?>> values = fields.get(key);
+        boolean removed = values.remove(remove);
+        if (removed) {
+            deleteRelations(remove);
+        }
+        return removed;
+    }
+
     private boolean checkQualifier(QualifiedValue<?> value, Enum<?>... qualifiers) {
         boolean contained = true;
         for (Enum<?> qualifier : qualifiers) {
