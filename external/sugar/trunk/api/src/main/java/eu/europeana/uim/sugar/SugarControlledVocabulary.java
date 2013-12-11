@@ -86,10 +86,7 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     COLLECTION_FIELD_VALIDATION,
 
     /** execution id of validation run */
-    COLLECTION_EDM_VALIDATION,
-    
-    /** execution id of validation run */
-    COLLECTION_REDISTRIBUTE_PROFILE;
+    COLLECTION_EDM_VALIDATION;
 
     /** SugarCRM date format */
     public static DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
