@@ -3,6 +3,7 @@ package eu.europeana.uim.store;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import eu.europeana.uim.common.TKey;
 
@@ -217,6 +218,22 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             if (value instanceof Comparable<?>) { return ((Comparable)value).compareTo(other); }
             return 0;
         }
+        
+
+        @Override
+        public String toString() {
+            try {
+                StringBuilder sb=new StringBuilder();
+                for (Enum<?> qualifier : qualifiers) 
+                    sb.append(qualifier.name()).append(" ");
+                sb.append(value.toString());
+                return sb.toString();
+            } catch (Exception e) {
+                //safegard not to break anything
+                return super.toString();
+            }
+        }
+        
     }
 
     // modeling structural information between qualified values
@@ -380,4 +397,5 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             return null;
         }
     }
+    
 }

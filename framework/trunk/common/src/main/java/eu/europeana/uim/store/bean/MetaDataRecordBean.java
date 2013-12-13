@@ -411,4 +411,31 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         }
         return relations;
     }
+    
+    @Override
+    public String toString() {
+        try {
+            StringBuilder sb=new StringBuilder();
+            sb.append(String.format("{MetadataRecordBean id:%d col:%s",
+                    getId(),
+                    collection==null ? "" : collection.getMnemonic()
+                    ));
+            for(Entry<TKey<?, ?>, List<QualifiedValue<?>>> fld:fields.entrySet()) {
+                sb.append(String.format("\n  [%s ",fld.getKey().getName()));
+                if(fld.getValue().size()==1)
+                    sb.append(String.format("%s]",fld.getValue().get(0).toString()));
+                else {
+                    for(QualifiedValue<?> v: fld.getValue()) 
+                        sb.append(String.format("(%s)",v.toString()));
+                    sb.append("]");
+                }
+            }
+            sb.append("}");
+            return sb.toString();
+        } catch (Exception e) {
+            //safegard not to break anything
+            return super.toString();
+        }
+    }
+    
 }
