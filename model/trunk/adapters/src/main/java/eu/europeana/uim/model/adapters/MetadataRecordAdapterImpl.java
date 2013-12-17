@@ -401,6 +401,22 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getTargetQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<S> source, TKey<N, T> targetKey,
+            Enum<?>... qualifiers) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> target, TKey<N, S> sourceKey,
+            Enum<?>... qualifiers) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
 
 
 
