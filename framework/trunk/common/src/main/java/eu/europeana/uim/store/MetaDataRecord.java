@@ -6,6 +6,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.store.MetaDataRecord.QualifiedRelation;
+import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 
 /**
  * This interface defines a highly dynamic model of records consisting of metadata. A meta data
@@ -267,7 +269,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            optional qualifiers, if true only matching relations will be removed
      */
     <T> void deleteRelations(QualifiedValue<T> value, Enum<?>... qualifiers);
-
+    
     /**
      * Retrieves as list the qualified field values which are end points of a relation starting at
      * the given source value. Furthermore, the targets are filtered using the given (optional)
@@ -290,6 +292,30 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return the list of qualified values
      */
     <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers);
+
+    /**
+     * Retrieves as list the qualified relations which are end points of a relation starting at
+     * the given source value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param source
+     *            a qualified value determining the start point of the relation
+     * @param targetKey
+     *            typed key which holds namespace, name and type information that the target values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified relations
+     */
+    <N, S, T> Set<QualifiedRelation<S, T>> getTargetQualifiedRelations(QualifiedValue<S> source,
             TKey<N, T> targetKey, Enum<?>... qualifiers);
 
     /**
@@ -316,6 +342,34 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
     <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
             TKey<N, S> sourceKey, Enum<?>... qualifiers);
 
+    
+
+    /**
+     * Retrieves as list the qualified relations which are start points of a relation ending in
+     * the given target value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param target
+     *            a qualified value determining the end point of the relation
+     * @param sourceKey
+     *            typed key which holds namespace, name and type information that the source values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified relations
+     */
+    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(QualifiedValue<T> target,
+            TKey<N, S> sourceKey, Enum<?>... qualifiers);
+    
+    
+    
     /**
      * Small class holding information of relations including qualification.
      * 
@@ -397,5 +451,6 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             return null;
         }
     }
+
     
 }

@@ -357,6 +357,9 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
     }
 
+    
+    
+    
     @Override
     public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
             TKey<N, S> sourceKey, Enum<?>... qualifiers) {
@@ -388,6 +391,81 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         return results;
     }
 
+    
+    @Override
+    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(QualifiedValue<T> target,
+            TKey<N, S> sourceKey, Enum<?>... qualifiers) {
+        Set<QualifiedRelation<S, T>> results = new HashSet<MetaDataRecord.QualifiedRelation<S,T>>();
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(target);
+        if (sourcesMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entrySources : sourcesMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validSources = fields.get(sourceKey);
+                if (!validSources.contains(entrySources.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entrySources.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    @SuppressWarnings("rawtypes")
+                    QualifiedRelation<S, T> relation = new QualifiedRelation(entrySources.getKey(), target,  
+                            entrySources.getValue());
+                    results.add(relation);
+                }
+            }
+        }
+
+        return results;
+    }    
+    
+    
+
+
+
+    @Override
+    public <N, S, T> Set<QualifiedRelation<S, T>> getTargetQualifiedRelations(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers) {
+        Set<QualifiedRelation<S, T>> results = new HashSet<QualifiedRelation<S,T>>();
+
+        HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        if (targetsMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validTargets = fields.get(targetKey);
+                if (!validTargets.contains(entryTargets.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entryTargets.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    @SuppressWarnings("rawtypes")
+                    QualifiedRelation<S, T> relation = new QualifiedRelation(source, entryTargets.getKey(),  
+                            entryTargets.getValue());
+                    results.add(relation);
+                }
+            }
+        }
+
+        return results;
+
+    }
+    
+    
     /**
      * @return available keys
      */
