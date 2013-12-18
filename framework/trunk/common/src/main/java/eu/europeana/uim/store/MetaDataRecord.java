@@ -100,8 +100,9 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            object typed using the type specified in the key
      * @param qualifiers
      *            information typed by enumerations to provide additional data
+     * @return the QualifiedValue object create inside the record
      */
-    <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers);
+    <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers);
 
     /**
      * Deletes all values known under the given typed key and returns this list of values.

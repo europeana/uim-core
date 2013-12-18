@@ -138,7 +138,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+    public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         if (value == null) { throw new IllegalArgumentException(
                 "Argument 'value' should not be null!"); }
 
@@ -157,7 +157,9 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (nextOrderIndex == null) {
             nextOrderIndex = calculateNextOrderIndex();
         }
-        values.add(new QualifiedValue<T>(value, quals, nextOrderIndex++));
+        eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> qualifiedValue = new QualifiedValue<T>(value, quals, nextOrderIndex++);
+        values.add(qualifiedValue);
+        return qualifiedValue;
     }
 
     private int calculateNextOrderIndex() {

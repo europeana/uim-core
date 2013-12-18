@@ -249,9 +249,8 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
      * java.lang.Object, java.lang.Enum<?>[])
      */
     @Override
-    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        emebeddedMdr.addValue(key, value, qualifiers);
-
+    public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+        return emebeddedMdr.addValue(key, value, qualifiers);
     }
 
     /*
