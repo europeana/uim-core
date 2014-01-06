@@ -95,7 +95,7 @@ public interface ExecutionContext<U extends UimDataSet<I>, I> {
      * @return a temporary directory, which is only valid for this execution and deleted after the
      *         workflow is over (if not overridden by configuration)
      */
-    File getTmpDirectory(IngestionPlugin<U, I> plugin);
+    File getTemporaryDirectory(IngestionPlugin<U, I> plugin);
 
     /**
      * Transforms file related properties into the actual file references.
