@@ -430,7 +430,7 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
     }
 
     @Override
-    public File getTmpDirectory(IngestionPlugin<U, I> plugin) {
+    public File getTemporaryDirectory(IngestionPlugin<U, I> plugin) {
         String tmpDirSuffix = workflow.getName() + File.separator + execution.getId() +
                               File.separator + plugin.getIdentifier();
         File tmpDirectory = new File(resourceEngine.getTemporaryDirectory(), tmpDirSuffix);
