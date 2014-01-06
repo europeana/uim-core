@@ -14,7 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck;
+import eu.europeana.uim.logging.modules.EdmLogging.LogEntryEdmCheck;
 
 /**
  * Implementation of log entry using JPA to persist the logging information to a data base.

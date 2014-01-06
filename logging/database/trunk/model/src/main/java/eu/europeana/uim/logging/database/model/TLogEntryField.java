@@ -15,7 +15,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.logging.LoggingEngine.LogEntryField;
+import eu.europeana.uim.logging.modules.FieldLogging.LogEntryField;
 
 /**
  * Implementation of failed log entry using JPA to persist the logging information to a data base.
