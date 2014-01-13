@@ -27,6 +27,7 @@
                             eu.europeana.uim.store,
                             eu.europeana.uim.common,
                             eu.europeana.uim.logging,
+                            eu.europeana.uim.logging.modules,
                             eu.europeana.uim.orchestration,
                             eu.europeana.uim.plugin,
                             org.osgi.framework,
