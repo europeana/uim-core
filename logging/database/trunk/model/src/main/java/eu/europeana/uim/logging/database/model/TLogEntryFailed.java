@@ -109,17 +109,17 @@ public class TLogEntryFailed implements LogEntryFailed {
                            String... messages) {
         super();
         this.level = level.getName();
-        this.stacktrace = stacktrace.length() < 2000 ? stacktrace : stacktrace.substring(0, 1999);
+        this.stacktrace = stacktrace.length() < 4000 ? stacktrace : stacktrace.substring(0, 3999);
         this.module = module;
         this.date = date;
 
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].length() < 2000) {
+                if (messages[i].length() < 4000) {
                     localMessages[i] = messages[i];
                 } else {
-                    localMessages[i] = messages[i].substring(0, 1999);
+                    localMessages[i] = messages[i].substring(0, 3999);
                 }
             }
             setMessage(localMessages);
