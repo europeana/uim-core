@@ -112,9 +112,8 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void logFailed(Level level, String module, Throwable throwable, String... messages) {
-//        TLogEntryFailed entry = new TLogEntryFailed(level, module,
-//                LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
-        TLogEntryFailed entry = new TLogEntryFailed(level, module, throwable.getMessage(), new Date(), messages);
+        TLogEntryFailed entry = new TLogEntryFailed(level, module,
+                LoggingEngineAdapter.getStackTrace(throwable).substring(0, 1000), new Date(), messages);
         insert(entry, false);
     }
 
