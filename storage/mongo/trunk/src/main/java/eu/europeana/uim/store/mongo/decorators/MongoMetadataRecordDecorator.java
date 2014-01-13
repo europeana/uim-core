@@ -23,6 +23,7 @@ package eu.europeana.uim.store.mongo.decorators;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
@@ -30,6 +31,7 @@ import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PrePersist;
 import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
+
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -247,9 +249,8 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
      * java.lang.Object, java.lang.Enum<?>[])
      */
     @Override
-    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        emebeddedMdr.addValue(key, value, qualifiers);
-
+    public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+        return emebeddedMdr.addValue(key, value, qualifiers);
     }
 
     /*
@@ -298,6 +299,22 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
     @Override
     public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
             TKey<N, S> sourceKey, Enum<?>... qualifiers) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getTargetQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<S> source, TKey<N, T> targetKey,
+            Enum<?>... qualifiers) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> target, TKey<N, S> sourceKey,
+            Enum<?>... qualifiers) {
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }

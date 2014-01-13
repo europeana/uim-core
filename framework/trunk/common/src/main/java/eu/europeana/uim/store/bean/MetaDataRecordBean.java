@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -138,7 +139,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     @Override
-    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+    public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
         if (value == null) { throw new IllegalArgumentException(
                 "Argument 'value' should not be null!"); }
 
@@ -157,7 +158,10 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (nextOrderIndex == null) {
             nextOrderIndex = calculateNextOrderIndex();
         }
-        values.add(new QualifiedValue<T>(value, quals, nextOrderIndex++));
+        eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> qualifiedValue = new QualifiedValue<T>(
+                value, quals, nextOrderIndex++);
+        values.add(qualifiedValue);
+        return qualifiedValue;
     }
 
     private int calculateNextOrderIndex() {
@@ -250,13 +254,13 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      * holds relations starting from source nodes, giving back target nodes with connected
      * qualifications
      */
-    private HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> sourcesLookup = new HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>>();
+    private Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> sourcesLookup = new HashMap<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>>();
 
     /**
      * holds relations ending in target nodes, giving back source nodes with connected
      * qualifications
      */
-    private HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> targetsLookup = new HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>>();
+    private Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> targetsLookup = new HashMap<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>>();
 
     @Override
     public <S, T> void addRelation(QualifiedValue<S> source, QualifiedValue<T> target,
@@ -266,14 +270,14 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             qualifierSet.add(qualifier);
         }
 
-        HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        Map<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
         if (targetsMap == null) {
             targetsMap = new HashMap<QualifiedValue<?>, Set<Enum<?>>>();
             sourcesLookup.put(source, targetsMap);
         }
         targetsMap.put(target, qualifierSet);
 
-        HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(source);
+        Map<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(source);
         if (sourcesMap == null) {
             sourcesMap = new HashMap<QualifiedValue<?>, Set<Enum<?>>>();
             targetsLookup.put(target, sourcesMap);
@@ -288,14 +292,17 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     private <T> void clearMap(
-            HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> startLookup,
-            HashMap<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> syncLookup,
+            Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> startLookup,
+            Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> syncLookup,
             QualifiedValue<T> value, Enum<?>... qualifiers) {
         Set<QualifiedValue<?>> rems = new HashSet<QualifiedValue<?>>();
-        if (qualifiers.length > 0) {
-            rems.addAll(startLookup.remove(value).keySet());
+        if (qualifiers.length == 0) {
+            Map<QualifiedValue<?>, Set<Enum<?>>> remove = startLookup.remove(value);
+            if (remove != null) {
+                rems.addAll(remove.keySet());
+            }
         } else {
-            HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = startLookup.get(value);
+            Map<QualifiedValue<?>, Set<Enum<?>>> targetsMap = startLookup.get(value);
             if (targetsMap != null) {
                 for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
                     boolean contained = true;
@@ -307,8 +314,11 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
                     }
                     if (contained) {
                         rems.add(entryTargets.getKey());
-                        targetsMap.remove(entryTargets.getKey());
+                        break;
                     }
+                }
+                for (QualifiedValue<?> rem : rems) {
+                    targetsMap.remove(rem);
                 }
                 if (targetsMap.isEmpty()) {
                     startLookup.remove(value);
@@ -317,10 +327,12 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         }
 
         for (QualifiedValue<?> rem : rems) {
-            HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = syncLookup.get(rem);
-            sourcesMap.remove(value);
-            if (sourcesMap.isEmpty()) {
-                syncLookup.remove(rem);
+            Map<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = syncLookup.get(rem);
+            if (sourcesMap != null) {
+                sourcesMap.remove(value);
+                if (sourcesMap.isEmpty()) {
+                    syncLookup.remove(rem);
+                }
             }
         }
     }
@@ -330,7 +342,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             TKey<N, T> targetKey, Enum<?>... qualifiers) {
         Set<QualifiedValue<T>> results = new HashSet<QualifiedValue<T>>();
 
-        HashMap<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        Map<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
         if (targetsMap != null) {
             for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
                 boolean contained = true;
@@ -362,7 +374,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
             TKey<N, S> sourceKey, Enum<?>... qualifiers) {
         Set<QualifiedValue<S>> results = new HashSet<QualifiedValue<S>>();
 
-        HashMap<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(target);
+        Map<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(target);
         if (sourcesMap != null) {
             for (Entry<QualifiedValue<?>, Set<Enum<?>>> entrySources : sourcesMap.entrySet()) {
                 boolean contained = true;
@@ -388,6 +400,75 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         return results;
     }
 
+    @Override
+    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            QualifiedValue<T> target, TKey<N, S> sourceKey, Enum<?>... qualifiers) {
+        Set<QualifiedRelation<S, T>> results = new HashSet<MetaDataRecord.QualifiedRelation<S, T>>();
+
+        Map<QualifiedValue<?>, Set<Enum<?>>> sourcesMap = targetsLookup.get(target);
+        if (sourcesMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entrySources : sourcesMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validSources = fields.get(sourceKey);
+                if (!validSources.contains(entrySources.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entrySources.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    @SuppressWarnings("rawtypes")
+                    QualifiedRelation<S, T> relation = new QualifiedRelation(entrySources.getKey(),
+                            target, entrySources.getValue());
+                    results.add(relation);
+                }
+            }
+        }
+
+        return results;
+    }
+
+    @Override
+    public <N, S, T> Set<QualifiedRelation<S, T>> getTargetQualifiedRelations(
+            QualifiedValue<S> source, TKey<N, T> targetKey, Enum<?>... qualifiers) {
+        Set<QualifiedRelation<S, T>> results = new HashSet<QualifiedRelation<S, T>>();
+
+        Map<QualifiedValue<?>, Set<Enum<?>>> targetsMap = sourcesLookup.get(source);
+        if (targetsMap != null) {
+            for (Entry<QualifiedValue<?>, Set<Enum<?>>> entryTargets : targetsMap.entrySet()) {
+                boolean contained = true;
+
+                List<QualifiedValue<?>> validTargets = fields.get(targetKey);
+                if (!validTargets.contains(entryTargets.getKey())) {
+                    contained = false;
+                } else {
+                    for (Enum<?> qualifier : qualifiers) {
+                        if (!entryTargets.getValue().contains(qualifier)) {
+                            contained = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (contained) {
+                    @SuppressWarnings("rawtypes")
+                    QualifiedRelation<S, T> relation = new QualifiedRelation(source,
+                            entryTargets.getKey(), entryTargets.getValue());
+                    results.add(relation);
+                }
+            }
+        }
+
+        return results;
+
+    }
+
     /**
      * @return available keys
      */
@@ -401,7 +482,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     @SuppressWarnings("rawtypes")
     public Set<QualifiedRelation<?, ?>> getAvailableRelations() {
         Set<QualifiedRelation<?, ?>> relations = new HashSet<MetaDataRecord.QualifiedRelation<?, ?>>();
-        for (Entry<QualifiedValue<?>, HashMap<QualifiedValue<?>, Set<Enum<?>>>> sourceEntry : sourcesLookup.entrySet()) {
+        for (Entry<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> sourceEntry : sourcesLookup.entrySet()) {
             for (Entry<QualifiedValue<?>, Set<Enum<?>>> targetEntry : sourceEntry.getValue().entrySet()) {
                 QualifiedRelation<?, ?> relation = new QualifiedRelation(sourceEntry.getKey(),
                         targetEntry.getKey(), targetEntry.getValue());
@@ -411,4 +492,29 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         }
         return relations;
     }
+
+    @Override
+    public String toString() {
+        try {
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("{MetadataRecordBean id:%d col:%s", getId(), collection == null
+                    ? "" : collection.getMnemonic()));
+            for (Entry<TKey<?, ?>, List<QualifiedValue<?>>> fld : fields.entrySet()) {
+                sb.append(String.format("\n  [%s ", fld.getKey().getName()));
+                if (fld.getValue().size() == 1)
+                    sb.append(String.format("%s]", fld.getValue().get(0).toString()));
+                else {
+                    for (QualifiedValue<?> v : fld.getValue())
+                        sb.append(String.format("(%s)", v.toString()));
+                    sb.append("]");
+                }
+            }
+            sb.append("}");
+            return sb.toString();
+        } catch (Exception e) {
+            // safegard not to break anything
+            return super.toString();
+        }
+    }
+
 }

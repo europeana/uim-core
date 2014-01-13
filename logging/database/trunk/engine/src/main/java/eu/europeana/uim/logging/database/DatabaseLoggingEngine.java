@@ -112,8 +112,9 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public void logFailed(Level level, String module, Throwable throwable, String... messages) {
-        TLogEntryFailed entry = new TLogEntryFailed(level, module,
-                LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
+//        TLogEntryFailed entry = new TLogEntryFailed(level, module,
+//                LoggingEngineAdapter.getStackTrace(throwable), new Date(), messages);
+        TLogEntryFailed entry = new TLogEntryFailed(level, module, throwable.getLocalizedMessage(), new Date(), messages);
         insert(entry, false);
     }
 
@@ -283,7 +284,7 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
     private void insert(TLogEntryFailed entry, boolean flush) {
         synchronized (batchFailed) {
             if (entry != null) batchFailed.add(entry);
-            if (batchFailed.size() > 0 || flush) {
+            if (batchFailed.size() > BATCH_SIZE || flush) {
                 storage.getLogFailedHome().insert(
                         batchFailed.toArray(new TLogEntryFailed[batchFailed.size()]));
                 batchFailed.clear();

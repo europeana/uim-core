@@ -97,8 +97,9 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            object typed using the type specified in the key
      * @param qualifiers
      *            information typed by enumerations to provide additional data
+     * @return the QualifiedValue object create inside the record
      */
-    <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers);
+    <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers);
 
     /**
      * Deletes all values known under the given typed key and returns this list of values.
@@ -114,7 +115,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return values that have just been removed as list of qualified values
      */
     <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key, Enum<?>... qualifiers);
-    
+
     /**
      * Delete a specific qualified value.
      * 
@@ -124,11 +125,11 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            the runtime type of the values for this field
      * @param key
      *            typed key which holds namespace, name and type information
-     * @param remove
+     * @param value
      *            value that should be removed
      * @return Successfull?
      */
-    <N, T> boolean deleteValue(TKey<N, T> key, QualifiedValue<T> remove);
+    <N, T> boolean deleteValue(TKey<N, T> key, QualifiedValue<T> value);
 
     /**
      * Small class holding information of values with qualification (might be null, if there are
@@ -217,6 +218,21 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             if (value instanceof Comparable<?>) { return ((Comparable)value).compareTo(other); }
             return 0;
         }
+
+        @Override
+        public String toString() {
+            try {
+                StringBuilder sb = new StringBuilder();
+                for (Enum<?> qualifier : qualifiers)
+                    sb.append(qualifier.name()).append(" ");
+                sb.append(value.toString());
+                return sb.toString();
+            } catch (Exception e) {
+                // safegard not to break anything
+                return super.toString();
+            }
+        }
+
     }
 
     // modeling structural information between qualified values
@@ -276,6 +292,30 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             TKey<N, T> targetKey, Enum<?>... qualifiers);
 
     /**
+     * Retrieves as list the qualified relations which are end points of a relation starting at the
+     * given source value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param source
+     *            a qualified value determining the start point of the relation
+     * @param targetKey
+     *            typed key which holds namespace, name and type information that the target values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified relations
+     */
+    <N, S, T> Set<QualifiedRelation<S, T>> getTargetQualifiedRelations(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers);
+
+    /**
      * Retrieves as list the qualified field values which are start points of a relation ending in
      * the given target value. Furthermore, the targets are filtered using the given (optional)
      * qualifiers.
@@ -298,6 +338,30 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      */
     <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
             TKey<N, S> sourceKey, Enum<?>... qualifiers);
+
+    /**
+     * Retrieves as list the qualified relations which are start points of a relation ending in the
+     * given target value. Furthermore, the targets are filtered using the given (optional)
+     * qualifiers.
+     * 
+     * @param <N>
+     *            the namespace (type) in which the field is defined
+     * @param <S>
+     *            the runtime type of the values for the source value
+     * @param <T>
+     *            the runtime type of the values for the target value
+     * @param target
+     *            a qualified value determining the end point of the relation
+     * @param sourceKey
+     *            typed key which holds namespace, name and type information that the source values
+     *            should be
+     * @param qualifiers
+     *            information typed by enumerations to provide semantic context (e.g. time instant
+     *            is connected to place as publication for example)
+     * @return the list of qualified relations
+     */
+    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            QualifiedValue<T> target, TKey<N, S> sourceKey, Enum<?>... qualifiers);
 
     /**
      * Small class holding information of relations including qualification.

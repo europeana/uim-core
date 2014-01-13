@@ -24,6 +24,7 @@ import java.util.Set;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 
 /**
  * 
@@ -190,7 +191,11 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
      * java.lang.Object, java.lang.Enum<?>[])
      */
     @Override
-    public <N, T> void addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+    public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
+        
+        @SuppressWarnings("unchecked")
+        final QualifiedValue<T>[] ret=new QualifiedValue[1];  
+        
         StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key, value,
                 qualifiers) {
 
@@ -198,7 +203,7 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
             @Override
             public Object query(TKey key, Object value, Enum<?>[] qualifiers) {
 
-                adaptedRecord.addValue(key, value, qualifiers);
+                ret[0]=adaptedRecord.addValue(key, value, qualifiers);
                 return null;
             }
 
@@ -212,6 +217,7 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         };
 
         executor.execute();
+        return ret[0];
     }
     
 	/* (non-Javadoc)
@@ -398,6 +404,22 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
     public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(
             QualifiedValue<T> target, TKey<N, S> sourceKey,
             Enum<?>... qualifiers) {
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getTargetQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<S> source, TKey<N, T> targetKey,
+            Enum<?>... qualifiers) {
+        // return null;
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<eu.europeana.uim.store.MetaDataRecord.QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> target, TKey<N, S> sourceKey,
+            Enum<?>... qualifiers) {
+        // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 

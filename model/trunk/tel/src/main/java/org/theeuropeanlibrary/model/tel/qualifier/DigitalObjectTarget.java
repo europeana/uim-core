@@ -17,5 +17,9 @@ public enum DigitalObjectTarget {
     /**
      * a direct link to the digital object (same as europeana:isShownBy)
      */
-    IS_SHOWN_BY
+    IS_SHOWN_BY,
+    /**
+     * a link to the digital object shown in context (same as europeana:isShownAt)
+     */
+    HAS_VIEW
 }

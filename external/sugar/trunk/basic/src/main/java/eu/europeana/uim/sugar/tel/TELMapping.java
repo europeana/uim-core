@@ -37,6 +37,7 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.MNEMONIC,
                 TELCollectionFields.NAME,
                 TELCollectionFields.TEL_COLLECTION_KIND,
+                TELCollectionFields.LAST_LOADED_DATE,
                 TELCollectionFields.COUNTRY,
                 TELCollectionFields.LANGUAGE,
                 TELCollectionFields.REPOX_SERVER,
