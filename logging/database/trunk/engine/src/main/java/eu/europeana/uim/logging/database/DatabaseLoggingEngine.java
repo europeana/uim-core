@@ -283,7 +283,7 @@ public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
     private void insert(TLogEntryFailed entry, boolean flush) {
         synchronized (batchFailed) {
             if (entry != null) batchFailed.add(entry);
-            if (batchFailed.size() > 0 || flush) {
+            if (batchFailed.size() > BATCH_SIZE || flush) {
                 storage.getLogFailedHome().insert(
                         batchFailed.toArray(new TLogEntryFailed[batchFailed.size()]));
                 batchFailed.clear();

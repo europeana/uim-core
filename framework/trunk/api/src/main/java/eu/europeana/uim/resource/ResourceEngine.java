@@ -22,37 +22,37 @@ public interface ResourceEngine {
     /**
      * @return the identifier for this resource engine. Usually the simpel class name.
      */
-    public String getIdentifier();
+    String getIdentifier();
 
     /**
      * @param config
      */
-    public void setConfiguration(Map<String, String> config);
+    void setConfiguration(Map<String, String> config);
 
     /**
      * @return configuration
      */
-    public Map<String, String> getConfiguration();
+    Map<String, String> getConfiguration();
 
     /**
      * Initializes engine by for example opening database connection.
      */
-    public void initialize();
+    void initialize();
 
     /**
      * Shutdown the engine and its connected components like connection to database.
      */
-    public void shutdown();
+    void shutdown();
 
     /**
      * Saves all entries
      */
-    public void checkpoint();
+    void checkpoint();
 
     /**
      * @return the current running status of the engine
      */
-    public EngineStatus getStatus();
+    EngineStatus getStatus();
 
     /**
      * Sets the global resources. Parameters are only overwritten, if they have a non-null List
@@ -61,7 +61,7 @@ public interface ResourceEngine {
      * @param resources
      *            key/resource map
      */
-    public void setGlobalResources(LinkedHashMap<String, List<String>> resources);
+    void setGlobalResources(LinkedHashMap<String, List<String>> resources);
 
     /**
      * Gets a hash map with every key that is requested and a List of resources, if there exist, or
@@ -71,7 +71,7 @@ public interface ResourceEngine {
      *            the keys to be in the HashMap
      * @return key/resource map
      */
-    public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys);
+    LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys);
 
     /**
      * Sets the workflow specific resources. If resources are null, then all workflow specific
@@ -83,7 +83,7 @@ public interface ResourceEngine {
      * @param resources
      *            key/resource map
      */
-    public void setWorkflowResources(Workflow<?,?> workflow,
+    void setWorkflowResources(Workflow<?,?> workflow,
             LinkedHashMap<String, List<String>> resources);
 
     /**
@@ -97,7 +97,7 @@ public interface ResourceEngine {
      * @return key/resource map
      */
 
-    public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow<?, ?> workflow,
+    LinkedHashMap<String, List<String>> getWorkflowResources(Workflow<?, ?> workflow,
             List<String> keys);
 
     /**
@@ -110,7 +110,7 @@ public interface ResourceEngine {
      * @param resources
      *            key/resource map
      */
-    public void setProviderResources(Provider<?> provider,
+    void setProviderResources(Provider<?> provider,
             LinkedHashMap<String, List<String>> resources);
 
     /**
@@ -124,7 +124,7 @@ public interface ResourceEngine {
      * @return key/resource map
      */
 
-    public LinkedHashMap<String, List<String>> getProviderResources(Provider<?> provider,
+    LinkedHashMap<String, List<String>> getProviderResources(Provider<?> provider,
             List<String> keys);
 
     /**
@@ -138,7 +138,7 @@ public interface ResourceEngine {
      *            key/resource map
      */
 
-    public void setCollectionResources(Collection<?> collection,
+    void setCollectionResources(Collection<?> collection,
             LinkedHashMap<String, List<String>> resources);
 
     /**
@@ -151,22 +151,22 @@ public interface ResourceEngine {
      *            the keys to be in the HashMap
      * @return key/resource map
      */
-    public LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> collection,
+    LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> collection,
             List<String> keys);
 
     /**
      * @return the root directory to store resource files in.
      */
-    public File getResourceDirectory();
+    File getResourceDirectory();
 
     /**
      * @return the root directory for creating work directories for persisted output files from
      *         executions.
      */
-    public File getWorkingDirectory();
+    File getWorkingDirectory();
 
     /**
      * @return the root directory for creating temporary directories for executions.
      */
-    public File getTemporaryDirectory();
+    File getTemporaryDirectory();
 }

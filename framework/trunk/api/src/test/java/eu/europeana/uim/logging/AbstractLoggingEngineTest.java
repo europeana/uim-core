@@ -11,9 +11,9 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.logging.LoggingEngine.LogEntry;
-import eu.europeana.uim.logging.LoggingEngine.LogEntryFailed;
-import eu.europeana.uim.logging.LoggingEngine.LogEntryLink;
+import eu.europeana.uim.logging.modules.FailureLogging.LogEntryFailed;
+import eu.europeana.uim.logging.modules.GeneralLogging.LogEntry;
+import eu.europeana.uim.logging.modules.LinkLogging.LogEntryLink;
 import eu.europeana.uim.plugin.ingestion.IngestionPlugin;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;

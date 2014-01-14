@@ -3,11 +3,8 @@ package eu.europeana.uim.store;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import eu.europeana.uim.common.TKey;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedRelation;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 
 /**
  * This interface defines a highly dynamic model of records consisting of metadata. A meta data
@@ -118,7 +115,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      * @return values that have just been removed as list of qualified values
      */
     <N, T> List<QualifiedValue<T>> deleteValues(TKey<N, T> key, Enum<?>... qualifiers);
-    
+
     /**
      * Delete a specific qualified value.
      * 
@@ -128,11 +125,11 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            the runtime type of the values for this field
      * @param key
      *            typed key which holds namespace, name and type information
-     * @param remove
+     * @param value
      *            value that should be removed
      * @return Successfull?
      */
-    <N, T> boolean deleteValue(TKey<N, T> key, QualifiedValue<T> remove);
+    <N, T> boolean deleteValue(TKey<N, T> key, QualifiedValue<T> value);
 
     /**
      * Small class holding information of values with qualification (might be null, if there are
@@ -221,22 +218,21 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             if (value instanceof Comparable<?>) { return ((Comparable)value).compareTo(other); }
             return 0;
         }
-        
 
         @Override
         public String toString() {
             try {
-                StringBuilder sb=new StringBuilder();
-                for (Enum<?> qualifier : qualifiers) 
+                StringBuilder sb = new StringBuilder();
+                for (Enum<?> qualifier : qualifiers)
                     sb.append(qualifier.name()).append(" ");
                 sb.append(value.toString());
                 return sb.toString();
             } catch (Exception e) {
-                //safegard not to break anything
+                // safegard not to break anything
                 return super.toString();
             }
         }
-        
+
     }
 
     // modeling structural information between qualified values
@@ -270,7 +266,7 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            optional qualifiers, if true only matching relations will be removed
      */
     <T> void deleteRelations(QualifiedValue<T> value, Enum<?>... qualifiers);
-    
+
     /**
      * Retrieves as list the qualified field values which are end points of a relation starting at
      * the given source value. Furthermore, the targets are filtered using the given (optional)
@@ -296,8 +292,8 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             TKey<N, T> targetKey, Enum<?>... qualifiers);
 
     /**
-     * Retrieves as list the qualified relations which are end points of a relation starting at
-     * the given source value. Furthermore, the targets are filtered using the given (optional)
+     * Retrieves as list the qualified relations which are end points of a relation starting at the
+     * given source value. Furthermore, the targets are filtered using the given (optional)
      * qualifiers.
      * 
      * @param <N>
@@ -343,11 +339,9 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
     <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
             TKey<N, S> sourceKey, Enum<?>... qualifiers);
 
-    
-
     /**
-     * Retrieves as list the qualified relations which are start points of a relation ending in
-     * the given target value. Furthermore, the targets are filtered using the given (optional)
+     * Retrieves as list the qualified relations which are start points of a relation ending in the
+     * given target value. Furthermore, the targets are filtered using the given (optional)
      * qualifiers.
      * 
      * @param <N>
@@ -366,11 +360,9 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
      *            is connected to place as publication for example)
      * @return the list of qualified relations
      */
-    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(QualifiedValue<T> target,
-            TKey<N, S> sourceKey, Enum<?>... qualifiers);
-    
-    
-    
+    public <N, S, T> Set<QualifiedRelation<S, T>> getSourceQualifiedRelations(
+            QualifiedValue<T> target, TKey<N, S> sourceKey, Enum<?>... qualifiers);
+
     /**
      * Small class holding information of relations including qualification.
      * 
@@ -452,6 +444,4 @@ public interface MetaDataRecord<I> extends UimDataSet<I> {
             return null;
         }
     }
-
-    
 }

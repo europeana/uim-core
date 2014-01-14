@@ -16,7 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.logging.LoggingEngine.LogEntryFailed;
+import eu.europeana.uim.logging.modules.FailureLogging.LogEntryFailed;
 
 /**
  * Implementation of failed log entry using JPA to persist the logging information to a data base.
@@ -105,21 +105,22 @@ public class TLogEntryFailed implements LogEntryFailed {
      * @param date
      * @param messages
      */
+    //FIXME: MAXIMUM LENGTH
     public TLogEntryFailed(Level level, String module, String stacktrace, Date date,
                            String... messages) {
         super();
         this.level = level.getName();
-        this.stacktrace = stacktrace.length() < 4000 ? stacktrace : stacktrace.substring(0, 3999);
+        this.stacktrace = stacktrace.length() < 1000 ? stacktrace : stacktrace.substring(0, 999);
         this.module = module;
         this.date = date;
 
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].length() < 4000) {
+                if (messages[i].length() < 1000) {
                     localMessages[i] = messages[i];
                 } else {
-                    localMessages[i] = messages[i].substring(0, 3999);
+                    localMessages[i] = messages[i].substring(0, 999);
                 }
             }
             setMessage(localMessages);
