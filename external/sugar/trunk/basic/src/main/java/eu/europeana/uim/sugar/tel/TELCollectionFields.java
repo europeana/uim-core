@@ -190,8 +190,11 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                          EDMCHECK_EXECUTION("tel_edmcheck_execution", "telda_tel_dataset.tel_edmcheck_execution",
                                  SugarControlledVocabulary.COLLECTION_EDM_VALIDATION, "Edmcheck execution"),
                                  
-    METADATA_PROFILE("tel_redistribute_profiles_c", "telda_tel_dataset.tel_redistribute_profiles_c",
-                       null, "LOD Metadata Profile"),
+                                 METADATA_PROFILE("tel_redistribute_profiles_c", "telda_tel_dataset.tel_redistribute_profiles_c",
+                                         null, "LOD Metadata Profile"),
+                                         
+                         STATUS("tel_dataset_status", "telda_tel_dataset.tel_dataset_status",
+                       null, "Collection status"),
 
     DATE_MODIFIED("date_modified", "telda_tel_dataset.date_modified", null, "Date of Modification"),
 
