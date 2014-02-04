@@ -117,10 +117,10 @@ public class TLogEntryFailed implements LogEntryFailed {
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].length() < 1000) {
+                if (messages[i].length() < 4000) {
                     localMessages[i] = messages[i];
                 } else {
-                    localMessages[i] = messages[i].substring(0, 999);
+                    localMessages[i] = messages[i].substring(0, 3999);
                 }
             }
             setMessage(localMessages);
@@ -141,17 +141,17 @@ public class TLogEntryFailed implements LogEntryFailed {
                            String... messages) {
         super();
         this.level = level.getName();
-        this.stacktrace = stacktrace;
+        this.stacktrace = stacktrace.length() < 1000 ? stacktrace : stacktrace.substring(0, 999);
         this.module = module;
         this.date = date;
 
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
-                if (messages[i].length() < 4000) {
+                if (messages[i].length() < 1000) {
                     localMessages[i] = messages[i];
                 } else {
-                    localMessages[i] = messages[i].substring(0, 3999);
+                    localMessages[i] = messages[i].substring(0, 999);
                 }
             }
             setMessage(localMessages);
@@ -174,7 +174,7 @@ public class TLogEntryFailed implements LogEntryFailed {
         this.stringExecutionId = stringExecutionId;
         this.level = level.getName();
         this.module = module;
-        this.stacktrace = stacktrace;
+        this.stacktrace = stacktrace.length() < 1000 ? stacktrace : stacktrace.substring(0, 999);
         this.date = date;
 
         if (messages != null && messages.length > 0) {
@@ -207,7 +207,7 @@ public class TLogEntryFailed implements LogEntryFailed {
         this.stringExecutionId = stringExecutionId;
         this.level = level.getName();
         this.module = module;
-        this.stacktrace = stacktrace;
+        this.stacktrace = stacktrace.length() < 1000 ? stacktrace : stacktrace.substring(0, 999);
         this.date = date;
         this.stringUimDatasetId = mdr;
         
