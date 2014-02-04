@@ -12,19 +12,6 @@ import org.theeuropeanlibrary.model.common.FieldId;
  */
 public class AccessPermission {
     /**
-     * Access statement
-     * 
-     * @author Nuno Freire (nfreire@gmail.com)
-     * @since 19/09/2013
-     */
-    public enum Access {
-        /** Access DENY */
-        DENY,
-        /** Access ALLOW */
-        ALLOW
-    }
-
-    /**
      * a tag identifying a context where access to this record is being specified
      */
     @FieldId(1)
