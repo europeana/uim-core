@@ -449,7 +449,25 @@ public final class ObjectModelUtils {
             mdr.addValue(ObjectModelRegistry.LINK,
                     new Link(baseUrl + "/WebResource/" + mdr.getId() +
                             "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-                             source) ),
+                                    source) ),
+                                    catlinks.get(index).getQualifier(LinkTarget.class));
+        }
+    }
+    
+    /**
+     * @param baseUrl
+     * @param mdr
+     */
+    public static void setupWebResourcesLinksForLod(String baseUrl, MetaDataRecord<?> mdr) {
+        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.CATALOGUE_RECORD);
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.DIGITAL_OBJECT));
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.THUMBNAIL));
+        for (int index = 0; index < catlinks.size(); index++) {
+            mdr.addValue(ObjectModelRegistry.LINK,
+                    new Link(baseUrl + "#webresource" + index  + getLinkHash(catlinks.get(index)) ),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
