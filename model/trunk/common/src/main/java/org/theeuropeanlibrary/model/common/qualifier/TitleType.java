@@ -28,5 +28,9 @@ public enum TitleType {
     /**
      * A title of another resource, which is the subject of this resource
      */
-    SUBJECT;
+    SUBJECT,
+	/**
+	 * uniform title of the series that the work is part of
+	 */
+    SERIES_UNIFORM,
 }
