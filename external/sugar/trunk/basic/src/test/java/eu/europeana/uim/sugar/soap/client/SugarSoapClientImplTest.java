@@ -36,26 +36,6 @@ public class SugarSoapClientImplTest {
 
     private SugarClient       client;
     private String            session;
-
-//    /**
-//     * Setup of the connection manager
-//     * 
-//     * @throws IOException
-//     */
-//    @BeforeClass
-//    public static void loadConfig() throws IOException {
-////        username = System.getProperty("sugar.username");
-////        password = System.getProperty("sugar.password");
-////
-////        if (username == null || password == null) { throw new IllegalStateException(
-////                "No credentials configured! sugar.username, sugar.password "
-////                        + "must be set via system property for tests."); }
-//
-//        username = "autosync";
-//        password="t5y6u7Sync";
-//        properties = new Properties();
-//        properties.load(new FileReader(new File("/Users/markusmuhr/git/uim-core/external/sugar/trunk/basic/src/main/profiles/tel/sugarcrm.properties")));
-//    }
     
     /**
      * Setup of the connection manager
