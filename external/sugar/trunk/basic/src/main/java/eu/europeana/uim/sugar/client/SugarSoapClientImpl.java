@@ -49,7 +49,7 @@ public class SugarSoapClientImpl implements SugarClient {
 
     private static final Logger  log     = Logger.getLogger(SugarSoapClientImpl.class.getName());
 
-    private static final Integer TIMEOUT = 20000;
+    private static final Integer TIMEOUT = 60000;
 
     private String               endPointUrl;
     private String               username;
