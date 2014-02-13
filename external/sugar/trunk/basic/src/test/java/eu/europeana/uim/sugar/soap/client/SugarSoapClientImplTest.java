@@ -127,8 +127,6 @@ public class SugarSoapClientImplTest {
     /**
      * 
      */
-    //FIXME: ignore as it times out
-    @Ignore
     @Test
     public void testUpdateCollection() {
         String mnemonic = properties.getProperty("test.collection.mnemonic");
