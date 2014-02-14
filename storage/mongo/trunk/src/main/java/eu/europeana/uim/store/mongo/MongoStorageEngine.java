@@ -1056,8 +1056,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	@Override
 	public void completed(ExecutionContext<?, String> context) {
 		if(context.getDataSet() instanceof Collection){
-			Collection<?> coll = (Collection<?>) context.getDataSet();
-			flushCollectionMDRS(coll.getMnemonic());
+			flushCollectionMDRS(context.getDataSet().getId());
 		}
 		
 	}
