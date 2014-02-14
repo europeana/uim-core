@@ -9,4 +9,7 @@
 	<service interface="eu.europeana.uim.resource.ResourceEngine" ranking="9">
         <bean class="eu.europeana.uim.store.mongo.MongoResourceEngine" />
     </service>
+    
+    <bp:reference id="orchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />
+    
 </blueprint>

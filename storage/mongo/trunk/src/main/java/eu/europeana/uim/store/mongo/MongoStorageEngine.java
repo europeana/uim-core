@@ -22,6 +22,7 @@ package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ import com.google.code.morphia.Morphia;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import eu.europeana.uim.EngineStatus;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
@@ -53,6 +56,7 @@ import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 import gnu.trove.iterator.hash.TObjectHashIterator;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
+import gnu.trove.procedure.TObjectObjectProcedure;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -72,7 +76,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	private static final String COLLECTIONID = "collectionId";
 	private static final String REQUESTID = "requestId";
 	private static final String SEARCHDATE = "searchDate";
-
+    private static final int MAXINMEMORYALLOWED = 50;
+	
+    private  Orchestrator<String> orchestrator;
+	
 	private static THashMap<String, MongoCollectionDecorator<String>> inmemoryCollections = new THashMap<String, MongoCollectionDecorator<String>>();
 
 	private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
@@ -101,6 +108,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 		this.dbName = "UIM";
 	}
 
+	
+	public MongoStorageEngine(Orchestrator orchestrator) {
+		this.orchestrator = orchestrator;
+		this.dbName = "UIM";
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -206,21 +219,6 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 */
 	@Override
 	public void command(String command) {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see eu.europeana.uim.api.StorageEngine#completed(eu.europeana.uim.api.
-	 * ExecutionContext)
-	 */
-	@Override
-	public void completed(ExecutionContext<?, String> context) {
-		if(context.getDataSet() instanceof Collection){
-			Collection<?> coll = (Collection<?>) context.getDataSet();
-			flushCollectionMDRS(coll.getMnemonic());
-		}
-		
 	}
 
 	/*
@@ -1048,8 +1046,25 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 		return exec.getEmbeddedExecution();
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see eu.europeana.uim.api.StorageEngine#completed(eu.europeana.uim.api.
+	 * ExecutionContext)
+	 */
+	@Override
+	public void completed(ExecutionContext<?, String> context) {
+		if(context.getDataSet() instanceof Collection){
+			Collection<?> coll = (Collection<?>) context.getDataSet();
+			flushCollectionMDRS(coll.getMnemonic());
+		}
+		
+	}
 
 	/**
+	 * Persists content stored in inmemoryCollectionRecordIDs
+	 * 
 	 * @param collectionID
 	 */
 	public void flushCollectionMDRS(String collectionID) {
@@ -1077,10 +1092,47 @@ public class MongoStorageEngine extends AbstractEngine implements
 				ds.merge(aggregator);
 			}
 		}
+		
+		// Make sure that inmemoryCollectionRecordIDs does not exceed the
+		// maximum allowed size. Reset it if it does.
 
+		if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED){
+			purgeInmemoryCollectionRecordIDs();
+		}
+
+		
 	}
 
+	
 	/**
+	 * This synchronized method is called when the amount of the collections that have their
+	 * records cached into memory exceeds the upper limit (which is 50)
+	 */
+	private synchronized void purgeInmemoryCollectionRecordIDs(){
+		if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED){
+
+			Set<String> content2bepreserved = new HashSet<String>();
+			
+			@SuppressWarnings("unchecked")
+			List<ActiveExecution<?, String>>  activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
+			
+			for(ActiveExecution<?, String> exec : activeExecs){
+				Collection<String> coll = exec.getDataSetCollection();
+				
+				if(coll != null){
+					content2bepreserved.add(coll.getMnemonic());
+				}
+			}
+			
+			synchronized (inmemoryCollectionRecordIDs) {	
+				inmemoryCollectionRecordIDs.forEachEntry(new InmemoryRecordIDCollITerator(content2bepreserved));
+			}
+		}
+	}
+	
+	/**
+	 * Persists content stored in inmemoryRequestRecordIDs
+	 * 
 	 * @param collectionID
 	 */
 	public void flushRequestMDRS(String requestID) {
@@ -1109,4 +1161,62 @@ public class MongoStorageEngine extends AbstractEngine implements
 
 	}
 
+	
+	/**
+	 * Inner class (trove implementation) of an iterator over the contents of 
+	 * inmemoryRequestRecordIDs
+	 * 
+	 * @author Georgios Markakis (gwarkx@hotmail.com)
+	 *
+	 * Feb 13, 2014
+	 */
+	private class InmemoryRecordIDCollITerator implements TObjectObjectProcedure<String, THashSet<String>> {
+		protected HashSet<String> tobepresernved;
+		
+		public InmemoryRecordIDCollITerator(Set<String> tobepresernved){
+		  this.tobepresernved = (HashSet<String>) tobepresernved;	
+		}
+		
+		
+		/* (non-Javadoc)
+		 * @see gnu.trove.procedure.TObjectObjectProcedure#execute(java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		public boolean execute(String id, THashSet<String> arg1) {
+			
+			if(!tobepresernved.contains(id)){
+				inmemoryRequestRecordIDs.remove(id);
+			}	
+			return true;
+		}	
+	}
+	
+	
+	/**
+	 * Inner class (trove implementation) of an iterator over the contents of 
+	 * inmemoryRequestRecordIDs
+	 * 
+	 * @author Georgios Markakis (gwarkx@hotmail.com)
+	 *
+	 * Feb 13, 2014
+	 */
+	private class InmemoryRecordIDRequestITerator extends InmemoryRecordIDCollITerator {
+
+		public InmemoryRecordIDRequestITerator(Set<String> tobepresernved) {
+			super(tobepresernved);
+		}
+		
+		/* (non-Javadoc)
+		 * @see eu.europeana.uim.store.mongo.MongoStorageEngine.InmemoryRecordIDCollITerator#execute(java.lang.String, gnu.trove.set.hash.THashSet)
+		 */
+		@Override
+		public boolean execute(String id, THashSet<String> arg1) {
+			
+			if(!tobepresernved.contains(id)){
+				inmemoryRequestRecordIDs.remove(id);
+			}	
+			return true;
+		}	
+	}
+	
 }
