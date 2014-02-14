@@ -35,5 +35,9 @@ public enum PartyRelation {
     /**
      * party is the subject of the resource
      */
-    SUBJECT;
+    SUBJECT,
+    /**
+     * party contributed to the content of the series the work is part of
+     */
+    SERIES_CONTRIBUTOR,
 }

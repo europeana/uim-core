@@ -13,10 +13,12 @@ import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.theeuropeanlibrary.model.common.qualifier.PartyRelation;
+import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TextRelation;
@@ -449,7 +451,25 @@ public final class ObjectModelUtils {
             mdr.addValue(ObjectModelRegistry.LINK,
                     new Link(baseUrl + "/WebResource/" + mdr.getId() +
                             "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-                             source) ),
+                                    source) ),
+                                    catlinks.get(index).getQualifier(LinkTarget.class));
+        }
+    }
+    
+    /**
+     * @param baseUrl
+     * @param mdr
+     */
+    public static void setupWebResourcesLinksForLod(String baseUrl, MetaDataRecord<?> mdr) {
+        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.CATALOGUE_RECORD);
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.DIGITAL_OBJECT));
+        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.THUMBNAIL));
+        for (int index = 0; index < catlinks.size(); index++) {
+            mdr.addValue(ObjectModelRegistry.LINK,
+                    new Link(baseUrl + "#webresource" + index  + getLinkHash(catlinks.get(index)) ),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
@@ -463,4 +483,33 @@ public final class ObjectModelUtils {
     public static String getLinkHash(QualifiedValue<Link> link) {
         return Integer.toHexString(link.getValue().getUrl().hashCode());
     }
+    
+    /**
+     * @return list of countries of publication
+     */
+    public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
+        List<Country> countries=new ArrayList<Country>();
+        
+        List<QualifiedValue<SpatialEntity>> qualifiedValues = mdr.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, SpatialRelation.PUBLICATION);
+        for(QualifiedValue<SpatialEntity> spEntity: qualifiedValues) {
+            for (Identifier id : spEntity.getValue().getIdentifiers()) {
+                if (id.getScope() != null
+                        && id.getScope().equals(
+                                SpatialIdentifierType.ISO3166.name())) {
+                    String code=null;
+                    if(id.getIdentifier().length()<=2)
+                        code=id.getIdentifier();
+                    else if(id.getIdentifier().length()>=5 && id.getIdentifier().charAt(2)=='-')
+                        code=id.getIdentifier().substring(3, 5);
+                    if(code!=null) {                 
+                        countries.add(Country.getByIso2(code));
+                        break;
+                    }
+                }
+                
+            }
+        }
+        return countries;
+    }
+    
 }
