@@ -1057,6 +1057,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	public void completed(ExecutionContext<?, String> context) {
 		if(context.getDataSet() instanceof Collection){
 			flushCollectionMDRS(context.getDataSet().getId());
+			flushRequestMDRS(context.getDataSet().getId());
 		}
 		
 	}
@@ -1124,10 +1125,15 @@ public class MongoStorageEngine extends AbstractEngine implements
 			}
 			
 			synchronized (inmemoryCollectionRecordIDs) {	
-				inmemoryCollectionRecordIDs.forEachEntry(new InmemoryRecordIDCollITerator(content2bepreserved));
+				inmemoryCollectionRecordIDs.forEachEntry(new InmemoryRecordIDITerator(content2bepreserved,inmemoryCollectionRecordIDs));
 			}
 		}
 	}
+	
+	
+
+	
+	
 	
 	/**
 	 * Persists content stored in inmemoryRequestRecordIDs
@@ -1157,9 +1163,42 @@ public class MongoStorageEngine extends AbstractEngine implements
 				ds.merge(aggregator);
 			}
 		}
+		
+		
+		// Make sure that inmemoryCollectionRecordIDs does not exceed the
+		// maximum allowed size. Reset it if it does.
+
+		if (inmemoryRequestRecordIDs.size() > MAXINMEMORYALLOWED){
+			purgeInmemoryRequestRecordIDs();
+		}
 
 	}
 
+	/**
+	 * This synchronized method is called when the amount of the collections that have their
+	 * records cached into memory exceeds the upper limit (which is 50)
+	 */
+	private synchronized void purgeInmemoryRequestRecordIDs(){
+		if (inmemoryRequestRecordIDs.size() > MAXINMEMORYALLOWED){
+
+			Set<String> content2bepreserved = new HashSet<String>();
+			
+			@SuppressWarnings("unchecked")
+			List<ActiveExecution<?, String>>  activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
+			
+			for(ActiveExecution<?, String> exec : activeExecs){
+				Collection<String> coll = exec.getDataSetCollection();
+				
+				if(coll != null){
+					content2bepreserved.add(coll.getMnemonic());
+				}
+			}
+			
+			synchronized (inmemoryRequestRecordIDs) {	
+				inmemoryRequestRecordIDs.forEachEntry(new InmemoryRecordIDITerator(content2bepreserved,inmemoryRequestRecordIDs));
+			}
+		}
+	}
 	
 	/**
 	 * Inner class (trove implementation) of an iterator over the contents of 
@@ -1169,11 +1208,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 *
 	 * Feb 13, 2014
 	 */
-	private class InmemoryRecordIDCollITerator implements TObjectObjectProcedure<String, THashSet<String>> {
+	private class InmemoryRecordIDITerator implements TObjectObjectProcedure<String, THashSet<String>> {
 		protected HashSet<String> tobepresernved;
+		protected THashMap<String, THashSet<String>> structuretobeprocessed;
 		
-		public InmemoryRecordIDCollITerator(Set<String> tobepresernved){
+		public InmemoryRecordIDITerator(Set<String> tobepresernved, THashMap<String, THashSet<String>>  structuretobeprocessed){
 		  this.tobepresernved = (HashSet<String>) tobepresernved;	
+		  this.structuretobeprocessed = structuretobeprocessed;
 		}
 		
 		
@@ -1184,38 +1225,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 		public boolean execute(String id, THashSet<String> arg1) {
 			
 			if(!tobepresernved.contains(id)){
-				inmemoryRequestRecordIDs.remove(id);
+				structuretobeprocessed.remove(id);
 			}	
 			return true;
 		}	
 	}
 	
 	
-	/**
-	 * Inner class (trove implementation) of an iterator over the contents of 
-	 * inmemoryRequestRecordIDs
-	 * 
-	 * @author Georgios Markakis (gwarkx@hotmail.com)
-	 *
-	 * Feb 13, 2014
-	 */
-	private class InmemoryRecordIDRequestITerator extends InmemoryRecordIDCollITerator {
 
-		public InmemoryRecordIDRequestITerator(Set<String> tobepresernved) {
-			super(tobepresernved);
-		}
-		
-		/* (non-Javadoc)
-		 * @see eu.europeana.uim.store.mongo.MongoStorageEngine.InmemoryRecordIDCollITerator#execute(java.lang.String, gnu.trove.set.hash.THashSet)
-		 */
-		@Override
-		public boolean execute(String id, THashSet<String> arg1) {
-			
-			if(!tobepresernved.contains(id)){
-				inmemoryRequestRecordIDs.remove(id);
-			}	
-			return true;
-		}	
-	}
 	
 }
