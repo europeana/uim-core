@@ -31,16 +31,12 @@
                         <component>
                             <name>hbm2dao</name>
                             <implementation>annotationconfiguration</implementation>
-                            <outputDirectory>
-                                target/source/java
-                            </outputDirectory>
+                            <outputDirectory>target/source/java</outputDirectory>
                         </component>
                         <component>
                             <name>hbm2ddl</name>
                             <implementation>annotationconfiguration</implementation>
-                            <outputDirectory>
-                                target/source/sql
-                            </outputDirectory>
+                            <outputDirectory>target/source/sql</outputDirectory>
                         </component>
                     </components>
                     <componentProperties>
