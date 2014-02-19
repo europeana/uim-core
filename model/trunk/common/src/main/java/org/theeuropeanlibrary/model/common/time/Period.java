@@ -85,7 +85,7 @@ public class Period extends Temporal {
         } else {
             ret = "";
         }
-        ret += " ";
+        ret += "--";
         if (end != null) {
             ret += end.getDisplay();
         }
