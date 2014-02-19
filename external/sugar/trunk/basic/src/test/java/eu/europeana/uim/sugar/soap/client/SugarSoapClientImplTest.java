@@ -36,7 +36,7 @@ public class SugarSoapClientImplTest {
 
     private SugarClient       client;
     private String            session;
-
+    
     /**
      * Setup of the connection manager
      * 

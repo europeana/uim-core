@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
@@ -42,14 +43,16 @@ import eu.europeana.uim.common.TKey;
 public final class AuthorityObjectModelRegistry {
     /**
      * named form of a person
-     */
+     */    
+    @FieldId(50)
     public static final TKey<AuthorityObjectModelRegistry, PersonNameForm>       PERSON_FORM         = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "person name form",
                                                                                                              PersonNameForm.class);
     /**
      * named form of an organization
-     */
+     */    
+    @FieldId(51)
     public static final TKey<AuthorityObjectModelRegistry, OrganizationNameForm> ORGANIZATION_FORM   = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "organization name form",
@@ -57,7 +60,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * authority topics
-     */
+     */    
+    @FieldId(52)
     public static final TKey<AuthorityObjectModelRegistry, TopicNameForm>        TOPIC_FORM          = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "topic name form",
@@ -65,7 +69,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * named form of a geographic entity
-     */
+     */    
+    @FieldId(53)
     public static final TKey<AuthorityObjectModelRegistry, NamedPlaceNameForm>   NAMED_PLACE_FORM    = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "named place name form",
@@ -73,7 +78,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * Nationalities of the entity
-     */
+     */    
+    @FieldId(54)
     public static final TKey<AuthorityObjectModelRegistry, Country>              NATIONALITY         = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "nationality",
@@ -81,7 +87,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * identifiers in the source authority files, or other data sets (for example wikipedia)
-     */
+     */    
+    @FieldId(55)
     public static final TKey<AuthorityObjectModelRegistry, Identifier>           IDENTIFIER          = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "identifier",
@@ -89,7 +96,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * Data used for disambiguation of parties (such as titles, publishers, isbns, coauthors, etc)
-     */
+     */    
+    @FieldId(56)
     public static final TKey<AuthorityObjectModelRegistry, Occurrences>          DISAMBIGUATION_DATA = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "disambiguation data",
@@ -97,7 +105,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * Last update date at the data sources
-     */
+     */    
+    @FieldId(57)
     public static final TKey<AuthorityObjectModelRegistry, UpdateFromDataSource> LAST_UPDATE         = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "last update",
@@ -105,7 +114,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * links to external resources like Wikipedia
-     */
+     */    
+    @FieldId(58)
     public static final TKey<AuthorityObjectModelRegistry, Link>                 LINK                = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "link",
@@ -113,7 +123,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * geographic feature class
-     */
+     */    
+    @FieldId(59)
     public static final TKey<AuthorityObjectModelRegistry, FeatureClass>         FEATURE_CLASS       = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "feature class",
@@ -121,7 +132,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * geographic feature class
-     */
+     */    
+    @FieldId(60)
     public static final TKey<AuthorityObjectModelRegistry, String>               FEATURE_CODE        = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "feature code",
@@ -129,7 +141,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * For spatial records - Population
-     */
+     */    
+    @FieldId(61)
     public static final TKey<AuthorityObjectModelRegistry, Long>                 POPULATION          = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "population",
@@ -137,7 +150,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * For spatial records - A coordinate - longitude or latitude
-     */
+     */    
+    @FieldId(62)
     public static final TKey<AuthorityObjectModelRegistry, Coordinates>          COORDINATES         = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "coordinates",
@@ -145,7 +159,8 @@ public final class AuthorityObjectModelRegistry {
 
     /**
      * raw data format
-     */
+     */    
+    @FieldId(63)
     public static final TKey<AuthorityObjectModelRegistry, Metadata>             METADATA            = TKey.register(
                                                                                                              AuthorityObjectModelRegistry.class,
                                                                                                              "metadata",
@@ -208,12 +223,18 @@ public final class AuthorityObjectModelRegistry {
             try {
                 Object object = field.get(null);
                 if (object instanceof TKey) {
-                    TKey k = (TKey)object;
-                    if (tKeyClassMap.containsKey(k.getType()))
-                        throw new RuntimeException(
-                                "Two TKeys for the same class in the Object Model: " +
-                                        k.getType().getName());
-                    tKeyClassMap.put(k.getType(), k);
+                    TKey key = (TKey)object;
+                    if (tKeyClassMap.containsKey(key.getType())) { throw new RuntimeException(
+                            "Two TKeys for the same class in the Object Model: " +
+                                    key.getType().getName()); }
+                    tKeyClassMap.put(key.getType(), key);
+
+                    List<Class<? extends Enum<?>>> validEnums = getValidEnums(key);
+                    for (Class<? extends Enum<?>> validEnum : validEnums) {
+                        if (!QualifierRegistry.isValidEnum(validEnum)) { throw new RuntimeException(
+                                "The enum hasn't been registered in the qualifier registry: " +
+                                        validEnum); }
+                    }
                 }
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException(e);
