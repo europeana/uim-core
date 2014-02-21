@@ -1108,7 +1108,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * This synchronized method is called when the amount of the collections that have their
 	 * records cached into memory exceeds the upper limit (which is 50)
 	 */
-	private synchronized void purgeInmemoryCollectionRecordIDs(){
+	public synchronized void purgeInmemoryCollectionRecordIDs(){
 		if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED){
 
 			Set<String> content2bepreserved = new HashSet<String>();
@@ -1131,6 +1131,15 @@ public class MongoStorageEngine extends AbstractEngine implements
 	}
 	
 	
+	/**
+	 * Brute Forces the purging of inmemoryCollectionRecordIDs data structure
+	 */
+	public synchronized void purgeInmemoryCollectionRecordIDsBrute(){
+		if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED){
+			System.out.println("Purging in memory record references");
+			inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
+		}
+	}
 
 	
 	
@@ -1178,7 +1187,7 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * This synchronized method is called when the amount of the collections that have their
 	 * records cached into memory exceeds the upper limit (which is 50)
 	 */
-	private synchronized void purgeInmemoryRequestRecordIDs(){
+	public synchronized void purgeInmemoryRequestRecordIDs(){
 		if (inmemoryRequestRecordIDs.size() > MAXINMEMORYALLOWED){
 
 			Set<String> content2bepreserved = new HashSet<String>();
