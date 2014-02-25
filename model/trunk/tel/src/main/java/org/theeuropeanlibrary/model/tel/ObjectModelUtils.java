@@ -485,6 +485,7 @@ public final class ObjectModelUtils {
     }
     
     /**
+     * @param mdr
      * @return list of countries of publication
      */
     public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
