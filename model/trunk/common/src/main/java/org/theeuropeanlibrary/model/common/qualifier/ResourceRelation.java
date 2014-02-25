@@ -280,5 +280,8 @@ public enum ResourceRelation {
     * 481 Also Bound in this Volume
     * 482 Bound With
     */
-    IS_BOUND_WITH
+    IS_BOUND_WITH,
+    
+    /** edm:isSimilarTo http://www.cidoc-crm.org/rdfs/cidoc-crm#P130F.shows_features_of - The most generic derivation property, covering also the case of questionable derivation. Is Similar To asserts that parts of the contents of one resource exhibit common features with respect to ideas, shapes, structures, colors, words, plots, topics with the contents of the related resource. Those common features may be attributed to a common origin or influence (in particular for derivation), but also to more generic cultural or psychological factors.*/
+    IS_SIMILAR_TO,
 }
