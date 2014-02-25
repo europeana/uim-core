@@ -81,8 +81,10 @@ public class ExecutionLogFileWriter<I> {
             // put a tab on the second to last line from every message
             String cleanedMessage = message.replace("\n", "\n\t");
 
+//            out.write(dateFormat.format(new Date()) + "|" +
+//                    String.format("%1$#9s", level.getName()) + "|" + cleanedMessage + "\n");
             out.write(dateFormat.format(new Date()) + "|" +
-                      String.format("%1$#9s", level.getName()) + "|" + cleanedMessage + "\n");
+                      String.format("%1$s", level.getName()) + "|" + cleanedMessage + "\n");
         } finally {
             if (out != null) out.close();
             if (fstream != null) fstream.close();
