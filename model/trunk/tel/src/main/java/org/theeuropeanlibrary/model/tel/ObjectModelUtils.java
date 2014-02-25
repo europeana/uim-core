@@ -485,6 +485,7 @@ public final class ObjectModelUtils {
     }
     
     /**
+     * @param mdr
      * @return list of countries of publication
      */
     public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
@@ -502,7 +503,9 @@ public final class ObjectModelUtils {
                     else if(id.getIdentifier().length()>=5 && id.getIdentifier().charAt(2)=='-')
                         code=id.getIdentifier().substring(3, 5);
                     if(code!=null) {                 
-                        countries.add(Country.getByIso2(code));
+                        Country iso = Country.getByIso2(code);
+                        if(iso!=null)
+                            countries.add(iso);
                         break;
                     }
                 }
