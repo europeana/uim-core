@@ -504,7 +504,7 @@ public final class ObjectModelUtils {
                         code=id.getIdentifier().substring(3, 5);
                     if(code!=null) {                 
                         Country iso = Country.getByIso2(code);
-                        if(iso!=null)
+                        if(iso!=null && !countries.contains(iso))
                             countries.add(iso);
                         break;
                     }
