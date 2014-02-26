@@ -114,6 +114,31 @@ public final class ObjectModelUtils {
     /**
      * @param record
      * @param qualifiers
+     * @return Spatial entities
+     */
+    public static List<QualifiedValue<? extends SpatialEntity>> getQualifiedSpatials(
+            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        List<QualifiedValue<? extends SpatialEntity>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends SpatialEntity>>();
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_BOX_PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, qualifiers));
+        Collections.sort(result);
+        return result;
+    }
+    
+    /**
+     * @param record
+     * @param qualifiers
+     * @return Spatial entities
+     */
+    public static List<? extends SpatialEntity> getSpatials(
+            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        return toValues(getQualifiedSpatials(record, qualifiers), true);
+    }
+    /**
+     * @param record
+     * @param qualifiers
      * @return places
      */
     public static List<Party> getParties(MetaDataRecord<?> record, Enum<?>... qualifiers) {
