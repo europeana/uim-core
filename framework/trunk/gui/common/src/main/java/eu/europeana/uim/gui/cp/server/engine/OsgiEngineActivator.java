@@ -5,8 +5,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 import eu.europeana.uim.Registry;
-import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.external.ExternalService;
 
 /**
  * This bundle activator serves as a dependency provisioning mechanism to the GWT RemoteServices. We
@@ -33,24 +32,24 @@ public class OsgiEngineActivator implements BundleActivator {
             Thread.sleep(1000);
         }
 
-        RepoxService repoxService = null;
+        ExternalService repoxService = null;
 
         wait = 0;
         while (repoxService == null && wait++ < 10) {
-            ServiceReference repoxServiceRef = bundleContext.getServiceReference("eu.europeana.uim.repox.RepoxService");
+            ServiceReference repoxServiceRef = bundleContext.getServiceReference("eu.europeana.uim.repox.ExternalService");
             if (repoxServiceRef != null) {
-                repoxService = (RepoxService)bundleContext.getService(repoxServiceRef);
+                repoxService = (ExternalService)bundleContext.getService(repoxServiceRef);
             }
             Thread.sleep(1000);
         }
 
-        SugarService sugarService = null;
+        ExternalService sugarService = null;
 
         wait = 0;
         while (sugarService == null && wait++ < 10) {
-            ServiceReference sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugar.SugarService");
+            ServiceReference sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugar.ExternalService");
             if (sugarServiceRef != null) {
-                sugarService = (SugarService)bundleContext.getService(sugarServiceRef);
+                sugarService = (ExternalService)bundleContext.getService(sugarServiceRef);
             }
             Thread.sleep(1000);
         }

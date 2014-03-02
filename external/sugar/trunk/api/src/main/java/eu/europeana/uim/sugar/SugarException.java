@@ -20,13 +20,15 @@
  */
 package eu.europeana.uim.sugar;
 
+import eu.europeana.uim.external.ExternalServiceException;
+
 /**
  * A generic Class representing an unclassified SugarCRM exception
  * 
  * @author Georgios Markakis
  * @since Jan 19, 2012
  */
-public class SugarException extends Exception {
+public class SugarException extends ExternalServiceException {
     private static final long serialVersionUID = 1L;
 
     /**
