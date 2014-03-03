@@ -27,6 +27,7 @@
                             eu.europeana.uim.repox,
                             eu.europeana.uim.repox.model,
                             eu.europeana.uim.store,
+                            eu.europeana.uim.external,
                             javax.xml.bind,
                             javax.xml.bind.annotation,
                             javax.xml.bind.annotation.adapters,
