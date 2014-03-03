@@ -14,22 +14,19 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import eu.europeana.uim.external.ExternalService;
+import eu.europeana.uim.external.ExternalServiceException;
 import eu.europeana.uim.gui.cp.client.services.RepositoryService;
 import eu.europeana.uim.gui.cp.server.engine.ExternalServiceEngine;
 import eu.europeana.uim.gui.cp.shared.CollectionDTO;
 import eu.europeana.uim.gui.cp.shared.ProviderDTO;
 import eu.europeana.uim.gui.cp.shared.StepStatusDTO;
 import eu.europeana.uim.gui.cp.shared.WorkflowDTO;
-import eu.europeana.uim.repox.RepoxControlledVocabulary;
-import eu.europeana.uim.repox.RepoxException;
-import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.sugar.SugarException;
-import eu.europeana.uim.sugar.SugarService;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
@@ -55,8 +52,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public Boolean synchronizeExternalServices() {
         boolean success = false;
         if (getEngine() instanceof ExternalServiceEngine) {
-            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            ExternalService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+            ExternalService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
             if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = getStorageEngine();
                 storage.command("repository.clearcache");
@@ -248,9 +245,9 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         collDTO.setOaiMetadataPrefix(col.getOaiMetadataPrefix(false));
         collDTO.setOaiSet(col.getOaiSet());
         collDTO.setCountry(col.getValue(StandardControlledVocabulary.COUNTRY));
-        collDTO.setUpdateDate(col.getValue(RepoxControlledVocabulary.LAST_UPDATE_DATE));
-        collDTO.setHarvestStatus(col.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_STATE));
-        collDTO.setHarvestRecords(col.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS));
+        collDTO.setUpdateDate(col.getValue("LAST_UPDATE_DATE"));
+        collDTO.setHarvestStatus(col.getValue("COLLECTION_HARVESTING_STATE"));
+        collDTO.setHarvestRecords(col.getValue("COLLECTION_HARVESTED_RECORDS"));
         return collDTO;
     }
 
@@ -401,8 +398,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
     public ProviderDTO synchronizeProviderExternalServices(Serializable providerId) {
         ProviderDTO prov = null;
         if (getEngine() instanceof ExternalServiceEngine) {
-            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            ExternalService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+            ExternalService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
             if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
@@ -429,23 +426,19 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return prov;
     }
 
-    private boolean synchronizeProviderWithRepox(RepoxService repoxService,
+    private boolean synchronizeProviderWithRepox(ExternalService repoxService,
             Provider<Serializable> provider) {
         Map<String, String> beforeValues = new HashMap<String, String>(provider.values());
 
+        boolean update = false;
         try {
-            repoxService.updateProvider(provider);
-        } catch (RepoxException e) {
+            update = repoxService.synchronize(provider, false);
+        } catch (ExternalServiceException e) {
             throw new RuntimeException("Could not update provider to repox!", e);
-        }
-        try {
-            repoxService.synchronizeProvider(provider);
-        } catch (RepoxException e) {
-            throw new RuntimeException("Could not synchronize provider to repox!", e);
         }
 
         Map<String, String> afterValues = provider.values();
-        boolean update = beforeValues.size() != afterValues.size();
+        update = beforeValues.size() != afterValues.size();
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
@@ -459,17 +452,12 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return update;
     }
 
-    private boolean synchronizeProviderWithSugar(SugarService sugarService,
+    private boolean synchronizeProviderWithSugar(ExternalService sugarService,
             Provider<Serializable> provider) {
         boolean update = false;
         try {
-            sugarService.updateProvider(provider);
-        } catch (SugarException e) {
-            throw new RuntimeException("Could not update provider to repox!", e);
-        }
-        try {
-            update = sugarService.synchronizeProvider(provider);
-        } catch (SugarException e) {
+            update = sugarService.synchronize(provider, false);
+        } catch (ExternalServiceException e) {
             throw new RuntimeException("Could not synchronize provider to repox!", e);
         }
         return update;
@@ -482,8 +470,8 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         CollectionDTO coll = null;
         if (getEngine() instanceof ExternalServiceEngine) {
-            RepoxService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
-            SugarService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
+            ExternalService repoxService = ((ExternalServiceEngine)getEngine()).getRepoxService();
+            ExternalService sugarService = ((ExternalServiceEngine)getEngine()).getSugarService();
             if (repoxService != null || sugarService != null) {
                 StorageEngine<Serializable> storage = (StorageEngine<Serializable>)getEngine().getRegistry().getStorageEngine();
                 try {
@@ -512,26 +500,21 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return coll;
     }
 
-    private boolean synchronizeCollectionWithRepox(RepoxService repoxService,
+    private boolean synchronizeCollectionWithRepox(ExternalService repoxService,
             Collection<Serializable> collection) {
         Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
 
+        boolean update = false;
         try {
-            repoxService.updateCollection(collection);
-        } catch (RepoxException e) {
-            log.severe("Could not update collection to repox! " + e);
-            throw new RuntimeException("Could not update collection to repox!", e);
-        }
-        try {
-            repoxService.synchronizeCollection(collection);
-        } catch (RepoxException e) {
+            update = repoxService.synchronize(collection, false);
+        } catch (ExternalServiceException e) {
             log.severe("Could not synchronize collection to repox! " + e);
             throw new RuntimeException("Could not synchronize collection to repox!", e);
         }
 
         Map<String, String> afterValues = collection.values();
 
-        boolean update = beforeValues.size() != afterValues.size();
+         update = beforeValues.size() != afterValues.size();
         if (!update) {
             for (Entry<String, String> entry : afterValues.entrySet()) {
                 String beforeValue = beforeValues.get(entry.getKey());
@@ -546,18 +529,12 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         return update;
     }
 
-    private boolean synchronizeCollectionWithSugar(SugarService sugarService,
+    private boolean synchronizeCollectionWithSugar(ExternalService sugarService,
             Collection<Serializable> collection) {
         boolean update = false;
         try {
-            sugarService.updateCollection(collection);
-        } catch (SugarException e) {
-            log.severe("Could not update collection to sugar! " + e);
-            throw new RuntimeException("Could not update collection to sugar!", e);
-        }
-        try {
-            update = sugarService.synchronizeCollection(collection);
-        } catch (SugarException e) {
+            update = sugarService.synchronize(collection, false);
+        } catch (ExternalServiceException e) {
             log.severe("Could not synchronize collection to sugar! " + e);
             throw new RuntimeException("Could not synchronize collection to sugar!", e);
         }

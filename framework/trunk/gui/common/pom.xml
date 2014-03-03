@@ -15,7 +15,7 @@
     <name>Unified Ingestion Manager: Base GWT Module Ingestion Control Panel GUI</name>
 
     <properties>
-        <gwtVersion>2.3.0</gwtVersion>
+        <gwtVersion>2.6.0</gwtVersion>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 
@@ -68,17 +68,17 @@
             <artifactId>europeana-uim-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-external-repox-api</artifactId>
-            <version>${europeana.uim.version}</version>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>eu.europeana</groupId> -->
+<!--             <artifactId>europeana-uim-external-repox-api</artifactId> -->
+<!--             <version>${europeana.uim.version}</version> -->
+<!--         </dependency> -->
 
-        <dependency>
-            <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-external-sugar-api</artifactId>
-            <version>${europeana.uim.version}</version>
-        </dependency>
+<!--         <dependency> -->
+<!--             <groupId>eu.europeana</groupId> -->
+<!--             <artifactId>europeana-uim-external-sugar-api</artifactId> -->
+<!--             <version>${europeana.uim.version}</version> -->
+<!--         </dependency> -->
 
         <dependency>
             <groupId>com.google.gwt</groupId>

@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 
+import eu.europeana.uim.external.ExternalServiceException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
@@ -528,5 +529,27 @@ public class SugarServiceImpl implements SugarService {
 // throw new RuntimeException("FAiled to load mapping class: <" + sugarMappingClass + ">",
 // e);
         }
+    }
+
+    @Override
+    public boolean synchronize(Provider<?> provider, boolean deleted)
+            throws ExternalServiceException {
+        boolean update = false;
+        if (!deleted) {
+            updateProvider(provider);
+            update = synchronizeProvider(provider);
+        }
+        return update;
+    }
+
+    @Override
+    public boolean synchronize(Collection<?> collection, boolean deleted)
+            throws ExternalServiceException {
+        boolean update = false;
+        if (!deleted) {
+            updateCollection(collection);
+            update = synchronizeCollection(collection);
+        }
+        return update;
     }
 }

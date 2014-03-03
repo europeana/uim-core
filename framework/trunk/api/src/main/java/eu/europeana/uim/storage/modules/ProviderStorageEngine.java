@@ -74,6 +74,15 @@ public interface ProviderStorageEngine<I> {
 // * @return IDs for records for this provider
 // * @throws StorageEngineException
 // */
-// BlockingQueue<I[]> getBatchesByProvider(Provider<I> provider, boolean recursive)
+// BlockingQueue<I[]> getIdsBatchesByProvider(Provider<I> provider, boolean recursive)
 // throws StorageEngineException;
+    
+ // /**
+ // * @param provider
+ // * @param recursive
+ // * @return IDs for records for this provider
+ // * @throws StorageEngineException
+ // */
+ // BlockingQueue<MetaDataRecord[]> getMdrBatchesByProvider(Provider<I> provider, boolean recursive)
+ // throws StorageEngineException;
 }

@@ -74,6 +74,22 @@ public interface MetaDataRecordStorageEngine<I> {
      */
     int getTotalForAllIds() throws StorageEngineException;
     
+ // /**
+ // * @param collection
+ // * @return IDs for records for this collection
+ // * @throws StorageEngineException
+ // */
+ // BlockingQueue<I[]> getBatchesIds()
+ // throws StorageEngineException;
+     
+  // /**
+  // * @param collection
+  // * @return MDRs for records for this collection
+  // * @throws StorageEngineException
+  // */
+  // BlockingQueue<I[]> getBatchesMdr()
+  // throws StorageEngineException;
+    
 // MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws
 // StorageEngineException;
 // void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
