@@ -75,12 +75,21 @@ public interface CollectionStorageEngine<I> {
      * @throws StorageEngineException
      */
     I[] getByCollection(Collection<I> collection) throws StorageEngineException;
+//    I[] getIdsByCollection(Collection<I> collection) throws StorageEngineException;
 
 // /**
 // * @param collection
 // * @return IDs for records for this collection
 // * @throws StorageEngineException
 // */
-// BlockingQueue<I[]> getBatchesByCollection(Collection<I> collection)
+// BlockingQueue<I[]> getBatchesIdsByCollection(Collection<I> collection)
 // throws StorageEngineException;
+    
+ // /**
+ // * @param collection
+ // * @return MDRs for records for this collection
+ // * @throws StorageEngineException
+ // */
+ // BlockingQueue<MetaDataRecord[]> getBatchesMdrByCollection(Collection<I> collection)
+ // throws StorageEngineException;
 }
