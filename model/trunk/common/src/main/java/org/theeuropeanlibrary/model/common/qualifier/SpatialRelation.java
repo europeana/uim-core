@@ -15,5 +15,9 @@ public enum SpatialRelation {
     /**
      * The place is the subject of the resource
      */
-    SUBJECT
+    SUBJECT,
+    /**
+     * The place where a resource is (physically) located
+     */
+    LOCATION,
 }

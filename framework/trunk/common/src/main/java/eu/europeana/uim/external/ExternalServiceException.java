@@ -18,24 +18,22 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-package eu.europeana.uim.repox;
-
-import eu.europeana.uim.external.ExternalServiceException;
+package eu.europeana.uim.external;
 
 /**
- * Basic exception thrown of methods in {@link RepoxService}.
+ * Basic exception thrown of methods in {@link ExternalService}.
  * 
- * @author Georgios Markakis
- * @since Jan 20, 2012
+ * @author Markus Muhr (markus.muhr@kb.nl)
+ * @since Mar 2, 2014
  */
-public class RepoxException extends ExternalServiceException {
+public class ExternalServiceException extends Exception {
     /**
      * For inheritance reasons, pipes through to the super constructor.
      * 
      * @param message
      *            description of the error
      */
-    public RepoxException(String message) {
+    public ExternalServiceException(String message) {
         super(message);
     }
 
@@ -47,7 +45,7 @@ public class RepoxException extends ExternalServiceException {
      * @param cause
      *            root cause of the error
      */
-    public RepoxException(String message, Throwable cause) {
+    public ExternalServiceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

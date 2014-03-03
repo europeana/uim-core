@@ -1,7 +1,6 @@
 package eu.europeana.uim.gui.cp.server.engine;
 
-import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.external.ExternalService;
 
 /**
  * OSGI based implementation of engine.
@@ -13,10 +12,10 @@ public abstract class ExternalServiceEngine extends Engine {
     /**
      * @return repox service
      */
-    public abstract RepoxService getRepoxService();
+    public abstract ExternalService getRepoxService();
 
     /**
      * @return sugar service
      */
-    public abstract SugarService getSugarService();
+    public abstract ExternalService getSugarService();
 }

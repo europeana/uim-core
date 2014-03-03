@@ -13,10 +13,12 @@ import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Title;
 import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 import org.theeuropeanlibrary.model.common.qualifier.LinkTarget;
 import org.theeuropeanlibrary.model.common.qualifier.PartyRelation;
+import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
 import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TextRelation;
@@ -109,6 +111,31 @@ public final class ObjectModelUtils {
         return result;
     }
     
+    /**
+     * @param record
+     * @param qualifiers
+     * @return Spatial entities
+     */
+    public static List<QualifiedValue<? extends SpatialEntity>> getQualifiedSpatials(
+            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        List<QualifiedValue<? extends SpatialEntity>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends SpatialEntity>>();
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_BOX_PLACE, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, qualifiers));
+        Collections.sort(result);
+        return result;
+    }
+    
+    /**
+     * @param record
+     * @param qualifiers
+     * @return Spatial entities
+     */
+    public static List<? extends SpatialEntity> getSpatials(
+            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+        return toValues(getQualifiedSpatials(record, qualifiers), true);
+    }
     /**
      * @param record
      * @param qualifiers
@@ -481,4 +508,36 @@ public final class ObjectModelUtils {
     public static String getLinkHash(QualifiedValue<Link> link) {
         return Integer.toHexString(link.getValue().getUrl().hashCode());
     }
+    
+    /**
+     * @param mdr
+     * @return list of countries of publication
+     */
+    public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
+        List<Country> countries=new ArrayList<Country>();
+        
+        List<QualifiedValue<SpatialEntity>> qualifiedValues = mdr.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, SpatialRelation.PUBLICATION);
+        for(QualifiedValue<SpatialEntity> spEntity: qualifiedValues) {
+            for (Identifier id : spEntity.getValue().getIdentifiers()) {
+                if (id.getScope() != null
+                        && id.getScope().equals(
+                                SpatialIdentifierType.ISO3166.name())) {
+                    String code=null;
+                    if(id.getIdentifier().length()<=2)
+                        code=id.getIdentifier();
+                    else if(id.getIdentifier().length()>=5 && id.getIdentifier().charAt(2)=='-')
+                        code=id.getIdentifier().substring(3, 5);
+                    if(code!=null) {                 
+                        Country iso = Country.getByIso2(code);
+                        if(iso!=null && !countries.contains(iso))
+                            countries.add(iso);
+                        break;
+                    }
+                }
+                
+            }
+        }
+        return countries;
+    }
+    
 }
