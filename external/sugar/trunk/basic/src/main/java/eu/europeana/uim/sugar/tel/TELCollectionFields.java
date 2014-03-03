@@ -147,7 +147,8 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
     LAST_LOD_RECORDS("tel_last_lod_records", "telda_tel_dataset.tel_last_lod_records",
                      SugarControlledVocabulary.COLLECTION_LAST_LOD_RECORDS, "Number of lod records"),
 
-    LAST_NEWSPAPER_DATE("tel_last_newspaper_date_c", "telda_tel_dataset_cstm.tel_last_newspaper_date_c",
+    LAST_NEWSPAPER_DATE("tel_last_newspaper_date_c",
+                        "telda_tel_dataset_cstm.tel_last_newspaper_date_c",
                         SugarControlledVocabulary.COLLECTION_LAST_NEWSPAPER_DATE,
                         "Last Newspaper Date"),
 
@@ -173,9 +174,9 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                     "Total number of digital objects"),
 
     DIGITAL_STORED_OBJECTS("count_digital_stored_objects_c",
-                   "telda_tel_dataset_cstm.count_digital_stored_objects_c",
-                   SugarControlledVocabulary.COLLECTION_DIGITAL_STORED_OBJECTS,
-                   "Total number of digital objects stored"),
+                           "telda_tel_dataset_cstm.count_digital_stored_objects_c",
+                           SugarControlledVocabulary.COLLECTION_DIGITAL_STORED_OBJECTS,
+                           "Total number of digital objects stored"),
 
     LOD_RECORDS("count_lod_records", "telda_tel_dataset.count_lod_records",
                 SugarControlledVocabulary.COLLECTION_LOD_RECORDS, "Total number of lod records"),
@@ -187,14 +188,13 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                          SugarControlledVocabulary.COLLECTION_FIELD_VALIDATION,
                          "Fieldcheck execution"),
 
-                         EDMCHECK_EXECUTION("tel_edmcheck_execution", "telda_tel_dataset.tel_edmcheck_execution",
-                                 SugarControlledVocabulary.COLLECTION_EDM_VALIDATION, "Edmcheck execution"),
-                                 
-                                 METADATA_PROFILE("tel_redistribute_profiles_c", "telda_tel_dataset.tel_redistribute_profiles_c",
-                                         null, "LOD Metadata Profile"),
-                                         
-                         STATUS("tel_dataset_status", "telda_tel_dataset.tel_dataset_status",
-                       null, "Collection status"),
+    EDMCHECK_EXECUTION("tel_edmcheck_execution", "telda_tel_dataset.tel_edmcheck_execution",
+                       SugarControlledVocabulary.COLLECTION_EDM_VALIDATION, "Edmcheck execution"),
+
+    METADATA_PROFILE("tel_redistribute_profiles_c",
+                     "telda_tel_dataset.tel_redistribute_profiles_c", SugarControlledVocabulary.COLLECTION_METADATA_PROFILE, "Redistribute Metadata Profile"),
+
+    STATUS("tel_dataset_status", "telda_tel_dataset.tel_dataset_status", SugarControlledVocabulary.COLLECTION_STATUS, "Collection status"),
 
     DATE_MODIFIED("date_modified", "telda_tel_dataset.date_modified", null, "Date of Modification"),
 
@@ -202,7 +202,7 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
                              "telda_tel_dataset.tel_description_link_english", null,
                              "Link to the collection description in English"),
 
-    DESCRIPTION_LINK_NATIVE("tel_description_link_native", 
+    DESCRIPTION_LINK_NATIVE("tel_description_link_native",
                             "telda_tel_dataset.tel_description_link_native", null,
                             "Link to the collection description in the native language");
 
