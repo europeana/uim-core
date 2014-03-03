@@ -26,7 +26,7 @@
                             eu.europeana.uim.storage,
                             eu.europeana.uim.store,
                             eu.europeana.uim.workflow,
-                            eu.europeana.uim.common.external,
+                            eu.europeana.uim.external,
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.sugar,

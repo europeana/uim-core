@@ -49,7 +49,7 @@
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.common,
-                            eu.europeana.uim.common.external,
+                            eu.europeana.uim.external,
                             eu.europeana.uim.common.progress,
                             eu.europeana.uim.common.utils,
                             eu.europeana.uim.store,
