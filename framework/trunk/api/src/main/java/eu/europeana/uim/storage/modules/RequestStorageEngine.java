@@ -71,7 +71,13 @@ public interface RequestStorageEngine<I> {
 // * @return IDs for records for this request
 // * @throws StorageEngineException
 // */
-// BlockingQueue<I[]> getBatchesByRequest(Request<I> request) throws StorageEngineException;
+// BlockingQueue<I[]> getIdsBatchesByRequest(Request<I> request) throws StorageEngineException;
+ // /**
+ // * @param request
+ // * @return IDs for records for this request
+ // * @throws StorageEngineException
+ // */
+ // BlockingQueue<MetaDataRecord[]> getMdrBatchesByRequest(Request<I> request) throws StorageEngineException;
 
     /**
      * @param request
