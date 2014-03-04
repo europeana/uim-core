@@ -43,7 +43,9 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.REPOX_SERVER,
                 TELCollectionFields.REPOX_PREFIX,
                 TELCollectionFields.TEL_ACTIVE_UIM,
-                TELCollectionFields.HARVESTING_METHOD
+                TELCollectionFields.HARVESTING_METHOD,
+                TELCollectionFields.METADATA_PROFILE,
+                TELCollectionFields.STATUS
         };
     }
 
