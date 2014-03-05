@@ -15,11 +15,11 @@
 		margin-right: 4px;
 		}
 		.anchor {
-            text-decoration: underline;
-            font-weight: bold;
-            cursor: pointer;
-            display: block;
-        }
+		text-decoration: underline;
+		font-weight: bold;
+		cursor: pointer;
+		display: block;
+		}
 	</ui:style>
 
 	<g:HTMLPanel>
@@ -27,47 +27,57 @@
 			<tr>
 				<td valign='top'>
 					<g:VerticalPanel>
-						<g:HTML><h2>Filter Ingestions:</h2></g:HTML>
-						<g:HTML><b>Select Provider/Collection </b></g:HTML>
-						<g:HTML><b>("--" counts as a wildcard):</b></g:HTML>
+						<g:HTML>
+							<h2>Filter Ingestions:</h2>
+						</g:HTML>
+						<g:HTML>
+							<b>Select Provider/Collection </b>
+						</g:HTML>
+						<g:HTML>
+							<b>("--" counts as a wildcard):</b>
+						</g:HTML>
 						<g:ListBox ui:field='providerBox' />
 						<g:ListBox ui:field='collectionBox' />
-						<g:HTML><b>Select Workflows (more than one allowed</b></g:HTML>
-						<g:HTML><b>hold CRTL button to select/deselect):</b></g:HTML>
+						<g:HTML>
+							<b>Select Workflows (more than one allowed</b>
+						</g:HTML>
+						<g:HTML>
+							<b>hold CRTL button to select/deselect):</b>
+						</g:HTML>
 						<g:ListBox ui:field='workflowBox' />
-						<g:HTML><b>Select Time Range:</b></g:HTML>
-						<g:HorizontalPanel> 
-						<g:HTML>From:</g:HTML>
-						<g:TextBox ui:field='startDateText' />
-						<g:Button ui:field='clearStartDateBTN' />
-						<dp:DatePicker ui:field="startDate" />
+						<g:HTML>
+							<b>Select Time Range:</b>
+						</g:HTML>
+						<g:HorizontalPanel>
+							<g:HTML>From:</g:HTML>
+							<g:TextBox ui:field='startDateText' />
+							<g:Button ui:field='clearStartDateBTN' />
+							<dp:DatePicker ui:field="startDate" />
 						</g:HorizontalPanel>
-						<g:HorizontalPanel> 
-						<g:HTML>To:&nbsp;&nbsp;&nbsp;&nbsp;</g:HTML>
-						<g:TextBox ui:field='endDateText' />
-						<g:Button ui:field='clearEndDateBTN' />
-						<dp:DatePicker ui:field="endDate" />
+						<g:HorizontalPanel>
+							<g:HTML>To:&nbsp;&nbsp;&nbsp;&nbsp;</g:HTML>
+							<g:TextBox ui:field='endDateText' />
+							<g:Button ui:field='clearEndDateBTN' />
+							<dp:DatePicker ui:field="endDate" />
 						</g:HorizontalPanel>
-						<g:HorizontalPanel> 
-						<g:Button ui:field='searchButton' />
-						<g:Button ui:field='clearButton' />
+						<g:HorizontalPanel>
+							<g:Button ui:field='searchButton' />
+							<g:Button ui:field='clearButton' />
 						</g:HorizontalPanel>
 					</g:VerticalPanel>
 				</td>
 				<td valign='top'>
-
-                      <g:VerticalPanel>
-							<c:CellTable addStyleNames='{style.cellTable}'
-								pageSize='15' ui:field='cellTable' />
-
-							<c:SimplePager ui:field='pager' />
-					  </g:VerticalPanel>
-
+					<g:VerticalPanel>
+						<c:CellTable addStyleNames='{style.cellTable}'
+							pageSize='15' ui:field='cellTable' />
+						<c:SimplePager ui:field='pager' />
+					</g:VerticalPanel>
 				</td>
 			</tr>
-
-
-
+			<tr style='height:50px;'>
+				<td valign='bottom'>
+				</td>
+			</tr>
 		</table>
 	</g:HTMLPanel>
 </ui:UiBinder>
