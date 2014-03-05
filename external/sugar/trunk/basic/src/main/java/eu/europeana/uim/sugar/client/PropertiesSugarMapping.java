@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.StandardControlledVocabulary;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 
@@ -89,7 +90,7 @@ public class PropertiesSugarMapping implements SugarMapping {
                     throw new IllegalArgumentException("No mapping field for :" + property);
                 }
             } else if (property.startsWith("sugar.collection.")) {
-                StandardControlledVocabulary mapping = null;
+                ControlledVocabularyKeyValue mapping = null;
                 if ("sugar.collection.name".equals(property)) {
                     mapping = StandardControlledVocabulary.NAME;
                 } else if ("sugar.collection.type".equals(property)) {
@@ -108,12 +109,11 @@ public class PropertiesSugarMapping implements SugarMapping {
                     mapping = StandardControlledVocabulary.REPOX_TYPE;
                 } else if ("sugar.collection.inuim".equals(property)) {
                      mapping = StandardControlledVocabulary.ACTIVE;
-                } 
-//                else if ("sugar.collection.profile".equals(property)) {
-//                    mapping = SugarControlledVocabulary.COLLECTION_METADATA_PROFILE;
-//                } else if ("sugar.collection.status".equals(property)) {
-//                    mapping = SugarControlledVocabulary.COLLECTION_STATUS;
-//                }
+                } else if ("sugar.collection.profile".equals(property)) {
+                    mapping = SugarControlledVocabulary.COLLECTION_METADATA_PROFILE;
+                } else if ("sugar.collection.status".equals(property)) {
+                    mapping = SugarControlledVocabulary.COLLECTION_STATUS;
+                }
 
                 if (mapping != null) {
                     MappingFieldImpl fieldImpl = new MappingFieldImpl(
