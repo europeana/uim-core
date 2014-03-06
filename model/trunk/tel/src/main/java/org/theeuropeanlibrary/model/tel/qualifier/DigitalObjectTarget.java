@@ -21,5 +21,9 @@ public enum DigitalObjectTarget {
     /**
      * a link to the digital object shown in context (same as europeana:isShownAt)
      */
-    HAS_VIEW
+    HAS_VIEW,
+    /**
+     * a digital link that is only useful for TEL
+     */
+    TEL
 }
