@@ -27,6 +27,7 @@ import org.theeuropeanlibrary.model.common.qualifier.TitleType;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.DigitalObjectTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
+import org.theeuropeanlibrary.model.tel.qualifier.FieldScope;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
 import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
@@ -131,6 +132,9 @@ public final class QualifierRegistry {
 
     @FieldId(29)
     public static final Class<DisambiguationDataType>      DISAMBIGUATION_DATA_TYPE      = DisambiguationDataType.class;
+    
+    @FieldId(30)
+    public static final Class<FieldScope>                 FIELD_SCOPE                  = FieldScope.class;
 
     public static final Set<String>                        enumSet                       = new HashSet<String>();
 

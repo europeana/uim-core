@@ -58,6 +58,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.DigitalObjectTarget;
+import org.theeuropeanlibrary.model.tel.qualifier.FieldScope;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
@@ -345,18 +346,21 @@ public final class ObjectModelRegistry {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(INSTANT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PERIOD, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(TIME_TEXTUAL, new ArrayList<Class<? extends Enum<?>>>() {
@@ -364,6 +368,7 @@ public final class ObjectModelRegistry {
                 add(TemporalRelation.class);
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(HISTORICAL_PERIOD, new ArrayList<Class<? extends Enum<?>>>() {
@@ -371,6 +376,7 @@ public final class ObjectModelRegistry {
                 add(TemporalRelation.class);
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -380,6 +386,7 @@ public final class ObjectModelRegistry {
                 add(TitleType.class);
 // add(TopicIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -388,6 +395,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -395,6 +403,7 @@ public final class ObjectModelRegistry {
             {
                 add(PartitionType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -402,6 +411,7 @@ public final class ObjectModelRegistry {
             {
                 add(HashType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -413,6 +423,7 @@ public final class ObjectModelRegistry {
                 add(ResourceRelation.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(LABELED_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
@@ -420,12 +431,14 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FULL_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -433,6 +446,7 @@ public final class ObjectModelRegistry {
             {
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -440,6 +454,7 @@ public final class ObjectModelRegistry {
             {
                 add(LanguageRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -447,6 +462,7 @@ public final class ObjectModelRegistry {
             {
                 add(IdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
                 add(KnowledgeOrganizationSystem.class);
                 add(SpatialIdentifierType.class);
@@ -461,6 +477,7 @@ public final class ObjectModelRegistry {
                 add(DigitalObjectTarget.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
             }
         });
@@ -469,6 +486,7 @@ public final class ObjectModelRegistry {
             {
                 add(NumberingRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -479,6 +497,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PERSON, new ArrayList<Class<? extends Enum<?>>>() {
@@ -488,6 +507,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(MEETING, new ArrayList<Class<? extends Enum<?>>>() {
@@ -497,6 +517,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FAMILY, new ArrayList<Class<? extends Enum<?>>>() {
@@ -506,6 +527,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(ORGANIZATION, new ArrayList<Class<? extends Enum<?>>>() {
@@ -515,6 +537,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -524,6 +547,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(GEO_BOX_PLACE, new ArrayList<Class<? extends Enum<?>>>() {
@@ -532,6 +556,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PLACE, new ArrayList<Class<? extends Enum<?>>>() {
@@ -540,6 +565,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(GEOGRAPHIC_ENTITY, new ArrayList<Class<? extends Enum<?>>>() {
@@ -547,17 +573,20 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(ContextLevel.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(METADATA, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -566,6 +595,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
             }
         });
@@ -573,6 +603,7 @@ public final class ObjectModelRegistry {
         validQualifiers.put(ACCESS_PERMISSION, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
