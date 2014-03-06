@@ -30,34 +30,36 @@ import eu.europeana.uim.store.UimDataSet;
  * Processes a UIM workflow as a runnable.
  * 
  * @param <I>
+ *            generic identifier
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class UIMWorkflowProcessor<I> implements Runnable {
-    private static Logger                                             log                  = Logger.getLogger(UIMWorkflowProcessor.class.getName());
+    private final static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED            = TKey.register(
+                                                                                                         UIMWorkflowProcessor.class,
+                                                                                                         "creators",
+                                                                                                         (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
 
-    private SimpleThreadFactory                                       factory              = new SimpleThreadFactory(
-                                                                                                   "processor");
-    private Thread                                                    dispatcher;
+    private final static Logger                                             log                  = Logger.getLogger(UIMWorkflowProcessor.class.getName());
 
-    private final Registry                                            registry;
+    private final SimpleThreadFactory                                       factory              = new SimpleThreadFactory(
+                                                                                                         "processor");
 
-    private boolean                                                   running              = false;
+    private Thread                                                          dispatcher;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static TKey<UIMWorkflowProcessor, ArrayList<TaskCreator>> SCHEDULED            = TKey.register(
-                                                                                                   UIMWorkflowProcessor.class,
-                                                                                                   "creators",
-                                                                                                   (Class<ArrayList<TaskCreator>>)new ArrayList<TaskCreator>().getClass());
+    private final Registry                                                  registry;
 
-    private List<ActiveExecution<?, I>>                               executions           = new ArrayList<ActiveExecution<?, I>>();
-    private List<ActiveExecution<?, I>>                               completions           = new ArrayList<ActiveExecution<?, I>>();
+    private boolean                                                         running              = false;
 
-    //FIXME: Updated these values, cannot handle more
-    private int                                                       maxRunningExecutions = 100;
-    private int                                                       maxTotalProgress     = 2000;
-    private int                                                       maxInProgress        = 500;
+    private final List<ActiveExecution<?, I>>                               executions           = new ArrayList<ActiveExecution<?, I>>();
+    private final List<ActiveExecution<?, I>>                               completions           = new ArrayList<ActiveExecution<?, I>>();
+
+    // FIXME: Updated these values, cannot handle more
+    private int                                                             maxRunningExecutions = 100;
+    private int                                                             maxTotalProgress     = 2000;
+    private int                                                             maxInProgress        = 500;
 
     /**
      * Creates a new instance of this class.
@@ -68,7 +70,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         this.registry = registry;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void run() {
         List<ActiveExecution<?, I>> active = new ArrayList<ActiveExecution<?, I>>();
@@ -88,157 +89,45 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             }
 
             try {
-
                 Iterator<ActiveExecution<?, I>> activeIterator = active.iterator();
                 while (activeIterator.hasNext()) {
                     ActiveExecution<?, I> execution = activeIterator.next();
-                    if (execution.isPaused()) {
-                        // did somebody cancel the paused job
-                        if (execution.getMonitor().isCancelled()) {
-                            complete(execution, true);
-                        }
-                        continue;
-                    } else if (execution.getMonitor().isCancelled()) {
-                        complete(execution, true);
-                        continue;
-                    } else if (execution.getThrowable() != null) {
-                        complete(execution, true);
+
+                    if (completeExecutionOnUnexpectedCause(execution)) {
                         continue;
                     }
 
-                    try {
-                        // start working after the execution is initailized
-                        if (execution.isInitialized()) {
+                    // start working after the execution is initailized
+                    if (execution.isInitialized()) {
+                        boolean newtasks = false;
+                        int execProgress = execution.getProgressSize();
+
+                        if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
                             // we ask the workflow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
-                            boolean newtasks = false;
-                            int execProgress = execution.getProgressSize();
-
-                            if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
-                                newtasks = ensureTasksInProgress(execution, start, execProgress,
-                                        totalProgress);
-                            }
-
-                            // we need to wait until nothing is in progress before
-                            // we acutally can cancel this execution (this way we
-                            // never leave records in the pipe
-                            if (execProgress == 0 && !newtasks) {
-                                ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
-                                if (creators.isEmpty()) {
-                                    if (start.isFinished(execution)) {
-                                        // everything done no new
-                                        if (execution.isFinished()) {
-                                            Thread.sleep(100);
-                                            if (execution.isFinished()) {
-                                                complete(execution, false);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(
-                                        new IngestionPlugin[0]);
-                                for (int i = steps.length - 1; i >= 0; i--) {
-                                    // early failure, if something goes wrong we
-                                    // can cancel the execution here "early"
-                                    if (execution.getThrowable() != null) {
-                                        complete(execution, true);
-                                        break;
-                                    }
-
-                                    IngestionPlugin thisStep = steps[i];
-
-                                    Queue prevSuccess = i > 0
-                                            ? execution.getSuccess(steps[i - 1].getIdentifier())
-                                            : execution.getSuccess(start.getIdentifier());
-
-                                    Queue thisSuccess = execution.getSuccess(thisStep.getIdentifier());
-                                    Queue thisFailure = execution.getFailure(thisStep.getIdentifier());
-                                    Set thisAssigned = execution.getAssigned(thisStep.getIdentifier());
-
-                                    boolean savepoint = execution.getWorkflow().isSavepoint(
-                                            thisStep.getIdentifier());
-                                    boolean mandatory = execution.getWorkflow().isMandatory(
-                                            thisStep.getIdentifier());
-
-                                    // if we are the "last" step we need to handle
-                                    // the last success queue here.
-                                    if (i == steps.length - 1) {
-                                        finishTasksLastSuccess(execution, thisSuccess);
-                                    }
-
-                                    // get successful tasks from previous step
-                                    // and schedule them into the step executor
-                                    // of this step
-                                    Task task = null;
-                                    synchronized (prevSuccess) {
-                                        task = (Task)prevSuccess.poll();
-                                    }
-
-                                    while (task != null) {
-                                        // early failure, if something goes wrong we
-                                        // can cancel the execution here "early"
-                                        // we cannot check the task, because we do not
-                                        // know when it's going to be executed
-                                        if (execution.getThrowable() != null) {
-                                            complete(execution, true);
-                                            break;
-                                        }
-
-                                        isbusy |= true; // well there is something todo
-
-                                        UimDatasetAdapter adapter = registry.getUimDatasetAdapter(thisStep.getIdentifier());
-                                        task.setAdapter(adapter);
-
-                                        task.setStep(thisStep, mandatory);
-                                        task.setSavepoint(savepoint);
-                                        task.setOnSuccess(thisSuccess);
-                                        task.setOnFailure(thisFailure);
-                                        task.setAssigned(thisAssigned);
-                                        // mandatory
-                                        task.setStatus(TaskStatus.QUEUED);
-
-                                        synchronized (thisAssigned) {
-                                            thisAssigned.add(task);
-                                        }
-
-                                        try {
-                                            TaskExecutorRegistry.getInstance().execute(execution,
-                                                    thisStep.getIdentifier(), task);
-                                        } catch (Throwable t) {
-                                            // if something goes wrong here
-                                            // we have a serios problem and
-                                            // should not continue the execution.
-                                            execution.setThrowable(t);
-                                            complete(execution, true);
-                                        }
-
-                                        // if this is the first step,
-                                        // then we have just now scheduled a
-                                        // newly created task from the start plugin.
-                                        if (i == 0) {
-                                            execution.incrementScheduled(1);
-                                        }
-
-                                        synchronized (prevSuccess) {
-                                            task = (Task)prevSuccess.poll();
-                                        }
-                                    }
-                                }
-                            }
+                            newtasks = ensureTasksInProgress(execution, start, execProgress,
+                                    totalProgress);
                         }
-                    } catch (Throwable exc) {
-                        log.log(Level.WARNING, "Exception in workflow execution", exc);
+
+                        // we need to wait until nothing is in progress before
+                        // we acutally can cancel this execution (this way we
+                        // never leave records in the pipe
+                        if (execProgress == 0 && !newtasks) {
+                            completeExecution(execution);
+                        } else {
+                            isbusy = executeSteps(execution, isbusy);
+                        }
                     }
-                } // end synchronized execution
+                }
             } catch (Throwable exc) {
-                log.log(Level.SEVERE, "Exception in workflow executor", exc);
+                log.log(Level.SEVERE, "Exception in workflow execution", exc);
             }
 
             if (!isbusy) {
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
+                    // ignore interrupts
                 }
             }
 
@@ -246,9 +135,150 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
+                    // ignore interrupts
                 }
             }
         }
+    }
+
+    private void completeExecution(ActiveExecution<?, I> execution) {
+        // we ask the workflow start if we have more to do
+        WorkflowStart start = execution.getWorkflow().getStart();
+        ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
+        if (creators.isEmpty()) {
+            if (start.isFinished(execution)) {
+                // everything done no new
+                if (execution.isFinished()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        // ignore interrupts
+                    }
+                    if (execution.isFinished()) {
+                        complete(execution, false);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean executeSteps(ActiveExecution<?, I> execution, boolean isbusy) {
+        boolean isStillBusy = isbusy;
+
+        // we ask the workflow start if we have more to do
+        WorkflowStart start = execution.getWorkflow().getStart();
+
+        IngestionPlugin[] steps = execution.getWorkflow().getSteps().toArray(new IngestionPlugin[0]);
+        for (int i = steps.length - 1; i >= 0; i--) {
+            // early failure, if something goes wrong we
+            // can cancel the execution here "early"
+            if (execution.getThrowable() != null) {
+                complete(execution, true);
+                break;
+            }
+
+            IngestionPlugin thisStep = steps[i];
+
+            Queue prevSuccess = i > 0 ? execution.getSuccess(steps[i - 1].getIdentifier())
+                    : execution.getSuccess(start.getIdentifier());
+
+            Queue thisSuccess = execution.getSuccess(thisStep.getIdentifier());
+            Queue thisFailure = execution.getFailure(thisStep.getIdentifier());
+            Set thisAssigned = execution.getAssigned(thisStep.getIdentifier());
+
+            boolean savepoint = execution.getWorkflow().isSavepoint(thisStep.getIdentifier());
+            boolean mandatory = execution.getWorkflow().isMandatory(thisStep.getIdentifier());
+
+            // if we are the "last" step we need to handle
+            // the last success queue here.
+            if (i == steps.length - 1) {
+                finishTasksLastSuccess(execution, thisSuccess);
+            }
+
+            // get successful tasks from previous step
+            // and schedule them into the step executor
+            // of this step
+            Task task = null;
+            synchronized (prevSuccess) {
+                task = (Task)prevSuccess.poll();
+            }
+
+            while (task != null) {
+                // early failure, if something goes wrong we
+                // can cancel the execution here "early"
+                // we cannot check the task, because we do not
+                // know when it's going to be executed
+                if (execution.getThrowable() != null) {
+                    complete(execution, true);
+                    break;
+                }
+
+                isStillBusy |= true; // well there is something todo
+
+                UimDatasetAdapter adapter = registry.getUimDatasetAdapter(thisStep.getIdentifier());
+                task.setAdapter(adapter);
+
+                task.setStep(thisStep, mandatory);
+                task.setSavepoint(savepoint);
+                task.setOnSuccess(thisSuccess);
+                task.setOnFailure(thisFailure);
+                task.setAssigned(thisAssigned);
+                // mandatory
+                task.setStatus(TaskStatus.QUEUED);
+
+                synchronized (thisAssigned) {
+                    thisAssigned.add(task);
+                }
+
+                try {
+                    TaskExecutorRegistry.getInstance().execute(execution, thisStep.getIdentifier(),
+                            task);
+                } catch (Throwable t) {
+                    // if something goes wrong here
+                    // we have a serios problem and
+                    // should not continue the execution.
+                    execution.setThrowable(t);
+                    complete(execution, true);
+                }
+
+                // if this is the first step,
+                // then we have just now scheduled a
+                // newly created task from the start plugin.
+                if (i == 0) {
+                    execution.incrementScheduled(1);
+                }
+
+                synchronized (prevSuccess) {
+                    task = (Task)prevSuccess.poll();
+                }
+            }
+        }
+
+        return isStillBusy;
+    }
+
+    /**
+     * @param execution
+     *            execution under investigation
+     * @return true, if execution has been completed on unexptected causes
+     * @throws StorageEngineException
+     */
+    private boolean completeExecutionOnUnexpectedCause(ActiveExecution<?, I> execution) {
+        boolean terminated = false;
+        if (execution.isPaused()) {
+            // did somebody cancel the paused job
+            if (execution.getMonitor().isCancelled()) {
+                complete(execution, true);
+            }
+            terminated = true;
+        } else if (execution.getMonitor().isCancelled()) {
+            complete(execution, true);
+            terminated = true;
+        } else if (execution.getThrowable() != null) {
+            complete(execution, true);
+            terminated = true;
+        }
+        return terminated;
     }
 
     private <U extends UimDataSet<I>> void finishTasksLastSuccess(ActiveExecution<U, I> execution,
@@ -268,7 +298,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         }
     }
 
-    @SuppressWarnings({ "rawtypes" })
     private <U extends UimDataSet<I>> boolean ensureTasksInProgress(
             ActiveExecution<U, I> execution, WorkflowStart<U, I> start, int execProgress,
             int totalProgress) throws StorageEngineException {
@@ -306,9 +335,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         return false;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private <U extends UimDataSet<I>> void complete(ActiveExecution<U, I> execution, boolean cancel)
-            throws StorageEngineException {
+    private <U extends UimDataSet<I>> void complete(ActiveExecution<U, I> execution, boolean cancel) {
         log.log(Level.INFO, "Remove Execution:" + execution.toString());
         synchronized(completions) {
             completions.add(execution);
@@ -332,27 +359,30 @@ public class UIMWorkflowProcessor<I> implements Runnable {
         }
 
         synchronized (execution) {
-            Execution executionBean = execution.getExecution();
+            try {
+                Execution executionBean = execution.getExecution();
 
-            executionBean.setActive(false);
-            executionBean.setEndTime(new Date());
-            if (cancel) {
-                executionBean.setCanceled(true);
-            } else {
-                executionBean.setCanceled(false);
+                executionBean.setActive(false);
+                executionBean.setEndTime(new Date());
+                if (cancel) {
+                    executionBean.setCanceled(true);
+                } else {
+                    executionBean.setCanceled(false);
+                }
+
+                executionBean.setSuccessCount(execution.getCompletedSize());
+                executionBean.setFailureCount(execution.getFailureSize());
+                executionBean.setProcessedCount(execution.getScheduledSize());
+
+                execution.getStorageEngine().updateExecution(executionBean);
+            } catch (Throwable t) {
+                log.log(Level.SEVERE, "Failed to update execution:" + execution, t);
             }
-
-            executionBean.setSuccessCount(execution.getCompletedSize());
-            executionBean.setFailureCount(execution.getFailureSize());
-            executionBean.setProcessedCount(execution.getScheduledSize());
-
-            execution.getStorageEngine().updateExecution(executionBean);
         }
 
         try {
             execution.getStorageEngine().checkpoint();
             execution.getLoggingEngine().completed(execution);
-
             execution.cleanup();
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to complete:" + execution, t);
@@ -363,7 +393,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         "UIMOrchestrator", "finish",
                         "Finished:" + execution.getExecution().getName());
             }
-
             synchronized(completions) {
                 completions.remove(execution);
             }
@@ -394,7 +423,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
         // init in separate thread, so that we are not blocking here.
         new Thread(new Runnable() {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
             @Override
             public void run() {
                 try {
