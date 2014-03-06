@@ -107,7 +107,7 @@ public class ResourceManagementWidget extends IngestionWidget {
 
         ResourceTreeViewModel browserTreeViewModel = new ResourceTreeViewModel(repositoryService,
                 selectionModelBrowser);
-        cellBrowser = new CellBrowser(browserTreeViewModel, null);
+        cellBrowser = new CellBrowser.Builder<String>(browserTreeViewModel, null).build();
         cellBrowser.setAnimationEnabled(true);
         // cellBrowser.setSize("300px", "350px");
 //        cellBrowser.setSize("100%", "100%");

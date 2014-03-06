@@ -21,6 +21,7 @@ package eu.europeana.uim.sugar;
 import java.util.List;
 import java.util.Map;
 
+import eu.europeana.uim.external.ExternalService;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -30,7 +31,7 @@ import eu.europeana.uim.store.Provider;
  * @author Georgios Markakis
  * @since Jan 27, 2012
  */
-public interface SugarService {
+public interface SugarService extends ExternalService {
     /**
      * Logins and ensures a new session
      * 

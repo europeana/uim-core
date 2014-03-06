@@ -22,6 +22,7 @@ package eu.europeana.uim.repox;
 
 import java.util.List;
 
+import eu.europeana.uim.external.ExternalService;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -33,7 +34,7 @@ import eu.europeana.uim.store.Provider;
  * @author Georgios Markakis
  * @since Jan 20, 2012
  */
-public interface RepoxService {
+public interface RepoxService extends ExternalService {
     /**
      * Deletes a provider from Repox (Collection objects belonging to this provider are deleted as
      * well)

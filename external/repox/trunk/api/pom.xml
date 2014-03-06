@@ -23,6 +23,7 @@
                     <instructions>
                         <Import-Package>
                             eu.europeana.uim.store,
+                            eu.europeana.uim.external,
                         </Import-Package>
                         <Export-Package>
                             eu.europeana.uim.repox,

@@ -1,8 +1,7 @@
 package eu.europeana.uim.gui.cp.server.engine;
 
 import eu.europeana.uim.Registry;
-import eu.europeana.uim.repox.RepoxService;
-import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.external.ExternalService;
 
 /**
  * OSGI based implementation of engine.
@@ -12,8 +11,8 @@ import eu.europeana.uim.sugar.SugarService;
  */
 public class ExternalServiceOsgiEngine extends ExternalServiceEngine {
     private final Registry     registry;
-    private final RepoxService repoxService;
-    private final SugarService sugarService;
+    private final ExternalService repoxService;
+    private final ExternalService sugarService;
 
     /**
      * Creates a new instance of this class.
@@ -22,8 +21,8 @@ public class ExternalServiceOsgiEngine extends ExternalServiceEngine {
      * @param sugarService
      * @param repoxService
      */
-    public ExternalServiceOsgiEngine(Registry registry, SugarService sugarService,
-                                     RepoxService repoxService) {
+    public ExternalServiceOsgiEngine(Registry registry, ExternalService sugarService,
+            ExternalService repoxService) {
         this.registry = registry;
         this.sugarService = sugarService;
         this.repoxService = repoxService;
@@ -35,12 +34,12 @@ public class ExternalServiceOsgiEngine extends ExternalServiceEngine {
     }
 
     @Override
-    public SugarService getSugarService() {
+    public ExternalService getSugarService() {
         return sugarService;
     }
 
     @Override
-    public RepoxService getRepoxService() {
+    public ExternalService getRepoxService() {
         return repoxService;
     }
 

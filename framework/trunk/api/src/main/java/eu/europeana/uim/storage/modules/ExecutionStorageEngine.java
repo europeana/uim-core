@@ -46,12 +46,4 @@ public interface ExecutionStorageEngine<I> {
      * @throws StorageEngineException
      */
     List<Execution<I>> getAllExecutions() throws StorageEngineException;
-// MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws
-// StorageEngineException;
-// void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;
-// MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
-// List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException;
-// List<MetaDataRecord<I>> getMetaDataRecords(Request<I> request, int start, int limit) throws
-// StorageEngineException;
-// int getMetaDataRecordNumberByRequest(Request<I> request) throws StorageEngineException;
 }

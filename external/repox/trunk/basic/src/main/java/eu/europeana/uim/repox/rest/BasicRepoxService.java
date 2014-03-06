@@ -2,12 +2,16 @@
 package eu.europeana.uim.repox.rest;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
+import eu.europeana.uim.external.ExternalServiceException;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
@@ -524,5 +528,64 @@ public class BasicRepoxService implements RepoxService {
         RepoxRestClient client = clientfactory.getInstance(url);
         RunningTasks rTasks = client.getActiveHarvestingSessions();
         return rTasks.getDataSource();
+    }
+
+    @Override
+    public boolean synchronize(Provider<?> provider, boolean deleted)
+            throws ExternalServiceException {
+        boolean update = false;
+        if (deleted) {
+            deleteProvider(provider);
+            update = true;
+        } else {
+            Map<String, String> beforeValues = new HashMap<String, String>(provider.values());
+
+            updateProvider(provider);
+            synchronizeProvider(provider);
+
+            Map<String, String> afterValues = provider.values();
+            update = beforeValues.size() != afterValues.size();
+            if (!update) {
+                for (Entry<String, String> entry : afterValues.entrySet()) {
+                    String beforeValue = beforeValues.get(entry.getKey());
+                    if (!(beforeValue == null ? entry.getValue() == null
+                            : beforeValue.equals(entry.getValue()))) {
+                        update = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return update;
+    }
+
+    @Override
+    public boolean synchronize(Collection<?> collection, boolean deleted)
+            throws ExternalServiceException {
+        boolean update = false;
+        if (deleted) {
+            deleteCollection(collection);
+            update = true;
+        } else {
+            Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+
+            updateCollection(collection);
+            synchronizeCollection(collection);
+
+            Map<String, String> afterValues = collection.values();
+
+            update = beforeValues.size() != afterValues.size();
+            if (!update) {
+                for (Entry<String, String> entry : afterValues.entrySet()) {
+                    String beforeValue = beforeValues.get(entry.getKey());
+                    if (!(beforeValue == null ? entry.getValue() == null
+                            : beforeValue.equals(entry.getValue()))) {
+                        update = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return update;
     }
 }

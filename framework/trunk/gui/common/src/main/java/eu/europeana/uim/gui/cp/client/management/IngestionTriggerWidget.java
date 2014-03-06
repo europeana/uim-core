@@ -138,7 +138,7 @@ public class IngestionTriggerWidget extends IngestionWidget {
 
         TriggerTreeViewModel browserTreeViewModel = new TriggerTreeViewModel(repositoryService,
                 selectionModelBrowser);
-        cellBrowser = new CellBrowser(browserTreeViewModel, null);
+        cellBrowser = new CellBrowser.Builder<String>(browserTreeViewModel, null).build();
         cellBrowser.setAnimationEnabled(true);
         cellBrowser.setSize("100%", "100%");
 
