@@ -92,7 +92,10 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     COLLECTION_METADATA_PROFILE,
     
     /** collection status */
-    COLLECTION_STATUS;
+    COLLECTION_STATUS,
+    
+    /** provider consortia name for a provider */
+    PROVIDER_CONSORTIA_NAME;
 
     /** SugarCRM date format */
     public static DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");

@@ -21,6 +21,7 @@ public class TELMapping implements SugarMapping {
                 TELProviderFields.COUNTRY,
                 TELProviderFields.REPOX_SERVER,
                 TELProviderFields.REPOX_PREFIX,
+                TELProviderFields.CONSORTIA_NAME,
                 TELProviderFields.TEL_ACTIVE_UIM,
         };
     }

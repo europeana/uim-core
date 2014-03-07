@@ -169,7 +169,6 @@ public class SugarServiceImpl implements SugarService {
                     update = false;
                     break;
                 }
-
             } else if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
 
@@ -356,17 +355,21 @@ public class SugarServiceImpl implements SugarService {
         RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
         for (RetrievableField field : fields) {
             String value = values.get(field.getFieldId());
-
             if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) { return value; }
         }
         return null;
     }
-
+    
     @Override
     public List<Map<String, String>> listProviders(boolean activeOnly) throws SugarException {
+        return filterProviders(activeOnly, "");
+    }
+
+    @Override
+    public List<Map<String, String>> filterProviders(boolean activeOnly, String filterQuery) throws SugarException {
         SugarClient client = validateConnection();
 
-        List<Map<String, String>> providers = client.getProviders(sessionID, "", Integer.MAX_VALUE);
+        List<Map<String, String>> providers = client.getProviders(sessionID, filterQuery != null ? filterQuery : "", Integer.MAX_VALUE);
 
         List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
