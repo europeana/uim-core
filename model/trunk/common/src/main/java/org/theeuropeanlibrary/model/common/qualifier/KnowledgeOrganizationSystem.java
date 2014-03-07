@@ -72,5 +72,9 @@ public enum KnowledgeOrganizationSystem {
     /**
      * Id in NACO authority file (http://www.loc.gov/standards/sourcelist/subject.html)
      */
-    NAF
+    NAF,
+    /**
+     * German Subject Headings System
+     */
+    GND
 }
