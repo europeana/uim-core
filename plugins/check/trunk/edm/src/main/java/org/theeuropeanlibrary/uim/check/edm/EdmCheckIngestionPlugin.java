@@ -15,6 +15,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Validator;
 
 import org.theeuropeanlibrary.commons.export.edm.EdmXmlSerializer;
+import org.theeuropeanlibrary.commons.export.edm.model.EdmProperty;
+import org.theeuropeanlibrary.commons.export.edm.model.EdmType;
 import org.theeuropeanlibrary.commons.export.edm.model.ResourceMap;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Status;
@@ -204,7 +206,6 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             }
 
         });
-
         try {
             validator.validate(source);
         } catch (SAXException e) {
@@ -212,6 +213,12 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+
+        if(edm.getPrimaryTopic().getType()!=null && edm.getPrimaryTopic().getType()==EdmType.TEXT) {
+            if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
+                validationError.add("Missing language for text object");
+        }
+        
         if (!validationError.isEmpty()) {
             value.report.addInvalidRecord(validationError);
             // store the validation errors in the uim logging engine
