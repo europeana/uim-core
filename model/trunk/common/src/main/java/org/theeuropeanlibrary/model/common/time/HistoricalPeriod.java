@@ -155,9 +155,43 @@ public class HistoricalPeriod extends Temporal {
     
     @Override
     public String getDisplay() {
-        return name;
+        String placeName=name;
+        if (temporalScope != null) {
+            placeName += (" (" + temporalScope.getDisplay() +")");
+        }
+        if (geographicScope != null) {
+            placeName += (" (" + geographicScope.getDisplay() +")");
+        }
+        if(subject!=null) {
+            String subjectHeadingString = subject.getSubjectHeadingDisplay();
+            if(!subjectHeadingString.isEmpty())
+                placeName=placeName+subjectHeadingString;
+        }
+        return placeName;
     }
 
+    /**
+     * @return a String readable by a human according to subject heading rules
+     */
+    public String getSubjectHeadingDisplay() {
+        String placeName=name;
+        if (temporalScope != null) {
+            placeName += (" (" + temporalScope.getDisplay() +")");
+        }
+        if (geographicScope != null) {
+            placeName += (" (" + geographicScope.getDisplay() +")");
+        }
+        if(subject!=null) {
+            String subjectHeadingString = subject.getSubjectHeadingDisplay();
+            if(!subjectHeadingString.isEmpty())
+                return placeName+subjectHeadingString;
+            else
+                return placeName;
+        }else
+            return placeName;
+    }
+    
+    
     @Override
     public int hashCode() {
         final int prime = 31;
