@@ -215,6 +215,15 @@ public class Topic extends Subject {
         StringBuilder builder = new StringBuilder();
         builder.append(topicName);
 
+        if (secondTopicTerm != null) {
+            builder.append(" (" + secondTopicTerm +")");
+        }
+        if (locationOfEvent != null) {
+            builder.append(" (" + locationOfEvent +")");
+        }
+        if (activeDates != null) {
+            builder.append(" (" + activeDates +")");
+        }
         if (formSubdivision != null) {
             builder.append("--" + formSubdivision);
         }
@@ -226,15 +235,6 @@ public class Topic extends Subject {
         }
         if (geographicSubdivision != null) {
             builder.append("--" + geographicSubdivision);
-        }
-        if (secondTopicTerm != null) {
-            builder.append(" (" + secondTopicTerm +")");
-        }
-        if (locationOfEvent != null) {
-            builder.append(" (" + locationOfEvent +")");
-        }
-        if (activeDates != null) {
-            builder.append(" (" + activeDates +")");
         }
 
         return builder.toString();

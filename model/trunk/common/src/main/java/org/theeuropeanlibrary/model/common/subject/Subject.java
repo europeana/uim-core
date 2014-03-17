@@ -140,4 +140,44 @@ public class Subject {
         } else if (!geographicSubdivision.equals(other.geographicSubdivision)) return false;
         return true;
     }
+
+    /**
+     * @return subject heading label
+     */
+    public String getSubjectHeadingDisplay() {
+        StringBuilder builder = new StringBuilder();
+        if (formSubdivision != null) {
+            builder.append("--" + formSubdivision);
+        }
+        if (generalSubdivision != null) {
+            builder.append("--" + generalSubdivision);
+        }
+        if (chronologicalSubdivision != null) {
+            builder.append("--" + chronologicalSubdivision);
+        }
+        if (geographicSubdivision != null) {
+            builder.append("--" + geographicSubdivision);
+        }
+        return builder.toString();
+    }
+
+    /**
+     * @return human readable string
+     */
+    public String getDisplay() {
+        StringBuilder builder = new StringBuilder();
+        if (formSubdivision != null) {
+            builder.append(", " + formSubdivision);
+        }
+        if (generalSubdivision != null) {
+            builder.append(", " + generalSubdivision);
+        }
+        if (chronologicalSubdivision != null) {
+            builder.append(", " + chronologicalSubdivision);
+        }
+        if (geographicSubdivision != null) {
+            builder.append(", " + geographicSubdivision);
+        }
+        return builder.toString();
+    }
 }
