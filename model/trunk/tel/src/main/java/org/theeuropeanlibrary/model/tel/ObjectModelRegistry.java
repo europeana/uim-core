@@ -737,6 +737,9 @@ public final class ObjectModelRegistry {
         fieldIdTkey = new HashMap<Integer, TKey<?, ?>>();
 
         for (Field f : ObjectModelRegistry.class.getDeclaredFields()) {
+            if (f.getName().equals("METADATARECORD")) {
+                continue;
+            }
             FieldId ann = f.getAnnotation(FieldId.class);
             if (ann != null) {
                 if (fieldIdTkey.containsKey(ann.value())) { throw new RuntimeException(
