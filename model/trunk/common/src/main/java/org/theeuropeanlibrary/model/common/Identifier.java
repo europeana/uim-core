@@ -110,7 +110,12 @@ public class Identifier {
 
     @Override
     public String toString() {
-        return getStringEncodedForm();
+        if (getScope() != null) try {
+            return URLEncoder.encode(getScope(), "UTF-8") + ":" + getIdentifier();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 not supported???", e);
+        }
+        return getIdentifier();
     }
 
     /**
