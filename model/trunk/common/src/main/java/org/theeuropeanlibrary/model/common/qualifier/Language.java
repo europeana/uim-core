@@ -101,7 +101,9 @@ public enum Language implements Translatable {
             "raj", "Rajasthani", null), RAP("rap", "Rapanui", null), RAR("rar", "Rarotongan", null), ROA("roa", "Romance languages", null), ROM("rom", "Romany", null), RUN("run", "Rundi", new Locale("rn")), RUP(
             "rup", "Aromanian", null), SAD("sad", "Sandawe", null), SAG("sag", "Sango", new Locale("sg")), SAH("sah", "Yakut", null), SAI("sai", "South American Indian languages", null), SAL("sal",
             "Salishan languages", null), SAM("sam", "Samaritan Aramaic", null), SAN("san", "Sanskrit", new Locale("sa")), SAS("sas", "Sasak", null), SAT("sat", "Santali", null), SCN("scn", "Sicilian", null), SCO(
-            "sco", "Scots", null), SEL("sel", "Selkup", null), SEM("sem", "Semitic languages", null), SGA("sga", "Irish, Old ", null), SGN("sgn", "Sign Languages", null), SHN("shn", "Shan", null), SID(
+            "sco", "Scots", null), SEL("sel", "Selkup", null), 
+            SCR("scr", "Serbo-Croatian", new Locale("sh")),
+            SEM("sem", "Semitic languages", null), SGA("sga", "Irish, Old ", null), SGN("sgn", "Sign Languages", null), SHN("shn", "Shan", null), SID(
             "sid", "Sidamo", null), SIN("sin", "Sinhala", new Locale("si")), SIO("sio", "Siouan languages", null), SIT("sit", "Sino-Tibetan languages", null), SLA("sla", "Slavic languages", null), SMA(
             "sma", "Southern Sami", null), SME("sme", "Northern Sami", new Locale("se")), SMI("smi", "Sami languages", null), SMJ("smj", "Lule Sami", null), SMN("smn", "Inari Sami", null), SMO("smo",
             "Samoan", new Locale("sm")), SMS("sms", "Skolt Sami", null), SNA("sna", "Shona", new Locale("sn")), SND("snd", "Sindhi", new Locale("sd")), SNK("snk", "Soninke", null), SOG("sog", "Sogdian",
