@@ -139,28 +139,27 @@ public enum Language implements Translatable {
 	    }	
     }};
 
-    private static final HashMap<String, String>   iso3mapping = new HashMap<String, String>() {{
-       put("alb", "sqi");
-       put("arm", "hye");
-       put("baq", "eus");
-       put("bur", "mya");
-       put("chi", "zho");
-       put("cze", "ces");
-       put("dut", "nld");
-       put("fre", "fra");
-       put("geo", "kat");
-       put("ger", "deu");
-       put("gre", "grc");
-       put("ice", "isl");
-       put("mak", "mkd");
-       put("mao", "mri");
-       put("msa", "may");
-       put("per", "fas");
-       put("rum", "ron");
-       put("slo", "slk");
-       put("wel", "cym");
-       put("hin", "pan");
-       put("ger", "gzr");
+    private static final HashMap<String, String[]>   iso3mapping = new HashMap<String, String[]>() {{
+       put("alb", new String[] {"sqi"});
+       put("arm", new String[] {"hye"});
+       put("baq", new String[] {"eus"});
+       put("bur", new String[] {"mya"});
+       put("chi", new String[] {"zho"});
+       put("cze", new String[] {"ces"});
+       put("dut", new String[] {"nld"});
+       put("fre", new String[] {"fra"});
+       put("geo", new String[] {"kat"});
+       put("ger", new String[] {"deu", "gzr"});
+       put("gre", new String[] {"grc"});
+       put("ice", new String[] {"isl"});
+       put("mak", new String[] {"mkd"});
+       put("mao", new String[] {"mri"});
+       put("msa", new String[] {"may"});
+       put("per", new String[] {"fas"});
+       put("rum", new String[] {"ron"});
+       put("slo", new String[] {"slk"});
+       put("wel", new String[] {"cym"});
+       put("hin", new String[] {"pan"});
      }};
 
      private static final HashMap<String, Language> iso3Lookup = new HashMap<String, Language>() {{
@@ -169,7 +168,10 @@ public enum Language implements Translatable {
 
         put(code, language);
         if (iso3mapping.containsKey(code)) {
-            put(iso3mapping.get(code), language);
+            String[] maps = iso3mapping.get(code);
+            for (String map : maps) {
+                put(map, language);   
+            }
         }
       }
     }};
@@ -213,9 +215,19 @@ public enum Language implements Translatable {
      */
     public String getAlias() {
         if (iso3mapping.containsKey(getIso3())) {
-            return iso3mapping.get(getIso3());
+            return iso3mapping.get(getIso3())[0];
         }
         return iso3;
+    }
+    
+    /**
+     * @return iso3 code for language
+     */
+    public String[] getAliases() {
+        if (iso3mapping.containsKey(getIso3())) {
+            return iso3mapping.get(getIso3());
+        }
+        return new String[] { iso3 };
     }
 
     /**
