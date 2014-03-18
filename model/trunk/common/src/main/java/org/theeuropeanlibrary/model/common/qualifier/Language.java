@@ -211,8 +211,9 @@ public enum Language implements Translatable {
     }
 
     /**
-     * @return iso3 code for language
+     * @return iso3 code for language or first alias
      */
+    @Deprecated
     public String getAlias() {
         if (iso3mapping.containsKey(getIso3())) {
             return iso3mapping.get(getIso3())[0];
@@ -221,7 +222,7 @@ public enum Language implements Translatable {
     }
     
     /**
-     * @return iso3 code for language
+     * @return iso3 code for language or all aliases
      */
     public String[] getAliases() {
         if (iso3mapping.containsKey(getIso3())) {
