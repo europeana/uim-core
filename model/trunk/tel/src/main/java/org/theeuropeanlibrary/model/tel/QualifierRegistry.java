@@ -151,9 +151,6 @@ public final class QualifierRegistry {
 
     @FieldId(29)
     public static final Class<DisambiguationDataType>      DISAMBIGUATION_DATA_TYPE      = DisambiguationDataType.class;
-    
-    @FieldId(30)
-    public static final Class<FieldScope>                 FIELD_SCOPE                  = FieldScope.class;
 
     @FieldId(30)
     public static final Class<AddressType>                 ADDRESS_TYPE                  = AddressType.class;
@@ -196,6 +193,9 @@ public final class QualifierRegistry {
 
     @FieldId(43)
     public static final Class<StructuralRelationType>      STRUCTURAL_RELATION_TYPE      = StructuralRelationType.class;
+    
+    @FieldId(44)
+    public static final Class<FieldScope>                  FIELD_SCOPE                   = FieldScope.class;
 
     public static final Set<String>                        enumSet                       = new HashSet<String>();
 
@@ -316,7 +316,7 @@ public final class QualifierRegistry {
             File file = new File(filePath);
             if (!file.exists()) {
                 filePath = "/home/mmuhr/git/uim-core/model/trunk/common/src/main/java/org/theeuropeanlibrary/model/common/qualifier/" +
-                        qualifierType.getSimpleName() + ".java";
+                           qualifierType.getSimpleName() + ".java";
                 file = new File(filePath);
                 if (!file.exists()) {
                     System.out.println(qualifierType.getName());
@@ -337,12 +337,13 @@ public final class QualifierRegistry {
                 }
 
                 if (eann == null) {
-                    java = java.replace(g.getName() + ",", " @FieldId(" + counter + ")\n" + g.getName() + ",");
+                    java = java.replace(g.getName() + ",",
+                            " @FieldId(" + counter + ")\n" + g.getName() + ",");
                 }
                 counter++;
             }
 
-//            FileUtils.writeStringToFile(filePath, data);
+// FileUtils.writeStringToFile(filePath, data);
         }
         System.out.println();
         System.out.println(QualifierRegistry.enumSet);
