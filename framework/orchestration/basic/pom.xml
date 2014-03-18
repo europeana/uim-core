@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim-framework</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>europeana-uim-orchestration-basic</artifactId>
+    <name>Unified Ingestion Manager: API Standard Orchestrator</name>
+    <packaging>bundle</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Import-Package>
+                            eu.europeana.uim,
+                            eu.europeana.uim.adapter,
+                            eu.europeana.uim.orchestration,
+                            eu.europeana.uim.common.progress,
+                            eu.europeana.uim.logging,
+                            eu.europeana.uim.plugin,
+                            eu.europeana.uim.plugin.ingestion,
+                            eu.europeana.uim.plugin.source,
+                            eu.europeana.uim.resource,
+                            eu.europeana.uim.storage,
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
+                            eu.europeana.uim.workflow,
+                            eu.europeana.uim.util,
+                            org.apache.commons.io,
+                            org.osgi.framework,
+                            org.osgi.service.blueprint,
+                        </Import-Package>
+                        <Export-Package>eu.europeana.uim.workflows</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <testResources>
+            <testResource>
+                <directory>${basedir}/src/test/resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>${project.build.directory}/unpacked-test-resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>europeana-uim-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${pom.groupId}</groupId>
+            <artifactId>europeana-uim-storage-memory</artifactId>
+            <version>${pom.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-common</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

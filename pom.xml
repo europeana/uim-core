@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.europeana</groupId>
+	<artifactId>europeana-uim-framework</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Unified Ingestion Manager</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.core.version>3.0.5.RELEASE</spring.core.version>
+		<karaf.version>2.2.0</karaf.version>
+		<europeana.uim.version>2.0.0-SNAPSHOT</europeana.uim.version>
+	</properties>
+
+	<modules>
+		<!-- basic framework of the UIM -->
+		<module>framework</module>
+
+		<!-- model of TEL and Europeana -->
+		<module>model</module>
+
+		<!-- external service Repox -->
+		<module>external/repox</module>
+
+		<!-- external service Sugar -->
+		<module>external/sugar</module>
+
+		<!-- uim mongo implementation -->
+		<module>storage/mongo</module>
+
+		<!-- database base logging -->
+		<module>logging/database</module>
+
+		<!-- plugins for checking -->
+		<module>plugins/check</module>
+
+		<!-- plugins for Solr -->
+		<module>plugins/solr</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<target>1.6</target>
+					<source>1.6</source>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
+					<preparationGoals>clean source:jar install</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<configuration>
+					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- Necessary for PAX-EXAM -->
+				<groupId>org.apache.servicemix.tooling</groupId>
+				<artifactId>depends-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-depends-file</id>
+						<goals>
+							<goal>generate-depends-file</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.surefire</groupId>
+					<artifactId>surefire-junit4</artifactId>
+					<version>2.4.3</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.servicemix.tooling</groupId>
+					<artifactId>depends-maven-plugin</artifactId>
+					<version>1.2</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.6</version>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.6,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>true</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.servicemix.tooling
+										</groupId>
+										<artifactId>
+											depends-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.2,)
+										</versionRange>
+										<goals>
+											<goal>
+												generate-depends-file
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<!-- Shared dependencies -->
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-math</groupId>
+				<artifactId>commons-math</artifactId>
+				<version>1.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-collections</groupId>
+				<artifactId>commons-collections</artifactId>
+				<version>3.2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>r09</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-jdk14</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+
+			<!-- common things -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>europeana-uim-common</artifactId>
+				<version>${europeana.uim.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>eu.europeana</groupId>
+				<artifactId>europeana-uim-common</artifactId>
+				<version>${europeana.uim.version}</version>
+				<classifier>tests</classifier>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- OSGi spec -->
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>4.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.compendium</artifactId>
+				<version>4.2.0</version>
+			</dependency>
+
+			<!-- Karaf Shell, for OSGi shell commands -->
+			<dependency>
+				<groupId>org.apache.karaf.shell</groupId>
+				<artifactId>org.apache.karaf.shell.console</artifactId>
+				<version>${karaf.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- Servlet, for webconsole extension -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<scope>provided</scope>
+				<version>2.5</version>
+			</dependency>
+
+			<!-- Spring for wiring unit tests -->
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-core</artifactId>
+				<version>${spring.core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${spring.core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.core.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.8.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>ant</groupId>
+				<artifactId>ant-junit</artifactId>
+				<version>1.6.5</version>
+			</dependency>
+
+			<!-- TODO what is this? -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit-dep</artifactId>
+				<version>4.5</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<profiles>
+		<profile>
+			<id>tel</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<version>2.6</version>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<version>2.2</version>
+						<configuration>
+							<aggregate>true</aggregate>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.5</version>
+						<configuration>
+							<formats>
+								<format>html</format>
+								<format>xml</format>
+							</formats>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.7</version>
+						<configuration>
+							<excludePackageNames>org.editeur.*</excludePackageNames>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<version>2.3.1</version>
+						<configuration>
+							<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+							<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+						</configuration>
+					</plugin>
+				</plugins>
+			</reporting>
+
+
+			<distributionManagement>
+				<repository>
+					<id>tel.release</id>
+					<name>TEL Release Repository</name>
+					<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
+				</repository>
+				<snapshotRepository>
+					<id>tel.snapshot</id>
+					<name>TEL Snapshot Repository</name>
+					<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>europeana</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<modules>
+				<!-- a version independent common module -->
+				<module>common</module>
+
+				<!-- the uim api module -->
+				<module>api</module>
+
+				<!-- the standard orchestration implementation module -->
+				<module>orchestration/basic</module>
+
+				<!-- UIM Model Definitions -->
+				<module>model</module>
+
+				<!-- the uim standard in memory storage implementation -->
+				<module>storage/memory</module>
+
+				<!-- the uim standard in memory storage implementation -->
+				<module>storage/mongo</module>
+
+				<!-- simplistic in-memory logging -->
+				<module>logging/memory</module>
+
+				<!-- UIM gui common module -->
+				<module>gui/common</module>
+
+				<!-- UIM Solr 1.4-3 OSGI support -->
+				<module>plugins/solr3</module>
+				<module>plugins/check/link</module>
+
+			</modules>
+
+			<distributionManagement>
+				<repository>
+					<id>europeanalabs.eu</id>
+					<name>europeanalabs.eu-releases</name>
+					<url>http://europeanalabs.eu/artifactory/uim-releases-local</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>tel.plugins</id>
+			<name>Maven Plugin Repository</name>
+			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<scm>
+		<connection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</connection>
+		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</developerConnection>
+	</scm>
+</project>

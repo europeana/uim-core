@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim-framework</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>europeana-uim-integration</artifactId>
+
+    <name>Unified Ingestion Manager: Integration Tests</name>
+
+    <properties>
+        <junit-version>4.5</junit-version>
+        <pax-exam-version>1.2.4</pax-exam-version>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Note: settings and dependencies for the final osgi runtime (TESTS) are just used in TestCases that annotated 
+                with this: @RunWith( MavenConfiguredJUnit4TestRunner.class ) All other testcases will use their own settings/provisioning 
+                inside @Configure Methods. -->
+            <plugin>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>maven-paxexam-plugin</artifactId>
+                <!-- <executions> -->
+                <!-- <execution> -->
+                <!-- <id>generate-config</id> -->
+                <!-- <goals> -->
+                <!-- <goal>generate-depends-file</goal> -->
+                <!-- </goals> -->
+                <!-- </execution> -->
+                <!-- </executions> -->
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- Pax-Exam dependencies -->
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam</artifactId>
+            <version>${pax-exam-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-junit</artifactId>
+            <version>${pax-exam-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.exam</groupId>
+            <artifactId>pax-exam-container-default</artifactId>
+            <version>${pax-exam-version}</version>
+        </dependency>
+
+        <!-- JUnit dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+<!--             <version>${junit-version}</version> -->
+        </dependency>
+
+        <!-- Apache Karaf integration -->
+        <dependency>
+            <groupId>org.apache.karaf.tooling</groupId>
+            <artifactId>org.apache.karaf.tooling.testing</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- UIM dependencies! Required for the maven-pax integration to work -->
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-api</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-storage-memory</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-logging-memory</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-plugin-solr14</artifactId>
+            <version>${europeana.uim.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-plugin-solr3</artifactId>
+            <version>${europeana.uim.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-logging-database</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+    </dependencies>
+</project>
