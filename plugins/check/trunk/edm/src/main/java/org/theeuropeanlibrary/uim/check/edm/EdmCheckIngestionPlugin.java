@@ -218,6 +218,10 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
                 validationError.add("Missing language for text object");
         }
+        if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_TITLE)==null && edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_DESCRIPTION)==null) {
+            if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
+                validationError.add("Missing both dc:title and dc:description");
+        }
         
         if (!validationError.isEmpty()) {
             value.report.addInvalidRecord(validationError);
