@@ -12,18 +12,36 @@ public enum BibliographicLevel {
     /**
      * MARC21 code 'a' UNIMARC code -
      */
+    @Deprecated
     ANALITIC_MONOGRAPHIC,
 
     /**
      * MARC21 code 'b' UNIMARC code -
      */
+    @Deprecated
     ANALITIC_SERIAL,
 
     /**
      * MARC21 code - UNIMARC code 'a'
      */
+    @Deprecated
     ANALITIC,
 
+    /**
+     * MARC21 code 'a' UNIMARC code -
+     */
+    ANALYTIC_MONOGRAPHIC,
+
+    /**
+     * MARC21 code 'b' UNIMARC code -
+     */
+    ANALYTIC_SERIAL,
+
+    /**
+     * MARC21 code - UNIMARC code 'a'
+     */
+    ANALYTIC,
+    
     /**
      * MARC21 code 'c' UNIMARC code 'c'
      */
