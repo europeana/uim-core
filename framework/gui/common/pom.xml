@@ -12,7 +12,7 @@
 
     <artifactId>europeana-uim-gui-common</artifactId>
     <packaging>jar</packaging>
-    <name>Unified Ingestion Manager: Base GWT Module Ingestion Control Panel GUI</name>
+    <name>Unified Ingestion Manager Framework: Base GWT Module Ingestion Control Panel GUI</name>
 
     <properties>
         <gwtVersion>2.6.0</gwtVersion>

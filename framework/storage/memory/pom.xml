@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>europeana-uim-storage-memory</artifactId>
-    <name>Unified Ingestion Manager: API MemoryOnly Storage</name>
+    <name>Unified Ingestion Manager Framework: API MemoryOnly Storage</name>
     <packaging>bundle</packaging>
 
     <build>

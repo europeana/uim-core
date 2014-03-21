@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>europeana-uim-orchestration-basic</artifactId>
-    <name>Unified Ingestion Manager: API Standard Orchestrator</name>
+    <name>Unified Ingestion Manager Framework: API Standard Orchestrator</name>
     <packaging>bundle</packaging>
 
     <build>

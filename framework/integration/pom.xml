@@ -10,7 +10,7 @@
 
     <artifactId>europeana-uim-integration</artifactId>
 
-    <name>Unified Ingestion Manager: Integration Tests</name>
+    <name>Unified Ingestion Manager Framework: Integration Tests</name>
 
     <properties>
         <junit-version>4.5</junit-version>

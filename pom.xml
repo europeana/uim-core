@@ -39,7 +39,9 @@
 		<module>plugins/check</module>
 
 		<!-- plugins for Solr -->
-		<module>plugins/solr</module>
+		<module>plugins/solr/solr14</module>
+		<module>plugins/solr/solr3</module>
+		<module>plugins/solr/solr4</module>
 	</modules>
 
 	<build>

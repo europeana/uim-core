@@ -10,7 +10,7 @@
     <packaging>bundle</packaging>
 
     <artifactId>europeana-uim-common</artifactId>
-    <name>Unified Ingestion Manager: Common</name>
+    <name>Unified Ingestion Manager Framework: Common</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -10,7 +10,7 @@
 	<artifactId>europeana-uim-gui</artifactId>
 
 	<packaging>pom</packaging>
-	<name>Unified Ingestion Manager: Graphical User Interfaces</name>
+	<name>Unified Ingestion Manager Framework: Graphical User Interfaces</name>
 	<description>The European Library central ingestion framework parent module for GUIs.</description>
 
 	<properties>
