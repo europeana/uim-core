@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.europeana</groupId>
-	<artifactId>europeana-uim-framework</artifactId>
+	<artifactId>europeana-uim</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Unified Ingestion Manager</name>
@@ -52,6 +52,7 @@
 					<source>1.6</source>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -60,6 +61,7 @@
 					<preparationGoals>clean source:jar install</preparationGoals>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -87,6 +89,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+		
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -457,37 +460,6 @@
 				<activeByDefault>false</activeByDefault>
 			</activation>
 
-			<modules>
-				<!-- a version independent common module -->
-				<module>common</module>
-
-				<!-- the uim api module -->
-				<module>api</module>
-
-				<!-- the standard orchestration implementation module -->
-				<module>orchestration/basic</module>
-
-				<!-- UIM Model Definitions -->
-				<module>model</module>
-
-				<!-- the uim standard in memory storage implementation -->
-				<module>storage/memory</module>
-
-				<!-- the uim standard in memory storage implementation -->
-				<module>storage/mongo</module>
-
-				<!-- simplistic in-memory logging -->
-				<module>logging/memory</module>
-
-				<!-- UIM gui common module -->
-				<module>gui/common</module>
-
-				<!-- UIM Solr 1.4-3 OSGI support -->
-				<module>plugins/solr3</module>
-				<module>plugins/check/link</module>
-
-			</modules>
-
 			<distributionManagement>
 				<repository>
 					<id>europeanalabs.eu</id>
@@ -509,9 +481,4 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<scm>
-		<connection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</connection>
-		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/</developerConnection>
-	</scm>
 </project>
