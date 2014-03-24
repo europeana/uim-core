@@ -167,7 +167,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         ContextRunningData value = context.getValue(DATA);
 
         Status recStatus = mdr.getFirstValue(ObjectModelRegistry.STATUS);
-        if(recStatus!=null && recStatus==Status.DELETED)
+        if(recStatus!=null && (recStatus==Status.DELETED || recStatus==Status.CLEANUP))
             return true;
         
         if (value.maxErrors > 0 && value.report.getInvalidRecords() >= value.maxErrors) {
