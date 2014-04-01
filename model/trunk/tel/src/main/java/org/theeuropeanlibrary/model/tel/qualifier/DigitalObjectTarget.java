@@ -9,7 +9,6 @@ package org.theeuropeanlibrary.model.tel.qualifier;
  * @since 27/11/2013
  */
 public enum DigitalObjectTarget {
-
     /**
      * a link to the digital object shown in context (same as europeana:isShownAt)
      */

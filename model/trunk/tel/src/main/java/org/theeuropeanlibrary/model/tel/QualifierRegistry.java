@@ -1,9 +1,14 @@
 package org.theeuropeanlibrary.model.tel;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.qualifier.CertaintyLevel;
 import org.theeuropeanlibrary.model.common.qualifier.ContributionType;
@@ -24,16 +29,31 @@ import org.theeuropeanlibrary.model.common.qualifier.Status;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TextRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TitleType;
+import org.theeuropeanlibrary.model.tel.qualifier.AddressType;
+import org.theeuropeanlibrary.model.tel.qualifier.Audience;
+import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
+import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
+import org.theeuropeanlibrary.model.tel.qualifier.CollectionType;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.DigitalObjectTarget;
 import org.theeuropeanlibrary.model.tel.qualifier.DisambiguationDataType;
+import org.theeuropeanlibrary.model.tel.qualifier.FieldScope;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
+import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
+import org.theeuropeanlibrary.model.tel.qualifier.Illustrations;
+import org.theeuropeanlibrary.model.tel.qualifier.MaterialType;
+import org.theeuropeanlibrary.model.tel.qualifier.Maturity;
+import org.theeuropeanlibrary.model.tel.qualifier.MediaType;
 import org.theeuropeanlibrary.model.tel.qualifier.NameFormRelation;
 import org.theeuropeanlibrary.model.tel.qualifier.NoteType;
+import org.theeuropeanlibrary.model.tel.qualifier.OrganizationType;
 import org.theeuropeanlibrary.model.tel.qualifier.PartitionType;
+import org.theeuropeanlibrary.model.tel.qualifier.PhoneType;
+import org.theeuropeanlibrary.model.tel.qualifier.PrintType;
 import org.theeuropeanlibrary.model.tel.qualifier.SpatialIdentifierRelation;
 import org.theeuropeanlibrary.model.tel.qualifier.SpatialNameQualifier;
+import org.theeuropeanlibrary.model.tel.qualifier.StructuralRelationType;
 
 import eu.europeana.uim.store.MetaDataRecord;
 
@@ -132,7 +152,55 @@ public final class QualifierRegistry {
     @FieldId(29)
     public static final Class<DisambiguationDataType>      DISAMBIGUATION_DATA_TYPE      = DisambiguationDataType.class;
 
+    @FieldId(30)
+    public static final Class<AddressType>                 ADDRESS_TYPE                  = AddressType.class;
+
+    @FieldId(31)
+    public static final Class<Audience>                    AUDIENCE                      = Audience.class;
+
+    @FieldId(32)
+    public static final Class<BibliographicLevel>          BIBLIOGRAPHIC_LEVEL           = BibliographicLevel.class;
+
+    @FieldId(33)
+    public static final Class<CatalogingForm>              CATALOGING_FORM               = CatalogingForm.class;
+
+    @FieldId(34)
+    public static final Class<CollectionType>              COLLECTION_TYPE               = CollectionType.class;
+
+    @FieldId(35)
+    public static final Class<FormOfItem>                  FORM_OF_ITEM                  = FormOfItem.class;
+
+    @FieldId(36)
+    public static final Class<Illustrations>               ILLUSTRATIONS                 = Illustrations.class;
+
+    @FieldId(37)
+    public static final Class<MaterialType>                MATERIAL_TYPE                 = MaterialType.class;
+
+    @FieldId(38)
+    public static final Class<Maturity>                    MATURITY                      = Maturity.class;
+
+    @FieldId(39)
+    public static final Class<MediaType>                   MEDIA_TYPE                    = MediaType.class;
+
+    @FieldId(40)
+    public static final Class<OrganizationType>            ORGANIZATION_TYPE             = OrganizationType.class;
+
+    @FieldId(41)
+    public static final Class<PhoneType>                   PHONE_TYPE                    = PhoneType.class;
+
+    @FieldId(42)
+    public static final Class<PrintType>                   PRINT_TYPE                    = PrintType.class;
+
+    @FieldId(43)
+    public static final Class<StructuralRelationType>      STRUCTURAL_RELATION_TYPE      = StructuralRelationType.class;
+    
+    @FieldId(44)
+    public static final Class<FieldScope>                  FIELD_SCOPE                   = FieldScope.class;
+
     public static final Set<String>                        enumSet                       = new HashSet<String>();
+
+    public static Map<String, String>                      enumFieldId;
+    public static Map<String, String>                      fieldIdEnum;
 
     static {
         for (Field field : QualifierRegistry.class.getDeclaredFields()) {
@@ -154,5 +222,132 @@ public final class QualifierRegistry {
 
     public static boolean isValidEnum(Class<? extends Enum<?>> enumeration) {
         return enumSet.contains(enumeration.getName());
+    }
+
+    static {
+        enumFieldId = new HashMap<String, String>();
+        fieldIdEnum = new HashMap<String, String>();
+
+        for (Field f : QualifierRegistry.class.getDeclaredFields()) {
+            FieldId fann = f.getAnnotation(FieldId.class);
+            if (fann == null) {
+                continue;
+            }
+
+            Class<?> qualifierType;
+            try {
+                qualifierType = (Class<?>)f.get(Enum.class);
+            } catch (Exception e) {
+                throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+// continue;
+            }
+
+            for (Field g : qualifierType.getDeclaredFields()) {
+                FieldId eann = g.getAnnotation(FieldId.class);
+
+                if (g.getName().contains("ENUM$VALUES")) {
+                    continue;
+                }
+
+                String none = qualifierType.getName() + "@" + g.getName();
+
+                if (eann != null) {
+                    String second = f.getDeclaringClass().getName() + "@" + eann.value();
+
+                    if (fieldIdEnum.containsKey(second)) { throw new RuntimeException(
+                            "Duplicate field id '" + second + "' is not allowed!"); }
+
+                    try {
+                        fieldIdEnum.put(second, none);
+                        enumFieldId.put(none, second);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+                    }
+                }
+
+                if (fann != null) {
+                    String first = fann.value() + "@" + g.getName();
+
+                    if (fieldIdEnum.containsKey(first)) { throw new RuntimeException(
+                            "Duplicate field id '" + first + "' is not allowed!"); }
+
+                    try {
+                        fieldIdEnum.put(first, none);
+                        enumFieldId.put(none, first);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+                    }
+                }
+
+                if (fann != null && eann != null) {
+                    String full = fann.value() + "@" + eann.value();
+
+                    if (fieldIdEnum.containsKey(full)) { throw new RuntimeException(
+                            "Duplicate field id '" + full + "' is not allowed!"); }
+
+                    try {
+                        fieldIdEnum.put(full, none);
+                        enumFieldId.put(none, full);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        for (Field f : QualifierRegistry.class.getDeclaredFields()) {
+            FieldId fann = f.getAnnotation(FieldId.class);
+            if (fann == null) {
+                continue;
+            }
+
+            Class<?> qualifierType;
+            try {
+                qualifierType = (Class<?>)f.get(Enum.class);
+            } catch (Exception e) {
+                throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+// continue;
+            }
+
+            String filePath = "/home/mmuhr/git/uim-core/model/trunk/tel/src/main/java/org/theeuropeanlibrary/model/tel/qualifier/" +
+                              qualifierType.getSimpleName() + ".java";
+            File file = new File(filePath);
+            if (!file.exists()) {
+                filePath = "/home/mmuhr/git/uim-core/model/trunk/common/src/main/java/org/theeuropeanlibrary/model/common/qualifier/" +
+                           qualifierType.getSimpleName() + ".java";
+                file = new File(filePath);
+                if (!file.exists()) {
+                    System.out.println(qualifierType.getName());
+                }
+            }
+            String java = FileUtils.readFileToString(file);
+            if (java == null || java.length() == 0) {
+                System.out.println(qualifierType.getName());
+                continue;
+            }
+
+            int counter = 1;
+            for (Field g : qualifierType.getDeclaredFields()) {
+                FieldId eann = g.getAnnotation(FieldId.class);
+
+                if (g.getName().contains("ENUM$VALUES")) {
+                    continue;
+                }
+
+                if (eann == null) {
+                    java = java.replace(g.getName() + ",",
+                            " @FieldId(" + counter + ")\n" + g.getName() + ",");
+                }
+                counter++;
+            }
+
+// FileUtils.writeStringToFile(filePath, data);
+        }
+        System.out.println();
+        System.out.println(QualifierRegistry.enumSet);
+        System.out.println(QualifierRegistry.enumFieldId);
+        System.out.println(QualifierRegistry.fieldIdEnum);
     }
 }

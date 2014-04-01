@@ -3,6 +3,7 @@ package eu.europeana.uim.sugar.tel;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.StandardControlledVocabulary;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 
@@ -82,6 +83,8 @@ public enum TELProviderFields implements RetrievableField, UpdatableField {
     TEL_MEMBER("tel_member_c", "accounts.tel_member_c", null, "Member of library"),
     
     PROVIDER_ACCOUNTS("provider_accounts_c", "accounts.provider_accounts_c", null, "Portal Accounts for this provider"),
+    
+    CONSORTIA_NAME("accounts_accounts_1_name", "accounts.accounts_accounts_1_name", SugarControlledVocabulary.PROVIDER_CONSORTIA_NAME, "Consortia name this provider belongs to."),
     ;
 
     private final String                       fieldId;

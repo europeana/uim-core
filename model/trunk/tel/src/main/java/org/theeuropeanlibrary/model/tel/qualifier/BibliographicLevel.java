@@ -12,18 +12,36 @@ public enum BibliographicLevel {
     /**
      * MARC21 code 'a' UNIMARC code -
      */
+    @Deprecated
     ANALITIC_MONOGRAPHIC,
 
     /**
      * MARC21 code 'b' UNIMARC code -
      */
+    @Deprecated
     ANALITIC_SERIAL,
 
     /**
      * MARC21 code - UNIMARC code 'a'
      */
+    @Deprecated
     ANALITIC,
 
+    /**
+     * MARC21 code 'a' UNIMARC code -
+     */
+    ANALYTIC_MONOGRAPHIC,
+
+    /**
+     * MARC21 code 'b' UNIMARC code -
+     */
+    ANALYTIC_SERIAL,
+
+    /**
+     * MARC21 code - UNIMARC code 'a'
+     */
+    ANALYTIC,
+    
     /**
      * MARC21 code 'c' UNIMARC code 'c'
      */
@@ -56,9 +74,9 @@ public enum BibliographicLevel {
     public static BibliographicLevel fromMarc21Code(char bibLevelCode) {
         switch (bibLevelCode) {
         case 'a':
-            return ANALITIC_MONOGRAPHIC;
+            return ANALYTIC_MONOGRAPHIC;
         case 'b':
-            return ANALITIC_SERIAL;
+            return ANALYTIC_SERIAL;
         case 'c':
             return COLLECTION_MADE_UP;
         case 'd':
@@ -80,7 +98,7 @@ public enum BibliographicLevel {
     public static BibliographicLevel fromUnimarcCode(char bibLevelCode) {
         switch (bibLevelCode) {
         case 'a':
-            return ANALITIC;
+            return ANALYTIC;
         case 'c':
             return COLLECTION_MADE_UP;
         case 'm':
@@ -96,7 +114,7 @@ public enum BibliographicLevel {
      */
     public boolean isContinuingResource() {
         switch (this) {
-        case ANALITIC_SERIAL:
+        case ANALYTIC_SERIAL:
         case SERIAL:
         case INTEGRATING_RESOURCE:
             return true;

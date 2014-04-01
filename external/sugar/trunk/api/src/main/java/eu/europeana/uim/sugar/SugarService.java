@@ -85,6 +85,16 @@ public interface SugarService extends ExternalService {
 
     /**
      * @param activeOnly
+     * @param filterQuery 
+     * @return a list of all providers in sugar
+     * @throws SugarException
+     */
+    List<Map<String, String>> filterProviders(boolean activeOnly, String filterQuery) throws SugarException;
+
+    
+    /**
+     * @param activeOnly
+     * @param filterQuery 
      * @return a list of all providers in sugar
      * @throws SugarException
      */

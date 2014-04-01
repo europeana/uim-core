@@ -29,6 +29,7 @@
                             eu.europeana.uim.sugar.model,
                             eu.europeana.uim.repox,
                             eu.europeana.uim.workflow,
+                            eu.europeana.uim.external,
                             org.theeuropeanlibrary.model.common.qualifier,
                             org.apache.commons.lang,
                             javax.servlet,

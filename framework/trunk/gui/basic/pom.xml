@@ -108,6 +108,7 @@
                         <Embed-StripVersion>true</Embed-StripVersion>
                         <Import-Package>
                             eu.europeana.uim,
+                            eu.europeana.uim.external,
                             eu.europeana.uim.common,
                             eu.europeana.uim.common.progress,
                             eu.europeana.uim.common.utils,

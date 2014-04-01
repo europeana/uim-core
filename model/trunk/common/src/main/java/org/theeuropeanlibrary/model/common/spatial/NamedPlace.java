@@ -98,6 +98,27 @@ public class NamedPlace extends SpatialEntity {
      */
     @Override
     public String getDisplay() {
-        return placeName;
+        if(subject!=null) {
+            String subjectHeadingString = subject.getDisplay();
+            if(!subjectHeadingString.isEmpty())
+                return placeName+", "+subjectHeadingString;
+            else
+                return placeName;
+        }else
+            return placeName;
+    }
+
+    /**
+     * @return a String readable by a human according to subject heading rules
+     */
+    public String getSubjectHeadingDisplay() {
+        if(subject!=null) {
+            String subjectHeadingString = subject.getSubjectHeadingDisplay();
+            if(!subjectHeadingString.isEmpty())
+                return placeName+subjectHeadingString;
+            else
+                return placeName;
+        }else
+            return placeName;
     }
 }

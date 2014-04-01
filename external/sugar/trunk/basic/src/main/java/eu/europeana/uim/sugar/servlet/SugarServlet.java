@@ -14,8 +14,10 @@ import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.sugar.tel.TELProviderFields;
 
 /**
  * Servlet as a callback for SugarCRM
@@ -57,6 +59,28 @@ public class SugarServlet extends AbstractSugarServlet {
                 update = getSugarService().synchronizeProvider(prov, provider);
             } else {
                 update = getSugarService().synchronizeProvider(prov);
+            }
+
+            String consortiaName = prov.getValue(SugarControlledVocabulary.PROVIDER_CONSORTIA_NAME);
+            if (consortiaName != null) {
+                List<Map<String, String>> providers = getSugarService().filterProviders(true,
+                        "accounts.name='" + consortiaName + "'");
+                for (Map<String, String> pr : providers) {
+                    String consMnemonic = pr.get(TELProviderFields.MNEMONIC.getFieldId());
+                    Provider<Serializable> consortia = engine.findProvider(consMnemonic);
+                    boolean add = true;
+                    if (consortia == null) {
+                        consortia = engine.createProvider();
+                        consortia.setMnemonic(consMnemonic);
+                        add = getSugarService().synchronizeProvider(prov);
+                    }
+                    if (add && (!consortia.getRelatedIn().contains(prov) ||
+                        !prov.getRelatedOut().contains(consortia))) {
+                        consortia.getRelatedIn().add(prov);
+                        prov.getRelatedOut().add(consortia);
+                        engine.updateProvider(consortia);
+                    }
+                }
             }
 
             // update is also false for inactive element

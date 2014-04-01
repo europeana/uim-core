@@ -15,6 +15,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Validator;
 
 import org.theeuropeanlibrary.commons.export.edm.EdmXmlSerializer;
+import org.theeuropeanlibrary.commons.export.edm.model.EdmProperty;
+import org.theeuropeanlibrary.commons.export.edm.model.EdmType;
 import org.theeuropeanlibrary.commons.export.edm.model.ResourceMap;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.Status;
@@ -165,7 +167,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         ContextRunningData value = context.getValue(DATA);
 
         Status recStatus = mdr.getFirstValue(ObjectModelRegistry.STATUS);
-        if(recStatus!=null && recStatus==Status.DELETED)
+        if(recStatus!=null && (recStatus==Status.DELETED || recStatus==Status.CLEANUP))
             return true;
         
         if (value.maxErrors > 0 && value.report.getInvalidRecords() >= value.maxErrors) {
@@ -204,7 +206,6 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             }
 
         });
-
         try {
             validator.validate(source);
         } catch (SAXException e) {
@@ -212,6 +213,16 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+
+        if(edm.getPrimaryTopic().getType()!=null && edm.getPrimaryTopic().getType()==EdmType.TEXT) {
+            if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
+                validationError.add("Missing language for text object");
+        }
+        if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_TITLE)==null && edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_DESCRIPTION)==null) {
+            if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
+                validationError.add("Missing both dc:title and dc:description");
+        }
+        
         if (!validationError.isEmpty()) {
             value.report.addInvalidRecord(validationError);
             // store the validation errors in the uim logging engine

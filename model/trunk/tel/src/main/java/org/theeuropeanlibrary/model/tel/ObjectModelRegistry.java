@@ -58,6 +58,7 @@ import org.theeuropeanlibrary.model.tel.qualifier.BibliographicLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.CatalogingForm;
 import org.theeuropeanlibrary.model.tel.qualifier.ContextLevel;
 import org.theeuropeanlibrary.model.tel.qualifier.DigitalObjectTarget;
+import org.theeuropeanlibrary.model.tel.qualifier.FieldScope;
 import org.theeuropeanlibrary.model.tel.qualifier.FieldSource;
 import org.theeuropeanlibrary.model.tel.qualifier.FormOfItem;
 import org.theeuropeanlibrary.model.tel.qualifier.HashType;
@@ -83,11 +84,28 @@ public final class ObjectModelRegistry {
     public static final String                                                                 XML_NAMESPACE       = "http://theeuropeanlibrary.org/internal_object_model";
 
     // FIXME: new way of conversion
-    @FieldId(1)
+    @FieldId(10)
     public static final TKey<ObjectModelRegistry, MetaDataRecordBean>                          METADATARECORD      = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "metadatarecord",
                                                                                                                            MetaDataRecordBean.class);
+
+    /**
+     * field keys lookup to an integer value for authority information
+     */
+    public static Map<TKey<?, ?>, Integer>                                                     mdrTkeyFieldId;
+    /**
+     * integer value to field keys lookup for authority information
+     */
+    public static Map<Integer, TKey<?, ?>>                                                     mdrFieldIdTkey;
+
+    static {
+        mdrTkeyFieldId = new HashMap<TKey<?, ?>, Integer>();
+        mdrFieldIdTkey = new HashMap<Integer, TKey<?, ?>>();
+        
+        mdrTkeyFieldId.put(METADATARECORD, 10);
+        mdrFieldIdTkey.put(10, METADATARECORD);
+    }
 
     @FieldId(2)
     public static final TKey<ObjectModelRegistry, Provenance>                                  PROVENANCE          = TKey.register(
@@ -148,37 +166,37 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "family",
                                                                                                                            Family.class);
-    
+
     @FieldId(12)
     public static final TKey<ObjectModelRegistry, Organization>                                ORGANIZATION        = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "organization",
                                                                                                                            Organization.class);
-    
+
     @FieldId(13)
     public static final TKey<ObjectModelRegistry, Link>                                        LINK                = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "link",
                                                                                                                            Link.class);
-    
+
     @FieldId(14)
     public static final TKey<ObjectModelRegistry, Facet>                                       FACET               = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "facet",
                                                                                                                            Facet.class);
-    
+
     @FieldId(15)
     public static final TKey<ObjectModelRegistry, Temporal>                                    TEMPORAL            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "temporal",
                                                                                                                            Temporal.class);
-    
+
     @FieldId(16)
     public static final TKey<ObjectModelRegistry, Instant>                                     INSTANT             = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "instant",
                                                                                                                            Instant.class);
-    
+
     @FieldId(17)
     public static final TKey<ObjectModelRegistry, Period>                                      PERIOD              = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
@@ -188,79 +206,79 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "time textual",
                                                                                                                            TemporalTextualExpression.class);
-    
+
     @FieldId(18)
     public static final TKey<ObjectModelRegistry, HistoricalPeriod>                            HISTORICAL_PERIOD   = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "historical period",
                                                                                                                            HistoricalPeriod.class);
-    
+
     @FieldId(19)
     public static final TKey<ObjectModelRegistry, Numbering>                                   NUMBERING           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "numbering",
                                                                                                                            Numbering.class);
-    
+
     @FieldId(20)
     public static final TKey<ObjectModelRegistry, Edition>                                     EDITION             = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "edition",
                                                                                                                            Edition.class);
-    
+
     @FieldId(21)
     public static final TKey<ObjectModelRegistry, Text>                                        TEXT                = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "text",
                                                                                                                            Text.class);
-    
+
     @FieldId(22)
     public static final TKey<ObjectModelRegistry, LabeledText>                                 LABELED_TEXT        = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "labeled text",
                                                                                                                            LabeledText.class);
-    
+
     @FieldId(23)
     public static final TKey<ObjectModelRegistry, FullText>                                    FULL_TEXT           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "full text",
                                                                                                                            FullText.class);
-    
+
     @FieldId(24)
     public static final TKey<ObjectModelRegistry, NamedPlace>                                  PLACE               = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "place",
-                                                                                                                           NamedPlace.class);    
-    
+                                                                                                                           NamedPlace.class);
+
     @FieldId(25)
     public static final TKey<ObjectModelRegistry, GeoReferencedPlace>                          GEO_PLACE           = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "georeference place",
                                                                                                                            GeoReferencedPlace.class);
-    
+
     @FieldId(26)
     public static final TKey<ObjectModelRegistry, BoundingBoxReferencedPlace>                  GEO_BOX_PLACE       = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "bounding box reference place",
                                                                                                                            BoundingBoxReferencedPlace.class);
-    
+
     @FieldId(27)
     public static final TKey<ObjectModelRegistry, SpatialEntity>                               GEOGRAPHIC_ENTITY   = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "geographic entity",
                                                                                                                            SpatialEntity.class);
-    
+
     @FieldId(28)
     public static final TKey<ObjectModelRegistry, Metadata>                                    METADATA            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "metadata",
                                                                                                                            Metadata.class);
-    
+
     @FieldId(29)
     public static final TKey<ObjectModelRegistry, RelatedResource>                             RELATED_RESOURCE    = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "related resource",
                                                                                                                            RelatedResource.class);
-    
+
     @FieldId(30)
     public static final TKey<ObjectModelRegistry, AccessPermission>                            ACCESS_PERMISSION   = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
@@ -268,67 +286,79 @@ public final class ObjectModelRegistry {
                                                                                                                            AccessPermission.class);
 
     // ----------------------------------------- Qualifiers
-
+    @FieldId(31)
     public static final TKey<ObjectModelRegistry, Status>                                      STATUS              = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "status",
                                                                                                                            Status.class);
 
+    @FieldId(32)
     public static final TKey<ObjectModelRegistry, Redirect>                                    REDIRECT            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "redirect",
                                                                                                                            Redirect.class);
 
+    @FieldId(33)
     public static final TKey<ObjectModelRegistry, Language>                                    LANGUAGE            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "language",
                                                                                                                            Language.class);
 
+    @FieldId(34)
     public static final TKey<ObjectModelRegistry, Country>                                     COUNTRY             = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "country",
                                                                                                                            Country.class);
 
+    @FieldId(35)
     public static final TKey<ObjectModelRegistry, Maturity>                                    MATURITY            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "maturity",
                                                                                                                            Maturity.class);
 
+    @FieldId(36)
     public static final TKey<ObjectModelRegistry, ResourceType>                                RESOURCE_TYPE       = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "resource_type",
                                                                                                                            ResourceType.class);
 
+    @FieldId(37)
     public static final TKey<ObjectModelRegistry, BibliographicLevel>                          BIBLIOGRAPHIC_LEVEL = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "bibliographic_level",
                                                                                                                            BibliographicLevel.class);
 
+    @FieldId(38)
     public static final TKey<ObjectModelRegistry, PrintType>                                   PRINT_TYPE          = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "print_type",
                                                                                                                            PrintType.class);
 
+    @FieldId(39)
     public static final TKey<ObjectModelRegistry, MaterialType>                                MATERIAL_TYPE       = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "material_type",
                                                                                                                            MaterialType.class);
 
+    @FieldId(40)
     public static final TKey<ObjectModelRegistry, Audience>                                    AUDIENCE            = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "audience",
                                                                                                                            Audience.class);
 
+    @FieldId(41)
     public static final TKey<ObjectModelRegistry, FormOfItem>                                  FORM                = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "form",
                                                                                                                            FormOfItem.class);
 
+    @FieldId(42)
     public static final TKey<ObjectModelRegistry, CatalogingForm>                              CATALOGING_FORM     = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "cataloging_form",
                                                                                                                            CatalogingForm.class);
 
+    @FieldId(43)
     public static final TKey<ObjectModelRegistry, Illustrations>                               ILLUSTRATIONS       = TKey.register(
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "illustrations",
@@ -345,18 +375,21 @@ public final class ObjectModelRegistry {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(INSTANT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PERIOD, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(TIME_TEXTUAL, new ArrayList<Class<? extends Enum<?>>>() {
@@ -364,6 +397,7 @@ public final class ObjectModelRegistry {
                 add(TemporalRelation.class);
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(HISTORICAL_PERIOD, new ArrayList<Class<? extends Enum<?>>>() {
@@ -371,6 +405,7 @@ public final class ObjectModelRegistry {
                 add(TemporalRelation.class);
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -380,6 +415,7 @@ public final class ObjectModelRegistry {
                 add(TitleType.class);
 // add(TopicIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -388,6 +424,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -395,6 +432,7 @@ public final class ObjectModelRegistry {
             {
                 add(PartitionType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -402,6 +440,7 @@ public final class ObjectModelRegistry {
             {
                 add(HashType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -413,6 +452,7 @@ public final class ObjectModelRegistry {
                 add(ResourceRelation.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(LABELED_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
@@ -420,12 +460,14 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FULL_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -433,6 +475,7 @@ public final class ObjectModelRegistry {
             {
                 add(Language.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -440,6 +483,7 @@ public final class ObjectModelRegistry {
             {
                 add(LanguageRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -447,6 +491,7 @@ public final class ObjectModelRegistry {
             {
                 add(IdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
                 add(KnowledgeOrganizationSystem.class);
                 add(SpatialIdentifierType.class);
@@ -461,6 +506,7 @@ public final class ObjectModelRegistry {
                 add(DigitalObjectTarget.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
             }
         });
@@ -469,6 +515,7 @@ public final class ObjectModelRegistry {
             {
                 add(NumberingRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -479,6 +526,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PERSON, new ArrayList<Class<? extends Enum<?>>>() {
@@ -488,6 +536,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(MEETING, new ArrayList<Class<? extends Enum<?>>>() {
@@ -497,6 +546,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FAMILY, new ArrayList<Class<? extends Enum<?>>>() {
@@ -506,6 +556,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(ORGANIZATION, new ArrayList<Class<? extends Enum<?>>>() {
@@ -515,6 +566,7 @@ public final class ObjectModelRegistry {
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -524,6 +576,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(GEO_BOX_PLACE, new ArrayList<Class<? extends Enum<?>>>() {
@@ -532,6 +585,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(PLACE, new ArrayList<Class<? extends Enum<?>>>() {
@@ -540,6 +594,7 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(GEOGRAPHIC_ENTITY, new ArrayList<Class<? extends Enum<?>>>() {
@@ -547,17 +602,20 @@ public final class ObjectModelRegistry {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(FORM, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(ContextLevel.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
         validQualifiers.put(METADATA, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -566,6 +624,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(ResourceRelation.class);
                 add(FieldSource.class);
+                add(FieldScope.class);
                 add(ContextLevel.class);
             }
         });
@@ -573,6 +632,7 @@ public final class ObjectModelRegistry {
         validQualifiers.put(ACCESS_PERMISSION, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(FieldSource.class);
+                add(FieldScope.class);
             }
         });
 
@@ -667,5 +727,46 @@ public final class ObjectModelRegistry {
             ret = new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>(0);
         }
         return ret;
+    }
+
+    public static Map<TKey<?, ?>, Integer> tkeyFieldId;
+    public static Map<Integer, TKey<?, ?>> fieldIdTkey;
+
+    static {
+        tkeyFieldId = new HashMap<TKey<?, ?>, Integer>();
+        fieldIdTkey = new HashMap<Integer, TKey<?, ?>>();
+
+        for (Field f : ObjectModelRegistry.class.getDeclaredFields()) {
+            if (f.getName().equals("METADATARECORD")) {
+                continue;
+            }
+            FieldId ann = f.getAnnotation(FieldId.class);
+            if (ann != null) {
+                if (fieldIdTkey.containsKey(ann.value())) { throw new RuntimeException(
+                        "Duplicate field id '" + ann.value() + "' is not allowed!"); }
+
+                try {
+                    tkeyFieldId.put((TKey<?, ?>)f.get(TKey.class), ann.value());
+                    fieldIdTkey.put(ann.value(), (TKey<?, ?>)f.get(TKey.class));
+                } catch (Exception e) {
+                    throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+                }
+            }
+        }
+
+        for (Field f : AuthorityObjectModelRegistry.class.getDeclaredFields()) {
+            FieldId ann = f.getAnnotation(FieldId.class);
+            if (ann != null) {
+                if (fieldIdTkey.containsKey(ann.value())) { throw new RuntimeException(
+                        "Duplicate field id '" + ann.value() + "' is not allowed!"); }
+
+                try {
+                    tkeyFieldId.put((TKey<?, ?>)f.get(TKey.class), ann.value());
+                    fieldIdTkey.put(ann.value(), (TKey<?, ?>)f.get(TKey.class));
+                } catch (Exception e) {
+                    throw new RuntimeException("Field '" + f + "' cannot be accessed!", e);
+                }
+            }
+        }
     }
 }
