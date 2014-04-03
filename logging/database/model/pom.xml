@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>europeana-uim-logging-database-model</artifactId>
-    <name>Unified Ingestion Manager: API Database Model</name>
+    <name>Unified Ingestion Manager: Database Loggin Model</name>
     <packaging>jar</packaging>
 
     <build>
