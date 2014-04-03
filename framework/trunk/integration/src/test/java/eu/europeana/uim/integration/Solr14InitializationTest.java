@@ -28,7 +28,6 @@ import eu.europeana.uim.solr14.Solr14Initializer;
  */
 @RunWith(JUnit4TestRunner.class)
 public class Solr14InitializationTest extends AbstractIntegrationTest {
-
     /**
      * @return setup configuration
      * @throws Exception

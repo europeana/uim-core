@@ -28,7 +28,6 @@ import eu.europeana.uim.logging.LoggingEngine;
  */
 @RunWith(JUnit4TestRunner.class)
 public class LoggingMemoryTest extends AbstractIntegrationTest {
-
     /**
      * @return setup configuration
      * @throws Exception
