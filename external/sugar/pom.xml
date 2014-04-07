@@ -14,11 +14,6 @@
 
     <modules>
         <module>api</module>
-<!--         <module>basic</module> -->
+        <module>basic</module>
     </modules>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/external/sugar/trunk/</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/external/sugar/trunk/</developerConnection>
-    </scm>
 </project>

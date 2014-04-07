@@ -21,21 +21,4 @@
         <module>europeana</module>
         <module>adapters</module>
     </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/model/trunk</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/model/trunk</developerConnection>
-    </scm>
 </project>

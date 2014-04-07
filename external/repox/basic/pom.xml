@@ -155,9 +155,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <scm>
-        <connection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/repox</connection>
-        <developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/trunk/uim/plugins/repox</developerConnection>
-    </scm>
 </project>

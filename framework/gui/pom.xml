@@ -35,19 +35,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<tagBase>https://europeanalabs.eu/svn/uim/tags</tagBase>
-					<preparationGoals>clean source:jar install</preparationGoals>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
-	<scm>
-		<connection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/gui</connection>
-		<developerConnection>scm:svn:https://europeanalabs.eu/svn/uim/framework/trunk/gui</developerConnection>
-	</scm>
 </project>
