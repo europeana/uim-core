@@ -19,17 +19,20 @@ package eu.europeana.uim.model.adapters;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * General interface for a metadata record adapter. 
- *
+ * General interface for a metadata record adapter.
+ * 
+ * @param <I>
+ * @param <Q>
+ * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
  * @since 9 May 2012
  */
-public interface MetadataRecordAdapter<I,Q extends QValueAdapterStrategy<?,?,?,?>> extends MetaDataRecord<I> {
-
-	 /**
-	  * Returns the original metadata record contained within the adapter
-	  * 
-	 * @return the adapted record
-	 */
-	public MetaDataRecord<I> getAdaptedRecord();
+public interface MetadataRecordAdapter<I, Q extends QValueAdapterStrategy<?, ?, ?, ?>> extends
+        MetaDataRecord<I> {
+    /**
+     * Returns the original metadata record contained within the adapter
+     * 
+     * @return the adapted record
+     */
+    MetaDataRecord<I> getAdaptedRecord();
 }
