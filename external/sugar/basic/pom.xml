@@ -140,7 +140,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-external-repox-api</artifactId>
-            <version>${parent.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
