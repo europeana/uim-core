@@ -32,23 +32,20 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
  * @since 30/09/2013
  */
 public class ScriptForDebuggingEdmValidation {
-
-    
     /**
      * @param args
      * @throws Exception
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static void main(String[] args) throws Exception {
-        TelRepositoryService repositoryService=TelRepositoryService.newInstanceOfProductionRepository();
+        TelRepositoryService repositoryService = TelRepositoryService.newInstanceOfProductionRepository();
         MetaDataRecordBean<Long> mdr = repositoryService.getMetadataRecord(3000031463925L);
-        ObjectModelToEdmConverter edmConverter=new ObjectModelToEdmConverter();
+        ObjectModelToEdmConverter edmConverter = new ObjectModelToEdmConverter();
         ResourceMap convertedEdm = edmConverter.convert(mdr);
-        EdmXmlSerializer edmSerializer=new EdmXmlSerializer();
+        EdmXmlSerializer edmSerializer = new EdmXmlSerializer();
         String edmXmlString = XmlUtil.writeDomToString(edmSerializer.toDom(convertedEdm));
         System.out.println(XmlUtil.prettyXml(edmXmlString));
-        
-        
+
         EdmCheckIngestionPlugin plugin = new EdmCheckIngestionPlugin();
         plugin.initialize();
 
@@ -76,7 +73,7 @@ public class ScriptForDebuggingEdmValidation {
         plugin.initialize(context);
 
         plugin.process(mdr, context);
-        
+
         plugin.completed(context);
 
         System.out.println("Submited: " + data.submitted);
@@ -84,18 +81,13 @@ public class ScriptForDebuggingEdmValidation {
         System.out.println("Invalid: " + data.report.getInvalidRecords());
         System.out.println("Valid: " + data.report.getValidRecords());
 
-        for(String s: data.report.getErrorMessagesCounts().keySet()) {
+        for (String s : data.report.getErrorMessagesCounts().keySet()) {
             System.out.println(s);
         }
-        
+
         // TODO: assert validation errors
         Assert.assertTrue(data.submitted > 0);
 
         plugin.shutdown();
     }
-    
-    
-    
-    
-    
 }

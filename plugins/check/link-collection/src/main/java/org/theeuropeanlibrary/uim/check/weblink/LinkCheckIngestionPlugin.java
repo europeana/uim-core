@@ -85,51 +85,40 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
     private static SugarService           sugarService;
 
     private static Registry               registry;
-    
-    
+
     /**
      * Creates a new instance of this class.
      */
     public LinkCheckIngestionPlugin() {
         super("Link Checking Plugin", "Plugin which checks links for validity.");
     }
-    
+
     /**
      * Creates a new instance of this class.
+     * 
+     * @param registry
      */
     public LinkCheckIngestionPlugin(Registry registry) {
         super("Link Checking Plugin", "Plugin which checks links for validity.");
         LinkCheckIngestionPlugin.registry = registry;
     }
 
-    /* (non-Javadoc)
-     * @see org.theeuropeanlibrary.uim.check.weblink.AbstractLinkIngestionPlugin#initialize()
-     */
     @Override
     public void initialize() {
     }
 
-    /* (non-Javadoc)
-     * @see org.theeuropeanlibrary.uim.check.weblink.AbstractLinkIngestionPlugin#shutdown()
-     */
     @Override
     public void shutdown() {
         WeblinkLinkchecker.getShared().shutdown();
     }
 
-    /* (non-Javadoc)
-     * @see eu.europeana.uim.plugin.Plugin#getParameters()
-     */
     @Override
     public List<String> getParameters() {
         return PARAMETER;
     }
 
-    /* (non-Javadoc)
-     * @see eu.europeana.uim.plugin.ExecutionPlugin#initialize(eu.europeana.uim.orchestration.ExecutionContext)
-     */
     @Override
-    public void initialize(ExecutionContext<Collection<I>,I> context)
+    public void initialize(ExecutionContext<Collection<I>, I> context)
             throws IngestionPluginFailedException {
         Data value = new Data();
 
@@ -167,7 +156,7 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
     }
 
     @Override
-    public void completed(ExecutionContext<Collection<I>,I> context)
+    public void completed(ExecutionContext<Collection<I>, I> context)
             throws IngestionPluginFailedException {
         Data value = context.getValue(DATA);
 
@@ -199,7 +188,7 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
                 collection.putValue(SugarControlledVocabulary.COLLECTION_LINK_VALIDATION,
                         "" + context.getExecution().getId());
 
-                ((ActiveExecution<Collection<I>,I>)context).getStorageEngine().updateCollection(
+                ((ActiveExecution<Collection<I>, I>)context).getStorageEngine().updateCollection(
                         collection);
 
                 if (getSugarService() != null) {
@@ -214,201 +203,190 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         }
     }
 
-    
-    
-    /* (non-Javadoc)
-     * @see eu.europeana.uim.plugin.ingestion.IngestionPlugin#process(eu.europeana.uim.store.UimDataSet, eu.europeana.uim.orchestration.ExecutionContext)
-     */
+    @SuppressWarnings("unchecked")
     @Override
     public boolean process(Collection<I> coll, ExecutionContext<Collection<I>, I> context)
             throws IngestionPluginFailedException, CorruptedDatasetException {
         Data value = context.getValue(DATA);
 
         int threshold = 100;
-        
-		Orchestrator<I> orchestrator = (Orchestrator<I>) registry.getOrchestrator();
-		ActiveExecution<?, Serializable> ae =  (ActiveExecution<?, Serializable>) orchestrator.getActiveExecution(context.getExecution().getId());
-		
-		RevisableProgressMonitor monitor = ae.getMonitor();
-		RevisingProgressMonitor revisingProgressMonitor = new MemoryProgressMonitor();
-		monitor.addListener(revisingProgressMonitor);
-        
-		
-		I[] recs = null;
-		
-		try {
-			 recs = context.getStorageEngine().getByCollection(coll);			 
-			 ae.incrementScheduled(recs.length);
 
-		} catch (StorageEngineException e1) {
-			e1.printStackTrace();
-		}
-        
-		LinkedBlockingQueue<I> refQueue = new LinkedBlockingQueue<I>(Arrays.asList(recs));
-        
+        Orchestrator<I> orchestrator = (Orchestrator<I>)registry.getOrchestrator();
+        ActiveExecution<?, Serializable> ae = (ActiveExecution<?, Serializable>)orchestrator.getActiveExecution(context.getExecution().getId());
+
+        RevisableProgressMonitor monitor = ae.getMonitor();
+        RevisingProgressMonitor revisingProgressMonitor = new MemoryProgressMonitor();
+        monitor.addListener(revisingProgressMonitor);
+
+        I[] recs = null;
+
+        try {
+            recs = context.getStorageEngine().getByCollection(coll);
+            ae.incrementScheduled(recs.length);
+
+        } catch (StorageEngineException e1) {
+            e1.printStackTrace();
+        }
+
+        LinkedBlockingQueue<I> refQueue = new LinkedBlockingQueue<I>(Arrays.asList(recs));
+
         Submission submission = WeblinkLinkchecker.getShared().getSubmission(context.getExecution());
-        
-		int processed =0;
-		int failed = 0;
-        
-		while(!refQueue.isEmpty()){
-			
-			if(submission == null || submission.getRemaining() < threshold){
-				try {					
-					MetaDataRecord<I> mdr = context.getStorageEngine().getMetaDataRecord(refQueue.remove());					
-					offerRecord(mdr,context,value);					
-					submission = WeblinkLinkchecker.getShared().getSubmission(context.getExecution());
-					
-				} catch (MalformedURLException e) {
-					context.getExecution().setFailureCount(failed++);
-				} catch (StorageEngineException e) {
-					context.getExecution().setFailureCount(failed++);
-				}
-				
-				
-				ae.incrementCompleted(1);				
-			    }
-			else{
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		
 
+// int processed = 0;
+        int failed = 0;
+
+        while (!refQueue.isEmpty()) {
+            if (submission == null || submission.getRemaining() < threshold) {
+                try {
+                    MetaDataRecord<I> mdr = context.getStorageEngine().getMetaDataRecord(
+                            refQueue.remove());
+                    offerRecord(mdr, context, value);
+                    submission = WeblinkLinkchecker.getShared().getSubmission(
+                            context.getExecution());
+
+                } catch (MalformedURLException e) {
+                    context.getExecution().setFailureCount(failed++);
+                } catch (StorageEngineException e) {
+                    context.getExecution().setFailureCount(failed++);
+                }
+
+                ae.incrementCompleted(1);
+            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
         return true;
     }
 
-    
     /**
      * @param mdr
      * @param context
      * @param data
      */
-    private void offerRecord(MetaDataRecord<I> mdr,ExecutionContext<Collection<I>, I> context,Data  value) throws MalformedURLException{
-    	
-    	@SuppressWarnings("unchecked")
-		UimDatasetAdapter<MetaDataRecord<I>, I> adapter = (UimDatasetAdapter<MetaDataRecord<I>, I>) registry.getUimDatasetAdapter(this.getClass().getSimpleName());
-    	
-    	if(adapter != null){
-    	   mdr = adapter.adapt((MetaDataRecord<I>) mdr);
-    	}
-    	
-    	
-    	List<QualifiedValue<Link>> linkList = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
-    	
-    	
-//      if (linkList.size() == 0) {
-//      // Adapter that ensures compatibility with the europeana datamodel
-//      Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
+    private void offerRecord(MetaDataRecord<I> mdr, ExecutionContext<Collection<I>, I> context,
+            Data value) throws MalformedURLException {
+
+        @SuppressWarnings("unchecked")
+        UimDatasetAdapter<MetaDataRecord<I>, I> adapter = (UimDatasetAdapter<MetaDataRecord<I>, I>)registry.getUimDatasetAdapter(this.getClass().getSimpleName());
+
+        MetaDataRecord<I> localMdr;
+        if (adapter != null) {
+            localMdr = adapter.adapt(mdr);
+        } else {
+            localMdr = mdr;
+        }
+
+        List<QualifiedValue<Link>> linkList = localMdr.getQualifiedValues(ObjectModelRegistry.LINK);
+
+// if (linkList.size() == 0) {
+// // Adapter that ensures compatibility with the europeana datamodel
+// Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>,
+// QValueAdapterStrategy<?, ?, ?, ?>>();
 //
-//      strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
+// strategies.put(ObjectModelRegistry.LINK, new EuropeanaLinkAdapterStrategy());
 //
-//      MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
-//              mdr, strategies);
+// MetadataRecordAdapter<I, QValueAdapterStrategy<?, ?, ?, ?>> mdrad = AdapterFactory.getAdapter(
+// mdr, strategies);
 //
-//      // get all links
-//      linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
-//  }
+// // get all links
+// linkList = mdrad.getQualifiedValues(ObjectModelRegistry.LINK);
+// }
 
-  int index = 0;
-  for (QualifiedValue<Link> linkQv : linkList) {
-      boolean disjoint = (linkQv.getQualifiers() == null) ? false : Collections.disjoint(
-              linkQv.getQualifiers(), value.checktypes);
-      if (disjoint) {
-          // link is not relevant.
-          synchronized (value) {
-              value.ignored++;
-          }
-          continue;
-      }
+        int index = 0;
+        for (QualifiedValue<Link> linkQv : linkList) {
+            boolean disjoint = (linkQv.getQualifiers() == null) ? false : Collections.disjoint(
+                    linkQv.getQualifiers(), value.checktypes);
+            if (disjoint) {
+                // link is not relevant.
+                synchronized (value) {
+                    value.ignored++;
+                }
+                continue;
+            }
 
-      synchronized (value) {
-          value.submitted++;
-      }
+            synchronized (value) {
+                value.submitted++;
+            }
 
-      Link link = linkQv.getValue();
+            Link link = linkQv.getValue();
 
-      
-      
-      try {
-          final LoggingEngine<I> loggingEngine = context.getLoggingEngine();
-          WeblinkLinkchecker.getShared().offer(
-                  new GuardedMetaDataRecordUrl<I>(context.getExecution(), mdr, link, index++,
-                          new URL(link.getUrl())) {
-                      @SuppressWarnings("unchecked")
-                      @Override
-                      public void processed(int status, String message) {
-                          LinkStatus state = null;
-                          if (status == 0) {
-                              state = LinkStatus.FAILED_CONNECTION;
-                          } else if (status < 400) {
-                              state = LinkStatus.VALID;
-                          } else if (status < 500) {
-                              state = LinkStatus.FAILED_FOURHUNDRED;
-                          } else {
-                              state = LinkStatus.FAILED_FIVEHUNDRED;
-                          }
+            try {
+                final LoggingEngine<I> loggingEngine = context.getLoggingEngine();
+                WeblinkLinkchecker.getShared().offer(
+                        new GuardedMetaDataRecordUrl<I>(context.getExecution(), localMdr, link,
+                                index++, new URL(link.getUrl())) {
+                            @SuppressWarnings("unchecked")
+                            @Override
+                            public void processed(int status, String message) {
+                                LinkStatus state = null;
+                                if (status == 0) {
+                                    state = LinkStatus.FAILED_CONNECTION;
+                                } else if (status < 400) {
+                                    state = LinkStatus.VALID;
+                                } else if (status < 500) {
+                                    state = LinkStatus.FAILED_FOURHUNDRED;
+                                } else {
+                                    state = LinkStatus.FAILED_FIVEHUNDRED;
+                                }
 
-                          getLink().setLastChecked(new Date());
-                          getLink().setLinkStatus(state);
+                                getLink().setLastChecked(new Date());
+                                getLink().setLinkStatus(state);
 
-                          String time = df.format(getLink().getLastChecked());
+                                String time = df.format(getLink().getLastChecked());
 
-                          Execution<I> execution = getExecution();
+                                Execution<I> execution = getExecution();
 
-                          loggingEngine.logLink(execution, "linkcheck", getMetaDataRecord(),
-                                  getLink().getUrl(), status, time, message,
-                                  getUrl().getHost(), getUrl().getPath());
+                                loggingEngine.logLink(execution, "linkcheck", getMetaDataRecord(),
+                                        getLink().getUrl(), status, time, message,
+                                        getUrl().getHost(), getUrl().getPath());
 
-                          Submission submission = WeblinkLinkchecker.getShared().getSubmission(
-                                  execution);
+                                Submission submission = WeblinkLinkchecker.getShared().getSubmission(
+                                        execution);
 
-                          if (submission != null) {
-                              synchronized (submission) {
-                                  execution.putValue("linkcheck.processed",
-                                          "" + submission.getProcessed());
+                                if (submission != null) {
+                                    synchronized (submission) {
+                                        execution.putValue("linkcheck.processed",
+                                                "" + submission.getProcessed());
 
-                                  if (!execution.isActive()) {
+                                        if (!execution.isActive()) {
 
-                                      // need to store our own
-                                      try {
-                                          if (submission.getProcessed() % 500 == 0) {
-                                              if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
-                                                  ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
-                                              }
-                                          } else if (!submission.hasRemaining()) {
-                                              if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
-                                                  ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
-                                              }
-                                          }
+                                            // need to store our own
+                                            try {
+                                                if (submission.getProcessed() % 500 == 0) {
+                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    }
+                                                } else if (!submission.hasRemaining()) {
+                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    }
+                                                }
 
-                                          // FIXME: misuse of api
-                                          loggingEngine.completed(null);
-                                      } catch (StorageEngineException e) {
-                                          throw new RuntimeException(
-                                                  "Caused by StorageEngineException", e);
-                                      }
-                                  }
-                              }
-                          }
+                                                // FIXME: misuse of api
+                                                loggingEngine.completed(null);
+                                            } catch (StorageEngineException e) {
+                                                throw new RuntimeException(
+                                                        "Caused by StorageEngineException", e);
+                                            }
+                                        }
+                                    }
+                                }
 
-                          // TODO: deal with mdr update
-                          log.info("Checked <" + getLink().getUrl() + ">" + message);
-                      }
-                  }, context);
-      } catch (MalformedURLException e) {
-          log.info("Invalid url: <" + link.getUrl() + "> for MDR:" + mdr.getId());
-      }
-  }// all links in mdr
+                                // TODO: deal with mdr update
+                                log.info("Checked <" + getLink().getUrl() + ">" + message);
+                            }
+                        }, context);
+            } catch (MalformedURLException e) {
+                log.info("Invalid url: <" + link.getUrl() + "> for MDR:" + localMdr.getId());
+            }
+        }// all links in mdr
     }
-    
-    
-    
+
     /**
      * @param sugarService
      */

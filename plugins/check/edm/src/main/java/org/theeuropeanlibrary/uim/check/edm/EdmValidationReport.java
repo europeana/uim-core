@@ -17,16 +17,19 @@ import java.util.Map.Entry;
  * @since 20 de Ago de 2012
  */
 public class EdmValidationReport {
-    
-    /** used to transform xml schema validation messages into more human readable values*/
-    private static final Map<String, String> errorHints=new HashMap<String, String>(){{
-        put("cvc-complex-type.2.4.b: The content of element 'edm:ProvidedCHO' is not complete.", "Required element is missing: \"edm:type\"");
-    }};
-    
-    private int                      recordCount;
-    private int                      invalidRecords;
 
-    private HashMap<String, Integer> errorMessagesCounts = new HashMap<String, Integer>();
+    /** used to transform xml schema validation messages into more human readable values */
+    private static final Map<String, String> errorHints          = new HashMap<String, String>() {
+                                                                     {
+                                                                         put("cvc-complex-type.2.4.b: The content of element 'edm:ProvidedCHO' is not complete.",
+                                                                                 "Required element is missing: \"edm:type\"");
+                                                                     }
+                                                                 };
+
+    private int                              recordCount;
+    private int                              invalidRecords;
+
+    private HashMap<String, Integer>         errorMessagesCounts = new HashMap<String, Integer>();
 
     /**
      * A record was validated without errors
@@ -45,20 +48,19 @@ public class EdmValidationReport {
         invalidRecords++;
         for (String error : new HashSet<String>(errors)) {
             String hint = null;
-            for(String messagePrefix: errorHints.keySet()) {
-                if(error.startsWith(messagePrefix)) {
-                    hint=errorHints.get(messagePrefix);
+            for (String messagePrefix : errorHints.keySet()) {
+                if (error.startsWith(messagePrefix)) {
+                    hint = errorHints.get(messagePrefix);
                     break;
                 }
             }
-                    
-            if (hint!=null) {
-                for(int i =0; i<errors.size(); i++) {
-                    String errInList=errors.get(i);
-                    if(errInList.equals(error))
-                        errors.set(i, hint);
+
+            if (hint != null) {
+                for (int i = 0; i < errors.size(); i++) {
+                    String errInList = errors.get(i);
+                    if (errInList.equals(error)) errors.set(i, hint);
                 }
-                error=hint;
+                error = hint;
             }
             synchronized (this) {
                 Integer msgCount = errorMessagesCounts.get(error);
