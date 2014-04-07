@@ -24,6 +24,8 @@ import eu.europeana.uim.workflow.Workflow;
  * @since May 9, 2011
  */
 public class MemoryResourceEngine implements ResourceEngine {
+    private static final String                                              IDENTIFIER          = MemoryResourceEngine.class.getSimpleName();
+
     private static final String                                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
                                                                                                    File.separator +
                                                                                                    "uim-memorystorage";
@@ -51,7 +53,7 @@ public class MemoryResourceEngine implements ResourceEngine {
 
     @Override
     public String getIdentifier() {
-        return MemoryResourceEngine.class.getSimpleName();
+        return IDENTIFIER;
     }
 
     @Override

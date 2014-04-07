@@ -39,7 +39,7 @@ public interface Registry {
     /**
      * @return a list of all registered plugins
      */
-    public List<Plugin> getPlugins();
+    List<Plugin> getPlugins();
 
     /**
      * @param storage

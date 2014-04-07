@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -42,8 +41,6 @@ import gnu.trove.map.hash.TObjectLongHashMap;
  */
 public class MemoryStorageEngine implements StorageEngine<Long> {
     private static final String                      IDENTIFIER          = MemoryStorageEngine.class.getSimpleName();
-    @SuppressWarnings("unused")
-    private static final Logger                      log                 = Logger.getLogger(MemoryStorageEngine.class.getName());
 
     private TLongObjectHashMap<Provider<Long>>       providers           = new TLongObjectHashMap<Provider<Long>>();
     private TObjectLongHashMap<String>               providerMnemonics   = new TObjectLongHashMap<String>();

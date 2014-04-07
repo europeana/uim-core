@@ -47,19 +47,19 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private final SimpleThreadFactory                                       factory              = new SimpleThreadFactory(
                                                                                                          "processor");
 
-    private Thread                                                          dispatcher;
-
     private final Registry                                                  registry;
+
+    private Thread                                                          dispatcher;
 
     private boolean                                                         running              = false;
 
     private final List<ActiveExecution<?, I>>                               executions           = new ArrayList<ActiveExecution<?, I>>();
-    private final List<ActiveExecution<?, I>>                               completions           = new ArrayList<ActiveExecution<?, I>>();
+    private final List<ActiveExecution<?, I>>                               completions          = new ArrayList<ActiveExecution<?, I>>();
 
     // FIXME: Updated these values, cannot handle more
     private int                                                             maxRunningExecutions = 100;
-    private int                                                             maxTotalProgress     = 2000;
-    private int                                                             maxInProgress        = 500;
+    private int                                                             maxTotalProgress     = 500;
+    private int                                                             maxInProgress        = 100;
 
     /**
      * Creates a new instance of this class.
@@ -337,11 +337,11 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
     private <U extends UimDataSet<I>> void complete(ActiveExecution<U, I> execution, boolean cancel) {
         log.log(Level.INFO, "Remove Execution:" + execution.toString());
-        synchronized(completions) {
+        synchronized (completions) {
             completions.add(execution);
         }
         removeExecution(execution);
-        
+
         try {
             execution.getWorkflow().getStart().completed(execution);
         } catch (Throwable t) {
@@ -393,7 +393,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         "UIMOrchestrator", "finish",
                         "Finished:" + execution.getExecution().getName());
             }
-            synchronized(completions) {
+            synchronized (completions) {
                 completions.remove(execution);
             }
         }
