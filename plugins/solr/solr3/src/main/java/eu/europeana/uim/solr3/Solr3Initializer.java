@@ -14,7 +14,7 @@ import org.apache.solr.core.CoreContainer;
 import eu.europeana.uim.common.BlockingInitializer;
 
 /**
- * 
+ * Initializer for all Solr 3.x related plugins. The whole bundle exposes solr in a certain version.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jun 24, 2011

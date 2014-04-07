@@ -40,7 +40,7 @@ public class LinkcheckIngestionPluginTest {
      * Tests a simple runthrough of the link checking plugin against live (and not-supposed to be)
      * live data.
      */
-    //@SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Ignore
     @Test
     public void testSimpleCheck() {

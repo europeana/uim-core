@@ -61,7 +61,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
                                                          }
                                                      };
 
-    private final static SimpleDateFormat df         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static SugarService           sugarService;
 
@@ -103,7 +103,7 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             collection = ((Request<?>)dataset).getCollection();
         }
 
-        String time = df.format(new Date());
+        String time = dateformat.format(new Date());
         String mnem = collection != null ? collection.getMnemonic() : "NULL";
         String name = collection != null ? collection.getName() : "No collection";
 
@@ -124,13 +124,13 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             collection = ((Request<I>)dataset).getCollection();
         }
 
-        String time = df.format(new Date());
+        String time = dateformat.format(new Date());
         String mnem = collection != null ? collection.getMnemonic() : "NULL";
         String name = collection != null ? collection.getName() : "No collection";
 
         context.getLoggingEngine().log(context.getExecution(), Level.INFO, "edmcheck", "completed",
-                mnem, name, String.valueOf(value.report.getRecordCount()), String.valueOf(value.ignored),
-                String.valueOf(value.report.getValidRecords()),
+                mnem, name, String.valueOf(value.report.getRecordCount()),
+                String.valueOf(value.ignored), String.valueOf(value.report.getValidRecords()),
                 String.valueOf(value.report.getInvalidRecords()),
                 String.valueOf(value.report.getValidRecordsPercent()),
                 (value.ignored > 0 ? "(partial report - error limit reached)" : ""), time);
@@ -167,9 +167,8 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
         ContextRunningData value = context.getValue(DATA);
 
         Status recStatus = mdr.getFirstValue(ObjectModelRegistry.STATUS);
-        if(recStatus!=null && recStatus==Status.DELETED)
-            return true;
-        
+        if (recStatus != null && recStatus == Status.DELETED) return true;
+
         if (value.maxErrors > 0 && value.report.getInvalidRecords() >= value.maxErrors) {
             value.ignored++;
             return true;
@@ -214,15 +213,16 @@ public class EdmCheckIngestionPlugin<I> extends AbstractEdmIngestionPlugin<I> {
             throw new RuntimeException(e.getMessage(), e);
         }
 
-        if(edm.getPrimaryTopic().getType()!=null && edm.getPrimaryTopic().getType()==EdmType.TEXT) {
-            if(edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE)==null)
+        if (edm.getPrimaryTopic().getType() != null &&
+            edm.getPrimaryTopic().getType() == EdmType.TEXT) {
+            if (edm.getPrimaryTopic().getFirstProperty(EdmProperty.DCTERMS_LANGUAGE) == null)
                 validationError.add("Missing language for text object");
         }
-        
+
         if (!validationError.isEmpty()) {
             value.report.addInvalidRecord(validationError);
             // store the validation errors in the uim logging engine
-            for (String valMsg : new HashSet<String>(validationError)) 
+            for (String valMsg : new HashSet<String>(validationError))
                 context.getLoggingEngine().logEdmCheck(context.getExecution(), "edmcheck", mdr,
                         valMsg);
         } else
