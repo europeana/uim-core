@@ -19,7 +19,6 @@ import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
-import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the

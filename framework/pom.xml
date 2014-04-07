@@ -33,8 +33,5 @@
 
 		<!-- UIM gui module -->
 		<module>gui</module>
-
-		<!-- UIM Integration -->
-		<module>integration</module>
 	</modules>
 </project>

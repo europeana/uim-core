@@ -16,7 +16,8 @@ import org.apache.solr.core.CoreContainer;
 import eu.europeana.uim.common.BlockingInitializer;
 
 /**
- * Initializer for solr 4.0-snapshot based indices.
+ * Initializer for solr 4.x-snapshot based indices. The whole bundle exposes solr in a certain
+ * version.
  * 
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Jun 24, 2011
@@ -61,9 +62,8 @@ public class Solr4Initializer extends BlockingInitializer {
             status = STATUS_BOOTING;
             if (url.startsWith("file://")) {
                 File home = new File(url.substring(7));
-                if (!new File(home, "solr.xml").exists()) {
-                    throw new SolrException(ErrorCode.SERVICE_UNAVAILABLE, "Cannot open server at url '" + url + "'!");
-                }
+                if (!new File(home, "solr.xml").exists()) { throw new SolrException(
+                        ErrorCode.SERVICE_UNAVAILABLE, "Cannot open server at url '" + url + "'!"); }
                 container = new CoreContainer(home.getAbsolutePath());
                 container.load();
                 server = new EmbeddedSolrServer(container, core);

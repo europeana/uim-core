@@ -35,7 +35,7 @@ public class Submission {
      * Creates a new instance of this class.
      * 
      * @param storage
-     * @param queue 
+     * @param queue
      */
     public Submission(StorageEngine<?> storage, GuardedQueue queue) {
         this.storage = storage;
@@ -70,23 +70,21 @@ public class Submission {
             return remaining.remove(guarded);
         }
     }
-    
+
     /**
      * @return more?
      */
     public boolean hasRemaining() {
-        synchronized(remaining) {
+        synchronized (remaining) {
             return !remaining.isEmpty();
         }
     }
-    
-    
+
     /**
-     * @return
+     * @return more?
      */
     public int getRemaining() {
-    	
-        synchronized(remaining) {
+        synchronized (remaining) {
             return remaining.size();
         }
     }
@@ -146,14 +144,14 @@ public class Submission {
             if (queue.isEmpty()) {
                 Thread.sleep(500);
             }
-            
+
             while (!remaining.isEmpty()) {
                 Thread.sleep(100);
-//                if (remaining.size() == 1) {
-//                    System.out.println("Remaining:" + remaining.iterator().next() + ", Queue:" +
-//                                       queue.size() + ", Processed:" + getProcessed() +
-//                                       ", Exceptions:" + getExceptions() + ", Status:" + getStatus());
-//                }
+// if (remaining.size() == 1) {
+// System.out.println("Remaining:" + remaining.iterator().next() + ", Queue:" +
+// queue.size() + ", Processed:" + getProcessed() +
+// ", Exceptions:" + getExceptions() + ", Status:" + getStatus());
+// }
             }
         } catch (Throwable t) {
         }

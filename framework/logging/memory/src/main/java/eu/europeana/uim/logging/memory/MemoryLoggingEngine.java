@@ -28,6 +28,8 @@ import eu.europeana.uim.store.UimDataSet;
  * @since Jul 17, 2011
  */
 public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
+    private static final String            IDENTIFIER = MemoryLoggingEngine.class.getSimpleName();
+
     private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
     private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
     private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
@@ -46,7 +48,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public String getIdentifier() {
-        return MemoryLoggingEngine.class.getSimpleName();
+        return IDENTIFIER;
     }
 
     @Override

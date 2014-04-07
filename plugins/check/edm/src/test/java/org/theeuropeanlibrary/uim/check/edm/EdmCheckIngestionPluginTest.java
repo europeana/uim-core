@@ -32,7 +32,8 @@ public class EdmCheckIngestionPluginTest {
     /**
      * Tests a simple runthrough of the link checking plugin against live (and not-supposed to be)
      * live data.
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Test

@@ -1,12 +1,9 @@
 package eu.europeana.uim.common;
 
-
 @SuppressWarnings("all")
 public class MDRFieldRegistry {
-
 	public static final TKey<MDRFieldRegistry, String> rawformat = TKey.register(MDRFieldRegistry.class, "rawformat", String.class);
 	public static final TKey<MDRFieldRegistry, String> rawrecord = TKey.register(MDRFieldRegistry.class, "rawrecord", String.class);
-
 
 /*  MDR object
         source_data     // xml blob exactly as delivered

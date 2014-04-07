@@ -2,9 +2,6 @@
 package org.theeuropeanlibrary.uim.check.weblink;
 
 import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.util.BatchWorkflowStart;
-import eu.europeana.uim.util.LoggingIngestionPlugin;
 import eu.europeana.uim.util.RecordAwareCBWorkflowStart;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
@@ -26,10 +23,12 @@ public class LinkCheckWorkflow<I> extends AbstractWorkflow<Collection<I>, I> {
 
         setStart(new RecordAwareCBWorkflowStart<I>());
         addStep(new LinkCheckIngestionPlugin<I>());
-        //addStep(new LoggingIngestionPlugin<MetaDataRecord<I>, I>());
+        // addStep(new LoggingIngestionPlugin<MetaDataRecord<I>, I>());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see eu.europeana.uim.workflow.Workflow#isSavepoint(java.lang.String)
      */
     @Override
@@ -37,7 +36,9 @@ public class LinkCheckWorkflow<I> extends AbstractWorkflow<Collection<I>, I> {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see eu.europeana.uim.workflow.Workflow#isMandatory(java.lang.String)
      */
     @Override

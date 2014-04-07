@@ -6,18 +6,18 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
 import static org.ops4j.pax.exam.OptionUtils.combine;
 
-import java.io.FileNotFoundException;
-
 import org.apache.karaf.testing.AbstractIntegrationTest;
 import org.apache.karaf.testing.Helper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
-import eu.europeana.uim.solr14.Solr14Initializer;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.store.Provider;
 
 /**
  * Integration test for UIM commands<br/>
@@ -25,18 +25,18 @@ import eu.europeana.uim.solr14.Solr14Initializer;
  * running Karaf instance somewhere on your system<br/>
  * 
  * @author Manuel Bernhardt
+ * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
+ * @since Apr 7, 2014
  */
 @RunWith(JUnit4TestRunner.class)
-public class Solr14InitializationTest extends AbstractIntegrationTest {
-
+public class StorageMemoryTest extends AbstractIntegrationTest {
     /**
      * @return setup configuration
      * @throws Exception
      */
     @Configuration
     public static Option[] configuration() throws Exception {
-        boolean debug = false;
-        Option[] options = combine(
+        return combine(
                 Helper.getDefaultOptions(
                         systemProperty("karaf.name").value("junit"),
                         systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
@@ -45,35 +45,28 @@ public class Solr14InitializationTest extends AbstractIntegrationTest {
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-plugin-solr14").versionAsInProject(),
 
                 felix(),
 
                 waitForFrameworkStartup());
-
-        // add std debug config if we want do debugging
-        if (debug) {
-            options = combine(
-                    options,
-                    PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"));
-        }
-        return options;
     }
 
     /**
-     * Tests logging.
+     * Tests storage.
      * 
-     * @throws Throwable
+     * @throws Exception
      */
     @Test
-    public void testSolrSetup() throws Throwable {
-        try {
-            Solr14Initializer init = new Solr14Initializer("file:///data", "ignore");
-            init.initialize(Solr14Initializer.class.getClassLoader());
-        } catch (Throwable t) {
-            if (!(t.getCause().getCause() instanceof FileNotFoundException)) { throw t; }
+    public void testStorage() throws Exception {
+        Registry registry = getOsgiService(Registry.class);
 
+        StorageEngine<?> storage = null;
+        while (storage == null) {
+            storage = registry.getStorageEngine();
+            Thread.sleep(500);
         }
+
+        Provider<?> provider = storage.createProvider();
+        Assert.assertNotNull(provider);
     }
 }
