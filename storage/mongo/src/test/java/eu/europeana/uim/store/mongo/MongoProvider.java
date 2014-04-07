@@ -5,12 +5,21 @@ import java.net.UnknownHostException;
 
 import org.junit.Ignore;
 
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.ArtifactStoreBuilder;
+import de.flapdoodle.embed.mongo.config.DownloadConfigBuilder;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
 import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
+import de.flapdoodle.embed.process.extract.ITempNaming;
+import de.flapdoodle.embed.process.extract.UUIDTempNaming;
+import de.flapdoodle.embed.process.io.directories.FixedPath;
+import de.flapdoodle.embed.process.io.directories.IDirectory;
 
 /**
  * Class exposing Embedded Mongo
@@ -31,7 +40,10 @@ public class MongoProvider {
 	private void setupMongo(int port) {
 
 		IMongodConfig conf = null;
+		IDirectory artifactStorePath = new FixedPath("/tmp/.embedded");
+		
 		try {
+			
 			conf = new MongodConfigBuilder().version(Version.V2_0_9)
 					.net(new Net(port, false)).build();
 		} catch (UnknownHostException e1) {
@@ -39,8 +51,21 @@ public class MongoProvider {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+		ITempNaming executableNaming = new UUIDTempNaming();
 
-		MongodStarter runtime = MongodStarter.getDefaultInstance();
+		Command command = Command.MongoD;
+
+		IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+		    .defaults(command)
+		    .artifactStore(new ArtifactStoreBuilder()
+		        .defaults(command)
+		        .download(new DownloadConfigBuilder()
+		            .defaultsForCommand(command)
+		            .artifactStorePath(artifactStorePath))
+		        .executableNaming(executableNaming))
+		    .build();
+
+		MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
 
 		mongodExecutable = runtime.prepare(conf);
 		try {
