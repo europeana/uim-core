@@ -67,6 +67,6 @@ public class StorageMemoryTest extends AbstractIntegrationTest {
         }
 
         Provider<?> provider = storage.createProvider();
-        Assert.assertNull(provider);
+        Assert.assertNotNull(provider);
     }
 }
