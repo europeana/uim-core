@@ -94,17 +94,17 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-solr14</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-solr3</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-plugin-solr4</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>

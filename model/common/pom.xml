@@ -23,7 +23,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>

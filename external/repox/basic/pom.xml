@@ -110,13 +110,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
         </dependency>
 
         <dependency>
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${europeana.uim.version}</version>
+            <version>${pom.version}</version>
             <scope>test</scope>
         </dependency>
 

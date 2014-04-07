@@ -71,13 +71,13 @@
 <!--         <dependency> -->
 <!--             <groupId>eu.europeana</groupId> -->
 <!--             <artifactId>europeana-uim-external-repox-api</artifactId> -->
-<!--             <version>${europeana.uim.version}</version> -->
+<!--             <version>${pom.version}</version> -->
 <!--         </dependency> -->
 
 <!--         <dependency> -->
 <!--             <groupId>eu.europeana</groupId> -->
 <!--             <artifactId>europeana-uim-external-sugar-api</artifactId> -->
-<!--             <version>${europeana.uim.version}</version> -->
+<!--             <version>${pom.version}</version> -->
 <!--         </dependency> -->
 
         <dependency>
