@@ -24,17 +24,20 @@ import java.util.Set;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
-import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 
 /**
  * 
+ * @param <I>
+ * @param <Q>
+ * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
- * @param <FROMNS>
  * @since 9 May 2012
  */
 public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, ?, ?>> implements
         MetadataRecordAdapter<I, Q> {
-
+    /**
+     * registered strategies
+     */
     public Map<TKey<?, ?>, Q> strategies;
 
     private MetaDataRecord<I> adaptedRecord;
@@ -47,30 +50,16 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
                                         Map<TKey<?, ?>, Q> strategies) {
         this.adaptedRecord = adaptedRecord;
         this.strategies = strategies;
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#getCollection()
-     */
     @Override
     public Collection<I> getCollection() {
         return adaptedRecord.getCollection();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#getFirstValue(eu.europeana.uim.common.TKey,
-     * java.lang.Enum<?>[])
-     */
     @Override
     public <N, T> T getFirstValue(TKey<N, T> key, Enum<?>... qualifiers) {
-
         StrategyExecutor<N, T, T> executor = new StrategyExecutor<N, T, T>(key, null, qualifiers) {
-
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public Object query(TKey key, Object value, Enum<?>[] qualifiers) {
@@ -80,21 +69,13 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
 
             @Override
             public T adaptback2normal(QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
-                return (T)strategy.adaptValue(result);
+                return strategy.adaptValue(result);
             }
         };
-
         executor.execute();
         return executor.getResult();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * eu.europeana.uim.store.MetaDataRecord#getFirstQualifiedValue(eu.europeana.uim.common.TKey,
-     * java.lang.Enum<?>[])
-     */
     @Override
     public <N, T> eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> getFirstQualifiedValue(
             TKey<N, T> key, Enum<?>... qualifiers) {
@@ -112,21 +93,14 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
             @Override
             public eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> adaptback2normal(
                     QValueAdapterStrategy<N, T, ?, ?> strategy, Object result) {
-                return (eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>)strategy.adaptQvalue((eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>)result);
+                return strategy.adaptQvalue((eu.europeana.uim.store.MetaDataRecord.QualifiedValue<?>)result);
             }
-
         };
 
         executor.execute();
         return executor.getResult();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#getQualifiedValues(eu.europeana.uim.common.TKey,
-     * java.lang.Enum<?>[])
-     */
     @Override
     public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> getQualifiedValues(
             TKey<N, T> key, Enum<?>... qualifiers) {
@@ -154,18 +128,10 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         return executor.getResult();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#getValues(eu.europeana.uim.common.TKey,
-     * java.lang.Enum<?>[])
-     */
     @Override
     public <N, T> List<T> getValues(TKey<N, T> key, Enum<?>... qualifiers) {
-
         StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key, null,
                 qualifiers) {
-
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public Object query(TKey key, Object value, Enum<?>[] qualifiers) {
@@ -176,34 +142,25 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
             @Override
             public List<T> adaptback2normal(QValueAdapterStrategy<N, T, ?, ?> strategy,
                     Object result) {
-                return (List<T>)strategy.adaptList((List<?>)result);
+                return strategy.adaptList((List<?>)result);
             }
-
         };
         executor.execute();
         return executor.getResult();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#addValue(eu.europeana.uim.common.TKey,
-     * java.lang.Object, java.lang.Enum<?>[])
-     */
     @Override
     public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        
         @SuppressWarnings("unchecked")
-        final QualifiedValue<T>[] ret=new QualifiedValue[1];  
-        
+        final QualifiedValue<T>[] ret = new QualifiedValue[1];
+
         StrategyExecutor<N, T, List<T>> executor = new StrategyExecutor<N, T, List<T>>(key, value,
                 qualifiers) {
-
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public Object query(TKey key, Object value, Enum<?>[] qualifiers) {
 
-                ret[0]=adaptedRecord.addValue(key, value, qualifiers);
+                ret[0] = adaptedRecord.addValue(key, value, qualifiers);
                 return null;
             }
 
@@ -213,39 +170,26 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
                 // Not actually used, since method returns no value
                 return null;
             }
-
         };
 
         executor.execute();
         return ret[0];
     }
-    
-	/* (non-Javadoc)
-	 * @see eu.europeana.uim.store.MetaDataRecord#deleteValue(eu.europeana.uim.common.TKey, eu.europeana.uim.store.MetaDataRecord.QualifiedValue)
-	 */
-	@Override
-	public <N, T> boolean deleteValue(TKey<N, T> key,
-			eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> value) {
-        
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-     };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.MetaDataRecord#deleteValues(eu.europeana.uim.common.TKey,
-     * java.lang.Enum<?>[])
-     */
+    @Override
+    public <N, T> boolean deleteValue(TKey<N, T> key,
+            eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T> value) {
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
     @Override
     public <N, T> List<eu.europeana.uim.store.MetaDataRecord.QualifiedValue<T>> deleteValues(
             TKey<N, T> key, Enum<?>... qualifiers) {
         StrategyExecutor<N, T, List<QualifiedValue<T>>> executor = new StrategyExecutor<N, T, List<QualifiedValue<T>>>(
                 key, null, qualifiers) {
-
             @SuppressWarnings({ "unchecked", "rawtypes" })
             @Override
             public Object query(TKey key, Object value, Enum<?>[] qualifiers) {
-
                 return adaptedRecord.deleteValues(key, qualifiers);
             }
 
@@ -261,24 +205,11 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         return executor.getResult();
     }
 
-
-    
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.UimEntity#getId()
-     */
     @Override
     public I getId() {
         return adaptedRecord.getId();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.model.adapters.MetadataRecordAdapter#getAdaptedRecord()
-     */
     @Override
     public MetaDataRecord<I> getAdaptedRecord() {
         return adaptedRecord;
@@ -294,26 +225,38 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
      * @param <X>
      * @param <RESTYPE>
      */
+    @SuppressWarnings("unused")
     private abstract class StrategyExecutor<N, T, RESTYPE> {
-
         TKey<N, T>      key;
         Enum<?>[]       qualifiers;
         T               value;
 
         private RESTYPE result;
 
-        
+        /**
+         * Creates a new instance of this class.
+         * 
+         * @param key
+         * @param value
+         */
         public StrategyExecutor(TKey<N, T> key, T value) {
             this.key = key;
             this.value = value;
         }
-        
+
         public StrategyExecutor(TKey<N, T> key, T value, Enum<?>... qualifiers) {
             this.key = key;
             this.value = value;
             this.qualifiers = qualifiers;
         }
 
+        /**
+         * @param key
+         * @param value
+         * @param qualifiers
+         * @return object
+         */
+        @SuppressWarnings("rawtypes")
         public abstract Object query(TKey key, Object value, Enum<?>[] qualifiers);
 
         public abstract RESTYPE adaptback2normal(QValueAdapterStrategy<N, T, ?, ?> strategy,
@@ -322,11 +265,11 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         /**
 		 * 
 		 */
+        @SuppressWarnings("unchecked")
         public void execute() {
             // First find if a transformation strategy is available
-            @SuppressWarnings("unchecked")
             QValueAdapterStrategy<N, T, ?, ?> strategy = (QValueAdapterStrategy<N, T, ?, ?>)strategies.get(key);
-            ;
+
             if (strategy == null) {
                 setResult((RESTYPE)query(key, value, qualifiers));
             } else {
@@ -356,7 +299,7 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
                 Object adaptedResult = query(adapted.getKey(), value, qualifiersarray);
 
                 // Adapt the object of the retrieved result
-                RESTYPE result = (RESTYPE)adaptback2normal(strategy, adaptedResult);
+                RESTYPE result = adaptback2normal(strategy, adaptedResult);
 
                 setResult(result);
             }
@@ -380,30 +323,27 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
     }
 
     @Override
-    public <S, T> void addRelation(QualifiedValue<S> source,
-            QualifiedValue<T> target, Enum<?>... qualifiers) {
-        //
-        throw new UnsupportedOperationException("Sorry, not implemented.");
-    }
-
-    @Override
-    public <T> void deleteRelations(QualifiedValue<T> value,
+    public <S, T> void addRelation(QualifiedValue<S> source, QualifiedValue<T> target,
             Enum<?>... qualifiers) {
         //
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(
-            QualifiedValue<S> source, TKey<N, T> targetKey,
-            Enum<?>... qualifiers) {
+    public <T> void deleteRelations(QualifiedValue<T> value, Enum<?>... qualifiers) {
+        //
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
     @Override
-    public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(
-            QualifiedValue<T> target, TKey<N, S> sourceKey,
-            Enum<?>... qualifiers) {
+    public <N, S, T> Set<QualifiedValue<T>> getTargetQualifiedValues(QualifiedValue<S> source,
+            TKey<N, T> targetKey, Enum<?>... qualifiers) {
+        throw new UnsupportedOperationException("Sorry, not implemented.");
+    }
+
+    @Override
+    public <N, S, T> Set<QualifiedValue<S>> getSourceQualifiedValues(QualifiedValue<T> target,
+            TKey<N, S> sourceKey, Enum<?>... qualifiers) {
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
@@ -422,8 +362,4 @@ public class MetadataRecordAdapterImpl<I, Q extends QValueAdapterStrategy<?, ?, 
         // return null;
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
-
-
-
-
 }
