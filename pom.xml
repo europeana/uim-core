@@ -490,5 +490,6 @@
 		<connection>scm:git:git@github.com:europeana/uim-core.git</connection>
 		<url>scm:git:git@github.com:europeana/uim-core.git</url>
 		<developerConnection>scm:git:git@github.com:europeana/uim-core.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 </project>
