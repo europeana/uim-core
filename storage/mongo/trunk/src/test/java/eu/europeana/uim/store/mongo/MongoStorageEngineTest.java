@@ -62,7 +62,7 @@ public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
 
 	private final static String HOST = "127.0.0.1";
 
-	private final static int PORT = 27017;
+	private final static int PORT = 10000;
 	
 	private MongoProvider mongoProvider = new MongoProvider(PORT);
 
