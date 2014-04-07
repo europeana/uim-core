@@ -162,9 +162,9 @@
 
 	<repositories>
 		<repository>
-			<id>europeanalabs.eu</id>
-			<name>europeanalabs.eu-snapshots</name>
-			<url>http://europeanalabs.eu/artifactory/ext-releases-local</url>
+			<id>artifactory.eanadev.org</id>
+			<name>artifactory.eanadev.org-snapshots</name>
+			<url>http://artifactory.eanadev.org/artifactory/ext-release-local</url>
 		</repository>
 	</repositories>
 </project>
