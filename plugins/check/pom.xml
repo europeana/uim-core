@@ -13,15 +13,21 @@
 	<name>Unified Ingestion Manager: TEL Check Plugins</name>
 	<description>Plugins doing all kinds of checking for the European Library central ingestion framework</description>
 
-	<properties>
-	</properties>
-
 	<modules>
 		<module>field</module>
 		<module>link</module>
 		<module>link-collection</module>
-		<module>edm</module>
 	</modules>
-
-	<build />
+	
+<!-- 	<profiles> -->
+<!-- 		<profile> -->
+<!-- 			<id>tel</id> -->
+<!-- 			<activation> -->
+<!-- 				<activeByDefault>false</activeByDefault> -->
+<!-- 			</activation> -->
+<!-- 			<modules> -->
+<!-- 				<module>edm</module> -->
+<!-- 			</modules> -->
+<!-- 		</profile> -->
+<!-- 	</profiles> -->
 </project>
