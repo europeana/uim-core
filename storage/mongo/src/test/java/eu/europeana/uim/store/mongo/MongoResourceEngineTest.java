@@ -25,6 +25,9 @@ import static org.mockito.Mockito.when;
 
 import java.net.UnknownHostException;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.invocation.InvocationOnMock;
@@ -52,6 +55,14 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
     private MongoStorageEngine  mongostorageEngine = null;
 
     private Mongo               m                  = null;
+    
+    
+    
+    private final static String HOST = "127.0.0.1";
+    
+    private final static int PORT = 10000;
+    
+    private MongoProvider mongoProvider = new MongoProvider(PORT);
 
     /**
      * Run before each test
@@ -60,7 +71,8 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
     public void setupTest() {
 
         try {
-            m = new Mongo();
+            m = new Mongo(HOST,PORT);
+            
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {
@@ -74,8 +86,14 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
     @After
     public void cleanup() {
         m.dropDatabase("UIMTEST");
+        
     }
 
+    @PreDestroy
+    public void stopMongo(){
+    	mongoProvider.stopMongo();
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -85,11 +103,9 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
     protected ResourceEngine getResourceEngine() {
         if (mongoEngine == null) {
             try {
-                m = new Mongo();
-                MongoResourceEngine engine = new MongoResourceEngine("UIMTEST");
-
-                MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST");
-
+            	 m = new Mongo(HOST,PORT);
+                MongoResourceEngine engine = new MongoResourceEngine("UIMTEST",HOST,PORT);
+                MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST",HOST,PORT);
                 m.dropDatabase("UIMTEST");
                 engine.initialize();
                 storageEngine.initialize();
