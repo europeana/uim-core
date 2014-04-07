@@ -18,16 +18,4 @@
 		<module>link</module>
 		<module>link-collection</module>
 	</modules>
-	
-<!-- 	<profiles> -->
-<!-- 		<profile> -->
-<!-- 			<id>tel</id> -->
-<!-- 			<activation> -->
-<!-- 				<activeByDefault>false</activeByDefault> -->
-<!-- 			</activation> -->
-<!-- 			<modules> -->
-<!-- 				<module>edm</module> -->
-<!-- 			</modules> -->
-<!-- 		</profile> -->
-<!-- 	</profiles> -->
 </project>
