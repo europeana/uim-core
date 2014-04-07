@@ -27,7 +27,7 @@ package eu.europeana.uim.repox.model;
  */
 public enum HarvestingState {
     /**
-     * runs still
+     * still running
      */
 	RUNNING,
     /**
@@ -35,7 +35,7 @@ public enum HarvestingState {
      */
 	ERROR,
     /**
-     * done without problems
+     * finished without problems
      */
 	OK,
     /**
@@ -47,7 +47,7 @@ public enum HarvestingState {
      */
 	CANCELED,
     /**
-     * undefined
+     * undefined state
      */
 	undefined
 }

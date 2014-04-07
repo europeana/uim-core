@@ -21,7 +21,7 @@
 package eu.europeana.uim.repox;
 
 /**
- * Exception thrown in case of a record operation error
+ * Exception thrown in case of a Record operation error
  * 
  * @author Georgios Markakis
  * @since Jan 20, 2012

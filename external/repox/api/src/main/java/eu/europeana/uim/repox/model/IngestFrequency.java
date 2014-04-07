@@ -28,19 +28,19 @@ package eu.europeana.uim.repox.model;
  */
 public enum IngestFrequency {
     /**
-     * once
+     * one time operation
      */
     ONCE,
     /**
-     * per day
+     * once per day
      */
     DAILY,
     /**
-     * per month
+     * once per month
      */
     WEEKLY,
     /**
-     * per x months
+     * once per X months
      */
     XMONTHLY
 }

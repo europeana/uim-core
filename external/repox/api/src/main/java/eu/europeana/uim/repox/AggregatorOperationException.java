@@ -21,7 +21,7 @@
 package eu.europeana.uim.repox;
 
 /**
- * An exception thrown in case of a Aggregator related operation error (create, update or delete
+ * An exception thrown in case of a Aggregator operation error (create, update or delete
  * aggregator).
  * 
  * @author Georgios Markakis

@@ -239,7 +239,7 @@ public interface RepoxUIMService {
             throws HarvestingOperationException;
 
     /**
-     * Gets a list of Datasources currently being harvested
+     * Gets a list of  active Datasources that are currently being harvested
      * 
      * @return an object containing a reference to all DataSources
      * @throws HarvestingOperationException
@@ -280,13 +280,11 @@ public interface RepoxUIMService {
     
     
     /**
-     * An auxiliary method indicationg whether the type of the datasource has been changed or not
-     *      * @param col
+     * An auxiliary method indicating whether the type of the datasource has been changed or not
+     * @param col
      * @return the UIM collection
      * @throws DataSourceOperationException
      */
     boolean hasHarvestingTypeChanged(Collection<?> col) throws DataSourceOperationException;
-    
-    
     
 }

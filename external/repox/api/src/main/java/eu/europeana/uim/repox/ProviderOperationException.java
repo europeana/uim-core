@@ -21,7 +21,7 @@
 package eu.europeana.uim.repox;
 
 /**
- * An exception thrown in case of a Provider related operation error (create, update or delete
+ * An exception thrown in case of a Provider operation error (create, update or delete
  * provider).
  * 
  * @author Georgios Markakis

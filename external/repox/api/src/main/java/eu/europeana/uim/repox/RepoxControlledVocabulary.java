@@ -46,11 +46,11 @@ public enum RepoxControlledVocabulary implements ControlledVocabularyKeyValue {
      */
     COLLECTION_HARVESTING_STATE,
     /**
-     * state of harvesting
+     * state of last harvesting
      */
     COLLECTION_HARVESTING_LAST_DATE,
     /**
-     * number of harvested record
+     * number of harvested records
      */
     COLLECTION_HARVESTED_RECORDS;
 
