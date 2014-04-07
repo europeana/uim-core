@@ -30,7 +30,7 @@
 		<module>external/sugar</module>
 
 		<!-- uim mongo implementation -->
-<!-- 		<module>storage/mongo</module> -->
+		<!-- <module>storage/mongo</module> -->
 
 		<!-- database base logging -->
 		<module>logging/database</module>
@@ -42,6 +42,9 @@
 		<module>plugins/solr/solr14</module>
 		<module>plugins/solr/solr3</module>
 		<module>plugins/solr/solr4</module>
+		
+		<!-- UIM Integration -->
+		<module>integration</module>
 	</modules>
 
 	<build>
@@ -54,7 +57,7 @@
 					<source>1.6</source>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
@@ -63,7 +66,7 @@
 					<preparationGoals>clean source:jar install</preparationGoals>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -91,7 +94,7 @@
 				</executions>
 			</plugin>
 		</plugins>
-		
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
