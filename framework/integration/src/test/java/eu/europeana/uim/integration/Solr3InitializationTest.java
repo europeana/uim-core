@@ -25,10 +25,11 @@ import eu.europeana.uim.solr3.Solr3Initializer;
  * running Karaf instance somewhere on your system<br/>
  * 
  * @author Manuel Bernhardt
+ * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
+ * @since Apr 7, 2014
  */
 @RunWith(JUnit4TestRunner.class)
 public class Solr3InitializationTest extends AbstractIntegrationTest {
-
     /**
      * @return setup configuration
      * @throws Exception
@@ -42,7 +43,7 @@ public class Solr3InitializationTest extends AbstractIntegrationTest {
                         systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
                                 "INFO")),
 
-//                PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
+// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
@@ -70,14 +71,12 @@ public class Solr3InitializationTest extends AbstractIntegrationTest {
      * @throws Throwable
      */
     @Test
-    public void testSolrSetup() throws Throwable  {
-
+    public void testSolrSetup() throws Throwable {
         Solr3Initializer init = new Solr3Initializer("file:///data", "ignore");
         try {
             init.initialize(Solr3Initializer.class.getClassLoader());
         } catch (Throwable t) {
             if (!(t.getCause().getCause() instanceof FileNotFoundException)) { throw t; }
-
         }
     }
 }

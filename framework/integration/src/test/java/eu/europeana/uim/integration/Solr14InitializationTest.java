@@ -25,6 +25,8 @@ import eu.europeana.uim.solr14.Solr14Initializer;
  * running Karaf instance somewhere on your system<br/>
  * 
  * @author Manuel Bernhardt
+ * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
+ * @since Apr 7, 2014
  */
 @RunWith(JUnit4TestRunner.class)
 public class Solr14InitializationTest extends AbstractIntegrationTest {

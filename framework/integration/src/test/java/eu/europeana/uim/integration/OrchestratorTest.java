@@ -40,6 +40,8 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
  * Integration test for the Orchestrator, using the MemoryStorageEngine
  * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
+ * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
+ * @since Apr 7, 2014
  */
 @RunWith(JUnit4TestRunner.class)
 public class OrchestratorTest extends AbstractIntegrationTest {
