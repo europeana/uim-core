@@ -64,7 +64,7 @@ public class Solr14InitializationTest extends AbstractIntegrationTest {
     }
 
     /**
-     * Tests logging.
+     * Tests solr initialization
      * 
      * @throws Throwable
      */

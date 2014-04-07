@@ -103,6 +103,11 @@
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-plugin-solr4</artifactId>
+            <version>${europeana.uim.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-logging-database</artifactId>
             <version>${pom.version}</version>
         </dependency>

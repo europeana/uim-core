@@ -45,7 +45,6 @@ public class LoggingMemoryTest extends AbstractIntegrationTest {
 
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
 
                 felix(),
