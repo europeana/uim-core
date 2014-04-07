@@ -444,7 +444,6 @@
 				</plugins>
 			</reporting>
 
-
 			<distributionManagement>
 				<repository>
 					<id>tel.release</id>
