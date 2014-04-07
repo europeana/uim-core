@@ -8,7 +8,6 @@ INDEX
 5/ Configuration
 6/ Technologies in use 
 
-
 #1 PROJECT STRUCTURE
 ====================
 
