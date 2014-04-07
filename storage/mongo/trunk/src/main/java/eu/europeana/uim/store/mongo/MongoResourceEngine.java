@@ -53,7 +53,11 @@ import eu.europeana.uim.workflow.Workflow;
 public class MongoResourceEngine extends AbstractEngine implements ResourceEngine {
 
 	private static final String DEFAULT_UIM_DB_NAME = "UIM";
+	private static final String DEFAULT_HOST = "localhost";
+	private static final int DEFAULT_PORT = 27017;
 	private String dbName;
+	private String host;
+	private int port;
 	private EngineStatus status = EngineStatus.STOPPED;
 	Mongo mongo = null;
 	private DB db = null;
@@ -66,6 +70,11 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 		this.dbName = dbName;
 	}
 
+	public MongoResourceEngine(String dbName, String host, int port) {
+		this.dbName = dbName;
+		this.host = host;
+		this.port = port;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -77,8 +86,12 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 			if (dbName == null) {
 				dbName = DEFAULT_UIM_DB_NAME;
 			}
+			if(host== null){
+				host =DEFAULT_HOST;
+				port = DEFAULT_PORT;
+			}
 			status = EngineStatus.BOOTING;
-			mongo = new Mongo();
+			mongo = new Mongo(host,port);
 			db = mongo.getDB(dbName);
 			Morphia morphia = new Morphia();
 

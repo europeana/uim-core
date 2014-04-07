@@ -68,6 +68,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 		StorageEngine<String> {
 
 	private static final String DEFAULT_UIM_DB_NAME = "UIM";
+	private static final String DEFAULT_HOST = "localhost";
+	private static final int DEFAULT_PORT = 27017;
 	private static final String MNEMONICFIELD = "searchMnemonic";
 	private static final String NAMEFIELD = "searchName";
 	private static final String LOCALIDFIELD = "mongoId";
@@ -93,6 +95,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	private EngineStatus status = EngineStatus.STOPPED;
 
 	private String dbName;
+	
+	private String host;
+	private int port;
+	
 
 	/**
 	 * @param dbName
@@ -101,17 +107,23 @@ public class MongoStorageEngine extends AbstractEngine implements
 		this.dbName = dbName;
 	}
 
+	public MongoStorageEngine(String dbName, String host, int port) {
+		this.dbName = dbName;
+		this.host = host;
+		this.port = port;
+	}
+	
 	/**
 	 * Default constructor
 	 */
 	public MongoStorageEngine() {
-		this.dbName = "UIM";
+		this.dbName = DEFAULT_UIM_DB_NAME;
 	}
 
 	
 	public MongoStorageEngine(Orchestrator orchestrator) {
 		this.orchestrator = orchestrator;
-		this.dbName = "UIM";
+		this.dbName = DEFAULT_UIM_DB_NAME;
 	}
 	
 	/*
@@ -150,8 +162,12 @@ public class MongoStorageEngine extends AbstractEngine implements
 			if (dbName == null) {
 				dbName = DEFAULT_UIM_DB_NAME;
 			}
+			if (host==null){
+				this.host = DEFAULT_HOST;
+				this.port = DEFAULT_PORT;
+			}
 			status = EngineStatus.BOOTING;
-			mongo = new Mongo();
+			mongo = new Mongo(host,port);
 			db = mongo.getDB(dbName);
 			Morphia morphia = new Morphia();
 			morphia.map(MongoProviderDecorator.class)

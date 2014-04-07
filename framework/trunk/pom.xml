@@ -465,32 +465,37 @@
                 <module>orchestration/basic</module>
 
                 <!-- UIM Model Definitions -->
-                <module>model</module>
+                <module>../../model/trunk</module>
 
                 <!-- the uim standard in memory storage implementation -->
                 <module>storage/memory</module>
 
                 <!-- the uim standard in memory storage implementation -->
-                <module>storage/mongo</module>
+                <module>../../storage/mongo/trunk</module>
 
                 <!-- simplistic in-memory logging -->
-                <module>logging/memory</module>
+                <module>../../logging/database/trunk</module>
 
                 <!-- UIM gui common module -->
                 <module>gui/common</module>
 
                 <!-- UIM Solr 1.4-3 OSGI support -->
-                <module>plugins/solr3</module>
-                <module>plugins/check/link</module>
+                <module>../../plugins/solr/trunk/solr4</module>
+                <module>../../plugins/check/trunk</module>
 
             </modules>
 
             <distributionManagement>
                 <repository>
-                    <id>europeanalabs.eu</id>
-                    <name>europeanalabs.eu-releases</name>
-                    <url>http://europeanalabs.eu/artifactory/uim-releases-local</url>
+                    <id>artifactory.eanadev.org</id>
+                    <name>artifactory.eanadev.org-releases</name>
+                    <url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
                 </repository>
+                <snapshotRepository>
+                    <id>artifactory.eanadev.org</id>
+                    <name>artifactory.eanadev.org-snapshots</name>
+                    <url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
+                </snapshotRepository>
             </distributionManagement>
         </profile>
     </profiles>
