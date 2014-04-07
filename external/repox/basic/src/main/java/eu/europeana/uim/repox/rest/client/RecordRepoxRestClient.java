@@ -34,7 +34,7 @@ import eu.europeana.uim.repox.rest.client.xml.Source;
  */
 public interface RecordRepoxRestClient {
     /**
-     * Retrieve a specific Record
+     * Retrieve a specific Record given an Id
      * 
      * @param recordID
      * @return a RecordResult object
@@ -44,7 +44,7 @@ public interface RecordRepoxRestClient {
     RecordResult retrieveRecord(String recordID) throws RepoxException;
 
     /**
-     * Retrieve a specific Record
+     * Save a Record
      * 
      * @param recordID
      * @param ds

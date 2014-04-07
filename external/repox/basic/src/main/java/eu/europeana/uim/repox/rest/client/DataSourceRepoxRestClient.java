@@ -53,6 +53,8 @@ public interface DataSourceRepoxRestClient {
     DataSources retrieveProviderDataSources(String providerId) throws RepoxException;
 
     /**
+     * Retrieve a Repox DataSource given a specific Id
+     * 
      * @param sourceId
      * @return specific data source
      * @throws RepoxException
@@ -60,6 +62,8 @@ public interface DataSourceRepoxRestClient {
     Source retrieveDataSource(String sourceId) throws RepoxException;
 
     /**
+     * Retrieve a Repox DataSource given a specific mnemonic
+     * 
      * @param mnemonic
      * @return specific data source
      * @throws RepoxException

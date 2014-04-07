@@ -87,7 +87,7 @@ public interface ProviderRepoxRestClient {
     DataProviders retrieveProviders() throws RepoxException;
 
     /**
-     * Retrieves all available providers within Repox
+     * Retrieves all available providers within Repox given a specific Aggregator
      * 
      * @param agr
      *            Aggregator reference
@@ -97,6 +97,8 @@ public interface ProviderRepoxRestClient {
     DataProviders retrieveAggregatorProviders(Aggregator agr) throws RepoxException;
 
     /**
+     * Retrieve a Provider given a specific Id
+     * 
      * @param providerId
      * @return specific provider
      * @throws RepoxException
@@ -105,6 +107,8 @@ public interface ProviderRepoxRestClient {
             throws RepoxException;
 
     /**
+     * Retrieve a Provider given a specific mnemonic
+     * 
      * @param mnemonic
      * @return specific provider
      * @throws RepoxException

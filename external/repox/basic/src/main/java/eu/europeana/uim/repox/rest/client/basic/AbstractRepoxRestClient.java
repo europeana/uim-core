@@ -46,17 +46,17 @@ public abstract class AbstractRepoxRestClient {
     private final static Logger log = Logger.getLogger(AbstractRepoxRestClient.class.getName());
 
     /**
-     * base uri specifying the repox installation
+     * Base uri specifying the repox installation
      */
     private String              uri;
 
     /**
-     * context for JAXB
+     * Context for JAXB
      */
     private static JAXBContext  jaxbContext;
 
     /**
-     * initializes jaxb context with root class of MACS records
+     * Initializes jaxb context with root class of MACS records
      */
     static {
         try {

@@ -56,7 +56,7 @@ public interface HarvestingRepoxRestClient {
     String initiateHarvesting(String dsID, boolean isfull) throws RepoxException;
 
     /**
-     * Initializes a Harvesting Session. It accesses the following REST Interface:
+     * Schedule a Harvesting Session. It accesses the following REST Interface:
      * 
      * <code>
      *      /rest/dataSources/scheduleIngest?id=bmfinancas&
