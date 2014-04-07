@@ -42,7 +42,7 @@
 		<module>plugins/solr/solr14</module>
 		<module>plugins/solr/solr3</module>
 		<module>plugins/solr/solr4</module>
-		
+
 		<!-- UIM Integration -->
 		<module>integration</module>
 	</modules>
@@ -56,6 +56,12 @@
 					<target>1.6</target>
 					<source>1.6</source>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
 			</plugin>
 
 			<plugin>
@@ -486,4 +492,10 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
+
+	<scm>
+		<connection>scm:git:git@github.com:europeana/uim-core.git</connection>
+		<url>scm:git:git@github.com:europeana/uim-core.git</url>
+		<developerConnection>scm:git:git@github.com:europeana/uim-core.git</developerConnection>
+	</scm>
 </project>
