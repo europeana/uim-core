@@ -62,8 +62,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <preparationGoals>clean compile process-classes test-compile test jar:test-jar source:jar install -Ptel</preparationGoals>
-                    <goals>clean compile process-classes test-compile test jar:test-jar source:jar install deploy -Ptel</goals>
+                    <preparationGoals>clean compile process-classes test-compile test jar:test-jar source:jar install -Ptel -Dmaven.test.skip=true</preparationGoals>
+                    <goals>clean compile process-classes test-compile test jar:test-jar source:jar install deploy -Ptel -Dmaven.test.skip=true</goals>
                 </configuration>
 			</plugin>
 
