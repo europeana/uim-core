@@ -467,9 +467,9 @@
 
 			<distributionManagement>
 				<repository>
-					<id>europeanalabs.eu</id>
-					<name>europeanalabs.eu-releases</name>
-					<url>http://europeanalabs.eu/artifactory/uim-releases-local</url>
+					<id>artifactory.eanadev.org</id>
+					<name>artifactory.eanadev.org-releases</name>
+					<url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
 				</repository>
 			</distributionManagement>
 		</profile>
