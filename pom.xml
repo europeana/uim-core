@@ -63,8 +63,8 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-					<preparationGoals>clean compile process-classes jar:test-jar source:jar test-compile test install -Ptel -Dmaven.test.failure.ignore=true -DskipTest</preparationGoals>
-					<goals>clean compile process-classes jar:test-jar source:jar test-compile test install deploy -Ptel -Dmaven.test.failure.ignore=true -DskipTest</goals>
+					<preparationGoals>clean compile process-classes jar:test-jar source:jar test-compile test install -Ptel -DskipTest</preparationGoals>
+					<goals>clean compile process-classes jar:test-jar source:jar test-compile test install deploy -Ptel -DskipTest</goals>
 				</configuration>
 			</plugin>
 
