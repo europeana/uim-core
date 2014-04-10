@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>eu.europeana</groupId>
 	<artifactId>europeana-uim</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Unified Ingestion Manager</name>
 
@@ -13,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.core.version>3.0.5.RELEASE</spring.core.version>
 		<karaf.version>2.2.0</karaf.version>
-		<europeana.uim.version>2.0.0-SNAPSHOT</europeana.uim.version>
+		<europeana.uim.version>2.0.1-SNAPSHOT</europeana.uim.version>
 	</properties>
 
 	<modules>
@@ -61,10 +60,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <preparationGoals>clean compile process-classes test-compile test jar:test-jar source:jar install -Ptel -Dmaven.test.skip=true</preparationGoals>
-                    <goals>clean compile process-classes test-compile test jar:test-jar source:jar install deploy -Ptel -Dmaven.test.skip=true</goals>
-                </configuration>
+				<version>2.5</version>
+				<configuration>
+					<preparationGoals>clean jar:test-jar compile process-classes source:jar install -Ptel -DskipTests</preparationGoals>
+					<goals>clean jar:test-jar compile process-classes source:jar install deploy -Ptel -DskipTests</goals>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -283,13 +283,13 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>europeana-uim-common</artifactId>
-				<version>${europeana.uim.version}</version>
+				<version>${pom.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>eu.europeana</groupId>
 				<artifactId>europeana-uim-common</artifactId>
-				<version>${europeana.uim.version}</version>
+				<version>${pom.version}</version>
 				<classifier>tests</classifier>
 				<scope>test</scope>
 			</dependency>
@@ -490,5 +490,6 @@
 		<connection>scm:git:git@github.com:europeana/uim-core.git</connection>
 		<url>scm:git:git@github.com:europeana/uim-core.git</url>
 		<developerConnection>scm:git:git@github.com:europeana/uim-core.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 </project>

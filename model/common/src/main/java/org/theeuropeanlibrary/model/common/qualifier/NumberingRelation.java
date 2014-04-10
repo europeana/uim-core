@@ -19,5 +19,9 @@ public enum NumberingRelation {
     /**
      * A specific page number
      */
-    PAGE
+    PAGE,
+    /**
+     * number of pages
+     */
+    PAGES
 }
