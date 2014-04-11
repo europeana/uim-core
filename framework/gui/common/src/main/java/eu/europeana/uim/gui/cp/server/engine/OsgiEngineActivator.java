@@ -25,7 +25,7 @@ public class OsgiEngineActivator implements BundleActivator {
 
         int wait = 0;
         while (registry == null && wait++ < 10) {
-            ServiceReference registryRef = bundleContext.getServiceReference("eu.europeana.uim.Registry");
+            ServiceReference<?> registryRef = bundleContext.getServiceReference("eu.europeana.uim.Registry");
             if (registryRef != null) {
                 registry = (Registry)bundleContext.getService(registryRef);
             }
@@ -36,7 +36,7 @@ public class OsgiEngineActivator implements BundleActivator {
 
         wait = 0;
         while (repoxService == null && wait++ < 10) {
-            ServiceReference repoxServiceRef = bundleContext.getServiceReference("eu.europeana.uim.repox.ExternalService");
+            ServiceReference<?> repoxServiceRef = bundleContext.getServiceReference("eu.europeana.uim.repox.ExternalService");
             if (repoxServiceRef != null) {
                 repoxService = (ExternalService)bundleContext.getService(repoxServiceRef);
             }
@@ -47,7 +47,7 @@ public class OsgiEngineActivator implements BundleActivator {
 
         wait = 0;
         while (sugarService == null && wait++ < 10) {
-            ServiceReference sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugar.ExternalService");
+            ServiceReference<?> sugarServiceRef = bundleContext.getServiceReference("eu.europeana.uim.sugar.ExternalService");
             if (sugarServiceRef != null) {
                 sugarService = (ExternalService)bundleContext.getService(sugarServiceRef);
             }

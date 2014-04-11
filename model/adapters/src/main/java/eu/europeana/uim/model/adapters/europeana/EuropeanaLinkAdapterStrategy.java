@@ -25,53 +25,46 @@ import eu.europeana.uim.model.europeana.EuropeanaLink;
 import eu.europeana.uim.model.europeana.EuropeanaModelRegistry;
 import org.theeuropeanlibrary.model.tel.ObjectModelRegistry;
 
-
 /**
  * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
  * @since 8 May 2012
  */
-public class EuropeanaLinkAdapterStrategy extends QValueAdapterStrategy<ObjectModelRegistry,Link,EuropeanaModelRegistry,EuropeanaLink>{
+public class EuropeanaLinkAdapterStrategy extends
+        QValueAdapterStrategy<ObjectModelRegistry, Link, EuropeanaModelRegistry, EuropeanaLink> {
+    @Override
+    public AdaptedInput adaptinput(TKey<ObjectModelRegistry, Link> key, Enum<?>... qualifiers) {
+        AdaptedInput adinput = new AdaptedInput();
 
-	@Override
-	public AdaptedInput adaptinput(TKey<ObjectModelRegistry, Link> key, Enum<?>... qualifiers) {
-		
-		AdaptedInput adinput = new AdaptedInput();
-		
-		TKey<EuropeanaModelRegistry, EuropeanaLink> tkey = EuropeanaModelRegistry.EUROPEANALINK;
-		adinput.setKey(tkey);
-		Set<Enum<?>> qs = new HashSet<Enum<?>>();
-		
-		if(qualifiers != null){
-			
-			for(int i=0;i<qualifiers.length;i++){
-				qs.add(qualifiers[i]);
-			}
-		}
-		
-		adinput.setQualifiers(qs);
+        TKey<EuropeanaModelRegistry, EuropeanaLink> tkey = EuropeanaModelRegistry.EUROPEANALINK;
+        adinput.setKey(tkey);
+        Set<Enum<?>> qs = new HashSet<Enum<?>>();
 
-		return adinput;
-	}
+        if (qualifiers != null) {
+            for (int i = 0; i < qualifiers.length; i++) {
+                qs.add(qualifiers[i]);
+            }
+        }
 
+        adinput.setQualifiers(qs);
 
+        return adinput;
+    }
 
-	@Override
-	public AdaptedOutput adaptoutput(EuropeanaLink adaptedResult, Set<Enum<?>> set) {
+    @Override
+    public AdaptedOutput adaptoutput(EuropeanaLink adaptedResult, Set<Enum<?>> set) {
+        AdaptedOutput adoutput = new AdaptedOutput();
 
-		AdaptedOutput adoutput = new AdaptedOutput();
-		
-		Link link = new Link();
-		
-		link.setAnchorKey(adaptedResult.getAnchorKey());
-		link.setCachedPath(adaptedResult.getCachedPath());
-		link.setLastChecked(adaptedResult.getLastChecked());
-		//link.getLinkStatus(adaptedResult.getLinkStatus());
-		link.setUrl(adaptedResult.getUrl());
-		
-		adoutput.setOutputObject(link);
-		
-		return adoutput;
-	}
+        Link link = new Link();
 
+        link.setAnchorKey(adaptedResult.getAnchorKey());
+        link.setCachedPath(adaptedResult.getCachedPath());
+        link.setLastChecked(adaptedResult.getLastChecked());
+        // link.getLinkStatus(adaptedResult.getLinkStatus());
+        link.setUrl(adaptedResult.getUrl());
+
+        adoutput.setOutputObject(link);
+
+        return adoutput;
+    }
 }

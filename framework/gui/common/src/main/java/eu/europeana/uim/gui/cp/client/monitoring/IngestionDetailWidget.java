@@ -28,7 +28,6 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.gwt.widgetideas.client.ProgressBar;
 
 import eu.europeana.uim.gui.cp.client.IngestionWidget;
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
@@ -231,14 +230,13 @@ public class IngestionDetailWidget extends IngestionWidget {
                 new FlowPanelCell()) {
             @Override
             public FlowPanel getValue(ExecutionDTO execution) {
-                final ProgressBar progressBar = new ProgressBar(0,
-                        execution.getProgress().getWork());
+                final ProgressBar progressBar = new ProgressBar(100, ProgressBar.SHOW_TEXT);
                 progressBar.setTitle("Ingestion Progress");
-                progressBar.setTextVisible(true);
                 progressBar.setHeight("20px");
                 progressBar.setWidth("100%");
                 progressBar.setVisible(true);
-                progressBar.setProgress(execution.getProgress().getWorked());
+                progressBar.setProgress(execution.getProgress().getWorked() /
+                                        execution.getProgress().getWork());
 
                 FlowPanel panel = new FlowPanel();
                 panel.add(progressBar);

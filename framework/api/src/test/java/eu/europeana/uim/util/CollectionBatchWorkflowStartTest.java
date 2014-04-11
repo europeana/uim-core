@@ -9,8 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.LinkedList;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import eu.europeana.uim.common.TKey;

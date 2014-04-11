@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Command;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Command;
 import org.apache.felix.service.command.CommandSession;
 import org.apache.felix.service.command.Function;
 

@@ -1,6 +1,8 @@
 in progress
 ===========
 
+- update libraries in parent uim
+
 - clean up the API
 - fix the GUI and the progress passing
 - WProcessor should save the status once a workflow is finished
