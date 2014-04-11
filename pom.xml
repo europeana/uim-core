@@ -14,6 +14,7 @@
 		<spring.core.version>4.0.3.RELEASE</spring.core.version>
 		<osgi.version>5.0.0</osgi.version>
 		<karaf.version>3.0.0</karaf.version>
+		<pax-exam-version>3.4.0</pax-exam-version>
 		<gwt.version>2.6.0</gwt.version>
 		<europeana.uim.version>3.0.0-SNAPSHOT</europeana.uim.version>
 	</properties>
@@ -280,15 +281,99 @@
 			</dependency>
 
 			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+				<version>4.3.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.3.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
+			</dependency>
+
+			<dependency>
 				<groupId>net.sf.trove4j</groupId>
 				<artifactId>trove4j</artifactId>
 				<version>3.0.3</version>
 			</dependency>
 
 			<dependency>
+				<groupId>c3p0</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>0.9.2.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.sf.ehcache</groupId>
+				<artifactId>ehcache-core</artifactId>
+				<version>2.6.8</version>
+			</dependency>
+
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>3.1</version>
+			</dependency>
+
+			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
 				<version>r09</version>
+			</dependency>
+
+			<dependency>
+				<groupId>joda-time</groupId>
+				<artifactId>joda-time</artifactId>
+				<version>2.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.axis</groupId>
+				<artifactId>axis</artifactId>
+				<version>1.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.axis</groupId>
+				<artifactId>axis-saaj</artifactId>
+				<version>1.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>wsdl4j</groupId>
+				<artifactId>wsdl4j</artifactId>
+				<version>1.6.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-discovery</groupId>
+				<artifactId>commons-discovery</artifactId>
+				<version>0.5</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.1.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
+				<version>2.1</version>
 			</dependency>
 
 			<dependency>
@@ -322,6 +407,56 @@
 				<scope>test</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>org.theeuropeanlibrary</groupId>
+				<artifactId>tel-database-ftl</artifactId>
+				<version>1.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- hibernate -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>4.3.4.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>4.3.4.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-annotations</artifactId>
+				<version>4.3.4.Final</version>
+			</dependency>
+
+			<dependency>
+				<groupId>hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>1.8.0.10</version>
+			</dependency>
+
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.1-901.jdbc4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>xml-apis</groupId>
+				<artifactId>xml-apis</artifactId>
+				<version>2.0.2</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.xerces</groupId>
+				<artifactId>com.springsource.org.apache.xerces</artifactId>
+				<version>2.9.0</version>
+			</dependency>
+
 			<!-- OSGi spec -->
 			<dependency>
 				<groupId>org.osgi</groupId>
@@ -348,6 +483,23 @@
 				<artifactId>servlet-api</artifactId>
 				<scope>provided</scope>
 				<version>2.5</version>
+			</dependency>
+
+			<!-- Pax-Exam dependencies -->
+			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam</artifactId>
+				<version>${pax-exam-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam-junit</artifactId>
+				<version>${pax-exam-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ops4j.pax.exam</groupId>
+				<artifactId>pax-exam-container-default</artifactId>
+				<version>${pax-exam-version}</version>
 			</dependency>
 
 			<!-- Spring for wiring unit tests -->
@@ -417,6 +569,13 @@
 				<groupId>junit</groupId>
 				<artifactId>junit-dep</artifactId>
 				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.karaf.tooling</groupId>
+				<artifactId>org.apache.karaf.tooling.testing</artifactId>
+				<version>2.2.11</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
