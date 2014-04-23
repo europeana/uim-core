@@ -234,9 +234,4 @@ public enum ResourceRelation {
      * particular for derivation), but also to more generic cultural or psychological factors.
      */
     IS_SIMILAR_TO,
-
-    /**
-     * see owl:sameAs
-     */
-    SAME_AS,
 }
