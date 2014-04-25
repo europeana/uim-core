@@ -3,7 +3,6 @@ package eu.europeana.uim.storage;
 import java.util.Map;
 
 import eu.europeana.uim.EngineStatus;
-import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.modules.CollectionStorageEngine;
 import eu.europeana.uim.storage.modules.ExecutionStorageEngine;
 import eu.europeana.uim.storage.modules.MetaDataRecordStorageEngine;
@@ -57,17 +56,6 @@ public interface StorageEngine<I> extends CollectionStorageEngine<I>, ExecutionS
      *            arbitrary command interpreted by the engine implementation
      */
     void command(String command);
-
-    /**
-     * Finalization method (tear down) for an execution. At the end of each execution this method is
-     * called to allow the storage engine to clean up memory or external resources.
-     * 
-     * @param context
-     *            holds execution depending, information the {@link ExecutionContext} for this
-     *            processing call. This context can change for each call, so references to it have
-     *            to be handled carefully.
-     */
-    void completed(ExecutionContext<?, I> context);
 
     /**
      * @return status of the engine (starting, ...)

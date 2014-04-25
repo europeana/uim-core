@@ -1,6 +1,6 @@
-package eu.europeana.uim.storage.modules;
+package eu.europeana.uim.storage.updatedmodules;
 
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.StorageEngineException;
@@ -46,7 +46,7 @@ public interface ExecutionStorageEngine<I> {
      * @return all known executions
      * @throws StorageEngineException
      */
-    List<Execution<I>> getAllExecutions() throws StorageEngineException;
+    BlockingQueue<Execution<I>> getAllExecutions() throws StorageEngineException;
 
     /**
      * Finalization method (tear down) for an execution. At the end of each execution this method is
