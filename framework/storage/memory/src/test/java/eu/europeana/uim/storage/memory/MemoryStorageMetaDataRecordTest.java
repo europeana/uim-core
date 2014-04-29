@@ -2,15 +2,13 @@ package eu.europeana.uim.storage.memory;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import eu.europeana.uim.AbstractMetaDataRecordTest;
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
-import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 

@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.ProgressBar;
 
 import eu.europeana.uim.gui.cp.client.services.ExecutionServiceAsync;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
@@ -72,9 +71,8 @@ public class IngestionStatus extends Composite {
         failedBox.setReadOnly(true);
         totalBox.setReadOnly(true);
 
-        progressBar = new ProgressBar();
+        progressBar = new ProgressBar(10, ProgressBar.SHOW_TEXT);
         progressBar.setTitle("Ingestion Progress");
-        progressBar.setTextVisible(true);
         progressBar.setHeight("20px");
         progressBar.setWidth("100%");
         progressBar.setVisible(true);
@@ -158,10 +156,7 @@ public class IngestionStatus extends Composite {
         failedBox.setText("" + execution.getFailure());
         totalBox.setText("" + execution.getProgress().getWork());
 
-        progressBar.setMinProgress(0);
-        progressBar.setMaxProgress(execution.getProgress().getWork());
-        progressBar.setProgress(execution.getProgress().getWorked());
-        progressBar.redraw();
+        progressBar.setProgress(execution.getProgress().getWorked() / execution.getProgress().getWork());
 
         if (execution.isPaused()) {
             pauseButton.setText("Resume");

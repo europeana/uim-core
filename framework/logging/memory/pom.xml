@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>europeana-uim-logging-memory</artifactId>
-    <name>Unified Ingestion Manager Framework: API MemoryOnly Logging</name>
+    <name>Unified Ingestion Manager Framework: MemoryOnly Logging</name>
     <packaging>bundle</packaging>
 
     <build>

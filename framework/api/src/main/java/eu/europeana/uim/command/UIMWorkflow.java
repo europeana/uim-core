@@ -3,9 +3,9 @@ package eu.europeana.uim.command;
 import java.io.PrintStream;
 import java.util.List;
 
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
 import eu.europeana.uim.Registry;

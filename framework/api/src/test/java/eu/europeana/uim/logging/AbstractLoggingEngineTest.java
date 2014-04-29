@@ -6,8 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.logging.Level;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,7 +73,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingExecution() {
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
-        IngestionPlugin<?,?> plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?, ?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
 
         engine.log(execution, Level.INFO, "test", "a0", "b", "c");
@@ -104,7 +103,7 @@ public abstract class AbstractLoggingEngineTest {
     public void testLoggingFailed() {
         Execution<Long> execution = mock(Execution.class);
         when(execution.getId()).thenReturn(1L);
-        IngestionPlugin<?,?> plugin = mock(IngestionPlugin.class);
+        IngestionPlugin<?, ?> plugin = mock(IngestionPlugin.class);
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
 
