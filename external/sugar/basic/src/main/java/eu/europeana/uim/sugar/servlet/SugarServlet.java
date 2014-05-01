@@ -74,8 +74,9 @@ public class SugarServlet extends AbstractSugarServlet {
                         consortia.setMnemonic(consMnemonic);
                         add = getSugarService().synchronizeProvider(prov);
                     }
-                    if (add && (!consortia.getRelatedIn().contains(prov) ||
-                        !prov.getRelatedOut().contains(consortia))) {
+                    if (add &&
+                        (!consortia.getRelatedIn().contains(prov) || !prov.getRelatedOut().contains(
+                                consortia))) {
                         consortia.getRelatedIn().add(prov);
                         prov.getRelatedOut().add(consortia);
                         engine.updateProvider(consortia);
@@ -101,12 +102,11 @@ public class SugarServlet extends AbstractSugarServlet {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean updateCollection(String mnemonic, Map<String, String> collection)
             throws SugarException {
-
         try {
-            @SuppressWarnings("unchecked")
             StorageEngine<Serializable> engine = (StorageEngine<Serializable>)registry.getStorageEngine();
             Collection<Serializable> coll = engine.findCollection(mnemonic);
             if (coll == null) {
