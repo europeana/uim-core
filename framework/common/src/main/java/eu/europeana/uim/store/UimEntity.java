@@ -14,4 +14,6 @@ public interface UimEntity<I> {
      * @return unique ID
      */
     I getId();
+    
+//    List<Object> getExternalIdentifiers();
 }
