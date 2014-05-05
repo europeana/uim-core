@@ -454,7 +454,7 @@ public final class ObjectModelUtils {
     public static void setupWebResourcesLinks(MetaDataRecord<?> mdr) {
         setupWebResourcesLinks("http://data.theeuropeanlibrary.org", null, mdr);
     }
-    
+
     
     /**
      * Changes the urls in Link objects to be served by redirection through the data portal. 
@@ -465,20 +465,19 @@ public final class ObjectModelUtils {
      * @param mdr
      */
     public static void setupWebResourcesLinks(String baseUrl, String source, MetaDataRecord<?> mdr) {
-        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,  
-                LinkTarget.CATALOGUE_RECORD);
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.DIGITAL_OBJECT));
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.THUMBNAIL));
-        
-        for (int index = 0; index < catlinks.size(); index++) {
-            mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
-                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-                                    source) ),
-                                    catlinks.get(index).getQualifier(LinkTarget.class));
-        }
+        setupWebResourcesLinksForLod(baseUrl, mdr);
+//        List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+//        mdr.deleteValues(ObjectModelRegistry.LINK,
+//                LinkTarget.DIGITAL_OBJECT);
+//        mdr.deleteValues(ObjectModelRegistry.LINK,
+//                LinkTarget.THUMBNAIL);
+//        for (int index = 0; index < catlinks.size(); index++) {
+//            mdr.addValue(ObjectModelRegistry.LINK,
+//                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
+//                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
+//                                    source) ),
+//                                    catlinks.get(index).getQualifier(LinkTarget.class));
+//        }
     }
     
     /**
@@ -486,27 +485,27 @@ public final class ObjectModelUtils {
      * @param mdr
      */
     public static void setupWebResourcesLinksForLod(String baseUrl, MetaDataRecord<?> mdr) {
-        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.CATALOGUE_RECORD);
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.DIGITAL_OBJECT));
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.THUMBNAIL));
+        List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+        mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.DIGITAL_OBJECT);
+        mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.THUMBNAIL);
         for (int index = 0; index < catlinks.size(); index++) {
             mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "#webresource" + index  + getLinkHash(catlinks.get(index)) ),
+                    new Link(getWebResourceLinkForLod(baseUrl, catlinks.get(index), index) ),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
-    
+
     /**
-     * Creates a hash for a link. Used for the WebResources links in the data portal
-     * 
-     * @param link
-     * @return hash of link
+     * @param baseUrl
+     * @param catlinks
+     * @param index
+     * @return
      */
-    public static String getLinkHash(QualifiedValue<Link> link) {
-        return Integer.toHexString(link.getValue().getUrl().hashCode());
+    private static String getWebResourceLinkForLod(String baseUrl,
+            QualifiedValue<Link> catlinks, int index) {
+        return baseUrl + "#webresource" + index  + Integer.toHexString(catlinks.getValue().getUrl().hashCode());
     }
     
     /**
