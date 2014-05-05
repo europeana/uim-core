@@ -465,7 +465,7 @@ public final class ObjectModelUtils {
      * @param mdr
      */
     public static void setupWebResourcesLinks(String baseUrl, String source, MetaDataRecord<?> mdr) {
-        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
+        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,  
                 LinkTarget.CATALOGUE_RECORD);
         catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
                 LinkTarget.DIGITAL_OBJECT));
