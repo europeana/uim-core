@@ -68,6 +68,10 @@ public enum TemporalRelation {
      * loaded
      */
     OP_LOADED,
+    /**
+     * loaded
+     */
+    OP_DELETED,
 
     /**
      * date of an issue
