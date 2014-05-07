@@ -91,6 +91,9 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     /** redistribute metadata profile */
     COLLECTION_METADATA_PROFILE,
     
+    /** redistribute metadata licence */
+    COLLECTION_METADATA_LICENCE,
+    
     /** collection status */
     COLLECTION_STATUS,
     
