@@ -238,6 +238,9 @@ public enum Language implements Translatable {
      */
     public String getIso2() {
         if (locale == null) return "";
+        if(this==HEB) //this is a bug only fixed in java 7 - the language code is wrong for HEB
+            return "he";
+        else
         return locale.getLanguage();
     }
 
