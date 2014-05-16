@@ -36,35 +36,33 @@ import eu.europeana.uim.storage.StorageEngine;
 
 /**
  * Configuration class for MongoDB StorageEngineTests
- * 
+ *
  * @author Georgios Markakis
  */
 public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<String> {
+
     private MongoStorageEngine mongoEngine = null;
 
-    private Mongo              m           = null;
- 
+    private Mongo m = null;
 
-	private final static String HOST = "127.0.0.1";
+    private final static String HOST = "127.0.0.1";
 
-	private final static int PORT = 10000;
-	
-	private MongoProvider mongoProvider = new MongoProvider(PORT);
-	
-	@PreDestroy
-    public void shutdownMongo(){
-    	mongoProvider.stopMongo();
+    private final static int PORT = 10000;
+
+    private MongoProvider mongoProvider = new MongoProvider(PORT);
+
+    @PreDestroy
+    public void shutdownMongo() {
+        mongoProvider.stopMongo();
     }
-	
+
     /**
      * Run before each test
      */
     @Before
     public void setupTest() {
-
         try {
-        	
-            m = new Mongo(HOST,PORT);
+            m = new Mongo(HOST, PORT);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (MongoException e) {
@@ -89,8 +87,8 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
     protected StorageEngine<String> getStorageEngine() {
         if (mongoEngine == null) {
             try {
-            	 m = new Mongo(HOST,PORT);
-                MongoStorageEngine engine = new MongoStorageEngine("UIMTEST",HOST,PORT);
+                m = new Mongo(HOST, PORT);
+                MongoStorageEngine engine = new MongoStorageEngine("UIMTEST", HOST, PORT);
                 m.dropDatabase("UIMTEST");
                 engine.initialize();
                 mongoEngine = engine;
