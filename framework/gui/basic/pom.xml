@@ -12,7 +12,7 @@
 
 	<artifactId>europeana-uim-gui-basic</artifactId>
 	<packaging>war</packaging>
-	<name>Unified Ingestion Manager Framework: Basic UIM Control Panel GUI</name>
+	<name>Unified Ingestion Manager Framework: GUI Basic Control Panel</name>
 
 	<properties>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>

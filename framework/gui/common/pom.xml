@@ -12,7 +12,7 @@
 
 	<artifactId>europeana-uim-gui-common</artifactId>
 	<packaging>jar</packaging>
-	<name>Unified Ingestion Manager Framework: Common GWT UIM Modules</name>
+	<name>Unified Ingestion Manager Framework: GUI Common GWT Modules</name>
 
 	<properties>
 		<webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
