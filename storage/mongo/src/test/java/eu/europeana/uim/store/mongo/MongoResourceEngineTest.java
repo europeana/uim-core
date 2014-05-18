@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 
 import java.net.UnknownHostException;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.junit.After;
@@ -41,27 +40,29 @@ import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 /**
  * MongoDB ResourceEngine JUnit Tests.
- * 
+ *
  * @author Georgios Markakis (gwarkx@hotmail.com)
  * @since Jan 6 2012
  * @see eu.europeana.uim.store.memory.ResourceStorageEngineTest
  */
+@RunWith(JUnit4.class)
 public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> {
-    private MongoResourceEngine mongoEngine        = null;
 
-    private MongoStorageEngine  mongostorageEngine = null;
+    private MongoResourceEngine mongoEngine = null;
 
-    private Mongo               m                  = null;
-    
-    
-    
+    private MongoStorageEngine mongostorageEngine = null;
+
+    private Mongo m = null;
+
     private final static String HOST = "127.0.0.1";
-    
+
     private final static int PORT = 10000;
-    
+
     private MongoProvider mongoProvider = new MongoProvider(PORT);
 
     /**
@@ -69,14 +70,10 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
      */
     @Before
     public void setupTest() {
-
         try {
-            m = new Mongo(HOST,PORT);
-            
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (MongoException e) {
-            e.printStackTrace();
+            m = new Mongo(HOST, PORT);
+        } catch (UnknownHostException | MongoException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -86,55 +83,37 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
     @After
     public void cleanup() {
         m.dropDatabase("UIMTEST");
-        
     }
 
     @PreDestroy
-    public void stopMongo(){
-    	mongoProvider.stopMongo();
+    public void stopMongo() {
+        mongoProvider.stopMongo();
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.api.AbstractResourceEngineTest#getResourceEngine()
-     */
+
     @Override
     protected ResourceEngine getResourceEngine() {
         if (mongoEngine == null) {
             try {
-            	 m = new Mongo(HOST,PORT);
-                MongoResourceEngine engine = new MongoResourceEngine("UIMTEST",HOST,PORT);
-                MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST",HOST,PORT);
+                m = new Mongo(HOST, PORT);
+                MongoResourceEngine engine = new MongoResourceEngine("UIMTEST", HOST, PORT);
+                MongoStorageEngine storageEngine = new MongoStorageEngine("UIMTEST", HOST, PORT);
                 m.dropDatabase("UIMTEST");
                 engine.initialize();
                 storageEngine.initialize();
                 mongoEngine = engine;
                 mongostorageEngine = storageEngine;
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
             }
-        } else {
-            return mongoEngine;
-        }
+        } 
         return mongoEngine;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.api.AbstractResourceEngineTest#nextID()
-     */
     @Override
     protected String nextID() {
         return new String();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateWorkflow()
-     */
     @Override
     protected Workflow testGenerateWorkflow() {
         Workflow workflow = mock(Workflow.class);
@@ -149,27 +128,13 @@ public class MongoResourceEngineTest extends AbstractResourceEngineTest<String> 
         return workflow;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateProvider()
-     */
     @Override
     protected Provider<String> testGenerateProvider() {
-
         return mongostorageEngine.createProvider();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * eu.europeana.uim.api.AbstractResourceEngineTest#testGenerateCollection(eu.europeana.uim.store
-     * .Provider)
-     */
     @Override
     protected Collection<String> testGenerateCollection(Provider<String> provider) {
-
         return mongostorageEngine.createCollection(provider);
     }
 }
