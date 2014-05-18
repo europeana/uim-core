@@ -22,7 +22,6 @@ package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.junit.After;
@@ -49,7 +48,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
 
     private final static int PORT = 10000;
 
-    private MongoProvider mongoProvider = new MongoProvider(PORT);
+    private final MongoProvider mongoProvider = new MongoProvider(PORT);
 
     @PreDestroy
     public void shutdownMongo() {
@@ -64,9 +63,9 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
         try {
             m = new Mongo(HOST, PORT);
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } catch (MongoException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -78,11 +77,6 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
         m.dropDatabase("UIMTEST");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see eu.europeana.uim.store.AbstractStorageEngineTest#getStorageEngine()
-     */
     @Override
     protected StorageEngine<String> getStorageEngine() {
         if (mongoEngine == null) {
@@ -93,7 +87,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
                 engine.initialize();
                 mongoEngine = engine;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         } else {
             return mongoEngine;

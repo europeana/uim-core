@@ -13,7 +13,6 @@
 	<name>Unified Ingestion Manager: API Mongo DB Storage</name>
 	<packaging>bundle</packaging>
 
-
 	<dependencies>
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
@@ -41,7 +40,7 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
-			<version>2.7.2</version>
+			<version>2.12.1</version>
 		</dependency>
 
 		<dependency>
@@ -107,13 +106,13 @@
 		<dependency>
 			<groupId>com.google.protobuf</groupId>
 			<artifactId>protobuf-java</artifactId>
-			<version>2.3.0</version>
+			<version>2.5.0</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-			<version>1.42</version>
+			<version>1.45</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -137,8 +136,8 @@
 							!org.codehaus.aspectwerkz.hook,
 							!org.testng.*,
 							org.theeuropeanlibrary.repository.convert,
-                            org.theeuropeanlibrary.translation,
-                            org.theeuropeanlibrary.collections.guarded,
+                                                        org.theeuropeanlibrary.translation,
+                                                        org.theeuropeanlibrary.collections.guarded,
 							*
 						</Import-Package>
 						<Embed-Dependency>
