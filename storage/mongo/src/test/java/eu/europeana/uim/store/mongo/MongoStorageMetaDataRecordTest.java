@@ -46,7 +46,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
 
     private final static String HOST = "127.0.0.1";
 
-    private final static int PORT = 10000;
+    private final static int PORT = 1000;
 
     private final MongoProvider mongoProvider = new MongoProvider(PORT);
 
@@ -62,9 +62,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
     public void setupTest() {
         try {
             m = new Mongo(HOST, PORT);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        } catch (MongoException e) {
+        } catch (UnknownHostException | MongoException e) {
             throw new RuntimeException(e);
         }
     }
@@ -86,7 +84,7 @@ public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<S
                 m.dropDatabase("UIMTEST");
                 engine.initialize();
                 mongoEngine = engine;
-            } catch (Exception e) {
+            } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
         } else {
