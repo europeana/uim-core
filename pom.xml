@@ -414,13 +414,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.theeuropeanlibrary</groupId>
-                <artifactId>tel-database-ftl</artifactId>
-                <version>1.0.0</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!-- hibernate -->
             <dependency>
                 <groupId>org.hibernate</groupId>

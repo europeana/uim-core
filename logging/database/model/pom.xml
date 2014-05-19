@@ -157,12 +157,6 @@
             <artifactId>europeana-uim-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.theeuropeanlibrary</groupId>
-            <artifactId>tel-database-ftl</artifactId>
-            <scope>provided</scope>
-        </dependency>
         
         <dependency>
             <groupId>org.springframework</groupId>
