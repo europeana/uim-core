@@ -5,14 +5,14 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-logging-database</artifactId>
+    <artifactId>europeana-uim-logging-database-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>Unified Ingestion Manager: Database Loggin</name>
+    <name>Unified Ingestion Manager: Database Logging</name>
 
     <modules>
         <module>model</module>

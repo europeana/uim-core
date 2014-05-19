@@ -1,24 +1,13 @@
 package eu.europeana.uim.integration;
 
-import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertEquals;
-import static org.ops4j.pax.exam.CoreOptions.felix;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
-import static org.ops4j.pax.exam.OptionUtils.combine;
 
 import java.util.Date;
 
-import junit.framework.Assert;
-
-import org.apache.karaf.testing.AbstractIntegrationTest;
-import org.apache.karaf.testing.Helper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 
 import eu.europeana.uim.Registry;
 import eu.europeana.uim.common.progress.MemoryProgressMonitor;
@@ -35,56 +24,70 @@ import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.store.bean.RequestBean;
 import eu.europeana.uim.workflow.Workflow;
 import eu.europeana.uim.workflows.SysoutWorkflow;
+import java.io.File;
+import javax.inject.Inject;
+import org.junit.Assert;
+import static org.junit.Assert.assertFalse;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
+import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
+import org.ops4j.pax.exam.options.MavenUrlReference;
 
 /**
  * Integration test for the Orchestrator, using the MemoryStorageEngine
- * 
+ *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Apr 7, 2014
  */
-@RunWith(JUnit4TestRunner.class)
-public class OrchestratorTest extends AbstractIntegrationTest {
-    /**
-     * @return setup configuration
-     * @throws Exception
-     */
-    @Configuration
-    public static Option[] configuration() throws Exception {
-        return combine(
-                Helper.getDefaultOptions(
-                        systemProperty("karaf.name").value("junit"),
-                        systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
-                                "FINE")),
+@RunWith(PaxExam.class)
+public class OrchestratorTest {
 
-                // rhaa
-                // systemProperty("integrationDir").value(System.getProperty("integrationDir")),
+    @Inject
+    private Registry registry;
+    
+    @Inject
+    private Orchestrator orchestrator;
 
-// PaxRunnerOptions.vmOption(
-// "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006" ),
+    @org.ops4j.pax.exam.Configuration
+    public Option[] config() {
+        MavenArtifactUrlReference karafUrl = maven()
+                .groupId("org.apache.karaf")
+                .artifactId("apache-karaf")
+                .version("3.0.0")
+                .type("tar.gz");
 
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-orchestration-basic").versionAsInProject(),
+        MavenUrlReference karafStandardRepo = maven()
+                .groupId("org.apache.karaf.features")
+                .artifactId("standard")
+                .classifier("features")
+                .type("xml")
+                .versionAsInProject();
 
-                felix(),
-
-                waitForFrameworkStartup());
+        return new Option[]{
+            // KarafDistributionOption.debugConfiguration("5005", true),
+            karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(new File("target/exam")).useDeployFolder(false),
+            keepRuntimeFolder(),
+            KarafDistributionOption.features(karafStandardRepo, "scr"),
+            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
+            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
+            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(),
+            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject().start(),
+            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-orchestration-basic").versionAsInProject().start(),};
     }
 
     /**
      * @throws Exception
      */
-    @SuppressWarnings({ "unchecked", "rawtypes", "cast" })
+    @SuppressWarnings({"unchecked", "rawtypes", "cast"})
     @Test
     public void processSampleData() throws Exception {
-        Registry registry = getOsgiService(Registry.class);
-
         StorageEngine<Long> storage = null;
         while (storage == null) {
-            storage = (StorageEngine<Long>)registry.getStorageEngine();
+            storage = (StorageEngine<Long>) registry.getStorageEngine();
             Thread.sleep(500);
         }
         Assert.assertNotNull(storage);
@@ -99,7 +102,6 @@ public class OrchestratorTest extends AbstractIntegrationTest {
 // Provider<Long> p = storage.getProvider(0l);
 // Collection<Long> c = storage.getCollections(p).get(0);
 // Request<Long> r = storage.createRequest(c, new Date());
-
         for (int i = 0; i < 999; i++) {
             MetaDataRecord<Long> record = storage.createMetaDataRecord(c, "id=" + i);
             storage.updateMetaDataRecord(record);
@@ -108,21 +110,20 @@ public class OrchestratorTest extends AbstractIntegrationTest {
 
         assertEquals("Wrong count of imported test MDRs", 999, storage.getTotalByCollection(c));
 
-        Orchestrator o = getOsgiService(Orchestrator.class);
         MemoryProgressMonitor monitor = new MemoryProgressMonitor();
         // run the workflow
 
         // Initialize workflow
         System.out.println("WORKFLOWS " + registry.getWorkflows());
-        Workflow<MetaDataRecord<Long>, Long> workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+        Workflow<MetaDataRecord<Long>, Long> workflow = (Workflow<MetaDataRecord<Long>, Long>) registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
         int wait = 0;
         while (workflow == null && wait++ < 10) {
-            workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+            workflow = (Workflow<MetaDataRecord<Long>, Long>) registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
             Thread.sleep(1000);
         }
         Assert.assertNotNull(workflow);
 
-        ActiveExecution<MetaDataRecord<Long>, Long> execution = (ActiveExecution<MetaDataRecord<Long>, Long>)o.executeWorkflow(
+        ActiveExecution<MetaDataRecord<Long>, Long> execution = (ActiveExecution<MetaDataRecord<Long>, Long>) orchestrator.executeWorkflow(
                 workflow, c);
         execution.getMonitor().addListener(monitor);
 
@@ -131,7 +132,7 @@ public class OrchestratorTest extends AbstractIntegrationTest {
         assertEquals("Wrong count of processed MDRs", 999, monitor.getWorked());
 
         Thread.sleep(1000);
-        assertEquals("Zombie execution", 0, o.getActiveExecutions().size());
+        assertEquals("Zombie execution", 0, orchestrator.getActiveExecutions().size());
 
         Execution<Long> e = storage.getExecution(execution.getExecution().getId());
         assertFalse("Status of execution not correctly saved when it is finished", e.isActive());
