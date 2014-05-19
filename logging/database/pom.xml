@@ -9,10 +9,10 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-logging-database-parent</artifactId>
+    <artifactId>europeana-uim-logging-database</artifactId>
     <packaging>pom</packaging>
 
-    <name>Unified Ingestion Manager: Database Logging Parent</name>
+    <name>Unified Ingestion Manager: Database Loggin</name>
 
     <modules>
         <module>model</module>

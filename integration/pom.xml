@@ -16,9 +16,9 @@
             <!-- Note: settings and dependencies for the final osgi runtime (TESTS) are just used in TestCases that annotated 
                 with this: @RunWith( MavenConfiguredJUnit4TestRunner.class ) All other testcases will use their own settings/provisioning 
                 inside @Configure Methods. -->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.ops4j.pax.exam</groupId>
-                <artifactId>maven-paxexam-plugin</artifactId>
+                <artifactId>maven-paxexam-plugin</artifactId>-->
                 <!-- <executions> -->
                 <!-- <execution> -->
                 <!-- <id>generate-config</id> -->
@@ -27,7 +27,7 @@
                 <!-- </goals> -->
                 <!-- </execution> -->
                 <!-- </executions> -->
-            </plugin>
+            <!--</plugin>-->
         </plugins>
     </build>
 
@@ -39,12 +39,12 @@
         </dependency>
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam-junit</artifactId>
+            <artifactId>pax-exam-junit4</artifactId>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam-container-default</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- JUnit dependencies -->
         <dependency>
@@ -97,7 +97,7 @@
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-logging-database</artifactId>
+            <artifactId>europeana-uim-logging-database-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

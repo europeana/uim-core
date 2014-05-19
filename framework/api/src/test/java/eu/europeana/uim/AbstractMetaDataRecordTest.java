@@ -14,6 +14,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
+import org.junit.Before;
 
 /**
  * Base, abstract class to test {@link MetaDataRecord} implementations.
@@ -25,17 +26,35 @@ import eu.europeana.uim.store.Request;
  * @since Mar 22, 2011
  */
 public abstract class AbstractMetaDataRecordTest<I> {
-    StorageEngine<I> engine = getStorageEngine();
-
     /**
-     * @return provides a specific implemtation of a storage typed with the kind of key used for all
-     *         data sets
+     * engine instance configured in setup up and used throughout tests
      */
-    protected abstract StorageEngine<I> getStorageEngine();
+    protected StorageEngine<I> engine = null;
 
     private enum TestEnum {
         EN;
     }
+
+    /**
+     * Setups storage engine.
+     */
+    @Before
+    public void setUp() {
+        engine = getStorageEngine();
+        performSetUp();
+    }
+
+    /**
+     * Override this for additional setup
+     */
+    protected void performSetUp() {
+        // nothing todo
+    }
+
+    /**
+     * @return configured storage engine
+     */
+    protected abstract StorageEngine<I> getStorageEngine();
 
     /**
      * Tests that the implementation of {@link MetaDataRecord} returns null for getFirstField if

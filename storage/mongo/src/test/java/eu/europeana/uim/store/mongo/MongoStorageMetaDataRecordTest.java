@@ -32,7 +32,6 @@ import com.mongodb.MongoException;
 
 import eu.europeana.uim.AbstractMetaDataRecordTest;
 import eu.europeana.uim.storage.StorageEngine;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -41,8 +40,6 @@ import org.junit.runners.JUnit4;
  *
  * @author Georgios Markakis
  */
-// FIXME: weird problem
-@Ignore
 @RunWith(JUnit4.class)
 public class MongoStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<String> {
 

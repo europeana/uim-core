@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>eu.europeana</groupId>
-        <artifactId>europeana-uim-logging-database-parent</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+        <artifactId>europeana-uim-logging-database</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>europeana-uim-logging-database-model</artifactId>
-    <name>Unified Ingestion Manager: Database Loggin Model</name>
+    <name>Unified Ingestion Manager: Database Logging Model</name>
     <packaging>jar</packaging>
 
     <build>
@@ -38,9 +39,11 @@
                         </component>
                     </components>
                     <componentProperties>
-                        <template>daohome.ftl</template>
-                        <templatepath>${basedir}/src/main/code/template</templatepath>
+                        <templatename>daohome.ftl</templatename>
+                        <templatepath>src/main/code/template</templatepath>
+                        <!--<templatepath>${basedir}/src/main/code/template/dao</templatepath>-->
                         <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
+                         <implementation>annotationconfiguration</implementation>
                         <ejb3>false</ejb3>
                         <jdk5>true</jdk5>
                         <drop>true</drop>
@@ -53,6 +56,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -102,7 +106,7 @@
         <pluginManagement>
             <plugins>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
-                    build itself. -->
+                build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -159,7 +163,7 @@
             <artifactId>tel-database-ftl</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -172,6 +176,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

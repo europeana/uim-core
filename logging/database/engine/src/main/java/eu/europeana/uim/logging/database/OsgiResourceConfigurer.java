@@ -106,14 +106,14 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
 
                     Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
 
-                    Dictionary<String, String> dictionary = config.getProperties();
+                    Dictionary<String, Object> dictionary = config.getProperties();
                     if (dictionary != null) {
                         Enumeration<String> keys = dictionary.keys();
                         while (keys.hasMoreElements()) {
                             String key = keys.nextElement();
-                            String value = dictionary.get(key);
+                            Object value = dictionary.get(key);
                             if (key != null && value != null) {
-                                properties.setProperty(key, value);
+                                properties.setProperty(key, (String) value);
                             }
                         }
                     }

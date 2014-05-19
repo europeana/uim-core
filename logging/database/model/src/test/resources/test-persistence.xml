@@ -5,8 +5,8 @@
 
     <persistence-unit name="europeana-unit-test">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        
-		<mapping-file>eu/europeana/uim/logging/database/model/Queries.xml</mapping-file>
+       
+        <mapping-file>eu/europeana/uim/logging/database/model/Queries.xml</mapping-file>
         
         <class>eu.europeana.uim.logging.database.model.TLogEntry</class>
         <class>eu.europeana.uim.logging.database.model.TLogEntryFailed</class>
@@ -23,8 +23,7 @@
             <property name="hibernate.c3p0.timeout" value="300"/>
             <property name="hibernate.c3p0.max_statements" value="50"/>
             <property name="hibernate.c3p0.idle_test_period" value="3000"/>
-        
-        
+
 <!--             <property name="hibernate.cache.provider_class" value="net.sf.ehcache.hibernate.SingletonEhCacheProvider"/> -->
 <!--             <property name="cache.provider_configuration_file_resource_path" value="test-ehcache.xml"/> -->
             
@@ -33,4 +32,5 @@
 <!--             <property name="hibernate.generate_statistics" value="true"/> -->
         </properties>
     </persistence-unit>
+    
 </persistence>
