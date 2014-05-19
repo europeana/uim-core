@@ -210,4 +210,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+     <profiles>
+        <profile>
+            <id>europeana</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <repositories>
+                <repository>
+                    <id>artifactory.eanadev.org</id>
+                    <name>artifactory.eanadev.org-releases</name>
+                    <url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>
