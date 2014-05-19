@@ -635,6 +635,13 @@ public final class ObjectModelRegistry {
                 add(FieldScope.class);
             }
         });
+        
+        validQualifiers.put(RESOURCE_TYPE, new ArrayList<Class<? extends Enum<?>>>() {
+            {
+                add(FieldSource.class);
+                add(FieldScope.class);
+            }
+        });
 
         validRelations.put(PERSON, new HashMap<TKey<?, ?>, ArrayList<Class<? extends Enum<?>>>>() {
             {

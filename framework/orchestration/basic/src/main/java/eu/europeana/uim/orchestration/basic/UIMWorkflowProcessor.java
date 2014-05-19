@@ -58,8 +58,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
     // FIXME: Updated these values, cannot handle more
     private int                                                             maxRunningExecutions = 50;
-    private int                                                             maxTotalProgress     = 500;
-    private int                                                             maxInProgress        = 50;
+    private int                                                             maxTotalProgress     = 5000; // 100;
+    private int                                                             maxInProgress        = 200; // 10;
 
     /**
      * Creates a new instance of this class.
@@ -97,20 +97,20 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         continue;
                     }
 
-                    // start working after the execution is initailized
+                    // start working after the execution is initialized
                     if (execution.isInitialized()) {
                         boolean newtasks = false;
                         int execProgress = execution.getProgressSize();
-
-                        if (totalProgress <= maxTotalProgress && execProgress <= maxInProgress) {
-                            // we ask the workflow start if we have more to do
+                        
+                        if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) && execProgress < maxInProgress) {
+                            // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
                             newtasks = ensureTasksInProgress(execution, start, execProgress,
                                     totalProgress);
                         }
 
                         // we need to wait until nothing is in progress before
-                        // we acutally can cancel this execution (this way we
+                        // we actually can cancel this execution (this way we
                         // never leave records in the pipe
                         if (execProgress == 0 && !newtasks) {
                             completeExecution(execution);
@@ -143,11 +143,11 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
     private void completeExecution(ActiveExecution<?, I> execution) {
         // we ask the workflow start if we have more to do
-        WorkflowStart start = execution.getWorkflow().getStart();
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
         if (creators.isEmpty()) {
+            WorkflowStart start = execution.getWorkflow().getStart();
             if (start.isFinished(execution)) {
-                // everything done no new
+                // everything done, no new
                 if (execution.isFinished()) {
                     try {
                         Thread.sleep(100);

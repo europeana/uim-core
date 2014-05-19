@@ -959,8 +959,8 @@ public class BasicDataSourceRepoxRestClient extends AbstractRepoxRestClient impl
             charset.append(ds.getTarget().getCharset());
         }
         recordIdPolicy.append("recordIdPolicy=");
-        recordIdPolicy.append(ds.getRecordIdPolicy().getType());
-        if (ds.getRecordIdPolicy().getType().equals("idExported")) {
+        recordIdPolicy.append(ds.getRecordIdPolicy() != null ? ds.getRecordIdPolicy().getType() : "idGenerated");
+        if (ds.getRecordIdPolicy() != null && ds.getRecordIdPolicy().getType().equals("idExported")) {
             idXpath.append("idXpath=");
 
             idXpath.append(ds.getRecordIdPolicy().getIdXpath());

@@ -12,7 +12,11 @@ import org.apache.commons.lang.StringUtils;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Title;
+import org.theeuropeanlibrary.model.common.party.Family;
+import org.theeuropeanlibrary.model.common.party.Meeting;
+import org.theeuropeanlibrary.model.common.party.Organization;
 import org.theeuropeanlibrary.model.common.party.Party;
+import org.theeuropeanlibrary.model.common.party.Person;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
@@ -23,12 +27,18 @@ import org.theeuropeanlibrary.model.common.qualifier.SpatialRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TemporalRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TextRelation;
 import org.theeuropeanlibrary.model.common.qualifier.TitleType;
+import org.theeuropeanlibrary.model.common.spatial.BoundingBoxReferencedPlace;
+import org.theeuropeanlibrary.model.common.spatial.GeoReferencedPlace;
 import org.theeuropeanlibrary.model.common.spatial.NamedPlace;
 import org.theeuropeanlibrary.model.common.spatial.SpatialEntity;
 import org.theeuropeanlibrary.model.common.subject.Subject;
 import org.theeuropeanlibrary.model.common.subject.TitleSubject;
 import org.theeuropeanlibrary.model.common.subject.Topic;
+import org.theeuropeanlibrary.model.common.time.HistoricalPeriod;
+import org.theeuropeanlibrary.model.common.time.Instant;
+import org.theeuropeanlibrary.model.common.time.Period;
 import org.theeuropeanlibrary.model.common.time.Temporal;
+import org.theeuropeanlibrary.model.common.time.TemporalTextualExpression;
 import org.theeuropeanlibrary.translation.Translations;
 
 import eu.europeana.uim.store.MetaDataRecord;
@@ -454,7 +464,7 @@ public final class ObjectModelUtils {
     public static void setupWebResourcesLinks(MetaDataRecord<?> mdr) {
         setupWebResourcesLinks("http://data.theeuropeanlibrary.org", null, mdr);
     }
-    
+
     
     /**
      * Changes the urls in Link objects to be served by redirection through the data portal. 
@@ -465,20 +475,19 @@ public final class ObjectModelUtils {
      * @param mdr
      */
     public static void setupWebResourcesLinks(String baseUrl, String source, MetaDataRecord<?> mdr) {
-        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.CATALOGUE_RECORD);
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.DIGITAL_OBJECT));
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.THUMBNAIL));
-        
-        for (int index = 0; index < catlinks.size(); index++) {
-            mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
-                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-                                    source) ),
-                                    catlinks.get(index).getQualifier(LinkTarget.class));
-        }
+        setupWebResourcesLinksForLod(baseUrl, mdr);
+//        List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+//        mdr.deleteValues(ObjectModelRegistry.LINK,
+//                LinkTarget.DIGITAL_OBJECT);
+//        mdr.deleteValues(ObjectModelRegistry.LINK,
+//                LinkTarget.THUMBNAIL);
+//        for (int index = 0; index < catlinks.size(); index++) {
+//            mdr.addValue(ObjectModelRegistry.LINK,
+//                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
+//                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
+//                                    source) ),
+//                                    catlinks.get(index).getQualifier(LinkTarget.class));
+//        }
     }
     
     /**
@@ -486,27 +495,27 @@ public final class ObjectModelUtils {
      * @param mdr
      */
     public static void setupWebResourcesLinksForLod(String baseUrl, MetaDataRecord<?> mdr) {
-        List<QualifiedValue<Link>> catlinks = mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.CATALOGUE_RECORD);
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.DIGITAL_OBJECT));
-        catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.THUMBNAIL));
+        List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+        mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.DIGITAL_OBJECT);
+        mdr.deleteValues(ObjectModelRegistry.LINK,
+                LinkTarget.THUMBNAIL);
         for (int index = 0; index < catlinks.size(); index++) {
             mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "#webresource" + index  + getLinkHash(catlinks.get(index)) ),
+                    new Link(getWebResourceLinkForLod(baseUrl, catlinks.get(index), index) ),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
-    
+
     /**
-     * Creates a hash for a link. Used for the WebResources links in the data portal
-     * 
-     * @param link
-     * @return hash of link
+     * @param baseUrl
+     * @param catlinks
+     * @param index
+     * @return
      */
-    public static String getLinkHash(QualifiedValue<Link> link) {
-        return Integer.toHexString(link.getValue().getUrl().hashCode());
+    private static String getWebResourceLinkForLod(String baseUrl,
+            QualifiedValue<Link> catlinks, int index) {
+        return baseUrl + "#webresource" + index  + Integer.toHexString(catlinks.getValue().getUrl().hashCode());
     }
     
     /**
@@ -538,6 +547,59 @@ public final class ObjectModelUtils {
             }
         }
         return countries;
+    }
+
+    /**
+     * @param mdr
+     * @param agent
+     * @param qualifiers 
+     */
+    public static void addValue(MetaDataRecord<?> mdr, Party agent, Enum<?>... qualifiers) {
+        if(agent.getClass().equals(Party.class))
+            mdr.addValue(ObjectModelRegistry.PARTY, agent, qualifiers);
+        else if(agent.getClass().equals(Person.class))
+            mdr.addValue(ObjectModelRegistry.PERSON, (Person)agent, qualifiers);
+        else if(agent.getClass().equals(Organization.class))
+            mdr.addValue(ObjectModelRegistry.ORGANIZATION, (Organization)agent, qualifiers);
+        else if(agent.getClass().equals(Meeting.class))
+            mdr.addValue(ObjectModelRegistry.MEETING, (Meeting)agent, qualifiers);
+        else if(agent.getClass().equals(Family.class))
+            mdr.addValue(ObjectModelRegistry.FAMILY, (Family)agent, qualifiers);
+        else
+            throw new RuntimeException(agent.getClass().getName());
+    }
+
+    /**
+     * @param mdr
+     * @param spatial
+     */
+    public static void addValue(MetaDataRecord<?> mdr, SpatialEntity spatial, Enum<?>... qualifiers) {
+        if(spatial.getClass().equals(SpatialEntity.class))
+            mdr.addValue(ObjectModelRegistry.GEOGRAPHIC_ENTITY, spatial, qualifiers);
+        else if(spatial.getClass().equals(NamedPlace.class))
+            mdr.addValue(ObjectModelRegistry.PLACE, (NamedPlace) spatial, qualifiers);
+        else if(spatial.getClass().equals(GeoReferencedPlace.class))
+            mdr.addValue(ObjectModelRegistry.GEO_PLACE, (GeoReferencedPlace) spatial, qualifiers);
+        else if(spatial.getClass().equals(BoundingBoxReferencedPlace.class))
+            mdr.addValue(ObjectModelRegistry.GEO_BOX_PLACE, (BoundingBoxReferencedPlace) spatial, qualifiers);
+        else
+            throw new RuntimeException(spatial.getClass().getName());
+    }
+
+    /**
+     * @param mdr
+     */
+    public static void addValue(MetaDataRecord<?> mdr, Temporal tempo, Enum<?>... qualifiers) {
+        if(tempo.getClass().equals(Period.class))
+            mdr.addValue(ObjectModelRegistry.PERIOD, (Period)tempo, qualifiers);
+        else if(tempo.getClass().equals(Instant.class))
+            mdr.addValue(ObjectModelRegistry.INSTANT, (Instant) tempo, qualifiers);
+        else if(tempo.getClass().equals(TemporalTextualExpression.class))
+            mdr.addValue(ObjectModelRegistry.TEMPORAL, (TemporalTextualExpression) tempo, qualifiers);
+        else if(tempo.getClass().equals(HistoricalPeriod.class))
+            mdr.addValue(ObjectModelRegistry.HISTORICAL_PERIOD, (HistoricalPeriod) tempo, qualifiers);
+        else
+            throw new RuntimeException(tempo.getClass().getName());
     }
     
 }
