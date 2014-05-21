@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.logging.Level;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,6 +219,7 @@ public class DatabaseEntityTest {
     /**
      * Tests string message type log edm check entry.
      */
+    @Ignore("not ready yet")
     @Test
     public void testLogEntryEdmCheck() {
         TLogEntryEdmCheck entry = new TLogEntryEdmCheck("1L", "module", "2L", "a", "b", "c");

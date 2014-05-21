@@ -8,7 +8,7 @@
         <version>3.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>europeana-uim-logging-database</artifactId>
+    <artifactId>europeana-uim-logging-database-engine</artifactId>
     <name>Unified Ingestion Manager: Database Logging Engine</name>
     <packaging>bundle</packaging>
 
@@ -125,11 +125,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
         </dependency>
@@ -166,7 +161,7 @@
         </dependency>
 
         <dependency>
-            <groupId>hsqldb</groupId>
+            <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
         </dependency>
 
