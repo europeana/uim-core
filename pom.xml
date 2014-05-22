@@ -81,20 +81,11 @@
 		<javax.inject-version>1</javax.inject-version>
 
 		<!-- Spring for wiring unit tests Versions -->
-<!-- 		<spring-context-version>3.0.5.RELEASE</spring-context-version> -->
-<!-- 		<spring-beans-version>3.0.5.RELEASE</spring-beans-version> -->
-<!-- 		<spring-core-version>3.0.5.RELEASE</spring-core-version> -->
-<!-- 		<spring-test-version>3.0.5.RELEASE</spring-test-version> -->
-<!-- 		<spring-jdbc-version>3.0.5.RELEASE</spring-jdbc-version> -->
-<!-- 		<spring-orm-version>3.0.5.RELEASE</spring-orm-version> -->
-
-
-
 		<spring-beans-version>4.0.5.RELEASE</spring-beans-version>
 		<spring-context-version>4.0.5.RELEASE</spring-context-version>
 		<spring-core-version>4.0.5.RELEASE</spring-core-version>
 		<spring-test-version>4.0.5.RELEASE</spring-test-version>
-		<spring-jdbc-version>3.1.4.RELEASE</spring-jdbc-version>
+		<spring-jdbc-version>4.0.5.RELEASE</spring-jdbc-version>
 		<spring-orm-version>4.0.5.RELEASE</spring-orm-version>
 
 		<!-- GWT dependencies Versions -->
