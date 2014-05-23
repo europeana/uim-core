@@ -19,7 +19,7 @@
         <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
         
         <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundl
+        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle>
         
         <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-logging-database/3.0.0-SNAPSHOT</bundle>
