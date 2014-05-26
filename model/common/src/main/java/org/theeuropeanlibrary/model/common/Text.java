@@ -15,6 +15,12 @@ public class Text {
     @FieldId(1)
     private String content;
 
+//    /**
+//     * encoding used for textual content
+//     */
+//    @FieldId(2)
+//    private String encoding;
+
     /**
      * Creates a new instance of this class.
      */
@@ -50,6 +56,21 @@ public class Text {
                 "Argument 'content' should not be null!"); }
         this.content = content;
     }
+
+//    /**
+//     * @return encoding used for textual content
+//     */
+//    public String getEncoding() {
+//        return encoding;
+//    }
+//
+//    /**
+//     * @param encoding
+//     *            encoding used for textual content
+//     */
+//    public void setEncoding(String encoding) {
+//        this.encoding = encoding;
+//    }
 
     @Override
     public int hashCode() {
