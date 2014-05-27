@@ -33,8 +33,8 @@
         <bundle>mvn:eu.europeana/europeana-uim-api/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
         
-        <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle>
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle> -->
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle> -->
         
 <!--         <bundle>mvn:eu.europeana/europeana-uim-external-repox-basic/3.0.0-SNAPSHOT</bundle> -->
 <!--         <bundle>mvn:eu.europeana/europeana-uim-external-sugar-basic/3.0.0-SNAPSHOT</bundle> -->
