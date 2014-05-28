@@ -88,13 +88,13 @@ public class Meeting extends Organization {
     public String getDisplay() {
         String ret=partyName;
         if (subdivision != null && !subdivision.trim().isEmpty()) 
-            ret += StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
+            ret = StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
         if (date != null || (location!=null)) { 
             ret += "(";
             if (location!=null) { 
                 ret += location.getDisplay();
                 if (date != null) 
-                    ret += StringUtils.stripEnd(ret, ".,;:?") + " " + date.getDisplay();
+                    ret = StringUtils.stripEnd(ret, ".,;:?") + " " + date.getDisplay();
             } else {
                 ret += date.getDisplay();
             }

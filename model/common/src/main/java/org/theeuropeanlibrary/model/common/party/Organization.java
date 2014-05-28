@@ -97,7 +97,7 @@ public class Organization extends Party {
     public String getDisplay() {
         String ret=partyName;
         if (subdivision != null && !subdivision.trim().isEmpty()) 
-            ret += StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
+            ret = StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
         if (location!=null) 
             ret += "(" + location.getDisplay() + ")";
         return ret;

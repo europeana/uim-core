@@ -157,7 +157,7 @@ public class PartyObjectTest {
         assertNotNull(title.getSubdivision());
         assertEquals("sub", title.getSubdivision());
         assertNotNull(title.getDisplay());
-        assertEquals("main, sub", title.getDisplay());
+        assertEquals("main. sub", title.getDisplay());
 
         assertEquals(new Organization("main", "sub"), title);
         assertEquals(new Organization("main", "sub").hashCode(), title.hashCode());

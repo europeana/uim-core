@@ -140,4 +140,9 @@ public class SpatialEntity {
                 return id.getIdentifier();
         return "";
     }
+    
+    @Override
+    public String toString() {
+        return getDisplay();
+    }
 }

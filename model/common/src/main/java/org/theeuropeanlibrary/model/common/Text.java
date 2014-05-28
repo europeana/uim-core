@@ -8,6 +8,12 @@ package org.theeuropeanlibrary.model.common;
  * @author Nuno Freire <nfreire@gmail.com>
  * @since Mar 21, 2011
  */
+/**
+ * 
+ * 
+ * @author Nuno Freire (nfreire@gmail.com)
+ * @since 28/05/2014
+ */
 public class Text {
     /**
      * textual content
@@ -91,4 +97,16 @@ public class Text {
         } else if (!content.equals(other.content)) return false;
         return true;
     }
+    
+   
+    @Override
+    public String toString() {
+        if (content==null)
+            return "";
+        if(content.length()>600)
+            return content.substring(0, 599)+"<TRUNCATED>";
+        return content;
+        
+    }
+
 }
