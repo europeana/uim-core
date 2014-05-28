@@ -86,8 +86,21 @@ public class Meeting extends Organization {
      */
     @Override
     public String getDisplay() {
-        if (date == null) return partyName;
-        return StringUtils.stripEnd(partyName, ".,;:?") + ", " + date;
+        String ret=partyName;
+        if (subdivision != null && !subdivision.trim().isEmpty()) 
+            ret += StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
+        if (date != null || (location!=null)) { 
+            ret += "(";
+            if (location!=null) { 
+                ret += location.getDisplay();
+                if (date != null) 
+                    ret += StringUtils.stripEnd(ret, ".,;:?") + " " + date.getDisplay();
+            } else {
+                ret += date.getDisplay();
+            }
+            ret += ")";
+        }
+        return ret;
     }
 
     @Override
@@ -112,4 +125,5 @@ public class Meeting extends Organization {
         } else if (!date.equals(other.date)) return false;
         return true;
     }
+
 }

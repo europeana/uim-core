@@ -95,11 +95,12 @@ public class Organization extends Party {
      */
     @Override
     public String getDisplay() {
-        if (subdivision == null || subdivision.trim().isEmpty()) {
-            return partyName;
-        } else {
-            return StringUtils.stripEnd(partyName, ".,;:?") + ", " + subdivision;
-        }
+        String ret=partyName;
+        if (subdivision != null && !subdivision.trim().isEmpty()) 
+            ret += StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
+        if (location!=null) 
+            ret += "(" + location.getDisplay() + ")";
+        return ret;
     }
 
     @Override
