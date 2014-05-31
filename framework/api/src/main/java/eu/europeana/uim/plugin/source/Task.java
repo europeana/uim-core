@@ -14,42 +14,41 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.UimDataSet;
 
 /**
- * Generic task to processed by the workflow pipeline. It extends Runnable to provide getter and
- * setter for all kinds of additional information.
- * 
- * @param <U>
- *            generic data set
- * @param <I>
- *            generic identifier
- * 
+ * Generic task to processed by the workflow pipeline. It extends Runnable to
+ * provide getter and setter for all kinds of additional information.
+ *
+ * @param <U> generic data set
+ * @param <I> generic identifier
+ *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
 public class Task<U extends UimDataSet<I>, I> implements Runnable {
-    private static Logger                log       = Logger.getLogger(Task.class.getName());
 
-    private TaskStatus                   status    = TaskStatus.NEW;
-    private Throwable                    throwable;
+    private static Logger log = Logger.getLogger(Task.class.getName());
 
-    private Queue<Task<U, I>>            success   = null;
-    private Queue<Task<U, I>>            failure   = null;
+    private TaskStatus status = TaskStatus.NEW;
+    private Throwable throwable;
 
-    private Set<Task<U, I>>              assigned  = null;
+    private Queue<Task<U, I>> success = null;
+    private Queue<Task<U, I>> failure = null;
 
-    private boolean                      savepoint = false;
-    private boolean                      mandatory = false;
-    private IngestionPlugin<U, I>        step;
+    private Set<Task<U, I>> assigned = null;
 
-    private UimDatasetAdapter<U, I>      adapter;
+    private boolean savepoint = false;
+    private boolean mandatory = false;
+    private IngestionPlugin<U, I> step;
 
-    private U                            dataset;
+    private UimDatasetAdapter<U, I> adapter;
+
+    private U dataset;
     private final ExecutionContext<U, I> context;
-    private boolean                      successfulProcessing;
+    private boolean successfulProcessing;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param dataset
      * @param context
      */
@@ -79,8 +78,7 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @param status
-     *            status of the task
+     * @param status status of the task
      */
     public void setStatus(TaskStatus status) {
         this.status = status;
@@ -108,8 +106,7 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @param savepoint
-     *            Is it a save point?
+     * @param savepoint Is it a save point?
      */
     public void setSavepoint(boolean savepoint) {
         this.savepoint = savepoint;
@@ -117,18 +114,18 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
 
     /**
      * Save the content to the storage backend.
-     * 
+     *
      * @throws StorageEngineException
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void save() throws StorageEngineException {
         if (dataset instanceof MetaDataRecord) {
-            context.getStorageEngine().updateMetaDataRecord((MetaDataRecord)dataset);
+            context.getStorageEngine().updateMetaDataRecord((MetaDataRecord) dataset);
         } else if (dataset instanceof Collection) {
-            context.getStorageEngine().updateCollection((Collection)dataset);
+            context.getStorageEngine().updateCollection((Collection) dataset);
         } else {
-            log.warning("Dataset type '" + dataset.getClass().getSimpleName() +
-                        "' is not supported for saving operations!");
+            log.warning("Dataset type '" + dataset.getClass().getSimpleName()
+                    + "' is not supported for saving operations!");
         }
     }
 
@@ -140,12 +137,10 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @param step
-     *            plugin to be executed by this task
-     * @param mandatory
-     *            Is this plugin mandatory, so that a unsuccessful processing of the record lead to
-     *            a failure or is it optional and not processed records can still be further
-     *            processed?
+     * @param step plugin to be executed by this task
+     * @param mandatory Is this plugin mandatory, so that a unsuccessful
+     * processing of the record lead to a failure or is it optional and not
+     * processed records can still be further processed?
      */
     public void setStep(IngestionPlugin<U, I> step, boolean mandatory) {
         this.step = step;
@@ -153,25 +148,23 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @return adapter used to adapt the given data set to the underlying plugin, null if no
-     *         adaption is necessary
+     * @return adapter used to adapt the given data set to the underlying
+     * plugin, null if no adaption is necessary
      */
     public UimDatasetAdapter<U, I> getAdapter() {
         return adapter;
     }
 
     /**
-     * @param adapter
-     *            adapter used to adapt the given data set to the underlying plugin, null if no
-     *            adaption is necessary
+     * @param adapter adapter used to adapt the given data set to the underlying
+     * plugin, null if no adaption is necessary
      */
     public void setAdapter(UimDatasetAdapter<U, I> adapter) {
         this.adapter = adapter;
     }
 
     /**
-     * @param success
-     *            queue with successful handled tasks
+     * @param success queue with successful handled tasks
      */
     public void setOnSuccess(Queue<Task<U, I>> success) {
         this.success = success;
@@ -185,48 +178,51 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @param failure
-     *            queue with failed tasks (but not fatal ones for the whole workflow)
+     * @param failure queue with failed tasks (but not fatal ones for the whole
+     * workflow)
      */
     public void setOnFailure(Queue<Task<U, I>> failure) {
         this.failure = failure;
     }
 
     /**
-     * @return queue with failed tasks (but not fatal ones for the whole workflow)
+     * @return queue with failed tasks (but not fatal ones for the whole
+     * workflow)
      */
     public Queue<Task<U, I>> getOnFailure() {
         return failure;
     }
 
     /**
-     * @param throwable
-     *            contains a thrown exception, if it is of type
-     *            {@link IngestionPluginFailedException} the workflow must be teared down as a
-     *            plugin is not able to proceed work
+     * @param throwable contains a thrown exception, if it is of type
+     * {@link IngestionPluginFailedException} the workflow must be teared down
+     * as a plugin is not able to proceed work
      */
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
     }
 
     /**
-     * @return thrown exception, if it is of type {@link IngestionPluginFailedException} the
-     *         workflow must be teared down as a plugin is not able to proceed work
+     * @return thrown exception, if it is of type
+     * {@link IngestionPluginFailedException} the workflow must be teared down
+     * as a plugin is not able to proceed work
      */
     public Throwable getThrowable() {
         return throwable;
     }
 
     /**
-     * @return Is this plugin mandatory, so that a unsuccessful processing of the record lead to a
-     *         failure or is it optional and not processed records can still be further processed?
+     * @return Is this plugin mandatory, so that a unsuccessful processing of
+     * the record lead to a failure or is it optional and not processed records
+     * can still be further processed?
      */
     public boolean isMandatory() {
         return mandatory;
     }
 
     /**
-     * @return true, if processing of a {@link MetaDataRecord} was successful, otherwise false
+     * @return true, if processing of a {@link MetaDataRecord} was successful,
+     * otherwise false
      */
     public boolean isSuccessfulProcessing() {
         return successfulProcessing;
@@ -254,8 +250,7 @@ public class Task<U extends UimDataSet<I>, I> implements Runnable {
     }
 
     /**
-     * @param assigned
-     *            set of assigned tasks
+     * @param assigned set of assigned tasks
      */
     public void setAssigned(Set<Task<U, I>> assigned) {
         this.assigned = assigned;

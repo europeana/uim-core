@@ -9,18 +9,18 @@ import eu.europeana.uim.store.Request;
 
 /**
  * Base class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface MetaDataRecordStorageEngine<I> {
+
     /**
      * @param collection
-     * @return creates a new record for the given external identifier (might differ from internal
-     *         one)
+     * @return creates a new record for the given external identifier (might
+     * differ from internal one)
      * @throws StorageEngineException
      */
     MetaDataRecord<I> createMetaDataRecord(Collection<I> collection)
@@ -28,7 +28,7 @@ public interface MetaDataRecordStorageEngine<I> {
 
     /**
      * Adds the given record request relation.
-     * 
+     *
      * @param request
      * @param record
      * @throws StorageEngineException
@@ -38,7 +38,7 @@ public interface MetaDataRecordStorageEngine<I> {
 
     /**
      * Stores the given record and its updated values.
-     * 
+     *
      * @param collection
      * @param record
      * @throws StorageEngineException
@@ -52,10 +52,8 @@ public interface MetaDataRecordStorageEngine<I> {
 //     * @throws StorageEngineException
 //     */
 //    MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException;
-
     /**
-     * @param ids
-     *            unique IDs, unique over collection, provider, ...
+     * @param ids unique IDs, unique over collection, provider, ...
      * @return metadata records for the provided IDs
      * @throws StorageEngineException
      */
@@ -69,7 +67,6 @@ public interface MetaDataRecordStorageEngine<I> {
 //     */
 //    List<MetaDataRecord<I>> findMetaDataRecords(String... externalIdentifierS)
 //            throws StorageEngineException;
-
 // /**
 // * @return IDs for all known records
 // * @throws StorageEngineException
@@ -81,7 +78,6 @@ public interface MetaDataRecordStorageEngine<I> {
 // * @throws StorageEngineException
 // */
 // int getTotalForAllIds() throws StorageEngineException;
-
     // /**
     // * @param collection
     // * @return IDs for records for this collection
@@ -89,7 +85,6 @@ public interface MetaDataRecordStorageEngine<I> {
     // */
     // BlockingQueue<I[]> getBatchesIds()
     // throws StorageEngineException;
-
     // /**
     // * @param collection
     // * @return MDRs for records for this collection
@@ -97,7 +92,6 @@ public interface MetaDataRecordStorageEngine<I> {
     // */
     // BlockingQueue<I[]> getBatchesMdr()
     // throws StorageEngineException;
-
 // MetaDataRecord<I> createMetaDataRecord(Request<I> request, String externalIdentifier) throws
 // StorageEngineException;
 // void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException;

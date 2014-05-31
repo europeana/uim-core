@@ -15,11 +15,12 @@ import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Tests for {@link LoggingEngineAdapter}.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 17, 2011
  */
 public class LoggingEngineAdapterTest {
+
     /**
      * Tests loggin engine adapter with long IDs.
      */
@@ -33,7 +34,7 @@ public class LoggingEngineAdapterTest {
         MetaDataRecord<Long> mdr = mock(MetaDataRecord.class);
         when(mdr.getId()).thenReturn(1L);
 
-        LoggingEngine<Long> engine = (LoggingEngine<Long>)registry.getLoggingEngine();
+        LoggingEngine<Long> engine = (LoggingEngine<Long>) registry.getLoggingEngine();
         engine.log(Level.INFO, "test", "a", "b", "c");
         engine.log(execution, Level.INFO, "test", "a", "b", "c");
         engine.log(execution, Level.WARNING, plugin, "a", "b", "c");

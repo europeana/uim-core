@@ -3,29 +3,14 @@ package eu.europeana.uim;
 
 /**
  * Status of the engine (starting, etc.)
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public enum EngineStatus {
-    /**
-     * registered
-     */
-    REGISTERED, 
-    /**
-     * booting
-     */
-    BOOTING, 
-    /**
-     * running
-     */
-    RUNNING, 
-    /**
-     * stopped
-     */
-    STOPPED, 
-    /**
-     * failuer
-     */
+    REGISTERED,
+    BOOTING,
+    RUNNING,
+    STOPPED,
     FAILURE
 }

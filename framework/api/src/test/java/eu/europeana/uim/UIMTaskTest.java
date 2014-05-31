@@ -17,11 +17,12 @@ import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Tests task management (setup and workflow).
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class UIMTaskTest {
+
     /**
      * test method to test setter/getter pairs and default task setup.
      */

@@ -4,21 +4,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Simple memory based implementation of a ProgressMonitor. This class just holds all information in
- * fields and exposes the field values through getter methods.
- * 
- * @author andreas.juffinger@kb.nl
+ * Simple memory based implementation of a ProgressMonitor. This class just
+ * holds all information in fields and exposes the field values through getter
+ * methods.
+ *
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since Mar 2, 2011
  */
 public class LoggingProgressMonitor extends MemoryProgressMonitor {
-    private final static Logger log         = Logger.getLogger(LoggingProgressMonitor.class.getName());
 
-    private Level               level;
-    private int                 logfrq      = 1000;
-    private Long                windowStart = null;
+    private final static Logger log = Logger.getLogger(LoggingProgressMonitor.class.getName());
+
+    private int logfrq = 1000;
+
+    private final Level level;
+    private final Long windowStart = null;
 
     /**
-     * Creates a new instance of this class logging progress with the defined logging level.
-     * 
+     * Creates a new instance of this class logging progress with the defined
+     * logging level.
+     *
      * @param level
      */
     public LoggingProgressMonitor(Level level) {
@@ -26,8 +31,9 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
     }
 
     /**
-     * Creates a new instance of this class with the given log level and log frequency
-     * 
+     * Creates a new instance of this class with the given log level and log
+     * frequency
+     *
      * @param level
      * @param logfrq
      */
@@ -39,7 +45,7 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
     @Override
     public void beginTask(String task, int work) {
         super.beginTask(task, work);
-        log.log(level, "Begin task: <" + task + "> " + work + " units of work.");
+        log.log(level, "Begin task: <{0}> {1} units of work.", new Object[]{task, work});
     }
 
     @Override
@@ -59,8 +65,8 @@ public class LoggingProgressMonitor extends MemoryProgressMonitor {
             }
 
             String st = getSubtask() != null ? "(" + getSubtask() + ")" : "";
-            log.log(level, String.format("%d units worked. So far %d done in %.3f sec <" + st +
-                                         ">. Average %.3f/sec (%.3f/sec)", logfrq, getWorked(),
+            log.log(level, String.format("%d units worked. So far %d done in %.3f sec <" + st
+                    + ">. Average %.3f/sec (%.3f/sec)", logfrq, getWorked(),
                     period / 1000.0, persec, windowPersec));
         }
     }

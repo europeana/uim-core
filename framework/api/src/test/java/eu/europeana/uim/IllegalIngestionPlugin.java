@@ -12,19 +12,20 @@ import eu.europeana.uim.plugin.ingestion.IngestionPluginFailedException;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * This is a minimal plugin containing non-static member fields. This should throw an exception.
- * 
- * @param <I>
- *            generic identifier
- * 
+ * This is a minimal plugin containing non-static member fields. This should
+ * throw an exception.
+ *
+ * @param <I> generic identifier
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
 public class IllegalIngestionPlugin<I> extends AbstractIngestionPlugin<MetaDataRecord<I>, I> {
+
     private static String constantConstant = "This is okay";
 
-    private String        soNotRight;
+    private String soNotRight;
 
     /**
      * Creates a new instance of this class.

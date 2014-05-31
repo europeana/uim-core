@@ -12,14 +12,14 @@ import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This is a minimal workflow start. This should not throw an exception.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class LegalWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<I>, I> {
+
     /**
      * Creates a new instance of this class.
      */

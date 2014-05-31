@@ -12,14 +12,15 @@ import eu.europeana.uim.UIMRegistry;
 
 /**
  * Tests concerning workflows in UIM.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMWorkflowTest {
+
     /**
      * Tests listing of operations of workflows.
-     * 
+     *
      * @throws Exception
      */
     @Test

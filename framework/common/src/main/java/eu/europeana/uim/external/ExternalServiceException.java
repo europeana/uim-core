@@ -22,16 +22,16 @@ package eu.europeana.uim.external;
 
 /**
  * Basic exception thrown of methods in {@link ExternalService}.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 2, 2014
  */
 public class ExternalServiceException extends Exception {
+
     /**
      * For inheritance reasons, pipes through to the super constructor.
-     * 
-     * @param message
-     *            description of the error
+     *
+     * @param message description of the error
      */
     public ExternalServiceException(String message) {
         super(message);
@@ -39,11 +39,9 @@ public class ExternalServiceException extends Exception {
 
     /**
      * For inheritance reasons, pipes through to the super constructor.
-     * 
-     * @param message
-     *            description of the error
-     * @param cause
-     *            root cause of the error
+     *
+     * @param message description of the error
+     * @param cause root cause of the error
      */
     public ExternalServiceException(String message, Throwable cause) {
         super(message, cause);

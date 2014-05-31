@@ -26,18 +26,20 @@ import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.util.CollectionBatchWorkflowStart.Data;
 
 /**
- * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and {@link StorageEngine}.
- * 
+ * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and
+ * {@link StorageEngine}.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class CollectionBatchWorkflowStartTest {
+
     /**
      * Tests initialization of {@link BatchWorkflowStart} with mocks.
-     * 
+     *
      * @throws StorageEngineException
      */
-    @SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+    @SuppressWarnings({"rawtypes", "unchecked", "unused"})
     @Test
     public void testInitialization() throws StorageEngineException {
         StorageEngine engine = mock(StorageEngineAdapter.class);
@@ -54,7 +56,7 @@ public class CollectionBatchWorkflowStartTest {
         when(execution.getProperties()).thenReturn(properties);
 
         Data data = new CollectionBatchWorkflowStart.Data();
-        when(execution.getValue((TKey<?, Data>)any())).thenReturn(data);
+        when(execution.getValue((TKey<?, Data>) any())).thenReturn(data);
 
         CollectionBatchWorkflowStart<Long> start = new CollectionBatchWorkflowStart<Long>();
 

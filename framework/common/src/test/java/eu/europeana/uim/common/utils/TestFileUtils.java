@@ -10,18 +10,18 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
-import eu.europeana.uim.common.utils.FileUtils;
 
 /**
  * Test of functions in {@link FileUtils}.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class TestFileUtils {
+
     /**
      * test if parsing of 4 and 8 digit dates works correct.
-     * 
+     *
      * @throws ParseException
      */
     @Test

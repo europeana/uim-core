@@ -14,11 +14,12 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Dummy implementation of the ResourceEngine
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 3, 2011
  */
 public class ResourceEngineAdapter implements ResourceEngine {
+
     @Override
     public String getIdentifier() {
         return ResourceEngineAdapter.class.getSimpleName();

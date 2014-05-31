@@ -5,17 +5,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import eu.europeana.uim.common.progress.MemoryProgressMonitor;
-import eu.europeana.uim.common.progress.RevisableProgressMonitor;
-import eu.europeana.uim.common.progress.RevisingProgressMonitor;
-
 /**
  * Test for the revisable progress monitor
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 31, 2011
  */
 public class RevisableProgressMonitorTest {
+
     /**
      * Test the revising and revisable progress monitor
      */

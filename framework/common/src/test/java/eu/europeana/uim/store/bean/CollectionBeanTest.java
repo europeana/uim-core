@@ -10,24 +10,26 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
 /**
- * Tests basic operations on implementation {@link CollectionBean} for {@link Collection}.
- * 
+ * Tests basic operations on implementation {@link CollectionBean} for
+ * {@link Collection}.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class CollectionBeanTest {
+
     /**
      * Tests creating of bean and all getter and setter methods on it.
      */
     @Test
     public void testCollectionSetterGetter() {
-        Provider<Long> provider = new ProviderBean<Long>(1L);
+        Provider<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("pmnemonic");
         provider.setName("pname");
         provider.setOaiBaseUrl("Pbase");
         provider.setOaiMetadataPrefix("Pmeta");
 
-        CollectionBean<Long> bean = new CollectionBean<Long>();
+        CollectionBean<Long> bean = new CollectionBean<>();
         bean.setProvider(provider);
         bean.setId(2L);
         bean.setLanguage("a1");
@@ -56,7 +58,7 @@ public class CollectionBeanTest {
      */
     @Test
     public void testCollectionValues() {
-        CollectionBean<Long> bean = new CollectionBean<Long>(1L, null);
+        CollectionBean<Long> bean = new CollectionBean<>(1L, null);
         bean.putValue("a", null);
         assertEquals(1, bean.values().size());
         assertNull(bean.getValue("a"));

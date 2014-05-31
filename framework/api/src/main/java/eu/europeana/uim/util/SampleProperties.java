@@ -12,21 +12,21 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
 /**
- * Convenient utility functions to populate provider etc. from a properties file given as stream or
- * getting it as resource.
- * 
+ * Convenient utility functions to populate provider etc. from a properties file
+ * given as stream or getting it as resource.
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class SampleProperties {
+
     private static final Logger log = Logger.getLogger(SampleProperties.class.getName());
 
     /**
      * Loads properties as resource and stores them to the storage.
-     * 
-     * @param storage
-     *            to update the objects in the backend
+     *
+     * @param storage to update the objects in the backend
      * @throws StorageEngineException
      * @throws IOException
      */
@@ -37,11 +37,9 @@ public class SampleProperties {
 
     /**
      * Stores the given properties to the storage.
-     * 
-     * @param storage
-     *            to update the objects in the backend
-     * @param stream
-     *            holding properties to be used for updates
+     *
+     * @param storage to update the objects in the backend
+     * @param stream holding properties to be used for updates
      * @throws StorageEngineException
      * @throws IOException
      */
@@ -72,8 +70,8 @@ public class SampleProperties {
                         provider.setOaiBaseUrl(arguments[1]);
                         storage.updateProvider(provider);
                     } else {
-                        log.warning("Failed to set provider oai url. Provider <" + arguments[0] +
-                                    " not found.");
+                        log.warning("Failed to set provider oai url. Provider <" + arguments[0]
+                                + " not found.");
                     }
                 } else if (split[0].startsWith("oai.provprefix")) {
                     String[] arguments = split[1].split("\\|");
@@ -82,8 +80,8 @@ public class SampleProperties {
                         provider.setOaiMetadataPrefix(arguments[1]);
                         storage.updateProvider(provider);
                     } else {
-                        log.warning("Failed to set provider oai prefix. Provider <" + arguments[0] +
-                                    " not found.");
+                        log.warning("Failed to set provider oai prefix. Provider <" + arguments[0]
+                                + " not found.");
                     }
                 } else if (split[0].startsWith("collection")) {
                     String[] arguments = split[1].split("\\|");
@@ -96,8 +94,8 @@ public class SampleProperties {
                         collection.setOaiBaseUrl(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai url. Collection <" +
-                                    arguments[0] + " not found.");
+                        log.warning("Failed to set collection oai url. Collection <"
+                                + arguments[0] + " not found.");
                     }
                 } else if (split[0].startsWith("oai.collprefix")) {
                     String[] arguments = split[1].split("\\|");
@@ -106,8 +104,8 @@ public class SampleProperties {
                         collection.setOaiMetadataPrefix(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai prefix. Collection <" +
-                                    arguments[0] + " not found.");
+                        log.warning("Failed to set collection oai prefix. Collection <"
+                                + arguments[0] + " not found.");
                     }
                 } else if (split[0].startsWith("oai.collset")) {
                     String[] arguments = split[1].split("\\|");
@@ -116,8 +114,8 @@ public class SampleProperties {
                         collection.setOaiSet(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai set. Collection <" +
-                                    arguments[0] + " not found.");
+                        log.warning("Failed to set collection oai set. Collection <"
+                                + arguments[0] + " not found.");
                     }
                 }
             }

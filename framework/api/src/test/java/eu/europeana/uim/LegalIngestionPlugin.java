@@ -12,15 +12,15 @@ import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * This is a minimal plugin. This should not throw an exception.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Apr 27, 2011
  */
 @SuppressWarnings("unused")
 public class LegalIngestionPlugin<I> extends AbstractIngestionPlugin<MetaDataRecord<I>, I> {
+
     private static String constantConstant = "This is okay";
 
     /**

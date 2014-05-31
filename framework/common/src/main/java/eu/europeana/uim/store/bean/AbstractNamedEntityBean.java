@@ -2,14 +2,14 @@ package eu.europeana.uim.store.bean;
 
 /**
  * Base class for all mnemonic and name holding data sets.
- * 
- * @param <I>
- *            unique ID
- * 
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public abstract class AbstractNamedEntityBean<I> extends AbstractEntityBean<I> {
+
     private String mnemonic;
     private String name;
 
@@ -22,9 +22,8 @@ public abstract class AbstractNamedEntityBean<I> extends AbstractEntityBean<I> {
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param id
-     *            unique ID
+     *
+     * @param id unique ID
      */
     public AbstractNamedEntityBean(I id) {
         super(id);

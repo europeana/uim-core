@@ -15,20 +15,24 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Dummy implementation of logging engine.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
-    /** LoggingEngineAdapter for LONG identifiers */
-    public static LoggingEngine<Long> LONG   = new LoggingEngineAdapter<Long>() {
-                                             };
-    /** LoggingEngineAdapter for STRING identifiers */
+
+    /**
+     * LoggingEngineAdapter for LONG identifiers
+     */
+    public static LoggingEngine<Long> LONG = new LoggingEngineAdapter<Long>() {
+    };
+    /**
+     * LoggingEngineAdapter for STRING identifiers
+     */
     public static LoggingEngine<Long> STRING = new LoggingEngineAdapter<Long>() {
-                                             };
+    };
 
     @Override
     public String getIdentifier() {
@@ -119,12 +123,12 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
     @Override
     public void logEdmCheck(Execution<I> execution, String modul, String... message) {
     }
-    
+
     @Override
     public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
             String... message) {
     }
-    
+
     @Override
     public List<eu.europeana.uim.logging.LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
         return Collections.emptyList();
@@ -147,19 +151,21 @@ public class LoggingEngineAdapter<I> implements LoggingEngine<I> {
             Execution<I> execution) {
         return Collections.emptyList();
     }
-    
+
     @Override
     public void completed(ExecutionContext<?, I> context) {
     }
 
     /**
      * utility method to serialize a throwable to a string
-     * 
+     *
      * @param throwable
      * @return the whole stacktrace in string representation
      */
     public static String getStackTrace(Throwable throwable) {
-        if (throwable == null) return "";
+        if (throwable == null) {
+            return "";
+        }
 
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);

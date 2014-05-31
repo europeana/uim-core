@@ -3,10 +3,9 @@ package eu.europeana.uim.common.progress;
 
 import org.junit.Test;
 
-
 /**
  * Tests for the CallbackProgressMonitor
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 31, 2011
  */
@@ -22,8 +21,10 @@ public class CallbackProgressMonitorTest {
 
             @Override
             public void event(int worked) {
-                if (worked % 10 != 0) { throw new IllegalStateException(
-                        "Did not arrived here at the right place"); }
+                if (worked % 10 != 0) {
+                    throw new IllegalStateException(
+                            "Did not arrived here at the right place");
+                }
 
             }
         };
@@ -31,6 +32,6 @@ public class CallbackProgressMonitorTest {
         for (int i = 0; i < 200; i++) {
             callbackProgressMonitor.worked(1);
         }
-        
+
     }
 }

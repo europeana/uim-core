@@ -13,14 +13,14 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Registry for UIM services
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface Registry {
+
     /**
-     * @param plugin
-     *            add plugin to registration
+     * @param plugin add plugin to registration
      */
     void addPlugin(Plugin plugin);
 
@@ -31,8 +31,7 @@ public interface Registry {
     Plugin getPlugin(String identifier);
 
     /**
-     * @param plugin
-     *            remove plugin to registration
+     * @param plugin remove plugin to registration
      */
     void removePlugin(Plugin plugin);
 
@@ -42,14 +41,12 @@ public interface Registry {
     List<Plugin> getPlugins();
 
     /**
-     * @param storage
-     *            add storage to registration
+     * @param storage add storage to registration
      */
     void addStorageEngine(StorageEngine<?> storage);
 
     /**
-     * @param storage
-     *            remove storage to registration
+     * @param storage remove storage to registration
      */
     void removeStorageEngine(StorageEngine<?> storage);
 
@@ -59,26 +56,22 @@ public interface Registry {
     Collection<StorageEngine<?>> getStorageEngines();
 
     /**
-     * @param configuredStorageEngine
-     *            name of configured storage engine
+     * @param configuredStorageEngine name of configured storage engine
      */
     void setConfiguredStorageEngine(String configuredStorageEngine);
 
     /**
-     * @param configuredLoggingEngine
-     *            name of configured logging engine
+     * @param configuredLoggingEngine name of configured logging engine
      */
     void setConfiguredLoggingEngine(String configuredLoggingEngine);
 
     /**
-     * @param configuredResourceEngine
-     *            name of the configured resource engine
+     * @param configuredResourceEngine name of the configured resource engine
      */
     void setConfiguredResourceEngine(String configuredResourceEngine);
 
     /**
-     * @param workflow
-     *            add workflow to registration
+     * @param workflow add workflow to registration
      */
     void addWorkflow(Workflow<?, ?> workflow);
 
@@ -88,15 +81,13 @@ public interface Registry {
     List<Workflow<?, ?>> getWorkflows();
 
     /**
-     * @param identifier
-     *            unique identifier of workflow (most likely class name)
+     * @param identifier unique identifier of workflow (most likely class name)
      * @return workflow for the given name or null
      */
     Workflow<?, ?> getWorkflow(String identifier);
 
     /**
-     * @param workflow
-     *            workflow plugin to registration
+     * @param workflow workflow plugin to registration
      */
     void removeWorkflow(Workflow<?, ?> workflow);
 
@@ -112,14 +103,12 @@ public interface Registry {
     StorageEngine<?> getStorageEngine(String identifier);
 
     /**
-     * @param loggingEngine
-     *            add logger to registration
+     * @param loggingEngine add logger to registration
      */
     void addLoggingEngine(LoggingEngine<?> loggingEngine);
 
     /**
-     * @param loggingEngine
-     *            remove logger to registration
+     * @param loggingEngine remove logger to registration
      */
     void removeLoggingEngine(LoggingEngine<?> loggingEngine);
 
@@ -140,14 +129,12 @@ public interface Registry {
     LoggingEngine<?> getLoggingEngine(String identifier);
 
     /**
-     * @param resourceEngine
-     *            add logger to registration
+     * @param resourceEngine add logger to registration
      */
     void addResourceEngine(ResourceEngine resourceEngine);
 
     /**
-     * @param resourceEngine
-     *            remove logger to registration
+     * @param resourceEngine remove logger to registration
      */
     void removeResourceEngine(ResourceEngine resourceEngine);
 
@@ -174,36 +161,34 @@ public interface Registry {
 
     /**
      * Registers the given orchestrator.
-     * 
+     *
      * @param orchestrator
      */
     void setOrchestrator(Orchestrator<?> orchestrator);
 
     /**
      * Unregisters the given orchestrator.
-     * 
+     *
      * @param orchestrator
      */
     void unsetOrchestrator(Orchestrator<?> orchestrator);
 
     /**
-     * @param adapter
-     *            add adapter to registration used to adapt different implementations of plugins to
-     *            use with different data
+     * @param adapter add adapter to registration used to adapt different
+     * implementations of plugins to use with different data
      */
     void addUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter);
 
     /**
-     * @param adapter
-     *            remove adapter from registration used to adapt different implementations of
-     *            plugins to use with different data
+     * @param adapter remove adapter from registration used to adapt different
+     * implementations of plugins to use with different data
      */
     void removeUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter);
 
     /**
-     * @param pluginIdentifier
-     *            identifier defining generic plugin
-     * @return adapter used to adapt data sets for the given plugin or null, if none is registered
+     * @param pluginIdentifier identifier defining generic plugin
+     * @return adapter used to adapt data sets for the given plugin or null, if
+     * none is registered
      */
     UimDatasetAdapter<?, ?> getUimDatasetAdapter(String pluginIdentifier);
 }

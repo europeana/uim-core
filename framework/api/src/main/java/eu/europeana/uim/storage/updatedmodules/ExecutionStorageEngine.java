@@ -9,14 +9,14 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Base class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface ExecutionStorageEngine<I> {
+
     /**
      * @param dataSet
      * @param workflow
@@ -28,15 +28,14 @@ public interface ExecutionStorageEngine<I> {
 
     /**
      * Stores the given execution and its updated values.
-     * 
+     *
      * @param execution
      * @throws StorageEngineException
      */
     void updateExecution(Execution<I> execution) throws StorageEngineException;
 
     /**
-     * @param id
-     *            unique ID, unique over collection, provider, ...
+     * @param id unique ID, unique over collection, provider, ...
      * @return execution under the given ID
      * @throws StorageEngineException
      */
@@ -49,13 +48,13 @@ public interface ExecutionStorageEngine<I> {
     BlockingQueue<Execution<I>> getAllExecutions() throws StorageEngineException;
 
     /**
-     * Finalization method (tear down) for an execution. At the end of each execution this method is
-     * called to allow the storage engine to clean up memory or external resources.
-     * 
-     * @param context
-     *            holds execution depending, information the {@link ExecutionContext} for this
-     *            processing call. This context can change for each call, so references to it have
-     *            to be handled carefully.
+     * Finalization method (tear down) for an execution. At the end of each
+     * execution this method is called to allow the storage engine to clean up
+     * memory or external resources.
+     *
+     * @param context holds execution depending, information the
+     * {@link ExecutionContext} for this processing call. This context can
+     * change for each call, so references to it have to be handled carefully.
      */
     void completed(ExecutionContext<?, I> context);
 }

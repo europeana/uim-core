@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-    xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+           xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0" xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
 
     <cm:property-placeholder persistent-id="eu.europeana.uim">
         <cm:default-properties>
@@ -52,7 +52,7 @@
 
     <reference-list interface="eu.europeana.uim.adapter.UimDatasetAdapter" availability="optional">
         <reference-listener bind-method="addUimDatasetAdapter" unbind-method="removeUimDatasetAdapter"
-            ref="uimRegistry">
+                            ref="uimRegistry">
         </reference-listener>
     </reference-list>
 

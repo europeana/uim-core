@@ -13,10 +13,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.felix.gogo.commands.Action;
-import org.apache.felix.gogo.commands.Argument;
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import org.apache.karaf.shell.commands.Action;
+import org.apache.karaf.shell.commands.Argument;
+import org.apache.karaf.shell.commands.Command;
+import org.apache.karaf.shell.commands.Option;
 import org.apache.felix.service.command.CommandSession;
 
 import eu.europeana.uim.Registry;
@@ -31,47 +31,36 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Store for the UIM process.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-@SuppressWarnings({ "all" })
+@SuppressWarnings({"all"})
 @Command(name = "uim", scope = "store")
 public class UIMStore implements Action {
+
     private static final Logger log = Logger.getLogger(UIMStore.class.getName());
 
     protected enum Operation {
+
         createProvider("<mnemonic> <name> [true|false] the mnemonic, name and aggregator flag"),
-
         updateProvider(
-                       "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"),
-
+                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix"),
         listProvider("lists the providers"),
-
         createCollection(
-                         "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"),
-
+                "p provider <mnemonic> <name> the provider as well as the mnemonic and name values"),
         updateCollection(
-                         "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"),
-
+                "<mnemonic> <field> <value> set the appropriate field value (field=oaiBaseUrl|oaiMetadataPrefix|language"),
         addBlacklistWorkflow(
-                             "Puts the given workflow onto the blacklist (stored in resource engine)"),
-
+                "Puts the given workflow onto the blacklist (stored in resource engine)"),
         removeBlacklistWorkflow(
-                                "Remove the given workflow from the blacklist (stored in resource engine)"),
-
+                "Remove the given workflow from the blacklist (stored in resource engine)"),
         listCollection("lists the collections"),
-
         listGlobalResources("lists the global resources"),
-
         listProviderResources("lists the provider resources"),
-
         listCollectionResources("lists the collection resources"),
-
         checkpoint("creates a checkpoint (a data synchronization)"),
-
         loadConfigData("loads a set of provider/collections"),
-
         loadSampleData("loads a set of sample provider/collections");
 
         private String desc;
@@ -85,26 +74,26 @@ public class UIMStore implements Action {
         }
     }
 
-    private Registry    registry;
+    private final Registry registry;
 
-    @Option(name = "-o", aliases = { "--operation" }, required = false)
+    @Option(name = "-o", aliases = {"--operation"}, required = false)
     protected Operation operation;
 
-    @Option(name = "-p", aliases = { "--parent" })
-    protected String    parent;
+    @Option(name = "-p", aliases = {"--parent"})
+    protected String parent;
 
     @Argument(index = 0)
-    protected String    argument0;
+    protected String argument0;
 
     @Argument(index = 1)
-    protected String    argument1;
+    protected String argument1;
 
     @Argument(index = 2)
-    protected String    argument2;
+    protected String argument2;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param registry
      */
     public UIMStore(Registry registry) {
@@ -128,49 +117,49 @@ public class UIMStore implements Action {
             ResourceEngine resource = registry.getResourceEngine();
 
             switch (operation) {
-            case createProvider:
-                createProvider(storage, out);
-                break;
-            case updateProvider:
-                updateProvider(storage, out);
-                break;
-            case listProvider:
-                listProvider(storage, out);
-                break;
-            case createCollection:
-                createCollection(storage, out);
-                break;
-            case updateCollection:
-                updateCollection(storage, out);
-                break;
-            case addBlacklistWorkflow:
-                addBlacklistWorkflow(resource, argument0);
-                break;
-            case removeBlacklistWorkflow:
-                removeBlacklistWorkflow(resource, argument0);
-                break;
-            case listCollection:
-                listCollection(storage, out);
-                break;
-            case listGlobalResources:
-                listGlobalResources(storage, resource, out);
-                break;
-            case listProviderResources:
-                listProviderResources(storage, resource, out);
-                break;
-            case listCollectionResources:
-                listCollectionResources(storage, resource, out);
-                break;
-            case checkpoint:
-                checkpoint(storage, out);
-                break;
-            case loadConfigData:
-                new SampleProperties().loadConfigData(storage, new FileInputStream(new File(
-                        argument0)));
-                break;
-            case loadSampleData:
-                new SampleProperties().loadSampleData(storage);
-                break;
+                case createProvider:
+                    createProvider(storage, out);
+                    break;
+                case updateProvider:
+                    updateProvider(storage, out);
+                    break;
+                case listProvider:
+                    listProvider(storage, out);
+                    break;
+                case createCollection:
+                    createCollection(storage, out);
+                    break;
+                case updateCollection:
+                    updateCollection(storage, out);
+                    break;
+                case addBlacklistWorkflow:
+                    addBlacklistWorkflow(resource, argument0);
+                    break;
+                case removeBlacklistWorkflow:
+                    removeBlacklistWorkflow(resource, argument0);
+                    break;
+                case listCollection:
+                    listCollection(storage, out);
+                    break;
+                case listGlobalResources:
+                    listGlobalResources(storage, resource, out);
+                    break;
+                case listProviderResources:
+                    listProviderResources(storage, resource, out);
+                    break;
+                case listCollectionResources:
+                    listCollectionResources(storage, resource, out);
+                    break;
+                case checkpoint:
+                    checkpoint(storage, out);
+                    break;
+                case loadConfigData:
+                    new SampleProperties().loadConfigData(storage, new FileInputStream(new File(
+                            argument0)));
+                    break;
+                case loadSampleData:
+                    new SampleProperties().loadSampleData(storage);
+                    break;
             }
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to start storage command:", t);
@@ -183,15 +172,17 @@ public class UIMStore implements Action {
      * key for blacklisted workflows in resource engine
      */
     public static List<String> blackListKey = new ArrayList<String>() {
-                                                {
-                                                    add("Workflow Blacklist");
-                                                }
-                                            };
+        {
+            add("Workflow Blacklist");
+        }
+    };
 
     private void removeBlacklistWorkflow(ResourceEngine resource, String blacklistWorkflow) {
         LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
         List<String> blackList = resources.get(blackListKey.get(0));
-        if (blackList == null) { return; }
+        if (blackList == null) {
+            return;
+        }
         boolean remove = true;
         while (remove) {
             remove = blackList.remove(blacklistWorkflow);
@@ -203,7 +194,7 @@ public class UIMStore implements Action {
         LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(blackListKey);
         List<String> blackList = resources.get(blackListKey.get(0));
         if (blackList == null) {
-            blackList = new ArrayList<String>();
+            blackList = new ArrayList<>();
             resources.put(blackListKey.get(0), blackList);
         }
         blackList.add(blacklistWorkflow);
@@ -216,7 +207,7 @@ public class UIMStore implements Action {
      */
     private <I> void listGlobalResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) {
-        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
+        List<Workflow<?, ?>> workflows = new ArrayList<>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();
@@ -228,8 +219,8 @@ public class UIMStore implements Action {
             List<String> keys = getParameters(current);
 
             LinkedHashMap<String, List<String>> resources = resource.getGlobalResources(keys);
-            out.println("Global Resources for <" + current.getIdentifier() + ">:" +
-                        resources.toString() + "\n");
+            out.println("Global Resources for <" + current.getIdentifier() + ">:"
+                    + resources.toString() + "\n");
         }
 
         LinkedHashMap<String, List<String>> blackWorkflow = resource.getGlobalResources(blackListKey);
@@ -243,7 +234,7 @@ public class UIMStore implements Action {
      */
     private <I> void listProviderResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
-        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
+        List<Workflow<?, ?>> workflows = new ArrayList<>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();
@@ -258,15 +249,15 @@ public class UIMStore implements Action {
             for (Provider provider : providers) {
                 LinkedHashMap<String, List<String>> resources = resource.getProviderResources(
                         provider, keys);
-                out.println("Provider " + provider.getMnemonic() + " Resources for <" +
-                            current.getIdentifier() + ">:" + resources.toString());
+                out.println("Provider " + provider.getMnemonic() + " Resources for <"
+                        + current.getIdentifier() + ">:" + resources.toString());
 
             }
         }
     }
 
     private List<String> getParameters(Workflow current) {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         keys.addAll(current.getStart().getParameters());
         List<IngestionPlugin<?, ?>> steps = current.getSteps();
         for (IngestionPlugin plugin : steps) {
@@ -282,7 +273,7 @@ public class UIMStore implements Action {
      */
     private <I> void listCollectionResources(StorageEngine<I> storage, ResourceEngine resource,
             PrintStream out) throws StorageEngineException {
-        List<Workflow<?, ?>> workflows = new ArrayList<Workflow<?, ?>>();
+        List<Workflow<?, ?>> workflows = new ArrayList<>();
         Workflow workflow = registry.getWorkflow(argument0);
         if (workflow == null) {
             workflows = registry.getWorkflows();
@@ -301,8 +292,8 @@ public class UIMStore implements Action {
                     for (Collection collection : collections) {
                         LinkedHashMap<String, List<String>> resources = resource.getCollectionResources(
                                 collection, keys);
-                        out.println("Collection " + collection.getMnemonic() + " Resources for <" +
-                                    current.getIdentifier() + ">:" + resources.toString() + "\n");
+                        out.println("Collection " + collection.getMnemonic() + " Resources for <"
+                                + current.getIdentifier() + ">:" + resources.toString() + "\n");
                     }
                 }
             }
@@ -363,14 +354,14 @@ public class UIMStore implements Action {
 
             out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
-            out.println("Failed to update provider. Failed to update using method <" + method +
-                        "(" + argument2 + ") reason:" + e.getLocalizedMessage());
+            out.println("Failed to update provider. Failed to update using method <" + method
+                    + "(" + argument2 + ") reason:" + e.getLocalizedMessage());
             e.printStackTrace(out);
         }
     }
 
     private void listProvider(StorageEngine storage, PrintStream out) throws StorageEngineException {
-        Set<Provider> mainprovs = new HashSet<Provider>();
+        Set<Provider> mainprovs = new HashSet<>();
         List<Provider> providers = storage.getAllProviders();
         for (Provider provider : providers) {
             if (provider.getRelatedIn() == null || provider.getRelatedIn().isEmpty()) {
@@ -378,7 +369,7 @@ public class UIMStore implements Action {
             }
         }
 
-        Set<Provider> processed = new HashSet<Provider>();
+        Set<Provider> processed = new HashSet<>();
         printTree(mainprovs, processed, "+-", out);
     }
 
@@ -443,8 +434,8 @@ public class UIMStore implements Action {
 
             out.println("Successfully executed " + method + "(" + argument2 + ")");
         } catch (Throwable e) {
-            out.println("Failed to update collection. Failed to update using method <" + method +
-                        "(\"" + argument2 + "\") reason:" + e.getMessage());
+            out.println("Failed to update collection. Failed to update using method <" + method
+                    + "(\"" + argument2 + "\") reason:" + e.getMessage());
             e.printStackTrace(out);
         }
     }

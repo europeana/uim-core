@@ -1,19 +1,22 @@
 package eu.europeana.uim.common.progress;
 
 /**
- * Simple memory based implementation of a ProgressMonitor. This class just holds all information in
- * fields and exposes the field values through getter methods.
- * 
- * @author andreas.juffinger@kb.nl
+ * Simple memory based implementation of a ProgressMonitor. This class just
+ * holds all information in fields and exposes the field values through getter
+ * methods.
+ *
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since Mar 2, 2011
  */
 public class MemoryProgressMonitor implements RevisingProgressMonitor {
-    private String  task      = "Not defined";
-    private String  subtask   = "Not defined";
 
-    private int     work      = 0;
-    private int     worked    = 0;
+    private String task = "Not defined";
+    private String subtask = "Not defined";
 
-    private long    start;
+    private int work = 0;
+    private int worked = 0;
+
+    private long start;
 
     private boolean cancelled = false;
 

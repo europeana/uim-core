@@ -11,19 +11,17 @@ import eu.europeana.uim.workflow.WorkflowStepStatus;
 
 /**
  * An Execution in a running state. It keeps track of the overall progress.
- * 
- * @param <U>
- *            uim data set type
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <U> uim data set type
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface ActiveExecution<U extends UimDataSet<I>, I> extends ExecutionContext<U, I> {
+
     /**
-     * @param paused
-     *            Should the execution be paused?
+     * @param paused Should the execution be paused?
      */
     void setPaused(boolean paused);
 
@@ -33,8 +31,7 @@ public interface ActiveExecution<U extends UimDataSet<I>, I> extends ExecutionCo
     boolean isPaused();
 
     /**
-     * @param initialized
-     *            is the execution already initialized
+     * @param initialized is the execution already initialized
      */
     void setInitialized(boolean initialized);
 
@@ -44,9 +41,9 @@ public interface ActiveExecution<U extends UimDataSet<I>, I> extends ExecutionCo
     boolean isInitialized();
 
     /**
-     * test the execution if all tasks are done either completely finished or failed. so if true:
-     * scheduled == finished + failed
-     * 
+     * test the execution if all tasks are done either completely finished or
+     * failed. so if true: scheduled == finished + failed
+     *
      * @return Is the execution finished?
      */
     boolean isFinished();
@@ -75,41 +72,44 @@ public interface ActiveExecution<U extends UimDataSet<I>, I> extends ExecutionCo
     void incrementCompleted(int count);
 
     /**
-     * gives an estimate of tasks/records which are currently in the pipeline. Note that failed
-     * tasks are not counted. The system can not guarantee the number of records, due to the problem
-     * that some of the tasks might change their status during the time of counting.
-     * 
+     * gives an estimate of tasks/records which are currently in the pipeline.
+     * Note that failed tasks are not counted. The system can not guarantee the
+     * number of records, due to the problem that some of the tasks might change
+     * their status during the time of counting.
+     *
      * @return progress size
      */
     int getProgressSize();
 
     /**
-     * gives the number of tasks/records which are completly finished successful by all steps.
-     * 
+     * gives the number of tasks/records which are completly finished successful
+     * by all steps.
+     *
      * @return amount of completed tasks
      */
     int getCompletedSize();
 
     /**
-     * gives the number of tasks/records which have failed on the way through the workflow no matter
-     * where.
-     * 
+     * gives the number of tasks/records which have failed on the way through
+     * the workflow no matter where.
+     *
      * @return amount of failures
      */
     int getFailureSize();
 
     /**
-     * gives the number of tasks/records which have been scheduled to be processed in the first
-     * place. So scheduled = progress + finished + failure.
-     * 
+     * gives the number of tasks/records which have been scheduled to be
+     * processed in the first place. So scheduled = progress + finished +
+     * failure.
+     *
      * @return amount of scheduled ones
      */
     int getScheduledSize();
 
     /**
-     * gives the number of records which this execution will need to deal with. If not possible to
-     * estimate Integer.MAX_VALUE is given.
-     * 
+     * gives the number of records which this execution will need to deal with.
+     * If not possible to estimate Integer.MAX_VALUE is given.
+     *
      * @return amount of tasks
      */
     int getTotalSize();
@@ -131,13 +131,13 @@ public interface ActiveExecution<U extends UimDataSet<I>, I> extends ExecutionCo
     void waitUntilFinished();
 
     /**
-     * @param work
-     *            increment next work
+     * @param work increment next work
      */
     void incrementScheduled(int work);
 
     /**
-     * Clean up the temporary files created during the execution, if configured in that way
+     * Clean up the temporary files created during the execution, if configured
+     * in that way
      */
     void cleanup();
 }

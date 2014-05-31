@@ -17,19 +17,21 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.UimDataSet;
 
 /**
- * Tests {@link SampleProperties} using mocks of {@link UimDataSet}s and {@link StorageEngine}.
- * 
+ * Tests {@link SampleProperties} using mocks of {@link UimDataSet}s and
+ * {@link StorageEngine}.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class SamplePropertiesTest {
+
     /**
      * Tests loading of samples.
-     * 
+     *
      * @throws StorageEngineException
      * @throws IOException
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void testLoadSamples() throws StorageEngineException, IOException {
         StorageEngine engine = mock(StorageEngine.class);
@@ -39,7 +41,7 @@ public class SamplePropertiesTest {
         when(engine.createProvider()).thenReturn(provider);
         when(engine.findProvider(anyString())).thenReturn(provider);
 
-        when(engine.createCollection((Provider)any())).thenReturn(collection);
+        when(engine.createCollection((Provider) any())).thenReturn(collection);
         when(engine.findCollection(anyString())).thenReturn(collection);
 
         SampleProperties sample = new SampleProperties();

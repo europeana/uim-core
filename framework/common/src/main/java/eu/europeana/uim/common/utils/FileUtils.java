@@ -8,18 +8,19 @@ import java.util.List;
 
 /**
  * Utility functions for file manipulations.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @date Apr 30, 2012
  */
 public class FileUtils {
+
     /**
      * @param file
      * @param lines
      * @return the tailing n lines (or all if file has less lines)
      */
     public static List<String> tail(File file, int lines) {
-        LinkedList<String> result = new LinkedList<String>();
+        LinkedList<String> result = new LinkedList<>();
         java.io.RandomAccessFile fileHandler = null;
 
         try {
@@ -57,7 +58,7 @@ public class FileUtils {
                         continue;
                     }
                 } else {
-                    sb.append((char)readByte);
+                    sb.append((char) readByte);
                 }
             }
 

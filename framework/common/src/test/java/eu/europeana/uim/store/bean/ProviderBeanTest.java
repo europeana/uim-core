@@ -9,18 +9,20 @@ import org.junit.Test;
 import eu.europeana.uim.store.Provider;
 
 /**
- * Tests basic operations on implementation {@link ProviderBean} for {@link Provider}.
- * 
+ * Tests basic operations on implementation {@link ProviderBean} for
+ * {@link Provider}.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class ProviderBeanTest {
+
     /**
      * Tests creating of bean and all getter and setter methods on it.
      */
     @Test
     public void testProviderSetterGetter() {
-        Provider<Long> bean = new ProviderBean<Long>(1L);
+        Provider<Long> bean = new ProviderBean<>(1L);
         bean.setMnemonic("mnemonic");
         bean.setName("name");
         bean.setOaiBaseUrl("Pbase");
@@ -39,7 +41,7 @@ public class ProviderBeanTest {
      */
     @Test
     public void testProviderValues() {
-        Provider<Long> bean = new ProviderBean<Long>(1L);
+        Provider<Long> bean = new ProviderBean<>(1L);
         bean.putValue("a", null);
         assertEquals(1, bean.values().size());
         assertNull(bean.getValue("a"));

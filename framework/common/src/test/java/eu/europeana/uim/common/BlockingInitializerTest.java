@@ -7,11 +7,12 @@ import org.junit.Test;
 
 /**
  * Test for BlockingInitializer
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 31, 2011
  */
 public class BlockingInitializerTest {
+
     /**
      * Tests a basic run through of a blocking initializer
      */

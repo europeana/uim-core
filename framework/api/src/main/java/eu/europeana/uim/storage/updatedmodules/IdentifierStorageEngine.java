@@ -8,26 +8,25 @@ import eu.europeana.uim.store.Provider;
 
 /**
  * Identifier class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 25, 2014
  */
 public interface IdentifierStorageEngine<I> {
+
     /**
      * @param external
      * @return storage engine based ids
      */
     List<I> getProviderId(String... providerExternalId);
-    
+
     /**
      * @param external
      * @return storage engine based ids
      */
     List<I> getCollectionId(Provider<I> provider, String... collectionExternalId);
-    
 
     /**
      * @param external

@@ -20,20 +20,21 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Abstract base class to test the contract of the resource engine
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @param <I>
  * @date May 9, 2011
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public abstract class AbstractResourceEngineTest<I> {
-    ResourceEngine engine          = null;
-    final String   EXAMPLE_KEY_1   = "example1.property.file";
-    final String   EXAMPLE_KEY_2   = "example2.property";
-    final String   EXAMPLE_KEY_3   = "3";
-    final String   EXAMPLE_KEY_4   = "4";
-    final String   EXAMPLE_VALUE_1 = "exampleValue1";
-    final String   EXAMPLE_VALUE_2 = "exampleValue2";
+
+    ResourceEngine engine = null;
+    final String EXAMPLE_KEY_1 = "example1.property.file";
+    final String EXAMPLE_KEY_2 = "example2.property";
+    final String EXAMPLE_KEY_3 = "3";
+    final String EXAMPLE_KEY_4 = "4";
+    final String EXAMPLE_VALUE_1 = "exampleValue1";
+    final String EXAMPLE_VALUE_2 = "exampleValue2";
 
     /**
      * Setups storage engine.
@@ -78,6 +79,7 @@ public abstract class AbstractResourceEngineTest<I> {
     protected abstract Collection<I> testGenerateCollection(Provider<I> provider);
 
     abstract class AbstractCreateAndGetResourceTestCase<J> {
+
         public abstract LinkedHashMap<String, List<String>> getEntityResources(J entity,
                 List<String> keys);
 

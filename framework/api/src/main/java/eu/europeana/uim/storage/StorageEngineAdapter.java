@@ -18,14 +18,14 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * noop storage engine adapter for testing purposes
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
+
     @Override
     public String getIdentifier() {
         return StorageEngineAdapter.class.getSimpleName();
@@ -196,25 +196,25 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     @SuppressWarnings("unchecked")
     @Override
     public I[] getByRequest(Request<I> request) {
-        return (I[])Collections.emptyList().toArray();
+        return (I[]) Collections.emptyList().toArray();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public I[] getByCollection(Collection<I> collection) {
-        return (I[])Collections.emptyList().toArray();
+        return (I[]) Collections.emptyList().toArray();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public I[] getByProvider(Provider<I> provider, boolean recursive) {
-        return (I[])Collections.emptyList().toArray();
+        return (I[]) Collections.emptyList().toArray();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public I[] getAllIds() {
-        return (I[])Collections.emptyList().toArray();
+        return (I[]) Collections.emptyList().toArray();
     }
 
     @Override

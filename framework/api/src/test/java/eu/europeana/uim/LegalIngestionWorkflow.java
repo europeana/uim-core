@@ -6,14 +6,14 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
 
 /**
  * This is a minimal workflow. This should not throw an exception.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class LegalIngestionWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
+
     /**
      * Creates a new instance of this class.
      */

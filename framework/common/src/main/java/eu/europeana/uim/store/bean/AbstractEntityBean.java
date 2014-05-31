@@ -6,20 +6,17 @@ import eu.europeana.uim.store.UimEntity;
 
 /**
  * Implements the {@link UimEntity} using Longs as keys.
- * 
- * @param <I>
- *            unique ID
- * 
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	/**
      * unique ID as Long
      */
     private I id;
@@ -33,7 +30,7 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param id
      */
     public AbstractEntityBean(I id) {
@@ -46,8 +43,7 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
     }
 
     /**
-     * @param id
-     *            unique identifier
+     * @param id unique identifier
      */
     public void setId(I id) {
         this.id = id;
@@ -64,13 +60,23 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
     @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        AbstractEntityBean other = (AbstractEntityBean)obj;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        AbstractEntityBean other = (AbstractEntityBean) obj;
         if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
+            if (other.id != null) {
+                return false;
+            }
+        } else if (!id.equals(other.id)) {
+            return false;
+        }
         return true;
     }
 }

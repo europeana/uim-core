@@ -18,14 +18,15 @@ import eu.europeana.uim.orchestration.Orchestrator;
 
 /**
  * Tests concerning executions.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMExecutionTest {
+
     /**
      * Tests listing of operations of executions.
-     * 
+     *
      * @throws Exception
      */
     @Test

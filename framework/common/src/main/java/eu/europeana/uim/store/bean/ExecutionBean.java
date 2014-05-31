@@ -11,29 +11,29 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Implementation of {@link Exception} using Longs as IDs.
- * 
- * @param <I>
- *            unique ID
- * 
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution<I>, Serializable {
-    private static final long   serialVersionUID = 1L;
-    
-    private boolean             active           = false;
-    private Date                startTime;
-    private Date                endTime;
-    private UimDataSet<I>       dataSet;
-    private String              workflowIdentifier;
-    private String              name;
-    private boolean             canceled         = false;
-    private int                 success;
-    private int                 failure;
-    private int                 processed;
-    private String              logFile;
 
-    private Map<String, String> values           = new HashMap<String, String>();
+    private static final long serialVersionUID = 1L;
+
+    private boolean active = false;
+    private Date startTime;
+    private Date endTime;
+    private UimDataSet<I> dataSet;
+    private String workflowIdentifier;
+    private String name;
+    private boolean canceled = false;
+    private int success;
+    private int failure;
+    private int processed;
+    private String logFile;
+
+    private Map<String, String> values = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -44,9 +44,8 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param id
-     *            unique ID
+     *
+     * @param id unique ID
      */
     public ExecutionBean(I id) {
         super(id);
@@ -195,8 +194,8 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
 
     @Override
     public String toString() {
-        return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier=" +
-               workflowIdentifier + ", dataSet=" + dataSet + "]";
+        return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier="
+                + workflowIdentifier + ", dataSet=" + dataSet + "]";
     }
 
     @Override

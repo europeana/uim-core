@@ -14,19 +14,20 @@ import eu.europeana.uim.Registry;
 
 /**
  * Infos during execution.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 @Command(name = "uim", scope = "info")
 public class UIMInfo implements Function, Action {
+
     private static final Logger log = Logger.getLogger(UIMInfo.class.getName());
 
-    private Registry            registry;
+    private final Registry registry;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param registry
      */
     public UIMInfo(Registry registry) {

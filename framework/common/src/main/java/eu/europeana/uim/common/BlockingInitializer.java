@@ -6,41 +6,27 @@ import java.util.logging.Logger;
 
 /**
  * Blocks while intialization of generic things.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 2, 2011
  */
 public abstract class BlockingInitializer implements Runnable {
-    private static final Logger log                = Logger.getLogger(BlockingInitializer.class.getName());
+
+    private static final Logger log = Logger.getLogger(BlockingInitializer.class.getName());
+
+    public static final int STATUS_NEW = 0;
+    public static final int STATUS_BOOTING = 1;
+    public static final int STATUS_FAILED = 97;
+    public static final int STATUS_INITIALIZED = 98;
+    public static final int STATUS_SHUTDOWN = 99;
+
+    protected int status = STATUS_NEW;
 
     /**
-     * BlockingInitializer STATUS_NEW object created
+     * BlockingInitializer exception which is caught from the internal run
+     * method
      */
-    public static final int     STATUS_NEW         = 0;
-
-    /**
-     * BlockingInitializer STATUS_BOOTING object is being initialized
-     */
-    public static final int     STATUS_BOOTING     = 1;
-
-    /**
-     * BlockingInitializer STATUS_FAILED Initialization failed
-     */
-    public static final int     STATUS_FAILED      = 97;
-    /**
-     * BlockingInitializer STATUS_INITIALIZED Initialization successful
-     * */
-    public static final int     STATUS_INITIALIZED = 98;
-    /** BlockingInitializer STATUS_SHUTDOWN Initializer has ended */
-    public static final int     STATUS_SHUTDOWN    = 99;
-
-    /**
-     * BlockingInitializer status current status of the initializer
-     */
-    protected int               status             = STATUS_NEW;
-
-    /** BlockingInitializer exception which is catched from the internal run method */
-    protected RuntimeException  exception          = null;
+    protected RuntimeException exception = null;
 
     /**
      * Creates a new instance of this class.
@@ -49,13 +35,15 @@ public abstract class BlockingInitializer implements Runnable {
     }
 
     /**
-     * Start the guarded initialization in a new thread and wait till the result for that is clear.
-     * 
-     * @param cl
-     *            the class loader relevant for this context
+     * Start the guarded initialization in a new thread and wait till the result
+     * for that is clear.
+     *
+     * @param cl the class loader relevant for this context
      */
     public final synchronized void initialize(ClassLoader cl) {
-        if (status >= STATUS_FAILED) return;
+        if (status >= STATUS_FAILED) {
+            return;
+        }
 
         // if status is NEW or BOOTING
         // we start a new initialization process.
@@ -67,10 +55,13 @@ public abstract class BlockingInitializer implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
+                //ignore interruption, just go to next check
             }
         }
 
-        if (exception != null) { throw exception; }
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     /**
@@ -87,17 +78,16 @@ public abstract class BlockingInitializer implements Runnable {
             initializeInternal();
             status = STATUS_INITIALIZED;
         } catch (Throwable t) {
-            log.log(Level.SEVERE, "Failed to initialize with classloader:" +
-                                  Thread.currentThread().getContextClassLoader(), t);
+            log.log(Level.SEVERE, "Failed to initialize with classloader:"
+                    + Thread.currentThread().getContextClassLoader(), t);
             status = STATUS_FAILED;
             exception = new RuntimeException("Exception while running initialization.", t);
         }
     }
 
     /**
-     * This is the extension point for implementations. Everything that needs to be setup during
-     * initialization should be in here
-     * 
+     * This is the extension point for implementations. Everything that needs to
+     * be setup during initialization should be in here
      */
     protected abstract void initializeInternal();
 }

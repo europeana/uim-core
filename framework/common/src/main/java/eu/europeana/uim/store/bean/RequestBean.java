@@ -13,24 +13,23 @@ import eu.europeana.uim.store.Request;
 
 /**
  * Implementation of {@link Request} using Long as ID.
- * 
- * @param <I>
- *            unique ID
- * 
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,Serializable {
+public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>, Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	private Collection<I>       collection;
-    private Date                date;
+    private static final long serialVersionUID = 1L;
 
-    private Date                from;
-    private Date                till;
+    private Collection<I> collection;
+    private Date date;
 
-    private boolean             failed;
+    private Date from;
+    private Date till;
+
+    private boolean failed;
 
     private Map<String, String> values = new HashMap<String, String>();
 
@@ -43,9 +42,8 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param id
-     *            unique ID
+     *
+     * @param id unique ID
      * @param collection
      * @param date
      */
@@ -81,7 +79,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     /**
      * Returns the from.
-     * 
+     *
      * @return the from
      */
     @Override
@@ -91,9 +89,8 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     /**
      * Sets the from to the given value.
-     * 
-     * @param from
-     *            the from to set
+     *
+     * @param from the from to set
      */
     @Override
     public void setDataFrom(Date from) {
@@ -102,28 +99,30 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     /**
      * Returns the till.
-     * 
+     *
      * @return the till
      */
     @Override
     public Date getDataTill() {
-        if (till == null) return getDate();
+        if (till == null) {
+            return getDate();
+        }
         return till;
     }
 
     /**
      * Sets the till to the given value.
-     * 
-     * @param till
-     *            the till to set
+     *
+     * @param till the till to set
      */
     @Override
     public void setDataTill(Date till) {
         this.till = till;
     }
-    
+
     /**
      * Returns the failed.
+     *
      * @return the failed
      */
     @Override
@@ -133,6 +132,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     /**
      * Sets the failed to the given value.
+     *
      * @param failed the failed to set
      */
     @Override

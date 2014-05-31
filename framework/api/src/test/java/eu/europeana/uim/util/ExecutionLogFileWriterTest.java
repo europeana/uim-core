@@ -17,11 +17,12 @@ import eu.europeana.uim.store.bean.ExecutionBean;
 
 /**
  * Simple test of the log file writer
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Oct 19, 2011
  */
 public class ExecutionLogFileWriterTest {
+
     /**
      * Clear logging directory before tests.
      */
@@ -33,7 +34,7 @@ public class ExecutionLogFileWriterTest {
 
     /**
      * Test logging to file!
-     * 
+     *
      * @throws IOException
      */
     @Test
@@ -41,7 +42,7 @@ public class ExecutionLogFileWriterTest {
         ExecutionLogFileWriter<Long> executionLogFileWriter = new ExecutionLogFileWriter<Long>(
                 "./target/logtest");
         assertNotNull(executionLogFileWriter);
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({"unchecked", "rawtypes"})
         Execution<Long> execution = new ExecutionBean(1123);
         executionLogFileWriter.log(execution, Level.SEVERE, "test1");
         assertTrue(executionLogFileWriter.getLogFile(execution).exists());

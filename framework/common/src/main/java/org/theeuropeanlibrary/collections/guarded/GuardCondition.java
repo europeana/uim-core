@@ -16,15 +16,18 @@
 package org.theeuropeanlibrary.collections.guarded;
 
 /**
- * @param <T>
- * 
+ * Guard condition on object to be passed or not.
+ *
+ * @param <T> generic object
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Aug 22, 2011
  */
 public interface GuardCondition<T> {
+
     /**
      * @param object
      * @return Is allowed?
      */
-    public boolean allow(GuardedKey<T> object);
+    boolean allow(GuardedKey<T> object);
 }

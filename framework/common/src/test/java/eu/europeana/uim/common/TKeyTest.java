@@ -10,16 +10,14 @@ import java.io.Serializable;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.europeana.uim.common.TKey;
-
 /**
  * Test for TKey
- * 
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class TKeyTest {
+
     /**
      * setup method for tkeys which clears all TKeys.
      */
@@ -69,7 +67,7 @@ public class TKeyTest {
     /**
      * This tests the backward compatible way of getting a key from a string
      */
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({"rawtypes"})
     @Test
     public void testFromStringBackwardCompatibility() {
         TKey<TKey, String> key = TKey.register(TKey.class, "key", String.class);

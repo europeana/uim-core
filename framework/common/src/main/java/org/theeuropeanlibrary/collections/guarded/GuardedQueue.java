@@ -33,35 +33,38 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * <p>
  * </p>
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Aug 22, 2011
  */
-@SuppressWarnings({ "cast", "rawtypes", "unchecked" })
+@SuppressWarnings({"cast", "rawtypes", "unchecked"})
 public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueue<Guarded> {
-    /** long serialVersionUID */
-    public static final long            serialVersionUID = 1L;
 
-    private PriorityQueue<GuardedKey>   priority         = null;
+    /**
+     * long serialVersionUID
+     */
+    public static final long serialVersionUID = 1L;
 
-    private Map<Object, Queue<Guarded>> sublistMap       = new HashMap<Object, Queue<Guarded>>();
+    private PriorityQueue<GuardedKey> priority = null;
 
-    private AtomicInteger               size             = new AtomicInteger(0);
-    private GuardCondition              condition;
+    private Map<Object, Queue<Guarded>> sublistMap = new HashMap<>();
 
-    private int                         maxParallelSize  = 500;
-    private int                         maxQueueSize     = 100;
+    private AtomicInteger size = new AtomicInteger(0);
+    private GuardCondition condition;
 
-    private ReentrantLock               changeLock       = new ReentrantLock();
+    private int maxParallelSize = 500;
+    private int maxQueueSize = 100;
 
-    private Semaphore                   emptyBlock;
+    private ReentrantLock changeLock = new ReentrantLock();
 
-    private Semaphore                   maxKeySizeBlock;
-    private Semaphore                   maxSizeBlock;
+    private final Semaphore emptyBlock;
+
+    private final Semaphore maxKeySizeBlock;
+    private final Semaphore maxSizeBlock;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param condition
      * @param maxParallelQueues
      * @param maxQueueSize
@@ -69,12 +72,12 @@ public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueu
      * @param fair
      */
     public GuardedQueue(GuardCondition condition, int maxParallelQueues, int maxQueueSize,
-                        int maxSize, boolean fair) {
+            int maxSize, boolean fair) {
         this.condition = condition;
         this.maxParallelSize = maxParallelQueues;
         this.maxQueueSize = maxQueueSize;
 
-        priority = new PriorityQueue<GuardedKey>(maxQueueSize, new Comparator<GuardedKey>() {
+        priority = new PriorityQueue<>(maxQueueSize, new Comparator<GuardedKey>() {
             @Override
             public int compare(GuardedKey o1, GuardedKey o2) {
                 return o1.compareTo(o2);
@@ -92,77 +95,89 @@ public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueu
      */
     @Override
     public boolean offer(Guarded task) {
-        if (task == null) throw new NullPointerException();
+        if (task == null) {
+            throw new NullPointerException();
+        }
 
         GuardedKey key = task.getGuardKey();
-        if (key == null) throw new NullPointerException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
 
         changeLock.lock();
-        Queue<Guarded> subList = (Queue<Guarded>)sublistMap.get(key);
-        if (subList == null) {
-            subList = new LinkedList<Guarded>();
-            if (maxKeySizeBlock.tryAcquire()) {
-                addQueue(key, subList);
-            } else {
+        try {
+            Queue<Guarded> subList = (Queue<Guarded>) sublistMap.get(key);
+            if (subList == null) {
+                subList = new LinkedList<>();
+                if (maxKeySizeBlock.tryAcquire()) {
+                    addQueue(key, subList);
+                } else {
+                    changeLock.unlock();
+                    return false;
+                }
+            }
+
+            if (maxSizeBlock.tryAcquire()) {
+                if (subList.offer(task)) {
+                    size.getAndIncrement();
+                }
+
+                emptyBlock.release();
                 changeLock.unlock();
-                return false;
+                return true;
             }
-        }
-
-        if (maxSizeBlock.tryAcquire()) {
-            if (subList.offer(task)) {
-                size.getAndIncrement();
-            }
-
-            emptyBlock.release();
+        } finally {
             changeLock.unlock();
-            return true;
         }
-
-        changeLock.unlock();
         return false;
     }
 
     @Override
     public boolean offer(Guarded task, long timeout, TimeUnit unit) throws InterruptedException {
-        if (task == null) throw new NullPointerException();
+        if (task == null) {
+            throw new NullPointerException();
+        }
 
         GuardedKey key = task.getGuardKey();
-        if (key == null) throw new NullPointerException();
+        if (key == null) {
+            throw new NullPointerException();
+        }
 
         changeLock.lock();
-        Queue<Guarded> subList = (Queue<Guarded>)sublistMap.get(key);
-        if (subList == null) {
-            subList = new LinkedList<Guarded>();
-            if (maxKeySizeBlock.tryAcquire(timeout, unit)) {
-                addQueue(key, subList);
-            } else {
+        try {
+            Queue<Guarded> subList = (Queue<Guarded>) sublistMap.get(key);
+            if (subList == null) {
+                subList = new LinkedList<>();
+                if (maxKeySizeBlock.tryAcquire(timeout, unit)) {
+                    addQueue(key, subList);
+                } else {
+                    changeLock.unlock();
+                    return false;
+                }
+            }
+
+            if (maxSizeBlock.tryAcquire(timeout, unit)) {
+                if (subList.offer(task)) {
+                    size.getAndIncrement();
+                }
+                emptyBlock.release();
                 changeLock.unlock();
-                return false;
+                return true;
             }
-        }
-
-        if (maxSizeBlock.tryAcquire(timeout, unit)) {
-            if (subList.offer(task)) {
-                size.getAndIncrement();
-            }
-            emptyBlock.release();
+        } finally {
             changeLock.unlock();
-            return true;
         }
-
-        changeLock.unlock();
         return false;
     }
 
     @Override
     public Guarded poll() {
-        LinkedList<GuardedKey> testList = new LinkedList<GuardedKey>();
-        GuardedKey key = null;
+        LinkedList<GuardedKey> testList = new LinkedList<>();
+        GuardedKey key;
 
         changeLock.lock();
         do {
-            key = (GuardedKey)priority.peek();
+            key = (GuardedKey) priority.peek();
             if (key != null && condition.allow(key)) {
                 testList.add(priority.poll());
             }
@@ -172,16 +187,11 @@ public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueu
             changeLock.unlock();
             return null;
         } else {
+            GuardedKey key0 = testList.getFirst();
+            Queue<Guarded> subList = (Queue<Guarded>) sublistMap.get(key0);
 
-            GuardedKey key0 = null;
-            Guarded gt0 = null;
-            Queue<Guarded> subList0 = null;
-
-            key0 = testList.getFirst();
-            Queue<Guarded> subList = (Queue<Guarded>)sublistMap.get(key0);
-
-            gt0 = subList.poll();
-            subList0 = subList;
+            Guarded gt0 = subList.poll();
+            Queue<Guarded> subList0 = subList;
 
             key0.delivered();
             for (GuardedKey k : testList) {
@@ -210,11 +220,13 @@ public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueu
             do {
                 if (emptyBlock.tryAcquire(millis, TimeUnit.MILLISECONDS)) {
                     try {
-                        GuardedKey key = (GuardedKey)priority.peek();
+                        GuardedKey key = (GuardedKey) priority.peek();
                         if (key != null) {
                             if (condition.allow(key)) {
                                 e = poll();
-                                if (e != null) { return e; }
+                                if (e != null) {
+                                    return e;
+                                }
                             }
                         }
                     } finally {
@@ -319,15 +331,11 @@ public class GuardedQueue extends AbstractQueue<Guarded> implements BlockingQueu
         return result;
     }
 
-    /**
-   */
     private synchronized void addQueue(GuardedKey key, Queue<Guarded> subList) {
         sublistMap.put(key, subList);
         priority.offer(key);
     }
 
-    /**
-   */
     private synchronized void removeQueue(Object key) {
         sublistMap.remove(key);
         priority.remove(key);

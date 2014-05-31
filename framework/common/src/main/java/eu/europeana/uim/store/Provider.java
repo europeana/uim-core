@@ -13,17 +13,19 @@ import java.util.Set;
 
  */
 /**
- * A provider holds different collection and most likely serves as entity like a national library.
- * 
- * @param <I>
- *            generic ID
- * 
+ * A provider holds different collection and most likely serves as entity like a
+ * national library.
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface Provider<I> extends UimEntity<I> {
+
     /**
-     * @return retrieve providers to which this provider seems to be dependent on
+     * @return retrieve providers to which this provider seems to be dependent
+     * on
      */
     Set<Provider<I>> getRelatedOut();
 
@@ -38,8 +40,7 @@ public interface Provider<I> extends UimEntity<I> {
     String getMnemonic();
 
     /**
-     * @param mnemonic
-     *            mnemonic under which this can be recognized
+     * @param mnemonic mnemonic under which this can be recognized
      */
     void setMnemonic(String mnemonic);
 
@@ -49,14 +50,12 @@ public interface Provider<I> extends UimEntity<I> {
     String getName();
 
     /**
-     * @param name
-     *            name of the provider (must not be unique)
+     * @param name name of the provider (must not be unique)
      */
     void setName(String name);
 
     /**
-     * @param aggregator
-     *            Is it an aggregator itself?
+     * @param aggregator Is it an aggregator itself?
      */
     void setAggregator(boolean aggregator);
 
@@ -71,8 +70,7 @@ public interface Provider<I> extends UimEntity<I> {
     String getOaiBaseUrl();
 
     /**
-     * @param baseUrl
-     *            base url to retrieve the providers data
+     * @param baseUrl base url to retrieve the providers data
      */
     void setOaiBaseUrl(String baseUrl);
 
@@ -82,14 +80,13 @@ public interface Provider<I> extends UimEntity<I> {
     String getOaiMetadataPrefix();
 
     /**
-     * @param prefix
-     *            a prefix for the metadata retrieved from this oai
+     * @param prefix a prefix for the metadata retrieved from this oai
      */
     void setOaiMetadataPrefix(String prefix);
 
     /**
      * string key,value pairs for arbitraty information on colleciton level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -97,7 +94,7 @@ public interface Provider<I> extends UimEntity<I> {
 
     /**
      * retrieve the stirng value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */
@@ -105,7 +102,7 @@ public interface Provider<I> extends UimEntity<I> {
 
     /**
      * string key,value pairs for arbitraty information on colleciton level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -113,7 +110,7 @@ public interface Provider<I> extends UimEntity<I> {
 
     /**
      * retrieve the stirng value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */

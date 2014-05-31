@@ -14,15 +14,14 @@ import eu.europeana.uim.store.Execution;
 
 /**
  * Simple log write to a file
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
- * @param <I>
- *            type of execution id
+ * @param <I> type of execution id
  * @date Oct 19, 2011
  */
 public class ExecutionLogFileWriter<I> {
 
-    private File              baseRootPath;
+    private File baseRootPath;
 
     private static DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss z");
 
@@ -35,9 +34,8 @@ public class ExecutionLogFileWriter<I> {
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param basePath
-     *            the path to store the log files in
+     *
+     * @param basePath the path to store the log files in
      * @throws IOException
      */
     public ExecutionLogFileWriter(final String basePath) throws IOException {
@@ -45,32 +43,32 @@ public class ExecutionLogFileWriter<I> {
     }
 
     /**
-     * @param rootPath
-     *            the root path to keep all log files
+     * @param rootPath the root path to keep all log files
      * @throws IOException
      */
     public void setRootPath(String rootPath) throws IOException {
         baseRootPath = new File(rootPath);
         if (!baseRootPath.exists()) {
-            if (!baseRootPath.mkdirs()) { throw new IllegalArgumentException(
-                    "Could not create logging directory " + baseRootPath.getCanonicalPath()); }
+            if (!baseRootPath.mkdirs()) {
+                throw new IllegalArgumentException(
+                        "Could not create logging directory " + baseRootPath.getCanonicalPath());
+            }
         }
     }
 
     /**
-     * @param execution
-     *            the execution this log entry belongs to
-     * @param level
-     *            the severity of the message
-     * @param message
-     *            the log message
+     * @param execution the execution this log entry belongs to
+     * @param level the severity of the message
+     * @param message the log message
      * @throws IOException
      */
     public synchronized void log(final Execution<I> execution, final Level level,
             final String message) throws IOException {
         File logFile = getLogFile(execution);
         // we have not configured the logging path, just ignore the log request
-        if (logFile == null) return;
+        if (logFile == null) {
+            return;
+        }
         FileWriter fstream = null;
         BufferedWriter out = null;
 
@@ -83,21 +81,27 @@ public class ExecutionLogFileWriter<I> {
 
 //            out.write(dateFormat.format(new Date()) + "|" +
 //                    String.format("%1$#9s", level.getName()) + "|" + cleanedMessage + "\n");
-            out.write(dateFormat.format(new Date()) + "|" +
-                      String.format("%1$s", level.getName()) + "|" + cleanedMessage + "\n");
+            out.write(dateFormat.format(new Date()) + "|"
+                    + String.format("%1$s", level.getName()) + "|" + cleanedMessage + "\n");
         } finally {
-            if (out != null) out.close();
-            if (fstream != null) fstream.close();
+            if (out != null) {
+                out.close();
+            }
+            if (fstream != null) {
+                fstream.close();
+            }
         }
     }
 
     /**
-     * 
+     *
      * @param execution
      * @return the log file for this execution
      */
     public File getLogFile(final Execution<I> execution) {
-        if (baseRootPath == null) { return null; }
+        if (baseRootPath == null) {
+            return null;
+        }
         return new File(baseRootPath, "execution-log-" + execution.getId());
     }
 }

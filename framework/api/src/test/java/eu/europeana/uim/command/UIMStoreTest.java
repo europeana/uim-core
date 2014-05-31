@@ -22,14 +22,15 @@ import eu.europeana.uim.store.bean.ProviderBean;
 
 /**
  * Tests store operations.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMStoreTest {
+
     /**
      * Tests listing of operations of store.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -149,7 +150,7 @@ public class UIMStoreTest {
 
     /**
      * Tests updating of providers in store.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -164,7 +165,7 @@ public class UIMStoreTest {
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findProvider((String)any())).thenReturn(provider);
+        when(storage.findProvider((String) any())).thenReturn(provider);
 
         registry.addStorageEngine(storage);
 
@@ -186,7 +187,7 @@ public class UIMStoreTest {
 
     /**
      * Test creation of collections in store.
-     * 
+     *
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
@@ -202,8 +203,8 @@ public class UIMStoreTest {
 
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findProvider((String)any())).thenReturn(provider);
-        when(storage.createCollection((Provider<Long>)any())).thenReturn(collection);
+        when(storage.findProvider((String) any())).thenReturn(provider);
+        when(storage.createCollection((Provider<Long>) any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
 
@@ -226,7 +227,7 @@ public class UIMStoreTest {
 
     /**
      * Tests updating of collections in store.
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -241,7 +242,7 @@ public class UIMStoreTest {
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findCollection((String)any())).thenReturn(collection);
+        when(storage.findCollection((String) any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
 

@@ -16,36 +16,38 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Workflow for the UIM process.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 @Command(name = "uim", scope = "workflow")
 public class UIMWorkflow implements Action {
+
     /**
      * Available operations
-     * 
+     *
      * @author Markus Muhr (markus.muhr@kb.nl)
      * @since Aug 17, 2011
      */
     protected enum Operation {
+
         /**
          * listing workflows
          */
         listWorkflows
     }
 
-    private Registry    registry;
+    private final Registry registry;
 
     /**
      * what operation? only listing workflows right now
      */
-    @Option(name = "-o", aliases = { "--operation" }, required = false)
+    @Option(name = "-o", aliases = {"--operation"}, required = false)
     protected Operation operation;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param registry
      */
     public UIMWorkflow(Registry registry) {
@@ -66,9 +68,9 @@ public class UIMWorkflow implements Action {
 
         StorageEngine<?> storage = registry.getStorageEngine();
         switch (operation) {
-        case listWorkflows:
-            listWorkflows(storage, out);
-            break;
+            case listWorkflows:
+                listWorkflows(storage, out);
+                break;
         }
         return null;
     }
@@ -77,7 +79,7 @@ public class UIMWorkflow implements Action {
      * @param storage
      * @param out
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void listWorkflows(StorageEngine<?> storage, PrintStream out) {
         List<Workflow<?, ?>> workflows = getRegistry().getWorkflows();
 
@@ -88,14 +90,18 @@ public class UIMWorkflow implements Action {
             }
             builder.append(workflow.getName());
             WorkflowStart<?, ?> start = workflow.getStart();
-            builder.append("\n\t\t  " + start.getClass().getSimpleName());
+            builder.append("\n\t\t  ");
+            builder.append(start.getClass().getSimpleName());
             List<IngestionPlugin<?, ?>> steps = workflow.getSteps();
             for (IngestionPlugin step : steps) {
-                builder.append("n\t\t  " + step.getClass().getSimpleName());
+                builder.append("n\t\t  ");
+                builder.append(step.getClass().getSimpleName());
             }
         }
 
-        if (out != null) out.println("UIM Workflows: " + builder.toString());
+        if (out != null) {
+            out.println("UIM Workflows: " + builder.toString());
+        }
     }
 
     /**

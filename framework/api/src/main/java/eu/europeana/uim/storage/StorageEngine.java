@@ -11,23 +11,22 @@ import eu.europeana.uim.storage.modules.RequestStorageEngine;
 
 /**
  * Base class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface StorageEngine<I> extends CollectionStorageEngine<I>, ExecutionStorageEngine<I>,
         MetaDataRecordStorageEngine<I>, ProviderStorageEngine<I>, RequestStorageEngine<I> {
+
     /**
      * @return identifier of the storage engine
      */
     String getIdentifier();
 
     /**
-     * @param config
-     *            arbitrary key - value map
+     * @param config arbitrary key - value map
      */
     void setConfiguration(Map<String, String> config);
 
@@ -42,7 +41,8 @@ public interface StorageEngine<I> extends CollectionStorageEngine<I>, ExecutionS
     void initialize();
 
     /**
-     * Shutdown the engine and its connected components like connection to database.
+     * Shutdown the engine and its connected components like connection to
+     * database.
      */
     void shutdown();
 
@@ -52,8 +52,7 @@ public interface StorageEngine<I> extends CollectionStorageEngine<I>, ExecutionS
     void checkpoint();
 
     /**
-     * @param command
-     *            arbitrary command interpreted by the engine implementation
+     * @param command arbitrary command interpreted by the engine implementation
      */
     void command(String command);
 

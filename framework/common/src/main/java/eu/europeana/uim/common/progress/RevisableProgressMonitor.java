@@ -4,20 +4,18 @@ package eu.europeana.uim.common.progress;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.europeana.uim.common.progress.MemoryProgressMonitor;
-import eu.europeana.uim.common.progress.ProgressMonitor;
-
 /**
- * A progress monitor which can be monitored by another monitor. This is useful to make a hierarchy
- * of monitors.
- * 
+ * A progress monitor which can be monitored by another monitor. This is useful
+ * to make a hierarchy of monitors.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 4, 2011
  */
 public class RevisableProgressMonitor implements ProgressMonitor {
-    private final MemoryProgressMonitor         delegate = new MemoryProgressMonitor();
 
-    private final List<RevisingProgressMonitor> monitors = new ArrayList<RevisingProgressMonitor>();
+    private final MemoryProgressMonitor delegate = new MemoryProgressMonitor();
+
+    private final List<RevisingProgressMonitor> monitors = new ArrayList<>();
 
     @Override
     public void beginTask(String task, int work) {
@@ -105,9 +103,8 @@ public class RevisableProgressMonitor implements ProgressMonitor {
 
     /**
      * Adds a listening monitor to be informed when the work progress changes.
-     * 
-     * @param monitor
-     *            the supervising monitor to report to
+     *
+     * @param monitor the supervising monitor to report to
      */
     public void addListener(RevisingProgressMonitor monitor) {
         monitor.setStart(getStart());
@@ -123,9 +120,8 @@ public class RevisableProgressMonitor implements ProgressMonitor {
 
     /**
      * Remove a listening monitor
-     * 
-     * @param monitor
-     *            the supervising monitor
+     *
+     * @param monitor the supervising monitor
      */
     public void removeListener(RevisingProgressMonitor monitor) {
         boolean remove = monitors.remove(monitor);

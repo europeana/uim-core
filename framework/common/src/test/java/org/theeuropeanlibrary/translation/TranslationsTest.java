@@ -10,21 +10,36 @@ import org.junit.Test;
 
 /**
  * Tests some basic translation stuff.
- * 
+ *
  * @author Ruud Diterwich
  * @since Aug 18, 2011
  */
 public class TranslationsTest {
+
     private static final TranslationProvider provider = new TranslationProvider() {
         @Override
         public String getTranslation(String key, Locale locale) {
-            if (key.equals("name") && locale.equals(Locale.ENGLISH)) return "name";
-            if (key.equals("name") && locale.equals(new Locale(""))) return "(name)";
-            if (key.equals("name") && locale.equals(Locale.FRENCH)) return "nomme";
-            if (key.equals("bottle") && locale.equals(Locale.ENGLISH)) return "bottle";
-            if (key.equals("bottle") && locale.equals(Locale.FRENCH)) return "bouteille";
-            if (key.equals("bottle") && locale.equals(new Locale("nl"))) return "fles";
-            if (key.equals("bottle") && locale.equals(new Locale("nl", "BE"))) return "fleske";
+            if (key.equals("name") && locale.equals(Locale.ENGLISH)) {
+                return "name";
+            }
+            if (key.equals("name") && locale.equals(new Locale(""))) {
+                return "(name)";
+            }
+            if (key.equals("name") && locale.equals(Locale.FRENCH)) {
+                return "nomme";
+            }
+            if (key.equals("bottle") && locale.equals(Locale.ENGLISH)) {
+                return "bottle";
+            }
+            if (key.equals("bottle") && locale.equals(Locale.FRENCH)) {
+                return "bouteille";
+            }
+            if (key.equals("bottle") && locale.equals(new Locale("nl"))) {
+                return "fles";
+            }
+            if (key.equals("bottle") && locale.equals(new Locale("nl", "BE"))) {
+                return "fleske";
+            }
             return null;
         }
     };

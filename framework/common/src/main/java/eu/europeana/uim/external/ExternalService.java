@@ -24,33 +24,35 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
 /**
- * This interface defines common functionality to all external services. This can be used to
- * synchronize between the UIM and other services like SugarCRM and Repox.
- * 
+ * This interface defines common functionality to all external services. This
+ * can be used to synchronize between the UIM and other services like SugarCRM
+ * and Repox.
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 2, 2014
  */
 public interface ExternalService {
+
     /**
-     * External service should synchronize a provider or in case of the delete flag delete it.
-     * 
-     * @param provider
-     *            UIM provider object to be synchronized
-     * @param deleted
-     *            Is the provider deleted and should be removed from the external service?
+     * External service should synchronize a provider or in case of the delete
+     * flag delete it.
+     *
+     * @param provider UIM provider object to be synchronized
+     * @param deleted Is the provider deleted and should be removed from the
+     * external service?
      * @return Return true, if the synchronization actually changed anything
      * @throws ExternalServiceException
      */
     boolean synchronize(Provider<?> provider, boolean deleted) throws ExternalServiceException;
 
     /**
-     * External service should synchronize a collection or in case of the delete flag delete it.
-     * 
-     * @param collection
-     *            UIM Collection object to be synchronized
-     * @param deleted
-     *            Is the provider deleted and should be removed from the external service?
-     *            @return Return true, if the synchronization actually changed anything
+     * External service should synchronize a collection or in case of the delete
+     * flag delete it.
+     *
+     * @param collection UIM Collection object to be synchronized
+     * @param deleted Is the provider deleted and should be removed from the
+     * external service?
+     * @return Return true, if the synchronization actually changed anything
      * @throws ExternalServiceException
      */
     boolean synchronize(Collection<?> collection, boolean deleted) throws ExternalServiceException;

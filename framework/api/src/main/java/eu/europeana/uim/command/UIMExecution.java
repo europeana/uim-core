@@ -27,9 +27,10 @@ import eu.europeana.uim.store.UimEntity;
 import eu.europeana.uim.workflow.Workflow;
 
 /**
- * uim:orchestrator list start <workflow> (collection | provider) <dataSet> pause <requestId> cancel
- * <requestId> status <requestId>
- * 
+ * uim:orchestrator list start workflow (collection | provider) dataSet
+ * pause requestId cancel
+ * requestId status requestId
+ *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
@@ -38,52 +39,36 @@ import eu.europeana.uim.workflow.Workflow;
 public class UIMExecution implements Action {
     private static final Logger log = Logger.getLogger(UIMExecution.class.getName());
 
-    /**
-     * The oprations enum
-     * 
-     * @author Andreas Juffinger (andreas.juffinger@kb.nl)
-     * @since Jul 17, 2011
-     */
     protected enum Operation {
-        /** Operation start */
+
         list,
-        /** Operation start */
         start,
-        /** Operation start */
         pause,
-        /** Operation start */
         resume,
-        /** Operation start */
         cancel,
-        /** Operation start */
         status,
-        /** Operation start */
         help
     }
 
-    private final Registry          registry;
+    private final Registry registry;
 
     private static final DateFormat df = new SimpleDateFormat("d MMM yyyy HH:mm:ss");
 
-    /** UIMExecution operation */
-    @Option(name = "-o", aliases = { "--operation" }, required = false)
-    protected Operation             operation;
+    @Option(name = "-o", aliases = {"--operation"}, required = false)
+    protected Operation operation;
 
-    /** argument 0 */
     @Argument(index = 0)
-    protected String                argument0;
+    protected String argument0;
 
-    /** argument 1 */
     @Argument(index = 1)
-    protected String                argument1;
+    protected String argument1;
 
-    /** argument 2 */
     @Argument(index = 2)
-    protected String                argument2;
+    protected String argument2;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param registry
      */
     public UIMExecution(Registry registry) {
@@ -105,27 +90,27 @@ public class UIMExecution implements Action {
 
         try {
             switch (operation) {
-            case list:
-                listExecutions(out);
-                break;
-            case start:
-                start(out);
-                break;
-            case pause:
-                pause(out);
-                break;
-            case resume:
-                resume(out);
-                break;
-            case cancel:
-                cancel(out);
-                break;
-            case status:
-                status(out);
-                break;
-            default:
-                out.println("Master, I am truly sorry but this doesn't work.");
-                break;
+                case list:
+                    listExecutions(out);
+                    break;
+                case start:
+                    start(out);
+                    break;
+                case pause:
+                    pause(out);
+                    break;
+                case resume:
+                    resume(out);
+                    break;
+                case cancel:
+                    cancel(out);
+                    break;
+                case status:
+                    status(out);
+                    break;
+                default:
+                    out.println("Master, I am truly sorry but this doesn't work.");
+                    break;
             }
 
         } catch (Throwable t) {
@@ -196,7 +181,7 @@ public class UIMExecution implements Action {
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void start(PrintStream out) throws StorageEngineException {
 
         if (argument0 == null || argument1 == null) {
@@ -227,9 +212,9 @@ public class UIMExecution implements Action {
             }
 
             out.println();
-            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '" +
-                        collection.getMnemonic() + "' (" + collection.getName() +
-                        ") with properties:" + properties.toString());
+            out.println("Starting to run worfklow '" + workflow.getName() + "' on collection '"
+                    + collection.getMnemonic() + "' (" + collection.getName()
+                    + ") with properties:" + properties.toString());
 
             ActiveExecution<?, ?> execution = registry.getOrchestrator().executeWorkflow(workflow,
                     collection, properties);
@@ -261,7 +246,7 @@ public class UIMExecution implements Action {
         }
     }
 
-    private void printWorfklows(PrintStream out, List<Workflow<?,?>> workflows) {
+    private void printWorfklows(PrintStream out, List<Workflow<?, ?>> workflows) {
         out.println("No workflow specified. Possible choices are:");
         for (int i = 0; i < workflows.size(); i++) {
             Workflow<?, ?> w = workflows.get(i);
@@ -276,10 +261,10 @@ public class UIMExecution implements Action {
         } else {
             for (ActiveExecution<?, ?> e : registry.getOrchestrator().getActiveExecutions()) {
                 out.println(String.format(
-                        "Execution %d: Workflow %s, data set %s, started=" +
-                                df.format(e.getExecution().getStartTime()) + ", active=" +
-                                e.getExecution().isActive() + ", paused=" + e.isPaused() +
-                                ", cancelled=" + e.getMonitor().isCancelled(),
+                        "Execution %d: Workflow %s, data set %s, started="
+                        + df.format(e.getExecution().getStartTime()) + ", active="
+                        + e.getExecution().isActive() + ", paused=" + e.isPaused()
+                        + ", cancelled=" + e.getMonitor().isCancelled(),
                         e.getExecution().getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
         }
@@ -287,13 +272,19 @@ public class UIMExecution implements Action {
 
     @SuppressWarnings("unused")
     private String getDataSetName(UimEntity<?> dataSet) {
-        if (dataSet instanceof Collection) { return ((Collection<?>)dataSet).getName(); }
-        if (dataSet instanceof Provider) { return ((Provider<?>)dataSet).getName(); }
-        if (dataSet instanceof MetaDataRecord) { return "MetaDataRecord " + dataSet.getId(); }
+        if (dataSet instanceof Collection) {
+            return ((Collection<?>) dataSet).getName();
+        }
+        if (dataSet instanceof Provider) {
+            return ((Provider<?>) dataSet).getName();
+        }
+        if (dataSet instanceof MetaDataRecord) {
+            return "MetaDataRecord " + dataSet.getId();
+        }
         if (dataSet instanceof Request) {
-            Request<?> request = ((Request<?>)dataSet);
-            return "Request on collection '" + request.getCollection().getName() + "' at " +
-                   df.format(request.getDate());
+            Request<?> request = ((Request<?>) dataSet);
+            return "Request on collection '" + request.getCollection().getName() + "' at "
+                    + df.format(request.getDate());
         }
         return "There is no spoon.";
     }

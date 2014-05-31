@@ -3,68 +3,56 @@ package eu.europeana.uim.store;
 
 /**
  * Provides information about provider and collection type and the country.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Sep 3, 2011
  */
 public enum StandardControlledVocabulary implements ControlledVocabularyKeyValue {
-    
+
     /**
      * mnemonic
      */
     MNEMONIC,
-    
     /**
      * name (internal name, can be abbreviated)
      */
     NAME,
-    
     /**
      * name (full external name)
      */
     FULLNAME,
-    
     /**
      * type of provider/collection
      */
     TYPE,
-
     /**
      * country
      */
     COUNTRY,
-    
-    /** language
-     *
+    /**
+     * language
      */
     LANGUAGE,
-    
     /**
      * oaiBase
      */
     INTERNAL_OAI_BASE,
-    
     /**
      * set
      */
     INTERNAL_OAI_SET,
-    
     /**
      * prefix
      */
     INTERNAL_OAI_PREFIX,
-    
     /**
      * active
      */
     REPOX_TYPE,
-    
     /**
      * active
      */
-    ACTIVE
-    ;
-    
+    ACTIVE;
 
     private StandardControlledVocabulary() {
     }

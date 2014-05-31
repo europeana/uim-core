@@ -4,8 +4,9 @@ package org.theeuropeanlibrary.translation;
 import java.util.Locale;
 
 /**
- * 
- * 
+ * This should be implemented by classes that provide translations for certain
+ * keys.
+ *
  * @author Ruud Diterwich
  * @since Aug 16, 2011
  */

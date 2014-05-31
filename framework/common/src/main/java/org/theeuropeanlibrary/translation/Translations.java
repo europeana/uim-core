@@ -11,44 +11,45 @@ import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
 
 /**
+ * Static creation class to provide translations.
+ *
  * @author Ruud Diterwich
  * @since Jul 18, 2011
  */
 public class Translations {
 
-
-    private static ConcurrentMap<TranslationProvider, TranslationProvider> providers          = new ConcurrentHashMap<TranslationProvider, TranslationProvider>();
+    private static ConcurrentMap<TranslationProvider, TranslationProvider> providers = new ConcurrentHashMap<>();
 
     /**
      * Example: fr_FR -> fr -> (empty) -> en
      */
-    private static ConcurrentMap<Locale, List<Locale>>                     localeAlternatives = new MapMaker().makeComputingMap(new Function<Locale, List<Locale>>() {
-          @Override
-          public List<Locale> apply(Locale locale) {
-              List<Locale> alternatives = new ArrayList<Locale>();
-              alternatives.add(locale);
-              if (!locale.getVariant().isEmpty()) {
-                  alternatives.add(new Locale(locale.getLanguage(), locale.getCountry(),""));
-              }
-              if (!locale.getCountry().isEmpty()) {
-                  alternatives.add(new Locale(locale.getLanguage(),"",""));
-              }
-              if (!locale.getLanguage().isEmpty()) {
-                  alternatives.add(new Locale("","",""));
-              }
-              if (!locale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
-                  alternatives.add(Locale.ENGLISH);
-              }
-              return alternatives;
-          }
-      });
+    private static final ConcurrentMap<Locale, List<Locale>> localeAlternatives = new MapMaker().makeComputingMap(new Function<Locale, List<Locale>>() {
+        @Override
+        public List<Locale> apply(Locale locale) {
+            List<Locale> alternatives = new ArrayList<>();
+            alternatives.add(locale);
+            if (!locale.getVariant().isEmpty()) {
+                alternatives.add(new Locale(locale.getLanguage(), locale.getCountry(), ""));
+            }
+            if (!locale.getCountry().isEmpty()) {
+                alternatives.add(new Locale(locale.getLanguage(), "", ""));
+            }
+            if (!locale.getLanguage().isEmpty()) {
+                alternatives.add(new Locale("", "", ""));
+            }
+            if (!locale.getLanguage().equals(Locale.ENGLISH.getLanguage())) {
+                alternatives.add(Locale.ENGLISH);
+            }
+            return alternatives;
+        }
+    });
 
     private Translations() {
     }
 
     /**
      * Registers the provider
-     * 
+     *
      * @param provider
      */
     public static void register(TranslationProvider provider) {
@@ -57,7 +58,7 @@ public class Translations {
 
     /**
      * Unregisters the provider
-     * 
+     *
      * @param provider
      */
     public static void unregister(TranslationProvider provider) {
@@ -80,15 +81,17 @@ public class Translations {
      * @return translated string, or defaultValue
      */
     public static String getTranslation(String key, Locale locale, String defaultValue) {
-        
-        Locale localeNullSafe= locale !=null ? locale:Locale.ENGLISH;
+
+        Locale localeNullSafe = locale != null ? locale : Locale.ENGLISH;
         for (Locale alt : localeAlternatives.get(localeNullSafe)) {
             for (TranslationProvider provider : providers.keySet()) {
                 String translation = provider.getTranslation(key, alt);
-                if (translation != null && !translation.trim().equals("")) { return translation; }
+                if (translation != null && !translation.trim().equals("")) {
+                    return translation;
+                }
             }
         }
-            return defaultValue;
+        return defaultValue;
     }
 
 }

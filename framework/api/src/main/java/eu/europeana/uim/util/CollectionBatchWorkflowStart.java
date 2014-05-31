@@ -15,21 +15,21 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Loads batches from the storage and pulls them into as tasks.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 14, 2011
  */
 public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Collection<I>, I> {
+
     /**
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
     private static TKey<CollectionBatchWorkflowStart, Data> DATA_KEY = TKey.register(
-                                                                             CollectionBatchWorkflowStart.class,
-                                                                             "data", Data.class);
+            CollectionBatchWorkflowStart.class,
+            "data", Data.class);
 
     /**
      * Creates a new instance of this class.
@@ -62,10 +62,10 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
 
         UimDataSet<I> dataSet = context.getDataSet();
         if (dataSet instanceof Collection) {
-            coll = (Collection<I>)dataSet;
+            coll = (Collection<I>) dataSet;
         } else {
-            throw new WorkflowStartFailedException("Unsupported dataset <" + context.getDataSet() +
-                                                   ">");
+            throw new WorkflowStartFailedException("Unsupported dataset <" + context.getDataSet()
+                    + ">");
         }
 
         // this is for testing to allow injection of a data object
@@ -81,28 +81,30 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
     @Override
     public TaskCreator<Collection<I>, I> createLoader(
             final ExecutionContext<Collection<I>, I> context) throws WorkflowStartFailedException {
-        if (!isFinished(context)) { return new TaskCreator<Collection<I>, I>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void run() {
-                try {
-                    Data container = context.getValue(DATA_KEY);
-                    if (!container.finished) {
-                        Task<Collection<I>, I> task = new Task<Collection<I>, I>(
-                                (Collection<I>)container.collection, context);
-                        synchronized (getQueue()) {
-                            getQueue().offer(task);
+        if (!isFinished(context)) {
+            return new TaskCreator<Collection<I>, I>() {
+                @SuppressWarnings("unchecked")
+                @Override
+                public void run() {
+                    try {
+                        Data container = context.getValue(DATA_KEY);
+                        if (!container.finished) {
+                            Task<Collection<I>, I> task = new Task<Collection<I>, I>(
+                                    (Collection<I>) container.collection, context);
+                            synchronized (getQueue()) {
+                                getQueue().offer(task);
+                            }
+                            container.finished = true;
                         }
-                        container.finished = true;
+                    } catch (Throwable t) {
+                        throw new RuntimeException("Failed to prepare task for collection. "
+                                + context.getExecution().toString(), t);
+                    } finally {
+                        setDone(true);
                     }
-                } catch (Throwable t) {
-                    throw new RuntimeException("Failed to prepare task for collection. " +
-                                               context.getExecution().toString(), t);
-                } finally {
-                    setDone(true);
                 }
-            }
-        }; }
+            };
+        }
         return null;
     }
 
@@ -130,19 +132,26 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
 
     /**
      * container for runtime information.
-     * 
+     *
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Feb 28, 2011
      */
     protected final static class Data implements Serializable {
-        /** initialized yes/no */
-        public boolean       initialized = false;
 
-        /** collection */
-        public Collection<?> collection  = null;
+        /**
+         * initialized yes/no
+         */
+        public boolean initialized = false;
 
-        /** initialized yes/no */
-        public boolean       finished    = false;
+        /**
+         * collection
+         */
+        public Collection<?> collection = null;
+
+        /**
+         * initialized yes/no
+         */
+        public boolean finished = false;
     }
 
     @Override

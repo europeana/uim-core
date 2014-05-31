@@ -5,17 +5,18 @@ import java.util.concurrent.ThreadFactory;
 
 /**
  * Factory pattern to provide newly created threads for task execution.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public class SimpleThreadFactory implements ThreadFactory {
-    private static long              id         = 0;
 
-    private String                   groupname  = "anonymouse";
-    private String                   threadname = "anonymouse";
+    private static long id = 0;
 
-    private ThreadGroup              threadgroup;
+    private String groupname = "anonymouse";
+    private String threadname = "anonymouse";
+
+    private final ThreadGroup threadgroup;
     private UncaughtExceptionHandler exceptionhandler;
 
     /**
@@ -27,26 +28,24 @@ public class SimpleThreadFactory implements ThreadFactory {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param threadname
      */
     public SimpleThreadFactory(String threadname) {
         this.threadname = threadname;
-
-        threadgroup = new ThreadGroup(groupname);
+        this.threadgroup = new ThreadGroup(groupname);
     }
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param groupname
      * @param threadname
      */
     public SimpleThreadFactory(String groupname, String threadname) {
         this.groupname = groupname;
         this.threadname = threadname;
-
-        threadgroup = new ThreadGroup(groupname);
+        this.threadgroup = new ThreadGroup(groupname);
     }
 
     @Override

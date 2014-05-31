@@ -22,11 +22,12 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Tests registration of storage, logging and resource engine.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class UIMRegistryTest {
+
     private UIMRegistry registry = new UIMRegistry();
 
     /**

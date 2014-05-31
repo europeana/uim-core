@@ -10,19 +10,17 @@ import eu.europeana.uim.store.Request;
 
 /**
  * Base class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface RequestStorageEngine<I> {
+
     /**
-     * @param collection
-     *            holding this request
-     * @param date
-     *            when is this request initiatedß
+     * @param collection holding this request
+     * @param date when is this request initiatedß
      * @return newly created request for the given collection and date
      * @throws StorageEngineException
      */
@@ -30,23 +28,21 @@ public interface RequestStorageEngine<I> {
 
     /**
      * Stores the given request and its updated values.
-     * 
+     *
      * @param request
      * @throws StorageEngineException
      */
     void updateRequest(Request<I> request) throws StorageEngineException;
 
     /**
-     * @param id
-     *            unique ID, unique over collection, provider, ...
+     * @param id unique ID, unique over collection, provider, ...
      * @return request under the given ID
      * @throws StorageEngineException
      */
     Request<I> getRequest(I id) throws StorageEngineException;
 
     /**
-     * @param mdr
-     *            the metadata record for which to lookup the request
+     * @param mdr the metadata record for which to lookup the request
      * @return all requests where this record was delivered in
      * @throws StorageEngineException
      */
@@ -72,13 +68,12 @@ public interface RequestStorageEngine<I> {
 // * @throws StorageEngineException
 // */
 // BlockingQueue<I[]> getIdsBatchesByRequest(Request<I> request) throws StorageEngineException;
- // /**
- // * @param request
- // * @return IDs for records for this request
- // * @throws StorageEngineException
- // */
- // BlockingQueue<MetaDataRecord[]> getMdrBatchesByRequest(Request<I> request) throws StorageEngineException;
-
+    // /**
+    // * @param request
+    // * @return IDs for records for this request
+    // * @throws StorageEngineException
+    // */
+    // BlockingQueue<MetaDataRecord[]> getMdrBatchesByRequest(Request<I> request) throws StorageEngineException;
     /**
      * @param request
      * @return number of records for this request

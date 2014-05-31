@@ -8,21 +8,21 @@ import java.io.ObjectOutputStream;
 import java.util.logging.Logger;
 
 /**
- * Base abstract class for converters. It provides abstract methods for encoding and decoding of
- * object typed by generics. Furthermore, encoding and decoding to byte array is available for all
- * sub classes.
- * 
- * @param <E>
- *            the format in which the content is stored in the backend (Object, String, byte[], ...)
- * @param <D>
- *            the source format in which the content comes from the front end (MyContent, String,
- *            ...)
- * 
+ * Base abstract class for converters. It provides abstract methods for encoding
+ * and decoding of object typed by generics. Furthermore, encoding and decoding
+ * to byte array is available for all sub classes.
+ *
+ * @param <E> the format in which the content is stored in the backend (Object,
+ * String, byte[], ...)
+ * @param <D> the source format in which the content comes from the front end
+ * (MyContent, String, ...)
+ *
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Feb 18, 2011
  */
 public abstract class Converter<E, D> {
+
     /**
      * private logging variable
      */
@@ -51,15 +51,16 @@ public abstract class Converter<E, D> {
     public abstract D decode(E data);
 
     /**
-     * @param data
-     *            object that should be encoded in bytes
+     * @param data object that should be encoded in bytes
      * @return the byte array of the object (object stream to bytes)
      * @throws IOException
      */
     public byte[] encodeToByteArray(E data) throws IOException {
         log.warning("Fallback serialization of object to byte[]");
 
-        if (data == null) return new byte[0];
+        if (data == null) {
+            return new byte[0];
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(data);
@@ -67,8 +68,7 @@ public abstract class Converter<E, D> {
     }
 
     /**
-     * @param data
-     *            byte array to be decoded to an object
+     * @param data byte array to be decoded to an object
      * @return the object read from the bytes (object stream from bytes)
      * @throws IOException
      */
@@ -80,7 +80,7 @@ public abstract class Converter<E, D> {
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             ObjectInputStream ois = new ObjectInputStream(bis);
             Object obj = ois.readObject();
-            return (D)obj;
+            return (D) obj;
         } catch (ClassNotFoundException e) {
             throw new IOException(e.getMessage());
         }

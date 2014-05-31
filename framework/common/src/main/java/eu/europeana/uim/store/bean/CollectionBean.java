@@ -10,30 +10,31 @@ import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.Provider;
 
 /**
- * Implements {@link Collection} using Longs as IDs and holding all information in memory.
- * 
- * @param <I>
- *            unique ID
- * 
+ * Implements {@link Collection} using Longs as IDs and holding all information
+ * in memory.
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Collection<I>,
         Serializable {
-    private static final long   serialVersionUID = 1L;
 
-    private Provider<I>         provider;
+    private static final long serialVersionUID = 1L;
 
-    private String              language;
+    private Provider<I> provider;
 
-    private String              oaiBaseUrl;
-    private String              oaiMetadataPrefix;
-    private String              oaiSet;
+    private String language;
 
-    private Date                lastModified;
-    private Date                lastSynchronized;
+    private String oaiBaseUrl;
+    private String oaiMetadataPrefix;
+    private String oaiSet;
 
-    private Map<String, String> values           = new HashMap<String, String>();
+    private Date lastModified;
+    private Date lastSynchronized;
+
+    private Map<String, String> values = new HashMap<String, String>();
 
     /**
      * Creates a new instance of this class.
@@ -44,7 +45,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param id
      * @param provider
      */
@@ -77,9 +78,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     @Override
     public String getOaiBaseUrl(boolean fallback) {
-        if (oaiBaseUrl != null && oaiBaseUrl.trim().length() > 0) { return oaiBaseUrl; }
+        if (oaiBaseUrl != null && oaiBaseUrl.trim().length() > 0) {
+            return oaiBaseUrl;
+        }
 
-        if (fallback) { return provider.getOaiBaseUrl(); }
+        if (fallback) {
+            return provider.getOaiBaseUrl();
+        }
         return null;
     }
 
@@ -94,8 +99,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     }
 
     /**
-     * @param oaiSet
-     *            set identifier for OAI
+     * @param oaiSet set identifier for OAI
      */
     @Override
     public void setOaiSet(String oaiSet) {
@@ -104,9 +108,13 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
 
     @Override
     public String getOaiMetadataPrefix(boolean fallback) {
-        if (oaiMetadataPrefix != null && oaiMetadataPrefix.trim().length() > 0) { return oaiMetadataPrefix; }
+        if (oaiMetadataPrefix != null && oaiMetadataPrefix.trim().length() > 0) {
+            return oaiMetadataPrefix;
+        }
 
-        if (fallback) { return provider.getOaiMetadataPrefix(); }
+        if (fallback) {
+            return provider.getOaiMetadataPrefix();
+        }
         return null;
     }
 
@@ -172,8 +180,8 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
             string += oai + "?verb={x}";
 
             string += getOaiSet() != null ? "&set=" + getOaiSet() : "";
-            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix=" +
-                                                           getOaiMetadataPrefix(true) : "";
+            string += getOaiMetadataPrefix(true) != null ? "&metadataPrefix="
+                    + getOaiMetadataPrefix(true) : "";
             string += "]";
         }
         return string;

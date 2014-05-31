@@ -23,15 +23,16 @@ import java.util.Map;
 
  */
 /**
- * A request to provide metadata records from a particular collection at a particular date.
- * 
- * @param <I>
- *            generic ID
- * 
+ * A request to provide metadata records from a particular collection at a
+ * particular date.
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface Request<I> extends UimDataSet<I> {
+
     /**
      * @return for which collection this request has been started
      */
@@ -48,8 +49,8 @@ public interface Request<I> extends UimDataSet<I> {
     void setDataFrom(Date from);
 
     /**
-     * @return a specific date which reflects the period of thime the request did process (null if
-     *         not specified)
+     * @return a specific date which reflects the period of thime the request
+     * did process (null if not specified)
      */
     Date getDataFrom();
 
@@ -59,8 +60,8 @@ public interface Request<I> extends UimDataSet<I> {
     void setDataTill(Date till);
 
     /**
-     * @return a specific date which reflects the period of time the request did process (same as @see
-     *         getDate() in most cases)
+     * @return a specific date which reflects the period of time the request did
+     * process (same as @see getDate() in most cases)
      */
     Date getDataTill();
 
@@ -70,14 +71,14 @@ public interface Request<I> extends UimDataSet<I> {
     void setFailed(boolean failed);
 
     /**
-     * @return true if something went wrong during the processing so that it is unclear if
-     *         "everything" is done.
+     * @return true if something went wrong during the processing so that it is
+     * unclear if "everything" is done.
      */
     boolean isFailed();
 
     /**
      * string key,value pairs for arbitraty information on colleciton level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -85,7 +86,7 @@ public interface Request<I> extends UimDataSet<I> {
 
     /**
      * retrieve the stirng value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */

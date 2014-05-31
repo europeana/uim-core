@@ -27,18 +27,20 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.util.BatchWorkflowStart.Data;
 
 /**
- * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and {@link StorageEngine}.
- * 
+ * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and
+ * {@link StorageEngine}.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class BatchWorkflowStartTest {
+
     /**
      * Tests initialization of {@link BatchWorkflowStart} with mocks.
-     * 
+     *
      * @throws StorageEngineException
      */
-    @SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+    @SuppressWarnings({"rawtypes", "unchecked", "unused"})
     @Test
     public void testInitialization() throws StorageEngineException {
         StorageEngine engine = mock(StorageEngineAdapter.class);
@@ -50,17 +52,17 @@ public class BatchWorkflowStartTest {
         Properties properties = new Properties();
         ActiveExecution execution = mock(ActiveExecution.class);
 
-        Long[] batches = new Long[] { 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L };
+        Long[] batches = new Long[]{1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L};
 
         when(execution.getDataSet()).thenReturn(collection);
         when(execution.getStorageEngine()).thenReturn(engine);
         when(execution.getProperties()).thenReturn(properties);
 
-        when(engine.getByCollection((Collection)any())).thenReturn(batches);
-        when(engine.getByRequest((Request)any())).thenReturn(batches);
+        when(engine.getByCollection((Collection) any())).thenReturn(batches);
+        when(engine.getByRequest((Request) any())).thenReturn(batches);
 
         Data data = new BatchWorkflowStart.Data();
-        when(execution.getValue((TKey<?, Data>)any())).thenReturn(data);
+        when(execution.getValue((TKey<?, Data>) any())).thenReturn(data);
 
         BatchWorkflowStart.BATCH_SIZE = 3;
         BatchWorkflowStart<Long> start = new BatchWorkflowStart<Long>();

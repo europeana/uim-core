@@ -21,17 +21,20 @@
 package eu.europeana.uim.store;
 
 /**
- * This interface is meant to provide support for storing information more efficiently in the values
- * Map as defined in the Collection, Provider and Execution interfaces. If the user wants to keep
- * track of the keys values used in this map, then may use a specific Enumeration that implements
- * this interface and use the following methods:
- * 
+ * This interface is meant to provide support for storing information more
+ * efficiently in the values Map as defined in the Collection, Provider and
+ * Execution interfaces. If the user wants to keep track of the keys values used
+ * in this map, then may use a specific Enumeration that implements this
+ * interface and use the following methods:
+ *
  * <code>void putValue(ControlledVocabularyKeyValue key, String value)</code>
  * <code>String getValue(ControlledVocabularyKeyValue key)</code>
- * 
+ *
  * @author Georgios Markakis
+ * @since Mar 21, 2011
  */
 public interface ControlledVocabularyKeyValue {
+
     /**
      * @return field identifier
      */

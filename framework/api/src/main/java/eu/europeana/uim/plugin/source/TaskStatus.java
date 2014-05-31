@@ -2,12 +2,13 @@ package eu.europeana.uim.plugin.source;
 
 /**
  * Task status as enumeration for predefined states a task can be in.
- * 
+ *
  * @author Manuel Bernhardt<bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
 public enum TaskStatus {
+
     /**
      * the task has just been created and is therefore new
      */

@@ -4,24 +4,23 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Interface for executions to retrieve information about start, end or cancellation time and the
- * data set to be worked on and the used workflow.
- * 
- * @param <I>
- *            generic ID
- * 
+ * Interface for executions to retrieve information about start, end or
+ * cancellation time and the data set to be worked on and the used workflow.
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface Execution<I> extends UimEntity<I> {
+
     /**
      * @return arbitrary name of this execution (must not be unique)
      */
     String getName();
 
     /**
-     * @param name
-     *            arbitrary name of this execution (must not be unique)
+     * @param name arbitrary name of this execution (must not be unique)
      */
     void setName(String name);
 
@@ -31,8 +30,7 @@ public interface Execution<I> extends UimEntity<I> {
     String getWorkflow();
 
     /**
-     * @param identifier
-     *            identifier of the underlying workflow
+     * @param identifier identifier of the underlying workflow
      */
     void setWorkflow(String identifier);
 
@@ -42,8 +40,7 @@ public interface Execution<I> extends UimEntity<I> {
     UimDataSet<I> getDataSet();
 
     /**
-     * @param dataSet
-     *            data set object on which the execution works
+     * @param dataSet data set object on which the execution works
      */
     void setDataSet(UimDataSet<I> dataSet);
 
@@ -53,8 +50,7 @@ public interface Execution<I> extends UimEntity<I> {
     boolean isActive();
 
     /**
-     * @param active
-     *            Is this execution active?
+     * @param active Is this execution active?
      */
     void setActive(boolean active);
 
@@ -64,8 +60,7 @@ public interface Execution<I> extends UimEntity<I> {
     Date getStartTime();
 
     /**
-     * @param start
-     *            When has it started?
+     * @param start When has it started?
      */
     void setStartTime(Date start);
 
@@ -75,68 +70,66 @@ public interface Execution<I> extends UimEntity<I> {
     Date getEndTime();
 
     /**
-     * @param end
-     *            When has it ended?
+     * @param end When has it ended?
      */
     void setEndTime(Date end);
 
     /**
-     * @return Has the execution been run through (false) or cancelled (true)? Only together with an
-     *         end time this value makes sense, before that the execution is still running!
+     * @return Has the execution been run through (false) or cancelled (true)?
+     * Only together with an end time this value makes sense, before that the
+     * execution is still running!
      */
     boolean isCanceled();
 
     /**
-     * @param canceled
-     *            Has the execution been run through (false) or cancelled (true)? Only together with
-     *            an end time this value makes sense, before that the execution is still running!
+     * @param canceled Has the execution been run through (false) or cancelled
+     * (true)? Only together with an end time this value makes sense, before
+     * that the execution is still running!
      */
     void setCanceled(boolean canceled);
 
     /**
-     * gives the number of tasks/records which are completly finished successful by all steps.
-     * 
+     * gives the number of tasks/records which are completly finished successful
+     * by all steps.
+     *
      * @return amount of completed tasks
      */
     int getSuccessCount();
 
     /**
-     * @param number
-     *            amount of completed tasks
+     * @param number amount of completed tasks
      */
     void setSuccessCount(int number);
 
     /**
-     * gives the number of tasks/records which have failed on the way through the workflow no matter
-     * where.
-     * 
+     * gives the number of tasks/records which have failed on the way through
+     * the workflow no matter where.
+     *
      * @return amount of failures
      */
     int getFailureCount();
 
     /**
-     * @param number
-     *            amount of failures
+     * @param number amount of failures
      */
     void setFailureCount(int number);
 
     /**
-     * gives the number of tasks/records which have been scheduled to be processed in the first
-     * place. So scheduled = finished + failure.
-     * 
+     * gives the number of tasks/records which have been scheduled to be
+     * processed in the first place. So scheduled = finished + failure.
+     *
      * @return amount of scheduled ones
      */
     int getProcessedCount();
 
     /**
-     * @param number
-     *            amount of scheduled ones
+     * @param number amount of scheduled ones
      */
     void setProcessedCount(int number);
 
     /**
      * string key,value pairs for arbitrary information on execution level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -144,7 +137,7 @@ public interface Execution<I> extends UimEntity<I> {
 
     /**
      * retrieve the string value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */
@@ -152,7 +145,7 @@ public interface Execution<I> extends UimEntity<I> {
 
     /**
      * string key,value pairs for arbitrary information on execution level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -160,7 +153,7 @@ public interface Execution<I> extends UimEntity<I> {
 
     /**
      * retrieve the string value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */

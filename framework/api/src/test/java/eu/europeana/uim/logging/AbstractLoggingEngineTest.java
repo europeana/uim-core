@@ -19,11 +19,12 @@ import eu.europeana.uim.store.MetaDataRecord;
 
 /**
  * Tests {@link LoggingEngine} implementations used for it.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 4, 2011
  */
 public abstract class AbstractLoggingEngineTest {
+
     LoggingEngine<Long> engine = null;
 
     /**
@@ -56,7 +57,7 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.log(Level.INFO, "test", "a", "b", "c");
         engine.log(Level.INFO, "test", "a", "d", "e");
-        engine.log(Level.INFO, (String)null);
+        engine.log(Level.INFO, (String) null);
 
         engine.log(Level.INFO, plugin, "a", "b", "c");
         engine.log(Level.INFO, plugin, "a", "d", "e");
@@ -68,7 +69,7 @@ public abstract class AbstractLoggingEngineTest {
     /**
      * Tests functionality of logging engine implementation based on JPA.
      */
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     @Test
     public void testLoggingExecution() {
         Execution<Long> execution = mock(Execution.class);
@@ -78,7 +79,7 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.log(execution, Level.INFO, "test", "a0", "b", "c");
         engine.log(execution, Level.INFO, "test", "a0", "d", "e");
-        engine.log(execution, Level.INFO, (String)null);
+        engine.log(execution, Level.INFO, (String) null);
 
         engine.log(execution, Level.INFO, plugin, "a1", "b", "c");
         engine.log(execution, Level.INFO, plugin, "a1", "d", "e");
@@ -109,14 +110,14 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.logFailed(Level.INFO, "test", new NullPointerException(), "a", "b", "c");
         engine.logFailed(Level.INFO, "test", new NullPointerException(), "a", "d", "e");
-        engine.logFailed(Level.INFO, (String)null, null);
+        engine.logFailed(Level.INFO, (String) null, null);
 
         engine.logFailed(Level.INFO, plugin, new NullPointerException(), "a", "b", "c");
         engine.logFailed(Level.INFO, plugin, new NullPointerException(), "a", "d", "e");
 
         engine.logFailed(execution, Level.INFO, "test", new NullPointerException(), "a0", "b", "c");
         engine.logFailed(execution, Level.INFO, "test", new NullPointerException(), "a0", "d", "e");
-        engine.logFailed(execution, Level.INFO, (String)null, null);
+        engine.logFailed(execution, Level.INFO, (String) null, null);
 
         engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), "a1", "b", "c");
         engine.logFailed(execution, Level.INFO, plugin, new NullPointerException(), "a2", "d", "e");
@@ -144,11 +145,11 @@ public abstract class AbstractLoggingEngineTest {
 
         engine.logLink("test", "http:...", 200, "a", "b", "c");
         engine.logLink("test", "http:...", 200, "a", "d", "e");
-        engine.logLink((String)null, "http:...", 200, "a", "b", "c");
+        engine.logLink((String) null, "http:...", 200, "a", "b", "c");
 
         engine.logLink(execution, "test", mdr, "http:...", 200, "a", "b", "c");
         engine.logLink(execution, "test", mdr, "http:...", 200, "a", "d", "e");
-        engine.logLink(execution, (String)null, mdr, "http:...", 200, "a", "b", "c");
+        engine.logLink(execution, (String) null, mdr, "http:...", 200, "a", "b", "c");
 
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "b", "c");
         engine.logLink(execution, plugin, mdr, "http:...", 200, "a", "d", "e");

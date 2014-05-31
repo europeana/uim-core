@@ -9,19 +9,21 @@ import org.junit.Test;
 
 /**
  * Tests dummy implementation of {@link StorageEngine}.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class StorageEngineAdapterTest {
+
     /**
      * Checks to default values.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
     public void testStorageAdapterNoop() throws StorageEngineException {
-        StorageEngine<Long> engine = new StorageEngineAdapter<Long>() {};
+        StorageEngine<Long> engine = new StorageEngineAdapter<Long>() {
+        };
 
         assertNull(engine.createProvider());
         assertNull(engine.createCollection(null));

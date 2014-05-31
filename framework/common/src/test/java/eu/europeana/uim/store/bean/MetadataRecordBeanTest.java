@@ -13,40 +13,45 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 
 /**
- * Tests basic operations on implementation {@link RequestBean} for {@link Request}.
- * 
+ * Tests basic operations on implementation {@link RequestBean} for
+ * {@link Request}.
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Aug 13, 2012
  */
 public class MetadataRecordBeanTest {
+
     private static final TKey<MetadataRecordBeanTest, String> PERSON = TKey.register(
-                                                                             MetadataRecordBeanTest.class,
-                                                                             "person", String.class);
+            MetadataRecordBeanTest.class,
+            "person", String.class);
 
     private enum PersonQualifier {
+
         AUTHOR, PUBLISHER
     }
 
     private static final TKey<MetadataRecordBeanTest, String> YEAR = TKey.register(
-                                                                           MetadataRecordBeanTest.class,
-                                                                           "year", String.class);
+            MetadataRecordBeanTest.class,
+            "year", String.class);
 
     private enum YearQualifier {
+
         BIRTH, DEATH
     }
 
     /**
-     * Tests creating of bean and general getter and setter methods on it (id, collection)
+     * Tests creating of bean and general getter and setter methods on it (id,
+     * collection)
      */
     @Test
     public void testMetadataRecordCreation() {
-        Provider<Long> provider = new ProviderBean<Long>(1L);
+        Provider<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("pmnemonic");
         provider.setName("pname");
         provider.setOaiBaseUrl("Pbase");
         provider.setOaiMetadataPrefix("Pmeta");
 
-        CollectionBean<Long> collection = new CollectionBean<Long>();
+        CollectionBean<Long> collection = new CollectionBean<>();
         collection.setProvider(provider);
         collection.setId(2L);
         collection.setLanguage("a1");
@@ -54,9 +59,9 @@ public class MetadataRecordBeanTest {
         collection.setName("name");
         collection.setOaiSet("cset");
 
-        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<Long>(1L, collection);
+        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<>(1L, collection);
 
-        Assert.assertEquals(new Long(1), bean.getId());
+        Assert.assertTrue(1 == bean.getId());
         Assert.assertEquals(collection, bean.getCollection());
     }
 
@@ -65,13 +70,13 @@ public class MetadataRecordBeanTest {
      */
     @Test
     public void testMetadataRecordValues() {
-        Provider<Long> provider = new ProviderBean<Long>(1L);
+        Provider<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("pmnemonic");
         provider.setName("pname");
         provider.setOaiBaseUrl("Pbase");
         provider.setOaiMetadataPrefix("Pmeta");
 
-        CollectionBean<Long> collection = new CollectionBean<Long>();
+        CollectionBean<Long> collection = new CollectionBean<>();
         collection.setProvider(provider);
         collection.setId(2L);
         collection.setLanguage("a1");
@@ -79,7 +84,7 @@ public class MetadataRecordBeanTest {
         collection.setName("name");
         collection.setOaiSet("cset");
 
-        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<Long>(1L, collection);
+        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<>(1L, collection);
 
         bean.addValue(PERSON, "Markus Muhr", PersonQualifier.AUTHOR);
 
@@ -115,13 +120,13 @@ public class MetadataRecordBeanTest {
      */
     @Test
     public void testMetadataRecordRelations() {
-        Provider<Long> provider = new ProviderBean<Long>(1L);
+        Provider<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("pmnemonic");
         provider.setName("pname");
         provider.setOaiBaseUrl("Pbase");
         provider.setOaiMetadataPrefix("Pmeta");
 
-        CollectionBean<Long> collection = new CollectionBean<Long>();
+        CollectionBean<Long> collection = new CollectionBean<>();
         collection.setProvider(provider);
         collection.setId(2L);
         collection.setLanguage("a1");
@@ -129,7 +134,7 @@ public class MetadataRecordBeanTest {
         collection.setName("name");
         collection.setOaiSet("cset");
 
-        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<Long>(1L, collection);
+        MetaDataRecordBean<Long> bean = new MetaDataRecordBean<>(1L, collection);
 
         bean.addValue(PERSON, "Markus Muhr", PersonQualifier.AUTHOR);
         bean.addValue(YEAR, "1981");

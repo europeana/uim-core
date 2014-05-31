@@ -6,29 +6,29 @@ import eu.europeana.uim.common.progress.RevisingProgressMonitor;
 
 /**
  * Prints out progress to the console.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public class ConsoleProgressMonitor implements RevisingProgressMonitor {
+
     private final PrintStream out;
 
-    private boolean           cancelled = false;
-    private int               worked    = 0;
+    private boolean cancelled = false;
+    private int worked = 0;
 
-    private int               work;
+    private int work;
 
-    private long              start;
+    private long start;
 
-    private String            task;
+    private String task;
 
-    private String            subtask;
+    private String subtask;
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param out
-     *            prints progress to the given stream
+     *
+     * @param out prints progress to the given stream
      */
     public ConsoleProgressMonitor(PrintStream out) {
         super();
@@ -37,14 +37,14 @@ public class ConsoleProgressMonitor implements RevisingProgressMonitor {
 
     @Override
     public void attached() {
-        out.print("Attached to monitor current status: <" + task + "> total " + work +
-                  " units of work. Worked so far:" + getWorked() + " [");
+        out.print("Attached to monitor current status: <" + task + "> total " + work
+                + " units of work. Worked so far:" + getWorked() + " [");
     }
 
     @Override
     public void detached() {
-        out.print("Detached to monitor current status:" + task + ", " + work +
-                  " units of work. Worked so far:" + getWorked());
+        out.print("Detached to monitor current status:" + task + ", " + work
+                + " units of work. Worked so far:" + getWorked());
     }
 
     @Override

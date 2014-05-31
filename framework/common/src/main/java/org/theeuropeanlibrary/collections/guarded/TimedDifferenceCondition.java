@@ -16,19 +16,21 @@
 package org.theeuropeanlibrary.collections.guarded;
 
 /**
- * <p>
- * </p>
- * 
+ * A guarded condition that is based on a time difference.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Aug 22, 2011
  */
 public class TimedDifferenceCondition implements GuardCondition<Long> {
-    /** long difference */
+
+    /**
+     * long difference
+     */
     protected long difference = 1000;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param difference
      */
     public TimedDifferenceCondition(long difference) {
@@ -43,8 +45,6 @@ public class TimedDifferenceCondition implements GuardCondition<Long> {
         long diff = compare - objkey;
 
         boolean allow = diff > difference;
-        if (allow) { return true; }
-
-        return false;
+        return allow;
     }
 }

@@ -12,11 +12,12 @@ import eu.europeana.uim.common.progress.RevisableProgressMonitor;
 
 /**
  * Tests monitoring of progress using console output.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class ConsoleProgressMonitorTest {
+
     /**
      * Tests progress on console output.
      */

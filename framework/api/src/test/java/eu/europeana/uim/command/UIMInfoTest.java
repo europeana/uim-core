@@ -17,14 +17,15 @@ import eu.europeana.uim.UIMRegistry;
 
 /**
  * UIM info tests.
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jun 19, 2011
  */
 public class UIMInfoTest {
+
     /**
      * Tests listing of operations of infos.
-     * 
+     *
      * @throws Exception
      */
     @Test

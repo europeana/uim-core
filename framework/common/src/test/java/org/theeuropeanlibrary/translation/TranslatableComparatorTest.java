@@ -11,36 +11,49 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * 
- * 
+ * Tests comparators of Translatable
+ *
  * @author Ruud Diterwich
  * @since Aug 18, 2011
  */
 public class TranslatableComparatorTest {
 
     private static class Soup implements Translatable {
+
         @Override
         public String translate(Locale locale) {
-            if (locale.equals(Locale.FRENCH)) return "soupe";
-            if (locale.equals(Locale.ENGLISH)) return "soup";
-            if (locale.equals(Locale.GERMAN)) return "Suppe";
+            if (locale.equals(Locale.FRENCH)) {
+                return "soupe";
+            }
+            if (locale.equals(Locale.ENGLISH)) {
+                return "soup";
+            }
+            if (locale.equals(Locale.GERMAN)) {
+                return "Suppe";
+            }
             return "";
         }
     }
-    
+
     private static class Water implements Translatable {
+
         @Override
         public String translate(Locale locale) {
-            if (locale.equals(Locale.FRENCH)) return "eau";
-            if (locale.equals(Locale.ENGLISH)) return "water";
-            if (locale.equals(Locale.GERMAN)) return "Wasser";
+            if (locale.equals(Locale.FRENCH)) {
+                return "eau";
+            }
+            if (locale.equals(Locale.ENGLISH)) {
+                return "water";
+            }
+            if (locale.equals(Locale.GERMAN)) {
+                return "Wasser";
+            }
             return "";
         }
     }
-    
-    
+
     /**
-     * 
+     *
      */
     @Test
     public void testComparator() {

@@ -18,20 +18,21 @@ import org.junit.Before;
 
 /**
  * Base, abstract class to test {@link MetaDataRecord} implementations.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public abstract class AbstractMetaDataRecordTest<I> {
+
     /**
      * engine instance configured in setup up and used throughout tests
      */
     protected StorageEngine<I> engine = null;
 
     private enum TestEnum {
+
         EN;
     }
 
@@ -57,9 +58,9 @@ public abstract class AbstractMetaDataRecordTest<I> {
     protected abstract StorageEngine<I> getStorageEngine();
 
     /**
-     * Tests that the implementation of {@link MetaDataRecord} returns null for getFirstField if
-     * there is no field and empty lists for the other getters.
-     * 
+     * Tests that the implementation of {@link MetaDataRecord} returns null for
+     * getFirstField if there is no field and empty lists for the other getters.
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -78,7 +79,8 @@ public abstract class AbstractMetaDataRecordTest<I> {
     }
 
     /**
-     * @return created and initialized request (creates provider and collection as well)
+     * @return created and initialized request (creates provider and collection
+     * as well)
      * @throws StorageEngineException
      */
     protected Request<I> createRequest() throws StorageEngineException {

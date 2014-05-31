@@ -16,39 +16,39 @@
 package org.theeuropeanlibrary.collections.guarded;
 
 /**
- * <p>
- * </p>
- * 
- * @author ajuffing
- * @param <T>
- *            the condition value type
- * @created Mar 1, 2005
- * 
+ * Key for a guarded object.
+ *
+ * @param <T> the condition value type
+ *
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since Mar 1, 2005
  */
 public interface GuardedKey<T> extends Comparable<GuardedKey<T>> {
 
     /**
-     * Tests for equal guard keys. This should return true if the elements should share the same
-     * queue.
+     * Tests for equal guard keys. This should return true if the elements
+     * should share the same queue.
+     *
+     * @param o arbitraty object to be tested
      */
     @Override
-    public boolean equals(Object o);
+    boolean equals(Object o);
 
     /**
-     * Returns if the given object has the same or different value. This value is used for priority
-     * queue.
+     * Returns if the given object has the same or different value. This value
+     * is used for priority queue.
      */
     @Override
-    public int compareTo(GuardedKey<T> o);
+    int compareTo(GuardedKey<T> o);
 
     /**
      * @return the condition value
      */
-    public T getConditionValue();
+    T getConditionValue();
 
     /**
-     * inform keay about a successful delivery
+     * inform key about a successful delivery
      */
-    public void delivered();
+    void delivered();
 
 }

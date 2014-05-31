@@ -15,35 +15,35 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 
 /**
- * In-memory implemenation of {@link MetaDataRecord} that uses Long as ID. It is supposed to be the
- * core class for usage if there is no need for a special implemenation due to special requirements
- * of the storage backend.
- * 
- * @param <I>
- *            unique ID
- * 
+ * In-memory implemenation of {@link MetaDataRecord} that uses Long as ID. It is
+ * supposed to be the core class for usage if there is no need for a special
+ * implemenation due to special requirements of the storage backend.
+ *
+ * @param <I> unique ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
 public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements MetaDataRecord<I>,
         Serializable {
-    private static final long                            serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * the collection that is responsible for this record
      */
-    private Collection<I>                                collection;
+    private Collection<I> collection;
 
     /**
      * holds for each key a list of known qualified values
      */
-    private HashMap<TKey<?, ?>, List<QualifiedValue<?>>> fields           = new HashMap<TKey<?, ?>, List<QualifiedValue<?>>>();
+    private HashMap<TKey<?, ?>, List<QualifiedValue<?>>> fields = new HashMap<TKey<?, ?>, List<QualifiedValue<?>>>();
 
     /**
      * Maintain index in order to retain ordering. null: not calculated yet
      */
-    private transient Integer                            nextOrderIndex   = null;
+    private transient Integer nextOrderIndex = null;
 
     /**
      * Creates a new instance of this class.
@@ -54,11 +54,9 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
     /**
      * Creates a new instance of this class.
-     * 
-     * @param id
-     *            unique ID
-     * @param collection
-     *            the collection that is responsible for this record
+     *
+     * @param id unique ID
+     * @param collection the collection that is responsible for this record
      */
     public MetaDataRecordBean(I id, Collection<I> collection) {
         super(id);
@@ -87,7 +85,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
                 if (checkQualifier(value, qualifiers)) {
-                    result = (T)value.getValue();
+                    result = (T) value.getValue();
                     break;
                 }
             }
@@ -102,7 +100,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
                 if (checkQualifier(value, qualifiers)) {
-                    result = (QualifiedValue<T>)value;
+                    result = (QualifiedValue<T>) value;
                     break;
                 }
             }
@@ -117,7 +115,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
                 if (checkQualifier(value, qualifiers)) {
-                    result.add((QualifiedValue<T>)value);
+                    result.add((QualifiedValue<T>) value);
                 }
             }
         }
@@ -131,7 +129,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
         if (values != null && values.size() > 0) {
             for (QualifiedValue<?> value : values) {
                 if (checkQualifier(value, qualifiers)) {
-                    result.add((T)value.getValue());
+                    result.add((T) value.getValue());
                 }
             }
         }
@@ -140,8 +138,10 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
     @Override
     public <N, T> QualifiedValue<T> addValue(TKey<N, T> key, T value, Enum<?>... qualifiers) {
-        if (value == null) { throw new IllegalArgumentException(
-                "Argument 'value' should not be null!"); }
+        if (value == null) {
+            throw new IllegalArgumentException(
+                    "Argument 'value' should not be null!");
+        }
 
         Set<Enum<?>> quals = new HashSet<Enum<?>>();
         for (Enum<?> qualifier : qualifiers) {
@@ -177,24 +177,25 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     }
 
     /**
-     * This should only be used during conversion, as in general addValue is the way to fill a
-     * {@link MetaDataRecord}.
-     * 
-     * @param <N>
-     *            the namespace (type) in which the field is defined
-     * @param <T>
-     *            the runtime type of the values for this field
-     * @param key
-     *            typed key which holds namespace, name and type information
-     * @param values
-     *            list of qualified values set under the given key (overrides exisiting entries)
+     * This should only be used during conversion, as in general addValue is the
+     * way to fill a {@link MetaDataRecord}.
+     *
+     * @param <N> the namespace (type) in which the field is defined
+     * @param <T> the runtime type of the values for this field
+     * @param key typed key which holds namespace, name and type information
+     * @param values list of qualified values set under the given key (overrides
+     * exisiting entries)
      */
     public <N, T> void setValue(TKey<N, T> key, List<QualifiedValue<T>> values) {
         List<QualifiedValue<?>> oldValues = fields.get(key);
-        if (oldValues != null) { throw new IllegalArgumentException(
-                "setValue should only be called be called once per tkey"); }
-        if (nextOrderIndex != null) { throw new IllegalArgumentException(
-                "setValue should not be called after addValue"); }
+        if (oldValues != null) {
+            throw new IllegalArgumentException(
+                    "setValue should only be called be called once per tkey");
+        }
+        if (nextOrderIndex != null) {
+            throw new IllegalArgumentException(
+                    "setValue should not be called after addValue");
+        }
         List<QualifiedValue<?>> sortedValues = new ArrayList<QualifiedValue<?>>(values);
         Collections.sort(sortedValues);
         fields.put(key, sortedValues);
@@ -210,7 +211,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
             for (QualifiedValue<?> value : values) {
                 if (checkQualifier(value, qualifiers)) {
-                    result.add((QualifiedValue<T>)value);
+                    result.add((QualifiedValue<T>) value);
                 } else {
                     leftValues.add(value);
                 }
@@ -251,14 +252,14 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
 
     // modeling structure information
     /**
-     * holds relations starting from source nodes, giving back target nodes with connected
-     * qualifications
+     * holds relations starting from source nodes, giving back target nodes with
+     * connected qualifications
      */
     private Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> sourcesLookup = new HashMap<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>>();
 
     /**
-     * holds relations ending in target nodes, giving back source nodes with connected
-     * qualifications
+     * holds relations ending in target nodes, giving back source nodes with
+     * connected qualifications
      */
     private Map<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>> targetsLookup = new HashMap<QualifiedValue<?>, Map<QualifiedValue<?>, Set<Enum<?>>>>();
 
@@ -360,7 +361,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
                 }
 
                 if (contained) {
-                    results.add((QualifiedValue<T>)entryTargets.getKey());
+                    results.add((QualifiedValue<T>) entryTargets.getKey());
                 }
             }
         }
@@ -392,7 +393,7 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
                 }
 
                 if (contained) {
-                    results.add((QualifiedValue<S>)entrySources.getKey());
+                    results.add((QualifiedValue<S>) entrySources.getKey());
                 }
             }
         }
@@ -501,11 +502,12 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
                     ? "" : collection.getMnemonic()));
             for (Entry<TKey<?, ?>, List<QualifiedValue<?>>> fld : fields.entrySet()) {
                 sb.append(String.format("\n  [%s ", fld.getKey().getName()));
-                if (fld.getValue().size() == 1)
+                if (fld.getValue().size() == 1) {
                     sb.append(String.format("%s]", fld.getValue().get(0).toString()));
-                else {
-                    for (QualifiedValue<?> v : fld.getValue())
+                } else {
+                    for (QualifiedValue<?> v : fld.getValue()) {
                         sb.append(String.format("(%s)", v.toString()));
+                    }
                     sb.append("]");
                 }
             }

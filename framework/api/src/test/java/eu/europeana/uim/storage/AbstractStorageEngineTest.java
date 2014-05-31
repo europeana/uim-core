@@ -24,22 +24,24 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 
 /**
- * Abstract, base class for all {@link StorageEngine} implementations. It tests creation, update and
- * retrieval for all kinds of data sets (Provider, Collection, Request, MetadataRecord).
- * 
- * @param <I>
- *            generic ID
- * 
+ * Abstract, base class for all {@link StorageEngine} implementations. It tests
+ * creation, update and retrieval for all kinds of data sets (Provider,
+ * Collection, Request, MetadataRecord).
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 public abstract class AbstractStorageEngineTest<I> {
+
     /**
      * engine instance configured in setup up and used throughout tests
      */
     protected StorageEngine<I> engine = null;
 
     private enum TestEnum {
+
         EN;
     }
 
@@ -65,8 +67,9 @@ public abstract class AbstractStorageEngineTest<I> {
     protected abstract StorageEngine<I> getStorageEngine();
 
     /**
-     * Tests creation of providers and that retrieval of it still contains all given information.
-     * 
+     * Tests creation of providers and that retrieval of it still contains all
+     * given information.
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -93,8 +96,9 @@ public abstract class AbstractStorageEngineTest<I> {
     }
 
     /**
-     * Tests the find functionality for providers and that the retrieved provider is a correct one.
-     * 
+     * Tests the find functionality for providers and that the retrieved
+     * provider is a correct one.
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -122,7 +126,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests the correct exception handling in case of a duplicate provider.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -150,7 +154,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests relations between roviders.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -169,7 +173,6 @@ public abstract class AbstractStorageEngineTest<I> {
         engine.updateProvider(provider0);
 
         // //engine.checkpoint();
-
         Provider<I> provider2 = engine.getProvider(provider1.getId());
         assertEquals(1, provider2.getRelatedIn().size());
         assertEquals(provider0.getMnemonic(),
@@ -183,7 +186,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation and retrieval of collections.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -234,7 +237,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation of duplicate collections.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -264,7 +267,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests relation between provider and collection.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -304,7 +307,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests retrieval of collections.
-     * 
+     *
      * @throws StorageEngineException
      */
     @Test
@@ -336,7 +339,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation and retrieval of requests.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -375,7 +378,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests not allowed creation of duplicate requests.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -405,7 +408,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests relation between collection and request.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -439,7 +442,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation and retrieval of executions.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -469,7 +472,6 @@ public abstract class AbstractStorageEngineTest<I> {
 // assertNotNull(execution3.getDataSet());
 // assertEquals("provider", execution3.getWorkflowName());
 // assertEquals(execution3.getDataSet().getId(), provider0.getId());
-
         Execution<I> execution4 = engine.getExecution(execution1.getId());
         assertNotNull(execution4.getDataSet());
         assertEquals("collection", execution4.getWorkflow());
@@ -483,7 +485,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation and retrieval of records.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -545,7 +547,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests creation of duplicate records.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */
@@ -617,7 +619,7 @@ public abstract class AbstractStorageEngineTest<I> {
 
     /**
      * Tests relation between request and record.
-     * 
+     *
      * @throws StorageEngineException
      * @throws InterruptedException
      */

@@ -11,15 +11,16 @@ import java.util.Map;
  language    // Primary language for collection (used as default for all fields if not given)
  */
 /**
- * This interface specifies common functionality for a collection for a specific provider.
- * 
- * @param <I>
- *            generic ID
- * 
+ * This interface specifies common functionality for a collection for a specific
+ * provider.
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface Collection<I> extends UimDataSet<I> {
+
     /**
      * @return the provider holding this collection
      */
@@ -31,8 +32,7 @@ public interface Collection<I> extends UimDataSet<I> {
     String getMnemonic();
 
     /**
-     * @param mnemonic
-     *            mnemonic under which this can be recognized
+     * @param mnemonic mnemonic under which this can be recognized
      */
     void setMnemonic(String mnemonic);
 
@@ -42,8 +42,7 @@ public interface Collection<I> extends UimDataSet<I> {
     String getName();
 
     /**
-     * @param name
-     *            name of the collection (must not be unique)
+     * @param name name of the collection (must not be unique)
      */
     void setName(String name);
 
@@ -53,8 +52,7 @@ public interface Collection<I> extends UimDataSet<I> {
     String getLanguage();
 
     /**
-     * @param language
-     *            in which language is the collection
+     * @param language in which language is the collection
      */
     void setLanguage(String language);
 
@@ -65,8 +63,7 @@ public interface Collection<I> extends UimDataSet<I> {
     String getOaiBaseUrl(boolean fallback);
 
     /**
-     * @param baseUrl
-     *            base url to retrieve the collections data
+     * @param baseUrl base url to retrieve the collections data
      */
     void setOaiBaseUrl(String baseUrl);
 
@@ -76,8 +73,7 @@ public interface Collection<I> extends UimDataSet<I> {
     String getOaiSet();
 
     /**
-     * @param set
-     *            set identifier for the oai
+     * @param set set identifier for the oai
      */
     void setOaiSet(String set);
 
@@ -88,38 +84,35 @@ public interface Collection<I> extends UimDataSet<I> {
     String getOaiMetadataPrefix(boolean fallback);
 
     /**
-     * @param prefix
-     *            a prefix for the metadata retrieved from this oai
+     * @param prefix a prefix for the metadata retrieved from this oai
      */
     void setOaiMetadataPrefix(String prefix);
 
     /**
-     * 
+     *
      * @return date of last modification of any record in this collection
      */
     Date getLastModified();
 
     /**
-     * @param date
-     *            date of last modification of any record in this collection
+     * @param date date of last modification of any record in this collection
      */
     void setLastModified(Date date);
 
     /**
-     * 
+     *
      * @return date of last (live) system update of the collection
      */
     Date getLastSynchronized();
 
     /**
-     * @param date
-     *            date of last synchronization of all record in this collection
+     * @param date date of last synchronization of all record in this collection
      */
     void setLastSynchronized(Date date);
 
     /**
      * string key,value pairs for arbitraty information on colleciton level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -127,7 +120,7 @@ public interface Collection<I> extends UimDataSet<I> {
 
     /**
      * retrieve the stirng value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */
@@ -135,7 +128,7 @@ public interface Collection<I> extends UimDataSet<I> {
 
     /**
      * string key,value pairs for arbitraty information on colleciton level
-     * 
+     *
      * @param key
      * @param value
      */
@@ -143,12 +136,12 @@ public interface Collection<I> extends UimDataSet<I> {
 
     /**
      * retrieve the stirng value for the specific key
-     * 
+     *
      * @param key
      * @return the string value or null
      */
     String getValue(ControlledVocabularyKeyValue key);
-    
+
     /**
      * @return the values map
      */

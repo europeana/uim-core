@@ -7,52 +7,51 @@ import java.util.logging.Level;
 
 import org.junit.Test;
 
-import eu.europeana.uim.common.progress.MemoryProgressMonitor;
-
 /**
  * Test for the ProgressMonitor
- * 
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 16, 2011
  */
 public class ProgressMonitorTest {
 
-	/** test for the memory progress monitor
-	 */
-	@Test
-	public void testMemoryProgressMonitor() {
-		MemoryProgressMonitor monitor = new MemoryProgressMonitor();
-		
-		testProgressMonitor(monitor);
-	}
+    /**
+     * test for the memory progress monitor
+     */
+    @Test
+    public void testMemoryProgressMonitor() {
+        MemoryProgressMonitor monitor = new MemoryProgressMonitor();
 
-	/** test for the logging progress monitor
-	 */
-	@Test
-	public void testLoggingProgressMonitor() {
-		MemoryProgressMonitor monitor = new LoggingProgressMonitor(Level.INFO, 50);
-		testProgressMonitor(monitor);
-	}
+        testProgressMonitor(monitor);
+    }
 
-	
-	private void testProgressMonitor(MemoryProgressMonitor monitor) {
-		assertEquals(0, monitor.getWork());
-		
-		monitor.beginTask("test", 12);
-		assertEquals(12, monitor.getWork());
-		monitor.worked(3);
-		assertEquals(3, monitor.getWorked());
+    /**
+     * test for the logging progress monitor
+     */
+    @Test
+    public void testLoggingProgressMonitor() {
+        MemoryProgressMonitor monitor = new LoggingProgressMonitor(Level.INFO, 50);
+        testProgressMonitor(monitor);
+    }
 
-		monitor.beginTask("test", 15);
-		assertEquals(15, monitor.getWork());
-		assertEquals(3, monitor.getWorked());
+    private void testProgressMonitor(MemoryProgressMonitor monitor) {
+        assertEquals(0, monitor.getWork());
 
-		monitor.subTask("subtask");
-		assertEquals("subtask", monitor.getSubtask());
-		
-		//trigger logging event
-		for (int i=0;i<50;i++) {
-		   monitor.worked(1); 
-		}
-	}
+        monitor.beginTask("test", 12);
+        assertEquals(12, monitor.getWork());
+        monitor.worked(3);
+        assertEquals(3, monitor.getWorked());
+
+        monitor.beginTask("test", 15);
+        assertEquals(15, monitor.getWork());
+        assertEquals(3, monitor.getWorked());
+
+        monitor.subTask("subtask");
+        assertEquals("subtask", monitor.getSubtask());
+
+        //trigger logging event
+        for (int i = 0; i < 50; i++) {
+            monitor.worked(1);
+        }
+    }
 }

@@ -8,14 +8,14 @@ import eu.europeana.uim.store.Provider;
 
 /**
  * Base class for storage engine typed with a ID class.
- * 
- * @param <I>
- *            generic ID
- * 
+ *
+ * @param <I> generic ID
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 21, 2011
  */
 public interface ProviderStorageEngine<I> {
+
     /**
      * @return newly created provider
      * @throws StorageEngineException
@@ -24,15 +24,14 @@ public interface ProviderStorageEngine<I> {
 
     /**
      * Stores the given provider and its updated values.
-     * 
+     *
      * @param provider
      * @throws StorageEngineException
      */
     void updateProvider(Provider<I> provider) throws StorageEngineException;
 
     /**
-     * @param id
-     *            unique ID, unique over collection, provider, ...
+     * @param id unique ID, unique over collection, provider, ...
      * @return provider under the given ID
      * @throws StorageEngineException
      */
@@ -46,7 +45,6 @@ public interface ProviderStorageEngine<I> {
 //     * @throws StorageEngineException
 //     */
 //    Provider<I> findProvider(String externalId) throws StorageEngineException;
-
     /**
      * @return all known providers
      * @throws StorageEngineException
@@ -60,7 +58,6 @@ public interface ProviderStorageEngine<I> {
      * @throws StorageEngineException
      */
 // int getTotalByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
-
     /**
      * @param provider
      * @param recursive
@@ -68,7 +65,6 @@ public interface ProviderStorageEngine<I> {
      * @throws StorageEngineException
      */
 // I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
-
     /**
      * @param provider
      * @param recursive

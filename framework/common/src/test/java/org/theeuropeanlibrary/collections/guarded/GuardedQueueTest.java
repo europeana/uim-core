@@ -12,8 +12,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 /**
- * 
- * 
+ * Tests guarded queue especially with guarded urls.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 16, 2011
  */
@@ -24,7 +24,7 @@ public class GuardedQueueTest {
      * @throws InterruptedException
      */
     @Test
-    public void testSimpel() throws MalformedURLException, InterruptedException {
+    public void testSimple() throws MalformedURLException, InterruptedException {
         GuardedQueue queue = new GuardedQueue(new TimedDifferenceCondition(100), 20, 20, 400, true);
         queue.offer(new GuardedUrl(new URL("http://www.test0.org/what-ever.html")));
         queue.offer(new GuardedUrl(new URL("http://www.test1.org/what-ever.html")));
@@ -46,9 +46,9 @@ public class GuardedQueueTest {
         queue.offer(new GuardedUrl(new URL("http://www.test2.org/what-ever.html")));
         queue.offer(new GuardedUrl(new URL("http://www.test3.org/what-ever.html")));
 
-        Map<GuardedKey<Long>, Long> last = new HashMap<GuardedKey<Long>, Long>();
+        Map<GuardedKey<Long>, Long> last = new HashMap<>();
         while (!queue.isEmpty()) {
-            GuardedUrl guarded = (GuardedUrl)queue.poll(10, TimeUnit.MILLISECONDS);
+            GuardedUrl guarded = (GuardedUrl) queue.poll(10, TimeUnit.MILLISECONDS);
 
             if (guarded != null) {
                 GuardedKey<Long> key = guarded.getGuardKey();
