@@ -1,19 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <features name="uim-features">
 
-    <feature name="uim-core-mem-dev" version="3.0.0-SNAPSHOT">
+    <feature name="uim-core-dev" version="3.0.0-SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-common/3.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-api/3.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    
+    <feature name="uim-external-dev" version="3.0.0-SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    
+    <feature name="uim-store-memory-dev" version="3.0.0-SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-storage-memory/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    
+    <feature name="uim-logging-memory-dev" version="3.0.0-SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-logging-memory/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    
+    <feature name="uim-logging-database-dev" version="3.0.0-SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-logging-memory/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    
+    <feature name="uim-europeana-gui-dev" version="3.0.0.SNAPSHOT">
+        <bundle>mvn:eu.europeana/europeana-uim-gui-basic/3.0.0-SNAPSHOT/war</bundle>
+    </feature> 
+    
+    <feature name="uim-tel-dev" version="3.0.0-SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-common/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-api/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
         
-        <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle>
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle> -->
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle> -->
+        
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-repox-basic/3.0.0-SNAPSHOT</bundle> -->
+<!--         <bundle>mvn:eu.europeana/europeana-uim-external-sugar-basic/3.0.0-SNAPSHOT</bundle> -->
         
         <bundle>mvn:eu.europeana/europeana-uim-storage-memory/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-logging-memory/3.0.0-SNAPSHOT</bundle>
+        <bundle>mvn:eu.europeana/europeana-uim-logging-database-engine/3.0.0-SNAPSHOT</bundle>
+        
+        <bundle>mvn:eu.europeana/europeana-uim-gui-basic/3.0.0-SNAPSHOT/war</bundle>
     </feature>
 
-    <feature name="uim-core-dev" version="3.0.0-SNAPSHOT">
+    <feature name="uim-europeana-dev" version="3.0.0-SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-common/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-api/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
@@ -23,25 +55,7 @@
         
         <bundle>mvn:eu.europeana/europeana-uim-storage-mongo/3.0.0-SNAPSHOT</bundle>
         <bundle>mvn:eu.europeana/europeana-uim-logging-database/3.0.0-SNAPSHOT</bundle>
-    </feature>
-    
-    <feature name="uim-tel-core-dev" version="3.0.0-SNAPSHOT">
-        <bundle>mvn:eu.europeana/europeana-uim-common/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-api/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-orchestration-basic/3.0.0-SNAPSHOT</bundle>
         
-        <bundle>mvn:eu.europeana/europeana-uim-external-repox-api/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-external-sugar-api/3.0.0-SNAPSHOT</bundle>
-        
-<!--         <bundle>mvn:eu.europeana/europeana-uim-external-repox-basic/3.0.0-SNAPSHOT</bundle> -->
-<!--         <bundle>mvn:eu.europeana/europeana-uim-external-sugar-basic/3.0.0-SNAPSHOT</bundle> -->
-        
-        <bundle>mvn:eu.europeana/europeana-uim-storage-memory/3.0.0-SNAPSHOT</bundle>
-        <bundle>mvn:eu.europeana/europeana-uim-logging-database-engine/3.0.0-SNAPSHOT</bundle>
-    </feature>
-     
-    <feature name="uim-europeana-gui-dev" version="3.0.0.SNAPSHOT">
         <bundle>mvn:eu.europeana/europeana-uim-gui-basic/3.0.0-SNAPSHOT/war</bundle>
-    </feature> 
-    
+    </feature>
 </features>
