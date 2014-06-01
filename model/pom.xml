@@ -11,7 +11,7 @@
     <artifactId>europeana-uim-model-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>Unified Ingestion Manager: Model Parent</name>
+    <name>Unified Ingestion Manager: Model</name>
 
     <modules>
         <module>common</module>

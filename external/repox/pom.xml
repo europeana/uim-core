@@ -9,12 +9,13 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-external-repox-parent</artifactId>
-    <name>Unified Ingestion Manager: External Service Repox Parent</name>
+    <artifactId>europeana-uim-external-repox</artifactId>
+    <name>Unified Ingestion Manager: External Service Repox</name>
     <packaging>pom</packaging>
 
     <modules>
         <module>api</module>
+        <module>basic</module>
     </modules>
     
     <profiles>

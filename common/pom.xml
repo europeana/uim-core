@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+    </parent>
+    <packaging>bundle</packaging>
+
+    <artifactId>europeana-uim-common</artifactId>
+    <name>Unified Ingestion Manager: Common definitions, model, etc.</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Import-Package>
+                            javax.xml,
+                            org.w3c.dom,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.xml.sax.helpers
+                        </Import-Package>
+                        <Export-Package>
+                            eu.europeana.uim.common,
+                            eu.europeana.uim.external,
+                            eu.europeana.uim.common.progress,
+                            eu.europeana.uim.common.utils,
+                            eu.europeana.uim.store,
+                            eu.europeana.uim.store.bean,
+                            org.theeuropeanlibrary.repository.convert,
+                            org.theeuropeanlibrary.translation,
+                            org.theeuropeanlibrary.collections.guarded,
+                            org.apache.commons.lang.*;version="2.6",
+                            org.apache.commons.io.*;version="2.4",
+                            org.apache.commons.math.*;version="2.2",
+                            gnu.trove.*;version="3.0.3"
+                            <!-- org.joda.*;version="1.6.2" -->
+                        </Export-Package>
+                        <Embed-Dependency>commons-lang,commons-io,commons-math,trove4j,guava</Embed-Dependency>
+                        <Embed-StripVersion>true</Embed-StripVersion>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <includes>
+                    <include>**/*.txt</include>
+                    <include>**/*.xml</include>
+                </includes>
+            </testResource>
+        </testResources>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.trove4j</groupId>
+            <artifactId>trove4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!-- <dependency> -->
+        <!-- <groupId>joda-time</groupId> -->
+        <!-- <artifactId>joda-time</artifactId> -->
+        <!-- <version>1.6.2</version> -->
+        <!-- </dependency> -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

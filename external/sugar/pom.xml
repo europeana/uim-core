@@ -8,12 +8,13 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-external-sugar-parent</artifactId>
-    <name>Unified Ingestion Manager: External Service SugarCRM Parent</name>
+    <artifactId>europeana-uim-external-sugar</artifactId>
+    <name>Unified Ingestion Manager: External Service SugarCRM</name>
     <packaging>pom</packaging>
 
     <modules>
         <module>api</module>
+        <module>basic</module>
     </modules>
     
      <profiles>

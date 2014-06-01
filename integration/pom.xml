@@ -105,6 +105,12 @@
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
+            <artifactId>europeana-uim-resource-memory</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

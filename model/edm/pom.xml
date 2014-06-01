@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>europeana-uim-model-edm</artifactId>
-    <name>Unified Ingestion Manager: EDM Internal Model</name>
+    <name>Unified Ingestion Manager: Model EDM Internal</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

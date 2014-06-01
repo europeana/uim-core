@@ -112,17 +112,39 @@
 	</properties>
 
 	<modules>
-		<!-- basic framework of the UIM -->
-		<module>framework</module>
-
-		<!-- model of TEL and Europeana -->
-		<module>model</module>
-
+            
+                <!-- a version independent common module -->
+		<module>common</module>
+                
+                <!-- other module -->
+		<module>other</module>
+                
+                <!-- the uim api module -->
+		<module>api</module>
+               
 		<!-- external service Repox -->
 		<module>external/repox</module>
 
 		<!-- external service Sugar -->
 		<module>external/sugar</module>
+                
+		<!-- the standard orchestration implementation module -->
+		<module>orchestration/basic</module>
+
+		<!-- the uim standard in memory storage implementation -->
+		<module>resource/memory</module>
+                
+                <!-- the uim standard in memory storage implementation -->
+		<module>storage/memory</module>
+
+		<!-- simplistic in-memory logging -->
+		<module>logging/memory</module>
+
+		<!-- UIM gui module -->
+		<module>gui</module>
+                
+		<!-- model of TEL and Europeana -->
+		<module>model</module>
 
 		<!-- uim mongo implementation -->
 		<module>storage/mongo</module>

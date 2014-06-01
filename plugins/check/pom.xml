@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>eu.europeana</groupId>
-		<artifactId>europeana-uim</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.europeana</groupId>
+        <artifactId>europeana-uim</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
-	</parent>
+    </parent>
 
-	<groupId>org.theeuropeanlibrary</groupId>
-	<artifactId>tel-uim-plugin-check</artifactId>
-	<packaging>pom</packaging>
-	<name>Unified Ingestion Manager: TEL Check Plugins</name>
-	<description>Plugins doing all kinds of checking for the European Library central ingestion framework</description>
+    <groupId>org.theeuropeanlibrary</groupId>
+    <artifactId>tel-uim-plugin-check</artifactId>
+    <packaging>pom</packaging>
+    <name>Unified Ingestion Manager: TEL Check Plugins</name>
+    <description>Plugins doing all kinds of checking for the European Library central ingestion framework</description>
 
-	<modules>
-		<module>field</module>
-		<module>link</module>
-		<module>link-collection</module>
-	</modules>
+    <modules>
+        <module>link-collection</module>
+        <module>link</module>
+        <module>field</module>
+    </modules>
 </project>

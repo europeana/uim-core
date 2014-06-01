@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-model-tel</artifactId>
-	<name>Unified Ingestion Manager: TEL Internal Model</name>
+	<name>Unified Ingestion Manager: Model TEL</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
