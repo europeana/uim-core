@@ -33,11 +33,6 @@
 
     <dependencies>
         <!-- Pax-Exam dependencies -->
-        <!--        <dependency>
-            <groupId>org.ops4j.pax.exam.samples</groupId>
-            <artifactId>pax-exam-sample8-ds</artifactId>
-            <scope>test</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.ops4j.pax.exam</groupId>
             <artifactId>pax-exam</artifactId>
@@ -63,10 +58,6 @@
             <artifactId>javax.inject</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>
-            <groupId>org.ops4j.pax.exam</groupId>
-            <artifactId>pax-exam-container-default</artifactId>
-        </dependency>-->
 
         <!-- JUnit dependencies -->
         <dependency>
@@ -75,13 +66,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Apache Karaf integration -->
-        <!--        <dependency>
-            <groupId>org.apache.karaf.tooling.exam</groupId>
-            <artifactId>org.apache.karaf.tooling.exam.container</artifactId>
-            <scope>test</scope>
-        </dependency>-->
-        
+        <!-- Apache Karaf integration -->        
         <dependency>
             <groupId>org.apache.karaf.features</groupId>
             <artifactId>standard</artifactId>
@@ -139,11 +124,11 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-logging-database</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>
