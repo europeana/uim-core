@@ -112,7 +112,6 @@
 	</properties>
 
 	<modules>
-            
                 <!-- a version independent common module -->
 		<module>common</module>
                 
@@ -121,15 +120,15 @@
                 
                 <!-- the uim api module -->
 		<module>api</module>
-               
+                
+                <!-- the standard orchestration implementation module -->
+		<module>orchestration</module>
+
 		<!-- external service Repox -->
 		<module>external/repox</module>
 
 		<!-- external service Sugar -->
 		<module>external/sugar</module>
-                
-		<!-- the standard orchestration implementation module -->
-		<module>orchestration/basic</module>
 
 		<!-- the uim standard in memory storage implementation -->
 		<module>resource/memory</module>

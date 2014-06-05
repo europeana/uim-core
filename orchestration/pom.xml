@@ -5,12 +5,12 @@
     <parent>
         <groupId>eu.europeana</groupId>
         <artifactId>europeana-uim</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+	<version>3.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-orchestration-basic</artifactId>
-    <name>Unified Ingestion Manager: Orchestrator Basic</name>
+    <artifactId>europeana-uim-orchestration</artifactId>
+    <name>Unified Ingestion Manager: Orchestrator</name>
     <packaging>bundle</packaging>
 
     <build>
