@@ -1,850 +1,840 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>eu.europeana</groupId>
-	<artifactId>europeana-uim</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Unified Ingestion Manager</name>
+    <groupId>eu.europeana</groupId>
+    <artifactId>europeana-uim</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Unified Ingestion Manager</name>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<europeana.uim.version>3.0.0-SNAPSHOT</europeana.uim.version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <europeana.uim.version>3.0.0-SNAPSHOT</europeana.uim.version>
 
-		<!-- Plugin Management Versions -->
-		<maven-jar-plugin-version>2.4</maven-jar-plugin-version>
-		<maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
-		<surefire-junit4-version>2.1</surefire-junit4-version>
-		<maven-release-plugin-version>2.5</maven-release-plugin-version>
-		<maven-dependency-plugin-version>2.8</maven-dependency-plugin-version>
-		<maven-site-plugin-version>3.3</maven-site-plugin-version>
-		<maven-project-info-reports-plugin-version>2.7</maven-project-info-reports-plugin-version>
-		<cobertura-maven-plugin-version>2.6</cobertura-maven-plugin-version>
-		<depends-maven-plugin-version>1.2</depends-maven-plugin-version>
-		<maven-bundle-plugin-version>2.4.0</maven-bundle-plugin-version>
-		<hibernate3-maven-plugin-version>2.2</hibernate3-maven-plugin-version>
-		<build-helper-maven-plugin>1.8</build-helper-maven-plugin>
-		<lifecycle-mapping-version>1.0.0</lifecycle-mapping-version>
+        <!-- Plugin Management Versions -->
+        <maven-jar-plugin-version>2.4</maven-jar-plugin-version>
+        <maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
+        <surefire-junit4-version>2.1</surefire-junit4-version>
+        <maven-release-plugin-version>2.5</maven-release-plugin-version>
+        <maven-dependency-plugin-version>2.8</maven-dependency-plugin-version>
+        <maven-site-plugin-version>3.3</maven-site-plugin-version>
+        <maven-project-info-reports-plugin-version>2.7</maven-project-info-reports-plugin-version>
+        <cobertura-maven-plugin-version>2.6</cobertura-maven-plugin-version>
+        <depends-maven-plugin-version>1.2</depends-maven-plugin-version>
+        <maven-bundle-plugin-version>2.4.0</maven-bundle-plugin-version>
+        <hibernate3-maven-plugin-version>2.2</hibernate3-maven-plugin-version>
+        <build-helper-maven-plugin>1.8</build-helper-maven-plugin>
+        <lifecycle-mapping-version>1.0.0</lifecycle-mapping-version>
 
-		<!-- Dependency Management Versions -->
-		<commons-lang-version>2.6</commons-lang-version>
-		<commons-fileupload-version>1.3</commons-fileupload-version>
-		<commons-io-version>2.4</commons-io-version>
-		<commons-codec-version>1.9</commons-codec-version>
-		<commons-math-version>2.2</commons-math-version>
-		<commons-math3-version>3.2</commons-math3-version>
-		<commons-collections-version>3.2.1</commons-collections-version>
-		<commons-logging-version>1.1.3</commons-logging-version>
-		<httpcore-version>4.3.2</httpcore-version>
-		<httpclient-version>4.3.2</httpclient-version>
-		<commons-httpclient-version>3.1</commons-httpclient-version>
-		<trove4j-version>3.0.3</trove4j-version>
-		<c3p0-version>0.9.1.2</c3p0-version>
-		<ehcache-core-version>2.6.8</ehcache-core-version>
-		<cglib-version>3.1</cglib-version>
-		<guava-version>r09</guava-version>
-		<joda-time-version>2.3</joda-time-version>
-		<axis-version>1.4</axis-version>
-		<axis-saaj-version>1.4</axis-saaj-version>
-		<wsdl4j-version>1.6.3</wsdl4j-version>
-		<commons-discovery-version>0.5</commons-discovery-version>
-		<geronimo-jaxrpc_1.1_spec-version>2.1</geronimo-jaxrpc_1.1_spec-version>
-		<slf4j-api-version>1.7.6</slf4j-api-version>
-		<slf4j-simple-version>1.6.1</slf4j-simple-version>
-		<slf4j-jdk14-version>1.7.6</slf4j-jdk14-version>
+        <!-- Dependency Management Versions -->
+        <commons-lang-version>2.6</commons-lang-version>
+        <commons-fileupload-version>1.3</commons-fileupload-version>
+        <commons-io-version>2.4</commons-io-version>
+        <commons-codec-version>1.9</commons-codec-version>
+        <commons-math-version>2.2</commons-math-version>
+        <commons-math3-version>3.2</commons-math3-version>
+        <commons-collections-version>3.2.1</commons-collections-version>
+        <commons-logging-version>1.1.3</commons-logging-version>
+        <http-version>4.3.2</http-version>
+        <commons-httpclient-version>3.1</commons-httpclient-version>
+        <trove4j-version>3.0.3</trove4j-version>
+        <c3p0-version>0.9.1.2</c3p0-version>
+        <ehcache-core-version>2.6.8</ehcache-core-version>
+        <cglib-version>3.1</cglib-version>
+        <guava-version>r09</guava-version>
+        <joda-time-version>2.3</joda-time-version>
+        <axis-version>1.4</axis-version>
+        <axis-saaj-version>1.4</axis-saaj-version>
+        <wsdl4j-version>1.6.3</wsdl4j-version>
+        <commons-discovery-version>0.5</commons-discovery-version>
+        <geronimo-jaxrpc_1.1_spec-version>2.1</geronimo-jaxrpc_1.1_spec-version>
+        <slf4j-api-version>1.7.6</slf4j-api-version>
+        <slf4j-simple-version>1.6.1</slf4j-simple-version>
+        <slf4j-jdk14-version>1.7.6</slf4j-jdk14-version>
 
-		<!-- Hibernate dependencies Versions -->
-		<hibernate-core-version>4.3.5.Final</hibernate-core-version>
-		<hibernate-entitymanager-version>4.3.5.Final</hibernate-entitymanager-version>
-		<hsqldb-version>2.3.2</hsqldb-version>
-		<postgresql-version>9.1-901.jdbc4</postgresql-version>
-		<xml-apis-version>1.3.04</xml-apis-version>
-		<com.springsource.org.apache.xerces-version>2.8.1</com.springsource.org.apache.xerces-version>
-		<geronimo-stax-api_1.0_spec-version>1.0.1</geronimo-stax-api_1.0_spec-version>
+        <!-- Hibernate dependencies Versions -->
+        <hibernate-version>4.3.5.Final</hibernate-version>
+        <hsqldb-version>2.3.2</hsqldb-version>
+        <postgresql-version>9.1-901.jdbc4</postgresql-version>
+        <xml-apis-version>1.3.04</xml-apis-version>
+        <com.springsource.org.apache.xerces-version>2.8.1</com.springsource.org.apache.xerces-version>
+        <geronimo-stax-api_1.0_spec-version>1.0.1</geronimo-stax-api_1.0_spec-version>
 
-		<!-- OSGi spec Versions -->
-		<osgi.version>5.0.0</osgi.version>
+        <!-- OSGi spec Versions -->
+        <osgi.version>5.0.0</osgi.version>
 
-		<!-- Karaf Shell, for OSGi shell commands Versions -->
-		<karaf.version>3.0.0</karaf.version>
+        <!-- Karaf Shell, for OSGi shell commands Versions -->
+        <karaf.version>3.0.0</karaf.version>
 
-		<!-- Servlet, for webconsole extension Versions -->
-		<servlet-api-version>2.5</servlet-api-version>
+        <!-- Servlet, for webconsole extension Versions -->
+        <servlet-api-version>2.5</servlet-api-version>
 
-		<!-- Pax-Exam dependencies Versions -->
-		<pax-exam-container-karaf-version>3.5.0</pax-exam-container-karaf-version>
-		<pax-exam-junit4-version>3.5.0</pax-exam-junit4-version>
-		<pax-exam-version>3.5.0</pax-exam-version>
-		<pax-url-aether-version>2.0.0</pax-url-aether-version>
-		<javax.inject-version>1</javax.inject-version>
+        <!-- Pax-Exam dependencies Versions -->
+        <pax-exam-version>3.5.0</pax-exam-version>
+        <pax-url-aether-version>2.0.0</pax-url-aether-version>
+        <javax.inject-version>1</javax.inject-version>
 
-		<!-- Spring for wiring unit tests Versions -->
-		<spring-beans-version>4.0.5.RELEASE</spring-beans-version>
-		<spring-context-version>4.0.5.RELEASE</spring-context-version>
-		<spring-core-version>4.0.5.RELEASE</spring-core-version>
-		<spring-test-version>4.0.5.RELEASE</spring-test-version>
-		<spring-jdbc-version>4.0.5.RELEASE</spring-jdbc-version>
-		<spring-orm-version>4.0.5.RELEASE</spring-orm-version>
+        <!-- Spring for wiring unit tests Versions -->
+        <spring-version>4.0.5.RELEASE</spring-version>
 
-		<!-- GWT dependencies Versions -->
-		<gwt-user-version>2.6.0</gwt-user-version>
-		<gwt-servlet-version>2.6.0</gwt-servlet-version>
-		<gwt-incubator-version>2.0.1</gwt-incubator-version>
+        <!-- GWT dependencies Versions -->
+        <gwt-version>2.6.0</gwt-version>
+        <gwt-incubator-version>2.0.1</gwt-incubator-version>
 
-		<!-- Tests dependencies Versions -->
-		<junit-version>4.11</junit-version>
-		<mockito-all-version>1.9.5</mockito-all-version>
-		<ant-junit-version>1.9.3</ant-junit-version>
-		<junit-dep-version>4.11</junit-dep-version>
+        <!-- Tests dependencies Versions -->
+        <junit-version>4.11</junit-version>
+        <mockito-all-version>1.9.5</mockito-all-version>
+        <ant-junit-version>1.9.3</ant-junit-version>
 
-		<!-- Reporting Versions -->
-		<maven-checkstyle-plugin-version.reporting>2.12</maven-checkstyle-plugin-version.reporting>
-		<cobertura-maven-plugin-version.reporting>2.6</cobertura-maven-plugin-version.reporting>
+        <!-- Reporting Versions -->
+        <maven-checkstyle-plugin-version.reporting>2.12</maven-checkstyle-plugin-version.reporting>
+        <cobertura-maven-plugin-version.reporting>2.6</cobertura-maven-plugin-version.reporting>
 
-		<!-- Profile Tel Versions -->
-		<maven-checkstyle-plugin-version.profile-tel>2.12</maven-checkstyle-plugin-version.profile-tel>
-		<maven-jxr-plugin-version.profile-tel>2.3</maven-jxr-plugin-version.profile-tel>
-		<cobertura-maven-plugin-version.profile-tel>2.6</cobertura-maven-plugin-version.profile-tel>
-		<maven-javadoc-plugin-version.profile-tel>2.9.1</maven-javadoc-plugin-version.profile-tel>
-		<maven-project-info-reports-plugin-version.profile-tel>2.7</maven-project-info-reports-plugin-version.profile-tel>
-	</properties>
+        <!-- Profile Tel Versions -->
+        <maven-checkstyle-plugin-version.profile-tel>2.12</maven-checkstyle-plugin-version.profile-tel>
+        <maven-jxr-plugin-version.profile-tel>2.3</maven-jxr-plugin-version.profile-tel>
+        <cobertura-maven-plugin-version.profile-tel>2.6</cobertura-maven-plugin-version.profile-tel>
+        <maven-javadoc-plugin-version.profile-tel>2.9.1</maven-javadoc-plugin-version.profile-tel>
+        <maven-project-info-reports-plugin-version.profile-tel>2.7</maven-project-info-reports-plugin-version.profile-tel>
+    </properties>
 
-	<modules>
-                <!-- a version independent common module -->
-		<module>common</module>
+    <modules>
+            
+        <!-- a version independent common module -->
+        <module>common</module>
                 
-                <!-- other module -->
-		<module>other</module>
+        <!-- other module -->
+        <module>other</module>
+
+        <!-- the uim api module -->
+        <module>api</module>
+
+        <!-- the standard orchestration implementation module -->
+        <module>orchestration</module>
+
+        <!-- external service Repox -->
+        <module>external/repox</module>
+        
+        <!-- external service Sugar -->
+        <module>external/sugar</module>
+
+        <!-- the uim standard in memory storage implementation -->
+        <module>resource/memory</module>
                 
-                <!-- the uim api module -->
-		<module>api</module>
+        <!-- the uim standard in memory storage implementation -->
+        <module>storage/memory</module>
+
+        <!-- simplistic in-memory logging -->
+        <module>logging/memory</module>
+
+        <!-- UIM gui module -->
+        <module>gui</module>
                 
-                <!-- the standard orchestration implementation module -->
-		<module>orchestration</module>
-
-		<!-- external service Repox -->
-		<module>external/repox</module>
-
-		<!-- external service Sugar -->
-		<module>external/sugar</module>
-
-		<!-- the uim standard in memory storage implementation -->
-		<module>resource/memory</module>
-                
-                <!-- the uim standard in memory storage implementation -->
-		<module>storage/memory</module>
-
-		<!-- simplistic in-memory logging -->
-		<module>logging/memory</module>
-
-		<!-- UIM gui module -->
-		<module>gui</module>
-                
-		<!-- model of TEL and Europeana -->
-		<module>model</module>
-
-		<!-- uim mongo implementation -->
-		<module>storage/mongo</module>
-
-		<!-- database base logging -->
-		<module>logging/database</module>
-
-		<!-- plugins for checking -->
-		<module>plugins/check</module>
-
-		<!-- plugins for Solr -->
-		<module>plugins/solr/solr14</module>
-		<module>plugins/solr/solr3</module>
-		<module>plugins/solr/solr4</module>
-
-		<!-- UIM Integration -->
-		<module>integration</module>
-	</modules>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<target>1.7</target>
-					<source>1.7</source>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<preparationGoals>clean jar:test-jar compile process-classes
-						source:jar install -Ptel -DskipTests</preparationGoals>
-					<goals>clean jar:test-jar compile process-classes source:jar
-						install deploy -Ptel -DskipTests</goals>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<configuration>
-					<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-				</configuration>
-			</plugin>
-
-			<!-- Necessary for PAX-EXAM -->
-			<plugin>
-				<groupId>org.apache.servicemix.tooling</groupId>
-				<artifactId>depends-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>generate-depends-file</id>
-						<goals>
-							<goal>generate-depends-file</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>${maven-jar-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>${maven-compiler-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.surefire</groupId>
-					<artifactId>surefire-junit4</artifactId>
-					<version>${surefire-junit4-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>${maven-release-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>${maven-dependency-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-site-plugin</artifactId>
-					<version>${maven-site-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>${maven-project-info-reports-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>${cobertura-maven-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.servicemix.tooling</groupId>
-					<artifactId>depends-maven-plugin</artifactId>
-					<version>${depends-maven-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${maven-bundle-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>hibernate3-maven-plugin</artifactId>
-					<version>${hibernate3-maven-plugin-version}</version>
-				</plugin>
-
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>${build-helper-maven-plugin-version}</version>
-				</plugin>
-
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>${lifecycle-mapping-version}</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-antrun-plugin
-										</artifactId>
-										<versionRange>
-											[1.6,)
-										</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute>
-											<runOnIncremental>true</runOnIncremental>
-										</execute>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.servicemix.tooling
-										</groupId>
-										<artifactId>
-											depends-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.2,)
-										</versionRange>
-										<goals>
-											<goal>
-												generate-depends-file
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
-	<!-- Shared dependencies -->
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>${commons-lang-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-fileupload</groupId>
-				<artifactId>commons-fileupload</artifactId>
-				<version>${commons-fileupload-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-math</artifactId>
-				<version>${commons-math-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-math3</artifactId>
-				<version>${commons-math3-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-collections</groupId>
-				<artifactId>commons-collections</artifactId>
-				<version>${commons-collections-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>${commons-logging-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpcore</artifactId>
-				<version>${httpcore-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${httpclient-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-httpclient</groupId>
-				<artifactId>commons-httpclient</artifactId>
-				<version>${commons-httpclient-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>net.sf.trove4j</groupId>
-				<artifactId>trove4j</artifactId>
-				<version>${trove4j-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>c3p0</groupId>
-				<artifactId>c3p0</artifactId>
-				<version>${c3p0-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>net.sf.ehcache</groupId>
-				<artifactId>ehcache-core</artifactId>
-				<version>${ehcache-core-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>cglib</groupId>
-				<artifactId>cglib</artifactId>
-				<version>${cglib-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${joda-time-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.axis</groupId>
-				<artifactId>axis</artifactId>
-				<version>${axis-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.axis</groupId>
-				<artifactId>axis-saaj</artifactId>
-				<version>${axis-saaj-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>wsdl4j</groupId>
-				<artifactId>wsdl4j</artifactId>
-				<version>${wsdl4j-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-discovery</groupId>
-				<artifactId>commons-discovery</artifactId>
-				<version>${commons-discovery-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.geronimo.specs</groupId>
-				<artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
-				<version>${geronimo-jaxrpc_1.1_spec-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j-api-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-simple</artifactId>
-				<version>${slf4j-simple-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-jdk14</artifactId>
-				<version>${slf4j-jdk14-version}</version>
-			</dependency>
-
-			<!-- common things -->
-			<dependency>
-				<groupId>${project.groupId}</groupId>
-				<artifactId>europeana-uim-common</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>eu.europeana</groupId>
-				<artifactId>europeana-uim-common</artifactId>
-				<version>${project.version}</version>
-				<classifier>tests</classifier>
-				<scope>test</scope>
-			</dependency>
-
-			<!-- Hibernate dependencies -->
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-core</artifactId>
-				<version>${hibernate-core-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate-entitymanager-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hsqldb</groupId>
-				<artifactId>hsqldb</artifactId>
-				<version>${hsqldb-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>${postgresql-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>xml-apis</groupId>
-				<artifactId>xml-apis</artifactId>
-				<version>${xml-apis-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.xerces</groupId>
-				<artifactId>com.springsource.org.apache.xerces</artifactId>
-				<version>${com.springsource.org.apache.xerces-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.geronimo.specs</groupId>
-				<artifactId>geronimo-stax-api_1.0_spec</artifactId>
-				<version>${geronimo-stax-api_1.0_spec-version}</version>
-			</dependency>
-
-			<!-- OSGi spec -->
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.core</artifactId>
-				<version>${osgi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.compendium</artifactId>
-				<version>${osgi.version}</version>
-			</dependency>
-
-			<!-- Servlet, for webconsole extension -->
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<scope>provided</scope>
-				<version>${servlet-api-version}</version>
-			</dependency>
-
-			<!-- Karaf Shell, for OSGi shell commands -->
-			<dependency>
-				<groupId>org.apache.karaf.shell</groupId>
-				<artifactId>org.apache.karaf.shell.console</artifactId>
-				<version>${karaf.version}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<!-- <dependency> <groupId>org.apache.karaf</groupId> <artifactId>apache-karaf</artifactId> 
-				<version>${karaf.version}</version> <type>zip</type> </dependency> -->
-
-			<dependency>
-				<groupId>org.apache.karaf.features</groupId>
-				<artifactId>standard</artifactId>
-				<classifier>features</classifier>
-				<version>${karaf.version}</version>
-				<type>xml</type>
-			</dependency>
-
-			<!-- <dependency> <groupId>org.apache.karaf.tooling</groupId> <artifactId>org.apache.karaf.tooling.testing</artifactId> 
-				<version>2.2.11</version> </dependency> -->
-
-			<!-- <dependency> <groupId>org.apache.karaf.tooling.exam</groupId> <artifactId>org.apache.karaf.tooling.exam.container</artifactId> 
-				<version>3.0.0.RC1</version> </dependency> -->
-
-			<!-- Pax-Exam dependencies -->
-			<dependency>
-				<groupId>org.ops4j.pax.exam</groupId>
-				<artifactId>pax-exam-container-karaf</artifactId>
-				<version>${pax-exam-container-karaf-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ops4j.pax.exam</groupId>
-				<artifactId>pax-exam-junit4</artifactId>
-				<version>${pax-exam-junit4-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ops4j.pax.exam</groupId>
-				<artifactId>pax-exam</artifactId>
-				<version>${pax-exam-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ops4j.pax.url</groupId>
-				<artifactId>pax-url-aether</artifactId>
-				<version>${pax-url-aether-version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.inject</groupId>
-				<artifactId>javax.inject</artifactId>
-				<version>${javax.inject-version}</version>
-			</dependency>
-
-			<!-- <dependency> <groupId>org.ops4j.pax.exam</groupId> <artifactId>pax-exam-container-default</artifactId> 
-				<version>1.2.4</version> </dependency> -->
-
-			<!-- Spring for wiring unit tests -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring-core-version}</version>
-			</dependency>
-
-			<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${spring-beans-version}</version>
-			</dependency>
-
-			<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring-context-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring-test-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring-jdbc-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring-orm-version}</version>
-			</dependency>
-
-			<!-- GWT dependencies -->
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-user</artifactId>
-				<version>${gwt-user-version}</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-servlet</artifactId>
-				<version>${gwt-servlet-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-incubator</artifactId>
-				<version>${gwt-incubator-version}</version>
-			</dependency>
-
-			<!-- Tests dependencies -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>${mockito-all-version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>ant</groupId>
-				<artifactId>ant-junit</artifactId>
-				<version>${ant-junit-version}</version>
-			</dependency>
-
-			<!-- TODO what is this? -->
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit-dep</artifactId>
-				<version>${junit-dep-version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${maven-checkstyle-plugin-version.reposting}</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>${cobertura-maven-plugin-version.reposting}</version>
-			</plugin>
-		</plugins>
-	</reporting>
-
-	<profiles>
-		<profile>
-			<id>tel</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-
-			<reporting>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-checkstyle-plugin</artifactId>
-						<version>${maven-checkstyle-plugin-version.profile-tel}</version>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jxr-plugin</artifactId>
-						<version>${maven-jxr-plugin-version.profile-tel}</version>
-						<configuration>
-							<aggregate>true</aggregate>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>cobertura-maven-plugin</artifactId>
-						<version>${cobertura-maven-plugin-version.profile-tel}</version>
-						<configuration>
-							<formats>
-								<format>html</format>
-								<format>xml</format>
-							</formats>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>${maven-javadoc-plugin-version.profile-tel}</version>
-						<configuration>
-							<excludePackageNames>org.editeur.*</excludePackageNames>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<version>${maven-project-info-reports-plugin-version.profile-tel}</version>
-						<configuration>
-							<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-							<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-						</configuration>
-					</plugin>
-				</plugins>
-			</reporting>
-
-			<distributionManagement>
-				<repository>
-					<id>tel.release</id>
-					<name>TEL Release Repository</name>
-					<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
-				</repository>
-				<snapshotRepository>
-					<id>tel.snapshot</id>
-					<name>TEL Snapshot Repository</name>
-					<url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-
-		<profile>
-			<id>europeana</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-
-			<distributionManagement>
-				<repository>
-					<id>artifactory.eanadev.org</id>
-					<name>artifactory.eanadev.org-releases</name>
-					<url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-	</profiles>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>tel.plugins</id>
-			<name>Maven Plugin Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
-			<layout>default</layout>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<scm>
-		<connection>scm:git:git@github.com:europeana/uim-core.git</connection>
-		<url>scm:git:git@github.com:europeana/uim-core.git</url>
-		<developerConnection>scm:git:git@github.com:europeana/uim-core.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
+        <!-- model of TEL and Europeana -->
+        <module>model</module>
+
+        <!-- uim mongo implementation -->
+        <module>storage/mongo</module>
+
+        <!-- database base logging -->
+        <module>logging/database</module>
+
+        <!-- plugins for checking -->
+        <module>plugins/check</module>
+
+        <!-- plugins for Solr -->
+        <module>plugins/solr/solr14</module>
+        <module>plugins/solr/solr3</module>
+        <module>plugins/solr/solr4</module>
+
+        <!-- UIM Integration -->
+        <module>integration</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <target>1.7</target>
+                    <source>1.7</source>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <preparationGoals>clean jar:test-jar compile process-classes
+                        source:jar install -Ptel -DskipTests</preparationGoals>
+                    <goals>clean jar:test-jar compile process-classes source:jar
+                        install deploy -Ptel -DskipTests</goals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+            </plugin>
+
+            <!-- Necessary for PAX-EXAM -->
+            <plugin>
+                <groupId>org.apache.servicemix.tooling</groupId>
+                <artifactId>depends-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-depends-file</id>
+                        <goals>
+                            <goal>generate-depends-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.surefire</groupId>
+                    <artifactId>surefire-junit4</artifactId>
+                    <version>${surefire-junit4-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven-project-info-reports-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>cobertura-maven-plugin</artifactId>
+                    <version>${cobertura-maven-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.servicemix.tooling</groupId>
+                    <artifactId>depends-maven-plugin</artifactId>
+                    <version>${depends-maven-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${maven-bundle-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>hibernate3-maven-plugin</artifactId>
+                    <version>${hibernate3-maven-plugin-version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build-helper-maven-plugin-version}</version>
+                </plugin>
+
+                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>${lifecycle-mapping-version}</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-antrun-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.6,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>run</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <execute>
+                                            <runOnIncremental>true</runOnIncremental>
+                                        </execute>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.servicemix.tooling
+                                        </groupId>
+                                        <artifactId>
+                                            depends-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [1.2,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>
+                                                generate-depends-file
+                                            </goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <!-- Shared dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math</artifactId>
+                <version>${commons-math-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons-math3-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons-logging-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${http-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${http-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons-httpclient-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.trove4j</groupId>
+                <artifactId>trove4j</artifactId>
+                <version>${trove4j-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>c3p0</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>${c3p0-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache-core-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis</groupId>
+                <artifactId>axis</artifactId>
+                <version>${axis-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.axis</groupId>
+                <artifactId>axis-saaj</artifactId>
+                <version>${axis-saaj-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>wsdl4j</groupId>
+                <artifactId>wsdl4j</artifactId>
+                <version>${wsdl4j-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-discovery</groupId>
+                <artifactId>commons-discovery</artifactId>
+                <version>${commons-discovery-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jaxrpc_1.1_spec</artifactId>
+                <version>${geronimo-jaxrpc_1.1_spec-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-api-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j-simple-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j-jdk14-version}</version>
+            </dependency>
+
+            <!-- common things -->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>europeana-uim-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>eu.europeana</groupId>
+                <artifactId>europeana-uim-common</artifactId>
+                <version>${project.version}</version>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Hibernate dependencies -->
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hsqldb</groupId>
+                <artifactId>hsqldb</artifactId>
+                <version>${hsqldb-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>${xml-apis-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.xerces</groupId>
+                <artifactId>com.springsource.org.apache.xerces</artifactId>
+                <version>${com.springsource.org.apache.xerces-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+                <version>${geronimo-stax-api_1.0_spec-version}</version>
+            </dependency>
+
+            <!-- OSGi spec -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>${osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.compendium</artifactId>
+                <version>${osgi.version}</version>
+            </dependency>
+
+            <!-- Servlet, for webconsole extension -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <scope>provided</scope>
+                <version>${servlet-api-version}</version>
+            </dependency>
+
+            <!-- Karaf Shell, for OSGi shell commands -->
+            <dependency>
+                <groupId>org.apache.karaf.shell</groupId>
+                <artifactId>org.apache.karaf.shell.console</artifactId>
+                <version>${karaf.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- <dependency> <groupId>org.apache.karaf</groupId> <artifactId>apache-karaf</artifactId> 
+            <version>${karaf.version}</version> <type>zip</type> </dependency> -->
+
+            <dependency>
+                <groupId>org.apache.karaf.features</groupId>
+                <artifactId>standard</artifactId>
+                <classifier>features</classifier>
+                <version>${karaf.version}</version>
+                <type>xml</type>
+            </dependency>
+
+            <!-- <dependency> <groupId>org.apache.karaf.tooling</groupId> <artifactId>org.apache.karaf.tooling.testing</artifactId> 
+            <version>2.2.11</version> </dependency> -->
+
+            <!-- <dependency> <groupId>org.apache.karaf.tooling.exam</groupId> <artifactId>org.apache.karaf.tooling.exam.container</artifactId> 
+            <version>3.0.0.RC1</version> </dependency> -->
+
+            <!-- Pax-Exam dependencies -->
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-container-karaf</artifactId>
+                <version>${pax-exam-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam-junit4</artifactId>
+                <version>${pax-exam-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.exam</groupId>
+                <artifactId>pax-exam</artifactId>
+                <version>${pax-exam-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ops4j.pax.url</groupId>
+                <artifactId>pax-url-aether</artifactId>
+                <version>${pax-url-aether-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${javax.inject-version}</version>
+            </dependency>
+
+            <!-- <dependency> <groupId>org.ops4j.pax.exam</groupId> <artifactId>pax-exam-container-default</artifactId> 
+            <version>1.2.4</version> </dependency> -->
+
+            <!-- Spring for wiring unit tests -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-orm</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <!-- GWT dependencies -->
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-user</artifactId>
+                <version>${gwt-version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-servlet</artifactId>
+                <version>${gwt-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.gwt</groupId>
+                <artifactId>gwt-incubator</artifactId>
+                <version>${gwt-incubator-version}</version>
+            </dependency>
+
+            <!-- Tests dependencies -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-all-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ant</groupId>
+                <artifactId>ant-junit</artifactId>
+                <version>${ant-junit-version}</version>
+            </dependency>
+
+            <!-- TODO what is this? -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit-dep</artifactId>
+                <version>${junit-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin-version.reposting}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura-maven-plugin-version.reposting}</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <id>tel</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${maven-checkstyle-plugin-version.profile-tel}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>${maven-jxr-plugin-version.profile-tel}</version>
+                        <configuration>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>${cobertura-maven-plugin-version.profile-tel}</version>
+                        <configuration>
+                            <formats>
+                                <format>html</format>
+                                <format>xml</format>
+                            </formats>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin-version.profile-tel}</version>
+                        <configuration>
+                            <excludePackageNames>org.editeur.*</excludePackageNames>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-project-info-reports-plugin</artifactId>
+                        <version>${maven-project-info-reports-plugin-version.profile-tel}</version>
+                        <configuration>
+                            <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                            <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
+
+            <distributionManagement>
+                <repository>
+                    <id>tel.release</id>
+                    <name>TEL Release Repository</name>
+                    <url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>tel.snapshot</id>
+                    <name>TEL Snapshot Repository</name>
+                    <url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>europeana</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+            <distributionManagement>
+                <repository>
+                    <id>artifactory.eanadev.org</id>
+                    <name>artifactory.eanadev.org-releases</name>
+                    <url>http://artifactory.eanadev.org/artifactory/uim-releases-local</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>tel.plugins</id>
+            <name>Maven Plugin Repository</name>
+            <url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <scm>
+        <connection>scm:git:git@github.com:europeana/uim-core.git</connection>
+        <url>scm:git:git@github.com:europeana/uim-core.git</url>
+        <developerConnection>scm:git:git@github.com:europeana/uim-core.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 </project>
 +
