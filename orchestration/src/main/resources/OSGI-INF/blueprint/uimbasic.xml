@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0" xmlns:shell="http://karaf.apache.org/xmlns/shell/v1.0.0"
+    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+    <bp:reference id="registry" interface="eu.europeana.uim.Registry" />
+
+    <!-- Property place holder -->
+    <cm:property-placeholder persistent-id="eu.europeana.uim.basic">
+        <cm:default-properties>
+            <cm:property name="maxInProgress" value="1000" />
+            <cm:property name="maxTotalProgress" value="5000" />
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <bean id="uimWorkflowProcessor" class="eu.europeana.uim.orchestration.basic.UIMWorkflowProcessor">
+        <argument ref="registry" />
+        <property name="maxInProgress" value="${maxInProgress}" />
+        <property name="maxTotalProgress" value="${maxTotalProgress}" />
+    </bean>
+
+    <bean id="uimOrchestrator" class="eu.europeana.uim.orchestration.basic.UIMOrchestrator" scope="singleton">
+        <argument ref="registry" />
+        <argument ref="uimWorkflowProcessor" />
+    </bean>
+    <bp:service id="orchestrator" ref="uimOrchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />
+
+    <bean id="ep" class="eu.europeana.uim.workflows.SyserrPlugin" />
+    <service id="syserrPlugin" ref="ep" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
+
+    <bean id="op" class="eu.europeana.uim.workflows.SysoutPlugin" />
+    <service id="sysoutPlugin" ref="op" interface="eu.europeana.uim.plugin.ingestion.IngestionPlugin" />
+
+    <bean id="mw" class="eu.europeana.uim.workflows.MixedWorkflow" />
+    <service id="mixedWorkflow" ref="mw" interface="eu.europeana.uim.workflow.Workflow" />
+
+    <bean id="ew" class="eu.europeana.uim.workflows.SyserrWorkflow" />
+    <service id="syserrWorkflow" ref="ew" interface="eu.europeana.uim.workflow.Workflow" />
+
+    <bean id="ow" class="eu.europeana.uim.workflows.SysoutWorkflow" />
+    <service id="sysoutWorkflow" ref="ow" interface="eu.europeana.uim.workflow.Workflow" />
+</blueprint>

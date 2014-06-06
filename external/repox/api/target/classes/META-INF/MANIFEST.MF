@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1400499093248
+Build-Jdk: 1.7.0_51
+Built-By: markus
+Bundle-ClassPath: .,joda-time-2.3.jar
+Bundle-ManifestVersion: 2
+Bundle-Name: Unified Ingestion Manager: External Service Repox API
+Bundle-SymbolicName: eu.europeana.uim-external-repox-api
+Bundle-Version: 3.0.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Embed-Dependency: joda-time
+Embedded-Artifacts: joda-time-2.3.jar;g="joda-time";a="joda-time";v="2.3
+ "
+Export-Package: eu.europeana.uim.repox;version="3.0.0.SNAPSHOT";uses:="e
+ u.europeana.uim.external,eu.europeana.uim.repox.model,eu.europeana.uim.
+ store",eu.europeana.uim.repox.model;version="3.0.0.SNAPSHOT"
+Import-Package: eu.europeana.uim.store;version="[3.0,4)",eu.europeana.ui
+ m.external;version="[3.0,4)"
+Tool: Bnd-2.1.0.20130426-122213
