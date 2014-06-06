@@ -1,4 +1,4 @@
-package eu.europeana.uim.workflows;
+package eu.europeana.uim.orchestration.basic.workflow;
 
 import java.io.Serializable;
 import java.util.Arrays;

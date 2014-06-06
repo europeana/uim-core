@@ -6,6 +6,7 @@ import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Base class for storage engine typed with a ID class.
@@ -23,7 +24,7 @@ public interface ExecutionStorageEngine<I> {
      * @return newly created execution for the given data set and workflow
      * @throws StorageEngineException
      */
-    Execution<I> createExecution(UimDataSet<I> dataSet, String workflow)
+    Execution<I> createExecution(UimDataSet<I> dataSet, Workflow workflow)
             throws StorageEngineException;
 
     /**

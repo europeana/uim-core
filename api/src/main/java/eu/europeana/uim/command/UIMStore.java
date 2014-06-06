@@ -28,6 +28,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.util.SampleProperties;
 import eu.europeana.uim.workflow.Workflow;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Store for the UIM process.
@@ -63,7 +64,7 @@ public class UIMStore implements Action {
         loadConfigData("loads a set of provider/collections"),
         loadSampleData("loads a set of sample provider/collections");
 
-        private String desc;
+        private final String desc;
 
         private Operation(String desc) {
             this.desc = desc;
@@ -245,7 +246,7 @@ public class UIMStore implements Action {
         for (Workflow current : workflows) {
             List<String> keys = getParameters(current);
 
-            List<Provider<I>> providers = storage.getAllProviders();
+            BlockingQueue<Provider<I>> providers = storage.getAllProviders();
             for (Provider provider : providers) {
                 LinkedHashMap<String, List<String>> resources = resource.getProviderResources(
                         provider, keys);
@@ -284,9 +285,9 @@ public class UIMStore implements Action {
         for (Workflow current : workflows) {
             List<String> keys = getParameters(current);
 
-            List<Provider<I>> providers = storage.getAllProviders();
+            BlockingQueue<Provider<I>> providers = storage.getAllProviders();
             for (Provider provider : providers) {
-                List<Collection<I>> collections = storage.getCollections(provider);
+                BlockingQueue<Collection<I>> collections = storage.getCollections(provider);
                 if (collections != null && !collections.isEmpty()) {
                     out.println(provider.getMnemonic());
                     for (Collection collection : collections) {
@@ -300,7 +301,7 @@ public class UIMStore implements Action {
         }
     }
 
-    private Provider createProvider(StorageEngine<?> storage, PrintStream out)
+    private Provider createProvider(StorageEngine storage, PrintStream out)
             throws StorageEngineException {
         if (argument0 == null || argument1 == null) {
             out.println("Failed to create provider. No arguments specified, should be <mnemonic> <name> [<true|false>]");
@@ -315,7 +316,8 @@ public class UIMStore implements Action {
         }
 
         if (parent != null) {
-            Provider pParent = storage.findProvider(parent);
+            Object id = storage.getUimId(Provider.class, parent);
+            Provider pParent = storage.getProvider(id);
 
             if (pParent != null) {
                 provider.getRelatedIn().add(pParent);
@@ -342,7 +344,8 @@ public class UIMStore implements Action {
             return;
         }
 
-        Provider provider = storage.findProvider(argument0);
+        Object id = storage.getUimId(Provider.class, argument0);
+        Provider provider = storage.getProvider(id);
 
         String method = "set" + StringUtils.capitalize(argument1);
         try {
@@ -362,7 +365,7 @@ public class UIMStore implements Action {
 
     private void listProvider(StorageEngine storage, PrintStream out) throws StorageEngineException {
         Set<Provider> mainprovs = new HashSet<>();
-        List<Provider> providers = storage.getAllProviders();
+        BlockingQueue<Provider> providers = storage.getAllProviders();
         for (Provider provider : providers) {
             if (provider.getRelatedIn() == null || provider.getRelatedIn().isEmpty()) {
                 mainprovs.add(provider);
@@ -397,7 +400,8 @@ public class UIMStore implements Action {
             return null;
         }
 
-        Provider provider = storage.findProvider(parent);
+        Object id = storage.getUimId(Provider.class, parent);
+        Provider provider = storage.getProvider(id);
         if (provider == null) {
             out.println("Failed to create collection. Provider \"" + parent + "\" not found.");
             return null;
@@ -418,8 +422,9 @@ public class UIMStore implements Action {
             out.println("Failed to update collection. No arguments specified, should be <mnemonic> <field> <value>");
             return;
         }
-
-        Collection collection = storage.findCollection(argument0);
+        
+        Object id = storage.getUimId(Collection.class, argument0);
+        Collection collection = storage.getCollection(id);
 
         String method = "set" + StringUtils.capitalize(argument1);
         try {
@@ -443,9 +448,9 @@ public class UIMStore implements Action {
     private void listCollection(StorageEngine storage, PrintStream out)
             throws StorageEngineException {
         if (parent == null) {
-            List<Provider> providers = storage.getAllProviders();
+            BlockingQueue<Provider> providers = storage.getAllProviders();
             for (Provider provider : providers) {
-                List<Collection> collections = storage.getCollections(provider);
+                BlockingQueue<Collection> collections = storage.getCollections(provider);
                 if (collections != null && !collections.isEmpty()) {
                     out.println(provider.getMnemonic());
                     for (Collection collection : collections) {
@@ -455,10 +460,11 @@ public class UIMStore implements Action {
                 }
             }
         } else {
-            Provider provider = storage.findProvider(parent);
+            Object id = storage.getUimId(Provider.class, parent);
+            Provider provider = storage.getProvider(id);
             out.println(provider.getMnemonic());
 
-            List<Collection> collections = storage.getCollections(provider);
+            BlockingQueue<Collection> collections = storage.getCollections(provider);
             for (Collection collection : collections) {
                 String p = "|  -+ (" + collection.getId() + ") " + collection.toString();
                 out.println(p);

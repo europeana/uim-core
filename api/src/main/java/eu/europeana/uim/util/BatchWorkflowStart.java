@@ -30,6 +30,7 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
+import java.text.DateFormat;
 
 /**
  * Loads batches from the storage and pulls them into as tasks.
@@ -44,57 +45,42 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
     private static final Logger log = Logger.getLogger(BatchWorkflowStart.class.getName());
 
-    /**
-     * String BATCH_SUBSET
-     */
     public static final String BATCH_SUBSET_HEAD = "batch.subset.head";
-
-    /**
-     * String BATCH_SUBSET
-     */
     public static final String BATCH_SUBSET_SHUFFLE = "batch.subset.shuffle";
-
-    /**
-     * String BATCH_SHUFFLE
-     */
     public static final String BATCH_SHUFFLE = "batch.shuffle";
-
-    /**
-     * BatchWorkflowStart COLLECTION_LAST_REQUEST
-     */
     public static final String COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
-
-    /**
-     * BatchWorkflowStart COLLECTION_FROM_REQUEST
-     */
     public static final String COLLECTION_FROM_REQUEST = "collection.from.requestdate";
 
-    private static final SimpleDateFormat ISO8601DATEFORMAT = new SimpleDateFormat(
-            "yyyy-MM-dd");
-    private static final SimpleDateFormat SIMPLEDATEFORMAT = new SimpleDateFormat(
-            "yyyy.MM.dd");
+    private static final ThreadLocal<DateFormat> ISO8601_DATE_FORMAT = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd");
+        }
+    };
+    private static final ThreadLocal<DateFormat> DEFAULT_DATE_FORMAT = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy.MM.dd");
+        }
+    };
+
+    //FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
+    public static int BATCH_SIZE = 100;
 
     /**
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
-    private static TKey<BatchWorkflowStart, Data> DATA_KEY = TKey.register(
+    private static final TKey<BatchWorkflowStart, Data> DATA_KEY = TKey.register(
             BatchWorkflowStart.class,
             "data",
             Data.class);
 
     /**
-     * default batch size
-     */
-    //FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
-    public static int BATCH_SIZE = 100;
-
-    /**
      * Creates a new instance of this class.
      */
     public BatchWorkflowStart() {
-        super(
-                "Batch Loading Workflow Start",
+        super("Batch Loading Workflow Start",
                 "Workflow start which loads batches from the storage and provides them in batches of 250 to the system.");
     }
 
@@ -122,7 +108,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
             long start = System.currentTimeMillis();
             Collection<I> coll = null;
-            I[] records = null;
+            BlockingQueue<I> records = null;
 
             UimDataSet<I> dataSet = context.getDataSet();
             if (dataSet instanceof Collection) {
@@ -136,9 +122,9 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                     String propFrom = context.getProperties().getProperty(COLLECTION_FROM_REQUEST);
                     if (propFrom != null) {
                         try {
-                            thisFrom = ISO8601DATEFORMAT.parse(propFrom);
+                            thisFrom = ISO8601_DATE_FORMAT.get().parse(propFrom);
                         } catch (ParseException e) {
-                            thisFrom = SIMPLEDATEFORMAT.parse(propFrom);
+                            thisFrom = DEFAULT_DATE_FORMAT.get().parse(propFrom);
                         }
                     }
 
@@ -146,7 +132,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                         Request<I> request = null;
 
                         // retrieve the "last" request
-                        List<Request<I>> requests = storage.getRequests(coll);
+                        BlockingQueue<Request<I>> requests = storage.getRequests(coll);
                         for (Request<I> candidate : requests) {
                             if (request == null || request.getDate().before(candidate.getDate())) {
                                 request = candidate;
@@ -154,9 +140,9 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                         }
 
                         if (request != null) {
-                            records = storage.getByRequest(request);
+                            records = storage.getMetaDataRecordIdsByRequest(request);
 
-                            log.info("Loaded request:" + request.getId());
+                            log.log(Level.INFO, "Loaded request:{0}", request.getId());
                             LoggingEngine<I> loggingEngine = context.getLoggingEngine();
                             if (loggingEngine != null) {
                                 loggingEngine.log(Level.INFO, "BatchWorkflowStart",
@@ -168,11 +154,11 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                         }
 
                     } else if (thisFrom != null) {
-                        List<I> allids = new ArrayList<I>();
+                        List<I> allids = new ArrayList<>();
 
                         // retrieve the "last" request
                         StringBuilder logging = new StringBuilder();
-                        List<Request<I>> requests = storage.getRequests(coll);
+                        BlockingQueue<Request<I>> requests = storage.getRequests(coll);
                         for (Request<I> candidate : requests) {
                             if (candidate.getDataFrom().after(thisFrom)) {
                                 if (logging.length() > 0) {
@@ -201,7 +187,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                         }
 
                     } else {
-                        records = storage.getByCollection((Collection<I>) dataSet);
+                        records = storage.getMetaDataRecordIdsByCollection((Collection<I>) dataSet);
                     }
                 } catch (StorageEngineException e) {
                     throw new WorkflowStartFailedException("Collection '" + dataSet.getId()
@@ -212,7 +198,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
             } else if (dataSet instanceof Request) {
                 try {
                     coll = ((Request<I>) dataSet).getCollection();
-                    records = storage.getByRequest((Request<I>) dataSet);
+                    records = storage.getMetaDataRecordIdsByRequest((Request<I>) dataSet);
                 } catch (StorageEngineException e) {
                     throw new RuntimeException("Request '" + dataSet.getId()
                             + "' could not be retrieved!", e);
@@ -441,7 +427,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
         /**
          * batches
          */
-        public BlockingQueue<T[]> batches = new LinkedBlockingQueue<T[]>();
+        public BlockingQueue<T[]> batches = new LinkedBlockingQueue<>();
 
         /**
          * collection

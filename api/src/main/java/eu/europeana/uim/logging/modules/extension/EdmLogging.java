@@ -1,4 +1,4 @@
-package eu.europeana.uim.logging.modules;
+package eu.europeana.uim.logging.modules.extension;
 
 import java.util.List;
 

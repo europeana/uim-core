@@ -1,4 +1,4 @@
-package eu.europeana.uim.workflows;
+package eu.europeana.uim.orchestration.basic.workflow;
 
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.util.CollectionBatchWorkflowStart;

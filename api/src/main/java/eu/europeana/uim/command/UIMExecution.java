@@ -25,6 +25,7 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimEntity;
 import eu.europeana.uim.workflow.Workflow;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * uim:orchestrator list start workflow (collection | provider) dataSet
@@ -112,7 +113,6 @@ public class UIMExecution implements Action {
                     out.println("Master, I am truly sorry but this doesn't work.");
                     break;
             }
-
         } catch (Throwable t) {
             log.log(Level.SEVERE, "Failed to start execution command:", t);
         }
@@ -164,7 +164,7 @@ public class UIMExecution implements Action {
             out.println("No can do. The correct syntax is: " + command + " <execution>");
             out.println("Possible executions are:");
             for (ActiveExecution<?, ?> e : registry.getOrchestrator().getActiveExecutions()) {
-                out.println(String.format("Execution %d: Workflow %s, data set %s",
+                out.println(String.format("Execution %s: Workflow %s, data set %s",
                         e.getExecution().getId(), e.getWorkflow().getName(), e.getDataSet()));
             }
             out.println();
@@ -192,7 +192,8 @@ public class UIMExecution implements Action {
         StorageEngine storage = registry.getStorageEngine();
 
         Workflow workflow = registry.getWorkflow(argument0);
-        Collection collection = storage.findCollection(argument1);
+        Object id = storage.getUimId(Collection.class, argument1);
+        Collection collection = storage.getCollection(id);
 
         if (workflow == null) {
             printWorfklows(out, registry.getWorkflows());
@@ -229,20 +230,20 @@ public class UIMExecution implements Action {
 
     @SuppressWarnings("unused")
     private void printProviders(PrintStream out, StorageEngine<?> storage,
-            List<Provider<?>> providers) {
+            BlockingQueue<Provider<?>> providers) {
         out.println("No provider specified. Possible choices are:");
-        for (int i = 0; i < providers.size(); i++) {
-            Provider<?> p = providers.get(i);
-            out.println(i + ") " + p.getName());
+        int counter = 0;
+        for (Provider<?> p : providers) {
+            out.println(counter++ + ") " + p.getName());
         }
     }
 
     private void printCollections(PrintStream out, StorageEngine<?> storage,
-            List<Collection<?>> collections) {
+            BlockingQueue<Collection<?>> collections) {
         out.println("No collection specified. Possible choices are:");
-        for (int i = 0; i < collections.size(); i++) {
-            Collection<?> collection = collections.get(i);
-            out.println(i + ") " + collection.getMnemonic() + ", " + collection.getName());
+        int counter = 0;
+        for (Collection<?> collection : collections) {
+            out.println(counter++ + ") " + collection.getMnemonic() + ", " + collection.getName());
         }
     }
 

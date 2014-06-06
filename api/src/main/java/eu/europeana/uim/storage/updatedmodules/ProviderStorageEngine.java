@@ -37,14 +37,6 @@ public interface ProviderStorageEngine<I> {
      */
     Provider<I> getProvider(I id) throws StorageEngineException;
 
-//    /**
-//     * @param externalId
-//     *            defines uniquely a provider
-//     * @return find a specific provider with the given mnemonic, might not always been supported by
-//     *         the backend
-//     * @throws StorageEngineException
-//     */
-//    Provider<I> findProvider(String externalId) throws StorageEngineException;
     /**
      * @return all known providers
      * @throws StorageEngineException
@@ -54,24 +46,10 @@ public interface ProviderStorageEngine<I> {
     /**
      * @param provider
      * @param recursive
-     * @return number of records for this provider
-     * @throws StorageEngineException
-     */
-// int getTotalByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
-    /**
-     * @param provider
-     * @param recursive
      * @return IDs for records for this provider
      * @throws StorageEngineException
      */
-// I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
-    /**
-     * @param provider
-     * @param recursive
-     * @return IDs for records for this provider
-     * @throws StorageEngineException
-     */
-    BlockingQueue<I[]> getMetaDataRecordIdsByProvider(Provider<I> provider)
+    BlockingQueue<I> getMetaDataRecordIdsByProvider(Provider<I> provider)
             throws StorageEngineException;
 
     /**
@@ -80,7 +58,6 @@ public interface ProviderStorageEngine<I> {
      * @return IDs for records for this provider
      * @throws StorageEngineException
      */
-    @SuppressWarnings("rawtypes")
-    BlockingQueue<MetaDataRecord[]> getMetaDataRecordsByProvider(Provider<I> provider)
+    BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByProvider(Provider<I> provider)
             throws StorageEngineException;
 }

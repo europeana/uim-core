@@ -1,6 +1,5 @@
 package eu.europeana.uim.storage.updatedmodules;
 
-import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.storage.StorageEngineException;
@@ -20,11 +19,10 @@ public interface RequestStorageEngine<I> {
 
     /**
      * @param collection holding this request
-     * @param date when is this request initiatedß
      * @return newly created request for the given collection and date
      * @throws StorageEngineException
      */
-    Request<I> createRequest(Collection<I> collection, Date date) throws StorageEngineException;
+    Request<I> createRequest(Collection<I> collection) throws StorageEngineException;
 
     /**
      * Stores the given request and its updated values.
@@ -55,32 +53,18 @@ public interface RequestStorageEngine<I> {
      */
     BlockingQueue<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException;
 
-// /**
-// * @param request
-// * @return IDs for records for this request
-// * @throws StorageEngineException
-// */
-// I[] getByRequest(Request<I> request) throws StorageEngineException;
     /**
      * @param request
      * @return IDs for records for this request
      * @throws StorageEngineException
      */
-    BlockingQueue<I[]> getMetaDataRecordIdsByRequest(Request<I> request) throws StorageEngineException;
+    BlockingQueue<I> getMetaDataRecordIdsByRequest(Request<I> request) throws StorageEngineException;
 
     /**
      * @param request
      * @return IDs for records for this request
      * @throws StorageEngineException
      */
-    @SuppressWarnings("rawtypes")
-    BlockingQueue<MetaDataRecord[]> getMetaDataRecordsByRequest(Request<I> request)
+    BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByRequest(Request<I> request)
             throws StorageEngineException;
-
-// /**
-// * @param request
-// * @return number of records for this request
-// * @throws StorageEngineException
-// */
-// int getTotalByRequest(Request<I> request) throws StorageEngineException;
 }

@@ -1,6 +1,5 @@
 package eu.europeana.uim.logging;
 
-import eu.europeana.uim.logging.modules.EdmLogging;
 import eu.europeana.uim.logging.modules.FailureLogging;
 import eu.europeana.uim.logging.modules.FieldLogging;
 import eu.europeana.uim.logging.modules.GeneralLogging;
@@ -22,7 +21,7 @@ import eu.europeana.uim.orchestration.ExecutionContext;
 // FIXME: simplify logging eninge, backend should take care of using special tables for special
 // loggings like link etc.
 public interface LoggingEngine<I> extends GeneralLogging<I>, FailureLogging<I>, TimingLogging<I>,
-        FieldLogging<I>, LinkLogging<I>, EdmLogging<I> {
+        FieldLogging<I>, LinkLogging<I> {
 
     /**
      * Gets the identifier of this LoggingEngine implementation

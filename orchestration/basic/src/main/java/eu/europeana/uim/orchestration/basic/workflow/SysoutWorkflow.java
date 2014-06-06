@@ -1,7 +1,7 @@
-package eu.europeana.uim.workflows;
+package eu.europeana.uim.orchestration.basic.workflow;
 
-import eu.europeana.uim.store.Collection;
-import eu.europeana.uim.util.CollectionBatchWorkflowStart;
+import eu.europeana.uim.store.MetaDataRecord;
+import eu.europeana.uim.util.BatchWorkflowStart;
 import eu.europeana.uim.util.LoggingIngestionPlugin;
 import eu.europeana.uim.workflow.AbstractWorkflow;
 
@@ -14,21 +14,21 @@ import eu.europeana.uim.workflow.AbstractWorkflow;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 4, 2011
  */
-public class CollectionSysoutWorkflow<I> extends AbstractWorkflow<Collection<I>, I> {
+public class SysoutWorkflow<I> extends AbstractWorkflow<MetaDataRecord<I>, I> {
     private String savePointIdentifier;
 
     /**
      * Creates a new instance of this class.
      */
-    public CollectionSysoutWorkflow() {
+    public SysoutWorkflow() {
         super("XT: Sysout Workflow",
                 "Simple workflow which uses sysout and logging plugins to report to the console about processing!");
-        setStart(new CollectionBatchWorkflowStart<I>());
+        setStart(new BatchWorkflowStart<I>());
 
-        SysoutPlugin<Collection<I>, I> step = new SysoutPlugin<Collection<I>, I>();
+        SysoutPlugin<MetaDataRecord<I>, I> step = new SysoutPlugin<MetaDataRecord<I>, I>();
         addStep(step);
 
-        LoggingIngestionPlugin<Collection<I>, I> log = new LoggingIngestionPlugin<Collection<I>, I>();
+        LoggingIngestionPlugin<MetaDataRecord<I>, I> log = new LoggingIngestionPlugin<MetaDataRecord<I>, I>();
         addStep(log);
 
         savePointIdentifier = step.getIdentifier();

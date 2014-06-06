@@ -79,6 +79,9 @@
         <!-- Spring for wiring unit tests Versions -->
         <spring-version>4.0.5.RELEASE</spring-version>
 
+        <!-- Jersey dependencies Versions -->
+        <jersey-version>2.3.1</jersey-version>
+
         <!-- GWT dependencies Versions -->
         <gwt-version>2.6.0</gwt-version>
         <gwt-incubator-version>2.0.1</gwt-incubator-version>
@@ -129,6 +132,9 @@
         <!-- simplistic in-memory logging -->
         <module>logging/memory</module>
 
+        <!-- REST module -->
+        <module>rest</module>
+        
         <!-- UIM gui module -->
         <module>gui</module>
                 
@@ -669,6 +675,37 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
                 <version>${spring-version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            
+            <!-- Jersey dependencies Versions -->
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet-core</artifactId>
+                <version>${jersey-version}</version>
+            </dependency>
+        
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-spring3</artifactId>
+                <version>${jersey-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-moxy</artifactId>
+                <version>${jersey-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-multipart</artifactId>
+                <version>${jersey-version}</version>
             </dependency>
 
             <!-- GWT dependencies -->

@@ -16,7 +16,6 @@ import eu.europeana.uim.store.Provider;
  * @since Mar 21, 2011
  */
 public interface CollectionStorageEngine<I> {
-
     /**
      * @param provider parenting provider
      * @return newly created collection for the given provider
@@ -38,13 +37,7 @@ public interface CollectionStorageEngine<I> {
      * @throws StorageEngineException
      */
     Collection<I> getCollection(I id) throws StorageEngineException;
-
-    /**
-     * // * @param externalId // * unique name // * @return find a specific
-     * collection with the given mnemonic, might not always been supported // *
-     * by the backend // * @throws StorageEngineException //
-     */
-//    Collection<I> findCollection(String externalId) throws StorageEngineException;
+    
     /**
      * @param provider
      * @return all collections for the given provider or all known if provider
@@ -59,25 +52,12 @@ public interface CollectionStorageEngine<I> {
      */
     BlockingQueue<Collection<I>> getAllCollections() throws StorageEngineException;
 
-// /**
-// * @param collection
-// * @return number of records for this collection
-// * @throws StorageEngineException
-// */
-// int getTotalByCollection(Collection<I> collection) throws StorageEngineException;
-// /**
-// * @param collection
-// * @return IDs for records for this collection
-// * @throws StorageEngineException
-// */
-// I[] getByCollection(Collection<I> collection) throws StorageEngineException;
-// I[] getIdsByCollection(Collection<I> collection) throws StorageEngineException;
     /**
      * @param collection
      * @return IDs for records for this collection
      * @throws StorageEngineException
      */
-    BlockingQueue<I[]> getMetaDataRecordIdsByCollection(Collection<I> collection)
+    BlockingQueue<I> getMetaDataRecordIdsByCollection(Collection<I> collection)
             throws StorageEngineException;
 
     /**
@@ -85,7 +65,6 @@ public interface CollectionStorageEngine<I> {
      * @return MDRs for records for this collection
      * @throws StorageEngineException
      */
-    @SuppressWarnings("rawtypes")
-    BlockingQueue<MetaDataRecord[]> getMetaDataRecordsByCollection(Collection<I> collection)
+    BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByCollection(Collection<I> collection)
             throws StorageEngineException;
 }

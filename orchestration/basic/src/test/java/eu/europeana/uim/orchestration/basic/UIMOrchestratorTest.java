@@ -24,11 +24,11 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.workflow.Workflow;
-import eu.europeana.uim.workflows.CollectionSysoutWorkflow;
-import eu.europeana.uim.workflows.MixedWorkflow;
-import eu.europeana.uim.workflows.SyserrWorkflow;
-import eu.europeana.uim.workflows.SysoutPlugin;
-import eu.europeana.uim.workflows.SysoutWorkflow;
+import eu.europeana.uim.orchestration.basic.workflow.CollectionSysoutWorkflow;
+import eu.europeana.uim.orchestration.basic.workflow.MixedWorkflow;
+import eu.europeana.uim.orchestration.basic.workflow.SyserrWorkflow;
+import eu.europeana.uim.orchestration.basic.workflow.SysoutPlugin;
+import eu.europeana.uim.orchestration.basic.workflow.SysoutWorkflow;
 
 /**
  * Tests UIM orchestration.

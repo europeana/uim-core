@@ -22,8 +22,8 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
 
     private static final long serialVersionUID = 1L;
 
-    private Set<Provider<I>> relatedOut = new HashSet<Provider<I>>();
-    private Set<Provider<I>> relatedIn = new HashSet<Provider<I>>();
+    private Set<Provider<I>> relatedOut = new HashSet<>();
+    private Set<Provider<I>> relatedIn = new HashSet<>();
 
     private String name;
 
@@ -32,7 +32,7 @@ public class ProviderBean<I> extends AbstractNamedEntityBean<I> implements Provi
 
     private boolean aggregator;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private Map<String, String> values = new HashMap<>();
 
     /**
      * Creates a new instance of this class.

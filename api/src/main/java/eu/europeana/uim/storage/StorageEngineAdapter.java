@@ -1,8 +1,6 @@
 package eu.europeana.uim.storage;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +13,10 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.UimEntity;
+import eu.europeana.uim.workflow.Workflow;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * noop storage engine adapter for testing purposes
@@ -37,7 +39,7 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
 
     @Override
     public Map<String, String> getConfiguration() {
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     @Override
@@ -80,25 +82,27 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public Provider<I> findProvider(String mnemonic) {
-
-        return null;
+    public BlockingQueue<Provider<I>> getAllProviders() throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public List<Provider<I>> getAllProviders() {
-        return new ArrayList<Provider<I>>();
+    public BlockingQueue<I> getMetaDataRecordIdsByProvider(Provider<I> provider) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
+    }
+
+    @Override
+    public BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByProvider(Provider<I> provider) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
     public Collection<I> createCollection(Provider<I> provider) {
-
         return null;
     }
 
     @Override
     public void updateCollection(Collection<I> collection) throws StorageEngineException {
-
     }
 
     @Override
@@ -107,23 +111,27 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public List<Collection<I>> getAllCollections() {
-        return new ArrayList<Collection<I>>();
+    public BlockingQueue<Collection<I>> getCollections(Provider<I> provider) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public Collection<I> findCollection(String mnemonic) {
-
-        return null;
+    public BlockingQueue<Collection<I>> getAllCollections() throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public List<Collection<I>> getCollections(Provider<I> provider) {
-        return new ArrayList<Collection<I>>();
+    public BlockingQueue<I> getMetaDataRecordIdsByCollection(Collection<I> collection) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public Request<I> createRequest(Collection<I> collection, Date date) {
+    public BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByCollection(Collection<I> collection) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
+    }
+
+    @Override
+    public Request<I> createRequest(Collection<I> collection) {
         return null;
     }
 
@@ -138,39 +146,32 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public List<Request<I>> getRequests(MetaDataRecord<I> mdr) throws StorageEngineException {
-        return null;
+    public BlockingQueue<Request<I>> getRequests(MetaDataRecord<I> mdr) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public List<Request<I>> getRequests(Collection<I> collection) {
-        return new ArrayList<Request<I>>();
+    public BlockingQueue<Request<I>> getRequests(Collection<I> collection) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public void addRequestRecord(Request<I> request, MetaDataRecord<I> record)
-            throws StorageEngineException {
+    public BlockingQueue<I> getMetaDataRecordIdsByRequest(Request<I> request) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public MetaDataRecord<I> createMetaDataRecord(Collection<I> collection, String identifier)
-            throws StorageEngineException {
-        return null;
+    public BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByRequest(Request<I> request) throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException {
-
-    }
-
-    @Override
-    public Execution<I> createExecution(UimDataSet<I> entity, String workflow) {
+    public Execution<I> createExecution(UimDataSet<I> dataSet, Workflow workflow) throws StorageEngineException {
         return null;
     }
 
     @Override
     public void updateExecution(Execution<I> execution) throws StorageEngineException {
-
     }
 
     @Override
@@ -179,61 +180,35 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public List<Execution<I>> getAllExecutions() {
-        return new ArrayList<Execution<I>>();
+    public BlockingQueue<Execution<I>> getAllExecutions() throws StorageEngineException {
+        return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public MetaDataRecord<I> getMetaDataRecord(I id) {
+    public MetaDataRecord<I> createMetaDataRecord(Collection<I> collection) throws StorageEngineException {
         return null;
     }
 
     @Override
-    public List<MetaDataRecord<I>> getMetaDataRecords(List<I> id) {
+    public void addRequestRecord(Request<I> request, MetaDataRecord<I> record) throws StorageEngineException {
+    }
+
+    @Override
+    public void updateMetaDataRecord(MetaDataRecord<I>... record) throws StorageEngineException {
+    }
+
+    @Override
+    public List<MetaDataRecord<I>> getMetaDataRecords(I... ids) throws StorageEngineException {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public I getUimId(Class<? extends UimEntity> entityClass, String externalId) {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public I[] getByRequest(Request<I> request) {
-        return (I[]) Collections.emptyList().toArray();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public I[] getByCollection(Collection<I> collection) {
-        return (I[]) Collections.emptyList().toArray();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public I[] getByProvider(Provider<I> provider, boolean recursive) {
-        return (I[]) Collections.emptyList().toArray();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public I[] getAllIds() {
-        return (I[]) Collections.emptyList().toArray();
-    }
-
-    @Override
-    public int getTotalByRequest(Request<I> request) {
-        return 0;
-    }
-
-    @Override
-    public int getTotalByCollection(Collection<I> collection) {
-        return 0;
-    }
-
-    @Override
-    public int getTotalByProvider(Provider<I> provider, boolean recursive) {
-        return 0;
-    }
-
-    @Override
-    public int getTotalForAllIds() {
-        return 0;
+    public List<I> getUimIds(Class<? extends UimEntity> entityClass, String... externalId) {
+        return new ArrayList<>();
     }
 }
