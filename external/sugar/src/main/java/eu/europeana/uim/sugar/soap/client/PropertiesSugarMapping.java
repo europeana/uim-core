@@ -8,22 +8,23 @@ import java.util.Properties;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.sugar.SugarControlledVocabulary;
+import eu.europeana.uim.sugar.tel.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 
 /**
- * 
- * 
+ * Mapping of properties.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 5, 2012
  */
 public class PropertiesSugarMapping implements SugarMapping {
-    private RetrievableField[] providerRetrievalbe   = null;
-    private UpdatableField[]   providerUpdatealbe    = null;
+
+    private RetrievableField[] providerRetrievalbe = null;
+    private UpdatableField[] providerUpdatealbe = null;
 
     private RetrievableField[] collectionRetrievalbe = null;
-    private UpdatableField[]   collectionUpdatealbe  = null;
+    private UpdatableField[] collectionUpdatealbe = null;
 
     /**
      * Creates a new instance of this class.
@@ -40,7 +41,7 @@ public class PropertiesSugarMapping implements SugarMapping {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param properties
      */
     public PropertiesSugarMapping(Properties properties) {
@@ -48,10 +49,10 @@ public class PropertiesSugarMapping implements SugarMapping {
     }
 
     private void initialize(Properties properties) {
-        List<RetrievableField> pro = new ArrayList<RetrievableField>();
-        List<UpdatableField> uPro = new ArrayList<UpdatableField>();
-        List<RetrievableField> col = new ArrayList<RetrievableField>();
-        List<UpdatableField> uCol = new ArrayList<UpdatableField>();
+        List<RetrievableField> pro = new ArrayList<>();
+        List<UpdatableField> uPro = new ArrayList<>();
+        List<RetrievableField> col = new ArrayList<>();
+        List<UpdatableField> uCol = new ArrayList<>();
 
         for (String property : properties.stringPropertyNames()) {
             if ("sugar.provider.mnemonic".equals(property)) {
@@ -67,18 +68,25 @@ public class PropertiesSugarMapping implements SugarMapping {
 
             } else if (property.startsWith("sugar.provider.")) {
                 StandardControlledVocabulary mapping = null;
-                if ("sugar.provider.name".equals(property)) {
-                    mapping = StandardControlledVocabulary.NAME;
-                } else if ("sugar.provider.type".equals(property)) {
-                    mapping = StandardControlledVocabulary.TYPE;
-                } else if ("sugar.provider.country".equals(property)) {
-                    mapping = StandardControlledVocabulary.COUNTRY;
-                } else if ("sugar.provider.oaibase".equals(property)) {
-                    mapping = StandardControlledVocabulary.INTERNAL_OAI_BASE;
-                } else if ("sugar.provider.oaiprefix".equals(property)) {
-                    mapping = StandardControlledVocabulary.INTERNAL_OAI_PREFIX;
-                } else if ("sugar.provider.inuim".equals(property)) {
-                    mapping = StandardControlledVocabulary.ACTIVE;
+                switch (property) {
+                    case "sugar.provider.name":
+                        mapping = StandardControlledVocabulary.NAME;
+                        break;
+                    case "sugar.provider.type":
+                        mapping = StandardControlledVocabulary.TYPE;
+                        break;
+                    case "sugar.provider.country":
+                        mapping = StandardControlledVocabulary.COUNTRY;
+                        break;
+                    case "sugar.provider.oaibase":
+                        mapping = StandardControlledVocabulary.INTERNAL_OAI_BASE;
+                        break;
+                    case "sugar.provider.oaiprefix":
+                        mapping = StandardControlledVocabulary.INTERNAL_OAI_PREFIX;
+                        break;
+                    case "sugar.provider.inuim":
+                        mapping = StandardControlledVocabulary.ACTIVE;
+                        break;
                 }
 
                 if (mapping != null) {
@@ -108,7 +116,7 @@ public class PropertiesSugarMapping implements SugarMapping {
                 } else if ("sugar.collection.repoxtype".equals(property)) {
                     mapping = StandardControlledVocabulary.REPOX_TYPE;
                 } else if ("sugar.collection.inuim".equals(property)) {
-                     mapping = StandardControlledVocabulary.ACTIVE;
+                    mapping = StandardControlledVocabulary.ACTIVE;
                 } else if ("sugar.collection.profile".equals(property)) {
                     mapping = SugarControlledVocabulary.COLLECTION_METADATA_PROFILE;
                 } else if ("sugar.collection.status".equals(property)) {
@@ -154,8 +162,8 @@ public class PropertiesSugarMapping implements SugarMapping {
 
     private static final class MappingFieldImpl implements RetrievableField, UpdatableField {
 
-        private final String                       fieldId;
-        private final String                       qualifiedId;
+        private final String fieldId;
+        private final String qualifiedId;
         private final ControlledVocabularyKeyValue key;
 
         public MappingFieldImpl(String qualifiedId, ControlledVocabularyKeyValue key) {
@@ -195,5 +203,4 @@ public class PropertiesSugarMapping implements SugarMapping {
             return getFieldId() + "->" + getMappingField();
         }
     }
-
 }

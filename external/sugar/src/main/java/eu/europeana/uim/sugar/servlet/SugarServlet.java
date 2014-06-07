@@ -4,7 +4,6 @@ package eu.europeana.uim.sugar.servlet;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.Registry;
@@ -12,7 +11,7 @@ import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
-import eu.europeana.uim.sugar.SugarControlledVocabulary;
+import eu.europeana.uim.sugar.tel.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.SugarService;
 import eu.europeana.uim.sugar.tel.TELProviderFields;
