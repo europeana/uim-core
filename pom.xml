@@ -131,7 +131,7 @@
         <module>logging/memory</module>
 
         <!-- REST module -->
-        <module>rest</module>
+        <!--<module>rest</module>-->
         
         <!-- UIM gui module -->
         <module>gui</module>
