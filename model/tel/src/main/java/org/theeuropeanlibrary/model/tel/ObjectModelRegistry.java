@@ -458,6 +458,9 @@ public final class ObjectModelRegistry {
         validQualifiers.put(LABELED_TEXT, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(Language.class);
+                add(TextRelation.class);
+                add(NoteType.class);
+                add(ResourceRelation.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
                 add(FieldScope.class);
