@@ -25,7 +25,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     private Date startTime;
     private Date endTime;
     private UimDataSet<I> dataSet;
-    private String workflowIdentifier;
+    private String workflow;
     private String name;
     private boolean canceled = false;
     private int success;
@@ -33,7 +33,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     private int processed;
     private String logFile;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private final Map<String, String> values = new HashMap<>();
 
     /**
      * Creates a new instance of this class.
@@ -67,12 +67,12 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
 
     @Override
     public String getWorkflow() {
-        return workflowIdentifier;
+        return workflow;
     }
 
     @Override
     public void setWorkflow(String identifier) {
-        this.workflowIdentifier = identifier;
+        this.workflow = identifier;
     }
 
     /**
@@ -80,8 +80,8 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
      */
     private String autoName() {
         String autoname = null;
-        if (workflowIdentifier != null && dataSet != null) {
-            autoname = workflowIdentifier + "/" + dataSet.toString();
+        if (workflow != null && dataSet != null) {
+            autoname = workflow + "/" + dataSet.toString();
         }
         return autoname;
     }
@@ -195,7 +195,7 @@ public class ExecutionBean<I> extends AbstractEntityBean<I> implements Execution
     @Override
     public String toString() {
         return "ExecutionBean [id=" + getId() + ", name=" + name + ", workflowIdentifier="
-                + workflowIdentifier + ", dataSet=" + dataSet + "]";
+                + workflow + ", dataSet=" + dataSet + "]";
     }
 
     @Override

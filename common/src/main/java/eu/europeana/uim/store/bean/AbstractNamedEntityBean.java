@@ -40,7 +40,13 @@ public abstract class AbstractNamedEntityBean<I> extends AbstractEntityBean<I> {
      * @param mnemonic
      */
     public void setMnemonic(String mnemonic) {
+//        if (this.mnemonic != null) {
+//            removeExternalIdentifier(this.mnemonic);
+//        }
         this.mnemonic = mnemonic;
+//        if (mnemonic != null) {
+//            addExternalIdentifier(mnemonic);
+//        }
     }
 
     /**

@@ -34,7 +34,7 @@ public class CollectionBean<I> extends AbstractNamedEntityBean<I> implements Col
     private Date lastModified;
     private Date lastSynchronized;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private final Map<String, String> values = new HashMap<>();
 
     /**
      * Creates a new instance of this class.

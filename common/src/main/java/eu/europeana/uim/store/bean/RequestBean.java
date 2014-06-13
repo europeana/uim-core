@@ -31,7 +31,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
 
     private boolean failed;
 
-    private Map<String, String> values = new HashMap<String, String>();
+    private final Map<String, String> values = new HashMap<>();
 
     /**
      * Creates a new instance of this class.
@@ -83,7 +83,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
      * @return the from
      */
     @Override
-    public Date getDataFrom() {
+    public Date getDateFrom() {
         return from;
     }
 
@@ -93,7 +93,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
      * @param from the from to set
      */
     @Override
-    public void setDataFrom(Date from) {
+    public void setDateFrom(Date from) {
         this.from = from;
     }
 
@@ -103,7 +103,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
      * @return the till
      */
     @Override
-    public Date getDataTill() {
+    public Date getDateTill() {
         if (till == null) {
             return getDate();
         }
@@ -116,7 +116,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
      * @param till the till to set
      */
     @Override
-    public void setDataTill(Date till) {
+    public void setDateTill(Date till) {
         this.till = till;
     }
 

@@ -3,6 +3,9 @@ package eu.europeana.uim.store.bean;
 import java.io.Serializable;
 
 import eu.europeana.uim.store.UimEntity;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Implements the {@link UimEntity} using Longs as keys.
@@ -21,6 +24,10 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
      */
     private I id;
 
+    /**
+     * external identifiers connected to this entity
+     */
+//    private final Set<Object> externalIds = new LinkedHashSet<>();
     /**
      * Creates a new instance of this class.
      */
@@ -43,7 +50,7 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
     }
 
     /**
-     * @param id unique identifier
+     * @param id unique storage engine based ID
      */
     public void setId(I id) {
         this.id = id;
@@ -57,6 +64,20 @@ public abstract class AbstractEntityBean<I> implements UimEntity<I>, Serializabl
         return result;
     }
 
+//    @Override
+//    public Set<Object> getExternalIdentifiers() {
+//        return Collections.unmodifiableSet(externalIds);
+//    }
+//
+//    @Override
+//    public void addExternalIdentifier(Object externalId) {
+//        externalIds.add(externalId);
+//    }
+//
+//    @Override
+//    public void removeExternalIdentifier(Object externalId) {
+//        externalIds.remove(externalId);
+//    }
     @SuppressWarnings("rawtypes")
     @Override
     public boolean equals(Object obj) {

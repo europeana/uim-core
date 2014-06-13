@@ -1,5 +1,7 @@
 package eu.europeana.uim.store;
 
+import java.util.Set;
+
 /**
  * Functionality to retrieve the unique ID for UIM entities.
  *
@@ -16,7 +18,22 @@ public interface UimEntity<I> {
     I getId();
 
 //    /**
+//     * @param id unique ID
+//     */
+//    void setId(I id);
+   
+//    /**
 //     * @return list of all external identifiers connected to this entity
 //     */
-//    List<Object> getExternalIdentifiers();
+//    Set<Object> getExternalIdentifiers();
+//
+//    /**
+//     * @param externalId external identifier connected to this entity
+//     */
+//    void addExternalIdentifier(Object externalId);
+//    
+//    /**
+//     * @param externalId external identifier connected to this entity
+//     */
+//    void removeExternalIdentifier(Object externalId);
 }

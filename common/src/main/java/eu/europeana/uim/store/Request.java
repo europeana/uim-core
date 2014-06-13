@@ -46,24 +46,24 @@ public interface Request<I> extends UimDataSet<I> {
     /**
      * @param from
      */
-    void setDataFrom(Date from);
+    void setDateFrom(Date from);
 
     /**
-     * @return a specific date which reflects the period of thime the request
+     * @return a specific date which reflects the period of time the request
      * did process (null if not specified)
      */
-    Date getDataFrom();
+    Date getDateFrom();
 
     /**
      * @param till
      */
-    void setDataTill(Date till);
+    void setDateTill(Date till);
 
     /**
      * @return a specific date which reflects the period of time the request did
      * process (same as @see getDate() in most cases)
      */
-    Date getDataTill();
+    Date getDateTill();
 
     /**
      * @param failed
@@ -77,7 +77,7 @@ public interface Request<I> extends UimDataSet<I> {
     boolean isFailed();
 
     /**
-     * string key,value pairs for arbitraty information on colleciton level
+     * string key,value pairs for arbitrary information on collection level
      *
      * @param key
      * @param value
@@ -85,7 +85,7 @@ public interface Request<I> extends UimDataSet<I> {
     void putValue(String key, String value);
 
     /**
-     * retrieve the stirng value for the specific key
+     * retrieve the string value for the specific key
      *
      * @param key
      * @return the string value or null
