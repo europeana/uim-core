@@ -192,7 +192,7 @@ public class UIMExecution implements Action {
         StorageEngine storage = registry.getStorageEngine();
 
         Workflow workflow = registry.getWorkflow(argument0);
-        Object id = storage.getUimId(Collection.class, argument1);
+        Object id = storage.getUimId(argument1);
         Collection collection = storage.getCollection(id);
 
         if (workflow == null) {

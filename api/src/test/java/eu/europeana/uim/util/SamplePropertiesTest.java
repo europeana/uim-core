@@ -2,7 +2,6 @@
 package eu.europeana.uim.util;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,15 +33,15 @@ public class SamplePropertiesTest {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
     public void testLoadSamples() throws StorageEngineException, IOException {
-        StorageEngine engine = mock(StorageEngine.class);
-        Provider provider = mock(Provider.class);
-        Collection collection = mock(Collection.class);
+        StorageEngine<Long> engine = mock(StorageEngine.class);
+        Provider<Long> provider = mock(Provider.class);
+        Collection<Long> collection = mock(Collection.class);
 
         when(engine.createProvider()).thenReturn(provider);
-        when(engine.findProvider(anyString())).thenReturn(provider);
+        when(engine.getProvider((Long) any())).thenReturn(provider);
 
         when(engine.createCollection((Provider) any())).thenReturn(collection);
-        when(engine.findCollection(anyString())).thenReturn(collection);
+        when(engine.getCollection((Long) any())).thenReturn(collection);
 
         SampleProperties sample = new SampleProperties();
         sample.loadSampleData(engine);

@@ -1,6 +1,7 @@
 /* StorageEngineAdapterTest.java - created on Feb 16, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package eu.europeana.uim.storage;
 
+import eu.europeana.uim.store.MetaDataRecord;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -27,26 +28,25 @@ public class StorageEngineAdapterTest {
 
         assertNull(engine.createProvider());
         assertNull(engine.createCollection(null));
-        assertNull(engine.createRequest(null, null));
-        assertNull(engine.createMetaDataRecord(null, null));
+        assertNull(engine.createRequest(null));
+        assertNull(engine.createMetaDataRecord(null));
 
         engine.updateProvider(null);
         engine.updateCollection(null);
         engine.updateRequest(null);
-        engine.updateMetaDataRecord(null);
+        engine.updateMetaDataRecord((MetaDataRecord<Long>) null);
 
         assertNotNull(engine.getAllProviders());
         assertNotNull(engine.getAllCollections());
 
-        assertNotNull(engine.getAllIds());
-        assertNotNull(engine.getByRequest(null));
-        assertNotNull(engine.getByCollection(null));
-        assertNotNull(engine.getByProvider(null, false));
-        assertNotNull(engine.getByProvider(null, true));
+        assertNotNull(engine.getMetaDataRecordsByRequest(null));
+        assertNotNull(engine.getMetaDataRecordsByCollection(null));
+        assertNotNull(engine.getMetaDataRecordsByProvider(null, false));
+        assertNotNull(engine.getMetaDataRecordsByProvider(null, true));
 
-        assertEquals(0, engine.getTotalByRequest(null));
-        assertEquals(0, engine.getTotalByCollection(null));
-        assertEquals(0, engine.getTotalByProvider(null, false));
-        assertEquals(0, engine.getTotalByProvider(null, true));
+        assertEquals(0, engine.getMetaDataRecordsByRequest(null).size());
+        assertEquals(0, engine.getMetaDataRecordsByCollection(null).size());
+        assertEquals(0, engine.getMetaDataRecordsByProvider(null, false).size());
+        assertEquals(0, engine.getMetaDataRecordsByProvider(null, true).size());
     }
 }

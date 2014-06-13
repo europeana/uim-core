@@ -31,7 +31,6 @@ import eu.europeana.cloud.service.uis.exception.RecordIdDoesNotExistException;
 /**
  * Implementation of the Unique Identifier Service. Accessible path /uniqueid
  *
- * @author Yorgos Mamakis (Yorgos.Mamakis@europeana.eu)
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Mar 24, 2014
  */

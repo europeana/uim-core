@@ -101,8 +101,8 @@ public class SugarServletTest {
     public void testUpdateCollection() throws SugarException, StorageEngineException {
         Registry registry = new UIMRegistry();
         registry.addStorageEngine(new MemoryStorageEngine());
+        registry.addExternalService(service);
         SugarServlet servlet = new SugarServlet(registry);
-        servlet.setSugarService(service);
 
         servlet.updateProvider("P01374", null);
         servlet.updateCollection("a1009b", null);

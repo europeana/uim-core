@@ -48,7 +48,7 @@ public class OrchestratorTest {
 
     @Inject
     private Registry registry;
-    
+
     @Inject
     private Orchestrator orchestrator;
 
@@ -92,9 +92,9 @@ public class OrchestratorTest {
         }
         Assert.assertNotNull(storage);
 
-        Provider<Long> p = new ProviderBean<Long>(1L);
-        Collection<Long> c = new CollectionBean<Long>(2L, p);
-        Request<Long> r = new RequestBean<Long>(3L, c, new Date());
+        Provider<Long> p = new ProviderBean<>(1L);
+        Collection<Long> c = new CollectionBean<>(2L, p);
+        Request<Long> r = new RequestBean<>(3L, c, new Date());
 
         // load the provider data
         Thread.sleep(1000);
@@ -103,12 +103,13 @@ public class OrchestratorTest {
 // Collection<Long> c = storage.getCollections(p).get(0);
 // Request<Long> r = storage.createRequest(c, new Date());
         for (int i = 0; i < 999; i++) {
-            MetaDataRecord<Long> record = storage.createMetaDataRecord(c, "id=" + i);
+            MetaDataRecord<Long> record = storage.createMetaDataRecord(c);
+            record.setUniqueId("id=" + i);
             storage.updateMetaDataRecord(record);
             storage.addRequestRecord(r, record);
         }
 
-        assertEquals("Wrong count of imported test MDRs", 999, storage.getTotalByCollection(c));
+        assertEquals("Wrong count of imported test MDRs", 999, storage.getMetaDataRecordIdsByCollection(c).size());
 
         MemoryProgressMonitor monitor = new MemoryProgressMonitor();
         // run the workflow

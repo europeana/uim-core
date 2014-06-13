@@ -13,9 +13,9 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.EofSensorInputStream;
 import org.apache.http.util.EntityUtils;
-import org.theeuropeanlibrary.collections.guarded.Guarded;
 
 import eu.europeana.uim.common.LruCache;
+import eu.europeana.uim.guarded.Guarded;
 
 /**
  * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the

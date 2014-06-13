@@ -20,9 +20,9 @@ public class RecordAwareCBWorkflowStart<I> extends CollectionBatchWorkflowStart<
     public int getTotalSize(ExecutionContext<Collection<I>, I> context) {
         int length = 0;
         try {
-            length = context.getStorageEngine().getByCollection((Collection<I>) context.getDataSet()).length;
+            length = context.getStorageEngine().getMetaDataRecordIdsByCollection((Collection<I>) context.getDataSet()).size();
         } catch (StorageEngineException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Could not get number of ids in collection!", e);
         }
         return length;
     }

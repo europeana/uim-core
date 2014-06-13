@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.theeuropeanlibrary.translation.Translatable;
-import org.theeuropeanlibrary.translation.Translations;
-
 /**
  * Country enum with english country name and MARC codes, ISO 3166 2 letter codes.
  * 

@@ -41,5 +41,8 @@ public class JerseyConfig extends ResourceConfig {
         register(BasicUniqueIdResource.class);
         register(DataProviderResource.class);
         register(DataProvidersResource.class);
+        
+        register(ExecutionResource.class);
+        register(ExecutionsResource.class);
     }
 }

@@ -1,13 +1,11 @@
 package eu.europeana.uim;
 
+import eu.europeana.uim.common.TKey;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.Date;
-
 import org.junit.Test;
 
-import eu.europeana.uim.common.MDRFieldRegistry;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
@@ -35,6 +33,11 @@ public abstract class AbstractMetaDataRecordTest<I> {
 
         EN;
     }
+
+    private static final TKey<AbstractMetaDataRecordTest, String> TEST_KEY = TKey.register(
+            AbstractMetaDataRecordTest.class,
+            "test key",
+            String.class);
 
     /**
      * Setups storage engine.
@@ -67,15 +70,15 @@ public abstract class AbstractMetaDataRecordTest<I> {
     public void testNullNotNullFields() throws StorageEngineException {
         Request<I> request = createRequest();
 
-        MetaDataRecord<I> record = engine.createMetaDataRecord(request.getCollection(), null);
+        MetaDataRecord<I> record = engine.createMetaDataRecord(request.getCollection());
 
         // no value for this field exists, therefore the first field is null
-        assertNull(record.getFirstValue(MDRFieldRegistry.rawformat));
+        assertNull(record.getFirstValue(TEST_KEY));
 
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getQualifiedValues(MDRFieldRegistry.rawformat));
+        assertNotNull(record.getQualifiedValues(TEST_KEY));
         // never return null - get empty list when nothing is there
-        assertNotNull(record.getValues(MDRFieldRegistry.rawformat, TestEnum.EN));
+        assertNotNull(record.getValues(TEST_KEY, TestEnum.EN));
     }
 
     /**
@@ -94,7 +97,7 @@ public abstract class AbstractMetaDataRecordTest<I> {
         collection0.setName("TEL's collection 001");
         engine.updateCollection(collection0);
 
-        Request<I> request0 = engine.createRequest(collection0, new Date(0));
+        Request<I> request0 = engine.createRequest(collection0);
         engine.updateRequest(request0);
 
         return request0;

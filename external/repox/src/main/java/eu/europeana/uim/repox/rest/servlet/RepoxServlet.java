@@ -4,7 +4,6 @@ package eu.europeana.uim.repox.rest.servlet;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -16,32 +15,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import eu.europeana.uim.Registry;
+import eu.europeana.uim.external.ExternalService;
+import eu.europeana.uim.external.ExternalServiceException;
 import eu.europeana.uim.repox.RepoxException;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Servlet as a callback for SugarCRM
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 8, 2011
  */
 public class RepoxServlet extends HttpServlet {
+
     private static final Logger logger = Logger.getLogger(RepoxServlet.class.getName());
 
-    private Registry            registry;
+    private final Registry registry;
 
-    private RepoxService        repoxService;
-//    private SugarService        sugarService;
+    private final RepoxService repoxService;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param registry
      */
     public RepoxServlet(Registry registry) {
         this.registry = registry;
+
+        RepoxService repox = null;
+        List<ExternalService> externalServices = registry.getExternalServices();
+        for (ExternalService externalService : externalServices) {
+            if (externalService instanceof RepoxService) {
+                repox = (RepoxService) externalService;
+            }
+        }
+        this.repoxService = repox;
     }
 
     @SuppressWarnings("unchecked")
@@ -56,16 +69,27 @@ public class RepoxServlet extends HttpServlet {
 
         if ("update".equals(action)) {
             try {
-                StorageEngine<Serializable> storageEngine = (StorageEngine<Serializable>)registry.getStorageEngine();
+                StorageEngine<Serializable> storageEngine = (StorageEngine<Serializable>) registry.getStorageEngine();
 
                 StringBuilder builder = new StringBuilder();
                 if ("*".equals(id)) {
-                    List<Collection<Serializable>> collections = storageEngine.getAllCollections();
+                    BlockingQueue<Collection<Serializable>> collections = storageEngine.getAllCollections();
                     for (Collection<Serializable> coll : collections) {
                         boolean updated = synchronizeCollection(coll);
                         builder.append(coll.getMnemonic());
                         if (updated) {
                             storageEngine.updateCollection(coll);
+                            
+                            List<ExternalService> externalServices = registry.getExternalServices();
+                            for (ExternalService externalService : externalServices) {
+                                if (!(externalService instanceof RepoxService)) {
+                                    try {
+                                        externalService.synchronize(coll, false);
+                                    } catch (ExternalServiceException ex) {
+                                        logger.log(Level.SEVERE, "Synchronize with external service failed!", ex);
+                                    }
+                                }
+                            }
 //                            if (sugarService != null) {
 //                                sugarService.updateCollection(coll);
 //                            }
@@ -78,7 +102,8 @@ public class RepoxServlet extends HttpServlet {
                     resp.getWriter().write(builder.toString());
                     resp.getWriter().write(" DONE:" + collections.size());
                 } else {
-                    Collection<Serializable> coll = storageEngine.findCollection(id);
+                    Serializable uimId = storageEngine.getUimId(id);
+                    Collection<Serializable> coll = storageEngine.getCollection(uimId);
                     boolean updated = synchronizeCollection(coll);
                     if (updated) {
                         storageEngine.updateCollection(coll);
@@ -86,11 +111,11 @@ public class RepoxServlet extends HttpServlet {
 //                            sugarService.updateCollection(coll);
 //                        }
                     }
-                    builder.append(id + ": " + (updated ? "upd" : "same"));
+                    builder.append(id).append(": ").append(updated ? "upd" : "same");
                     resp.setStatus(200);
                     resp.getWriter().write(" DONE");
                 }
-            } catch (Throwable t) {
+            } catch (StorageEngineException | IOException t) {
                 logger.log(Level.SEVERE, "Error during update", t);
 
                 resp.setStatus(500);
@@ -108,7 +133,7 @@ public class RepoxServlet extends HttpServlet {
     }
 
     private boolean synchronizeCollection(Collection<Serializable> collection) {
-        Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+        Map<String, String> beforeValues = new HashMap<>(collection.values());
 
         try {
             repoxService.updateCollection(collection);
@@ -136,50 +161,4 @@ public class RepoxServlet extends HttpServlet {
 
         return update;
     }
-
-    /**
-     * @return repox service
-     */
-    public RepoxService getRepoxService() {
-        return repoxService;
-    }
-
-    /**
-     * @param repoxService
-     *            repox service
-     */
-    public void setRepoxService(RepoxService repoxService) {
-        this.repoxService = repoxService;
-    }
-
-//    /**
-//     * Returns the sugarService.
-//     * 
-//     * @return the sugarService
-//     */
-//    public SugarService getSugarService() {
-//        return sugarService;
-//    }
-//
-//    /**
-//     * Sets the sugarService to the given value.
-//     * 
-//     * @param sugarService
-//     *            the sugarService to set
-//     */
-//    public void setSugarService(SugarService sugarService) {
-//        this.sugarService = sugarService;
-//        logger.info("Sugar service SET for repox servlet.");
-//    }
-//
-//    /**
-//     * Sets the sugarService to the given value.
-//     * 
-//     * @param sugarService
-//     *            the sugarService to set
-//     */
-//    public void unsetSugarService(SugarService sugarService) {
-//        this.sugarService = null;
-//        logger.info("Sugar service UNSET for repox servlet.");
-//    }
 }

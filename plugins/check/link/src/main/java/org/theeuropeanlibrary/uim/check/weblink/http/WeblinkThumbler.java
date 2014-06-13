@@ -1,9 +1,11 @@
 /* LinkcheckServer.java - created on Jul 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.uim.check.weblink.http;
 
+import eu.europeana.uim.guarded.Guarded;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -13,22 +15,22 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.util.EntityUtils;
-import org.theeuropeanlibrary.collections.guarded.Guarded;
 
 /**
- * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the
- * status of links. Initially we try the HEAD method which would be optimal but not widely
- * supported.
- * 
- * If the HEAD method is not supported by the webserver we do use as fallback forth on the GET
- * method.
- * 
- * 
+ * HTTP Link checker with internal thread pool using the @see
+ * {@link HttpClientSetup} to check the status of links. Initially we try the
+ * HEAD method which would be optimal but not widely supported.
+ *
+ * If the HEAD method is not supported by the webserver we do use as fallback
+ * forth on the GET method.
+ *
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 15, 2011
  */
 public class WeblinkThumbler extends AbstractWeblinkServer {
-    private static final Logger    log = Logger.getLogger(WeblinkThumbler.class.getName());
+
+    private static final Logger log = Logger.getLogger(WeblinkThumbler.class.getName());
 
     private static WeblinkThumbler instance;
 
@@ -56,7 +58,7 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
 
     @Override
     public Runnable createTask(Guarded guarded) {
-        return new CacheTask((GuardedMetaDataRecordUrl<?>)guarded);
+        return new CacheTask((GuardedMetaDataRecordUrl<?>) guarded);
     }
 
     /**
@@ -64,6 +66,7 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
      * @since Jul 15, 2011
      */
     private class CacheTask implements Runnable {
+
         private final GuardedMetaDataRecordUrl<?> guarded;
 
         public CacheTask(GuardedMetaDataRecordUrl<?> guarded) {
@@ -85,11 +88,11 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
                     status = response.getStatusLine().getStatusCode();
 
                     if (status == HttpStatus.SC_BAD_REQUEST) {
-                        log.info("Bad request: <" + guarded.getUrl() + ">.");
+                        log.log(Level.INFO, "Bad request: <{0}>.", guarded.getUrl());
 
                     } else if (status == HttpStatus.SC_OK) {
-                        String name = guarded.getMetaDataRecord().getId() + "_" +
-                                      guarded.getIndex();
+                        String name = guarded.getMetaDataRecord().getId() + "_"
+                                + guarded.getIndex();
                         target = store(response, guarded.getDirectory(), name);
                     }
 
@@ -98,13 +101,14 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
                         submission.incrExceptions();
                     }
 
-                    log.info("Failed to store url: <" + guarded.getUrl() + "> to <" +
-                             guarded.getDirectory().getAbsolutePath() + "> " + t.getMessage());
+                    log.log(Level.INFO, "Failed to store url: <{0}> to <{1}> {2}", new Object[]{guarded.getUrl(), guarded.getDirectory().getAbsolutePath(), t.getMessage()});
 
                     guarded.processed(0, t.getLocalizedMessage());
                 } finally {
                     try {
-                        if (response != null) EntityUtils.consume(response.getEntity());
+                        if (response != null) {
+                            EntityUtils.consume(response.getEntity());
+                        }
 
                         synchronized (submission) {
                             submission.incrStatus(status);
@@ -116,12 +120,13 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
 
                             guarded.processed(status, "file://" + target.getAbsolutePath());
                         } else if (status > 0) {
-                            if (response != null)
+                            if (response != null) {
                                 guarded.processed(status,
                                         response.getStatusLine().getReasonPhrase());
+                            }
                         } else {
                             // already handled within catch clause
-                            log.info("Status was zero: <" + guarded.getUrl() + ">.");
+                            log.log(Level.INFO, "Status was zero: <{0}>.", guarded.getUrl());
                         }
                     } catch (Throwable t) {
                         t.printStackTrace();
@@ -132,11 +137,9 @@ public class WeblinkThumbler extends AbstractWeblinkServer {
         }
 
         /**
-         * @param response 
-         * @param directory
-         *            where to store
-         * @param name
-         *            under which name to store
+         * @param response
+         * @param directory where to store
+         * @param name under which name to store
          * @return file with downloaded content
          */
         protected File store(HttpResponse response, File directory, String name) {

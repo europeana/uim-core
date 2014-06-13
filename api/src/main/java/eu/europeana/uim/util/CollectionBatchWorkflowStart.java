@@ -27,7 +27,7 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
-    private static TKey<CollectionBatchWorkflowStart, Data> DATA_KEY = TKey.register(
+    private static final TKey<CollectionBatchWorkflowStart, Data> DATA_KEY = TKey.register(
             CollectionBatchWorkflowStart.class,
             "data", Data.class);
 
@@ -52,7 +52,7 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
 
     @Override
     public List<String> getParameters() {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class CollectionBatchWorkflowStart<I> extends AbstractWorkflowStart<Colle
                     try {
                         Data container = context.getValue(DATA_KEY);
                         if (!container.finished) {
-                            Task<Collection<I>, I> task = new Task<Collection<I>, I>(
+                            Task<Collection<I>, I> task = new Task<>(
                                     (Collection<I>) container.collection, context);
                             synchronized (getQueue()) {
                                 getQueue().offer(task);

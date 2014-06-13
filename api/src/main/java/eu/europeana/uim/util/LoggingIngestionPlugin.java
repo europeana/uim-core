@@ -51,7 +51,7 @@ public class LoggingIngestionPlugin<U extends UimDataSet<I>, I> extends
     private static final Logger log = Logger.getLogger(LoggingIngestionPlugin.class.getName());
 
     @SuppressWarnings("rawtypes")
-    private static TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(
+    private static final TKey<LoggingIngestionPlugin, Data> DATA_KEY = TKey.register(
             LoggingIngestionPlugin.class,
             "data", Data.class);
 
@@ -105,7 +105,7 @@ public class LoggingIngestionPlugin<U extends UimDataSet<I>, I> extends
 
         if (value.current++ % value.stepsize == 0) {
             if (log.isLoggable(value.level)) {
-                log.log(value.level, "Record:" + mdr.getId());
+                log.log(value.level, "Record:{0}", mdr.getId());
             }
         }
         return true;

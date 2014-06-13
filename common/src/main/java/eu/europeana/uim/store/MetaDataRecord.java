@@ -19,14 +19,14 @@ import eu.europeana.uim.common.TKey;
 public interface MetaDataRecord<I> extends UimDataSet<I> {
 
     /**
-     * @return unique external ID
+     * @return unique external identifier
      */
-    String getUniqueExternalId();
+    String getUniqueId();
 
     /**
-     * @param uniqueExternalId unique external ID
+     * @param uniqueId unique external identifier
      */
-    void setUniqueExternalId(String uniqueExternalId);
+    void setUniqueId(String uniqueId);
 
     /**
      * @return the collection the record belongs to

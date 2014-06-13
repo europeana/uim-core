@@ -23,17 +23,17 @@ import eu.europeana.uim.workflow.Workflow;
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @since May 9, 2011
  */
-public class MemoryResourceEngine implements ResourceEngine {
+public final class MemoryResourceEngine implements ResourceEngine {
     private static final String                                              IDENTIFIER          = MemoryResourceEngine.class.getSimpleName();
 
     private static final String                                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +
                                                                                                    File.separator +
                                                                                                    "uim-memorystorage";
 
-    private final LinkedHashMap<String, List<String>>                        globalResources     = new LinkedHashMap<String, List<String>>();
-    private final LinkedHashMap<String, LinkedHashMap<String, List<String>>> workflowResources   = new LinkedHashMap<String, LinkedHashMap<String, List<String>>>();
-    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> providerResources   = new LinkedHashMap<Object, LinkedHashMap<String, List<String>>>();
-    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<Object, LinkedHashMap<String, List<String>>>();
+    private final LinkedHashMap<String, List<String>>                        globalResources     = new LinkedHashMap<>();
+    private final LinkedHashMap<String, LinkedHashMap<String, List<String>>> workflowResources   = new LinkedHashMap<>();
+    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> providerResources;
+    private final LinkedHashMap<Object, LinkedHashMap<String, List<String>>> collectionResources = new LinkedHashMap<>();
 
     private File                                                             rootResourceDir;
     private File                                                             rootWorkingDir;
@@ -43,6 +43,7 @@ public class MemoryResourceEngine implements ResourceEngine {
      * Creates a new instance of this class.
      */
     public MemoryResourceEngine() {
+        this.providerResources = new LinkedHashMap<>();
         try {
             setRootPath(DEFAULT_DATA_DIR);
         } catch (FileNotFoundException e) {
@@ -74,7 +75,7 @@ public class MemoryResourceEngine implements ResourceEngine {
 
     @Override
     public LinkedHashMap<String, List<String>> getGlobalResources(List<String> keys) {
-        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<>();
         for (String key : keys) {
             List<String> values = globalResources.get(key);
             results.put(key, values);
@@ -94,7 +95,7 @@ public class MemoryResourceEngine implements ResourceEngine {
 
         LinkedHashMap<String, List<String>> workResources = workflowResources.get(workflow.getIdentifier());
         if (workResources == null) {
-            workResources = new LinkedHashMap<String, List<String>>();
+            workResources = new LinkedHashMap<>();
             workflowResources.put(workflow.getIdentifier(), workResources);
         }
 
@@ -111,7 +112,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     @Override
     public LinkedHashMap<String, List<String>> getWorkflowResources(Workflow<?, ?> workflow,
             List<String> keys) {
-        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<>();
         LinkedHashMap<String, List<String>> workflowMap = workflowResources.get(workflow.getIdentifier());
 
         for (String key : keys) {
@@ -153,7 +154,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     @Override
     public LinkedHashMap<String, List<String>> getProviderResources(Provider<?> id,
             List<String> keys) {
-        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<>();
         LinkedHashMap<String, List<String>> providerMap = providerResources.get(id.getId());
 
         for (String key : keys) {
@@ -197,7 +198,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     @Override
     public LinkedHashMap<String, List<String>> getCollectionResources(Collection<?> id,
             List<String> keys) {
-        LinkedHashMap<String, List<String>> results = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> results = new LinkedHashMap<>();
         LinkedHashMap<String, List<String>> collectionMap = collectionResources.get(id.getId());
 
         for (String key : keys) {
@@ -219,7 +220,7 @@ public class MemoryResourceEngine implements ResourceEngine {
     @Override
     public Map<String, String> getConfiguration() {
         // not needed, return empty
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     @Override

@@ -1,0 +1,17 @@
+eu/europeana/uim/sugar/SugarCrmService.class
+eu/europeana/uim/sugar/GenericSugarCrmException.class
+eu/europeana/uim/sugar/SugarException.class
+eu/europeana/uim/sugar/model/DatasetStates.class
+eu/europeana/uim/sugar/SugarCrmQuery.class
+eu/europeana/uim/sugar/QueryResultException.class
+eu/europeana/uim/sugar/model/UpdatableField.class
+eu/europeana/uim/sugar/model/RetrievableField.class
+eu/europeana/uim/sugar/PollingListener.class
+eu/europeana/uim/sugar/ConnectionStatus.class
+eu/europeana/uim/sugar/SugarCrmRecord.class
+eu/europeana/uim/sugar/SugarService.class
+eu/europeana/uim/sugar/model/Datasets.class
+eu/europeana/uim/sugar/model/SugarCrmField.class
+eu/europeana/uim/sugar/SugarControlledVocabulary.class
+eu/europeana/uim/sugar/LoginFailureException.class
+eu/europeana/uim/sugar/FileAttachmentException.class

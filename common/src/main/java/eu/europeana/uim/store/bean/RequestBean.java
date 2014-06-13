@@ -74,7 +74,7 @@ public class RequestBean<I> extends AbstractEntityBean<I> implements Request<I>,
      * @param date
      */
     public void setDate(Date date) {
-        this.date = DateUtils.truncate(date, Calendar.SECOND);
+        this.date = DateUtils.truncate(date, Calendar.MILLISECOND);
     }
 
     /**

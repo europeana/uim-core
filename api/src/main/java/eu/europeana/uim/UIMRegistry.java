@@ -10,13 +10,16 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import eu.europeana.uim.adapter.UimDatasetAdapter;
+import eu.europeana.uim.external.ExternalService;
 import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.logging.LoggingEngineAdapter;
 import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.plugin.Plugin;
+import eu.europeana.uim.Registry;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.workflow.Workflow;
+import java.util.Collections;
 import java.util.logging.Level;
 
 /**
@@ -50,6 +53,8 @@ public class UIMRegistry implements Registry {
     private Orchestrator<?> orchestrator = null;
 
     private final Map<String, UimDatasetAdapter<?, ?>> adapters = new HashMap<>();
+
+    private final List<ExternalService> externals = new ArrayList<>();
 
     /**
      * Creates a new instance of this class.
@@ -509,5 +514,20 @@ public class UIMRegistry implements Registry {
     @Override
     public UimDatasetAdapter<?, ?> getUimDatasetAdapter(String pluginIdentifier) {
         return this.adapters.get(pluginIdentifier);
+    }
+
+    @Override
+    public void addExternalService(ExternalService service) {
+        externals.add(service);
+    }
+
+    @Override
+    public void removeExternalService(ExternalService service) {
+        externals.remove(service);
+    }
+
+    @Override
+    public List<ExternalService> getExternalServices() {
+        return Collections.unmodifiableList(externals);
     }
 }

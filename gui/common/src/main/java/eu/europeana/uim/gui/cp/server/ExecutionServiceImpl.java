@@ -28,6 +28,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.workflow.Workflow;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Orchestration service implementation.
@@ -109,7 +110,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
              return r;
          }
 
-         List<Execution<Serializable>> executions = null;
+         BlockingQueue<Execution<Serializable>> executions = null;
          try {
              executions = storage.getAllExecutions();
 

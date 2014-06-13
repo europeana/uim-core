@@ -20,25 +20,25 @@ import eu.europeana.uim.store.UimDataSet;
 
 /**
  * Memory based logging engine.
- * 
- * @param <I>
- *            generic ID type
- * 
+ *
+ * @param <I> generic ID type
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 17, 2011
  */
 public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
-    private static final String            IDENTIFIER = MemoryLoggingEngine.class.getSimpleName();
 
-    private LinkedList<LogEntry>           entries    = new LinkedList<LogEntry>();
-    private LinkedList<FailedEntry>        failed     = new LinkedList<FailedEntry>();
-    private LinkedList<LinkEntry>          linklogs   = new LinkedList<LinkEntry>();
-    private LinkedList<FieldEntry>         fieldlogs  = new LinkedList<FieldEntry>();
-    private LinkedList<EdmEntry>           edmlogs    = new LinkedList<EdmEntry>();
+    private static final String IDENTIFIER = MemoryLoggingEngine.class.getSimpleName();
 
-    private Map<String, SummaryStatistics> durations  = new HashMap<String, SummaryStatistics>();
+    private final LinkedList<LogEntry> entries = new LinkedList<>();
+    private final LinkedList<FailedEntry> failed = new LinkedList<>();
+    private final LinkedList<LinkEntry> linklogs = new LinkedList<>();
+    private final LinkedList<FieldEntry> fieldlogs = new LinkedList<>();
+    private final LinkedList<EdmEntry> edmlogs = new LinkedList<>();
 
-    private int                            maxentries = 100000;
+    private Map<String, SummaryStatistics> durations = new HashMap<>();
+
+    private int maxentries = 100000;
 
     /**
      * Creates a new instance of this class.
@@ -203,7 +203,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public List<LoggingEngine.LogEntry> getLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntry> result = new ArrayList<LoggingEngine.LogEntry>();
+        List<LoggingEngine.LogEntry> result = new ArrayList<>();
         for (LogEntry entry : entries) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -214,7 +214,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public List<LoggingEngine.LogEntryFailed> getFailedLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntryFailed> result = new ArrayList<LoggingEngine.LogEntryFailed>();
+        List<LoggingEngine.LogEntryFailed> result = new ArrayList<>();
         for (FailedEntry entry : failed) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -225,7 +225,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
 
     @Override
     public List<LoggingEngine.LogEntryLink> getLinkLogs(Execution<I> execution) {
-        List<LoggingEngine.LogEntryLink> result = new ArrayList<LoggingEngine.LogEntryLink>();
+        List<LoggingEngine.LogEntryLink> result = new ArrayList<>();
         for (LinkEntry entry : linklogs) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -237,7 +237,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     @Override
     public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
             Execution<I> execution) {
-        List<LoggingEngine.LogEntryEdmCheck> result = new ArrayList<LoggingEngine.LogEntryEdmCheck>();
+        List<LoggingEngine.LogEntryEdmCheck> result = new ArrayList<>();
         for (EdmEntry entry : edmlogs) {
             if (entry.execution != null && entry.execution.equals(execution)) {
                 result.add(entry);
@@ -247,10 +247,11 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class LogEntry implements LoggingEngine.LogEntry {
-        private final Level        level;
-        private final String       module;
-        private final Date         date;
-        private final String[]     message;
+
+        private final Level level;
+        private final String module;
+        private final Date date;
+        private final String[] message;
 
         private final Execution<I> execution;
 
@@ -264,7 +265,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public LogEntry(Execution<I> execution, Level level, String module, Date date,
-                        String[] message) {
+                String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -300,16 +301,17 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class FailedEntry implements LoggingEngine.LogEntryFailed {
-        private final Level         level;
-        private final String        module;
+
+        private final Level level;
+        private final String module;
         private final UimDataSet<I> mdr;
-        private final Date          date;
-        private final String[]      message;
-        private final Execution<I>  execution;
-        private final Throwable     throwable;
+        private final Date date;
+        private final String[] message;
+        private final Execution<I> execution;
+        private final Throwable throwable;
 
         public FailedEntry(Level level, String module, Throwable throwable, Date date,
-                           String[] message) {
+                String[] message) {
             super();
             this.level = level;
             this.module = module;
@@ -321,7 +323,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           Date date, String[] message) {
+                Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -333,7 +335,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FailedEntry(Execution<I> execution, Level level, String module, Throwable throwable,
-                           UimDataSet<I> mdr, Date date, String[] message) {
+                UimDataSet<I> mdr, Date date, String[] message) {
             super();
             this.execution = execution;
             this.level = level;
@@ -381,14 +383,15 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class LinkEntry implements LogEntryLink {
-        private final String        module;
-        private final String        link;
-        private final Date          date;
-        private final int           status;
-        private final String[]      message;
+
+        private final String module;
+        private final String link;
+        private final Date date;
+        private final int status;
+        private final String[] message;
 
         private final UimDataSet<I> mdr;
-        private final Execution<I>  execution;
+        private final Execution<I> execution;
 
         public LinkEntry(String module, String link, int status, Date date, String[] message) {
             super();
@@ -403,7 +406,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public LinkEntry(Execution<I> execution, String module, UimDataSet<I> mdr, String link,
-                         Date date, int status, String[] message) {
+                Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
@@ -451,18 +454,19 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class FieldEntry implements LogEntryField {
-        private final String        module;
-        private final String        field;
-        private final String        qualifier;
-        private final Date          date;
-        private final int           status;
-        private final String[]      message;
+
+        private final String module;
+        private final String field;
+        private final String qualifier;
+        private final Date date;
+        private final int status;
+        private final String[] message;
 
         private final UimDataSet<I> mdr;
-        private final Execution<I>  execution;
+        private final Execution<I> execution;
 
         public FieldEntry(String module, String field, String qualifier, int status, Date date,
-                          String[] message) {
+                String[] message) {
             super();
             this.module = module;
             this.field = field;
@@ -476,7 +480,7 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
         }
 
         public FieldEntry(Execution<I> execution, String module, UimDataSet<I> mdr, String field,
-                          String qualifier, Date date, int status, String[] message) {
+                String qualifier, Date date, int status, String[] message) {
             super();
             this.execution = execution;
             this.module = module;
@@ -530,15 +534,16 @@ public class MemoryLoggingEngine<I> implements LoggingEngine<I> {
     }
 
     private class EdmEntry implements LoggingEngine.LogEntryEdmCheck {
-        private final String        module;
-        private final UimDataSet<I> mdr;
-        private final String[]      message;
 
-        private final Execution<I>  execution;
+        private final String module;
+        private final UimDataSet<I> mdr;
+        private final String[] message;
+
+        private final Execution<I> execution;
 
         /**
          * Creates a new instance of this class.
-         * 
+         *
          * @param execution
          * @param module
          * @param mdr

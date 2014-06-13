@@ -36,7 +36,8 @@ public class MemoryStorageMetaDataRecordTest extends AbstractMetaDataRecordTest<
     @Test
     public void testMetadataRecord() throws StorageEngineException {
         MetaDataRecord<Long> record = getStorageEngine().createMetaDataRecord(
-                createRequest().getCollection(), "ID 1");
+                createRequest().getCollection());
+        record.setUniqueId("ID 1");
 
         TKey<MemoryStorageMetaDataRecordTest, String> testKey = TKey.register(
                 MemoryStorageMetaDataRecordTest.class, "test", String.class);

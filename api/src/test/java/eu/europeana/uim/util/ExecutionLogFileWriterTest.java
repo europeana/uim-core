@@ -39,7 +39,7 @@ public class ExecutionLogFileWriterTest {
      */
     @Test
     public void testLogToFile() throws IOException {
-        ExecutionLogFileWriter<Long> executionLogFileWriter = new ExecutionLogFileWriter<Long>(
+        ExecutionLogFileWriter<Long> executionLogFileWriter = new ExecutionLogFileWriter<>(
                 "./target/logtest");
         assertNotNull(executionLogFileWriter);
         @SuppressWarnings({"unchecked", "rawtypes"})

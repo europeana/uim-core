@@ -28,6 +28,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.StandardControlledVocabulary;
 import eu.europeana.uim.workflow.Workflow;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * Orchestration service implementation.
@@ -60,7 +61,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                 storage.checkpoint();
 
                 try {
-                    List<Provider<Serializable>> providers = storage.getAllProviders();
+                    BlockingQueue<Provider<Serializable>> providers = storage.getAllProviders();
                     for (Provider<Serializable> provider : providers) {
                         boolean update = repoxService != null ? synchronizeProviderWithRepox(
                                 repoxService, provider) : false;
@@ -71,7 +72,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
                         }
                     }
 
-                    List<Collection<Serializable>> collections = storage.getAllCollections();
+                    BlockingQueue<Collection<Serializable>> collections = storage.getAllCollections();
                     for (Collection<Serializable> collection : collections) {
                         boolean update = repoxService != null ? synchronizeCollectionWithRepox(
                                 repoxService, collection) : false;
@@ -141,7 +142,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         StorageEngine<Serializable> storage = getStorageEngine();
         if (storage == null) { return res; }
 
-        List<Provider<Serializable>> providers = null;
+        BlockingQueue<Provider<Serializable>> providers = null;
         try {
             providers = storage.getAllProviders();
         } catch (Throwable t) {
@@ -186,7 +187,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
         }
 
         if (p != null) {
-            List<Collection<Serializable>> cols = null;
+            BlockingQueue<Collection<Serializable>> cols = null;
             try {
                 cols = storage.getCollections(p);
             } catch (Throwable t) {
@@ -258,7 +259,7 @@ public class RepositoryServiceImpl extends AbstractOSGIRemoteServiceServlet impl
 
         int num = 0;
         try {
-            num = storage.getTotalByCollection(storage.getCollection(collection));
+            num = storage.getMetaDataRecordIdsByCollection(storage.getCollection(collection)).size();
         } catch (Throwable t) {
             log.log(Level.WARNING, "Could not get number of records for collection '" + collection +
                                    "'!", t);

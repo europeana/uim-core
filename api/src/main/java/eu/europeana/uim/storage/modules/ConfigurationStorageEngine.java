@@ -1,14 +1,8 @@
 package eu.europeana.uim.storage.modules;
 
-import eu.europeana.uim.storage.*;
 import java.util.Map;
 
 import eu.europeana.uim.EngineStatus;
-import eu.europeana.uim.storage.updatedmodules.CollectionStorageEngine;
-import eu.europeana.uim.storage.updatedmodules.ExecutionStorageEngine;
-import eu.europeana.uim.storage.updatedmodules.MetaDataRecordStorageEngine;
-import eu.europeana.uim.storage.updatedmodules.ProviderStorageEngine;
-import eu.europeana.uim.storage.updatedmodules.RequestStorageEngine;
 
 /**
  * Base class for storage engine typed with a ID class.

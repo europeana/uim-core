@@ -12,25 +12,24 @@ import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
 import eu.europeana.uim.gui.cp.shared.ParameterDTO;
 
 /**
- * Definition of the service to retrieve orchestration dependent information from the server.
- * 
+ * Definition of the service to retrieve orchestration dependent information
+ * from the server.
+ *
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since May 23, 2011
  */
 @RemoteServiceRelativePath("execution")
 public interface ExecutionService extends RemoteService {
+
     /**
      * Triggers a new execution.
-     * 
-     * @param workflow
-     *            what should be done?
-     * @param collectionId
-     *            on what data?
-     * @param executionName
-     *            name for execution
-     * @param parameters
-     *            execution specific parameters which override potentially configured ones
+     *
+     * @param workflow what should be done?
+     * @param collectionId on what data?
+     * @param executionName name for execution
+     * @param parameters execution specific parameters which override
+     * potentially configured ones
      * @return created execution
      */
     Boolean startCollection(String workflow, Serializable collectionId, String executionName,
@@ -38,15 +37,12 @@ public interface ExecutionService extends RemoteService {
 
     /**
      * Triggers a new execution.
-     * 
-     * @param workflow
-     *            what should be done?
-     * @param providerId
-     *            on what data?
-     * @param executionName
-     *            name for execution
-     * @param parameters
-     *            execution specific parameters which override potentially configured ones
+     *
+     * @param workflow what should be done?
+     * @param providerId on what data?
+     * @param executionName name for execution
+     * @param parameters execution specific parameters which override
+     * potentially configured ones
      * @return created execution
      */
     ExecutionDTO startProvider(String workflow, Serializable providerId, String executionName,
@@ -54,7 +50,8 @@ public interface ExecutionService extends RemoteService {
 
     /**
      * @param id
-     * @return null or the queried execution (either be it active or an old stored one)
+     * @return null or the queried execution (either be it active or an old
+     * stored one)
      */
     ExecutionDTO getExecution(Serializable id);
 
@@ -69,44 +66,44 @@ public interface ExecutionService extends RemoteService {
     List<ExecutionDTO> getPastExecutions();
 
     /**
-     * @param workflows
-     *            the list of workflows to be considered. Null means all.
+     * @param workflows the list of workflows to be considered. Null means all.
      * @return list of completed executions from a list of specific workflows
      */
     List<ExecutionDTO> getPastExecutions(String[] workflows);
 
     /**
-     * @param workflows  the list of workflows to be considered. Null means all.
+     * @param workflows the list of workflows to be considered. Null means all.
      * @param collmenmonic filter executions for a specific collection
      * @param start filter executions after the given date
-     * @param end   filter executions before the given date
+     * @param end filter executions before the given date
      * @return list of completed executions for these criteria
      */
-    List<ExecutionDTO> getPastExecutions(String[] workflows,String collmenmonic,Date start, Date end);
-    
-    
+    List<ExecutionDTO> getPastExecutions(String[] workflows, String collmenmonic, Date start, Date end);
+
     /**
-     * Pause the given execution (if it is paused or not running, nothing happens and false is
-     * returned).
-     * 
+     * Pause the given execution (if it is paused or not running, nothing
+     * happens and false is returned).
+     *
      * @param executionId
-     * @return true, if pausing was successfull
+     * @return true, if pausing was successful
      */
     Boolean pauseExecution(Serializable executionId);
 
     /**
-     * Resumes the given execution (if it is not paused, nothing happens and false is returned).
-     * 
+     * Resumes the given execution (if it is not paused, nothing happens and
+     * false is returned).
+     *
      * @param executionId
-     * @return true, if resuming was successfull
+     * @return true, if resuming was successful
      */
     Boolean resumeExecution(Serializable executionId);
 
     /**
-     * Cancels the given execution (if it is not running,, nothing happens and false is returned).
-     * 
+     * Cancels the given execution (if it is not running,, nothing happens and
+     * false is returned).
+     *
      * @param executionId
-     * @return true, if cancellation was successfull
+     * @return true, if cancellation was successful
      */
     Boolean cancelExecution(Serializable executionId);
 }

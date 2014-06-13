@@ -16,11 +16,12 @@ import eu.europeana.uim.sugar.SugarException;
 
 /**
  * Servlet as a callback for SugarCRM
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 8, 2011
  */
 public abstract class AbstractSugarServlet extends HttpServlet {
+
     private static final Logger log = Logger.getLogger(AbstractSugarServlet.class.getName());
 
     /**
@@ -39,7 +40,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
         String type = req.getParameter("type");
         String id = req.getParameter("id");
 
-        log.fine("Sugar update request:" + req.getParameterMap());
+        log.log(Level.FINE, "Sugar update request:{0}", req.getParameterMap());
         if ("true".equals(req.getParameter("async"))) {
             asynchUpdate(resp, action, type, id);
         } else {
@@ -51,67 +52,73 @@ public abstract class AbstractSugarServlet extends HttpServlet {
             throws ServletException {
         if ("update".equals(action)) {
             try {
-                if ("organization".equals(type)) {
+                if (null != type) {
+                    switch (type) {
+                        case "organization": {
+                            StringBuilder builder = new StringBuilder();
+                            if ("*".equals(id)) {
+                                List<Map<String, String>> providers = listProviders(true);
+                                for (Map<String, String> provider : providers) {
+                                    String mnemonic = getProviderMnemonic(provider);
+                                    if (mnemonic != null) {
+                                        boolean update = updateProvider(mnemonic, provider);
+                                        log.log(Level.INFO, "Updated/Synched provider with sugar:{0}", mnemonic);
 
-                    StringBuilder builder = new StringBuilder();
-                    if ("*".equals(id)) {
-                        List<Map<String, String>> providers = listProviders(true);
-                        for (Map<String, String> provider : providers) {
-                            String mnemonic = getProviderMnemonic(provider);
-                            if (mnemonic != null) {
-                                boolean update = updateProvider(mnemonic, provider);
-                                log.info("Updated/Synched provider with sugar:" + mnemonic);
-
-                                if (builder.length() > 0) {
-                                    builder.append(", \n");
+                                        if (builder.length() > 0) {
+                                            builder.append(", \n");
+                                        }
+                                        builder.append(mnemonic).append(": ").append(update ? "UPD" : "NaN");
+                                    }
                                 }
-                                builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+
+                                resp.setStatus(200);
+                                resp.getWriter().write(builder.toString());
+                                resp.getWriter().write(" DONE:" + providers.size());
+                            } else {
+                                boolean update = updateProvider(id, null);
+                                log.log(Level.INFO, "Updated/Synched provider with sugar:{0}", id);
+
+                                builder.append(id).append(": ").append(update ? "UPD" : "NaN");
+                                resp.setStatus(200);
+                                resp.getWriter().write(" DONE");
                             }
+                            break;
                         }
+                        case "collection": {
+                            StringBuilder builder = new StringBuilder();
+                            if ("*".equals(id)) {
+                                List<Map<String, String>> collections = listCollections(true);
+                                for (Map<String, String> collection : collections) {
+                                    String mnemonic = getCollectionMnemonic(collection);
+                                    if (mnemonic != null) {
+                                        boolean update = updateCollection(mnemonic, collection);
+                                        log.log(Level.INFO, "Updated/Synched collection with sugar:{0}", mnemonic);
 
-                        resp.setStatus(200);
-                        resp.getWriter().write(builder.toString());
-                        resp.getWriter().write(" DONE:" + providers.size());
-                    } else {
-                        boolean update = updateProvider(id, null);
-                        log.info("Updated/Synched provider with sugar:" + id);
-
-                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
-                        resp.setStatus(200);
-                        resp.getWriter().write(" DONE");
-                    }
-                } else if ("collection".equals(type)) {
-                    StringBuilder builder = new StringBuilder();
-                    if ("*".equals(id)) {
-                        List<Map<String, String>> collections = listCollections(true);
-                        for (Map<String, String> collection : collections) {
-                            String mnemonic = getCollectionMnemonic(collection);
-                            if (mnemonic != null) {
-                                boolean update = updateCollection(mnemonic, collection);
-                                log.info("Updated/Synched collection with sugar:" + mnemonic);
-
-                                if (builder.length() > 0) {
-                                    builder.append(", \n");
+                                        if (builder.length() > 0) {
+                                            builder.append(", \n");
+                                        }
+                                        builder.append(mnemonic).append(": ").append(update ? "UPD" : "NaN");
+                                    }
                                 }
-                                builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+
+                                resp.setStatus(200);
+                                resp.getWriter().write(builder.toString());
+                                resp.getWriter().write(" DONE:" + collections.size());
+                            } else {
+                                boolean update = updateCollection(id, null);
+                                log.log(Level.INFO, "Updated/Synched collection with sugar:{0}", id);
+
+                                builder.append(id).append(": ").append(update ? "UPD" : "NaN");
+                                resp.setStatus(200);
+                                resp.getWriter().write(" DONE");
                             }
+                            break;
                         }
-
-                        resp.setStatus(200);
-                        resp.getWriter().write(builder.toString());
-                        resp.getWriter().write(" DONE:" + collections.size());
-                    } else {
-                        boolean update = updateCollection(id, null);
-                        log.info("Updated/Synched collection with sugar:" + id);
-
-                        builder.append(id + ": " + (update ? "UPD" : "NaN"));
-                        resp.setStatus(200);
-                        resp.getWriter().write(" DONE");
+                        default:
+                            resp.sendError(400,
+                                    "Illegal arguments, neither collection nor provider id was given.");
+                            break;
                     }
-
-                } else {
-                    resp.sendError(400,
-                            "Illegal arguments, neither collection nor provider id was given.");
                 }
             } catch (Throwable t) {
                 log.log(Level.SEVERE, "Error during update", t);
@@ -138,63 +145,68 @@ public abstract class AbstractSugarServlet extends HttpServlet {
             public void run() {
                 if ("update".equals(action)) {
                     try {
-                        if ("organization".equals(type)) {
+                        if (null != type) {
+                            switch (type) {
+                                case "organization": {
+                                    StringBuilder builder = new StringBuilder();
+                                    if ("*".equals(id)) {
+                                        List<Map<String, String>> providers = listProviders(true);
+                                        for (Map<String, String> provider : providers) {
+                                            String mnemonic = getProviderMnemonic(provider);
+                                            if (mnemonic != null) {
+                                                boolean update = updateProvider(mnemonic, provider);
+                                                log.log(Level.INFO, "Updated/Synched provider with sugar:{0}", mnemonic);
 
-                            StringBuilder builder = new StringBuilder();
-                            if ("*".equals(id)) {
-                                List<Map<String, String>> providers = listProviders(true);
-                                for (Map<String, String> provider : providers) {
-                                    String mnemonic = getProviderMnemonic(provider);
-                                    if (mnemonic != null) {
-                                        boolean update = updateProvider(mnemonic, provider);
-                                        log.info("Updated/Synched provider with sugar:" + mnemonic);
-
-                                        if (builder.length() > 0) {
-                                            builder.append(", \n");
+                                                if (builder.length() > 0) {
+                                                    builder.append(", \n");
+                                                }
+                                                builder.append(mnemonic).append(": ").append(update ? "UPD" : "NaN");
+                                            }
                                         }
-                                        builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+
+                                        log.log(Level.INFO, " DONE comlete provider update:{0}", providers.size());
+                                    } else {
+                                        @SuppressWarnings("unused")
+                                        boolean update = updateProvider(id, null);
+                                        log.log(Level.INFO, "Updated/Synched provider with sugar:{0}", id);
                                     }
+                                    break;
                                 }
+                                case "collection": {
+                                    StringBuilder builder = new StringBuilder();
+                                    if ("*".equals(id)) {
+                                        List<Map<String, String>> collections = listCollections(true);
+                                        for (Map<String, String> collection : collections) {
+                                            String mnemonic = getCollectionMnemonic(collection);
+                                            if (mnemonic != null) {
+                                                boolean update = updateCollection(mnemonic, collection);
+                                                log.log(Level.INFO, "Updated/Synched collection with sugar:{0}", mnemonic);
 
-                                log.info(" DONE comlete provider update:" + providers.size());
-                            } else {
-                                @SuppressWarnings("unused")
-                                boolean update = updateProvider(id, null);
-                                log.info("Updated/Synched provider with sugar:" + id);
-                            }
-                        } else if ("collection".equals(type)) {
-                            StringBuilder builder = new StringBuilder();
-                            if ("*".equals(id)) {
-                                List<Map<String, String>> collections = listCollections(true);
-                                for (Map<String, String> collection : collections) {
-                                    String mnemonic = getCollectionMnemonic(collection);
-                                    if (mnemonic != null) {
-                                        boolean update = updateCollection(mnemonic, collection);
-                                        log.info("Updated/Synched collection with sugar:" +
-                                                 mnemonic);
-
-                                        if (builder.length() > 0) {
-                                            builder.append(", \n");
+                                                if (builder.length() > 0) {
+                                                    builder.append(", \n");
+                                                }
+                                                builder.append(mnemonic).append(": ").append(update ? "UPD" : "NaN");
+                                            }
                                         }
-                                        builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
+
+                                        log.log(Level.INFO, " DONE complete collection update:{0}", collections.size());
+                                    } else {
+                                        @SuppressWarnings("unused")
+                                        boolean update = updateCollection(id, null);
+                                        log.log(Level.INFO, "Updated/Synched collection with sugar:{0}", id);
                                     }
+                                    break;
                                 }
-
-                                log.info(" DONE complete collection update:" + collections.size());
-                            } else {
-                                @SuppressWarnings("unused")
-                                boolean update = updateCollection(id, null);
-                                log.info("Updated/Synched collection with sugar:" + id);
+                                default:
+                                    log.severe("Illegal arguments, neither collection nor provider id was given.");
+                                    break;
                             }
-
-                        } else {
-                            log.severe("Illegal arguments, neither collection nor provider id was given.");
                         }
                     } catch (Throwable t) {
                         log.log(Level.SEVERE, "Error during update", t);
                     }
                 } else {
-                    log.warning("Action: <" + action + "> is invalid.");
+                    log.log(Level.WARNING, "Action: <{0}> is invalid.", action);
                 }
             }
         };

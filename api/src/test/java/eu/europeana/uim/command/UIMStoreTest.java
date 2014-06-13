@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 
 import org.apache.felix.service.command.CommandSession;
 import org.junit.Test;
@@ -19,6 +18,7 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Tests store operations.
@@ -40,14 +40,14 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
 
-        final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
+        final ProviderBean<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
 
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>() {
+        when(storage.getAllProviders()).thenReturn(new LinkedBlockingQueue<Provider<Long>>() {
             {
                 add(provider);
             }
@@ -77,23 +77,23 @@ public class UIMStoreTest {
 
         UIMRegistry registry = new UIMRegistry();
 
-        final ProviderBean<Long> provider = new ProviderBean<Long>(1L);
+        final ProviderBean<Long> provider = new ProviderBean<>(1L);
         provider.setMnemonic("mnemonic");
         provider.setName("name");
 
-        final CollectionBean<Long> collection = new CollectionBean<Long>(1L, provider);
+        final CollectionBean<Long> collection = new CollectionBean<>(1L, provider);
         collection.setMnemonic("mnemonic");
         collection.setName("name");
 
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.getAllProviders()).thenReturn(new ArrayList<Provider<Long>>() {
+        when(storage.getAllProviders()).thenReturn(new LinkedBlockingQueue<Provider<Long>>() {
             {
                 add(provider);
             }
         });
-        when(storage.getCollections(provider)).thenReturn(new ArrayList<Collection<Long>>() {
+        when(storage.getCollections(provider)).thenReturn(new LinkedBlockingQueue<Collection<Long>>() {
             {
                 add(collection);
             }
@@ -165,7 +165,7 @@ public class UIMStoreTest {
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findProvider((String) any())).thenReturn(provider);
+        when(storage.getProvider((Long) any())).thenReturn(provider);
 
         registry.addStorageEngine(storage);
 
@@ -196,14 +196,14 @@ public class UIMStoreTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        Provider<Long> provider = new ProviderBean<Long>(1L);
-        Collection<Long> collection = new CollectionBean<Long>(1L, provider);
+        Provider<Long> provider = new ProviderBean<>(1L);
+        Collection<Long> collection = new CollectionBean<>(1L, provider);
 
         UIMRegistry registry = new UIMRegistry();
 
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findProvider((String) any())).thenReturn(provider);
+        when(storage.getProvider((Long) any())).thenReturn(provider);
         when(storage.createCollection((Provider<Long>) any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
@@ -235,14 +235,14 @@ public class UIMStoreTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        Collection<Long> collection = new CollectionBean<Long>(1L, null);
+        Collection<Long> collection = new CollectionBean<>(1L, null);
 
         UIMRegistry registry = new UIMRegistry();
 
         @SuppressWarnings("unchecked")
         StorageEngine<Long> storage = mock(StorageEngine.class);
         when(storage.getIdentifier()).thenReturn("identifier");
-        when(storage.findCollection((String) any())).thenReturn(collection);
+        when(storage.getCollection((Long) any())).thenReturn(collection);
 
         registry.addStorageEngine(storage);
 

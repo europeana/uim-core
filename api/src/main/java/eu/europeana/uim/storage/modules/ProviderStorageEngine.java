@@ -1,8 +1,9 @@
 package eu.europeana.uim.storage.modules;
 
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 
 /**
@@ -37,26 +38,10 @@ public interface ProviderStorageEngine<I> {
     Provider<I> getProvider(I id) throws StorageEngineException;
 
     /**
-     * @param mnemonic defines uniquely a provider
-     * @return find a specific provider with the given mnemonic, might not
-     * always been supported by the backend
-     * @throws StorageEngineException
-     */
-    Provider<I> findProvider(String mnemonic) throws StorageEngineException;
-
-    /**
      * @return all known providers
      * @throws StorageEngineException
      */
-    List<Provider<I>> getAllProviders() throws StorageEngineException;
-
-    /**
-     * @param provider
-     * @param recursive
-     * @return number of records for this provider
-     * @throws StorageEngineException
-     */
-    int getTotalByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+    BlockingQueue<Provider<I>> getAllProviders() throws StorageEngineException;
 
     /**
      * @param provider
@@ -64,22 +49,15 @@ public interface ProviderStorageEngine<I> {
      * @return IDs for records for this provider
      * @throws StorageEngineException
      */
-    I[] getByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException;
+    BlockingQueue<I> getMetaDataRecordIdsByProvider(Provider<I> provider, boolean recursive)
+            throws StorageEngineException;
 
-// /**
-// * @param provider
-// * @param recursive
-// * @return IDs for records for this provider
-// * @throws StorageEngineException
-// */
-// BlockingQueue<I[]> getIdsBatchesByProvider(Provider<I> provider, boolean recursive)
-// throws StorageEngineException;
-    // /**
-    // * @param provider
-    // * @param recursive
-    // * @return IDs for records for this provider
-    // * @throws StorageEngineException
-    // */
-    // BlockingQueue<MetaDataRecord[]> getMdrBatchesByProvider(Provider<I> provider, boolean recursive)
-    // throws StorageEngineException;
+    /**
+     * @param provider
+     * @param recursive
+     * @return IDs for records for this provider
+     * @throws StorageEngineException
+     */
+    BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByProvider(Provider<I> provider, boolean recursive)
+            throws StorageEngineException;
 }

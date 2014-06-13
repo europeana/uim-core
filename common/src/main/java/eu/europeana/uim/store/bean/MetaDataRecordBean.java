@@ -37,6 +37,11 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
     private Collection<I> collection;
 
     /**
+     * unique external identifier
+     */
+    private String uniqueId;
+
+    /**
      * holds for each key a list of known qualified values
      */
     private final Map<TKey<?, ?>, List<QualifiedValue<?>>> fields = new HashMap<>();
@@ -68,13 +73,13 @@ public class MetaDataRecordBean<I> extends AbstractEntityBean<I> implements Meta
      * @return unique external identifier
      */
     @Override
-    public String getUniqueExternalId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getUniqueId() {
+        return uniqueId;
     }
 
     @Override
-    public void setUniqueExternalId(String uniqueExternalId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     @Override

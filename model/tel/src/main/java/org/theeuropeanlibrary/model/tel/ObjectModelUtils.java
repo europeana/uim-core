@@ -29,20 +29,21 @@ import org.theeuropeanlibrary.model.common.subject.Subject;
 import org.theeuropeanlibrary.model.common.subject.TitleSubject;
 import org.theeuropeanlibrary.model.common.subject.Topic;
 import org.theeuropeanlibrary.model.common.time.Temporal;
-import org.theeuropeanlibrary.translation.Translations;
 
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
+import eu.europeana.uim.translation.Translations;
 
 /**
- * Provides convenient utility function to retrieve places, parties and temporal objects despite the
- * actual derived class.
- * 
+ * Provides convenient utility function to retrieve places, parties and temporal
+ * objects despite the actual derived class.
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @author Ruud Diterwich (ruud@diterwich.com)
  * @since Jun 10, 2011
  */
 public final class ObjectModelUtils {
+
     /**
      * Private constructor as this is a utility function class.
      */
@@ -52,7 +53,7 @@ public final class ObjectModelUtils {
 
     /**
      * Converts a collection of qualified values to a list of values.
-     * 
+     *
      * @param <T>
      * @param qualifiedValues
      * @param unique
@@ -60,7 +61,7 @@ public final class ObjectModelUtils {
      */
     public static <T> List<T> toValues(Collection<QualifiedValue<? extends T>> qualifiedValues,
             boolean unique) {
-        List<T> values = new ArrayList<T>(qualifiedValues.size());
+        List<T> values = new ArrayList<>(qualifiedValues.size());
         for (QualifiedValue<? extends T> value : qualifiedValues) {
             if (unique) {
                 if (!values.contains(value.getValue())) {
@@ -82,7 +83,9 @@ public final class ObjectModelUtils {
     @SuppressWarnings("unchecked")
     public static <E extends Enum<?>> E getQualifier(QualifiedValue<?> value, Class<E> qualifierType) {
         for (Enum<?> qualifier : value.getQualifiers()) {
-            if (qualifierType.isInstance(qualifier)) { return (E)qualifier; }
+            if (qualifierType.isInstance(qualifier)) {
+                return (E) qualifier;
+            }
         }
         return null;
     }
@@ -103,14 +106,14 @@ public final class ObjectModelUtils {
      */
     public static List<QualifiedValue<? extends NamedPlace>> getQualifiedPlaces(
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        List<QualifiedValue<? extends NamedPlace>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends NamedPlace>>();
+        List<QualifiedValue<? extends NamedPlace>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PLACE, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_PLACE, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_BOX_PLACE, qualifiers));
         Collections.sort(result);
         return result;
     }
-    
+
     /**
      * @param record
      * @param qualifiers
@@ -118,7 +121,7 @@ public final class ObjectModelUtils {
      */
     public static List<QualifiedValue<? extends SpatialEntity>> getQualifiedSpatials(
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        List<QualifiedValue<? extends SpatialEntity>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends SpatialEntity>>();
+        List<QualifiedValue<? extends SpatialEntity>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PLACE, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_PLACE, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.GEO_BOX_PLACE, qualifiers));
@@ -126,7 +129,7 @@ public final class ObjectModelUtils {
         Collections.sort(result);
         return result;
     }
-    
+
     /**
      * @param record
      * @param qualifiers
@@ -136,6 +139,7 @@ public final class ObjectModelUtils {
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
         return toValues(getQualifiedSpatials(record, qualifiers), true);
     }
+
     /**
      * @param record
      * @param qualifiers
@@ -147,7 +151,7 @@ public final class ObjectModelUtils {
 
     /**
      * Returns parties that are creators or contributors, ordered
-     * 
+     *
      * @param record
      * @param qualifiers
      * @return places
@@ -158,14 +162,14 @@ public final class ObjectModelUtils {
 
     /**
      * Returns parties, ordered
-     * 
+     *
      * @param record
      * @param qualifiers
      * @return all kinds of parties onto record
      */
     public static List<QualifiedValue<? extends Party>> getQualifiedParties(
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        List<QualifiedValue<? extends Party>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends Party>>();
+        List<QualifiedValue<? extends Party>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERSON, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.MEETING, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.FAMILY, qualifiers));
@@ -177,25 +181,26 @@ public final class ObjectModelUtils {
 
     /**
      * Returns parties that are creators or contributors, ordered
-     * 
+     *
      * @param record
      * @param qualifiers
      * @return all kinds of parties onto record
      */
     public static List<QualifiedValue<? extends Party>> getQualifiedPartiesIntelectuallyResponsible(
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        List<QualifiedValue<? extends Party>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends Party>>();
+        List<QualifiedValue<? extends Party>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERSON, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.MEETING, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.FAMILY, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.ORGANIZATION, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PARTY, qualifiers));
         Collections.sort(result);
-        for(Iterator<QualifiedValue<? extends Party>> it=result.iterator(); it.hasNext();) {
+        for (Iterator<QualifiedValue<? extends Party>> it = result.iterator(); it.hasNext();) {
             QualifiedValue<? extends Party> p = it.next();
             PartyRelation pRel = p.getQualifier(PartyRelation.class);
-            if (!(pRel!=null && (pRel==PartyRelation.CREATOR || pRel==PartyRelation.CONTRIBUTOR))) 
+            if (!(pRel != null && (pRel == PartyRelation.CREATOR || pRel == PartyRelation.CONTRIBUTOR))) {
                 it.remove();
+            }
         }
         return result;
     }
@@ -211,14 +216,14 @@ public final class ObjectModelUtils {
 
     /**
      * Returns temporals, ordered
-     * 
+     *
      * @param record
      * @param qualifiers
      * @return all kinds of temporals onto record
      */
     public static List<QualifiedValue<? extends Temporal>> getQualifiedTemporals(
             MetaDataRecord<?> record, Enum<?>... qualifiers) {
-        List<QualifiedValue<? extends Temporal>> result = new ArrayList<MetaDataRecord.QualifiedValue<? extends Temporal>>();
+        List<QualifiedValue<? extends Temporal>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.INSTANT, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERIOD, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.TIME_TEXTUAL, qualifiers));
@@ -228,12 +233,12 @@ public final class ObjectModelUtils {
     }
 
     /**
-     * 
+     *
      * @param record
      * @return subject objects
      */
     public static List<QualifiedValue<?>> getSubjects(MetaDataRecord<?> record) {
-        List<QualifiedValue<?>> result = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
+        List<QualifiedValue<?>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.INSTANT,
                 TemporalRelation.SUBJECT));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERIOD,
@@ -262,12 +267,12 @@ public final class ObjectModelUtils {
     }
 
     /**
-     * 
+     *
      * @param record
      * @return description objects
      */
     public static List<QualifiedValue<?>> getDescriptions(MetaDataRecord<?> record) {
-        List<QualifiedValue<?>> result = new ArrayList<MetaDataRecord.QualifiedValue<?>>();
+        List<QualifiedValue<?>> result = new ArrayList<>();
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.TEXT, TextRelation.DESCRIPTION));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.TEXT, TextRelation.ABSTRACT));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.TEXT,
@@ -281,7 +286,7 @@ public final class ObjectModelUtils {
      * @return Id's of records
      */
     public static List<Long> getAuthorityParties(Party party) {
-        List<Long> result = new ArrayList<Long>();
+        List<Long> result = new ArrayList<>();
         for (Identifier id : party.getIdentifiers()) {
             if (id.getScope().equals(KnowledgeOrganizationSystem.TEL.toString())) {
                 result.add(Long.parseLong(id.getIdentifier()));
@@ -296,51 +301,55 @@ public final class ObjectModelUtils {
      */
     public static String displaySubject(QualifiedValue<?> subjectValue) {
         if (subjectValue.getValue() instanceof Temporal) {
-            Temporal temporal = (Temporal)subjectValue.getValue();
+            Temporal temporal = (Temporal) subjectValue.getValue();
 
             String subject = displaySubject(temporal.getSubject());
-            if (subject != null && !subject.isEmpty()) { return temporal.toString() + ", " +
-                                                                subject; }
+            if (subject != null && !subject.isEmpty()) {
+                return temporal.toString() + ", "
+                        + subject;
+            }
             return temporal.toString();
-
         } else if (subjectValue.getValue() instanceof Title) {
-            Title title = (Title)subjectValue.getValue();
-
+            Title title = (Title) subjectValue.getValue();
             String subject = displaySubject(title.getTitleSubject());
-            if (subject != null && !subject.isEmpty()) { return title.toString() + ", " + subject; }
+            if (subject != null && !subject.isEmpty()) {
+                return title.toString() + ", " + subject;
+            }
             return title.toString();
         } else if (subjectValue.getValue() instanceof Topic) {
-            Topic topic = (Topic)subjectValue.getValue();
+            Topic topic = (Topic) subjectValue.getValue();
             return displaySubject(topic);
-
         } else if (subjectValue.getValue() instanceof Party) {
-            Party party = (Party)subjectValue.getValue();
+            Party party = (Party) subjectValue.getValue();
 
             String subject = displaySubject(party.getSubject());
-            if (subject != null && !subject.isEmpty()) { return party.toString() + ", " + subject; }
+            if (subject != null && !subject.isEmpty()) {
+                return party.toString() + ", " + subject;
+            }
             return party.toString();
-
         } else if (subjectValue.getValue() instanceof SpatialEntity) {
-            SpatialEntity spatialEntity = (SpatialEntity)subjectValue.getValue();
-
+            SpatialEntity spatialEntity = (SpatialEntity) subjectValue.getValue();
             String subject = displaySubject(spatialEntity.getSubject());
-            if (subject != null && !subject.isEmpty()) { return spatialEntity.toString() + ", " +
-                                                                subject; }
+            if (subject != null && !subject.isEmpty()) {
+                return spatialEntity.toString() + ", "
+                        + subject;
+            }
             return spatialEntity.toString();
         }
         return "";
     }
 
     /**
-     * 
-     * @param subject
-     *            subject, may be null
+     *
+     * @param subject subject, may be null
      * @return display string, or null
      */
     public static String displaySubject(Subject subject) {
-        if (subject == null) { return null; }
+        if (subject == null) {
+            return null;
+        }
         if (subject instanceof TitleSubject) {
-            TitleSubject titleSubject = (TitleSubject)subject;
+            TitleSubject titleSubject = (TitleSubject) subject;
             return StringUtils.join(
                     filterEmpty(subject.getFormSubdivision(), subject.getGeneralSubdivision(),
                             subject.getChronologicalSubdivision(),
@@ -348,7 +357,7 @@ public final class ObjectModelUtils {
                             titleSubject.getMiscellaneousInformation()), ", ");
         }
         if (subject instanceof Topic) {
-            Topic topic = (Topic)subject;
+            Topic topic = (Topic) subject;
             return StringUtils.join(
                     filterEmpty(topic.getTopicName(), topic.getTopicDescription(),
                             topic.getSecondTopicTerm(), topic.getLocationOfEvent(),
@@ -372,7 +381,7 @@ public final class ObjectModelUtils {
         String publisher = StringUtils.join(getPlaces(record, SpatialRelation.PUBLICATION), ",");
 
         // publishers and times
-        List<Object> partiesAndTemporals = new ArrayList<Object>();
+        List<Object> partiesAndTemporals = new ArrayList<>();
         partiesAndTemporals.addAll(getParties(record, PartyRelation.PUBLISHER));
 
         List<Temporal> temporals = null;
@@ -412,21 +421,22 @@ public final class ObjectModelUtils {
                 publisher += ": " + parties;
             }
         } else {
-            if (parties.length() > 0) publisher = parties;
+            if (parties.length() > 0) {
+                publisher = parties;
+            }
         }
         return publisher;
     }
 
     /**
-     * @param qualifier
-     *            qualifier, or null
+     * @param qualifier qualifier, or null
      * @param locale
      * @return display name for qualifier, never null
      */
     public static String display(Enum<?> qualifier, Locale locale) {
-        return Translations.getTranslation("qualifier." +
-                                           (qualifier != null ? qualifier.toString().toLowerCase()
-                                                   : "unknown"), locale);
+        return Translations.getTranslation("qualifier."
+                + (qualifier != null ? qualifier.toString().toLowerCase()
+                : "unknown"), locale);
     }
 
     /**
@@ -435,7 +445,7 @@ public final class ObjectModelUtils {
      * @return the filtered list (no empty and null values)
      */
     public static <I> List<I> filterEmpty(I... values) {
-        List<I> result = new ArrayList<I>();
+        List<I> result = new ArrayList<>();
         for (I i : values) {
             if (i != null && !i.toString().isEmpty()) {
                 result.add(i);
@@ -444,22 +454,21 @@ public final class ObjectModelUtils {
 
         return result;
     }
-    
-    
+
     /**
      * Changes all links in the MDR to be served by the data portal
-     * 
+     *
      * @param mdr
      */
     public static void setupWebResourcesLinks(MetaDataRecord<?> mdr) {
         setupWebResourcesLinks("http://data.theeuropeanlibrary.org", null, mdr);
     }
-    
-    
+
     /**
-     * Changes the urls in Link objects to be served by redirection through the data portal. 
-     * This is necessary for the RDF representation of data in LOD and EDM.
-     * 
+     * Changes the urls in Link objects to be served by redirection through the
+     * data portal. This is necessary for the RDF representation of data in LOD
+     * and EDM.
+     *
      * @param baseUrl
      * @param source
      * @param mdr
@@ -471,16 +480,16 @@ public final class ObjectModelUtils {
                 LinkTarget.DIGITAL_OBJECT));
         catlinks.addAll(mdr.deleteValues(ObjectModelRegistry.LINK,
                 LinkTarget.THUMBNAIL));
-        
+
         for (int index = 0; index < catlinks.size(); index++) {
             mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
-                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-                                    source) ),
-                                    catlinks.get(index).getQualifier(LinkTarget.class));
+                    new Link(baseUrl + "/WebResource/" + mdr.getId()
+                            + "/" + index + "-" + getLinkHash(catlinks.get(index)) + (source == null ? "" : "?source="
+                            + source)),
+                    catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
-    
+
     /**
      * @param baseUrl
      * @param mdr
@@ -494,50 +503,53 @@ public final class ObjectModelUtils {
                 LinkTarget.THUMBNAIL));
         for (int index = 0; index < catlinks.size(); index++) {
             mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(baseUrl + "#webresource" + index  + getLinkHash(catlinks.get(index)) ),
+                    new Link(baseUrl + "#webresource" + index + getLinkHash(catlinks.get(index))),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
-    
+
     /**
-     * Creates a hash for a link. Used for the WebResources links in the data portal
-     * 
+     * Creates a hash for a link. Used for the WebResources links in the data
+     * portal
+     *
      * @param link
      * @return hash of link
      */
     public static String getLinkHash(QualifiedValue<Link> link) {
         return Integer.toHexString(link.getValue().getUrl().hashCode());
     }
-    
+
     /**
      * @param mdr
      * @return list of countries of publication
      */
     public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
-        List<Country> countries=new ArrayList<Country>();
-        
+        List<Country> countries = new ArrayList<Country>();
+
         List<QualifiedValue<SpatialEntity>> qualifiedValues = mdr.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, SpatialRelation.PUBLICATION);
-        for(QualifiedValue<SpatialEntity> spEntity: qualifiedValues) {
+        for (QualifiedValue<SpatialEntity> spEntity : qualifiedValues) {
             for (Identifier id : spEntity.getValue().getIdentifiers()) {
                 if (id.getScope() != null
                         && id.getScope().equals(
                                 SpatialIdentifierType.ISO3166.name())) {
-                    String code=null;
-                    if(id.getIdentifier().length()<=2)
-                        code=id.getIdentifier();
-                    else if(id.getIdentifier().length()>=5 && id.getIdentifier().charAt(2)=='-')
-                        code=id.getIdentifier().substring(3, 5);
-                    if(code!=null) {                 
+                    String code = null;
+                    if (id.getIdentifier().length() <= 2) {
+                        code = id.getIdentifier();
+                    } else if (id.getIdentifier().length() >= 5 && id.getIdentifier().charAt(2) == '-') {
+                        code = id.getIdentifier().substring(3, 5);
+                    }
+                    if (code != null) {
                         Country iso = Country.getByIso2(code);
-                        if(iso!=null && !countries.contains(iso))
+                        if (iso != null && !countries.contains(iso)) {
                             countries.add(iso);
+                        }
                         break;
                     }
                 }
-                
+
             }
         }
         return countries;
     }
-    
+
 }

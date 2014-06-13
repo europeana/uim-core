@@ -1,13 +1,12 @@
 /* Submission.java - created on Jul 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.uim.check.weblink.http;
 
+import eu.europeana.uim.guarded.GuardedQueue;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import org.theeuropeanlibrary.collections.guarded.GuardedQueue;
 
 import eu.europeana.uim.storage.StorageEngine;
 

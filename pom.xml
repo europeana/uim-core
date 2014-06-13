@@ -53,6 +53,7 @@
         <slf4j-api-version>1.7.6</slf4j-api-version>
         <slf4j-simple-version>1.6.1</slf4j-simple-version>
         <slf4j-jdk14-version>1.7.6</slf4j-jdk14-version>
+        <miredot-version>1.2</miredot-version>
 
         <!-- Hibernate dependencies Versions -->
         <hibernate-version>4.3.5.Final</hibernate-version>
@@ -107,9 +108,6 @@
             
         <!-- a version independent common module -->
         <module>common</module>
-                
-        <!-- other module -->
-        <module>other</module>
 
         <!-- the uim api module -->
         <module>api</module>
@@ -142,7 +140,7 @@
         <module>model</module>
 
         <!-- uim mongo implementation -->
-        <module>storage/mongo</module>
+        <!--<module>storage/mongo</module>-->
 
         <!-- database base logging -->
         <module>logging/database</module>
@@ -429,6 +427,12 @@
                 <groupId>net.sf.trove4j</groupId>
                 <artifactId>trove4j</artifactId>
                 <version>${trove4j-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qmino</groupId>
+                <artifactId>miredot-annotations</artifactId>
+                <version>${miredot-version}</version>
             </dependency>
 
             <dependency>

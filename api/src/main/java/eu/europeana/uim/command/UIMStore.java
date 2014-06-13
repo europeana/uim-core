@@ -316,7 +316,7 @@ public class UIMStore implements Action {
         }
 
         if (parent != null) {
-            Object id = storage.getUimId(Provider.class, parent);
+            Object id = storage.getUimId(parent);
             Provider pParent = storage.getProvider(id);
 
             if (pParent != null) {
@@ -344,7 +344,7 @@ public class UIMStore implements Action {
             return;
         }
 
-        Object id = storage.getUimId(Provider.class, argument0);
+        Object id = storage.getUimId(argument0);
         Provider provider = storage.getProvider(id);
 
         String method = "set" + StringUtils.capitalize(argument1);
@@ -400,7 +400,7 @@ public class UIMStore implements Action {
             return null;
         }
 
-        Object id = storage.getUimId(Provider.class, parent);
+        Object id = storage.getUimId(parent);
         Provider provider = storage.getProvider(id);
         if (provider == null) {
             out.println("Failed to create collection. Provider \"" + parent + "\" not found.");
@@ -423,7 +423,7 @@ public class UIMStore implements Action {
             return;
         }
         
-        Object id = storage.getUimId(Collection.class, argument0);
+        Object id = storage.getUimId(argument0);
         Collection collection = storage.getCollection(id);
 
         String method = "set" + StringUtils.capitalize(argument1);
@@ -460,7 +460,7 @@ public class UIMStore implements Action {
                 }
             }
         } else {
-            Object id = storage.getUimId(Provider.class, parent);
+            Object id = storage.getUimId(parent);
             Provider provider = storage.getProvider(id);
             out.println(provider.getMnemonic());
 

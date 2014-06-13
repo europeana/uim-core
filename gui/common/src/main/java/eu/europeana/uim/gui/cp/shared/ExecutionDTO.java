@@ -44,7 +44,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     private boolean                               canceled;
     private boolean                               paused;
 
-    private Map<String, String>                   values       = new HashMap<String, String>();
+    private Map<String, String>                   values       = new HashMap<>();
 
     /**
      * Creates a new instance of this class.

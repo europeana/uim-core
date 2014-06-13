@@ -24,7 +24,10 @@ import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
-import eu.europeana.uim.util.BatchWorkflowStart.Data;
+import eu.europeana.uim.util.CollectionBatchWorkflowStart.Data;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Tests {@link BatchWorkflowStart} using mocks of {@link UimDataSet}s and
@@ -43,56 +46,67 @@ public class BatchWorkflowStartTest {
     @SuppressWarnings({"rawtypes", "unchecked", "unused"})
     @Test
     public void testInitialization() throws StorageEngineException {
-        StorageEngine engine = mock(StorageEngineAdapter.class);
+        StorageEngine<Long> engine = mock(StorageEngineAdapter.class);
 
-        Provider provider = mock(Provider.class);
-        Collection collection = mock(Collection.class);
-        Request request = mock(Request.class);
+        Provider<Long> provider = mock(Provider.class);
+        Collection<Long> collection = mock(Collection.class);
+        Request<Long> request = mock(Request.class);
 
         Properties properties = new Properties();
         ActiveExecution execution = mock(ActiveExecution.class);
 
-        Long[] batches = new Long[]{1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L};
+        List<Long> ids = new ArrayList<>();
+        ids.add(1l);
+        ids.add(2l);
+        ids.add(3l);
+        ids.add(4l);
+        ids.add(5l);
+        ids.add(6l);
+        ids.add(7l);
+        ids.add(8l);
+        ids.add(9l);
+        ids.add(10l);
+        ids.add(11l);
 
         when(execution.getDataSet()).thenReturn(collection);
         when(execution.getStorageEngine()).thenReturn(engine);
         when(execution.getProperties()).thenReturn(properties);
 
-        when(engine.getByCollection((Collection) any())).thenReturn(batches);
-        when(engine.getByRequest((Request) any())).thenReturn(batches);
-
-        Data data = new BatchWorkflowStart.Data();
+        BatchWorkflowStart.Data data = new BatchWorkflowStart.Data();
         when(execution.getValue((TKey<?, Data>) any())).thenReturn(data);
 
-        BatchWorkflowStart.BATCH_SIZE = 3;
-        BatchWorkflowStart<Long> start = new BatchWorkflowStart<Long>();
+        BatchWorkflowStart.DEFAULT_BATCH_SIZE = 3;
+        BatchWorkflowStart<Long> start = new BatchWorkflowStart<>();
 
         assertEquals(5, start.getPreferredThreadCount());
         assertEquals(10, start.getMaximumThreadCount());
         assertEquals(5, start.getParameters().size());
 
+        when(engine.getMetaDataRecordIdsByCollection((Collection) any())).thenReturn(new LinkedBlockingQueue<>(ids));
         start.initialize(execution);
-        assertEquals(4, data.batches.size());
+        assertEquals(11, data.recordIds.size());
 
-        data.batches.clear();
+        data.recordIds.clear();
 
         when(execution.getDataSet()).thenReturn(request);
+        when(engine.getMetaDataRecordIdsByRequest((Request) any())).thenReturn(new LinkedBlockingQueue<>(ids));
         start.initialize(execution);
-        assertEquals(4, data.batches.size());
+        assertEquals(11, data.recordIds.size());
 
-        data.batches.clear();
+        data.recordIds.clear();
 
         MetaDataRecord record = new MetaDataRecordBean(1L, collection);
         when(execution.getDataSet()).thenReturn(record);
         start.initialize(execution);
-        assertEquals(1, data.batches.size());
+        assertEquals(1, data.recordIds.size());
 
-        data.batches.clear();
-
+        data.recordIds.clear();
+        
+        when(engine.getMetaDataRecordIdsByCollection((Collection) any())).thenReturn(new LinkedBlockingQueue<>(ids));
         when(execution.getDataSet()).thenReturn(collection);
         properties.setProperty(BatchWorkflowStart.BATCH_SUBSET_SHUFFLE, "5");
         start.initialize(execution);
-        assertEquals(2, data.batches.size());
+        assertEquals(5, data.recordIds.size());
 
         TaskCreator loader = start.createLoader(execution);
         loader.setQueue(new LinkedList<Task<MetaDataRecord<Long>, Long>>());

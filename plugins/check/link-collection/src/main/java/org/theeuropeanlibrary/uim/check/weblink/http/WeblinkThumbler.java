@@ -1,6 +1,7 @@
 /* LinkcheckServer.java - created on Jul 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.uim.check.weblink.http;
 
+import eu.europeana.uim.guarded.Guarded;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -13,7 +14,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.util.EntityUtils;
-import org.theeuropeanlibrary.collections.guarded.Guarded;
 
 /**
  * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the

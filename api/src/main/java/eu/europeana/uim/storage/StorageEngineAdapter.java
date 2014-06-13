@@ -13,7 +13,6 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.store.UimEntity;
 import eu.europeana.uim.workflow.Workflow;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -87,12 +86,12 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public BlockingQueue<I> getMetaDataRecordIdsByProvider(Provider<I> provider) throws StorageEngineException {
+    public BlockingQueue<I> getMetaDataRecordIdsByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException {
         return new LinkedBlockingQueue<>();
     }
 
     @Override
-    public BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByProvider(Provider<I> provider) throws StorageEngineException {
+    public BlockingQueue<MetaDataRecord<I>> getMetaDataRecordsByProvider(Provider<I> provider, boolean recursive) throws StorageEngineException {
         return new LinkedBlockingQueue<>();
     }
 
@@ -194,21 +193,26 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
     }
 
     @Override
-    public void updateMetaDataRecord(MetaDataRecord<I>... record) throws StorageEngineException {
+    public void updateMetaDataRecord(MetaDataRecord<I> record) throws StorageEngineException {
     }
 
     @Override
-    public List<MetaDataRecord<I>> getMetaDataRecords(I... ids) throws StorageEngineException {
+    public List<MetaDataRecord<I>> getMetaDataRecords(List<I> ids) throws StorageEngineException {
         return new ArrayList<>();
     }
-
+    
     @Override
-    public I getUimId(Class<? extends UimEntity> entityClass, String externalId) {
+    public MetaDataRecord<I> getMetaDataRecord(I id) throws StorageEngineException {
         return null;
     }
 
     @Override
-    public List<I> getUimIds(Class<? extends UimEntity> entityClass, String... externalId) {
+    public I getUimId(Object externalId) {
+        return null;
+    }
+
+    @Override
+    public List<I> getUimIds(Object... externalId) {
         return new ArrayList<>();
     }
 }

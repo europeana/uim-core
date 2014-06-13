@@ -10,6 +10,7 @@ import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import java.util.logging.Level;
 
 /**
  * Convenient utility functions to populate provider etc. from a properties file
@@ -43,7 +44,7 @@ public class SampleProperties {
      * @throws StorageEngineException
      * @throws IOException
      */
-    public void loadConfigData(StorageEngine<?> storage, InputStream stream)
+    public void loadConfigData(StorageEngine storage, InputStream stream)
             throws StorageEngineException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
@@ -65,23 +66,23 @@ public class SampleProperties {
                     }
                 } else if (split[0].startsWith("oai.provurl")) {
                     String[] arguments = split[1].split("\\|");
-                    Provider provider = storage.findProvider(arguments[0]);
+                    Object id = storage.getUimId(arguments[0]);
+                    Provider provider = storage.getProvider(id);
                     if (provider != null) {
                         provider.setOaiBaseUrl(arguments[1]);
                         storage.updateProvider(provider);
                     } else {
-                        log.warning("Failed to set provider oai url. Provider <" + arguments[0]
-                                + " not found.");
+                        log.log(Level.WARNING, "Failed to set provider oai url. Provider <{0} not found.", arguments[0]);
                     }
                 } else if (split[0].startsWith("oai.provprefix")) {
                     String[] arguments = split[1].split("\\|");
-                    Provider provider = storage.findProvider(arguments[0]);
+                    Object id = storage.getUimId(arguments[0]);
+                    Provider provider = storage.getProvider(id);
                     if (provider != null) {
                         provider.setOaiMetadataPrefix(arguments[1]);
                         storage.updateProvider(provider);
                     } else {
-                        log.warning("Failed to set provider oai prefix. Provider <" + arguments[0]
-                                + " not found.");
+                        log.log(Level.WARNING, "Failed to set provider oai prefix. Provider <{0} not found.", arguments[0]);
                     }
                 } else if (split[0].startsWith("collection")) {
                     String[] arguments = split[1].split("\\|");
@@ -89,33 +90,33 @@ public class SampleProperties {
                             arguments[2]);
                 } else if (split[0].startsWith("oai.collurl")) {
                     String[] arguments = split[1].split("\\|");
-                    Collection collection = storage.findCollection(arguments[0]);
+                    Object id = storage.getUimId(arguments[0]);
+                    Collection collection = storage.getCollection(id);
                     if (collection != null) {
                         collection.setOaiBaseUrl(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai url. Collection <"
-                                + arguments[0] + " not found.");
+                        log.log(Level.WARNING, "Failed to set collection oai url. Collection <{0} not found.", arguments[0]);
                     }
                 } else if (split[0].startsWith("oai.collprefix")) {
                     String[] arguments = split[1].split("\\|");
-                    Collection collection = storage.findCollection(arguments[0]);
+                    Object id = storage.getUimId(arguments[0]);
+                    Collection collection = storage.getCollection(id);
                     if (collection != null) {
                         collection.setOaiMetadataPrefix(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai prefix. Collection <"
-                                + arguments[0] + " not found.");
+                        log.log(Level.WARNING, "Failed to set collection oai prefix. Collection <{0} not found.", arguments[0]);
                     }
                 } else if (split[0].startsWith("oai.collset")) {
                     String[] arguments = split[1].split("\\|");
-                    Collection collection = storage.findCollection(arguments[0]);
+                    Object id = storage.getUimId(arguments[0]);
+                    Collection collection = storage.getCollection(id);
                     if (collection != null) {
                         collection.setOaiSet(arguments[1]);
                         storage.updateCollection(collection);
                     } else {
-                        log.warning("Failed to set collection oai set. Collection <"
-                                + arguments[0] + " not found.");
+                        log.log(Level.WARNING, "Failed to set collection oai set. Collection <{0} not found.", arguments[0]);
                     }
                 }
             }
@@ -123,11 +124,12 @@ public class SampleProperties {
         }
     }
 
-    private Collection<?> createCollection(StorageEngine<?> storage, String parent,
+    private Collection<?> createCollection(StorageEngine storage, String parent,
             String mnemonic, String name, String language) throws StorageEngineException {
-        Provider provider = storage.findProvider(parent);
+        Object id = storage.getUimId(parent);
+        Provider provider = storage.getProvider(id);
         if (provider == null) {
-            log.warning("Failed to create collection. Provider \"" + parent + "\" not found.");
+            log.log(Level.WARNING, "Failed to create collection. Provider \"{0}\" not found.", parent);
             return null;
         }
 
@@ -150,7 +152,8 @@ public class SampleProperties {
         }
 
         if (parent != null) {
-            Provider pParent = storage.findProvider(parent);
+            Object id = storage.getUimId(parent);
+            Provider pParent = storage.getProvider(id);
 
             if (pParent != null) {
                 provider.getRelatedIn().add(pParent);
@@ -159,7 +162,7 @@ public class SampleProperties {
                 storage.updateProvider(provider);
                 storage.updateProvider(pParent);
             } else {
-                log.warning("Failed to create provider. Parent <" + parent + "> not found.");
+                log.log(Level.WARNING, "Failed to create provider. Parent <{0}> not found.", parent);
 
             }
         } else {

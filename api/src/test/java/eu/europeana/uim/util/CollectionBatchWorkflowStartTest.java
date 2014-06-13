@@ -58,7 +58,7 @@ public class CollectionBatchWorkflowStartTest {
         Data data = new CollectionBatchWorkflowStart.Data();
         when(execution.getValue((TKey<?, Data>) any())).thenReturn(data);
 
-        CollectionBatchWorkflowStart<Long> start = new CollectionBatchWorkflowStart<Long>();
+        CollectionBatchWorkflowStart<Long> start = new CollectionBatchWorkflowStart<>();
 
         assertEquals(2, start.getPreferredThreadCount());
         assertEquals(4, start.getMaximumThreadCount());

@@ -1,0 +1,17 @@
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/model/SugarCrmField.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/QueryResultException.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarControlledVocabulary.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/ConnectionStatus.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/LoginFailureException.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/GenericSugarCrmException.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarCrmRecord.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/PollingListener.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/FileAttachmentException.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarCrmService.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarException.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/model/UpdatableField.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarCrmQuery.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/model/Datasets.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/model/RetrievableField.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/model/DatasetStates.java
+/home/markus/NetBeansProjects/uim-core/external/sugar/api/src/main/java/eu/europeana/uim/sugar/SugarService.java

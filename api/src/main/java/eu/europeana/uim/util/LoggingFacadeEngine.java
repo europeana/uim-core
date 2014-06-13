@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 import eu.europeana.uim.common.progress.MemoryProgressMonitor;
 import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.modules.extension.EdmLogging;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.plugin.Plugin;
 import eu.europeana.uim.store.Collection;
@@ -28,7 +29,7 @@ import eu.europeana.uim.workflow.Workflow;
  * @param <I>
  * @date Oct 24, 2011
  */
-public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements LoggingEngine<I> {
+public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements LoggingEngine<I>, EdmLogging<I> {
 
     private final Execution<I> execution;
     private final UimDataSet<I> dataset;
@@ -36,6 +37,8 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     private final Properties properties;
 
     private final LoggingEngine<I> delegateLoggingEngine;
+    private final EdmLogging<I> delegateEdmLoggingEngine;
+    
     private final ExecutionLogFileWriter<I> delegateLogFileWriter;
 
     /**
@@ -58,6 +61,11 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
         this.properties = properties;
         this.delegateLoggingEngine = delegateLoggingEngine;
         this.delegateLogFileWriter = delegateLogFileWriter;
+        if (delegateLoggingEngine instanceof EdmLogging) {
+            this.delegateEdmLoggingEngine = (EdmLogging) delegateLoggingEngine;
+        } else {
+            this.delegateEdmLoggingEngine = null;
+        }
     }
 
     @Override
@@ -307,13 +315,13 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
 
     @Override
     public void logEdmCheck(Execution<I> execution, String modul, String... message) {
-        delegateLoggingEngine.logEdmCheck(execution, modul, message);
+        delegateEdmLoggingEngine.logEdmCheck(execution, modul, message);
     }
 
     @Override
     public void logEdmCheck(Execution<I> execution, String modul, UimDataSet<I> mdr,
             String... message) {
-        delegateLoggingEngine.logEdmCheck(execution, modul, mdr, message);
+        delegateEdmLoggingEngine.logEdmCheck(execution, modul, mdr, message);
     }
 
     @Override
@@ -334,9 +342,9 @@ public class LoggingFacadeEngine<I> extends MemoryProgressMonitor implements Log
     }
 
     @Override
-    public List<eu.europeana.uim.logging.LoggingEngine.LogEntryEdmCheck> getEdmCheckLogs(
+    public List<eu.europeana.uim.logging.modules.extension.EdmLogging.LogEntryEdmCheck> getEdmCheckLogs(
             Execution<I> execution) {
-        return delegateLoggingEngine.getEdmCheckLogs(execution);
+        return delegateEdmLoggingEngine.getEdmCheckLogs(execution);
     }
 
     @Override

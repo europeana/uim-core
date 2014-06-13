@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import eu.europeana.uim.adapter.UimDatasetAdapter;
+import eu.europeana.uim.external.ExternalService;
 import eu.europeana.uim.logging.LoggingEngine;
 import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.plugin.Plugin;
@@ -191,4 +192,22 @@ public interface Registry {
      * none is registered
      */
     UimDatasetAdapter<?, ?> getUimDatasetAdapter(String pluginIdentifier);
+
+    /**
+     * @param service add external service to registration used to synchronize
+     * with external systems 
+     */
+    void addExternalService(ExternalService service);
+
+    /**
+     * @param service remove external service to registration used to synchronize
+     * with external systems 
+     */
+    void removeExternalService(ExternalService service);
+
+    /**
+     * @return external services to registration used to synchronize
+     * with external systems 
+     */
+    List<ExternalService> getExternalServices();
 }

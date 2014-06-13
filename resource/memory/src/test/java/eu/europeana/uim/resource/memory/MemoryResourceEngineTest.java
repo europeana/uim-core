@@ -13,7 +13,6 @@ import org.mockito.stubbing.Answer;
 
 import eu.europeana.uim.resource.AbstractResourceEngineTest;
 import eu.europeana.uim.resource.ResourceEngine;
-import eu.europeana.uim.resource.memory.MemoryResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.bean.CollectionBean;
@@ -22,18 +21,19 @@ import eu.europeana.uim.workflow.Workflow;
 
 /**
  * Implementation of test cases for memory based resource engine.
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date May 9, 2011
  */
 @RunWith(JUnit4.class)
 public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
+
     @Override
     protected ResourceEngine getResourceEngine() {
         return new MemoryResourceEngine();
     }
 
-    private static AtomicLong id = new AtomicLong();
+    private static final AtomicLong id = new AtomicLong();
 
     @Override
     protected Long nextID() {
@@ -57,17 +57,15 @@ public class MemoryResourceEngineTest extends AbstractResourceEngineTest<Long> {
 
     @Override
     public Provider<Long> testGenerateProvider() {
-        Provider<Long> provider = new ProviderBean<Long>(nextID());
+        Provider<Long> provider = new ProviderBean<>(nextID());
         provider.setMnemonic("pro");
-
         return provider;
     }
 
     @Override
     public Collection<Long> testGenerateCollection(Provider<Long> provider) {
-        Collection<Long> collection = new CollectionBean<Long>(nextID(), provider);
+        Collection<Long> collection = new CollectionBean<>(nextID(), provider);
         collection.setMnemonic("col");
-
         return collection;
     }
 }

@@ -1,7 +1,6 @@
 package eu.europeana.uim.storage.memory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.lang.ArrayUtils;
 
 import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ExecutionContext;
@@ -27,45 +24,41 @@ import eu.europeana.uim.store.bean.ExecutionBean;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
 import eu.europeana.uim.store.bean.ProviderBean;
 import eu.europeana.uim.store.bean.RequestBean;
+import eu.europeana.uim.workflow.Workflow;
 import gnu.trove.iterator.TLongLongIterator;
 import gnu.trove.iterator.TLongObjectIterator;
 import gnu.trove.map.hash.TLongLongHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * An in-memory implementation of the {@link StorageEngine} using Longs as IDs.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public class MemoryStorageEngine implements StorageEngine<Long> {
-    private static final String                      IDENTIFIER          = MemoryStorageEngine.class.getSimpleName();
+public final class MemoryStorageEngine implements StorageEngine<Long> {
 
-    private TLongObjectHashMap<Provider<Long>>       providers           = new TLongObjectHashMap<Provider<Long>>();
-    private TObjectLongHashMap<String>               providerMnemonics   = new TObjectLongHashMap<String>();
+    private static final String IDENTIFIER = MemoryStorageEngine.class.getSimpleName();
 
-    private TLongObjectHashMap<Collection<Long>>     collections         = new TLongObjectHashMap<Collection<Long>>();
-    private TObjectLongHashMap<String>               collectionMnemonics = new TObjectLongHashMap<String>();
+    private final Map<Object, Long> idsLookup = new HashMap<>();
+    private final AtomicLong uimIdGenerator = new AtomicLong();
 
-    private TLongObjectHashMap<Request<Long>>        requests            = new TLongObjectHashMap<Request<Long>>();
-    private TLongObjectHashMap<Execution<Long>>      executions          = new TLongObjectHashMap<Execution<Long>>();
+    private final TLongObjectHashMap<Provider<Long>> providers = new TLongObjectHashMap<>();
+    private final TLongObjectHashMap<Collection<Long>> collections = new TLongObjectHashMap<>();
+    private final TLongObjectHashMap<Request<Long>> requests = new TLongObjectHashMap<>();
+    private final TLongObjectHashMap<Execution<Long>> executions = new TLongObjectHashMap<>();
+    private final TLongObjectHashMap<MetaDataRecord<Long>> metadatas = new TLongObjectHashMap<>();
 
-    private Map<String, Long>                        mdrIdentifier       = new HashMap<String, Long>();
+    private final TLongObjectHashMap<List<Long>> metarequest = new TLongObjectHashMap<>();
+    private final TLongLongHashMap metacollection = new TLongLongHashMap();
+    private final TLongLongHashMap metaprovider = new TLongLongHashMap();
 
-    private TLongObjectHashMap<List<Long>>           metarequest         = new TLongObjectHashMap<List<Long>>();
-    private TLongLongHashMap                         metacollection      = new TLongLongHashMap();
-    private TLongLongHashMap                         metaprovider        = new TLongLongHashMap();
-    private TLongObjectHashMap<MetaDataRecord<Long>> metadatas           = new TLongObjectHashMap<MetaDataRecord<Long>>();
-
-    private AtomicLong                               providerId          = new AtomicLong();
-    private AtomicLong                               collectionId        = new AtomicLong();
-    private AtomicLong                               requestId           = new AtomicLong();
-    private AtomicLong                               executionId         = new AtomicLong();
-
-    private AtomicLong                               mdrId               = new AtomicLong();
-
-    private EngineStatus                             status              = EngineStatus.RUNNING;
+    private final EngineStatus status = EngineStatus.RUNNING;
 
     /**
      * Creates a new instance of this class.
@@ -77,6 +70,15 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
+    }
+
+    @Override
+    public void setConfiguration(Map<String, String> config) {
+    }
+
+    @Override
+    public Map<String, String> getConfiguration() {
+        return new HashMap<>();
     }
 
     @Override
@@ -92,20 +94,7 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public void completed(ExecutionContext<?, Long> context) {
-    }
-
-    @Override
     public void shutdown() {
-    }
-
-    @Override
-    public void setConfiguration(Map<String, String> config) {
-    }
-
-    @Override
-    public Map<String, String> getConfiguration() {
-        return new HashMap<String, String>();
     }
 
     @Override
@@ -114,35 +103,90 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public MetaDataRecord<Long> getMetaDataRecord(Long id) {
-        return metadatas.get(id);
+    public Long getUimId(Object externalId) {
+        return idsLookup.get(externalId);
     }
 
     @Override
-    public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> ids) {
-        List<MetaDataRecord<Long>> records = new ArrayList<MetaDataRecord<Long>>();
-        for (Long id : ids) {
-            records.add(metadatas.get(id));
+    public List<Long> getUimIds(Object... externalIds) {
+        List<Long> uimIds = new ArrayList<>();
+        for (Object externalId : externalIds) {
+            uimIds.add(getUimId(externalId));
         }
-        return records;
+        return uimIds;
     }
 
     @Override
     public Provider<Long> createProvider() {
-        return new ProviderBean<Long>(providerId.getAndIncrement());
+        return new ProviderBean<>();
     }
 
+//    private void setupUimId(UimEntity<Long> entity) throws StorageEngineException {
+//        Long uimId = getUimId(entity.getExternalIdentifiers());
+//        
+//        if (entity.getId() == null) {
+//            if (uimId != null) {
+//                throw new StorageEngineException(
+//                        "Provider is duplicated, please retrieve provider via id and update it!");
+//            }
+//            uimId = uimIdGenerator.getAndIncrement();
+//            entity.setId(uimId);
+//        }
+//        
+//        addUimIdMappings(uimId, entity.getExternalIdentifiers());
+//    }
+//    
+//        private Long getUimId(Set<Object> externalIdentifiers) throws StorageEngineException {
+//        Long uimId = null;
+//        for (Object provId : externalIdentifiers) {
+//            Long existId = idsLookup.get(provId);
+//            if (existId == null) {
+//                continue;
+//            }
+//
+//            if (uimId == null) {
+//                uimId = existId;
+//            } else if (!existId.equals(uimId)) {
+//                throw new StorageEngineException(
+//                        "Entity has contraticting ids attached to it!");
+//            }
+//        }
+//        return uimId;
+//    }
+//
+//    private void addUimIdMappings(Long uimId, Set<Object> externalIdentifiers) {
+//        for (Object externalIdentifier : externalIdentifiers) {
+//            idsLookup.put(externalIdentifier, uimId);
+//        }
+//    }
     @Override
     public void updateProvider(Provider<Long> provider) throws StorageEngineException {
-        if (provider.getMnemonic() == null) { throw new StorageEngineException(
-                "Cannot store provider without mnemonic/code."); }
-        if (providerMnemonics.containsKey(provider.getMnemonic())) {
-            Long pid = providerMnemonics.get(provider.getMnemonic());
-            if (pid != provider.getId()) { throw new StorageEngineException(
-                    "Cannot store provider duplicate mnemonic/code."); }
+        if (!(provider instanceof ProviderBean)) {
+            throw new StorageEngineException(
+                    "Cannot store this provider as this implementation does only support ProviderBean!");
         }
+        
+        if (provider.getMnemonic() == null) {
+            throw new StorageEngineException(
+                    "Cannot store provider without mnemonic/code.");
+        }
+
+        final String mnemonic = PROVIDER_PREFIX + provider.getMnemonic();
+        if (idsLookup.containsKey(mnemonic)) {
+            Long pid = idsLookup.get(mnemonic);
+            if (!Objects.equals(pid, provider.getId())) {
+                throw new StorageEngineException(
+                        "Cannot store provider duplicate mnemonic/code.");
+            }
+        }
+
+        if (provider.getId() == null) {
+            Long uimId = uimIdGenerator.getAndIncrement();
+            ((ProviderBean<Long>) provider).setId(uimId);
+            idsLookup.put(mnemonic, uimId);
+        }
+
         providers.put(provider.getId(), provider);
-        providerMnemonics.put(provider.getMnemonic(), provider.getId());
 
         for (Provider<Long> related : provider.getRelatedOut()) {
             if (!related.getRelatedIn().contains(provider)) {
@@ -157,8 +201,14 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public List<Provider<Long>> getAllProviders() {
-        ArrayList<Provider<Long>> result = new ArrayList<Provider<Long>>();
+    public Provider<Long> getProvider(Long id) {
+        Provider<Long> provider = providers.get(id);
+        return provider;
+    }
+
+    @Override
+    public BlockingQueue<Provider<Long>> getAllProviders() {
+        BlockingQueue<Provider<Long>> result = new LinkedBlockingQueue<>();
         TLongObjectIterator<Provider<Long>> iterator = providers.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
@@ -168,41 +218,109 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Provider<Long> getProvider(Long id) {
-        Provider<Long> provider = providers.get(id);
-        return provider;
+    public BlockingQueue<Long> getMetaDataRecordIdsByProvider(Provider<Long> provider, boolean recursive) {
+        List<Long> mdrIds = new ArrayList<>();
+
+        Set<Long> set = new HashSet<>();
+        if (recursive) {
+            getRecursive(provider, set);
+        } else {
+            set.add(provider.getId());
+        }
+
+        TLongLongIterator iterator = metaprovider.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (set.contains(iterator.value())) {
+                mdrIds.add(iterator.key());
+            }
+        }
+        Collections.sort(mdrIds);
+
+        return new LinkedBlockingQueue<>(mdrIds);
     }
 
     @Override
-    public Provider<Long> findProvider(String mnemonic) {
-        if (providerMnemonics.containsKey(mnemonic)) {
-            Long id = providerMnemonics.get(mnemonic);
-            return providers.get(id);
+    public BlockingQueue<MetaDataRecord<Long>> getMetaDataRecordsByProvider(Provider<Long> provider, boolean recursive) {
+        List<Long> mdrIds = new ArrayList<>();
+
+        Set<Long> set = new HashSet<>();
+        if (recursive) {
+            getRecursive(provider, set);
+        } else {
+            set.add(provider.getId());
         }
-        return null;
+
+        TLongLongIterator iterator = metaprovider.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (set.contains(iterator.value())) {
+                mdrIds.add(iterator.key());
+            }
+        }
+        Collections.sort(mdrIds);
+
+        BlockingQueue<MetaDataRecord<Long>> result = new LinkedBlockingQueue<>();
+        for (Long mdrId : mdrIds) {
+            result.add(metadatas.get(mdrId));
+        }
+        return result;
+    }
+
+    private void getRecursive(Provider<Long> provider, Set<Long> result) {
+        if (!result.contains(provider.getId())) {
+            result.add(provider.getId());
+            for (Provider<Long> related : provider.getRelatedOut()) {
+                getRecursive(related, result);
+            }
+        }
     }
 
     @Override
     public Collection<Long> createCollection(Provider<Long> provider) {
-        return new CollectionBean<Long>(collectionId.getAndIncrement(), provider);
+        CollectionBean<Long> coll = new CollectionBean<>();
+        coll.setProvider(provider);
+        return coll;
     }
 
     @Override
     public void updateCollection(Collection<Long> collection) throws StorageEngineException {
-        if (collection.getMnemonic() == null) { throw new StorageEngineException(
-                "Cannot store collection without mnemonic/code."); }
-        if (collectionMnemonics.containsKey(collection.getMnemonic())) {
-            Long pid = collectionMnemonics.get(collection.getMnemonic());
-            if (pid != collection.getId()) { throw new StorageEngineException(
-                    "Cannot store collection duplicate mnemonic/code."); }
+        if (!(collection instanceof CollectionBean)) {
+            throw new StorageEngineException(
+                    "Cannot store this collection as this implementation does only support CollectionBean!");
         }
+
+        if ( collection.getMnemonic() == null) {
+            throw new StorageEngineException(
+                    "Cannot store collection without mnemonic/code.");
+        }
+
+        final String mnemonic = COLLECITON_PREFIX + collection.getMnemonic();
+        if (idsLookup.containsKey(mnemonic)) {
+            Long pid = idsLookup.get(mnemonic);
+            if (!Objects.equals(pid, collection.getId())) {
+                throw new StorageEngineException(
+                        "Cannot store collection duplicate mnemonic/code.");
+            }
+        }
+
+        if (collection.getId() == null) {
+            Long uimId = uimIdGenerator.getAndIncrement();
+            ((CollectionBean<Long>) collection).setId(uimId);
+            idsLookup.put(mnemonic, uimId);
+        }
+
         collections.put(collection.getId(), collection);
-        collectionMnemonics.put(collection.getMnemonic(), collection.getId());
     }
 
     @Override
-    public List<Collection<Long>> getCollections(Provider<Long> provider) {
-        ArrayList<Collection<Long>> result = new ArrayList<Collection<Long>>();
+    public Collection<Long> getCollection(Long id) {
+        return collections.get(id);
+    }
+
+    @Override
+    public BlockingQueue<Collection<Long>> getCollections(Provider<Long> provider) {
+        BlockingQueue<Collection<Long>> result = new LinkedBlockingQueue<>();
         TLongObjectIterator<Collection<Long>> iterator = collections.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
@@ -215,8 +333,8 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public List<Collection<Long>> getAllCollections() {
-        ArrayList<Collection<Long>> result = new ArrayList<Collection<Long>>();
+    public BlockingQueue<Collection<Long>> getAllCollections() {
+        BlockingQueue<Collection<Long>> result = new LinkedBlockingQueue<>();
         TLongObjectIterator<Collection<Long>> iterator = collections.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
@@ -227,38 +345,76 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Collection<Long> getCollection(Long id) {
-        return collections.get(id);
-    }
-
-    @Override
-    public Collection<Long> findCollection(String mnemonic) {
-        if (collectionMnemonics.containsKey(mnemonic)) {
-            Long id = collectionMnemonics.get(mnemonic);
-            return collections.get(id);
-        }
-        return null;
-    }
-
-    @Override
-    public Request<Long> createRequest(Collection<Long> collection, Date date) {
-        TLongObjectIterator<Request<Long>> iterator = requests.iterator();
+    public BlockingQueue<Long> getMetaDataRecordIdsByCollection(Collection<Long> collection) {
+        List<Long> result = new ArrayList<>();
+        TLongLongIterator iterator = metacollection.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
-            Request<Long> candidate = iterator.value();
-            if (collection.equals(candidate.getCollection())) {
-                if (date.equals(candidate.getDate())) {
-                    String unique = "REQUEST/" + collection.getMnemonic() + "/" + date;
-                    throw new IllegalStateException("Duplicate unique key for request: <" + unique +
-                                                    ">");
-                }
+            if (iterator.value() == collection.getId()) {
+                result.add(iterator.key());
             }
         }
-        return new RequestBean<Long>(requestId.getAndIncrement(), collection, date);
+        Collections.sort(result);
+        return new LinkedBlockingQueue<>(result);
     }
 
     @Override
-    public void updateRequest(Request<Long> request) {
+    public BlockingQueue<MetaDataRecord<Long>> getMetaDataRecordsByCollection(Collection<Long> collection) {
+        List<Long> mdrIds = new ArrayList<>();
+        TLongLongIterator iterator = metacollection.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (iterator.value() == collection.getId()) {
+                mdrIds.add(iterator.key());
+            }
+        }
+        Collections.sort(mdrIds);
+
+        BlockingQueue<MetaDataRecord<Long>> result = new LinkedBlockingQueue<>();
+        for (Long mdrId : mdrIds) {
+            result.add(metadatas.get(mdrId));
+        }
+        return result;
+    }
+
+    @Override
+    public Request<Long> createRequest(Collection<Long> collection) throws StorageEngineException {
+        RequestBean<Long> request = new RequestBean<>();
+        request.setCollection(collection);
+        synchronized (this) {
+            request.setDate(new Date());
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                //ignore
+            }
+        }
+        return request;
+    }
+
+    @Override
+    public void updateRequest(Request<Long> request) throws StorageEngineException {
+        if (!(request instanceof RequestBean)) {
+            throw new StorageEngineException(
+                    "Cannot store this request as this implementation does only support RequestBean!");
+        }
+
+        String unique = REQUEST_PREFIX + request.getCollection().getMnemonic() + "/" + request.getDate().getTime();
+
+        if (idsLookup.containsKey(unique)) {
+            Long pid = idsLookup.get(unique);
+            if (!Objects.equals(pid, request.getId())) {
+                throw new StorageEngineException(
+                        "Cannot store request duplicate mnemonic/code.");
+            }
+        }
+
+        if (request.getId() == null) {
+            Long uimId = uimIdGenerator.getAndIncrement();
+            ((RequestBean<Long>) request).setId(uimId);
+            idsLookup.put(unique, uimId);
+        }
+
         requests.put(request.getId(), request);
     }
 
@@ -268,8 +424,8 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public List<Request<Long>> getRequests(Collection<Long> collection) {
-        ArrayList<Request<Long>> result = new ArrayList<Request<Long>>();
+    public BlockingQueue<Request<Long>> getRequests(Collection<Long> collection) {
+        BlockingQueue<Request<Long>> result = new LinkedBlockingDeque<>();
         TLongObjectIterator<Request<Long>> iterator = requests.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
@@ -282,45 +438,9 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public MetaDataRecord<Long> createMetaDataRecord(Collection<Long> collection, String identifier)
+    public BlockingQueue<Request<Long>> getRequests(MetaDataRecord<Long> record)
             throws StorageEngineException {
-        MetaDataRecordBean<Long> mdr;
-        Long id = mdrIdentifier.get(identifier);
-        if (id != null) {
-            mdr = new MetaDataRecordBean<Long>(id, collection);
-        } else {
-            mdr = new MetaDataRecordBean<Long>(mdrId.getAndIncrement(), collection);
-            synchronized (mdrIdentifier) {
-                mdrIdentifier.put(identifier, mdr.getId());
-            }
-        }
-        return mdr;
-    }
-
-    @Override
-    public void updateMetaDataRecord(MetaDataRecord<Long> record) {
-        synchronized (metadatas) {
-            metadatas.put(record.getId(), record);
-            metacollection.put(record.getId(),
-                    ((MetaDataRecordBean<Long>)record).getCollection().getId());
-            metaprovider.put(record.getId(),
-                    ((MetaDataRecordBean<Long>)record).getCollection().getProvider().getId());
-        }
-    }
-
-    @Override
-    public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
-            throws StorageEngineException {
-        if (!metarequest.contains(record.getId())) {
-            metarequest.put(record.getId(), new ArrayList<Long>());
-        }
-        metarequest.get(record.getId()).add(request.getId());
-    }
-
-    @Override
-    public List<Request<Long>> getRequests(MetaDataRecord<Long> record)
-            throws StorageEngineException {
-        List<Request<Long>> result = new ArrayList<Request<Long>>();
+        BlockingQueue<Request<Long>> result = new LinkedBlockingDeque<>();
         if (metarequest.contains(record.getId())) {
             List<Long> list = metarequest.get(record.getId());
             for (Long id : list) {
@@ -331,21 +451,76 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Execution<Long> createExecution(UimDataSet<Long> entity, String workflow) {
-        ExecutionBean<Long> execution = new ExecutionBean<Long>(executionId.getAndIncrement());
+    public BlockingQueue<Long> getMetaDataRecordIdsByRequest(Request<Long> request) {
+        List<Long> mdrIds = new ArrayList<>();
+        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (iterator.value().contains(request.getId())) {
+                mdrIds.add(iterator.key());
+            }
+        }
+        Collections.sort(mdrIds);
+
+        return new LinkedBlockingQueue<>(mdrIds);
+    }
+
+    @Override
+    public BlockingQueue<MetaDataRecord<Long>> getMetaDataRecordsByRequest(Request<Long> request) {
+        List<Long> mdrIds = new ArrayList<>();
+        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (iterator.value().contains(request.getId())) {
+                mdrIds.add(iterator.key());
+            }
+        }
+        Collections.sort(mdrIds);
+
+        BlockingQueue<MetaDataRecord<Long>> result = new LinkedBlockingQueue<>();
+        for (Long mdrId : mdrIds) {
+            result.add(metadatas.get(mdrId));
+        }
+        return result;
+    }
+
+    @Override
+    public Execution<Long> createExecution(UimDataSet<Long> entity, Workflow workflow) {
+        ExecutionBean<Long> execution = new ExecutionBean<>();
         execution.setDataSet(entity);
-        execution.setWorkflow(workflow);
+        execution.setWorkflow(workflow.getIdentifier());
         return execution;
     }
 
     @Override
-    public void updateExecution(Execution<Long> execution) {
+    public void updateExecution(Execution<Long> execution) throws StorageEngineException {
+        if (!(execution instanceof ExecutionBean)) {
+            throw new StorageEngineException(
+                    "Cannot store this execution as this implementation does only support ExecutionBean!");
+        }
+
+        String unique = EXECUTION_PREFIX + execution.getWorkflow() + "/" + execution.getDataSet().getId() + "/" + execution.getStartTime();
+
+        if (idsLookup.containsKey(unique)) {
+            Long pid = idsLookup.get(unique);
+            if (!Objects.equals(pid, execution.getId())) {
+                throw new StorageEngineException(
+                        "Cannot store request duplicate identifier.");
+            }
+        }
+
+        if (execution.getId() == null) {
+            Long uimId = uimIdGenerator.getAndIncrement();
+            ((ExecutionBean<Long>) execution).setId(uimId);
+            idsLookup.put(unique, uimId);
+        }
+
         executions.put(execution.getId(), execution);
     }
 
     @Override
-    public List<Execution<Long>> getAllExecutions() {
-        ArrayList<Execution<Long>> result = new ArrayList<Execution<Long>>();
+    public BlockingQueue<Execution<Long>> getAllExecutions() {
+        BlockingQueue<Execution<Long>> result = new LinkedBlockingQueue<>();
         TLongObjectIterator<Execution<Long>> iterator = executions.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
@@ -360,116 +535,73 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     }
 
     @Override
-    public Long[] getByRequest(Request<Long> request) {
-        List<Long> result = new ArrayList<Long>();
-        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value().contains(request.getId())) {
-                result.add(iterator.key());
-            }
-        }
-
-        Long[] ids = result.toArray(new Long[result.size()]);
-        Arrays.sort(ids);
-        return ids;
+    public void completed(ExecutionContext<?, Long> context) {
     }
 
     @Override
-    public Long[] getByCollection(Collection<Long> collection) {
-        List<Long> result = new ArrayList<Long>();
-        TLongLongIterator iterator = metacollection.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value() == collection.getId()) {
-                result.add(iterator.key());
-            }
-        }
-
-        Long[] ids = result.toArray(new Long[result.size()]);
-        Arrays.sort(ids);
-        return ids;
+    public MetaDataRecord<Long> createMetaDataRecord(Collection<Long> collection)
+            throws StorageEngineException {
+        MetaDataRecordBean<Long> mdr = new MetaDataRecordBean<>();
+        mdr.setCollection(collection);
+        return mdr;
     }
 
     @Override
-    public Long[] getByProvider(Provider<Long> provider, boolean recursive) {
-        List<Long> result = new ArrayList<Long>();
-
-        Set<Long> set = new HashSet<Long>();
-        if (recursive) {
-            getRecursive(provider, set);
-        } else {
-            set.add(provider.getId());
+    public void updateMetaDataRecord(MetaDataRecord<Long> record) throws StorageEngineException {
+        if (!(record instanceof MetaDataRecordBean)) {
+            throw new StorageEngineException(
+                    "Cannot store this record as this implementation does only support MetaDataRecordBean!");
         }
 
-        TLongLongIterator iterator = metaprovider.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (set.contains(iterator.value())) {
-                result.add(iterator.key());
+        if ( record.getUniqueId() == null) {
+            throw new StorageEngineException(
+                    "Cannot store record without identifier.");
+        }
+
+        final String uniqueId = RECORD_PREFIX + record.getUniqueId();
+        if (idsLookup.containsKey(uniqueId)) {
+            Long pid = idsLookup.get(uniqueId);
+            if (!Objects.equals(pid, record.getId())) {
+                throw new StorageEngineException(
+                        "Cannot store record duplicate identifier.");
             }
         }
 
-        Long[] ids = result.toArray(new Long[result.size()]);
-        Arrays.sort(ids);
-        return ids;
-    }
-
-    private void getRecursive(Provider<Long> provider, Set<Long> result) {
-        if (!result.contains(provider.getId())) {
-            result.add(provider.getId());
-            for (Provider<Long> related : provider.getRelatedOut()) {
-                getRecursive(related, result);
-            }
+        if (record.getId() == null) {
+            Long uimId = uimIdGenerator.getAndIncrement();
+            ((MetaDataRecordBean<Long>) record).setId(uimId);
+            idsLookup.put(uniqueId, uimId);
+        }
+        
+        synchronized (metadatas) {
+            metadatas.put(record.getId(), record);
+            metacollection.put(record.getId(),
+                    ((MetaDataRecordBean<Long>) record).getCollection().getId());
+            metaprovider.put(record.getId(),
+                    ((MetaDataRecordBean<Long>) record).getCollection().getProvider().getId());
         }
     }
 
     @Override
-    public Long[] getAllIds() {
-        return ArrayUtils.toObject(metadatas.keys());
-    }
-
-    @Override
-    public int getTotalByRequest(Request<Long> request) {
-        int result = 0;
-        TLongObjectIterator<List<Long>> iterator = metarequest.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value().contains(request.getId())) {
-                result++;
-            }
+    public void addRequestRecord(Request<Long> request, MetaDataRecord<Long> record)
+            throws StorageEngineException {
+        if (!metarequest.contains(record.getId())) {
+            metarequest.put(record.getId(), new ArrayList<Long>());
         }
-        return result;
+        metarequest.get(record.getId()).add(request.getId());
     }
 
     @Override
-    public int getTotalByCollection(Collection<Long> collection) {
-        int result = 0;
-        TLongLongIterator iterator = metacollection.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value() == collection.getId()) {
-                result++;
-            }
+    public MetaDataRecord<Long> getMetaDataRecord(Long id) {
+        return metadatas.get(id);
+    }
+
+    @Override
+    public List<MetaDataRecord<Long>> getMetaDataRecords(List<Long> ids) {
+        List<MetaDataRecord<Long>> records = new ArrayList<>();
+        for (Long id : ids) {
+            records.add(metadatas.get(id));
         }
-        return result;
-    }
-
-    @Override
-    public int getTotalByProvider(Provider<Long> provider, boolean recursive) {
-        int result = 0;
-        TLongLongIterator iterator = metaprovider.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value() == provider.getId()) {
-                result++;
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public int getTotalForAllIds() {
-        return metadatas.size();
+        return records;
     }
 }

@@ -13,13 +13,15 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 /**
- * Function class holding a {@link HttpClient} together with creation and guarded queue.
- * 
+ * Function class holding a {@link HttpClient} together with creation and
+ * guarded queue.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 20, 2011
  */
 public class HttpClientSetup {
-    private static HttpClient                  client;
+
+    private static HttpClient client;
     private static ThreadSafeClientConnManager manager;
 
     /**
@@ -53,7 +55,6 @@ public class HttpClientSetup {
         HttpConnectionParams.setConnectionTimeout(parameters, 10000);
         HttpConnectionParams.setSoTimeout(parameters, 10000);
 
-        
         HttpClient client = new DefaultHttpClient(manager, parameters);
 
         // Configure how we want the method to act.
