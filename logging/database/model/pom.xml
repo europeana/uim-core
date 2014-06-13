@@ -16,7 +16,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -29,19 +29,20 @@
                     <components>
                         <component>
                             <name>hbm2dao</name>
-                            <implementation>annotationconfiguration</implementation>
+                            <!--<implementation>annotationconfiguration</implementation>-->
                             <outputDirectory>target/source/java</outputDirectory>
                         </component>
                         <component>
                             <name>hbm2ddl</name>
-                            <implementation>annotationconfiguration</implementation>
+                            <!--<implementation>annotationconfiguration</implementation>-->
                             <outputDirectory>target/source/sql</outputDirectory>
                         </component>
                     </components>
                     <componentProperties>
                         <template>daohome.ftl</template>
-                        <templatepath>${basedir}/src/main/code/template</templatepath>
+                        <templatepath>src/main/code/template</templatepath>
                         <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
+                         <implementation>annotationconfiguration</implementation>
                         <ejb3>false</ejb3>
                         <jdk5>true</jdk5>
                         <drop>true</drop>
@@ -116,7 +117,7 @@
                                     <pluginExecutionFilter>
                                         <groupId>org.codehaus.mojo</groupId>
                                         <artifactId>hibernate3-maven-plugin</artifactId>
-                                        <versionRange>2.1</versionRange>
+                                        <versionRange>2.2</versionRange>
                                         <goals>
                                             <goal>hbm2dao</goal>
                                         </goals>
