@@ -16,7 +16,15 @@ import org.springframework.stereotype.Component;
 import com.qmino.miredot.annotations.ReturnType;
 
 import eu.europeana.uim.Registry;
-import java.util.List;
+import eu.europeana.uim.orchestration.ActiveExecution;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.store.Collection;
+import eu.europeana.uim.workflow.Workflow;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * REST interface for starting, stopping, retrieving etc. of executions.
@@ -42,13 +50,54 @@ public class ExecutionResource {
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response startExecution(@QueryParam(UimParamConstants.WORKFLOW) String workflow, @QueryParam(UimParamConstants.DATASET_ID) String datasetId,
-            @QueryParam(UimParamConstants.NAME) String name, @QueryParam(UimParamConstants.PARAMETER) List<String> parameters) {
-//            throws DatabaseConnectionException, RecordExistsException, ProviderDoesNotExistException,
-//            RecordDatasetEmptyException, CloudIdDoesNotExistException 
-//
-//        return localId != null ? Response.ok().entity(uniqueIdentifierService.createCloudId(providerId, localId))
-//                .build() : Response.ok().entity(uniqueIdentifierService.createCloudId(providerId)).build();
-        return null;
+            @QueryParam(UimParamConstants.NAME) String name, @QueryParam(UimParamConstants.PARAMETER) Map<String, String[]> parameters) throws StorageEngineException {
+        StorageEngine<Serializable> storage = (StorageEngine<Serializable>) registry.getStorageEngine();
+        if (storage == null) {
+            throw new StorageEngineException("Storage engine has not been configured!");
+        }
+
+        Collection<Serializable> coll = storage.getCollection(datasetId);
+        if (coll == null) {
+            throw new StorageEngineException("Storage doesn't know element with dataset '" + datasetId + "' with id '" + datasetId + "'!");
+        }
+
+        Workflow wf = registry.getWorkflow(
+                workflow);
+
+        Orchestrator<Serializable> orchestrator = (Orchestrator<Serializable>) registry.getOrchestrator();
+
+        ActiveExecution<?, Serializable> ae;
+        if (parameters != null) {
+            Properties properties = prepareProperties(parameters);
+            ae = orchestrator.executeWorkflow(wf, coll, properties);
+        } else {
+            ae = orchestrator.executeWorkflow(wf, coll);
+        }
+
+        if (name != null) {
+            ae.getExecution().setName(name);
+        }
+        return Response.ok().entity(ae != null).build();
+    }
+
+    private Properties prepareProperties(Map<String, String[]> parameters) {
+        Properties properties = new Properties();
+        for (Map.Entry<String, String[]> parameter : parameters.entrySet()) {
+            if (parameter.getValue() != null) {
+                if (parameter.getValue().length > 1) {
+                    StringBuilder b = new StringBuilder();
+                    for (String val : parameter.getValue()) {
+                        b.append(val);
+                        b.append(",");
+                    }
+                    b.deleteCharAt(b.length() - 1);
+                    properties.put(parameter.getKey(), b.toString());
+                } else if (parameter.getValue().length == 1) {
+                    properties.put(parameter.getKey(), parameter.getValue()[0]);
+                }
+            }
+        }
+        return properties;
     }
 
     @GET

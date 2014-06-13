@@ -10,41 +10,42 @@ import com.google.gwt.view.client.ProvidesKey;
 
 /**
  * Execution data Serializable used in GWT for visualization.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Apr 28, 2011
  */
 public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
+
     /**
      * The key provider that provides the unique ID of a contact.
      */
     public static final ProvidesKey<ExecutionDTO> KEY_PROVIDER = new ProvidesKey<ExecutionDTO>() {
-                                                                   @Override
-                                                                   public Serializable getKey(
-                                                                           ExecutionDTO item) {
-                                                                       return item == null ? null
-                                                                               : item.getId();
-                                                                   }
-                                                               };
+        @Override
+        public Serializable getKey(
+                ExecutionDTO item) {
+            return item == null ? null
+                    : item.getId();
+        }
+    };
 
-    private Serializable                                id;
-    private String                                name;
-    private String                                workflow;
-    private String                                dataset;
+    private Serializable id;
+    private String name;
+    private String workflow;
+    private String dataset;
 
-    private ProgressDTO                           progress;
+    private ProgressDTO progress;
 
-    private int                                   scheduled;
-    private int                                   completed;
-    private int                                   failure;
+    private int scheduled;
+    private int completed;
+    private int failure;
 
-    private boolean                               isActive;
-    private Date                                  startTime;
-    private Date                                  endTime;
-    private boolean                               canceled;
-    private boolean                               paused;
+    private boolean isActive;
+    private Date startTime;
+    private Date endTime;
+    private boolean canceled;
+    private boolean paused;
 
-    private Map<String, String>                   values       = new HashMap<>();
+    private final Map<String, String> values = new HashMap<>();
 
     /**
      * Creates a new instance of this class.
@@ -54,7 +55,7 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param id
      */
     public ExecutionDTO(Serializable id) {
@@ -252,8 +253,9 @@ public class ExecutionDTO implements IsSerializable, Comparable<ExecutionDTO> {
     }
 
     /**
-     * Stores a generic value. USed e.g. to transport status of the reports for this execution
-     * 
+     * Stores a generic value. USed e.g. to transport status of the reports for
+     * this execution
+     *
      * @param key
      * @param value
      */

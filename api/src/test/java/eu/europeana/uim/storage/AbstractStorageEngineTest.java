@@ -128,7 +128,7 @@ public abstract class AbstractStorageEngineTest<I> {
         provider1.setName("French National Library");
         engine.updateProvider(provider1);
 
-        I id = engine.getUimId(IdentifierStorageEngine.PROVIDER_PREFIX + "TEL");
+        I id = engine.getUimId(IdentifierStorageEngine.DatasetPrefix.PROVIDER + IdentifierStorageEngine.SEPARATOR + "TEL");
         Provider<I> provider2 = engine.getProvider(id);
         assertEquals(provider2.getMnemonic(), provider0.getMnemonic());
         assertEquals(provider2.getName(), provider0.getName());
@@ -345,7 +345,7 @@ public abstract class AbstractStorageEngineTest<I> {
         collection2.setName("TEL's collection 003");
         engine.updateCollection(collection2);
 
-        I id = engine.getUimId(IdentifierStorageEngine.COLLECITON_PREFIX + "a0002");
+        I id = engine.getUimId(IdentifierStorageEngine.DatasetPrefix.COLLECTION + IdentifierStorageEngine.SEPARATOR + "a0002");
         Collection<I> collection3 = engine.getCollection(id);
         assertEquals(collection3.getMnemonic(), collection1.getMnemonic());
         assertEquals(collection3.getName(), collection1.getName());

@@ -13,11 +13,16 @@ import java.util.List;
  */
 public interface IdentifierStorageEngine<I> {
 
-    public static final String PROVIDER_PREFIX = "PROVIDER/";
-    public static final String COLLECITON_PREFIX = "COLLECTION/";
-    public static final String REQUEST_PREFIX = "REQUEST/";
-    public static final String EXECUTION_PREFIX = "EXECUTION/";
-    public static final String RECORD_PREFIX = "MDR/";
+    public enum DatasetPrefix {
+
+        PROVIDER,
+        COLLECTION,
+        REQUEST,
+        MDR,
+        EXECUTION
+    }
+
+    public static final String SEPARATOR = "/";
 
 //    /**
 //     * @param external ids

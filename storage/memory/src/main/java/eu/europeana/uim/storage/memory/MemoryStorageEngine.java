@@ -13,6 +13,7 @@ import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.modules.IdentifierStorageEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -171,7 +172,7 @@ public final class MemoryStorageEngine implements StorageEngine<Long> {
                     "Cannot store provider without mnemonic/code.");
         }
 
-        final String mnemonic = PROVIDER_PREFIX + provider.getMnemonic();
+        final String mnemonic = IdentifierStorageEngine.DatasetPrefix.PROVIDER + IdentifierStorageEngine.SEPARATOR + provider.getMnemonic();
         if (idsLookup.containsKey(mnemonic)) {
             Long pid = idsLookup.get(mnemonic);
             if (!Objects.equals(pid, provider.getId())) {
@@ -295,7 +296,7 @@ public final class MemoryStorageEngine implements StorageEngine<Long> {
                     "Cannot store collection without mnemonic/code.");
         }
 
-        final String mnemonic = COLLECITON_PREFIX + collection.getMnemonic();
+        final String mnemonic = IdentifierStorageEngine.DatasetPrefix.COLLECTION + IdentifierStorageEngine.SEPARATOR + collection.getMnemonic();
         if (idsLookup.containsKey(mnemonic)) {
             Long pid = idsLookup.get(mnemonic);
             if (!Objects.equals(pid, collection.getId())) {
@@ -399,7 +400,7 @@ public final class MemoryStorageEngine implements StorageEngine<Long> {
                     "Cannot store this request as this implementation does only support RequestBean!");
         }
 
-        String unique = REQUEST_PREFIX + request.getCollection().getMnemonic() + "/" + request.getDate().getTime();
+        String unique = IdentifierStorageEngine.DatasetPrefix.REQUEST + IdentifierStorageEngine.SEPARATOR + request.getCollection().getMnemonic() + "/" + request.getDate().getTime();
 
         if (idsLookup.containsKey(unique)) {
             Long pid = idsLookup.get(unique);
@@ -499,7 +500,7 @@ public final class MemoryStorageEngine implements StorageEngine<Long> {
                     "Cannot store this execution as this implementation does only support ExecutionBean!");
         }
 
-        String unique = EXECUTION_PREFIX + execution.getWorkflow() + "/" + execution.getDataSet().getId() + "/" + execution.getStartTime();
+        String unique = IdentifierStorageEngine.DatasetPrefix.EXECUTION + IdentifierStorageEngine.SEPARATOR + execution.getWorkflow() + "/" + execution.getDataSet().getId() + "/" + execution.getStartTime();
 
         if (idsLookup.containsKey(unique)) {
             Long pid = idsLookup.get(unique);
@@ -558,7 +559,7 @@ public final class MemoryStorageEngine implements StorageEngine<Long> {
                     "Cannot store record without identifier.");
         }
 
-        final String uniqueId = RECORD_PREFIX + record.getUniqueId();
+        final String uniqueId = IdentifierStorageEngine.DatasetPrefix.MDR + IdentifierStorageEngine.SEPARATOR + record.getUniqueId();
         if (idsLookup.containsKey(uniqueId)) {
             Long pid = idsLookup.get(uniqueId);
             if (!Objects.equals(pid, record.getId())) {
