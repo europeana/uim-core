@@ -16,8 +16,8 @@ import eu.europeana.uim.storage.memory.MemoryStorageEngine;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.soap.client.PropertiesSugarMapping;
 import eu.europeana.uim.sugar.soap.client.SugarClient;
-import eu.europeana.uim.sugar.soap.client.SugarSoapClientImpl;
-import eu.europeana.uim.sugar.soap.SugarServiceImpl;
+import eu.europeana.uim.sugar.soap.client.SoapSugarClient;
+import eu.europeana.uim.sugar.soap.SoapSugarService;
 import eu.europeana.uim.sugar.servlet.SugarServlet;
 import eu.europeana.uim.sugar.soap.impl.SugarServiceImplTest;
 
@@ -33,7 +33,7 @@ public class SugarServletTest {
     private static Properties       properties;
 
     private static SugarClient      client;
-    private static SugarServiceImpl service;
+    private static SoapSugarService service;
 
     /**
      * Setup of the connection manager
@@ -63,10 +63,10 @@ public class SugarServletTest {
         String contactModul = properties.getProperty("sugar.contact");
         String collectionTranslationModul=properties.getProperty("sugar.collectiontranslation");
 
-        client = new SugarSoapClientImpl(endpoint, username, password, providerModul,
+        client = new SoapSugarClient(endpoint, username, password, providerModul,
                 providerMnemonic, collectionModul, collectionMnemonic, contactModul,collectionTranslationModul);
 
-        service = new SugarServiceImpl(client, new PropertiesSugarMapping(properties));
+        service = new SoapSugarService(client, new PropertiesSugarMapping(properties));
     }
 
     /**

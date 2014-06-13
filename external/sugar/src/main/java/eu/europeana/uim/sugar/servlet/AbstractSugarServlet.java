@@ -140,7 +140,8 @@ public abstract class AbstractSugarServlet extends HttpServlet {
     private void asynchUpdate(HttpServletResponse resp, final String action, final String type,
             final String id) throws ServletException {
 
-        Runnable async = new Runnable() {
+        Runnable async;
+        async = new Runnable() {
             @Override
             public void run() {
                 if ("update".equals(action)) {

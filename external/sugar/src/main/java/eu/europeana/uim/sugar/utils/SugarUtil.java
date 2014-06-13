@@ -8,8 +8,8 @@ import org.theeuropeanlibrary.model.common.qualifier.Country;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
 
 /**
- * 
- * 
+ * Utitilities function for sugar crm fields.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 4, 2012
  */
@@ -17,9 +17,8 @@ public class SugarUtil {
 
     /**
      * generate a MD5 checksum of a string encoded in a hex string.
-     * 
-     * @param message
-     *            the message( the password) to be encoded
+     *
+     * @param message the message( the password) to be encoded
      * @return hex string of the checksum
      */
     public static String generateMD5HexString(String message) {
@@ -33,7 +32,7 @@ public class SugarUtil {
 
         messageDiget.update(message.getBytes());
         byte[] digestBytes = messageDiget.digest();
-        StringBuffer hexString = new StringBuffer();
+        StringBuilder hexString = new StringBuilder();
         for (int i = 0; i < digestBytes.length; i++) {
 
             String hex = Integer.toHexString(0xFF & digestBytes[i]);
@@ -45,16 +44,16 @@ public class SugarUtil {
         return hexString.toString();
     }
 
-    
     /**
      * Converts the SugarCrm language field content to simple Iso3 code.
-     * 
-     * @param code
-     *            the full field entry from SugarCRM
+     *
+     * @param code the full field entry from SugarCRM
      * @return the Iso3 code, "und" if not known
      */
     public static Language normalizeSugarLanguage(String code) {
-        if (code == null || code.isEmpty()) return Language.UND;
+        if (code == null || code.isEmpty()) {
+            return Language.UND;
+        }
         String[] split = code.split("-", 2);
         String isocode = split[0].trim();
 
@@ -73,13 +72,14 @@ public class SugarUtil {
 
     /**
      * Converts the SugarCrm language field content to simple Iso3 code.
-     * 
-     * @param code
-     *            the full field entry from SugarCRM
+     *
+     * @param code the full field entry from SugarCRM
      * @return the Iso3 code, "und" if not known
      */
     public static Country normalizeSugarCountry(String code) {
-        if (code == null || code.isEmpty()) return Country.XX;
+        if (code == null || code.isEmpty()) {
+            return Country.XX;
+        }
         String[] split = code.split("-", 2);
         String isocode = split[0].trim();
 

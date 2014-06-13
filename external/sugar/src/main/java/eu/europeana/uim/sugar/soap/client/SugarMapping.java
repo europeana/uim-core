@@ -4,14 +4,14 @@ package eu.europeana.uim.sugar.soap.client;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 
-
 /**
- * 
- * 
+ * Interface to define provider and collection fields.
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 5, 2012
  */
 public interface SugarMapping {
+
     /**
      * @return the retrievable fields for providers
      */

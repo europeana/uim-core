@@ -24,6 +24,7 @@ import eu.europeana.uim.sugar.soap.client.SugarMapping;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 import eu.europeana.uim.sugar.utils.SugarUtil;
+import java.util.logging.Level;
 
 /**
  * TEL specific implementation of the SugarCRM service
@@ -31,8 +32,8 @@ import eu.europeana.uim.sugar.utils.SugarUtil;
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 15, 2011
  */
-public class SugarServiceImpl implements SugarService {
-    private static final Logger log           = Logger.getLogger(SugarServiceImpl.class.getName());
+public final class SoapSugarService implements SugarService {
+    private static final Logger log           = Logger.getLogger(SoapSugarService.class.getName());
 
     private Date                sessionCreate = null;
     private String              sessionID     = null;
@@ -46,7 +47,7 @@ public class SugarServiceImpl implements SugarService {
      * Creates a new instance of this class.
      * 
      */
-    public SugarServiceImpl() {
+    public SoapSugarService() {
     }
 
     /**
@@ -54,7 +55,7 @@ public class SugarServiceImpl implements SugarService {
      * 
      * @param client
      */
-    public SugarServiceImpl(SugarClient client) {
+    public SoapSugarService(SugarClient client) {
         this.setSugarClient(client);
     }
 
@@ -64,7 +65,7 @@ public class SugarServiceImpl implements SugarService {
      * @param client
      * @param mapping
      */
-    public SugarServiceImpl(SugarClient client, SugarMapping mapping) {
+    public SoapSugarService(SugarClient client, SugarMapping mapping) {
         this.setSugarClient(client);
         this.setSugarMapping(mapping);
     }
@@ -103,14 +104,13 @@ public class SugarServiceImpl implements SugarService {
 
         boolean update = false;
 
-        Map<String, String> updates = new HashMap<String, String>();
+        Map<String, String> updates = new HashMap<>();
         UpdatableField[] fields = getSugarMapping().getProviderUpdateableFields();
         for (UpdatableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 
             if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
-
             } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
                 if (!StringUtils.equals(value, provider.getName())) {
                     updates.put(field.getFieldId(), provider.getName());
@@ -171,7 +171,6 @@ public class SugarServiceImpl implements SugarService {
                 }
             } else if (StandardControlledVocabulary.MNEMONIC.equals(field.getMappingField())) {
                 // well this cannot change.
-
             } else if (StandardControlledVocabulary.NAME.equals(field.getMappingField())) {
                 if (!StringUtils.equals(value, provider.getName())) {
                     provider.setName(value);
@@ -212,7 +211,7 @@ public class SugarServiceImpl implements SugarService {
 
     @Override
     public void updateCollection(Collection<?> collection) throws SugarException {
-        log.info("Update sugar for collection '" + collection.getMnemonic() + "!");
+        log.log(Level.INFO, "Update sugar for collection ''{0}!", collection.getMnemonic());
         SugarClient client = validateConnection();
 
         String mnemonic = collection.getMnemonic();
@@ -220,7 +219,7 @@ public class SugarServiceImpl implements SugarService {
 
         boolean update = false;
 
-        Map<String, String> updates = new HashMap<String, String>();
+        Map<String, String> updates = new HashMap<>();
         UpdatableField[] fields = getSugarMapping().getCollectionUpdateableFields();
         for (UpdatableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
@@ -269,7 +268,7 @@ public class SugarServiceImpl implements SugarService {
             collection.getMnemonic().isEmpty()) { throw new NullPointerException(
                 "Collection and collection mnemonic must not be null."); }
 
-        log.info("Synchronize sugar for collection '" + collection.getMnemonic() + "!");
+        log.log(Level.INFO, "Synchronize sugar for collection ''{0}!", collection.getMnemonic());
 
         SugarClient client = validateConnection();
         Map<String, String> sugarprovider = client.getCollection(sessionID,
@@ -371,7 +370,7 @@ public class SugarServiceImpl implements SugarService {
 
         List<Map<String, String>> providers = client.getProviders(sessionID, filterQuery != null ? filterQuery : "", Integer.MAX_VALUE);
 
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> result = new ArrayList<>();
         RetrievableField[] fields = getSugarMapping().getProviderRetrievableFields();
 
         for (Map<String, String> record : providers) {
@@ -379,7 +378,7 @@ public class SugarServiceImpl implements SugarService {
                 continue;
             }
 
-            HashMap<String, String> resultRecord = new HashMap<String, String>();
+            HashMap<String, String> resultRecord = new HashMap<>();
             for (RetrievableField field : fields) {
                 if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
                     if (activeOnly) {
@@ -429,7 +428,7 @@ public class SugarServiceImpl implements SugarService {
         List<Map<String, String>> collections = client.getCollections(sessionID, "",
                 Integer.MAX_VALUE);
 
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> result = new ArrayList<>();
         RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
 
         for (Map<String, String> record : collections) {
@@ -437,7 +436,7 @@ public class SugarServiceImpl implements SugarService {
                 continue;
             }
 
-            HashMap<String, String> resultRecord = new HashMap<String, String>();
+            HashMap<String, String> resultRecord = new HashMap<>();
             for (RetrievableField field : fields) {
                 if (StandardControlledVocabulary.ACTIVE.equals(field.getMappingField())) {
                     if (activeOnly) {
@@ -523,7 +522,7 @@ public class SugarServiceImpl implements SugarService {
     public void setSugarMappingClass(String sugarMappingClass) {
         try {
             Class<?> mapping = Class.forName(sugarMappingClass, true,
-                    SugarServiceImpl.class.getClassLoader());
+                    SoapSugarService.class.getClassLoader());
             setSugarMapping((SugarMapping)mapping.newInstance());
 
             this.sugarMappingClass = sugarMappingClass;

@@ -18,17 +18,14 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-
 package eu.europeana.uim.sugar.model;
-
 
 /**
  * Marker interface for fields which should be allowed to be updated
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */
 public interface UpdatableField extends SugarCrmField {
-
 
 }

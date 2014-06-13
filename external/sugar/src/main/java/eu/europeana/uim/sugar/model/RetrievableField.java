@@ -18,13 +18,11 @@
  * See the Licence for the specific language governing
  * permissions and limitations under the Licence.
  */
-
 package eu.europeana.uim.sugar.model;
-
 
 /**
  * Marker interface for all retrievable fields
- * 
+ *
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @date Aug 12, 2011
  */

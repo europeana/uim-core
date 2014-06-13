@@ -13,10 +13,7 @@ import javax.xml.bind.JAXBException;
 
 import eu.europeana.uim.external.ExternalServiceException;
 import eu.europeana.uim.repox.RepoxControlledVocabulary;
-import eu.europeana.uim.repox.RepoxControlledVocabulary;
 import eu.europeana.uim.repox.RepoxException;
-import eu.europeana.uim.repox.RepoxException;
-import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.RepoxService;
 import eu.europeana.uim.repox.HarvestingState;
 import eu.europeana.uim.repox.client.RepoxRestClient;
@@ -109,7 +106,7 @@ public class RestRepoxService implements RepoxService {
 
     @Override
     public void updateProvider(Provider<?> provider) throws RepoxException {
-        log.info("Calling updateProvider for '" + provider + "'!");
+        log.log(Level.INFO, "Calling updateProvider for ''{0}''!", provider);
 
         if (provider.isAggregator()) { throw new RepoxException(
                 "The requested object is not a Provider"); }
@@ -238,7 +235,7 @@ public class RestRepoxService implements RepoxService {
 
     @Override
     public void deleteProvider(Provider<?> provider) throws RepoxException {
-        log.info("Calling deleteProvider for '" + provider + "'!");
+        log.log(Level.INFO, "Calling deleteProvider for ''{0}''!", provider);
 
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
 
@@ -253,7 +250,7 @@ public class RestRepoxService implements RepoxService {
 
     @Override
     public void synchronizeProvider(Provider<?> provider) throws RepoxException {
-        log.info("Calling synchronizeProvider for '" + provider + "'!");
+        log.log(Level.INFO, "Calling synchronizeProvider for ''{0}''!", provider);
 
         if (provider.getOaiBaseUrl() == null || provider.getOaiBaseUrl().length() == 0) { return; }
 
@@ -276,14 +273,14 @@ public class RestRepoxService implements RepoxService {
                 provider.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE,
                         new Date(System.currentTimeMillis()).toString());
 
-                log.info("Stored xml for '" + provider + "' is '" + storedXml + "'!");
+                log.log(Level.INFO, "Stored xml for ''{0}'' is ''{1}''!", new Object[]{provider, storedXml});
             }
         }
     }
 
     @Override
     public void updateCollection(Collection<?> collection) throws RepoxException {
-        log.info("Calling updateCollection for '" + collection + "'!");
+        log.log(Level.INFO, "Calling updateCollection for ''{0}''!", collection);
 
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
@@ -298,7 +295,7 @@ public class RestRepoxService implements RepoxService {
             htypeString = htypeString.replaceAll("\\s", "_");
             harvestingtype = DatasourceType.valueOf(htypeString);
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to parse harvesting type: <" + htypeString + ">");
+            log.log(Level.WARNING, "Failed to parse harvesting type: <{0}>", htypeString);
         }
 
         String collectionId = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
@@ -379,15 +376,13 @@ public class RestRepoxService implements RepoxService {
             }
         }
 
-        log.info("Collection REPOX id is '" +
-                 collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID) + "'!");
-        log.info("Provider REPOX id is '" +
-                 collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID) + "'!");
+        log.log(Level.INFO, "Collection REPOX id is ''{0}''!", collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID));
+        log.log(Level.INFO, "Provider REPOX id is ''{0}''!", collection.getValue(RepoxControlledVocabulary.PROVIDER_REPOX_ID));
     }
 
     @Override
     public void deleteCollection(Collection<?> collection) throws RepoxException {
-        log.info("Calling deleteCollection for '" + collection + "'!");
+        log.log(Level.INFO, "Calling deleteCollection for ''{0}''!", collection);
 
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
@@ -401,7 +396,7 @@ public class RestRepoxService implements RepoxService {
 
     @Override
     public void synchronizeCollection(Collection<?> collection) throws RepoxException {
-        log.info("Calling synchronizeCollection for '" + collection + "'!");
+        log.log(Level.INFO, "Calling synchronizeCollection for ''{0}''!", collection);
 
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return; }
 
@@ -426,7 +421,7 @@ public class RestRepoxService implements RepoxService {
                             xmlCollection);
                     collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                    log.info("Stored xml for '" + collection + "' is '" + storedXml + "'!");
+                    log.log(Level.INFO, "Stored xml for ''{0}'' is ''{1}''!", new Object[]{collection, storedXml});
                 }
             }
 
@@ -463,7 +458,7 @@ public class RestRepoxService implements RepoxService {
                         uimStatus);
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Status for '" + collection + "' is '" + uimStatus + "'!");
+                log.log(Level.INFO, "Status for ''{0}'' is ''{1}''!", new Object[]{collection, uimStatus});
             }
 
             String storedRecords = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS);
@@ -474,7 +469,7 @@ public class RestRepoxService implements RepoxService {
                 collection.putValue(RepoxControlledVocabulary.COLLECTION_HARVESTED_RECORDS, records);
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Number of records for '" + collection + "' is '" + records + "'!");
+                log.log(Level.INFO, "Number of records for ''{0}'' is ''{1}''!", new Object[]{collection, records});
             }
 
             String storedHarvestDate = collection.getValue(RepoxControlledVocabulary.COLLECTION_HARVESTING_LAST_DATE);
@@ -490,20 +485,20 @@ public class RestRepoxService implements RepoxService {
                         harvestDate);
                 collection.putValue(RepoxControlledVocabulary.LAST_UPDATE_DATE, dateString);
 
-                log.info("Last harvesting date for '" + collection + "' is '" + harvestDate + "'!");
+                log.log(Level.INFO, "Last harvesting date for ''{0}'' is ''{1}''!", new Object[]{collection, harvestDate});
             }
         } else {
-            log.warning("Missing repox identifier for '" + collection + "'!");
+            log.log(Level.WARNING, "Missing repox identifier for ''{0}''!", collection);
         }
     }
 
     @Override
     public String getHarvestLog(Collection<?> collection) throws RepoxException {
-        log.info("Calling getHarvestLog for '" + collection + "'!");
+        log.log(Level.INFO, "Calling getHarvestLog for ''{0}''!", collection);
 
         if (collection.getOaiBaseUrl(true) == null || collection.getOaiBaseUrl(true).length() == 0) { return null; }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String id = collection.getValue(RepoxControlledVocabulary.COLLECTION_REPOX_ID);
         if (id != null) {
             RepoxRestClient client = clientfactory.getInstance(collection.getOaiBaseUrl(true));
@@ -514,9 +509,9 @@ public class RestRepoxService implements RepoxService {
                 sb.append(ln);
             }
 
-            log.info("Harvesting log for '" + collection + "' is '" + sb.toString() + "'!");
+            log.log(Level.INFO, "Harvesting log for ''{0}'' is ''{1}''!", new Object[]{collection, sb.toString()});
         } else {
-            log.warning("Missing repox identifier for '" + collection + "'!");
+            log.log(Level.WARNING, "Missing repox identifier for ''{0}''!", collection);
         }
 
         return sb.toString();
@@ -524,7 +519,7 @@ public class RestRepoxService implements RepoxService {
 
     @Override
     public List<String> getActiveHarvestings(String url) throws RepoxException {
-        log.info("Calling getActiveHarvestings for '" + url + "'!");
+        log.log(Level.INFO, "Calling getActiveHarvestings for ''{0}''!", url);
 
         if (url == null || url.length() == 0) { return null; }
 
@@ -541,7 +536,7 @@ public class RestRepoxService implements RepoxService {
             deleteProvider(provider);
             update = true;
         } else {
-            Map<String, String> beforeValues = new HashMap<String, String>(provider.values());
+            Map<String, String> beforeValues = new HashMap<>(provider.values());
 
             updateProvider(provider);
             synchronizeProvider(provider);
@@ -570,7 +565,7 @@ public class RestRepoxService implements RepoxService {
             deleteCollection(collection);
             update = true;
         } else {
-            Map<String, String> beforeValues = new HashMap<String, String>(collection.values());
+            Map<String, String> beforeValues = new HashMap<>(collection.values());
 
             updateCollection(collection);
             synchronizeCollection(collection);

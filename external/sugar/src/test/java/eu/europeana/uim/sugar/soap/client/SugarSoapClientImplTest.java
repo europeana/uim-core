@@ -69,7 +69,7 @@ public class SugarSoapClientImplTest {
         String contactModul = properties.getProperty("sugar.contact");
         String collectionTranslationModul = properties.getProperty("sugar.collectiontranslation");
 
-        client = new SugarSoapClientImpl(endpoint, username, password, providerModul,
+        client = new SoapSugarClient(endpoint, username, password, providerModul,
                 providerMnemonic, collectionModul, collectionMnemonic, contactModul,
                 collectionTranslationModul);
         session = client.login();
@@ -92,9 +92,9 @@ public class SugarSoapClientImplTest {
 
         List<String> modules = client.getAvailableModules(session);
 
-        assertTrue(modules.contains(((SugarSoapClientImpl)client).getProviderModule()));
-        assertTrue(modules.contains(((SugarSoapClientImpl)client).getCollectionModule()));
-        assertTrue(modules.contains(((SugarSoapClientImpl)client).getContactModule()));
+        assertTrue(modules.contains(((SoapSugarClient)client).getProviderModule()));
+        assertTrue(modules.contains(((SoapSugarClient)client).getCollectionModule()));
+        assertTrue(modules.contains(((SoapSugarClient)client).getContactModule()));
     }
 
     /**
@@ -115,7 +115,7 @@ public class SugarSoapClientImplTest {
         Map<String, String> collection = client.getCollection(session, mnemonic);
         assertNotNull(collection.get("id"));
 
-        String sugarid = collection.get(((SugarSoapClientImpl)client).getCollectionMnemonicUnqualified());
+        String sugarid = collection.get(((SoapSugarClient)client).getCollectionMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
 
         String provider = client.getProviderForCollection(session, mnemonic);
@@ -166,7 +166,7 @@ public class SugarSoapClientImplTest {
         Map<String, String> provider = client.getProvider(session, mnemonic);
         assertNotNull(provider.get("id"));
 
-        String sugarid = provider.get(((SugarSoapClientImpl)client).getProviderMnemonicUnqualified());
+        String sugarid = provider.get(((SoapSugarClient)client).getProviderMnemonicUnqualified());
         assertEquals(mnemonic, sugarid);
 
         List<Map<String, String>> contacts = client.getProviderContacts(session, mnemonic);
@@ -203,7 +203,7 @@ public class SugarSoapClientImplTest {
         Language language = Language.LIT;
         String title = "Test Title";
         String description = "Test Description";
-        ((SugarSoapClientImpl)client).createCollectionTranslation(session, mnemonic, language,
+        ((SoapSugarClient)client).createCollectionTranslation(session, mnemonic, language,
                 title, description);
     }
 }

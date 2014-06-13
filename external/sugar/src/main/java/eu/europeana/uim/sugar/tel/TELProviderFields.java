@@ -3,7 +3,6 @@ package eu.europeana.uim.sugar.tel;
 
 import eu.europeana.uim.store.ControlledVocabularyKeyValue;
 import eu.europeana.uim.store.StandardControlledVocabulary;
-import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.model.RetrievableField;
 import eu.europeana.uim.sugar.model.UpdatableField;
 
