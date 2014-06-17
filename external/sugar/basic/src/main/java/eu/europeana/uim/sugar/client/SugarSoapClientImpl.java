@@ -895,7 +895,7 @@ public class SugarSoapClientImpl implements SugarClient {
         if (languageEntry == null || languageEntry.isEmpty()) {
             // not found, try alias
             languageEntry = getSingleEntry(session, "telda_TEL_iso639_3_languages",
-                    language.getAlias().toLowerCase(), "code");
+                    language.getAliases()[0].toLowerCase(), "code");
         }
 
         if (languageEntry == null || languageEntry.isEmpty()) { throw new IllegalStateException(
