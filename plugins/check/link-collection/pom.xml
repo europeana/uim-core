@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>tel-uim-plugin-check-link-collection</artifactId>
-	<name>Unified Ingestion Manager: TEL Link Validation Plugin (Collection Based)</name>
+	<name>Unified Ingestion Manager: Check Link Validation Plugin (Collection Based)</name>
 	<packaging>bundle</packaging>
 
 	<build>
