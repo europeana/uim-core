@@ -1,11 +1,10 @@
 /* Language.java - created on Mar 18, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.common.qualifier;
 
+import eu.europeana.uim.translation.Translatable;
+import eu.europeana.uim.translation.Translations;
 import java.util.HashMap;
 import java.util.Locale;
-
-import org.theeuropeanlibrary.translation.Translatable;
-import org.theeuropeanlibrary.translation.Translations;
 
 /**
  * Language enum with english language name and ISO639-2 3 letter codes, ISO639 2 letter codes and

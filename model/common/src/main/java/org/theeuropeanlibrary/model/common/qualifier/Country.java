@@ -1,13 +1,12 @@
 /* Country.java - created on Mar 18, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.common.qualifier;
 
+import eu.europeana.uim.translation.Translatable;
+import eu.europeana.uim.translation.Translations;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import org.theeuropeanlibrary.translation.Translatable;
-import org.theeuropeanlibrary.translation.Translations;
 
 /**
  * Country enum with english country name and MARC codes, ISO 3166 2 letter codes.
