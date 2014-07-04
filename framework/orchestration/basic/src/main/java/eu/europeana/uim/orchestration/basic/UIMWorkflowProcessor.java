@@ -58,8 +58,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 
     // FIXME: Updated these values, cannot handle more
     private int                                                             maxRunningExecutions = 50;
-    private int                                                             maxTotalProgress     = 5000; // 100;
-    private int                                                             maxInProgress        = 200; // 10;
+    private int                                                             maxTotalProgress     = 100; // 5000;
+    private int                                                             maxInProgress        = 10; // 200;
 
     /**
      * Creates a new instance of this class.
