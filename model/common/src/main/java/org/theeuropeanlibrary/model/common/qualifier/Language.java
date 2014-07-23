@@ -32,7 +32,9 @@ public enum Language implements Translatable {
     // in
     // Spain, but also
     // Portugal
-    GRE("gre", "Greek", new Locale("el")), GSW("gsw", "Swiss German", null), HEB("heb", "Hebrew", new Locale("he")), HIN("hin", "Hindi", new Locale("hi")), HRV("hrv", "Croatian", new Locale("hr")), HUN(
+    GRE("gre", "Greek, Modern", new Locale("el")),
+    GRC("grc", "Greek, Ancient", null),
+    GSW("gsw", "Swiss German", null), HEB("heb", "Hebrew", new Locale("he")), HIN("hin", "Hindi", new Locale("hi")), HRV("hrv", "Croatian", new Locale("hr")), HUN(
             "hun", "Hungarian", new Locale("hu")), ICE("ice", "Icelandic", new Locale("is")), IND("ind", "Indonesia", new Locale("in")), ITA("ita", "Italian", new Locale("it")), JPN("jpn", "Japanese",
             new Locale("jp")), LAT("lat", "Latin", new Locale("la")), LAV("lav", "Latvian", new Locale("lv")), LTG("ltg", "Latgalian", new Locale("lv")), // dialect
     // of latvia
@@ -60,12 +62,26 @@ public enum Language implements Translatable {
             "Creoles and pidgins, Portuguese-based", null), CRE("cre", "Cree", new Locale("cr")), CRH("crh", "Crimean Tatar", null), CRP("crp", "Creoles and pidgins", null), CSB("csb", "Kashubian", null), CUS(
             "cus", "Cushitic languages", null), DAK("dak", "Dakota", null), DAR("dar", "Dargwa", null), DAY("day", "Land Dayak languages", null), DEL("del", "Delaware", null), DEN("den", "Slave ", null), DGR(
             "dgr", "Dogrib", null), DIN("din", "Dinka", null), DIV("div", "Divehi", new Locale("dv")), DOI("doi", "Dogri", null), DRA("dra", "Dravidian languages", null), DSB("dsb", "Lower Sorbian", null), DUA(
-            "dua", "Duala", null), DUM("dum", "Dutch, Middle ", null), DYU("dyu", "Dyula", null), DZO("dzo", "Dzongkha", new Locale("dz")), EFI("efi", "Efik", null), EGY("egy", "Egyptian ", null), EKA(
-            "eka", "Ekajuk", null), ELX("elx", "Elamite", null), ENM("enm", "English, Middle ", null), BAQ("baq", "Basque", new Locale("eu")), EWE("ewe", "Ewe", new Locale("ee")), EWO("ewo", "Ewondo", null), FAN(
+            "dua", "Duala", null), DUM("dum", "Dutch, Middle ", null), DYU("dyu", "Dyula", null), DZO("dzo", "Dzongkha", new Locale("dz")), EFI("efi", "Efik", null), 
+
+            EGY("egy", "Egyptian, ancient", null),
+            ARZ("arz", "Egyptian Arabic", null),
+            SRI("sri", "Siriano", null),
+            WLM("wlm", "Middle Welsh", null),
+            PES("pes", "Iranian Persian", null),
+            AXM("axm", "Armenian, Middle", null),
+            PAN("pan", "Panjabi", null),
+            SRM("srm", "Saramaccan", null),
+            PSP("psp", "Philippine Sign", null),
+            AEN("aen", "Armenian Sign", null),
+            
+            EKA("eka", "Ekajuk", null), ELX("elx", "Elamite", null), ENM("enm", "English, Middle ", null), BAQ("baq", "Basque", new Locale("eu")), EWE("ewe", "Ewe", new Locale("ee")), EWO("ewo", "Ewondo", null), FAN(
             "fan", "Fang", null), FAO("fao", "Faroese", new Locale("fo")), FAT("fat", "Fanti", null), FIJ("fij", "Fijian", new Locale("fj")), FIL("fil", "Filipino", null), FIU("fiu",
             "Finno-Ugrian languages", null), FON("fon", "Fon", null), FRM("frm", "French, Middle ", null), FRO("fro", "French, Old ", null), FRR("frr", "Northern Frisian", null), FRS("frs",
             "Eastern Frisian", null), FRY("fry", "Western Frisian", new Locale("fy")), FUL("ful", "Fulah", new Locale("ff")), FUR("fur", "Friulian", null), GAA("gaa", "Ga", null), GAY("gay", "Gayo", null), GBA(
-            "gba", "Gbaya", null), GEM("gem", "Germanic languages", null), GEZ("gez", "Geez", null), GIL("gil", "Gilbertese", null), GLA("gla", "Gaelic", new Locale("gd")), GLV("glv", "Manx", new Locale(
+            "gba", "Gbaya", null), GEM("gem", "Germanic languages", null), GEZ("gez", "Geez", null), GIL("gil", "Gilbertese", null), 
+            GLA("gla", "Scotish Gaelic", new Locale("gd")), 
+            GLV("glv", "Manx", new Locale(
             "gv")), GMH("gmh", "German, Middle High ", null), GOH("goh", "German, Old High ", null), GON("gon", "Gondi", null), GOR("gor", "Gorontalo", null), GOT("got", "Gothic", null), GRB("grb",
             "Grebo", null), GRN("grn", "Guarani", new Locale("gn")), GUJ("guj", "Gujarati", new Locale("gu")), GWI("gwi", "Gwich'in", null), HAI("hai", "Haida", null), HAT("hat", "Haitian",
             new Locale("ht")), HAU("hau", "Hausa", new Locale("ha")), HAW("haw", "Hawaiian", null), HER("her", "Herero", new Locale("hz")), HIL("hil", "Hiligaynon", null), HIM("him", "Himachali languages",
@@ -152,16 +168,15 @@ public enum Language implements Translatable {
        put("fre", new String[] {"fra"});
        put("geo", new String[] {"kat"});
        put("ger", new String[] {"deu", "gzr"});
-       put("gre", new String[] {"grc"});
+       put("gre", new String[] {"ell"});
        put("ice", new String[] {"isl"});
-       put("mak", new String[] {"mkd"});
+       put("mac", new String[] {"mkd"});
        put("mao", new String[] {"mri"});
        put("msa", new String[] {"may"});
        put("per", new String[] {"fas"});
        put("rum", new String[] {"ron"});
        put("slo", new String[] {"slk"});
        put("wel", new String[] {"cym"});
-       put("hin", new String[] {"pan"});
      }};
 
      private static final HashMap<String, Language> iso3Lookup = new HashMap<String, Language>() {{

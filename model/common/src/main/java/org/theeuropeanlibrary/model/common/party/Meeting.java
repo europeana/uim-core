@@ -90,7 +90,7 @@ public class Meeting extends Organization {
         if (subdivision != null && !subdivision.trim().isEmpty()) 
             ret = StringUtils.stripEnd(ret, ".,;:?") + ". " + subdivision;
         if (date != null || (location!=null)) { 
-            ret += "(";
+            ret += " (";
             if (location!=null) { 
                 ret += location.getDisplay();
                 if (date != null) 
