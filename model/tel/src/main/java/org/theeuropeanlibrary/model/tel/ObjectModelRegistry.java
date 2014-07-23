@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.FullText;
+import org.theeuropeanlibrary.model.common.FullTextBlock;
 import org.theeuropeanlibrary.model.common.Identifier;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.Numbering;
@@ -102,7 +103,7 @@ public final class ObjectModelRegistry {
     static {
         mdrTkeyFieldId = new HashMap<TKey<?, ?>, Integer>();
         mdrFieldIdTkey = new HashMap<Integer, TKey<?, ?>>();
-        
+
         mdrTkeyFieldId.put(METADATARECORD, 10);
         mdrFieldIdTkey.put(10, METADATARECORD);
     }
@@ -363,6 +364,12 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "illustrations",
                                                                                                                            Illustrations.class);
+
+    @FieldId(44)
+    public static final TKey<ObjectModelRegistry, FullTextBlock>                               FULL_TEXT_BLOCK     = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "full text block",
+                                                                                                                           FullTextBlock.class);
 
     private static final Map<Class<?>, TKey<?, ?>>                                             tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
@@ -638,7 +645,7 @@ public final class ObjectModelRegistry {
                 add(FieldScope.class);
             }
         });
-        
+
         validQualifiers.put(RESOURCE_TYPE, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(FieldSource.class);
