@@ -41,7 +41,7 @@ public enum Language implements Translatable {
     LIT("lit", "Lithuanian", new Locale("lt")), LTZ("ltz", "Luxembourgish", new Locale("lb")), MAC("mac", "Macedonian", new Locale("mk")), MAR("mar", "Marathi", new Locale("mr")), MLT("mlt", "Maltese",
             new Locale("mt")), MSA("msa", "Malay", new Locale("ms")), NOR("nor", "Norwegian", new Locale("no")), PER("per", "Persian", new Locale("fa")), POL("pol", "Polish", new Locale("pl")), POR("por",
             "Portuguese", new Locale("pt")), ROH("roh", "Romansh", null), RUM("rum", "Romanian", new Locale("ro")), RUS("rus", "Russian", new Locale("ru")), SLO("slo", "Slovak", new Locale("sk")), SLV(
-            "slv", "Slovenian", new Locale("sl")), SPA("spa", "Spanish", new Locale("es")), SRP("srp", "Serbian", new Locale("sr")), SWE("swe", "Swedish", new Locale("sv")), TUR("tur", "Turkish",
+            "slv", "Slovenian", new Locale("sl")), SPA("spa", "Spanish", new Locale("es")), SRI("sri", "Siriano", null), SRP("srp", "Serbian", new Locale("sr")), SWE("swe", "Swedish", new Locale("sv")), TUR("tur", "Turkish",
             new Locale("tr")), UKR("ukr", "Ukrainian", new Locale("uk")), VIE("vie", "Vietnamese", new Locale("vi")), WEL("wel", "Welsh", new Locale("cy")), YID("yid", "Yiddish", new Locale("yi")),
 
     AAR("aar", "Afar", new Locale("aa")), ABK("abk", "Abkhazian", new Locale("ab")), ACE("ace", "Achinese", null), ACH("ach", "Acoli", null), ADA("ada", "Adangme", null), ADY("ady", "Adyghe", null), AFA(

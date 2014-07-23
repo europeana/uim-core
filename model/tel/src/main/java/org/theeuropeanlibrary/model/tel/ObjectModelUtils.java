@@ -120,7 +120,7 @@ public final class ObjectModelUtils {
         Collections.sort(result);
         return result;
     }
-    
+
     /**
      * @param record
      * @param qualifiers
@@ -136,16 +136,17 @@ public final class ObjectModelUtils {
         Collections.sort(result);
         return result;
     }
-    
+
     /**
      * @param record
      * @param qualifiers
      * @return Spatial entities
      */
-    public static List<? extends SpatialEntity> getSpatials(
-            MetaDataRecord<?> record, Enum<?>... qualifiers) {
+    public static List<? extends SpatialEntity> getSpatials(MetaDataRecord<?> record,
+            Enum<?>... qualifiers) {
         return toValues(getQualifiedSpatials(record, qualifiers), true);
     }
+
     /**
      * @param record
      * @param qualifiers
@@ -162,7 +163,8 @@ public final class ObjectModelUtils {
      * @param qualifiers
      * @return places
      */
-    public static List<Party> getPartiesIntelectuallyResponsible(MetaDataRecord<?> record, Enum<?>... qualifiers) {
+    public static List<Party> getPartiesIntelectuallyResponsible(MetaDataRecord<?> record,
+            Enum<?>... qualifiers) {
         return toValues(getQualifiedPartiesIntelectuallyResponsible(record, qualifiers), true);
     }
 
@@ -201,10 +203,10 @@ public final class ObjectModelUtils {
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.ORGANIZATION, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PARTY, qualifiers));
         Collections.sort(result);
-        for(Iterator<QualifiedValue<? extends Party>> it=result.iterator(); it.hasNext();) {
+        for (Iterator<QualifiedValue<? extends Party>> it = result.iterator(); it.hasNext();) {
             QualifiedValue<? extends Party> p = it.next();
             PartyRelation pRel = p.getQualifier(PartyRelation.class);
-            if (!(pRel!=null && (pRel==PartyRelation.CREATOR || pRel==PartyRelation.CONTRIBUTOR))) 
+            if (!(pRel != null && (pRel == PartyRelation.CREATOR || pRel == PartyRelation.CONTRIBUTOR)))
                 it.remove();
         }
         return result;
@@ -454,8 +456,7 @@ public final class ObjectModelUtils {
 
         return result;
     }
-    
-    
+
     /**
      * Changes all links in the MDR to be served by the data portal
      * 
@@ -465,10 +466,9 @@ public final class ObjectModelUtils {
         setupWebResourcesLinks("http://data.theeuropeanlibrary.org", null, mdr);
     }
 
-    
     /**
-     * Changes the urls in Link objects to be served by redirection through the data portal. 
-     * This is necessary for the RDF representation of data in LOD and EDM.
+     * Changes the urls in Link objects to be served by redirection through the data portal. This is
+     * necessary for the RDF representation of data in LOD and EDM.
      * 
      * @param baseUrl
      * @param source
@@ -476,33 +476,31 @@ public final class ObjectModelUtils {
      */
     public static void setupWebResourcesLinks(String baseUrl, String source, MetaDataRecord<?> mdr) {
         setupWebResourcesLinksForLod(baseUrl, mdr);
-//        List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
-//        mdr.deleteValues(ObjectModelRegistry.LINK,
-//                LinkTarget.DIGITAL_OBJECT);
-//        mdr.deleteValues(ObjectModelRegistry.LINK,
-//                LinkTarget.THUMBNAIL);
-//        for (int index = 0; index < catlinks.size(); index++) {
-//            mdr.addValue(ObjectModelRegistry.LINK,
-//                    new Link(baseUrl + "/WebResource/" + mdr.getId() +
-//                            "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" :   "?source=" +
-//                                    source) ),
-//                                    catlinks.get(index).getQualifier(LinkTarget.class));
-//        }
+// List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
+// mdr.deleteValues(ObjectModelRegistry.LINK,
+// LinkTarget.DIGITAL_OBJECT);
+// mdr.deleteValues(ObjectModelRegistry.LINK,
+// LinkTarget.THUMBNAIL);
+// for (int index = 0; index < catlinks.size(); index++) {
+// mdr.addValue(ObjectModelRegistry.LINK,
+// new Link(baseUrl + "/WebResource/" + mdr.getId() +
+// "/" + index + "-" + getLinkHash(catlinks.get(index))+ (source==null? "" : "?source=" +
+// source) ),
+// catlinks.get(index).getQualifier(LinkTarget.class));
+// }
     }
-    
+
     /**
      * @param baseUrl
      * @param mdr
      */
     public static void setupWebResourcesLinksForLod(String baseUrl, MetaDataRecord<?> mdr) {
         List<QualifiedValue<Link>> catlinks = mdr.getQualifiedValues(ObjectModelRegistry.LINK);
-        mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.DIGITAL_OBJECT);
-        mdr.deleteValues(ObjectModelRegistry.LINK,
-                LinkTarget.THUMBNAIL);
+        mdr.deleteValues(ObjectModelRegistry.LINK, LinkTarget.DIGITAL_OBJECT);
+        mdr.deleteValues(ObjectModelRegistry.LINK, LinkTarget.THUMBNAIL);
         for (int index = 0; index < catlinks.size(); index++) {
             mdr.addValue(ObjectModelRegistry.LINK,
-                    new Link(getWebResourceLinkForLod(baseUrl, catlinks.get(index), index) ),
+                    new Link(getWebResourceLinkForLod(baseUrl, catlinks.get(index), index)),
                     catlinks.get(index).getQualifier(LinkTarget.class));
         }
     }
@@ -513,37 +511,38 @@ public final class ObjectModelUtils {
      * @param index
      * @return
      */
-    private static String getWebResourceLinkForLod(String baseUrl,
-            QualifiedValue<Link> catlinks, int index) {
-        return baseUrl + "#webresource" + index  + Integer.toHexString(catlinks.getValue().getUrl().hashCode());
+    private static String getWebResourceLinkForLod(String baseUrl, QualifiedValue<Link> catlinks,
+            int index) {
+        return baseUrl + "#webresource" + index +
+               Integer.toHexString(catlinks.getValue().getUrl().hashCode());
     }
-    
+
     /**
      * @param mdr
      * @return list of countries of publication
      */
     public static List<Country> getCountriesOfPublication(MetaDataRecord<?> mdr) {
-        List<Country> countries=new ArrayList<Country>();
-        
-        List<QualifiedValue<SpatialEntity>> qualifiedValues = mdr.getQualifiedValues(ObjectModelRegistry.GEOGRAPHIC_ENTITY, SpatialRelation.PUBLICATION);
-        for(QualifiedValue<SpatialEntity> spEntity: qualifiedValues) {
+        List<Country> countries = new ArrayList<Country>();
+
+        List<QualifiedValue<SpatialEntity>> qualifiedValues = mdr.getQualifiedValues(
+                ObjectModelRegistry.GEOGRAPHIC_ENTITY, SpatialRelation.PUBLICATION);
+        for (QualifiedValue<SpatialEntity> spEntity : qualifiedValues) {
             for (Identifier id : spEntity.getValue().getIdentifiers()) {
-                if (id.getScope() != null
-                        && id.getScope().equals(
-                                SpatialIdentifierType.ISO3166.name())) {
-                    String code=null;
-                    if(id.getIdentifier().length()<=2)
-                        code=id.getIdentifier();
-                    else if(id.getIdentifier().length()>=5 && id.getIdentifier().charAt(2)=='-')
-                        code=id.getIdentifier().substring(3, 5);
-                    if(code!=null) {                 
+                if (id.getScope() != null &&
+                    id.getScope().equals(SpatialIdentifierType.ISO3166.name())) {
+                    String code = null;
+                    if (id.getIdentifier().length() <= 2)
+                        code = id.getIdentifier();
+                    else if (id.getIdentifier().length() >= 5 &&
+                             id.getIdentifier().charAt(2) == '-')
+                        code = id.getIdentifier().substring(3, 5);
+                    if (code != null) {
                         Country iso = Country.getByIso2(code);
-                        if(iso!=null && !countries.contains(iso))
-                            countries.add(iso);
+                        if (iso != null && !countries.contains(iso)) countries.add(iso);
                         break;
                     }
                 }
-                
+
             }
         }
         return countries;
@@ -552,18 +551,18 @@ public final class ObjectModelUtils {
     /**
      * @param mdr
      * @param agent
-     * @param qualifiers 
+     * @param qualifiers
      */
     public static void addValue(MetaDataRecord<?> mdr, Party agent, Enum<?>... qualifiers) {
-        if(agent.getClass().equals(Party.class))
+        if (agent.getClass().equals(Party.class))
             mdr.addValue(ObjectModelRegistry.PARTY, agent, qualifiers);
-        else if(agent.getClass().equals(Person.class))
+        else if (agent.getClass().equals(Person.class))
             mdr.addValue(ObjectModelRegistry.PERSON, (Person)agent, qualifiers);
-        else if(agent.getClass().equals(Organization.class))
+        else if (agent.getClass().equals(Organization.class))
             mdr.addValue(ObjectModelRegistry.ORGANIZATION, (Organization)agent, qualifiers);
-        else if(agent.getClass().equals(Meeting.class))
+        else if (agent.getClass().equals(Meeting.class))
             mdr.addValue(ObjectModelRegistry.MEETING, (Meeting)agent, qualifiers);
-        else if(agent.getClass().equals(Family.class))
+        else if (agent.getClass().equals(Family.class))
             mdr.addValue(ObjectModelRegistry.FAMILY, (Family)agent, qualifiers);
         else
             throw new RuntimeException(agent.getClass().getName());
@@ -572,34 +571,38 @@ public final class ObjectModelUtils {
     /**
      * @param mdr
      * @param spatial
+     * @param qualifiers
      */
     public static void addValue(MetaDataRecord<?> mdr, SpatialEntity spatial, Enum<?>... qualifiers) {
-        if(spatial.getClass().equals(SpatialEntity.class))
+        if (spatial.getClass().equals(SpatialEntity.class))
             mdr.addValue(ObjectModelRegistry.GEOGRAPHIC_ENTITY, spatial, qualifiers);
-        else if(spatial.getClass().equals(NamedPlace.class))
-            mdr.addValue(ObjectModelRegistry.PLACE, (NamedPlace) spatial, qualifiers);
-        else if(spatial.getClass().equals(GeoReferencedPlace.class))
-            mdr.addValue(ObjectModelRegistry.GEO_PLACE, (GeoReferencedPlace) spatial, qualifiers);
-        else if(spatial.getClass().equals(BoundingBoxReferencedPlace.class))
-            mdr.addValue(ObjectModelRegistry.GEO_BOX_PLACE, (BoundingBoxReferencedPlace) spatial, qualifiers);
+        else if (spatial.getClass().equals(NamedPlace.class))
+            mdr.addValue(ObjectModelRegistry.PLACE, (NamedPlace)spatial, qualifiers);
+        else if (spatial.getClass().equals(GeoReferencedPlace.class))
+            mdr.addValue(ObjectModelRegistry.GEO_PLACE, (GeoReferencedPlace)spatial, qualifiers);
+        else if (spatial.getClass().equals(BoundingBoxReferencedPlace.class))
+            mdr.addValue(ObjectModelRegistry.GEO_BOX_PLACE, (BoundingBoxReferencedPlace)spatial,
+                    qualifiers);
         else
             throw new RuntimeException(spatial.getClass().getName());
     }
 
     /**
      * @param mdr
+     * @param tempo
+     * @param qualifiers
      */
     public static void addValue(MetaDataRecord<?> mdr, Temporal tempo, Enum<?>... qualifiers) {
-        if(tempo.getClass().equals(Period.class))
+        if (tempo.getClass().equals(Period.class))
             mdr.addValue(ObjectModelRegistry.PERIOD, (Period)tempo, qualifiers);
-        else if(tempo.getClass().equals(Instant.class))
-            mdr.addValue(ObjectModelRegistry.INSTANT, (Instant) tempo, qualifiers);
-        else if(tempo.getClass().equals(TemporalTextualExpression.class))
-            mdr.addValue(ObjectModelRegistry.TEMPORAL, (TemporalTextualExpression) tempo, qualifiers);
-        else if(tempo.getClass().equals(HistoricalPeriod.class))
-            mdr.addValue(ObjectModelRegistry.HISTORICAL_PERIOD, (HistoricalPeriod) tempo, qualifiers);
+        else if (tempo.getClass().equals(Instant.class))
+            mdr.addValue(ObjectModelRegistry.INSTANT, (Instant)tempo, qualifiers);
+        else if (tempo.getClass().equals(TemporalTextualExpression.class))
+            mdr.addValue(ObjectModelRegistry.TEMPORAL, tempo, qualifiers);
+        else if (tempo.getClass().equals(HistoricalPeriod.class))
+            mdr.addValue(ObjectModelRegistry.HISTORICAL_PERIOD, (HistoricalPeriod)tempo, qualifiers);
         else
             throw new RuntimeException(tempo.getClass().getName());
     }
-    
+
 }
