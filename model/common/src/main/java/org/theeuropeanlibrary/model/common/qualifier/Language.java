@@ -80,7 +80,7 @@ public enum Language implements Translatable {
             "Finno-Ugrian languages", null), FON("fon", "Fon", null), FRM("frm", "French, Middle ", null), FRO("fro", "French, Old ", null), FRR("frr", "Northern Frisian", null), FRS("frs",
             "Eastern Frisian", null), FRY("fry", "Western Frisian", new Locale("fy")), FUL("ful", "Fulah", new Locale("ff")), FUR("fur", "Friulian", null), GAA("gaa", "Ga", null), GAY("gay", "Gayo", null), GBA(
             "gba", "Gbaya", null), GEM("gem", "Germanic languages", null), GEZ("gez", "Geez", null), GIL("gil", "Gilbertese", null), 
-            GLA("gla", "Scotish Gaelic", new Locale("gd")), 
+            GLA("gla", "Scottish Gaelic", new Locale("gd")), 
             GLV("glv", "Manx", new Locale(
             "gv")), GMH("gmh", "German, Middle High ", null), GOH("goh", "German, Old High ", null), GON("gon", "Gondi", null), GOR("gor", "Gorontalo", null), GOT("got", "Gothic", null), GRB("grb",
             "Grebo", null), GRN("grn", "Guarani", new Locale("gn")), GUJ("guj", "Gujarati", new Locale("gu")), GWI("gwi", "Gwich'in", null), HAI("hai", "Haida", null), HAT("hat", "Haitian",
