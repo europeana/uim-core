@@ -13,12 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.google.gwt.thirdparty.guava.common.cache.Cache;
-import com.google.gwt.thirdparty.guava.common.cache.CacheBuilder;
 
 import eu.europeana.uim.gui.cp.client.services.ExecutionService;
 import eu.europeana.uim.gui.cp.shared.ExecutionDTO;
@@ -52,14 +48,14 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
         super();
     }
 
-//    private Map<Serializable, ExecutionDTO> wrappedExecutionDTOs     = new HashMap<Serializable, ExecutionDTO>();
+    private Map<Serializable, ExecutionDTO> wrappedExecutionDTOs     = new HashMap<Serializable, ExecutionDTO>();
     
-    private Cache<Serializable, ExecutionDTO> wrappedExecutionDTOs = CacheBuilder.newBuilder()
-            .concurrencyLevel(4)
-            .weakKeys()
-            .maximumSize(10000)
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .build();
+//    private Cache<Serializable, ExecutionDTO> wrappedExecutionDTOs = CacheBuilder.newBuilder()
+//            .concurrencyLevel(4)
+//            .weakKeys()
+//            .maximumSize(10000)
+//            .expireAfterWrite(10, TimeUnit.MINUTES)
+//            .build();
     
 //    Map<Serializable, ExecutionDTO> map = ExpiringMap.builder()
 //            .expiration(30, TimeUnit.SECONDS)
@@ -87,7 +83,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
                             r.add(exec);
                         } catch (Throwable t) {
                             log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                            wrappedExecutionDTOs.invalidate(execution.getId());
+                            wrappedExecutionDTOs.remove(execution.getId());
                         }
                     } else {
                         log.log(Level.WARNING, "An active execution or its identifier is null!");
@@ -176,7 +172,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
                         } catch (Throwable t) {
                             log.log(Level.WARNING, "Error in copy data to DTO of execution!", t);
-                            wrappedExecutionDTOs.invalidate(execution.getId());
+                            wrappedExecutionDTOs.remove(execution.getId());
                         }
                     }
                 }
@@ -328,7 +324,7 @@ public class ExecutionServiceImpl extends AbstractOSGIRemoteServiceServlet imple
 
     private synchronized ExecutionDTO getWrappedExecutionDTO(Serializable id,
             Execution<Serializable> e, ActiveExecution<?, Serializable> ae) {
-        ExecutionDTO wrapped = wrappedExecutionDTOs.getIfPresent(id);
+        ExecutionDTO wrapped = wrappedExecutionDTOs.get(id);
         if (wrapped == null) {
             wrapped = new ExecutionDTO();
             wrapped.setId(id);
