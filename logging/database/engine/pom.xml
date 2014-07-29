@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-logging-database-engine</artifactId>
-	<name>Unified Ingestion Manager: Database Logging Engine</name>
+	<name>Unified Ingestion Manager: Logging Database Engine</name>
 	<packaging>bundle</packaging>
 
 	<build>

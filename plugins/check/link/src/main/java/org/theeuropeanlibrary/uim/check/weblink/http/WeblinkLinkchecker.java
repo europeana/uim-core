@@ -13,28 +13,29 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.EofSensorInputStream;
 import org.apache.http.util.EntityUtils;
-import org.theeuropeanlibrary.collections.guarded.Guarded;
 
 import eu.europeana.uim.common.LruCache;
+import eu.europeana.uim.guarded.Guarded;
 
 /**
- * HTTP Link checker with internal thread pool using the @see {@link HttpClientSetup} to check the
- * status of links. Initially we try the HEAD method which would be optimal but not widely
- * supported.
- * 
- * If the HEAD method is not supported by the webserver we do use as fallback forth on the GET
- * method.
- * 
- * 
+ * HTTP Link checker with internal thread pool using the @see
+ * {@link HttpClientSetup} to check the status of links. Initially we try the
+ * HEAD method which would be optimal but not widely supported.
+ *
+ * If the HEAD method is not supported by the webserver we do use as fallback
+ * forth on the GET method.
+ *
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 15, 2011
  */
 public class WeblinkLinkchecker extends AbstractWeblinkServer {
-    private static final Logger       log  = Logger.getLogger(WeblinkLinkchecker.class.getName());
+
+    private static final Logger log = Logger.getLogger(WeblinkLinkchecker.class.getName());
 
     private static WeblinkLinkchecker instance;
 
-    private LruCache<String, String>  head = new LruCache<String, String>(1000);
+    private final LruCache<String, String> head = new LruCache<>(1000);
 
     /**
      * @return the singleton linkchecker instance
@@ -60,7 +61,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
 
     @Override
     public Runnable createTask(Guarded guarded) {
-        return new CheckTask((GuardedMetaDataRecordUrl<?>)guarded);
+        return new CheckTask((GuardedMetaDataRecordUrl<?>) guarded);
     }
 
     /**
@@ -68,6 +69,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
      * @since Jul 15, 2011
      */
     private class CheckTask implements Runnable {
+
         private final GuardedMetaDataRecordUrl<?> guarded;
 
         public CheckTask(GuardedMetaDataRecordUrl<?> guarded) {
@@ -99,8 +101,8 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                     response = HttpClientSetup.getHttpClient().execute(http);
                     status = response.getStatusLine().getStatusCode();
 
-                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED &&
-                        http instanceof HttpHead) {
+                    if (response.getStatusLine().getStatusCode() == HttpStatus.SC_METHOD_NOT_ALLOWED
+                            && http instanceof HttpHead) {
                         EntityUtils.consume(response.getEntity());
 
                         http = new HttpGet(guarded.getUrl().toExternalForm());
@@ -112,8 +114,8 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                         }
                     }
 
-                    if (status == HttpStatus.SC_MOVED_TEMPORARILY ||
-                        status == HttpStatus.SC_MOVED_PERMANENTLY) {
+                    if (status == HttpStatus.SC_MOVED_TEMPORARILY
+                            || status == HttpStatus.SC_MOVED_PERMANENTLY) {
                         EntityUtils.consume(response.getEntity());
 
                         Header locationHeader = response.getFirstHeader("location");
@@ -125,16 +127,16 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                             status = response.getStatusLine().getStatusCode();
                         }
 
-                    } else if (status == HttpStatus.SC_BAD_REQUEST ||
-                               status == HttpStatus.SC_METHOD_NOT_ALLOWED) {
-                        log.info("Bad request: <" + guarded.getUrl() + ">.");
+                    } else if (status == HttpStatus.SC_BAD_REQUEST
+                            || status == HttpStatus.SC_METHOD_NOT_ALLOWED) {
+                        log.log(Level.INFO, "Bad request: <{0}>.", guarded.getUrl());
                     }
 
                 } catch (Throwable t) {
                     synchronized (submission) {
                         submission.incrExceptions();
                     }
-                    
+
                     log.log(Level.INFO, "Failed to load url: <" + guarded.getUrl() + ">.", t);
                     guarded.processed(0, t.getLocalizedMessage());
 
@@ -145,7 +147,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                                 InputStream content = response.getEntity().getContent();
                                 if (content != null) {
                                     if (content instanceof EofSensorInputStream) {
-                                        ((EofSensorInputStream)content).abortConnection();
+                                        ((EofSensorInputStream) content).abortConnection();
                                     }
                                 }
                             } else {
@@ -168,7 +170,7 @@ public class WeblinkLinkchecker extends AbstractWeblinkServer {
                         } else {
 
                             // already handled within catch clause
-                            log.info("Status was zero: <" + guarded.getUrl() + ">.");
+                            log.log(Level.INFO, "Status was zero: <{0}>.", guarded.getUrl());
                         }
                     } catch (Throwable t) {
                         t.printStackTrace();

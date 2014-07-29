@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>europeana-uim-model-europeana</artifactId>
-    <name>Unified Ingestion Manager: Europeana UIM Model </name>
+    <name>Unified Ingestion Manager: Model Europeana</name>
 
     <dependencies>
         <dependency>

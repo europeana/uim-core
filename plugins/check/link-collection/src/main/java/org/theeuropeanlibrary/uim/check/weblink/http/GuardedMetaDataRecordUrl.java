@@ -1,10 +1,10 @@
 package org.theeuropeanlibrary.uim.check.weblink.http;
 
+import eu.europeana.uim.guarded.GuardedUrl;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.theeuropeanlibrary.collections.guarded.GuardedUrl;
 import org.theeuropeanlibrary.model.common.Link;
 
 import eu.europeana.uim.store.Execution;

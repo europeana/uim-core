@@ -226,7 +226,7 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
                             @SuppressWarnings("unchecked")
                             @Override
                             public void processed(int status, String message) {
-                                LinkStatus state = null;
+                                LinkStatus state;
                                 if (status == 0) {
                                     state = LinkStatus.FAILED_CONNECTION;
                                 } else if (status < 400) {
@@ -281,11 +281,11 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
                                 }
 
                                 // TODO: deal with mdr update
-                                log.info("Checked <" + getLink().getUrl() + ">" + message);
+                                log.log(Level.INFO, "Checked <{0}>{1}", new Object[]{getLink().getUrl(), message});
                             }
                         }, context);
             } catch (MalformedURLException e) {
-                log.info("Invalid url: <" + link.getUrl() + "> for MDR:" + mdr.getId());
+                log.log(Level.INFO, "Invalid url: <{0}> for MDR:{1}", new Object[]{link.getUrl(), mdr.getId()});
             }
         }// all links in mdr
 

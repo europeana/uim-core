@@ -12,10 +12,10 @@
     <artifactId>europeana-uim-logging-database-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>Unified Ingestion Manager: Database Logging</name>
+    <name>Unified Ingestion Manager: Logging Database</name>
 
     <modules>
-        <module>model</module>
         <module>engine</module>
+        <module>model</module>
     </modules>
 </project>

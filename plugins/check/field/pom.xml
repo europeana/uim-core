@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>tel-uim-plugin-check-field</artifactId>
-    <name>Unified Ingestion Manager: TEL Field Validation Plugin</name>
+    <name>Unified Ingestion Manager: Check Field Validation Plugin</name>
     <packaging>bundle</packaging>
 
     <build>

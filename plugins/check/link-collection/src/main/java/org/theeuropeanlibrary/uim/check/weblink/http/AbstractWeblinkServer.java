@@ -10,11 +10,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.theeuropeanlibrary.collections.guarded.Guarded;
-import org.theeuropeanlibrary.collections.guarded.GuardedQueue;
-import org.theeuropeanlibrary.collections.guarded.TimedDifferenceCondition;
-
 import eu.europeana.uim.common.SimpleThreadFactory;
+import eu.europeana.uim.guarded.Guarded;
+import eu.europeana.uim.guarded.GuardedQueue;
+import eu.europeana.uim.guarded.TimedDifferenceCondition;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.store.Collection;

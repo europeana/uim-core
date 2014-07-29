@@ -1,0 +1,533 @@
+package eu.europeana.uim;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import eu.europeana.uim.adapter.UimDatasetAdapter;
+import eu.europeana.uim.external.ExternalService;
+import eu.europeana.uim.logging.LoggingEngine;
+import eu.europeana.uim.logging.LoggingEngineAdapter;
+import eu.europeana.uim.orchestration.Orchestrator;
+import eu.europeana.uim.plugin.Plugin;
+import eu.europeana.uim.Registry;
+import eu.europeana.uim.resource.ResourceEngine;
+import eu.europeana.uim.storage.StorageEngine;
+import eu.europeana.uim.workflow.Workflow;
+import java.util.Collections;
+import java.util.logging.Level;
+
+/**
+ * The central service registry for UIM. The service container registers all
+ * services with this registry (as configured in the blueprint xml files) so
+ * that one can get an overview of registered services for storage, logging,
+ * resources as well as workflows.
+ *
+ * @author Andreas Juffinger (andreas.juffinger@kb.nl)
+ * @since Feb 16, 2011
+ */
+public class UIMRegistry implements Registry {
+
+    private static final Logger log = Logger.getLogger(UIMRegistry.class.getName());
+
+    private String configuredStorageEngine;
+    private StorageEngine<?> activeStorage = null;
+    private final Map<String, StorageEngine<?>> storages = new HashMap<>();
+
+    private String configuredLoggingEngine;
+    private LoggingEngine<?> activeLogging = null;
+    private final Map<String, LoggingEngine<?>> loggers = new HashMap<>();
+
+    private String configuredResourceEngine;
+    private ResourceEngine activeResource = null;
+    private final Map<String, ResourceEngine> resources = new HashMap<>();
+
+    private final Map<String, Plugin> plugins = new HashMap<>();
+    private final Map<String, Workflow<?, ?>> workflows = new HashMap<>();
+
+    private Orchestrator<?> orchestrator = null;
+
+    private final Map<String, UimDatasetAdapter<?, ?>> adapters = new HashMap<>();
+
+    private final List<ExternalService> externals = new ArrayList<>();
+
+    /**
+     * Creates a new instance of this class.
+     */
+    public UIMRegistry() {
+        // nothing todo
+    }
+
+    @Override
+    public void setConfiguredStorageEngine(String configuredStorageEngine) {
+        // this may happen before the storage services are loaded
+        // we set the active storage "lazy"
+        this.configuredStorageEngine = configuredStorageEngine;
+        if (this.activeStorage != null) {
+            this.activeStorage = null;
+            this.activeStorage = getStorageEngine(configuredStorageEngine);
+        }
+    }
+
+    @Override
+    public void setConfiguredLoggingEngine(String configuredLoggingEngine) {
+        // this may happen before the storage services are loaded
+        // we set the active logging "lazy"
+
+        this.configuredLoggingEngine = configuredLoggingEngine;
+        if (this.activeLogging != null) {
+            this.activeLogging = null;
+            this.activeLogging = getLoggingEngine(configuredLoggingEngine);
+        }
+    }
+
+    @Override
+    public void setConfiguredResourceEngine(String configuredResourceEngine) {
+        // this may happen before the resource services are loaded
+        // we set the active resource engine "lazy"
+
+        this.configuredResourceEngine = configuredResourceEngine;
+        if (this.activeResource != null) {
+            this.activeResource = null;
+            this.activeResource = getResourceEngine(configuredResourceEngine);
+        }
+    }
+
+    @Override
+    public List<Workflow<?, ?>> getWorkflows() {
+        return new ArrayList<>(workflows.values());
+    }
+
+    @Override
+    public Workflow<?, ?> getWorkflow(String identifier) {
+        return workflows.get(identifier);
+    }
+
+    @Override
+    public void addPlugin(Plugin plugin) {
+        if (plugin != null) {
+            checkPluginForNonStaticMemberVariables(plugin);
+
+            log.log(Level.INFO, "Added plugin: {0}", plugin.getIdentifier());
+            if (!plugins.containsKey(plugin.getIdentifier())) {
+                plugin.initialize();
+                plugins.put(plugin.getIdentifier(), plugin);
+            }
+        }
+    }
+
+    /**
+     * Checks if the plugin contains non-static member variables
+     *
+     * @param plugin
+     */
+    private void checkPluginForNonStaticMemberVariables(Plugin plugin) {
+        log.log(Level.INFO, "Checking for non-static member-fields: {0}", plugin.getIdentifier());
+        StringBuilder nonStaticMembers = new StringBuilder();
+
+        // getFields() only accesses public fields - use getDeclaredFields() instead
+        for (Field currentField : plugin.getClass().getDeclaredFields()) {
+            if (Modifier.isStatic(currentField.getModifiers()) || currentField.getName().length() > 20) {
+                continue;
+            }
+            nonStaticMembers.append(currentField.getName());
+            nonStaticMembers.append(" ");
+        }
+        if (nonStaticMembers.length() > 0) {
+            throw new IllegalArgumentException(plugin.getIdentifier()
+                    + " has non-static member(s): "
+                    + nonStaticMembers.toString());
+        }
+    }
+
+    @Override
+    public Plugin getPlugin(String identifier) {
+        return plugins.get(identifier);
+    }
+
+    @Override
+    public List<Plugin> getPlugins() {
+        return new ArrayList<>(plugins.values());
+    }
+
+    @Override
+    public void removePlugin(Plugin plugin) {
+        if (plugin != null) {
+            log.log(Level.INFO, "Removed plugin: {0}", plugin.getIdentifier());
+            plugins.remove(plugin.getIdentifier());
+            plugin.shutdown();
+        }
+    }
+
+    @Override
+    public void addStorageEngine(StorageEngine<?> storage) {
+        if (storage != null) {
+            log.log(Level.INFO, "Added storage: {0}", storage.getIdentifier());
+            if (!storages.containsKey(storage.getIdentifier())) {
+                storage.initialize();
+                this.storages.put(storage.getIdentifier(), storage);
+
+                // activate default storage
+                if (storage.getIdentifier().equals(configuredStorageEngine)) {
+                    activeStorage = storage;
+                    log.log(Level.INFO, "Making storage {0} default", storage.getIdentifier());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeStorageEngine(StorageEngine<?> storage) {
+        if (storage != null) {
+            log.log(Level.INFO, "Removed storage: {0}", storage.getIdentifier());
+            storage.shutdown();
+
+            StorageEngine<?> remove = this.storages.remove(storage.getIdentifier());
+            if (activeStorage == remove) {
+                activeStorage = null;
+            }
+        }
+    }
+
+    @Override
+    public Collection<StorageEngine<?>> getStorageEngines() {
+        return storages.values();
+    }
+
+    @Override
+    public void addWorkflow(Workflow<?, ?> workflow) {
+        if (workflow != null) {
+            log.log(Level.INFO, "Added workflow: {0}", workflow.getName());
+            if (!workflows.containsKey(workflow.getIdentifier())) {
+                workflows.put(workflow.getIdentifier(), workflow);
+            }
+        }
+    }
+
+    @Override
+    public void removeWorkflow(Workflow<?, ?> workflow) {
+        if (workflow != null) {
+            log.log(Level.INFO, "Removed workflow: {0}", workflow.getName());
+            workflows.remove(workflow.getIdentifier());
+        }
+    }
+
+    @Override
+    public StorageEngine<?> getStorageEngine() {
+        if (storages == null || storages.isEmpty()) {
+            return null;
+        }
+
+        if (activeStorage == null) {
+            if (getStorageEngine(configuredStorageEngine) != null) {
+                activeStorage = getStorageEngine(configuredStorageEngine);
+            } else {
+                // default to first engine
+                activeStorage = storages.values().iterator().next();
+
+            }
+        }
+        return activeStorage;
+    }
+
+    StorageEngine<?> getActiveStorageEngine() {
+        return activeStorage;
+    }
+
+    @Override
+    public StorageEngine<?> getStorageEngine(String identifier) {
+        if (identifier == null || storages == null || storages.isEmpty()) {
+            return null;
+        }
+        return storages.get(identifier);
+    }
+
+    @Override
+    public void addLoggingEngine(LoggingEngine<?> logging) {
+        if (logging != null) {
+            log.log(Level.INFO, "Added logging engine:{0}", logging.getIdentifier());
+            if (!loggers.containsKey(logging.getIdentifier())) {
+                loggers.put(logging.getIdentifier(), logging);
+                // activate default logging
+                if (activeLogging == null) {
+                    activeLogging = logging;
+                } else if (logging.getIdentifier().equals(configuredLoggingEngine)) {
+                    activeLogging = logging;
+                    log.log(Level.INFO, "Making logging engine {0} default", logging.getIdentifier());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeLoggingEngine(LoggingEngine<?> logging) {
+        if (logging != null) {
+            LoggingEngine<?> remove = loggers.remove(logging.getIdentifier());
+            if (activeLogging == remove) {
+                activeLogging = null;
+            }
+        }
+    }
+
+    @Override
+    public List<LoggingEngine<?>> getLoggingEngines() {
+        List<LoggingEngine<?>> res = new ArrayList<>();
+        res.addAll(loggers.values());
+        return res;
+    }
+
+    @Override
+    public LoggingEngine<?> getLoggingEngine() {
+        if (loggers == null || loggers.isEmpty()) {
+            return LoggingEngineAdapter.LONG;
+        }
+
+        if (activeLogging == null) {
+            if (getLoggingEngine(configuredLoggingEngine) != null) {
+                activeLogging = getLoggingEngine(configuredLoggingEngine);
+            } else {
+                // default to first engine
+                activeLogging = loggers.values().iterator().next();
+            }
+        }
+        return activeLogging;
+    }
+
+    LoggingEngine<?> getActiveLoggingEngine() {
+        return activeLogging;
+    }
+
+    @Override
+    public LoggingEngine<?> getLoggingEngine(String identifier) {
+        if (identifier == null || loggers == null || loggers.isEmpty()) {
+            return null;
+        }
+        return loggers.get(identifier);
+    }
+
+    @Override
+    public void addResourceEngine(ResourceEngine resource) {
+        if (resource != null) {
+            log.log(Level.INFO, "Added resource engine:{0}", resource.getIdentifier());
+            if (!resources.containsKey(resource.getIdentifier())) {
+                resource.initialize();
+                resources.put(resource.getIdentifier(), resource);
+
+                // activate default resource engine
+                if (activeResource == null) {
+                    activeResource = resource;
+                } else if (resource.getIdentifier().equals(configuredResourceEngine)) {
+                    activeResource = resource;
+                    log.log(Level.INFO, "Making resource engine {0} default", resource.getIdentifier());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void removeResourceEngine(ResourceEngine resourceEngine) {
+        if (resourceEngine != null) {
+            ResourceEngine remove = resources.remove(resourceEngine.getIdentifier());
+            if (activeResource == remove) {
+                activeResource = null;
+            }
+
+        }
+    }
+
+    @Override
+    public List<ResourceEngine> getResourceEngines() {
+        List<ResourceEngine> res = new ArrayList<>();
+        res.addAll(resources.values());
+        return res;
+    }
+
+    @Override
+    public ResourceEngine getResourceEngine() {
+        if (resources == null || resources.isEmpty()) {
+            return null;
+        }
+
+        if (activeResource == null) {
+            if (getResourceEngine(configuredResourceEngine) != null) {
+                activeResource = getResourceEngine(configuredResourceEngine);
+            } else {
+                // default to first engine
+                activeResource = resources.values().iterator().next();
+            }
+        }
+        return activeResource;
+    }
+
+    @Override
+    public ResourceEngine getResourceEngine(String identifier) {
+        if (identifier == null || resources == null || resources.isEmpty()) {
+            return null;
+        }
+        return resources.get(identifier);
+    }
+
+    ResourceEngine getActiveResourceEngine() {
+        return activeResource;
+    }
+
+    @Override
+    public Orchestrator<?> getOrchestrator() {
+        return orchestrator;
+    }
+
+    @Override
+    public void setOrchestrator(Orchestrator<?> orchestrator) {
+        this.orchestrator = orchestrator;
+    }
+
+    @Override
+    public void unsetOrchestrator(Orchestrator<?> orchestrator) {
+        this.orchestrator = null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("\nRegistered plugins:");
+        builder.append("\n--------------------------------------");
+        if (plugins.isEmpty()) {
+            builder.append("\n\tNo plugins. ");
+        } else {
+            for (Plugin plugin : plugins.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\tPlugin:");
+                }
+                builder.append(plugin.getIdentifier()).append("|").append(plugin.getName()).append(
+                        ": [").append(plugin.getDescription()).append("]");
+            }
+        }
+
+        builder.append("\nRegistered workflows:");
+        builder.append("\n--------------------------------------");
+        if (plugins.isEmpty()) {
+            builder.append("\n\tNo workflows. ");
+        } else {
+            for (Workflow<?, ?> worfklow : workflows.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\tWorkflow:");
+                }
+                builder.append(worfklow.getIdentifier()).append("|").append(worfklow.getName()).append(
+                        ": [").append(worfklow.getDescription()).append("]");
+            }
+        }
+
+        builder.append("\nRegistered storage:");
+        builder.append("\n--------------------------------------");
+        if (storages.isEmpty()) {
+            builder.append("\n\tNo storage.");
+        } else {
+            for (StorageEngine<?> storage : storages.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\t");
+                }
+                if (activeStorage != null && activeStorage == storage) {
+                    builder.append("* ");
+                } else {
+                    builder.append("  ");
+                }
+
+                builder.append(storage.getIdentifier());
+                builder.append(" [").append(storage.getStatus()).append("] ");
+                builder.append(storage.getConfiguration().toString());
+            }
+        }
+
+        builder.append("\nRegistered resource engines:");
+        builder.append("\n--------------------------------------");
+        if (resources.isEmpty()) {
+            builder.append("\n\tNo resource engine.");
+        } else {
+            for (ResourceEngine resourceEngine : resources.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\t");
+                }
+                if (activeResource != null && activeResource == resourceEngine) {
+                    builder.append("* ");
+                } else {
+                    builder.append("  ");
+                }
+
+                builder.append(resourceEngine.getIdentifier());
+                builder.append(" [").append(resourceEngine.getStatus()).append("] ");
+                builder.append(resourceEngine.getConfiguration().toString());
+            }
+        }
+
+        builder.append("\nRegistered logging:");
+        builder.append("\n--------------------------------------");
+        if (loggers.isEmpty()) {
+            builder.append("\n\tNo logging.");
+        } else {
+            for (LoggingEngine<?> loggingEngine : loggers.values()) {
+                if (builder.length() > 0) {
+                    builder.append("\n\t");
+                }
+                if (activeLogging != null && activeLogging == loggingEngine) {
+                    builder.append("* ");
+                } else {
+                    builder.append("  ");
+                }
+                builder.append(loggingEngine.getIdentifier());
+            }
+        }
+
+        builder.append("\nRegistered orchestrator:");
+        builder.append("\n--------------------------------------");
+        builder.append(orchestrator != null ? "\n\t" + orchestrator.getIdentifier()
+                : "\n\tNo orchestrator defined.");
+
+        return builder.toString();
+    }
+
+    @Override
+    public void addUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter) {
+        if (adapter != null) {
+            String pluginIdentifier = adapter.getPluginIdentifier();
+            log.log(Level.INFO, "Added adapter: {0}", pluginIdentifier);
+            if (!adapters.containsKey(pluginIdentifier)) {
+                this.adapters.put(pluginIdentifier, adapter);
+            }
+        }
+    }
+
+    @Override
+    public void removeUimDatasetAdapter(UimDatasetAdapter<?, ?> adapter) {
+        if (adapter != null) {
+            String pluginIdentifier = adapter.getPluginIdentifier();
+            log.log(Level.INFO, "Removed adapter: {0}", pluginIdentifier);
+            this.adapters.remove(pluginIdentifier);
+        }
+    }
+
+    @Override
+    public UimDatasetAdapter<?, ?> getUimDatasetAdapter(String pluginIdentifier) {
+        return this.adapters.get(pluginIdentifier);
+    }
+
+    @Override
+    public void addExternalService(ExternalService service) {
+        externals.add(service);
+    }
+
+    @Override
+    public void removeExternalService(ExternalService service) {
+        externals.remove(service);
+    }
+
+    @Override
+    public List<ExternalService> getExternalServices() {
+        return Collections.unmodifiableList(externals);
+    }
+}

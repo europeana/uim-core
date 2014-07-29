@@ -1,41 +1,41 @@
 /* Submission.java - created on Jul 15, 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.uim.check.weblink.http;
 
+import eu.europeana.uim.guarded.GuardedQueue;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.theeuropeanlibrary.collections.guarded.GuardedQueue;
-
 import eu.europeana.uim.storage.StorageEngine;
 
 /**
- * 
- * 
+ *
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Jul 15, 2011
  */
 public class Submission {
-    private static final Logger              log        = Logger.getLogger(Submission.class.getName());
 
-    private Set<GuardedMetaDataRecordUrl<?>> remaining  = new HashSet<GuardedMetaDataRecordUrl<?>>();
-    private Map<Integer, Integer>            statusmap  = new HashMap<Integer, Integer>();
+    private static final Logger log = Logger.getLogger(Submission.class.getName());
 
-    private long                             start      = System.currentTimeMillis();
+    private final Set<GuardedMetaDataRecordUrl<?>> remaining = new HashSet<>();
+    private final Map<Integer, Integer> statusmap = new HashMap<>();
 
-    private int                              processed  = 0;
-    private int                              exceptions = 0;
+    private final long start = System.currentTimeMillis();
 
-    private GuardedQueue                     queue;
-    private StorageEngine<?>                 storage;
+    private int processed = 0;
+    private int exceptions = 0;
+
+    private final GuardedQueue queue;
+    private final StorageEngine<?> storage;
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param storage
-     * @param queue 
+     * @param queue
      */
     public Submission(StorageEngine<?> storage, GuardedQueue queue) {
         this.storage = storage;
@@ -44,7 +44,7 @@ public class Submission {
 
     /**
      * Returns the storage.
-     * 
+     *
      * @return the storage
      */
     public StorageEngine<?> getStorageEngine() {
@@ -70,12 +70,12 @@ public class Submission {
             return remaining.remove(guarded);
         }
     }
-    
+
     /**
      * @return more?
      */
     public boolean hasRemaining() {
-        synchronized(remaining) {
+        synchronized (remaining) {
             return !remaining.isEmpty();
         }
     }
@@ -110,7 +110,7 @@ public class Submission {
 
     /**
      * Increases the status count by one
-     * 
+     *
      * @param status
      */
     public void incrStatus(int status) {
@@ -135,7 +135,7 @@ public class Submission {
             if (queue.isEmpty()) {
                 Thread.sleep(500);
             }
-            
+
             while (!remaining.isEmpty()) {
                 Thread.sleep(100);
 //                if (remaining.size() == 1) {

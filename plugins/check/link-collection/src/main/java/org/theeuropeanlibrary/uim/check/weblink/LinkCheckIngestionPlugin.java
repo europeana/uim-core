@@ -43,6 +43,7 @@ import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
 import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarService;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This plugin check links and adds/updates status information onto the {@link Link} object.
@@ -218,17 +219,13 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         RevisingProgressMonitor revisingProgressMonitor = new MemoryProgressMonitor();
         monitor.addListener(revisingProgressMonitor);
 
-        I[] recs = null;
-
+        BlockingQueue<I> refQueue = null;
         try {
-            recs = context.getStorageEngine().getByCollection(coll);
-            ae.incrementScheduled(recs.length);
-
+            refQueue = context.getStorageEngine().getMetaDataRecordIdsByCollection(coll);
+            ae.incrementScheduled(refQueue.size());
         } catch (StorageEngineException e1) {
             e1.printStackTrace();
         }
-
-        LinkedBlockingQueue<I> refQueue = new LinkedBlockingQueue<I>(Arrays.asList(recs));
 
         Submission submission = WeblinkLinkchecker.getShared().getSubmission(context.getExecution());
 

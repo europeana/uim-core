@@ -14,22 +14,25 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import eu.europeana.uim.logging.modules.EdmLogging.LogEntryEdmCheck;
+import eu.europeana.uim.logging.modules.extension.EdmLogging.LogEntryEdmCheck;
 
 /**
- * Implementation of log entry using JPA to persist the logging information to a data base.
- * 
- * This is to large parts a duplication of @see {@field TLogEntry}. Given the expected high
- * numbers of log entries these tables/entities are not derived from each other.
- * 
+ * Implementation of log entry using JPA to persist the logging information to a
+ * data base.
+ *
+ * This is to large parts a duplication of @see {
+ *
+ * @field TLogEntry}. Given the expected high numbers of log entries these
+ * tables/entities are not derived from each other.
+ *
  * They a kept separate to reduce the number of rows per table.
- * 
+ *
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 4 de Jul de 2013
  */
 /**
- * 
- * 
+ *
+ *
  * @author Nuno Freire (nfreire@gmail.com)
  * @since 4 de Jul de 2013
  */
@@ -38,48 +41,49 @@ import eu.europeana.uim.logging.modules.EdmLogging.LogEntryEdmCheck;
 @Inheritance(strategy = InheritanceType.JOINED)
 @SequenceGenerator(name = "SEQ_UIM_LOGENTRY_EDMCHECK", sequenceName = "seq_uim_logentry_edmcheck")
 public class TLogEntryEdmCheck implements LogEntryEdmCheck {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SEQ_UIM_LOGENTRY_EDMCHECK")
-    private Long     oid;
+    private Long oid;
 
     @Column
-    private String   module;
+    private String module;
 
     @Column
-    private String   stringExecutionId;
+    private String stringExecutionId;
 
     @Column
-    private String   stringMetaDataRecordId;
+    private String stringMetaDataRecordId;
 
     @Column(length = 4000)
-    private String   message0;
+    private String message0;
 
     @Column(length = 4000)
-    private String   message1;
+    private String message1;
 
     @Column(length = 4000)
-    private String   message2;
+    private String message2;
 
     @Column(length = 4000)
-    private String   message3;
+    private String message3;
 
     @Column(length = 4000)
-    private String   message4;
+    private String message4;
 
     @Column(length = 4000)
-    private String   message5;
+    private String message5;
 
     @Column(length = 4000)
-    private String   message6;
+    private String message6;
 
     @Column(length = 4000)
-    private String   message7;
+    private String message7;
 
     @Column(length = 4000)
-    private String   message8;
+    private String message8;
 
     @Column(length = 4000)
-    private String   message9;
+    private String message9;
 
     @Transient
     private String[] messages;
@@ -92,19 +96,19 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
 
     /**
      * Creates a new instance of this class.
-     * 
+     *
      * @param stringExecutionId
      * @param module
      * @param stringMetaDataRecordId
      * @param messages
      */
     public TLogEntryEdmCheck(String stringExecutionId, String module,
-                             String stringMetaDataRecordId, String... messages) {
+            String stringMetaDataRecordId, String... messages) {
         super();
         this.stringExecutionId = stringExecutionId;
         this.module = module;
         this.stringMetaDataRecordId = stringMetaDataRecordId;
-        
+
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
@@ -119,8 +123,8 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
     }
 
     /**
-     * @return unique identifier used as primary key on database (is automatically set when
-     *         persisted)
+     * @return unique identifier used as primary key on database (is
+     * automatically set when persisted)
      */
     public Long getOid() {
         return oid;
@@ -132,8 +136,7 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
     }
 
     /**
-     * @param stringExecutionId
-     *            for which stringExecutionId
+     * @param stringExecutionId for which stringExecutionId
      */
     public void setStringExecutionId(String stringExecutionId) {
         this.stringExecutionId = stringExecutionId;
@@ -145,8 +148,7 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
     }
 
     /**
-     * @param module
-     *            name of plugin
+     * @param module name of plugin
      */
     public void setModule(String module) {
         this.module = module;
@@ -158,8 +160,7 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
     }
 
     /**
-     * @param stringMetaDataRecordId
-     *            data set ID
+     * @param stringMetaDataRecordId data set ID
      */
     public void setStringMetaDataRecordId(String stringMetaDataRecordId) {
         this.stringMetaDataRecordId = stringMetaDataRecordId;
@@ -206,8 +207,8 @@ public class TLogEntryEdmCheck implements LogEntryEdmCheck {
     }
 
     /**
-     * @param messages
-     *            string messages, note that only maximum 10 messages are supported by this entry
+     * @param messages string messages, note that only maximum 10 messages are
+     * supported by this entry
      */
     protected void setMessage(String[] messages) {
         this.messages = messages;

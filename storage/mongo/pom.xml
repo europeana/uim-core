@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>europeana-uim-storage-mongo</artifactId>
-	<name>Unified Ingestion Manager: API Mongo DB Storage</name>
+	<name>Unified Ingestion Manager: Storage MongoDB</name>
 	<packaging>bundle</packaging>
 
 	<dependencies>
