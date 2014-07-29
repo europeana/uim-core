@@ -51,13 +51,13 @@
 						<g:HorizontalPanel>
 							<g:HTML>From:</g:HTML>
 							<g:TextBox ui:field='startDateText' />
-							<g:Button ui:field='clearStartDateBTN' />
+							<g:Button ui:field='clearStartDateButton' />
 							<dp:DatePicker ui:field="startDate" />
 						</g:HorizontalPanel>
 						<g:HorizontalPanel>
 							<g:HTML>To:&nbsp;&nbsp;&nbsp;&nbsp;</g:HTML>
 							<g:TextBox ui:field='endDateText' />
-							<g:Button ui:field='clearEndDateBTN' />
+							<g:Button ui:field='clearEndDateButton' />
 							<dp:DatePicker ui:field="endDate" />
 						</g:HorizontalPanel>
 						<g:HorizontalPanel>

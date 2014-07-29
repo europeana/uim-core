@@ -5,6 +5,7 @@ package eu.europeana.uim.gui.cp.client.monitoring;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -92,13 +93,13 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
      * Clear StartDateButton Button
      */
     @UiField(provided = true)
-    Button       clearStartDateBTN;
+    Button       clearStartDateButton;
 
     /**
      * Clear EndDateButton Button
      */
     @UiField(provided = true)
-    Button       clearEndDateBTN;
+    Button       clearEndDateButton;
 
     /**
      * Update Button
@@ -113,14 +114,14 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
     Button       clearButton;
 
     /**
-     * The cached value of the start date.
+     * cached value of the start date.
      */
-    private Date startDateval;
+    private Date startDateValue;
 
     /**
-     * The cached value of the end date.
+     * cached value of the end date.
      */
-    private Date endDateval;
+    private Date endDateValue;
 
     /**
      * The UiBinder interface used by this example.
@@ -174,25 +175,28 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
         endDateText = new TextBox();
         searchButton = new Button();
         clearButton = new Button();
-        clearStartDateBTN = new Button();
-        clearEndDateBTN = new Button();
+        clearStartDateButton = new Button();
+        clearEndDateButton = new Button();
 
-        clearStartDateBTN.setText("Clear");
-        clearStartDateBTN.addClickHandler(new ClickHandler() {
+        clearStartDateButton.setText("Clear");
+        clearStartDateButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, -6); 
+                
                 startDateText.setText("");
-                startDateval = null;
+                startDateValue = cal.getTime();
                 startDate.setValue(new Date());
             }
         });
 
-        clearEndDateBTN.setText("Clear");
-        clearEndDateBTN.addClickHandler(new ClickHandler() {
+        clearEndDateButton.setText("Clear");
+        clearEndDateButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
                 endDateText.setText("");
-                endDateval = null;
+                endDateValue = null;
                 endDate.setValue(new Date());
             }
         });
@@ -202,7 +206,7 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
             @Override
             public void onFocus(FocusEvent event) {
                 startDate.setVisible(true);
-                clearStartDateBTN.setVisible(false);
+                clearStartDateButton.setVisible(false);
             }
         });
 
@@ -211,7 +215,7 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
             @Override
             public void onFocus(FocusEvent event) {
                 endDate.setVisible(true);
-                clearEndDateBTN.setVisible(false);
+                clearEndDateButton.setVisible(false);
             }
         });
 
@@ -219,11 +223,11 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
             @Override
             public void onValueChange(ValueChangeEvent<Date> event) {
                 Date date = event.getValue();
-                startDateval = date;
+                startDateValue = date;
                 String dateString = date.toString();
                 startDateText.setText(dateString);
                 startDate.setVisible(false);
-                clearStartDateBTN.setVisible(true);
+                clearStartDateButton.setVisible(true);
             }
         });
 
@@ -231,11 +235,11 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
             @Override
             public void onValueChange(ValueChangeEvent<Date> event) {
                 Date date = event.getValue();
-                endDateval = date;
+                endDateValue = date;
                 String dateString = date.toString();
                 endDateText.setText(dateString);
                 endDate.setVisible(false);
-                clearEndDateBTN.setVisible(true);
+                clearEndDateButton.setVisible(true);
             }
         });
 
@@ -368,13 +372,17 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
 
                 // Reset the workflow list
                 resetSelectedWorkflows();
+
                 // Reset the time range fields
-                startDateText.setText("");
-                startDateval = null;
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, -6); 
+                
+                startDateText.setText("");  
+                startDateValue = cal.getTime();
                 startDate.setValue(new Date());
 
                 endDateText.setText("");
-                endDateval = null;
+                endDateValue = null;
                 endDate.setValue(new Date());
             }
         });
@@ -419,7 +427,7 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
 
         String[] workflows = getSelectedWorkflows();
 
-        executionService.getPastExecutions(workflows, mnemonic, startDateval, endDateval,
+        executionService.getPastExecutions(workflows, mnemonic, startDateValue, endDateValue,
                 new AsyncCallback<List<ExecutionDTO>>() {
                     @Override
                     public void onFailure(Throwable caught) {
