@@ -5,7 +5,6 @@ package eu.europeana.uim.gui.cp.client.monitoring;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -182,11 +181,11 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
         clearStartDateButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent arg0) {
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.MONTH, -6); 
+//                Calendar cal = Calendar.getInstance();
+//                cal.add(Calendar.MONTH, -6); 
                 
                 startDateText.setText("");
-                startDateValue = cal.getTime();
+                startDateValue = null;//cal.getTime();
                 startDate.setValue(new Date());
             }
         });
@@ -374,11 +373,11 @@ public class FilteredIngestionHistoryWidget extends IngestionHistoryWidget {
                 resetSelectedWorkflows();
 
                 // Reset the time range fields
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.MONTH, -6); 
+//                Calendar cal = Calendar.getInstance();
+//                cal.add(Calendar.MONTH, -6); 
                 
                 startDateText.setText("");  
-                startDateValue = cal.getTime();
+                startDateValue = null;//cal.getTime();
                 startDate.setValue(new Date());
 
                 endDateText.setText("");
