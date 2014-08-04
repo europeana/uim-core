@@ -27,6 +27,10 @@ public class Metadata {
      * Creates a new instance of this class.
      */
     public Metadata() {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < Math.min(10,stackTrace.length); i++) {
+            System.out.println(stackTrace[i]);
+        }
     }
 
     /**
@@ -36,6 +40,11 @@ public class Metadata {
      * @param format
      */
     public Metadata(String recordInXml, String format) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < Math.min(10,stackTrace.length); i++) {
+            System.out.println(stackTrace[i]);
+        }
+        
         if (recordInXml == null) { throw new IllegalArgumentException(
                 "Argument 'recordInXml' should not be null!"); }
         if (format == null) { throw new IllegalArgumentException(
