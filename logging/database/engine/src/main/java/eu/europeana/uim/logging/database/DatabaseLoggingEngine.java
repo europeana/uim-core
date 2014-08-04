@@ -35,7 +35,7 @@ import eu.europeana.uim.store.UimDataSet;
  * @since Mar 31, 2011
  */
 public class DatabaseLoggingEngine<I> implements LoggingEngine<I> {
-    private static final int        BATCH_SIZE    = 500;
+    private static final int        BATCH_SIZE    = 50;
 
     private static final Logger     log           = Logger.getLogger(DatabaseLoggingEngine.class.getName());
 
