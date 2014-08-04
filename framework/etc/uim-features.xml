@@ -19,7 +19,6 @@
 	</feature>
 
 	<feature name="uim-core-pers" version="2.0.0">
-		>
 		<bundle>mvn:eu.europeana/europeana-uim-storage-mongo/2.0.0</bundle>
 		<bundle>mvn:eu.europeana/europeana-uim-logging-database/2.0.0</bundle>
 	</feature>
