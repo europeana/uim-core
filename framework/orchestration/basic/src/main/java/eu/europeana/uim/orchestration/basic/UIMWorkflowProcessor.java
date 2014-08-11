@@ -57,9 +57,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private final List<ActiveExecution<?, I>>                               completions          = new ArrayList<ActiveExecution<?, I>>();
 
     // FIXME: Updated these values, cannot handle more
-    private int                                                             maxRunningExecutions = 50;
-    private int                                                             maxTotalProgress     = 500; // 100 5000;
-    private int                                                             maxInProgress        = 50; // 10 200;
+    private int                                                             maxRunningExecutions = 10;
+    private int                                                             maxTotalProgress     = 250; // 100 5000;
+    private int                                                             maxInProgress        = 25; // 10 200;
 
     /**
      * Creates a new instance of this class.
