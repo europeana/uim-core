@@ -32,6 +32,10 @@ public class Link {
     @FieldId(5)
     private String     anchorKey;
 
+    //FIXME: this is a first hack, should be improved later (Nuno please)
+    @FieldId(6)
+    private String     expirationDate;
+
     /**
      * Creates a new instance of this class.
      */
@@ -137,6 +141,20 @@ public class Link {
         this.anchorKey = anchorKey;
     }
 
+    /**
+     * @return expiration date
+     */
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    /**
+     * @param expirationDate
+     */
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
