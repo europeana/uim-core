@@ -139,5 +139,9 @@ public enum TextRelation {
     /**
      * contains a term indicating the script
      */
-    SCRIPT
+    SCRIPT,
+    /**
+     * contains a term or terms that can be used to group records together for searching
+     */
+    GROUPING
 }
