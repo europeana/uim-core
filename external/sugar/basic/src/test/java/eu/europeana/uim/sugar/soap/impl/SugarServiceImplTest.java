@@ -49,15 +49,15 @@ public class SugarServiceImplTest {
      */
     @BeforeClass
     public static void loadConfig() throws IOException {
-        username = "tsugar";
-        password = "TestSugar";
+        username = System.getProperty("sugar.username");
+        password = System.getProperty("sugar.password");
 
         if (username == null || password == null) { throw new IllegalStateException(
                 "No credentials configured! sugar.username, sugar.password "
                         + "must be set via system property for tests."); }
 
         properties = new Properties();
-        properties.load(new FileInputStream(new File("/Users/simontzanakis/git/uim-core/external/sugar/basic/src/main/profiles/tel/sugarcrm.properties")));
+        properties.load(SugarServiceImplTest.class.getResourceAsStream("/sugarcrm.properties"));
 
         String endpoint = properties.getProperty("sugar.endpoint");
 
