@@ -196,7 +196,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
-//    @Ignore
+    @Ignore
     public void testUpdateSugarCollection() throws SugarException {
         String pMne = properties.getProperty("test.provider.mnemonic");
         String cMne = properties.getProperty("test.collection.mnemonic");
