@@ -131,19 +131,19 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     DESCRIPTION_LINK_NATIVE("tel_description_link_native", "telda_tel_dataset.tel_description_link_native", null, "Link to the collection description in the native language"),
 
-    PARTNERSHIP_AGREEMENT_STATUS("partnership_agreement_status_c", "telda_tel_dataset.partnership_agreement_status_c", null, "The status of the patnership agreement"),
+    PARTNERSHIP_AGREEMENT_STATUS("partnership_agreement_status_c", "telda_tel_dataset.partnership_agreement_status_c", SugarControlledVocabulary.PARTNERSHIP_AGREEMENT_STATUS, "The status of the patnership agreement"),
 
-    RESTRICTION_BY_DISTRIB_FORMAT("restriction_by_distrib_format_c", "telda_tel_dataset.restriction_by_distrib_format_c", null, "Distribution format restriction"),
+    RESTRICTION_BY_DISTRIB_FORMAT("restriction_by_distrib_format_c", "telda_tel_dataset.restriction_by_distrib_format_c", SugarControlledVocabulary.RESTRICTION_BY_DISTRIB_FORMAT, "Distribution format restriction"),
 
-    TEL_OTHER_DISTRIBUTION_FORMATS("tel_other_distribution_formats_c", "telda_tel_dataset.tel_other_distribution_formats_c", null, "Other distribution formats"),
+    TEL_OTHER_DISTRIBUTION_FORMATS("tel_other_distribution_formats_c", "telda_tel_dataset.tel_other_distribution_formats_c", SugarControlledVocabulary.TEL_OTHER_DISTRIBUTION_FORMATS, "Other distribution formats"),
 
-    TEL_SOURCE_DATA_LICENCE("tel_source_data_licence_c", "telda_tel_dataset.tel_source_data_licence_c", null, "Source data licence"),
+    TEL_SOURCE_DATA_LICENCE("tel_source_data_licence_c", "telda_tel_dataset.tel_source_data_licence_c", SugarControlledVocabulary.TEL_SOURCE_DATA_LICENCE, "Source data licence"),
 
-    TEL_OTHER_SOURCE_DATA_LICENSE("tel_other_source_data_license_c", "telda_tel_dataset.tel_other_source_data_license_c", null, "Other Source data licence"),
+    TEL_OTHER_SOURCE_DATA_LICENSE("tel_other_source_data_license_c", "telda_tel_dataset.tel_other_source_data_license_c", SugarControlledVocabulary.TEL_OTHER_SOURCE_DATA_LICENSE, "Other Source data licence"),
 
-    TEL_FIELD_OF_TIME_RESTRICTION("tel_field_of_time_restriction_c", "telda_tel_dataset.tel_field_of_time_restriction_c", null, "Restriction by release date - Field of time restriction"),
+    TEL_FIELD_OF_TIME_RESTRICTION("tel_field_of_time_restriction_c", "telda_tel_dataset.tel_field_of_time_restriction_c", SugarControlledVocabulary.TEL_FIELD_OF_TIME_RESTRICTION, "Restriction by release date - Field of time restriction"),
 
-    TEL_DURATION_OF_RESTRICTION_C("tel_duration_of_restriction_c", "telda_tel_dataset.tel_duration_of_restriction_c", null, "TEL Restriction by release date - Duration of restriction");
+    TEL_DURATION_OF_RESTRICTION("tel_duration_of_restriction_c", "telda_tel_dataset.tel_duration_of_restriction_c", SugarControlledVocabulary.TEL_DURATION_OF_RESTRICTION, "TEL Restriction by release date - Duration of restriction");
 
     private final String                       fieldId;
     private final String                       qualifiedFieldId;

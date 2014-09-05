@@ -56,13 +56,11 @@ public class PropertiesSugarMapping implements SugarMapping {
         for (String property : properties.stringPropertyNames()) {
             if ("sugar.provider.mnemonic".equals(property)) {
                 // not updateable
-                MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property),
-                        StandardControlledVocabulary.MNEMONIC);
+                MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property), StandardControlledVocabulary.MNEMONIC);
                 pro.add(fieldImpl);
             } else if ("sugar.collection.mnemonic".equals(property)) {
                 // not updateable
-                MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property),
-                        StandardControlledVocabulary.MNEMONIC);
+                MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property), StandardControlledVocabulary.MNEMONIC);
                 col.add(fieldImpl);
 
             } else if (property.startsWith("sugar.provider.")) {
@@ -82,8 +80,7 @@ public class PropertiesSugarMapping implements SugarMapping {
                 }
 
                 if (mapping != null) {
-                    MappingFieldImpl fieldImpl = new MappingFieldImpl(
-                            properties.getProperty(property), mapping);
+                    MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property), mapping);
                     pro.add(fieldImpl);
                     uPro.add(fieldImpl);
                 } else {
@@ -108,16 +105,29 @@ public class PropertiesSugarMapping implements SugarMapping {
                 } else if ("sugar.collection.repoxtype".equals(property)) {
                     mapping = StandardControlledVocabulary.REPOX_TYPE;
                 } else if ("sugar.collection.inuim".equals(property)) {
-                     mapping = StandardControlledVocabulary.ACTIVE;
+                    mapping = StandardControlledVocabulary.ACTIVE;
                 } else if ("sugar.collection.profile".equals(property)) {
                     mapping = SugarControlledVocabulary.COLLECTION_METADATA_PROFILE;
                 } else if ("sugar.collection.status".equals(property)) {
                     mapping = SugarControlledVocabulary.COLLECTION_STATUS;
+                } else if ("sugar.collection.partnership.agreement.status".equals(property)) {
+                    mapping = SugarControlledVocabulary.PARTNERSHIP_AGREEMENT_STATUS;
+                } else if ("sugar.collection.restriction.by.destribution.format".equals(property)) {
+                    mapping = SugarControlledVocabulary.RESTRICTION_BY_DISTRIB_FORMAT;
+                } else if ("sugar.collection.other.distribution.formats".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_OTHER_DISTRIBUTION_FORMATS;
+                } else if ("sugar.collection.source.data.licence".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_SOURCE_DATA_LICENCE;
+                } else if ("sugar.collection.other.source.data.licence".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_OTHER_SOURCE_DATA_LICENSE;
+                } else if ("sugar.collection.field.of.time.restriction".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_FIELD_OF_TIME_RESTRICTION;
+                } else if ("sugar.collection.duration.of.restriction".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_DURATION_OF_RESTRICTION;
                 }
 
                 if (mapping != null) {
-                    MappingFieldImpl fieldImpl = new MappingFieldImpl(
-                            properties.getProperty(property), mapping);
+                    MappingFieldImpl fieldImpl = new MappingFieldImpl(properties.getProperty(property), mapping);
                     col.add(fieldImpl);
                     uCol.add(fieldImpl);
                 } else {
