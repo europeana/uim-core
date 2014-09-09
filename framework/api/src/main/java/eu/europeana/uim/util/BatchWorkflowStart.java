@@ -400,16 +400,16 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
                                 Task<MetaDataRecord<I>, I> task = new Task<MetaDataRecord<I>, I>(
                                         mdr, context);
-                                while (true) {
-                                    if (getQueue().size() < BATCH_SIZE) {
+//                                while (true) {
+//                                    if (getQueue().size() < BATCH_SIZE) {
                                         synchronized (getQueue()) {
                                             getQueue().offer(task);
                                             break;
                                         }
-                                    } else {
-                                        Thread.currentThread().wait(10);
-                                    }
-                                }
+//                                    } else {
+//                                        Thread.currentThread().wait(10);
+//                                    }
+//                                }
                             } else {
                                 log.warning("Requested '" + poll[i] + "' record is null!");
                             }
