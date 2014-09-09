@@ -404,7 +404,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 //                                    if (getQueue().size() < BATCH_SIZE) {
                                         synchronized (getQueue()) {
                                             getQueue().offer(task);
-                                            break;
+//                                            break;
                                         }
 //                                    } else {
 //                                        Thread.currentThread().wait(10);
