@@ -102,8 +102,8 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         boolean newtasks = false;
                         int execProgress = execution.getProgressSize();
                         
-                        if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) && execProgress < maxInProgress) {
-//                        if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
+//                        if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) && execProgress < maxInProgress) {
+                        if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
                             newtasks = ensureTasksInProgress(execution, start, execProgress,
