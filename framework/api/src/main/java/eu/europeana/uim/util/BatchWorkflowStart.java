@@ -33,79 +33,91 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
 
 /**
  * Loads batches from the storage and pulls them into as tasks.
- * 
- * @param <I>
- *            generic identifier
- * 
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Feb 14, 2011
  */
 @SuppressWarnings("hiding")
 public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<I>, I> {
-    private static final Logger                        log                     = Logger.getLogger(BatchWorkflowStart.class.getName());
 
-    /** String BATCH_SUBSET */
-    public static final String                         BATCH_SUBSET_HEAD       = "batch.subset.head";
+    private static final Logger log = Logger.getLogger(BatchWorkflowStart.class.getName());
 
-    /** String BATCH_SUBSET */
-    public static final String                         BATCH_SUBSET_SHUFFLE    = "batch.subset.shuffle";
+    /**
+     * String BATCH_SUBSET
+     */
+    public static final String BATCH_SUBSET_HEAD = "batch.subset.head";
 
-    /** String BATCH_SHUFFLE */
-    public static final String                         BATCH_SHUFFLE           = "batch.shuffle";
+    /**
+     * String BATCH_SUBSET
+     */
+    public static final String BATCH_SUBSET_SHUFFLE = "batch.subset.shuffle";
 
-    /** String BATCH_SUBSET */
-    public static final String                         BATCH_LOAD_CONTENT      = "batch.load-content";
+    /**
+     * String BATCH_SHUFFLE
+     */
+    public static final String BATCH_SHUFFLE = "batch.shuffle";
 
-    /** BatchWorkflowStart COLLECTION_LAST_REQUEST */
-    public static final String                         COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
+    /**
+     * String BATCH_SUBSET
+     */
+    public static final String BATCH_LOAD_CONTENT = "batch.load-content";
 
-    /** BatchWorkflowStart COLLECTION_FROM_REQUEST */
-    public static final String                         COLLECTION_FROM_REQUEST = "collection.from.requestdate";
+    /**
+     * BatchWorkflowStart COLLECTION_LAST_REQUEST
+     */
+    public static final String COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
+
+    /**
+     * BatchWorkflowStart COLLECTION_FROM_REQUEST
+     */
+    public static final String COLLECTION_FROM_REQUEST = "collection.from.requestdate";
 
     /**
      * parameters to be set for batch loading
      */
-    private static final List<String>                  PARAMETER               = new ArrayList<String>() {
-                                                                                   {
-                                                                                       add(BATCH_SUBSET_HEAD);
-                                                                                       add(BATCH_SUBSET_SHUFFLE);
-                                                                                       add(BATCH_SHUFFLE);
-                                                                                       add(COLLECTION_LAST_REQUEST);
-                                                                                       add(COLLECTION_FROM_REQUEST);
-                                                                                       add(BATCH_LOAD_CONTENT);
-                                                                                   }
-                                                                               };
+    private static final List<String> PARAMETER = new ArrayList<String>() {
+        {
+            add(BATCH_SUBSET_HEAD);
+            add(BATCH_SUBSET_SHUFFLE);
+            add(BATCH_SHUFFLE);
+            add(COLLECTION_LAST_REQUEST);
+            add(COLLECTION_FROM_REQUEST);
+            add(BATCH_LOAD_CONTENT);
+        }
+    };
 
-    private static final ThreadLocal<SimpleDateFormat> ISO8601_DATE_FORMAT     = new ThreadLocal<SimpleDateFormat>() {
-                                                                                   @Override
-                                                                                   protected SimpleDateFormat initialValue() {
-                                                                                       return new SimpleDateFormat(
-                                                                                               "yyyy-MM-dd");
-                                                                                   }
-                                                                               };
+    private static final ThreadLocal<SimpleDateFormat> ISO8601_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat(
+                    "yyyy-MM-dd");
+        }
+    };
 
-    private static final ThreadLocal<SimpleDateFormat> SIMPLE_DATE_FORMAT      = new ThreadLocal<SimpleDateFormat>() {
-                                                                                   @Override
-                                                                                   protected SimpleDateFormat initialValue() {
-                                                                                       return new SimpleDateFormat(
-                                                                                               "yyyy.MM.dd");
-                                                                                   }
-                                                                               };
+    private static final ThreadLocal<SimpleDateFormat> SIMPLE_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat(
+                    "yyyy.MM.dd");
+        }
+    };
 
     /**
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
-    private static TKey<BatchWorkflowStart, Data>      DATA_KEY                = TKey.register(
-                                                                                       BatchWorkflowStart.class,
-                                                                                       "data",
-                                                                                       Data.class);
+    private static TKey<BatchWorkflowStart, Data> DATA_KEY = TKey.register(
+            BatchWorkflowStart.class,
+            "data",
+            Data.class);
 
     /**
      * default batch size
      */
     // FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
-    public static int                                  BATCH_SIZE              = 50;
+    public static int BATCH_SIZE = 50;
 
     /**
      * Creates a new instance of this class.
@@ -145,7 +157,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
             UimDataSet<I> dataSet = context.getDataSet();
             if (dataSet instanceof Collection) {
                 try {
-                    coll = (Collection<I>)dataSet;
+                    coll = (Collection<I>) dataSet;
 
                     boolean lastrequest = Boolean.parseBoolean(context.getProperties().getProperty(
                             COLLECTION_LAST_REQUEST, "false"));
@@ -203,7 +215,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                         }
 
                         if (!allids.isEmpty()) {
-                            records = allids.toArray((I[])Array.newInstance(
+                            records = allids.toArray((I[]) Array.newInstance(
                                     allids.get(0).getClass(), 0));
 
                             log.info("Loaded requests:" + logging);
@@ -214,35 +226,35 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                             }
                         } else {
                             throw new WorkflowStartFailedException(
-                                    "No requests found for collection <" + coll.getMnemonic() +
-                                            "> after " + thisFrom);
+                                    "No requests found for collection <" + coll.getMnemonic()
+                                    + "> after " + thisFrom);
                         }
 
                     } else {
-                        records = storage.getByCollection((Collection<I>)dataSet);
+                        records = storage.getByCollection((Collection<I>) dataSet);
                     }
                 } catch (StorageEngineException e) {
-                    throw new WorkflowStartFailedException("Collection '" + dataSet.getId() +
-                                                           "' could not be retrieved!", e);
+                    throw new WorkflowStartFailedException("Collection '" + dataSet.getId()
+                            + "' could not be retrieved!", e);
                 } catch (ParseException e) {
                     throw new WorkflowStartFailedException("Caused by parse exception", e);
                 }
             } else if (dataSet instanceof Request) {
                 try {
-                    coll = ((Request<I>)dataSet).getCollection();
-                    records = storage.getByRequest((Request<I>)dataSet);
+                    coll = ((Request<I>) dataSet).getCollection();
+                    records = storage.getByRequest((Request<I>) dataSet);
                 } catch (StorageEngineException e) {
-                    throw new RuntimeException("Request '" + dataSet.getId() +
-                                               "' could not be retrieved!", e);
+                    throw new RuntimeException("Request '" + dataSet.getId()
+                            + "' could not be retrieved!", e);
                 }
             } else if (dataSet instanceof MetaDataRecord) {
-                MetaDataRecord<I> record = (MetaDataRecord<I>)dataSet;
-                records = (I[])Array.newInstance(record.getId().getClass(), 1);
+                MetaDataRecord<I> record = (MetaDataRecord<I>) dataSet;
+                records = (I[]) Array.newInstance(record.getId().getClass(), 1);
                 records[0] = record.getId();
                 coll = record.getCollection();
             } else {
-                throw new WorkflowStartFailedException("Unsupported dataset <" +
-                                                       context.getDataSet() + ">");
+                throw new WorkflowStartFailedException("Unsupported dataset <"
+                        + context.getDataSet() + ">");
             }
 
             // this is for testing to allow injection of a data object
@@ -278,7 +290,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                             @SuppressWarnings("rawtypes")
                             @Override
                             public int compare(I o1, I o2) {
-                                return ((Comparable)o1).compareTo(o2);
+                                return ((Comparable) o1).compareTo(o2);
                             }
 
                         });
@@ -290,8 +302,8 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                 data.total = ids.length;
                 addArray(context, ids);
 
-                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" +
-                                       subset, ids.length,
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:"
+                        + subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else if (context.getProperties().getProperty(BATCH_SUBSET_SHUFFLE) != null) {
                 int subset = Integer.parseInt(context.getProperties().getProperty(
@@ -305,8 +317,8 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                 data.total = ids.length;
                 addArray(context, ids);
 
-                log.info(String.format("Loaded %d records in %.3f sec created subset of size:" +
-                                       subset, ids.length,
+                log.info(String.format("Loaded %d records in %.3f sec created subset of size:"
+                        + subset, ids.length,
                         (System.currentTimeMillis() - start) / 1000.0));
             } else {
                 if (records.length > 0) {
@@ -316,7 +328,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                             @SuppressWarnings("rawtypes")
                             @Override
                             public int compare(I o1, I o2) {
-                                return ((Comparable)o1).compareTo(o2);
+                                return ((Comparable) o1).compareTo(o2);
                             }
                         });
                     }
@@ -335,7 +347,10 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
             boolean loadContent = Boolean.parseBoolean(context.getProperties().getProperty(
                     BATCH_LOAD_CONTENT, "false"));
             if (loadContent) {
+                log.log(Level.WARNING, "Batch workflow load content for ''{0}''!", coll.getMnemonic());
                 storage.command("load-content:" + coll.getMnemonic());
+            } else {
+//                log.log(Level.WARNING, "Batch workflow doesn''t load content for ''{0}''!", coll.getMnemonic());
             }
         } finally {
         }
@@ -344,7 +359,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     @SuppressWarnings("unchecked")
     private <I> void addArray(ExecutionContext<MetaDataRecord<I>, I> context, Object[] ids) {
         if (ids.length > BATCH_SIZE) {
-            int batches = (int)Math.ceil(1.0 * ids.length / BATCH_SIZE);
+            int batches = (int) Math.ceil(1.0 * ids.length / BATCH_SIZE);
             for (int i = 0; i < batches; i++) {
                 int end = Math.min(ids.length, (i + 1) * BATCH_SIZE);
                 int sta = i * BATCH_SIZE;
@@ -372,50 +387,52 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     public TaskCreator<MetaDataRecord<I>, I> createLoader(
             final ExecutionContext<MetaDataRecord<I>, I> context)
             throws WorkflowStartFailedException {
-        if (!isFinished(context)) { return new TaskCreator<MetaDataRecord<I>, I>() {
-            @SuppressWarnings({ "unchecked", "rawtypes" })
-            @Override
-            public void run() {
-                try {
-                    Data container = context.getValue(DATA_KEY);
-                    I[] poll = (I[])container.batches.poll(500, TimeUnit.MILLISECONDS);
-                    if (poll != null) {
-                        List<MetaDataRecord<I>> metaDataRecords = context.getStorageEngine().getMetaDataRecords(
-                                Arrays.asList(poll));
-                        MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
+        if (!isFinished(context)) {
+            return new TaskCreator<MetaDataRecord<I>, I>() {
+                @SuppressWarnings({"unchecked", "rawtypes"})
+                @Override
+                public void run() {
+                    try {
+                        Data container = context.getValue(DATA_KEY);
+                        I[] poll = (I[]) container.batches.poll(500, TimeUnit.MILLISECONDS);
+                        if (poll != null) {
+                            List<MetaDataRecord<I>> metaDataRecords = context.getStorageEngine().getMetaDataRecords(
+                                    Arrays.asList(poll));
+                            MetaDataRecord<I>[] mdrs = metaDataRecords.toArray(new MetaDataRecord[metaDataRecords.size()]);
 
-                        if (mdrs.length != poll.length) {
-                            log.warning(String.format(
-                                    "Requested %d records from storage backend, but got back %d records!",
-                                    poll.length, mdrs.length));
-                        }
+                            if (mdrs.length != poll.length) {
+                                log.warning(String.format(
+                                        "Requested %d records from storage backend, but got back %d records!",
+                                        poll.length, mdrs.length));
+                            }
 
-                        for (int i = 0; i < mdrs.length; i++) {
-                            MetaDataRecord<I> mdr = mdrs[i];
+                            for (int i = 0; i < mdrs.length; i++) {
+                                MetaDataRecord<I> mdr = mdrs[i];
 
-                            if (mdr != null) {
-                                if (mdr instanceof MetaDataRecordBean) {
-                                    ((MetaDataRecordBean)mdr).setCollection(container.collection);
+                                if (mdr != null) {
+                                    if (mdr instanceof MetaDataRecordBean) {
+                                        ((MetaDataRecordBean) mdr).setCollection(container.collection);
+                                    }
+
+                                    Task<MetaDataRecord<I>, I> task = new Task<MetaDataRecord<I>, I>(
+                                            mdr, context);
+                                    synchronized (getQueue()) {
+                                        getQueue().offer(task);
+                                    }
+                                } else {
+                                    log.warning("Requested '" + poll[i] + "' record is null!");
                                 }
-
-                                Task<MetaDataRecord<I>, I> task = new Task<MetaDataRecord<I>, I>(
-                                        mdr, context);
-                                synchronized (getQueue()) {
-                                    getQueue().offer(task);
-                                }
-                            } else {
-                                log.warning("Requested '" + poll[i] + "' record is null!");
                             }
                         }
+                    } catch (Throwable t) {
+                        throw new RuntimeException("Failed to retrieve MDRs from storage. "
+                                + context.getExecution().toString(), t);
+                    } finally {
+                        setDone(true);
                     }
-                } catch (Throwable t) {
-                    throw new RuntimeException("Failed to retrieve MDRs from storage. " +
-                                               context.getExecution().toString(), t);
-                } finally {
-                    setDone(true);
                 }
-            }
-        }; }
+            };
+        }
         return null;
     }
 
@@ -453,23 +470,32 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
     /**
      * container for runtime information.
-     * 
+     *
      * @param <T>
-     * 
+     *
      * @author Andreas Juffinger (andreas.juffinger@kb.nl)
      * @since Feb 28, 2011
      */
     protected final static class Data<T> implements Serializable {
-        /** total records */
-        public int                total       = 0;
-        /** initialized yes/no */
-        public boolean            initialized = false;
 
-        /** batches */
-        public BlockingQueue<T[]> batches     = new LinkedBlockingQueue<T[]>();
+        /**
+         * total records
+         */
+        public int total = 0;
+        /**
+         * initialized yes/no
+         */
+        public boolean initialized = false;
 
-        /** collection */
-        public Collection<?>      collection  = null;
+        /**
+         * batches
+         */
+        public BlockingQueue<T[]> batches = new LinkedBlockingQueue<T[]>();
+
+        /**
+         * collection
+         */
+        public Collection<?> collection = null;
     }
 
     @Override
