@@ -59,7 +59,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     // FIXME: Updated these values, cannot handle more
     private int                                                             maxRunningExecutions = 10;
     private int                                                             maxTotalProgress     = 500; // 100 5000;
-    private int                                                             maxInProgress        = 50; // 10 200;
+    private int                                                             maxInProgress        = 100; // 10 200;
 
     /**
      * Creates a new instance of this class.
@@ -103,6 +103,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         int execProgress = execution.getProgressSize();
                         
 //                        if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) && execProgress < maxInProgress) {
+//                        if (totalProgress < maxTotalProgress && execProgress < maxInProgress && execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
                         if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
