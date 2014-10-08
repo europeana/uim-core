@@ -177,6 +177,7 @@ public enum Language implements Translatable {
        put("rum", new String[] {"ron"});
        put("slo", new String[] {"slk"});
        put("wel", new String[] {"cym"});
+       put("tib", new String[] {"bod"});
      }};
 
      private static final HashMap<String, Language> iso3Lookup = new HashMap<String, Language>() {{

@@ -301,42 +301,78 @@ public final class ObjectModelUtils {
         }
         return result;
     }
-
+    
     /**
      * @param subjectValue
      * @return subject string
      */
     public static String displaySubject(QualifiedValue<?> subjectValue) {
+        return displaySubject(subjectValue, ", ");
+    }
+
+    /**
+     * @param subjectValue
+     * @return subject string
+     */
+    public static String displaySubjectHeading(QualifiedValue<?> subjectValue) {
+        return displaySubject(subjectValue, " -- ");
+    }
+    
+    /**
+     * 
+     * @param subject
+     *            subject, may be null
+     * @return display string, or null
+     */
+    public static String displaySubject(Subject subject) {
+        return displaySubject(subject, ", ");
+    }
+
+    /**
+     * 
+     * @param subject
+     *            subject, may be null
+     * @return display string, or null
+     */
+    public static String displaySubjectHeading(Subject subject) {
+        return displaySubject(subject, " -- ");
+    }
+
+    /**
+     * @param subjectValue
+     * @return subject string
+     */
+    private static String displaySubject(QualifiedValue<?> subjectValue, String separator) {
         if (subjectValue.getValue() instanceof Temporal) {
             Temporal temporal = (Temporal)subjectValue.getValue();
 
-            String subject = displaySubject(temporal.getSubject());
-            if (subject != null && !subject.isEmpty()) { return temporal.toString() + ", " +
+            String subject = displaySubject(temporal.getSubject(), separator);
+            if (subject != null && !subject.isEmpty()) { return temporal.toString() + separator +
                                                                 subject; }
             return temporal.toString();
 
         } else if (subjectValue.getValue() instanceof Title) {
             Title title = (Title)subjectValue.getValue();
 
-            String subject = displaySubject(title.getTitleSubject());
-            if (subject != null && !subject.isEmpty()) { return title.toString() + ", " + subject; }
+            String subject = displaySubject(title.getTitleSubject(), separator);
+            if (subject != null && !subject.isEmpty()) { return title.toString() + separator + subject; }
             return title.toString();
         } else if (subjectValue.getValue() instanceof Topic) {
             Topic topic = (Topic)subjectValue.getValue();
-            return displaySubject(topic);
+            return displaySubject(topic, separator);
 
         } else if (subjectValue.getValue() instanceof Party) {
             Party party = (Party)subjectValue.getValue();
 
-            String subject = displaySubject(party.getSubject());
-            if (subject != null && !subject.isEmpty()) { return party.toString() + ", " + subject; }
+            String subject = displaySubject(party.getSubject(), separator);
+            if (subject != null && !subject.isEmpty()) { return party.toString() + separator + subject; }
             return party.toString();
 
         } else if (subjectValue.getValue() instanceof SpatialEntity) {
             SpatialEntity spatialEntity = (SpatialEntity)subjectValue.getValue();
 
-            String subject = displaySubject(spatialEntity.getSubject());
-            if (subject != null && !subject.isEmpty()) { return spatialEntity.toString() + ", " +
+            String subject = displaySubject(spatialEntity.getSubject(), separator);
+            if (subject != null && !subject.isEmpty()) { return spatialEntity.toString() + separator +
                                                                 subject; }
             return spatialEntity.toString();
         }
@@ -349,7 +385,7 @@ public final class ObjectModelUtils {
      *            subject, may be null
      * @return display string, or null
      */
-    public static String displaySubject(Subject subject) {
+    private static String displaySubject(Subject subject, String separator) {
         if (subject == null) { return null; }
         if (subject instanceof TitleSubject) {
             TitleSubject titleSubject = (TitleSubject)subject;
@@ -357,7 +393,7 @@ public final class ObjectModelUtils {
                     filterEmpty(subject.getFormSubdivision(), subject.getGeneralSubdivision(),
                             subject.getChronologicalSubdivision(),
                             subject.getGeographicSubdivision(), titleSubject.getTitleDates(),
-                            titleSubject.getMiscellaneousInformation()), ", ");
+                            titleSubject.getMiscellaneousInformation()), separator);
         }
         if (subject instanceof Topic) {
             Topic topic = (Topic)subject;
@@ -366,12 +402,12 @@ public final class ObjectModelUtils {
                             topic.getSecondTopicTerm(), topic.getLocationOfEvent(),
                             topic.getActiveDates(), subject.getFormSubdivision(),
                             subject.getGeneralSubdivision(), subject.getChronologicalSubdivision(),
-                            subject.getGeographicSubdivision()), ", ");
+                            subject.getGeographicSubdivision()), separator);
         }
         return StringUtils.join(
                 filterEmpty(subject.getFormSubdivision(), subject.getGeneralSubdivision(),
                         subject.getChronologicalSubdivision(), subject.getGeographicSubdivision()),
-                ", ");
+                        separator);
     }
 
     /**
