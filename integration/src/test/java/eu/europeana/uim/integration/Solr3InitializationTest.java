@@ -1,6 +1,9 @@
 package eu.europeana.uim.integration;
 
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.CoreOptions.maven;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 
 import java.io.FileNotFoundException;
 
@@ -8,28 +11,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Option;
 
-import eu.europeana.uim.solr3.Solr3Initializer;
 import java.io.File;
-import static org.ops4j.pax.exam.CoreOptions.maven;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
-import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.options.MavenUrlReference;
 
+import eu.europeana.uim.solr3.Solr3Initializer;
+
 /**
  * Integration test for UIM commands<br/>
- * Warning: /!\ if you do not want to be driven insane, do check -- twice -- if you do NOT have a
- * running Karaf instance somewhere on your system<br/>
- * 
+ * Warning: /!\ if you do not want to be driven insane, do check -- twice -- if
+ * you do NOT have a running Karaf instance somewhere on your system<br/>
+ *
  * @author Manuel Bernhardt
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Apr 7, 2014
  */
 @RunWith(PaxExam.class)
 public class Solr3InitializationTest {
-    
+
     @org.ops4j.pax.exam.Configuration
     public Option[] config() {
         MavenArtifactUrlReference karafUrl = maven()
@@ -59,7 +60,7 @@ public class Solr3InitializationTest {
 
     /**
      * Tests solr initialization
-     * 
+     *
      * @throws Throwable
      */
     @Test
@@ -68,7 +69,9 @@ public class Solr3InitializationTest {
         try {
             init.initialize(Solr3Initializer.class.getClassLoader());
         } catch (Throwable t) {
-            if (!(t.getCause().getCause() instanceof FileNotFoundException)) { throw t; }
+            if (!(t.getCause().getCause() instanceof FileNotFoundException)) {
+                throw t;
+            }
         }
     }
 }

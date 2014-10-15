@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.theeuropeanlibrary</groupId>
         <artifactId>tel-uim-plugin-check</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>tel-uim-plugin-check-field</artifactId>
@@ -53,7 +53,7 @@
 
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-external-sugar-api</artifactId>
+            <artifactId>europeana-uim-external-sugar</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -77,7 +77,7 @@
 
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <artifactId>europeana-uim-orchestration</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -85,7 +85,7 @@
 
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <artifactId>europeana-uim-orchestration</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

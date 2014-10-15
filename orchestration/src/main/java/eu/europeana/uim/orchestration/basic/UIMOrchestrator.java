@@ -124,10 +124,10 @@ public class UIMOrchestrator<I> implements Orchestrator<I> {
                 }
             }
 
-            ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<I>(
+            ExecutionLogFileWriter<I> executionLogFileWriter = new ExecutionLogFileWriter<>(
                     workingDirectory);
 
-            Execution<I> e = storageEngine.createExecution(dataset, workflow.getIdentifier());
+            Execution<I> e = storageEngine.createExecution(dataset, workflow);
             e.setName(workflow.getName() +
                       "/" +
                       (dataset instanceof Collection ? ((Collection)dataset).getMnemonic()

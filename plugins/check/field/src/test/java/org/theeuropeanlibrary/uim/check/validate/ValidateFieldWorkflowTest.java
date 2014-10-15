@@ -32,7 +32,7 @@ public class ValidateFieldWorkflowTest extends AbstractBatchWorkflowTest {
     @Test
     public void testSimpleValidation() throws IOException, InterruptedException,
             StorageEngineException {
-        LinkedHashMap<String, List<String>> map = new LinkedHashMap<String, List<String>>();
+        LinkedHashMap<String, List<String>> map = new LinkedHashMap<>();
         map.put(FieldCheckIngestionPlugin.KEY_FIELDSPEC,
                 Arrays.asList("./src/test/resources/fieldspec.txt"));
         registry.getResourceEngine().setGlobalResources(map);

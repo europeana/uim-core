@@ -31,8 +31,8 @@ import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.sugar.tel.SugarControlledVocabulary;
 
 /**
  * Validate fields, does nothing to alter the metadata record.

@@ -38,11 +38,13 @@ public abstract class AbstractBatchWorkflowTest extends AbstractWorkflowTest {
         collection0.setName("TEL's collection 001");
         engine.updateCollection(collection0);
 
-        Request<Long> request0 = engine.createRequest(collection0, new Date(0));
+        Request<Long> request0 = engine.createRequest(collection0);
+        request0.setDateFrom(new Date(0));
         engine.updateRequest(request0);
 
         for (int i = 0; i < count; i++) {
-            MetaDataRecord<Long> record = engine.createMetaDataRecord(collection0, "TEL-" + i);
+            MetaDataRecord<Long> record = engine.createMetaDataRecord(collection0);
+            record.setUniqueId("TEL-" + i);
             fillRecord(record, i);
             engine.updateMetaDataRecord(record);
             engine.addRequestRecord(request0, record);

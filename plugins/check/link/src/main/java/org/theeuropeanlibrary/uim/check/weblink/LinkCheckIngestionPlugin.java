@@ -32,48 +32,57 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
-import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.sugar.tel.SugarControlledVocabulary;
 
 /**
- * This plugin check links and adds/updates status information onto the {@link Link} object.
- * 
- * @param <I>
- *            generic identifier
- * 
+ * This plugin check links and adds/updates status information onto the
+ * {@link Link} object.
+ *
+ * @param <I> generic identifier
+ *
  * @author Andreas Juffinger (andreas.juffinger@kb.nl)
  * @since Mar 20, 2011
  */
 public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> {
+
     /**
      * Set the Logging variable to use logging within this class
      */
-    private static final Logger           log       = Logger.getLogger(LinkCheckIngestionPlugin.class.getName());
+    private static final Logger log = Logger.getLogger(LinkCheckIngestionPlugin.class.getName());
 
-    /** Use thumbnail links */
-    public static final String            THUMBNAIL = "linkcheck.thumbnail";
+    /**
+     * Use thumbnail links
+     */
+    public static final String THUMBNAIL = "linkcheck.thumbnail";
 
-    /** Use opac links */
-    public static final String            CATALOGUE = "linkcheck.catalogue";
+    /**
+     * Use opac links
+     */
+    public static final String CATALOGUE = "linkcheck.catalogue";
 
-    /** Use content links */
-    public static final String            DIGOBJECT = "linkcheck.digitalobject";
+    /**
+     * Use content links
+     */
+    public static final String DIGOBJECT = "linkcheck.digitalobject";
 
-    /** Use toc links */
-    public static final String            TOC       = "linkcheck.tableofcontents";
+    /**
+     * Use toc links
+     */
+    public static final String TOC = "linkcheck.tableofcontents";
 
-    private static final List<String>     PARAMETER = new ArrayList<String>() {
-                                                        {
-                                                            add(TOC);
-                                                            add(THUMBNAIL);
-                                                            add(CATALOGUE);
-                                                            add(DIGOBJECT);
-                                                        }
-                                                    };
+    private static final List<String> PARAMETER = new ArrayList<String>() {
+        {
+            add(TOC);
+            add(THUMBNAIL);
+            add(CATALOGUE);
+            add(DIGOBJECT);
+        }
+    };
 
-    private final static SimpleDateFormat df        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private static SugarService           sugarService;
+    private static SugarService sugarService;
 
     /**
      * Creates a new instance of this class.
@@ -121,9 +130,9 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         Collection<?> collection = null;
         UimDataSet<?> dataset = context.getDataSet();
         if (dataset instanceof Collection) {
-            collection = (Collection<?>)dataset;
+            collection = (Collection<?>) dataset;
         } else if (dataset instanceof Request<?>) {
-            collection = ((Request<?>)dataset).getCollection();
+            collection = ((Request<?>) dataset).getCollection();
         }
 
         String time = df.format(new Date());
@@ -142,9 +151,9 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         Collection<I> collection = null;
         UimDataSet<I> dataset = context.getDataSet();
         if (dataset instanceof Collection) {
-            collection = (Collection<I>)dataset;
+            collection = (Collection<I>) dataset;
         } else if (dataset instanceof Request<?>) {
-            collection = ((Request<I>)dataset).getCollection();
+            collection = ((Request<I>) dataset).getCollection();
         }
 
         String time = df.format(new Date());
@@ -167,7 +176,7 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
                 collection.putValue(SugarControlledVocabulary.COLLECTION_LINK_VALIDATION,
                         "" + context.getExecution().getId());
 
-                ((ActiveExecution<MetaDataRecord<I>, I>)context).getStorageEngine().updateCollection(
+                ((ActiveExecution<MetaDataRecord<I>, I>) context).getStorageEngine().updateCollection(
                         collection);
 
                 if (getSugarService() != null) {
@@ -177,8 +186,8 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
         } catch (Throwable t) {
             context.getLoggingEngine().logFailed(Level.INFO, this, t,
                     "Update collection or sugar service on " + collection + " failed");
-            log.log(Level.WARNING, "Failed to update collection or call sugar service: " +
-                                   collection, t);
+            log.log(Level.WARNING, "Failed to update collection or call sugar service: "
+                    + collection, t);
         }
     }
 
@@ -261,12 +270,12 @@ public class LinkCheckIngestionPlugin<I> extends AbstractLinkIngestionPlugin<I> 
                                             // need to store our own
                                             try {
                                                 if (submission.getProcessed() % 500 == 0) {
-                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
-                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    if (((StorageEngine<I>) submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>) submission.getStorageEngine()).updateExecution(execution);
                                                     }
                                                 } else if (!submission.hasRemaining()) {
-                                                    if (((StorageEngine<I>)submission.getStorageEngine()) != null) {
-                                                        ((StorageEngine<I>)submission.getStorageEngine()).updateExecution(execution);
+                                                    if (((StorageEngine<I>) submission.getStorageEngine()) != null) {
+                                                        ((StorageEngine<I>) submission.getStorageEngine()).updateExecution(execution);
                                                     }
                                                 }
 

@@ -84,7 +84,7 @@
         </dependency>
         <dependency>
             <groupId>eu.europeana</groupId>
-            <artifactId>europeana-uim-orchestration-basic</artifactId>
+            <artifactId>europeana-uim-orchestration</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

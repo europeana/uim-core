@@ -15,7 +15,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import eu.europeana.uim.adapter.UimDatasetAdapter;
-import eu.europeana.uim.common.MDRFieldRegistry;
+import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
@@ -32,15 +32,16 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
 
 /**
  * Tests UIM orchestration.
- * 
+ *
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
 @SuppressWarnings("unchecked")
 public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
+
     /**
      * Tests success of basic setup of orchestrator.o
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -69,7 +70,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests automatically pausing option for too many executions.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -99,19 +100,18 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
                 request, properties);
 
         Assert.assertEquals(6, orchestrator.getActiveExecutions().size());
-        
+
         /* Temporarily commented out this bit since its logic was valid only 
          * when the maximum allowed executions was 4  
          * 
-        int countPaused = 0;
-        for (ActiveExecution<?, Long> activeExecution : orchestrator.getActiveExecutions()) {
-            if (activeExecution.isPaused()) {
-                countPaused++;
-            }
-        }
-        Assert.assertEquals(2, countPaused);
-        */
-        
+         int countPaused = 0;
+         for (ActiveExecution<?, Long> activeExecution : orchestrator.getActiveExecutions()) {
+         if (activeExecution.isPaused()) {
+         countPaused++;
+         }
+         }
+         Assert.assertEquals(2, countPaused);
+         */
         execution0.waitUntilFinished();
         execution1.waitUntilFinished();
         execution2.waitUntilFinished();
@@ -124,7 +124,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests failed setup.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -132,7 +132,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testSimpleFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 21);
+        Request<Long> request = createTestData((StorageEngine<Long>) registry.getStorageEngine(), 21);
         // creating the data calles 21 times the update method.
         verify(engine, times(21)).updateMetaDataRecord(any(MetaDataRecord.class));
 
@@ -151,7 +151,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests partial failures.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -159,7 +159,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testSimplePartlyFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
+        Request<Long> request = createTestData((StorageEngine<Long>) registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
@@ -179,7 +179,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests partial failures.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -187,7 +187,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testSimplePluginFailedSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
+        Request<Long> request = createTestData((StorageEngine<Long>) registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
@@ -203,7 +203,6 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // each failed metadata record is saved once 30 + original count of 30
         // cannot sy this - depends on when the shutdown happens.
         // verify(engine, times(32)).updateMetaDataRecord(any(MetaDataRecord.class));
-
         assertEquals(0, execution0.getCompletedSize());
         // assertEquals(2, execution0.getFailureSize());
         assertEquals(30, execution0.getScheduledSize());
@@ -211,7 +210,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests partial failures.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -219,7 +218,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testResourcesSetup() throws InterruptedException, StorageEngineException {
         assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData((StorageEngine<Long>)registry.getStorageEngine(), 30);
+        Request<Long> request = createTestData((StorageEngine<Long>) registry.getStorageEngine(), 30);
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
@@ -261,7 +260,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Test save point.
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -301,12 +300,14 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         collection0.setName("TEL's collection 001");
         engine.updateCollection(collection0);
 
-        Request<Long> request0 = engine.createRequest(collection0, new Date(0));
+        Request<Long> request0 = engine.createRequest(collection0);
+        request0.setDateFrom(new Date(0));
         engine.updateRequest(request0);
 
         for (int i = 0; i < count; i++) {
-            MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0, "abcd" + i);
-            record0.addValue(MDRFieldRegistry.rawrecord, "title " + i);
+            MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0);
+            record0.setUniqueId("abcd" + i);
+            record0.addValue(testKey, "title " + i);
             engine.updateMetaDataRecord(record0);
             engine.addRequestRecord(request0, record0);
         }
@@ -314,14 +315,16 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         return request0;
     }
 
+    private TKey<UIMOrchestratorTest, String> testKey = TKey.register(UIMOrchestratorTest.class, "test", String.class);
+
     @Override
     protected void fillRecord(MetaDataRecord<Long> record, int count) {
-        record.addValue(MDRFieldRegistry.rawrecord, "title " + count);
+        record.addValue(testKey, "title " + count);
     }
 
     /**
      * Tests success of basic setup of orchestrator.o
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
@@ -347,14 +350,15 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Dummy adapter to test adaptions for metadata records.
-     * 
+     *
      * @author Markus Muhr (markus.muhr@kb.nl)
      * @since Oct 9, 2012
      */
     private static class FailureAdapter implements UimDatasetAdapter<MetaDataRecord<Long>, Long> {
-        private String identifier      = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
-        private int    adaptionCount   = 0;
-        private int    unadaptionCount = 0;
+
+        private String identifier = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
+        private int adaptionCount = 0;
+        private int unadaptionCount = 0;
 
         /**
          * @return count of adaptions
@@ -392,7 +396,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     /**
      * Tests success of basic setup of orchestrator.o
-     * 
+     *
      * @throws InterruptedException
      * @throws StorageEngineException
      */
