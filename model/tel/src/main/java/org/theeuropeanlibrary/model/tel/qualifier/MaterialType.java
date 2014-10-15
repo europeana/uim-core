@@ -43,5 +43,6 @@ public enum MaterialType {
     RESEARCH_DATASET,
     TEXT_RESOURCE,
     DATABASE,
+    USER_GENERATED_CONTENT,
     
 }
