@@ -60,7 +60,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5</version>
 				<configuration>
 					<preparationGoals>clean jar:test-jar compile process-classes source:jar install -Ptel -DskipTests</preparationGoals>
 					<goals>clean jar:test-jar compile process-classes source:jar install deploy -Ptel -DskipTests</goals>
