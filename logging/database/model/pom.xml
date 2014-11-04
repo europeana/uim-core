@@ -41,7 +41,7 @@
 					</components>
 					<componentProperties>
 						<template>daohome.ftl</template>
-						<templatepath>${basedir}/src/main/code/template</templatepath>
+						<templatepath>src/main/code/template</templatepath>
 						<configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
 						<ejb3>false</ejb3>
 						<jdk5>true</jdk5>
