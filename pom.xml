@@ -32,7 +32,7 @@
 		<module>storage/mongo</module>
 
 		<!-- database base logging -->
-		<module>logging/database</module>
+<!-- 		<module>logging/database</module> -->
 
 		<!-- plugins for checking -->
 		<module>plugins/check</module>
