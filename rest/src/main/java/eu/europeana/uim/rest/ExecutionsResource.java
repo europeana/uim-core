@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.qmino.miredot.annotations.ReturnType;
 
 import eu.europeana.uim.Registry;
 
@@ -32,7 +31,7 @@ public class ExecutionsResource {
     @GET
     @Path("executions/active")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response getActiveExecutions() {
 //        return Response.ok(uniqueIdentifierService.getCloudId(providerId, recordId)).build();
         return null;
@@ -41,7 +40,7 @@ public class ExecutionsResource {
     @GET
     @Path("executions/finished")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response getFinishedExecutions(@QueryParam(UimParamConstants.WORKFLOW) String workflow, @QueryParam(UimParamConstants.DATASET_ID) String datasetId,
             @QueryParam(UimParamConstants.START_DATA) String startDate, @QueryParam(UimParamConstants.END_DATA) String endDate) {
 //        return Response.ok(uniqueIdentifierService.getCloudId(providerId, recordId)).build();

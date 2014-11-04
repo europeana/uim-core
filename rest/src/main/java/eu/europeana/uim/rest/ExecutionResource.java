@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.qmino.miredot.annotations.ReturnType;
+//import com.qmino.miredot.annotations.ReturnType;
 
 import eu.europeana.uim.Registry;
 import eu.europeana.uim.orchestration.ActiveExecution;
@@ -48,7 +48,7 @@ public class ExecutionResource {
     @POST
     @Path("execution")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response startExecution(@QueryParam(UimParamConstants.WORKFLOW) String workflow, @QueryParam(UimParamConstants.DATASET_ID) String datasetId,
             @QueryParam(UimParamConstants.NAME) String name, @QueryParam(UimParamConstants.PARAMETER) Map<String, String[]> parameters) throws StorageEngineException {
         StorageEngine<Serializable> storage = (StorageEngine<Serializable>) registry.getStorageEngine();
@@ -103,7 +103,7 @@ public class ExecutionResource {
     @GET
     @Path("execution/{" + ID + "}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response getExecution() {
         return null;
     }
@@ -111,7 +111,7 @@ public class ExecutionResource {
     @POST
     @Path("execution/{" + ID + "}/pause")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response pauseExecution() {
 //        return Response.ok(uniqueIdentifierService.getCloudId(providerId, recordId)).build();
         return null;
@@ -120,7 +120,7 @@ public class ExecutionResource {
     @POST
     @Path("execution/{" + ID + "}/resume")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response resumeExecution() {
 //        return Response.ok(uniqueIdentifierService.getCloudId(providerId, recordId)).build();
         return null;
@@ -129,7 +129,7 @@ public class ExecutionResource {
     @POST
     @Path("execution/{" + ID + "}/cancel")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    @ReturnType("eu.europeana.cloud.common.model.CloudId")
+//    @ReturnType("eu.europeana.cloud.common.model.CloudId")
     public Response cancelExecution() {
 //        return Response.ok(uniqueIdentifierService.getCloudId(providerId, recordId)).build();
         return null;

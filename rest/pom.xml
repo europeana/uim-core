@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>europeana-uim-erst</artifactId>
+    <artifactId>europeana-uim-rest</artifactId>
     <packaging>war</packaging>
     <name>Unified Ingestion Manager: REST</name>
 
@@ -59,10 +59,10 @@
             </exclusions>
         </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>com.qmino</groupId>
             <artifactId>miredot-annotations</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>
