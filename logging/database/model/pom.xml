@@ -64,22 +64,22 @@
 <!-- 							<goal>hbm2dao</goal> -->
 <!-- 						</goals> -->
 <!-- 						<configuration> -->
-<!-- 						<hibernatetool destdir="${project.basedir}"> -->
-<!-- 						<annotationconfiguration /> -->
+<!-- 							<hibernatetool destdir="${project.basedir}"> -->
+<!-- 								<annotationconfiguration /> -->
 
-<!-- 						<classpath> -->
-<!-- 						<path location="${project.basedir}/src/main/code/template" /> -->
-<!-- 						</classpath> -->
+<!-- 								<classpath> -->
+<!-- 									<path location="${project.basedir}/src/main/code/template" /> -->
+<!-- 								</classpath> -->
 
-<!-- 						<configuration -->
-<!-- 						configurationfile="${project.basedir}src/main/code/hibernate.cfg.xml" 
-<!-- 							/> --> -->
+<!-- 								<configuration -->
+<!-- 									configurationfile="${project.basedir}src/main/code/hibernate.cfg.xml"  -->
+						
+ 						
+<!-- 									<hbm2dao jdk5="true" ejb3="false" /> -->
 
-<!-- 						<hbm2dao jdk5="true" ejb3="false" /> -->
-
-<!-- 						<hbm2ddl create="true" export="false" drop="true" -->
-<!-- 						outputfilename="schema.sql" format="true" console="false" /> -->
-<!-- 						</hibernatetool> -->
+<!-- 									<hbm2ddl create="true" export="false" drop="true" -->
+<!-- 										outputfilename="schema.sql" format="true" console="false" /> -->
+<!-- 							</hibernatetool> -->
 <!-- 						</configuration> -->
 
 <!-- 						<configuration> -->
