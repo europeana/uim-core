@@ -17,60 +17,99 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.1</version>
 				<executions>
 					<execution>
-						<id>create-schema</id>
 						<phase>compile</phase>
 						<goals>
 							<goal>hbm2dao</goal>
 						</goals>
-<!-- 						<configuration> -->
-<!-- 							<hibernatetool destdir="${project.basedir}"> -->
-<!-- 								<annotationconfiguration /> -->
-
-<!-- 								<classpath> -->
-<!-- 									<path location="${project.basedir}/src/main/code/template" /> -->
-<!-- 								</classpath> -->
-
-<!-- 								<configuration -->
-<!-- 									configurationfile="${project.basedir}src/main/code/hibernate.cfg.xml" /> -->
-
-<!-- 								<hbm2dao jdk5="true" ejb3="false" /> -->
-
-<!-- 								<hbm2ddl create="true" export="false" drop="true" -->
-<!-- 									outputfilename="schema.sql" format="true" console="false" /> -->
-<!-- 							</hibernatetool> -->
-<!-- 						</configuration> -->
-
-						<configuration>
-							<components>
-								<component>
-									<name>hbm2dao</name>
-									<implementation>annotationconfiguration</implementation>
-									<outputDirectory>target/source/java</outputDirectory>
-								</component>
-								<component>
-									<name>hbm2ddl</name>
-									<implementation>annotationconfiguration</implementation>
-									<outputDirectory>target/source/sql</outputDirectory>
-								</component>
-							</components>
-							<componentProperties>
-								<template>daohome.ftl</template>
-								<templatepath>${basedir}/src/main/code/template</templatepath>
-								<configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
-								<ejb3>false</ejb3>
-								<jdk5>true</jdk5>
-								<drop>true</drop>
-								<format>true</format>
-								<export>false</export>
-								<outputfilename>schema.sql</outputfilename>
-							</componentProperties>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<components>
+						<component>
+							<name>hbm2dao</name>
+							<implementation>annotationconfiguration</implementation>
+							<outputDirectory>target/source/java</outputDirectory>
+						</component>
+						<component>
+							<name>hbm2ddl</name>
+							<implementation>annotationconfiguration</implementation>
+							<outputDirectory>target/source/sql</outputDirectory>
+						</component>
+					</components>
+					<componentProperties>
+						<template>daohome.ftl</template>
+						<templatepath>${basedir}/src/main/code/template</templatepath>
+						<configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
+						<ejb3>false</ejb3>
+						<jdk5>true</jdk5>
+						<drop>true</drop>
+						<format>true</format>
+						<export>false</export>
+						<outputfilename>schema.sql</outputfilename>
+					</componentProperties>
+				</configuration>
 			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>hibernate3-maven-plugin</artifactId> -->
+<!-- 				<version>2.1</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>create-schema</id> -->
+<!-- 						<phase>compile</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>hbm2dao</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 						<hibernatetool destdir="${project.basedir}"> -->
+<!-- 						<annotationconfiguration /> -->
+
+<!-- 						<classpath> -->
+<!-- 						<path location="${project.basedir}/src/main/code/template" /> -->
+<!-- 						</classpath> -->
+
+<!-- 						<configuration -->
+<!-- 						configurationfile="${project.basedir}src/main/code/hibernate.cfg.xml" 
+<!-- 							/> --> -->
+
+<!-- 						<hbm2dao jdk5="true" ejb3="false" /> -->
+
+<!-- 						<hbm2ddl create="true" export="false" drop="true" -->
+<!-- 						outputfilename="schema.sql" format="true" console="false" /> -->
+<!-- 						</hibernatetool> -->
+<!-- 						</configuration> -->
+
+<!-- 						<configuration> -->
+<!-- 							<components> -->
+<!-- 								<component> -->
+<!-- 									<name>hbm2dao</name> -->
+<!-- 									<implementation>annotationconfiguration</implementation> -->
+<!-- 									<outputDirectory>target/source/java</outputDirectory> -->
+<!-- 								</component> -->
+<!-- 								<component> -->
+<!-- 									<name>hbm2ddl</name> -->
+<!-- 									<implementation>annotationconfiguration</implementation> -->
+<!-- 									<outputDirectory>target/source/sql</outputDirectory> -->
+<!-- 								</component> -->
+<!-- 							</components> -->
+<!-- 							<componentProperties> -->
+<!-- 								<template>daohome.ftl</template> -->
+<!-- 								<templatepath>${basedir}/src/main/code/template</templatepath> -->
+<!-- 								<configurationfile>src/main/code/hibernate.cfg.xml</configurationfile> -->
+<!-- 								<ejb3>false</ejb3> -->
+<!-- 								<jdk5>true</jdk5> -->
+<!-- 								<drop>true</drop> -->
+<!-- 								<format>true</format> -->
+<!-- 								<export>false</export> -->
+<!-- 								<outputfilename>schema.sql</outputfilename> -->
+<!-- 							</componentProperties> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
