@@ -116,28 +116,28 @@
         <module>orchestration</module>
 
         <!-- external service Repox -->
-        <module>external/repox</module>
+        <!--<module>external/repox</module>-->
         
         <!-- external service Sugar -->
-        <module>external/sugar</module>
+        <!--<module>external/sugar</module>-->
 
         <!-- the uim standard in memory storage implementation -->
-        <module>resource/memory</module>
+        <!--<module>resource/memory</module>-->
                 
         <!-- the uim standard in memory storage implementation -->
-        <module>storage/memory</module>
+        <!--<module>storage/memory</module>-->
 
         <!-- simplistic in-memory logging -->
-        <module>logging/memory</module>
+        <!--<module>logging/memory</module>-->
 
         <!-- REST module -->
-        <module>rest</module>
+        <!--<module>rest</module>-->
         
         <!-- UIM gui module -->
-        <module>gui</module>
+        <!--<module>gui</module>-->
                 
         <!-- model of TEL and Europeana -->
-        <module>model</module>
+        <!--<module>model</module>-->
 
         <!-- uim mongo implementation -->
         <!--<module>storage/mongo</module>-->
