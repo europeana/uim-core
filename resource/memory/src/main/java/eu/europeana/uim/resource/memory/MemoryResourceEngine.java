@@ -23,7 +23,7 @@ import eu.europeana.uim.workflow.Workflow;
  * @author Rene Wiermer (rene.wiermer@kb.nl)
  * @since May 9, 2011
  */
-public final class MemoryResourceEngine implements ResourceEngine {
+public class MemoryResourceEngine implements ResourceEngine {
     private static final String                                              IDENTIFIER          = MemoryResourceEngine.class.getSimpleName();
 
     private static final String                                              DEFAULT_DATA_DIR    = System.getProperty("java.io.tmpdir") +

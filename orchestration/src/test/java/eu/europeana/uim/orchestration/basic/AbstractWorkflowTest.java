@@ -55,8 +55,8 @@ public abstract class AbstractWorkflowTest {
             registry.addResourceEngine(resource);
             registry.setConfiguredResourceEngine(MemoryResourceEngine.class.getSimpleName());
 
-            UIMWorkflowProcessor<Long> processor = new UIMWorkflowProcessor<Long>(registry);
-            orchestrator = new UIMOrchestrator<Long>(registry, processor);
+            UIMWorkflowProcessor<Long> processor = new UIMWorkflowProcessor<>(registry);
+            orchestrator = new UIMOrchestrator<>(registry, processor);
         }
     }
 }

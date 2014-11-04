@@ -54,7 +54,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
@@ -80,7 +80,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
         Request<Long> request = createTestData(engine, 1);
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
         Properties properties = new Properties();
         properties.setProperty(SysoutPlugin.RANDOM_SLEEP, "true");
@@ -136,7 +136,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 21 times the update method.
         verify(engine, times(21)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SyserrWorkflow<Long>(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new SyserrWorkflow<>(7, true);
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
@@ -163,7 +163,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<Long>(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<>(7, true);
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
@@ -191,7 +191,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<Long>(7, true);
+        Workflow<MetaDataRecord<Long>, Long> w = new MixedWorkflow<>(7, true);
 
         Properties properties = new Properties();
         properties.setProperty("syserr.fullfailure", "true");
@@ -222,10 +222,10 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 30 times the update method.
         verify(engine, times(30)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
-        LinkedHashMap<String, List<String>> resources = new LinkedHashMap<String, List<String>>();
-        ArrayList<String> list = new ArrayList<String>();
+        LinkedHashMap<String, List<String>> resources = new LinkedHashMap<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("true");
         resources.put("sysout.random.sleep", list);
         resource.setGlobalResources(resources);
@@ -273,7 +273,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(20)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request);
@@ -315,7 +315,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         return request0;
     }
 
-    private TKey<UIMOrchestratorTest, String> testKey = TKey.register(UIMOrchestratorTest.class, "test", String.class);
+    private final TKey<UIMOrchestratorTest, String> testKey = TKey.register(UIMOrchestratorTest.class, "test", String.class);
 
     @Override
     protected void fillRecord(MetaDataRecord<Long> record, int count) {
@@ -335,7 +335,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         Request<Long> request = createTestData(engine, 1);
         verify(engine, times(1)).updateCollection(any(Collection.class));
 
-        Workflow<Collection<Long>, Long> w = new CollectionSysoutWorkflow<Long>();
+        Workflow<Collection<Long>, Long> w = new CollectionSysoutWorkflow<>();
 
         ActiveExecution<Collection<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request.getCollection());
@@ -356,7 +356,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
      */
     private static class FailureAdapter implements UimDatasetAdapter<MetaDataRecord<Long>, Long> {
 
-        private String identifier = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
+        private final String identifier = new SysoutPlugin<MetaDataRecord<Long>, Long>().getIdentifier();
         private int adaptionCount = 0;
         private int unadaptionCount = 0;
 
@@ -412,7 +412,7 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         // creating the data calles 20 times the update method.
         verify(engine, times(1)).updateMetaDataRecord(any(MetaDataRecord.class));
 
-        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<Long>();
+        Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
                 request);

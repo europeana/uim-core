@@ -42,7 +42,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @since Mar 22, 2011
  */
-public final class MemoryStorageEngine implements StorageEngine<Long> {
+public class MemoryStorageEngine implements StorageEngine<Long> {
 
     private static final String IDENTIFIER = MemoryStorageEngine.class.getSimpleName();
 
