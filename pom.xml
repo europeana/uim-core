@@ -20,13 +20,13 @@
 		<module>framework</module>
 
 		<!-- model of TEL and Europeana -->
-<!-- 		<module>model</module> -->
+		<module>model</module>
 
 		<!-- external service Repox -->
-<!-- 		<module>external/repox</module> -->
+		<module>external/repox</module>
 
 		<!-- external service Sugar -->
-<!-- 		<module>external/sugar</module> -->
+		<module>external/sugar</module>
 
 		<!-- uim mongo implementation -->
 <!-- 		<module>storage/mongo</module> -->
@@ -283,13 +283,13 @@
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>europeana-uim-common</artifactId>
-				<version>${pom.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>eu.europeana</groupId>
 				<artifactId>europeana-uim-common</artifactId>
-				<version>${pom.version}</version>
+				<version>${project.version}</version>
 				<classifier>tests</classifier>
 				<scope>test</scope>
 			</dependency>

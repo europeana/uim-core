@@ -22,7 +22,7 @@
 		<dependency>
 			<groupId>eu.europeana</groupId>
 			<artifactId>europeana-uim-model-common</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
