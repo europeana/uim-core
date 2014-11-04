@@ -78,8 +78,6 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
     public void testExecutionQueuing() throws InterruptedException, StorageEngineException {
         Assert.assertEquals(0, orchestrator.getActiveExecutions().size());
 
-        Request<Long> request = createTestData(engine, 1);
-
         Workflow<MetaDataRecord<Long>, Long> w = new SysoutWorkflow<>();
 
         Properties properties = new Properties();
@@ -87,17 +85,17 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
         properties.setProperty(SysoutPlugin.SLEEP_RANGES, "500-1000");
 
         ActiveExecution<MetaDataRecord<Long>, Long> execution0 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
         ActiveExecution<MetaDataRecord<Long>, Long> execution1 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
         ActiveExecution<MetaDataRecord<Long>, Long> execution2 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
         ActiveExecution<MetaDataRecord<Long>, Long> execution3 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
         ActiveExecution<MetaDataRecord<Long>, Long> execution4 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
         ActiveExecution<MetaDataRecord<Long>, Long> execution5 = orchestrator.executeWorkflow(w,
-                request, properties);
+                createTestData(engine, 1), properties);
 
         Assert.assertEquals(6, orchestrator.getActiveExecutions().size());
 
@@ -290,23 +288,35 @@ public class UIMOrchestratorTest extends AbstractBatchWorkflowTest {
 
     private Request<Long> createTestData(StorageEngine<Long> engine, int count)
             throws StorageEngineException {
-        Provider<Long> provider0 = engine.createProvider();
-        provider0.setMnemonic("TEL");
-        provider0.setName("The European Library");
-        engine.updateProvider(provider0);
+        Long uimId = engine.getUimId("PROVIDER/TEL");
+        Provider<Long> provider0;
+        if (uimId != null) {
+            provider0 = engine.getProvider(uimId);
+        } else {
+            provider0 = engine.createProvider();
+            provider0.setMnemonic("TEL");
+            provider0.setName("The European Library");
+            engine.updateProvider(provider0);
+        }
 
-        Collection<Long> collection0 = engine.createCollection(provider0);
-        collection0.setMnemonic("a0001");
-        collection0.setName("TEL's collection 001");
-        engine.updateCollection(collection0);
+        uimId = engine.getUimId("COLLECTION/a0001");
+        Collection<Long> collection0;
+        if (uimId != null) {
+            collection0 = engine.getCollection(uimId);
+        } else {
+            collection0 = engine.createCollection(provider0);
+            collection0.setMnemonic("a0001");
+            collection0.setName("TEL's collection 001");
+            engine.updateCollection(collection0);
+        }
 
         Request<Long> request0 = engine.createRequest(collection0);
-        request0.setDateFrom(new Date(0));
+        request0.setDateFrom(new Date(System.nanoTime()));
         engine.updateRequest(request0);
 
         for (int i = 0; i < count; i++) {
             MetaDataRecord<Long> record0 = engine.createMetaDataRecord(collection0);
-            record0.setUniqueId("abcd" + i);
+            record0.setUniqueId("abcd" + System.nanoTime());
             record0.addValue(testKey, "title " + i);
             engine.updateMetaDataRecord(record0);
             engine.addRequestRecord(request0, record0);
