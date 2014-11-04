@@ -110,25 +110,25 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-external-repox-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-external-sugar-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -139,7 +139,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-storage-memory</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
 

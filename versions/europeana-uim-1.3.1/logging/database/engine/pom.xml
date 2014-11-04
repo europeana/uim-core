@@ -79,21 +79,21 @@
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-common</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>eu.europeana</groupId>
             <artifactId>europeana-uim-logging-database-model</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -200,7 +200,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>europeana-uim-api</artifactId>
-            <version>${pom.version}</version>
+            <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
