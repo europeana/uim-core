@@ -16,7 +16,7 @@ public class MDRFieldRegistryTest {
      * Clears the {@link TKey}s registry.
      */
     @Before
-    public static void setup() {
+    public void setup() {
         TKey.clear();
     }
 
