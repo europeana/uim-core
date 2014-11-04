@@ -20,30 +20,30 @@
 		<module>framework</module>
 
 		<!-- model of TEL and Europeana -->
-		<module>model</module>
+<!-- 		<module>model</module> -->
 
 		<!-- external service Repox -->
-		<module>external/repox</module>
+<!-- 		<module>external/repox</module> -->
 
 		<!-- external service Sugar -->
-		<module>external/sugar</module>
+<!-- 		<module>external/sugar</module> -->
 
 		<!-- uim mongo implementation -->
-		<module>storage/mongo</module>
+<!-- 		<module>storage/mongo</module> -->
 
 		<!-- database base logging -->
-		<module>logging/database</module>
+<!-- 		<module>logging/database</module> -->
 
 		<!-- plugins for checking -->
-		<module>plugins/check</module>
+<!-- 		<module>plugins/check</module> -->
 
 		<!-- plugins for Solr -->
-		<module>plugins/solr/solr14</module>
-		<module>plugins/solr/solr3</module>
-		<module>plugins/solr/solr4</module>
+<!-- 		<module>plugins/solr/solr14</module> -->
+<!-- 		<module>plugins/solr/solr3</module> -->
+<!-- 		<module>plugins/solr/solr4</module> -->
 
 		<!-- UIM Integration -->
-		<module>integration</module>
+<!-- 		<module>integration</module> -->
 	</modules>
 
 	<build>
