@@ -221,12 +221,12 @@ public class Instant extends Temporal {
      */
     public void setGranularity(InstantGranularity granularity) {
         this.granularity = granularity;
-        Calendar cal = Calendar.getInstance();
         if (time != null) {
+            Calendar cal = Calendar.getInstance();
             cal.setTime(time);
+            normalizeTime(cal, granularity);
+            time = cal.getTime();
         }
-        normalizeTime(cal, granularity);
-        time = cal.getTime();
     }
 
     /**
