@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
-		   xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+		   xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+		    xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0">
+		    <cm:property-placeholder persistent-id="storage" />
 
 	<service interface="eu.europeana.uim.storage.StorageEngine" ranking="9">
-		<bean class="eu.europeana.uim.store.mongo.MongoStorageEngine" />
+		<bean class="eu.europeana.uim.store.mongo.MongoStorageEngine" >
+			<property name="dbName" value="${mongo.dbName}"/>
+			<property name="host" value="${mongo.host}"/>
+			<property name="port" value="${mongo.port}"/>
+			<property name="username" value="${mongo.username}"/>
+			<property name="password" value="${mongo.password}"/>
+		</bean>
 	</service>
 	
 	<service interface="eu.europeana.uim.resource.ResourceEngine" ranking="9">
-        <bean class="eu.europeana.uim.store.mongo.MongoResourceEngine" />
+        <bean class="eu.europeana.uim.store.mongo.MongoResourceEngine">
+        <property name="dbName" value="${mongo.dbName}"/>
+			<property name="host" value="${mongo.host}"/>
+			<property name="port" value="${mongo.port}"/>
+			<property name="username" value="${mongo.username}"/>
+			<property name="password" value="${mongo.password}"/>
+        </bean>
     </service>
     
     <bp:reference id="orchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />

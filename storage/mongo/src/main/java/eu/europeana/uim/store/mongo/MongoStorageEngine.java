@@ -99,6 +99,9 @@ public class MongoStorageEngine extends AbstractEngine implements
 	private String host;
 	private int port;
 	
+	private String username;
+	private String password;
+	
 
 	/**
 	 * @param dbName
@@ -113,6 +116,14 @@ public class MongoStorageEngine extends AbstractEngine implements
 		this.port = port;
 	}
 	
+	public MongoStorageEngine(String dbName, String host, int port, String username, String password) {
+		this.dbName = dbName;
+		this.host = host;
+		this.port = port;
+		this.username = username;
+		this.password = password;
+	}
+	
 	/**
 	 * Default constructor
 	 */
@@ -125,6 +136,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 		this.orchestrator = orchestrator;
 		this.dbName = DEFAULT_UIM_DB_NAME;
 	}
+	
+	
 	
 	/*
 	 * (non-Javadoc)
@@ -177,7 +190,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 					.map(MongoMetadataRecordDecorator.class)
 					.map(MDRPerCollectionAggregator.class)
 					.map(MDRPerRequestAggregator.class);
-			ds = morphia.createDatastore(mongo, dbName);
+			if(username!=null && password!=null){
+			ds = morphia.createDatastore(mongo, dbName, username, password.toCharArray());
+			} else {
+				ds = morphia.createDatastore(mongo, dbName);
+			}
 			ensureIndexes();
 
 			status = EngineStatus.RUNNING;
@@ -1254,6 +1271,50 @@ public class MongoStorageEngine extends AbstractEngine implements
 			}	
 			return true;
 		}	
+	}
+
+	public Mongo getMongo() {
+		return mongo;
+	}
+
+	public void setMongo(Mongo mongo) {
+		this.mongo = mongo;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
 	}
 	
 	

@@ -50,13 +50,16 @@ import eu.europeana.uim.workflow.Workflow;
  * 
  * @author Georgios Markakis <gwarkx@hotmail.com>
  */
-public class MongoResourceEngine extends AbstractEngine implements ResourceEngine {
+public class MongoResourceEngine extends AbstractEngine implements
+		ResourceEngine {
 
 	private static final String DEFAULT_UIM_DB_NAME = "UIM";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final int DEFAULT_PORT = 27017;
 	private String dbName;
 	private String host;
+	private String username;
+	private String password;
 	private int port;
 	private EngineStatus status = EngineStatus.STOPPED;
 	Mongo mongo = null;
@@ -75,6 +78,16 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 		this.host = host;
 		this.port = port;
 	}
+
+	public MongoResourceEngine(String dbName, String host, int port,
+			String username, String password) {
+		this.dbName = dbName;
+		this.host = host;
+		this.port = port;
+		this.username = username;
+		this.password = password;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -86,12 +99,12 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 			if (dbName == null) {
 				dbName = DEFAULT_UIM_DB_NAME;
 			}
-			if(host== null){
-				host =DEFAULT_HOST;
+			if (host == null) {
+				host = DEFAULT_HOST;
 				port = DEFAULT_PORT;
 			}
 			status = EngineStatus.BOOTING;
-			mongo = new Mongo(host,port);
+			mongo = new Mongo(host, port);
 			db = mongo.getDB(dbName);
 			Morphia morphia = new Morphia();
 
@@ -101,8 +114,12 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 					.map(MongoExecutionDecorator.class)
 					.map(MongoCollectionDecorator.class)
 					.map(MongoRequestDecorator.class);
-
-			ds = morphia.createDatastore(mongo, dbName);
+			if (username != null && password != null) {
+				ds = morphia.createDatastore(mongo, dbName, username,
+						password.toCharArray());
+			} else {
+				ds = morphia.createDatastore(mongo, dbName);
+			}
 			status = EngineStatus.RUNNING;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -435,8 +452,6 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 		return results;
 	}
 
-
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -468,6 +483,46 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 	public File getTemporaryDirectory() {
 		// Not used here
 		return null;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 }
