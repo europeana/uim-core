@@ -77,11 +77,11 @@ public class Instant extends Temporal {
      * @param year
      */
     public Instant(int year) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
         granularity = InstantGranularity.YEAR;
         uncertain = false;
+        Calendar cal = Calendar.getInstance();
         normalizeTime(cal, granularity);
+        cal.set(Calendar.YEAR, year);
         time = cal.getTime();
     }
 
@@ -92,11 +92,11 @@ public class Instant extends Temporal {
      * @param granularity
      */
     public Instant(int year, InstantGranularity granularity) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
         this.granularity = granularity;
         uncertain = false;
+        Calendar cal = Calendar.getInstance();
         normalizeTime(cal, granularity);
+        cal.set(Calendar.YEAR, year);
         time = cal.getTime();
     }
 
@@ -107,13 +107,13 @@ public class Instant extends Temporal {
      * @param month
      */
     public Instant(int year, int month) {
+        granularity = InstantGranularity.MONTH;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
-        granularity = InstantGranularity.MONTH;
-        uncertain = false;
-        normalizeTime(cal, granularity);
         time = cal.getTime();
     }
 
@@ -125,14 +125,14 @@ public class Instant extends Temporal {
      * @param day
      */
     public Instant(int year, int month, int day) {
+        granularity = InstantGranularity.DAY;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
-        granularity = InstantGranularity.DAY;
-        uncertain = false;
-        normalizeTime(cal, granularity);
         time = cal.getTime();
     }
 
@@ -146,16 +146,16 @@ public class Instant extends Temporal {
      * @param minute
      */
     public Instant(int year, int month, int day, int hour, int minute) {
+        granularity = InstantGranularity.MINUTE;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
-        granularity = InstantGranularity.MINUTE;
-        uncertain = false;
-        normalizeTime(cal, granularity);
         time = cal.getTime();
     }
 
@@ -170,7 +170,10 @@ public class Instant extends Temporal {
      * @param miliseconds
      */
     public Instant(int year, int month, int day, int hour, int minute, int miliseconds) {
+        granularity = InstantGranularity.MILLISECOND;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
@@ -178,9 +181,6 @@ public class Instant extends Temporal {
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
         cal.set(Calendar.MILLISECOND, miliseconds);
-        granularity = InstantGranularity.MILLISECOND;
-        uncertain = false;
-        normalizeTime(cal, granularity);
         time = cal.getTime();
     }
 
