@@ -140,7 +140,7 @@
         <module>model</module>
 
         <!-- uim mongo implementation -->
-        <module>storage/mongo</module>
+        <!--<module>storage/mongo</module>-->
 
         <!-- database base logging -->
         <module>logging/database</module>
