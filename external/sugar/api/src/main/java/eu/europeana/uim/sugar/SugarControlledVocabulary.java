@@ -119,7 +119,10 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
     TEL_FIELD_OF_TIME_RESTRICTION,
     
     /** SugarControlledVocabulary TEL_DURATION_OF_RESTRICTION */
-    TEL_DURATION_OF_RESTRICTION;
+    TEL_DURATION_OF_RESTRICTION,
+    
+    /** SugarControlledVocabulary TEL DISTRIBUTION FORMAT LICENCE */
+    TEL_DISTRIBUTION_FORMAT_LICENCE;
 
     /** SugarCRM date format */
     public static DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");

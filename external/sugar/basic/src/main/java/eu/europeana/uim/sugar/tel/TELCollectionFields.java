@@ -144,8 +144,10 @@ public enum TELCollectionFields implements RetrievableField, UpdatableField {
 
     TEL_FIELD_OF_TIME_RESTRICTION("tel_field_of_time_restriction_c", "telda_tel_dataset.tel_field_of_time_restriction_c", SugarControlledVocabulary.TEL_FIELD_OF_TIME_RESTRICTION, "Restriction by release date - Field of time restriction"),
 
-    TEL_DURATION_OF_RESTRICTION("tel_duration_of_restriction_c", "telda_tel_dataset.tel_duration_of_restriction_c", SugarControlledVocabulary.TEL_DURATION_OF_RESTRICTION, "TEL Restriction by release date - Duration of restriction");
-
+    TEL_DURATION_OF_RESTRICTION("tel_duration_of_restriction_c", "telda_tel_dataset.tel_duration_of_restriction_c", SugarControlledVocabulary.TEL_DURATION_OF_RESTRICTION, "TEL Restriction by release date - Duration of restriction"),
+    
+    TEL_DISTRIBUTION_FORMAT_LICENCE("tel_distribution_format_licenc_c", "telda_tel_dataset.tel_distribution_format_licenc_c", SugarControlledVocabulary.TEL_DISTRIBUTION_FORMAT_LICENCE, "Distribution format licence");
+    
     private final String                       fieldId;
     private final String                       qualifiedFieldId;
     private final ControlledVocabularyKeyValue key;

@@ -124,6 +124,8 @@ public class PropertiesSugarMapping implements SugarMapping {
                     mapping = SugarControlledVocabulary.TEL_FIELD_OF_TIME_RESTRICTION;
                 } else if ("sugar.collection.duration.of.restriction".equals(property)) {
                     mapping = SugarControlledVocabulary.TEL_DURATION_OF_RESTRICTION;
+                } else if ("sugar.collection.distribution.format.licence".equals(property)) {
+                    mapping = SugarControlledVocabulary.TEL_DISTRIBUTION_FORMAT_LICENCE;
                 }
 
                 if (mapping != null) {

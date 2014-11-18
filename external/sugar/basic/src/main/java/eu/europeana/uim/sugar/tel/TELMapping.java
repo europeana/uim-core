@@ -53,7 +53,8 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.TEL_SOURCE_DATA_LICENCE,
                 TELCollectionFields.TEL_OTHER_SOURCE_DATA_LICENSE,
                 TELCollectionFields.TEL_FIELD_OF_TIME_RESTRICTION,
-                TELCollectionFields.TEL_DURATION_OF_RESTRICTION
+                TELCollectionFields.TEL_DURATION_OF_RESTRICTION,
+                TELCollectionFields.TEL_DISTRIBUTION_FORMAT_LICENCE
         };
     }
 
