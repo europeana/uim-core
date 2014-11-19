@@ -188,4 +188,9 @@ public class Link {
         } else if (!anchorKey.equals(other.anchorKey)) return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Link [url=" + url + "]";
+    }
 }
