@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.Identifier;
+import org.theeuropeanlibrary.model.common.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.SpatialIdentifierType;
 import org.theeuropeanlibrary.model.common.subject.Subject;
 
 /**
@@ -135,9 +137,18 @@ public class SpatialEntity {
      * @return a String readable by a human 
      */
     public String getDisplay() {
-        if(identifiers!=null)
-            for(Identifier id: identifiers)
+        if(identifiers!=null && !identifiers.isEmpty()) {
+            for(Identifier id: identifiers) {
+                if(id.getScope()!=null && id.getScope().equals(SpatialIdentifierType.ISO3166.name())) {
+                    Country lookupCountry = Country.lookupCountry(id.getIdentifier(), false);
+                    if(lookupCountry!=null)
+                        return lookupCountry.getName();
+                }
+            }
+            for(Identifier id: identifiers) {
                 return id.getIdentifier();
+            }
+        }
         return "";
     }
     
