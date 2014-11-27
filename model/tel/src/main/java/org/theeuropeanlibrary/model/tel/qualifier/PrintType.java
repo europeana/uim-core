@@ -1,7 +1,7 @@
 /* PrintType.java - created on 29 de Ago de 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.tel.qualifier;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * If a resource is printed or is a manuscript
@@ -70,11 +70,11 @@ public enum PrintType {
      * Creates a new instance of this class.
      */
     private PrintType() {
-        humanReadableLabel=WordUtils.capitalize(name().replace('_', ' ').toLowerCase());
+        humanReadableLabel=StringUtils.capitalize(name().replace('_', ' ').toLowerCase());
     }
     
     /**
-     * @return
+     * @return readable values
      */
     public String toHumanReadableLabel() {
         return humanReadableLabel;

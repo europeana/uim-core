@@ -2,7 +2,6 @@
 package org.theeuropeanlibrary.model.common.qualifier;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 
 /**
  * Types of content and material
@@ -73,7 +72,7 @@ public enum ResourceType {
      * Creates a new instance of this class.
      */
     private ResourceType() {
-        humanReadableLabel=WordUtils.capitalize(name().replace('_', ' ').toLowerCase());
+        humanReadableLabel=StringUtils.capitalize(name().replace('_', ' ').toLowerCase());
     }
     
     /**
@@ -151,12 +150,16 @@ public enum ResourceType {
     
 
     /**
-     * @return
+     * @return readable value
      */
     public String toHumanReadableLabel() {
         return humanReadableLabel;
     }
     
+    /**
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         System.out.println(THREE_DIMENSIONAL_OBJECT.toHumanReadableLabel());
     }
