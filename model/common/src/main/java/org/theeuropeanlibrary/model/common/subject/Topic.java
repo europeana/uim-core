@@ -296,13 +296,9 @@ public class Topic extends Subject {
                ", activeDates=" + activeDates + ", edition=" + edition + ", identifiers=" +
                identifiers + ", formSubdivision=" + formSubdivision + ", generalSubdivision=" +
                generalSubdivision + ", chronologicalSubdivision=" + chronologicalSubdivision +
-               ", geographicSubdivision=" + geographicSubdivision + "]";
+               ", geographicSubdivision=" + geographicSubdivision +
+               ", unstructuredSubjectHeading=" + unstructuredSubjectHeading + "]";
     }
-
-
-
-
-    
 
 
 }
