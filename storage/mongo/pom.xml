@@ -18,7 +18,8 @@
 		<dependency>
 			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
-			<version>0.99</version>
+			<version>0.99.1-patched</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!--Optional Jars (for certain features) but required by maven for building. -->
@@ -158,9 +159,14 @@
 
 	<repositories>
 		<repository>
-			<id>artifactory.eanadev.org</id>
-			<name>artifactory.eanadev.org-snapshots</name>
+			<id>artifactory.eanadev.org-release</id>
+			<name>artifactory.eanadev.org-release</name>
 			<url>http://artifactory.eanadev.org/artifactory/ext-release-local</url>
+		</repository>
+		<repository>
+			<id>artifactory.eanadev.org-snapshot</id>
+			<name>artifactory.eanadev.org-snapshots</name>
+			<url>http://artifactory.eanadev.org/artifactory/libs-release-local</url>
 		</repository>
 	</repositories>
 </project>

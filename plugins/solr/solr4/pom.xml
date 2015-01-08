@@ -37,8 +37,8 @@
 						</Import-Package>
 						<Export-Package>
 							eu.europeana.uim.solr4,
-							org.apache.lucene.*;version="4.6.1",
-							org.apache.solr.*;version="4.6.1",
+							org.apache.lucene.*;version="4.9.0",
+							org.apache.solr.*;version="4.9.0",
 						</Export-Package>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!europeana-uim-common</Embed-Dependency>
@@ -119,25 +119,25 @@
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-core</artifactId>
-			<version>4.6.1</version>
+			<version>4.9.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>
-			<version>4.6.1</version>
+			<version>4.9.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-analysis-extras</artifactId>
-			<version>4.6.1</version>
+			<version>4.9.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-sandbox</artifactId>
-			<version>4.6.1</version>
+			<version>4.9.0</version>
 		</dependency>
 
 		<dependency>

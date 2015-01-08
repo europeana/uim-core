@@ -22,22 +22,26 @@ package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.bson.types.ObjectId;
+
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.mapping.DefaultCreator;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+
 import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ActiveExecution;
-import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
@@ -46,6 +50,7 @@ import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.Provider;
 import eu.europeana.uim.store.Request;
 import eu.europeana.uim.store.UimDataSet;
+import eu.europeana.uim.store.mongo.activator.MongoBundleActivator;
 import eu.europeana.uim.store.mongo.aggregators.MDRPerCollectionAggregator;
 import eu.europeana.uim.store.mongo.aggregators.MDRPerRequestAggregator;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
@@ -55,8 +60,8 @@ import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoRequestDecorator;
 import gnu.trove.iterator.hash.TObjectHashIterator;
 import gnu.trove.map.hash.THashMap;
-import gnu.trove.set.hash.THashSet;
 import gnu.trove.procedure.TObjectObjectProcedure;
+import gnu.trove.set.hash.THashSet;
 
 /**
  * Basic implementation of a StorageEngine based on MongoDB with Morphia.
@@ -177,6 +182,14 @@ public class MongoStorageEngine extends AbstractEngine implements
 					.map(MongoMetadataRecordDecorator.class)
 					.map(MDRPerCollectionAggregator.class)
 					.map(MDRPerRequestAggregator.class);
+			morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
+                @Override
+                protected ClassLoader getClassLoaderForClass(String clazz, DBObject object) {
+                    // we're the only bundle for now using Morphia so we can be sure that in any case
+                    // the classloader of this bundle has to be used
+                    return MongoBundleActivator.getBundleClassLoader();
+                }
+            });
 			ds = morphia.createDatastore(mongo, dbName);
 			ensureIndexes();
 
