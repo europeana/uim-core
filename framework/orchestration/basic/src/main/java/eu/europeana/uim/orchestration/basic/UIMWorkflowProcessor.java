@@ -123,9 +123,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 // execProgress < maxInProgress) {
 // if (totalProgress < maxTotalProgress && execProgress < maxInProgress &&
 // execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
-                        if (totalProgress < maxTotalProgress &&
-                            execProgress < maxInProgress && // FIXME: CHANGE THIS PART IF NOT WORKING
-                            execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
+                        if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
                             newtasks = ensureTasksInProgress(execution, start, execProgress,
@@ -324,6 +322,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private <U extends UimDataSet<I>> boolean ensureTasksInProgress(
             ActiveExecution<U, I> execution, WorkflowStart<U, I> start, int execProgress,
             int totalProgress) throws StorageEngineException {
+        // FIXME: CHECK IF THIS WORKS!
+        if (execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) { return true; }
+
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
 
