@@ -223,7 +223,6 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         int size = 0;
         WorkflowStart<U, I> start = workflow.getStart();
         size += getProgressSize(start.getIdentifier());
-
         for (IngestionPlugin<U, I> step : workflow.getSteps()) {
             size += getProgressSize(step.getIdentifier());
         }
@@ -235,8 +234,9 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         LinkedList<Task<U, I>> list = success.get(name);
         synchronized (list) {
             size += list.size();
-
-            HashSet<Task<U, I>> set = assigned.get(name);
+        }
+        HashSet<Task<U, I>> set = assigned.get(name);
+        synchronized (set) {
             size += set.size();
         }
         return size;

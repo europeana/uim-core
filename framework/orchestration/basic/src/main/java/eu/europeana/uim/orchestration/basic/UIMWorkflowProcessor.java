@@ -76,6 +76,10 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     public void run() {
         List<ActiveExecution<?, I>> active = new ArrayList<ActiveExecution<?, I>>();
 
+        // FIXME: HACK TO CHECK INDICATORS
+        long startTime = System.nanoTime();
+        // FIXME: HACK TO CHECK INDICATORS
+
         running = true;
         while (running) {
             boolean isbusy = false;
@@ -103,6 +107,17 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                     if (execution.isInitialized()) {
                         boolean newtasks = false;
                         int execProgress = execution.getProgressSize();
+
+                        // FIXME: HACK TO CHECK INDICATORS
+                        if (System.nanoTime() - startTime > 1000000000) {
+                            log.warning("TOTAL PROGRESS: '" + totalProgress +
+                                        "'; EXECUTION PROGRESS: '" + execProgress +
+                                        "'; EXECUTION SCHEDULED: '" + execution.getScheduledSize() +
+                                        "'; EXECUTION COMPLETED: '" + execution.getCompletedSize() +
+                                        "'");
+                            startTime = System.nanoTime();
+                        }
+                        // FIXME: HACK TO CHECK INDICATORS
 
 // if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) &&
 // execProgress < maxInProgress) {
