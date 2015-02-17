@@ -60,7 +60,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private int                                                             maxRunningExecutions = 10;
     private int                                                             maxTotalProgress     = 250;                                                                          // 100
 // 5000;
-    private int                                                             maxInProgress        = 50;                                                                          // 10
+    private int                                                             maxInProgress        = 50;                                                                           // 10
 // 200;
 
     /**
@@ -123,7 +123,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 // execProgress < maxInProgress) {
 // if (totalProgress < maxTotalProgress && execProgress < maxInProgress &&
 // execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
-                        if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
+                        if (totalProgress < maxTotalProgress &&
+                            execProgress < maxInProgress &&
+                            execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
                             newtasks = ensureTasksInProgress(execution, start, execProgress,
