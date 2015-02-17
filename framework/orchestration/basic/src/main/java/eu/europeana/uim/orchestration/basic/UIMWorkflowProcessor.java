@@ -323,7 +323,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
             ActiveExecution<U, I> execution, WorkflowStart<U, I> start, int execProgress,
             int totalProgress) throws StorageEngineException {
         // FIXME: CHECK IF THIS WORKS!
-//        if (execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) { return true; }
+        if (execution.getScheduledSize() - execution.getCompletedSize() > maxInProgress) { return true; }
 
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
