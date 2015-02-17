@@ -124,7 +124,7 @@ public class UIMWorkflowProcessor<I> implements Runnable {
 // if (totalProgress < maxTotalProgress && execProgress < maxInProgress &&
 // execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
                         if (totalProgress < maxTotalProgress &&
-                            execProgress < maxInProgress &&
+                            execProgress < maxInProgress && // FIXME: CHANGE THIS PART IF NOT WORKING
                             execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
