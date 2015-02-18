@@ -14,6 +14,11 @@ public class Content {
     private String type;
 
     /**
+     * original url
+     */
+    private String url;
+
+    /**
      * content object as a byte array
      */
     private byte[] object;
@@ -30,11 +35,14 @@ public class Content {
      * 
      * @param type
      *            specifies what the type the content object is
+     * @param url
+     *            original url
      * @param object
      *            content object as a byte array
      */
-    public Content(String type, byte[] object) {
+    public Content(String type, String url, byte[] object) {
         this.type = type;
+        this.url = url;
         this.object = object;
     }
 
@@ -54,9 +62,24 @@ public class Content {
     }
 
     /**
+     * @return original url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * @param url
+     *            original url
+     */
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    /**
      * @return content object as a byte array
      */
-    public Object getObject() {
+    public byte[] getObject() {
         return object;
     }
 

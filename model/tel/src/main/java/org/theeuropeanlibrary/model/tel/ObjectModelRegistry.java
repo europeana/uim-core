@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.theeuropeanlibrary.model.common.Content;
 import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.FullText;
 import org.theeuropeanlibrary.model.common.FullTextBlock;
@@ -25,6 +26,7 @@ import org.theeuropeanlibrary.model.common.party.Person;
 import org.theeuropeanlibrary.model.common.qualifier.CertaintyLevel;
 import org.theeuropeanlibrary.model.common.qualifier.ContributionType;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.Downloadable;
 import org.theeuropeanlibrary.model.common.qualifier.IdentifierType;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
@@ -370,6 +372,11 @@ public final class ObjectModelRegistry {
                                                                                                                            ObjectModelRegistry.class,
                                                                                                                            "full text block",
                                                                                                                            FullTextBlock.class);
+    @FieldId(45)
+    public static final TKey<ObjectModelRegistry, Content>                                     CONTENT             = TKey.register(
+                                                                                                                           ObjectModelRegistry.class,
+                                                                                                                           "content",
+                                                                                                                           Content.class);
 
     private static final Map<Class<?>, TKey<?, ?>>                                             tKeyClassMap        = new HashMap<Class<?>, TKey<?, ?>>();
 
@@ -518,6 +525,7 @@ public final class ObjectModelRegistry {
                 add(FieldSource.class);
                 add(FieldScope.class);
                 add(ContextLevel.class);
+                add(Downloadable.class);
             }
         });
 

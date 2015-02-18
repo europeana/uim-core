@@ -13,6 +13,7 @@ import org.theeuropeanlibrary.model.common.FieldId;
 import org.theeuropeanlibrary.model.common.qualifier.CertaintyLevel;
 import org.theeuropeanlibrary.model.common.qualifier.ContributionType;
 import org.theeuropeanlibrary.model.common.qualifier.Country;
+import org.theeuropeanlibrary.model.common.qualifier.Downloadable;
 import org.theeuropeanlibrary.model.common.qualifier.IdentifierType;
 import org.theeuropeanlibrary.model.common.qualifier.KnowledgeOrganizationSystem;
 import org.theeuropeanlibrary.model.common.qualifier.Language;
@@ -193,9 +194,12 @@ public final class QualifierRegistry {
 
     @FieldId(43)
     public static final Class<StructuralRelationType>      STRUCTURAL_RELATION_TYPE      = StructuralRelationType.class;
-    
+
     @FieldId(44)
     public static final Class<FieldScope>                  FIELD_SCOPE                   = FieldScope.class;
+
+    @FieldId(45)
+    public static final Class<Downloadable>                DOWNLOADABLE                  = Downloadable.class;
 
     public static final Set<String>                        enumSet                       = new HashSet<String>();
 
