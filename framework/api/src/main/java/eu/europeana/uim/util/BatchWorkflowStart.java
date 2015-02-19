@@ -61,9 +61,14 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     public static final String                         BATCH_SHUFFLE           = "batch.shuffle";
 
     /**
-     * String BATCH_SUBSET
+     * String BATCH_LOAD_CONTENT
      */
     public static final String                         BATCH_LOAD_CONTENT      = "batch.load-content";
+
+    /**
+     * String BATCH_LOAD_FULLTEXT
+     */
+    public static final String                         BATCH_LOAD_FULLTEXT     = "batch.load-fulltext";
 
     /**
      * BatchWorkflowStart COLLECTION_LAST_REQUEST
@@ -86,6 +91,7 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                                                                                        add(COLLECTION_LAST_REQUEST);
                                                                                        add(COLLECTION_FROM_REQUEST);
                                                                                        add(BATCH_LOAD_CONTENT);
+                                                                                       add(BATCH_LOAD_FULLTEXT);
                                                                                    }
                                                                                };
 
@@ -354,6 +360,16 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
             } else {
 // log.log(Level.WARNING, "Batch workflow doesn''t load content for ''{0}''!", coll.getMnemonic());
             }
+            
+            boolean loadFulltext = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_LOAD_FULLTEXT, "false"));
+            if (loadFulltext) {
+                log.log(Level.WARNING, "Batch workflow load fulltext for ''{0}''!",
+                        coll.getMnemonic());
+                storage.command("load-fulltext:" + coll.getMnemonic());
+            } else {
+// log.log(Level.WARNING, "Batch workflow doesn''t load content for ''{0}''!", coll.getMnemonic());
+            }
         } finally {
         }
     }
@@ -465,6 +481,11 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                 BATCH_LOAD_CONTENT, "false"));
         if (loadContent) {
             storage.command("unload-content:" + value.collection.getMnemonic());
+        }
+        boolean loadFulltext = Boolean.parseBoolean(context.getProperties().getProperty(
+                BATCH_LOAD_FULLTEXT, "false"));
+        if (loadFulltext) {
+            storage.command("unload-fulltext:" + value.collection.getMnemonic());
         }
     }
 

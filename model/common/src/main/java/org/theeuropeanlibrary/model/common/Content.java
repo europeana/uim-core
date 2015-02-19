@@ -11,16 +11,19 @@ public class Content {
     /**
      * specifies what the type the content object is
      */
+    @FieldId(1)
     private String type;
 
     /**
      * original url
      */
+    @FieldId(2)
     private String url;
 
     /**
      * content object as a byte array
      */
+    @FieldId(3)
     private byte[] object;
 
     /**
