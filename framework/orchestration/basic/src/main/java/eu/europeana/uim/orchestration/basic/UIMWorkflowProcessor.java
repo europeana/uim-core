@@ -56,12 +56,9 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private final List<ActiveExecution<?, I>>                               executions           = new ArrayList<ActiveExecution<?, I>>();
     private final List<ActiveExecution<?, I>>                               completions          = new ArrayList<ActiveExecution<?, I>>();
 
-    // FIXME: Updated these values, cannot handle more
     private int                                                             maxRunningExecutions = 10;
-    private int                                                             maxTotalProgress     = 250;                                                                          // 100
-// 5000;
-    private int                                                             maxInProgress        = 50;                                                                           // 10
-// 200;
+    private int                                                             maxTotalProgress     = 500; 
+    private int                                                             maxInProgress        = 100;
 
     /**
      * Creates a new instance of this class.
@@ -75,10 +72,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     @Override
     public void run() {
         List<ActiveExecution<?, I>> active = new ArrayList<ActiveExecution<?, I>>();
-
-        // FIXME: HACK TO CHECK INDICATORS
-        long startTime = System.nanoTime();
-        // FIXME: HACK TO CHECK INDICATORS
 
         running = true;
         while (running) {
@@ -108,21 +101,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
                         boolean newtasks = false;
                         int execProgress = execution.getProgressSize();
 
-                        // FIXME: HACK TO CHECK INDICATORS
-                        if (System.nanoTime() - startTime > 1000000000) {
-                            log.warning("TOTAL PROGRESS: '" + totalProgress +
-                                        "'; EXECUTION PROGRESS: '" + execProgress +
-                                        "'; EXECUTION SCHEDULED: '" + execution.getScheduledSize() +
-                                        "'; EXECUTION COMPLETED: '" + execution.getCompletedSize() +
-                                        "'");
-                            startTime = System.nanoTime();
-                        }
-                        // FIXME: HACK TO CHECK INDICATORS
-
-// if ((totalProgress < maxTotalProgress || active.size() * maxInProgress >= maxTotalProgress) &&
-// execProgress < maxInProgress) {
-// if (totalProgress < maxTotalProgress && execProgress < maxInProgress &&
-// execution.getScheduledSize() - execution.getCompletedSize() < maxInProgress) {
                         if (totalProgress < maxTotalProgress && execProgress < maxInProgress) {
                             // we ask the work flow start if we have more to do
                             WorkflowStart start = execution.getWorkflow().getStart();
@@ -322,9 +300,6 @@ public class UIMWorkflowProcessor<I> implements Runnable {
     private <U extends UimDataSet<I>> boolean ensureTasksInProgress(
             ActiveExecution<U, I> execution, WorkflowStart<U, I> start, int execProgress,
             int totalProgress) throws StorageEngineException {
-        // FIXME: CHECK IF THIS WORKS!
-//        if (execution.getScheduledSize() - execution.getCompletedSize() > maxInProgress) { return true; }
-
         // how many creators do we have
         ArrayList<TaskCreator> creators = execution.getValue(SCHEDULED);
 
