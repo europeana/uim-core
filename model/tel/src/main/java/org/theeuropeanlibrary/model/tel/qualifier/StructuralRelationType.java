@@ -15,5 +15,7 @@ public enum StructuralRelationType {
     /** StructuralRelationType PARENT */
     PARENT, 
     /** StructuralRelationType CHILD */
-    CHILD; 
+    CHILD, 
+    /** StructuralRelationType FORMAT */
+    FORMAT; 
 }
