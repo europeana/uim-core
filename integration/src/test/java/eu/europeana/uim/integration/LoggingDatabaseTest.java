@@ -2,8 +2,11 @@ package eu.europeana.uim.integration;
 
 import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
 import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFileExtend;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -15,7 +18,7 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
-import org.ops4j.pax.exam.karaf.options.KarafDistributionOption;
+import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
 import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
 import org.ops4j.pax.exam.options.MavenUrlReference;
 
@@ -23,11 +26,8 @@ import eu.europeana.uim.Registry;
 import eu.europeana.uim.logging.LoggingEngine;
 
 /**
- * Integration test for UIM commands<br/>
- * Warning: /!\ if you do not want to be driven insane, do check -- twice -- if you do NOT have a
- * running Karaf instance somewhere on your system<br/>
+ * Integration test logging engine using a Hibernate connected sql database.
  * 
- * @author Manuel Bernhardt
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Apr 7, 2014
  */
@@ -42,7 +42,7 @@ public class LoggingDatabaseTest {
     @Configuration
     public Option[] config() {
         MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId(
-                "apache-karaf").version("3.0.0").type("tar.gz");
+                "apache-karaf").version("3.0.3").type("tar.gz");
 
         MavenUrlReference karafStandardRepo = maven().groupId("org.apache.karaf.features").artifactId(
                 "standard").classifier("features").type("xml").versionAsInProject();
@@ -51,15 +51,20 @@ public class LoggingDatabaseTest {
                 // KarafDistributionOption.debugConfiguration("5005", true),
                 karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(
                         new File("target/exam")).useDeployFolder(false),
+                logLevel(LogLevel.INFO),
                 keepRuntimeFolder(),
-                KarafDistributionOption.features(karafStandardRepo, "scr"),
+                features(karafStandardRepo, "scr"),
+                
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.driverClass", "org.hsqldb.jdbcDriver"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.dialect", "HSQL"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.jdbcUrl", "jdbc:hsqldb:mem:embedded"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.user", "sa"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.password", ""),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.showsql", "false"),
+                
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
                 mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject().start(),
-        // FIXME: problems with database logging, right now used is only memory one
-// mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-database").versionAsInProject().start(),
-        };
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-database").versionAsInProject().start(), };
     }
 
     /**

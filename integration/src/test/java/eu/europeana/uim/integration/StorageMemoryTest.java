@@ -41,30 +41,23 @@ public class StorageMemoryTest {
      */
     @org.ops4j.pax.exam.Configuration
     public Option[] config() {
-        MavenArtifactUrlReference karafUrl = maven()
-                .groupId("org.apache.karaf")
-                .artifactId("apache-karaf")
-                .version("3.0.0")
-                .type("tar.gz");
+        MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId(
+                "apache-karaf").version("3.0.3").type("tar.gz");
 
-        MavenUrlReference karafStandardRepo = maven()
-                .groupId("org.apache.karaf.features")
-                .artifactId("standard")
-                .classifier("features")
-                .type("xml")
-                .versionAsInProject();
+        MavenUrlReference karafStandardRepo = maven().groupId("org.apache.karaf.features").artifactId(
+                "standard").classifier("features").type("xml").versionAsInProject();
 
-        return new Option[]{
-            // KarafDistributionOption.debugConfiguration("5005", true),
-            karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(new File("target/exam")).useDeployFolder(false),
-            keepRuntimeFolder(),
-            KarafDistributionOption.features(karafStandardRepo, "scr"),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(),
-        };
+        return new Option[] {
+                // KarafDistributionOption.debugConfiguration("5005", true),
+                karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(
+                        new File("target/exam")).useDeployFolder(false),
+                keepRuntimeFolder(),
+                KarafDistributionOption.features(karafStandardRepo, "scr"),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(), };
     }
-   
+
     /**
      * Tests storage.
      * 
@@ -72,11 +65,11 @@ public class StorageMemoryTest {
      */
     @Test
     public void testStorage() throws Exception {
-//        StorageEngine<?> storage = null;
-//        while (storage == null) {
-//            storage = registry.getStorageEngine();
-//            Thread.sleep(500);
-//        }
+// StorageEngine<?> storage = null;
+// while (storage == null) {
+// storage = registry.getStorageEngine();
+// Thread.sleep(500);
+// }
 
         StorageEngine<?> storage = registry.getStorageEngine();
         Provider<?> provider = storage.createProvider();

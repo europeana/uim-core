@@ -39,17 +39,17 @@ import eu.europeana.uim.workflows.SysoutWorkflow;
 
 /**
  * Integration test for the Orchestrator, using the MemoryStorageEngine
- *
+ * 
  * @author Manuel Bernhardt <bernhardt.manuel@gmail.com>
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Apr 7, 2014
  */
-@SuppressWarnings({"unchecked", "rawtypes", "cast"})
+@SuppressWarnings({ "unchecked", "rawtypes", "cast" })
 @RunWith(PaxExam.class)
 public class OrchestratorTest {
 
     @Inject
-    private Registry registry;
+    private Registry     registry;
 
     @Inject
     private Orchestrator orchestrator;
@@ -59,29 +59,23 @@ public class OrchestratorTest {
      */
     @org.ops4j.pax.exam.Configuration
     public Option[] config() {
-        MavenArtifactUrlReference karafUrl = maven()
-                .groupId("org.apache.karaf")
-                .artifactId("apache-karaf")
-                .version("3.0.0")
-                .type("tar.gz");
+        MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId(
+                "apache-karaf").version("3.0.3").type("tar.gz");
 
-        MavenUrlReference karafStandardRepo = maven()
-                .groupId("org.apache.karaf.features")
-                .artifactId("standard")
-                .classifier("features")
-                .type("xml")
-                .versionAsInProject();
+        MavenUrlReference karafStandardRepo = maven().groupId("org.apache.karaf.features").artifactId(
+                "standard").classifier("features").type("xml").versionAsInProject();
 
-        return new Option[]{
-            // KarafDistributionOption.debugConfiguration("5005", true),
-            karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(new File("target/exam")).useDeployFolder(false),
-            keepRuntimeFolder(),
-            KarafDistributionOption.features(karafStandardRepo, "scr"),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject().start(),
-            mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-orchestration-basic").versionAsInProject().start(),};
+        return new Option[] {
+                // KarafDistributionOption.debugConfiguration("5005", true),
+                karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(
+                        new File("target/exam")).useDeployFolder(false),
+                keepRuntimeFolder(),
+                KarafDistributionOption.features(karafStandardRepo, "scr"),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-memory").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-orchestration-basic").versionAsInProject().start(), };
     }
 
     /**
@@ -91,7 +85,7 @@ public class OrchestratorTest {
     public void processSampleData() throws Exception {
         StorageEngine<Long> storage = null;
         while (storage == null) {
-            storage = (StorageEngine<Long>) registry.getStorageEngine();
+            storage = (StorageEngine<Long>)registry.getStorageEngine();
             Thread.sleep(500);
         }
         Assert.assertNotNull(storage);
@@ -119,15 +113,15 @@ public class OrchestratorTest {
 
         // Initialize workflow
         System.out.println("WORKFLOWS " + registry.getWorkflows());
-        Workflow<MetaDataRecord<Long>, Long> workflow = (Workflow<MetaDataRecord<Long>, Long>) registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+        Workflow<MetaDataRecord<Long>, Long> workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
         int wait = 0;
         while (workflow == null && wait++ < 10) {
-            workflow = (Workflow<MetaDataRecord<Long>, Long>) registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
+            workflow = (Workflow<MetaDataRecord<Long>, Long>)registry.getWorkflow(SysoutWorkflow.class.getSimpleName());
             Thread.sleep(1000);
         }
         Assert.assertNotNull(workflow);
 
-        ActiveExecution<MetaDataRecord<Long>, Long> execution = (ActiveExecution<MetaDataRecord<Long>, Long>) orchestrator.executeWorkflow(
+        ActiveExecution<MetaDataRecord<Long>, Long> execution = (ActiveExecution<MetaDataRecord<Long>, Long>)orchestrator.executeWorkflow(
                 workflow, c);
         execution.getMonitor().addListener(monitor);
 
