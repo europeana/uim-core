@@ -39,6 +39,7 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 import eu.europeana.uim.EngineStatus;
+import eu.europeana.uim.Registry;
 import eu.europeana.uim.orchestration.ActiveExecution;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.orchestration.Orchestrator;
@@ -83,10 +84,10 @@ public class MongoStorageEngine extends AbstractEngine implements
 	private static final String COLLECTIONID = "collectionId";
 	private static final String REQUESTID = "requestId";
 	private static final String SEARCHDATE = "searchDate";
-    private static final int MAXINMEMORYALLOWED = 50;
+    private static final int MAXINMEMORYALLOWED = 15;
 	
-    private  Orchestrator<String> orchestrator;
-	
+    //private  Orchestrator<String> orchestrator;
+	private Registry registry;
 	private static THashMap<String, MongoCollectionDecorator<String>> inmemoryCollections = new THashMap<String, MongoCollectionDecorator<String>>();
 
 	private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
@@ -126,8 +127,8 @@ public class MongoStorageEngine extends AbstractEngine implements
 	}
 
 	
-	public MongoStorageEngine(Orchestrator orchestrator) {
-		this.orchestrator = orchestrator;
+	public MongoStorageEngine(Registry registry) {
+		this.registry = registry;
 		this.dbName = DEFAULT_UIM_DB_NAME;
 	}
 	
@@ -1121,7 +1122,11 @@ public class MongoStorageEngine extends AbstractEngine implements
 				ds.merge(aggregator);
 			}
 		}
-		
+		if(registry==null){
+                System.out.println("Registry is null here");
+            } else {
+                    System.out.println("Got registry reference");
+                }
 		// Make sure that inmemoryCollectionRecordIDs does not exceed the
 		// maximum allowed size. Reset it if it does.
 
@@ -1138,10 +1143,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * records cached into memory exceeds the upper limit (which is 50)
 	 */
 	public synchronized void purgeInmemoryCollectionRecordIDs(){
+            if(registry==null){
+                System.out.println("Registry is null here");
+            }
 		if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED){
 
 			Set<String> content2bepreserved = new HashSet<String>();
-			
+			Orchestrator<String> orchestrator = (Orchestrator<String>)registry.getOrchestrator();
 			@SuppressWarnings("unchecked")
 			List<ActiveExecution<?, String>>  activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
 			
@@ -1217,10 +1225,13 @@ public class MongoStorageEngine extends AbstractEngine implements
 	 * records cached into memory exceeds the upper limit (which is 50)
 	 */
 	public synchronized void purgeInmemoryRequestRecordIDs(){
+            if(registry==null){
+                System.out.println("Registry is null here");
+            }
 		if (inmemoryRequestRecordIDs.size() > MAXINMEMORYALLOWED){
 
 			Set<String> content2bepreserved = new HashSet<String>();
-			
+			Orchestrator<String> orchestrator = (Orchestrator<String>)registry.getOrchestrator();
 			@SuppressWarnings("unchecked")
 			List<ActiveExecution<?, String>>  activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
 			

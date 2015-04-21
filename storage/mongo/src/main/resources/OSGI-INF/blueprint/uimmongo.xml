@@ -3,13 +3,16 @@
 		   xmlns:bp="http://www.osgi.org/xmlns/blueprint/v1.0.0">
 
 	<service interface="eu.europeana.uim.storage.StorageEngine" ranking="9">
-		<bean class="eu.europeana.uim.store.mongo.MongoStorageEngine" />
+		<bean class="eu.europeana.uim.store.mongo.MongoStorageEngine">
+                <argument ref="registry"/>
+                </bean>
 	</service>
 	
 	<service interface="eu.europeana.uim.resource.ResourceEngine" ranking="9">
         <bean class="eu.europeana.uim.store.mongo.MongoResourceEngine" />
     </service>
     
-    <bp:reference id="orchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />
+<!--    <bp:reference id="orchestrator" interface="eu.europeana.uim.orchestration.Orchestrator" />-->
+<bp:reference id="registry" interface="eu.europeana.uim.Registry" />
     
 </blueprint>
