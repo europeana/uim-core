@@ -464,6 +464,7 @@ public final class ObjectModelRegistry {
                 add(TextRelation.class);
                 add(NoteType.class);
                 add(ResourceRelation.class);
+                add(LanguageRelation.class);
                 add(FieldSource.class);
                 add(ContextLevel.class);
                 add(FieldScope.class);
