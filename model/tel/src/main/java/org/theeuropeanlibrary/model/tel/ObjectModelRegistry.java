@@ -388,6 +388,7 @@ public final class ObjectModelRegistry {
         validQualifiers.put(TEMPORAL, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
@@ -412,11 +413,13 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
         validQualifiers.put(HISTORICAL_PERIOD, new ArrayList<Class<? extends Enum<?>>>() {
             {
                 add(TemporalRelation.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(Language.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
@@ -430,6 +433,7 @@ public final class ObjectModelRegistry {
 // add(TopicIdentifierType.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
 
@@ -546,6 +550,7 @@ public final class ObjectModelRegistry {
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
         validQualifiers.put(PERSON, new ArrayList<Class<? extends Enum<?>>>() {
@@ -556,6 +561,7 @@ public final class ObjectModelRegistry {
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
         validQualifiers.put(MEETING, new ArrayList<Class<? extends Enum<?>>>() {
@@ -566,6 +572,7 @@ public final class ObjectModelRegistry {
                 add(PartyIdentifierType.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
+                add(KnowledgeOrganizationSystem.class);
             }
         });
         validQualifiers.put(FAMILY, new ArrayList<Class<? extends Enum<?>>>() {
@@ -574,6 +581,7 @@ public final class ObjectModelRegistry {
                 add(PartyRelation.class);
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
@@ -584,6 +592,7 @@ public final class ObjectModelRegistry {
                 add(PartyRelation.class);
                 add(ContributionType.class);
                 add(PartyIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
@@ -594,6 +603,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
@@ -612,6 +622,7 @@ public final class ObjectModelRegistry {
                 add(Language.class);
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
@@ -620,6 +631,7 @@ public final class ObjectModelRegistry {
             {
                 add(SpatialRelation.class);
                 add(SpatialIdentifierType.class);
+                add(KnowledgeOrganizationSystem.class);
                 add(FieldSource.class);
                 add(FieldScope.class);
             }
