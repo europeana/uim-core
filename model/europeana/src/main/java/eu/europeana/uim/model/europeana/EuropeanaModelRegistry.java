@@ -52,9 +52,9 @@ public final class EuropeanaModelRegistry {
     /**
      * The key for id redirects
      */
-    public static final TKey<EuropeanaModelRegistry, EuropeanaRedirectId> EDMRECORDREDIRECT = TKey
+    public static final TKey<EuropeanaModelRegistry, Boolean> EDMRECORDREDIRECT = TKey
             .register(EuropeanaModelRegistry.class, "edmrecordredirect",
-                    EuropeanaRedirectId.class);
+                    Boolean.class);
     /**
      * The key date of dereference
      */
