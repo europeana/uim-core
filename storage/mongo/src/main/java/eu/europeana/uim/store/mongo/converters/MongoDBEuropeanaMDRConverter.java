@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import eu.europeana.uim.common.TKey;
 import eu.europeana.uim.store.MetaDataRecord.QualifiedValue;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
@@ -50,89 +51,89 @@ import com.google.protobuf.WireFormat;
 
 /**
  * Converts between metadata record bean and byte array.
- * 
+ *
  * @author Andreas Juffinger <andreas.juffinger@kb.nl>
  * @author Markus Muhr (markus.muhr@kb.nl)
  * @author Nuno Freire <nfreire@gmail.com>
  * @author Georgios Markakis (gwarkx@hotmail.com)
- * 
  * @since Jan 5, 2012
  */
 
 @SuppressWarnings("rawtypes")
-public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List<byte[]>>, MetaDataRecordBean<String>>{
+public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List<byte[]>>, MetaDataRecordBean<String>> {
 
 
-	private static final int FIELD_ENTRY_ORDER     = 10;
-    private static final int FIELD_ENTRY_VALUE     = 20;
+    private static final int FIELD_ENTRY_ORDER = 10;
+    private static final int FIELD_ENTRY_VALUE = 20;
     private static final int FIELD_ENTRY_QUALIFIER = 30;
-    private ConverterFactory                             converterFactory;
+    private ConverterFactory converterFactory;
+
     /**
      * Private Constructor (instantiate via factory method)
      */
-	private MongoDBEuropeanaMDRConverter(){
+    private MongoDBEuropeanaMDRConverter() {
         this.converterFactory = new CombinedConverterFactory(ObjectModelConverterFactory.INSTANCE,
                 AuthorityModelConverterFactory.INSTANCE);
-	}
-	
+    }
+
     /**
      * Factory Method
      */
     public static MongoDBEuropeanaMDRConverter getInstance() {
-      return new MongoDBEuropeanaMDRConverter();
+        return new MongoDBEuropeanaMDRConverter();
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.theeuropeanlibrary.repository.convert.Converter#decode(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public MetaDataRecordBean<String> decode(HashMap<String, List<byte[]>> fields) {
-    	MetaDataRecordBean<String> mdr = new MetaDataRecordBean<String>();
-    	Collection c = fields.keySet();    	   
-        Iterator itr = c.iterator();    	
-        while (itr.hasNext()){       	
-        	TKey key = TKey.fromString((String)itr.next());               	
-        	List<byte[]> bqvalues =  fields.get(key.toString()); 
-        	List<QualifiedValue<String>> qvalues = new ArrayList<QualifiedValue<String>>();        	
-        	for(byte[] qvalue: bqvalues){        		
-        		QualifiedValue qval;
-				try {
-					qval = decodeQualifiedValue( key, qvalue);
-					qvalues.add(qval);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-        	}
-			mdr.setValue(key, qvalues);  
+        MetaDataRecordBean<String> mdr = new MetaDataRecordBean<String>();
+        Collection c = fields.keySet();
+        Iterator itr = c.iterator();
+        while (itr.hasNext()) {
+            TKey key = TKey.fromString((String) itr.next());
+            List<byte[]> bqvalues = fields.get(key.toString());
+            List<QualifiedValue<String>> qvalues = new ArrayList<QualifiedValue<String>>();
+            for (byte[] qvalue : bqvalues) {
+                QualifiedValue qval;
+                try {
+                    qval = decodeQualifiedValue(key, qvalue);
+                    qvalues.add(qval);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            mdr.setValue(key, qvalues);
         }
         return mdr;
     }
 
-    
+
     /* (non-Javadoc)
      * @see org.theeuropeanlibrary.repository.convert.Converter#encode(java.lang.Object)
      */
     @Override
     public HashMap<String, List<byte[]>> encode(MetaDataRecordBean<String> rec) {
-    	HashMap<String, List<byte[]>> sd = new HashMap<String, List<byte[]>>();
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();        	
+        HashMap<String, List<byte[]>> sd = new HashMap<String, List<byte[]>>();
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(bout);
             CodedOutputStream output = CodedOutputStream.newInstance(gzip);
             Set<TKey<?, ?>> keys = rec.getAvailableKeys();
-             
-             for(TKey<?, ?> key: keys){
-            	 ArrayList<byte[]> arlist = new ArrayList<byte[]>();
-            	 List<?> values = rec.getQualifiedValues(key);           	 
-            	 for(Object qval: values){
-            		 byte[] enc = encodeQualifiedValue((QualifiedValue)qval);
-            		 arlist.add(enc);
-            	 }
-            	 sd.put(key.toString(), arlist); 
-             }
-            output.flush();            
+
+            for (TKey<?, ?> key : keys) {
+                ArrayList<byte[]> arlist = new ArrayList<byte[]>();
+                List<?> values = rec.getQualifiedValues(key);
+                for (Object qval : values) {
+                    byte[] enc = encodeQualifiedValue((QualifiedValue) qval);
+                    arlist.add(enc);
+                }
+                sd.put(key.toString(), arlist);
+            }
+            output.flush();
             gzip.flush();
             gzip.close();
         } catch (IOException e) {
@@ -147,92 +148,91 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
 
         return sd;
     }
-    
+
     /* (non-Javadoc)
      * @see org.theeuropeanlibrary.repository.convert.Converter#getEncodeType()
      */
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public Class<HashMap<String, List<byte[]>>> getEncodeType() {
-        return  (Class<HashMap<String, List<byte[]>>>) new HashMap<String, List<byte[]>>().getClass();
+        return (Class<HashMap<String, List<byte[]>>>) new HashMap<String, List<byte[]>>().getClass();
     }
 
     /* (non-Javadoc)
      * @see org.theeuropeanlibrary.repository.convert.Converter#getDecodeType()
      */
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public Class<MetaDataRecordBean<String>> getDecodeType() {
-        return  (Class<MetaDataRecordBean<String>>) new MetaDataRecordBean<String>().getClass();
+        return (Class<MetaDataRecordBean<String>>) new MetaDataRecordBean<String>().getClass();
     }
-    
-    
+
+
     /**
      * Encodes a Qualified value type into a byte array
-     * 
+     *
      * @param qval the Qualified value type
      * @return a byte array
      */
-    private byte[] encodeQualifiedValue(QualifiedValue<?> qval){
+    private byte[] encodeQualifiedValue(QualifiedValue<?> qval) {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        GZIPOutputStream gzip;
-		try {
-			gzip = new GZIPOutputStream(bout);
-	        CodedOutputStream output = CodedOutputStream.newInstance(gzip);	        
-	        output.writeInt32(FIELD_ENTRY_ORDER, qval.getOrderIndex());
-	        
-	          Converter converter = converterFactory.getConverter(qval.getValue().getClass());
-	            if (converter != null) {
-	                ByteString b = ByteString.copyFrom((byte[])converter.encode(qval.getValue()));
-	                output.writeBytes(FIELD_ENTRY_VALUE, b);
-	            } else {
-	                BaseTypeEncoder encoder = converterFactory.getBaseTypeEncoder(qval.getValue().getClass());
-	                if (encoder != null) {
-	                    encoder.encode(FIELD_ENTRY_VALUE, qval.getValue(), output);
-	                } else {
-	                    // No encoder or converter, the value is not persisted
-	                }
-	            }
-	              
-	        Set<Enum<?>> qualifiers = qval.getQualifiers();
-	        	            for (Enum<?> qualifier : qualifiers) {
-	        	                String qualifierEncoded = qualifier.getClass().getName() + "@" + qualifier.name();
-	        	                output.writeString(FIELD_ENTRY_QUALIFIER, qualifierEncoded);
-	       }
-	       output.flush();	       
-           gzip.flush();
-           gzip.close();	       
-		} catch (IOException e) {
-			throw new RuntimeException("Could not write qualified value to byte array!", e);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not write qualified value to byte array!", e);
-		}
-        finally {
+        //GZIPOutputStream gzip;
         try {
-            bout.close();
+            GZIPOutputStream gzip = new GZIPOutputStream(bout);
+            CodedOutputStream output = CodedOutputStream.newInstance(gzip);
+            output.writeInt32(FIELD_ENTRY_ORDER, qval.getOrderIndex());
+
+            Converter converter = converterFactory.getConverter(qval.getValue().getClass());
+            if (converter != null) {
+                ByteString b = ByteString.copyFrom((byte[]) converter.encode(qval.getValue()));
+                output.writeBytes(FIELD_ENTRY_VALUE, b);
+            } else {
+                BaseTypeEncoder encoder = converterFactory.getBaseTypeEncoder(qval.getValue().getClass());
+                if (encoder != null) {
+                    encoder.encode(FIELD_ENTRY_VALUE, qval.getValue(), output);
+                } else {
+                    // No encoder or converter, the value is not persisted
+                }
+            }
+
+            Set<Enum<?>> qualifiers = qval.getQualifiers();
+            for (Enum<?> qualifier : qualifiers) {
+                String qualifierEncoded = qualifier.getClass().getName() + "@" + qualifier.name();
+                output.writeString(FIELD_ENTRY_QUALIFIER, qualifierEncoded);
+            }
+            output.flush();
+            gzip.flush();
+            gzip.close();
         } catch (IOException e) {
-            throw new RuntimeException("Could not close output stream!", e);
+            throw new RuntimeException("Could not write qualified value to byte array!", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not write qualified value to byte array!", e);
+        } finally {
+            try {
+                bout.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Could not close output stream!", e);
+            }
         }
-    }    	
-    	return bout.toByteArray();
+        return bout.toByteArray();
     }
-    
-    
+
+
     /**
      * Decodes a byte array into a Qualified value type
-     * 
+     *
      * @param <NS>
      * @param <T>
-     * @param key the TKey type
-     * @param enc the byte array
+     * @param key  the TKey type
+     * @param enc  the byte array
      * @return a Qualified value type
      * @throws IOException
      */
     @SuppressWarnings("unchecked")
-	private <NS, T> QualifiedValue  decodeQualifiedValue(TKey<NS, T> key,byte[] enc) throws IOException{
+    private <NS, T> QualifiedValue decodeQualifiedValue(TKey<NS, T> key, byte[] enc) throws IOException {
 
-    	GZIPInputStream bin = new GZIPInputStream(new ByteArrayInputStream(enc));
-        CodedInputStream input = CodedInputStream.newInstance(bin);        
+        GZIPInputStream bin = new GZIPInputStream(new ByteArrayInputStream(enc));
+        CodedInputStream input = CodedInputStream.newInstance(bin);
         int order = -1;
         T value = null;
         Set<Enum<?>> qualifiers = new HashSet<Enum<?>>();
@@ -240,55 +240,53 @@ public class MongoDBEuropeanaMDRConverter extends Converter<HashMap<String, List
         while ((tag = input.readTag()) != 0) {
             int field = WireFormat.getTagFieldNumber(tag);
             switch (field) {
-            case FIELD_ENTRY_ORDER:
-                order = input.readInt32();
-                break;
-            case FIELD_ENTRY_VALUE:
-                Converter converter = converterFactory.getConverter(key);
-                if (converter != null) {
-                    try {
-                        ByteString b = input.readBytes();
-                        value = (T)converter.decode(b.toByteArray());
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error decoding a " +
-                                                   key.getType().getName(), e);
+                case FIELD_ENTRY_ORDER:
+                    order = input.readInt32();
+                    break;
+                case FIELD_ENTRY_VALUE:
+                    Converter converter = converterFactory.getConverter(key);
+                    if (converter != null) {
+                        try {
+                            ByteString b = input.readBytes();
+                            value = (T) converter.decode(b.toByteArray());
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error decoding a " +
+                                    key.getType().getName(), e);
+                        }
+                    } else {
+                        BaseTypeEncoder encoder = converterFactory.getBaseTypeEncoder(key.getType());
+                        if (encoder == null)
+                            throw new RuntimeException("Unsupported class for metadata record: " +
+                                    key.getType().getName());
+                        try {
+                            value = (T) encoder.decode(input);
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
-                } else {
-                    BaseTypeEncoder encoder = converterFactory.getBaseTypeEncoder(key.getType());
-                    if (encoder == null)
-                        throw new RuntimeException("Unsupported class for metadata record: " +
-                                                   key.getType().getName());
-                    try {
-						value = (T)encoder.decode(input);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                }
-            	
-                break;
-            case FIELD_ENTRY_QUALIFIER:
-                String encoded = input.readString();
-                String[] split = encoded.split("@");
-                Class<? extends Enum> type;
-                try {
-                    type = (Class<? extends Enum>)Class.forName(split[0]);
-                } catch (ClassNotFoundException e) { 
-                    throw new RuntimeException("Could not convert encoded enum '" + encoded +
-                                               "'!", e);
-                }
-                Enum<?> enumValue = Enum.valueOf(type, split[1]);
-                qualifiers.add(enumValue);
-                break;
-            default:
-                break;
-            }
-        }        
-        QualifiedValue qval = new QualifiedValue(value,qualifiers,order);
-       	return qval;
-    }
-    
 
+                    break;
+                case FIELD_ENTRY_QUALIFIER:
+                    String encoded = input.readString();
+                    String[] split = encoded.split("@");
+                    Class<? extends Enum> type;
+                    try {
+                        type = (Class<? extends Enum>) Class.forName(split[0]);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException("Could not convert encoded enum '" + encoded +
+                                "'!", e);
+                    }
+                    Enum<?> enumValue = Enum.valueOf(type, split[1]);
+                    qualifiers.add(enumValue);
+                    break;
+                default:
+                    break;
+            }
+        }
+        QualifiedValue qval = new QualifiedValue(value, qualifiers, order);
+        return qval;
+    }
 
 
 }
