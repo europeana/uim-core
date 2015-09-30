@@ -29,12 +29,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.mapping.DefaultCreator;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.resource.ResourceEngine;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.mongo.activator.MongoBundleActivator;
 import eu.europeana.uim.store.mongo.decorators.MongoCollectionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoExecutionDecorator;
 import eu.europeana.uim.store.mongo.decorators.MongoProviderDecorator;
@@ -94,7 +97,14 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 			mongo = new Mongo(host,port);
 			db = mongo.getDB(dbName);
 			Morphia morphia = new Morphia();
-
+			morphia.getMapper().getOptions().setObjectFactory(new DefaultCreator() {
+	                @Override
+	                protected ClassLoader getClassLoaderForClass(String clazz, DBObject object) {
+	                    // we're the only bundle for now using Morphia so we can be sure that in any case
+	                    // the classloader of this bundle has to be used
+	                    return MongoBundleActivator.getBundleClassLoader();
+	                }
+	        });
 			morphia.map(CollectionResource.class).map(GlobalResource.class)
 					.map(ProviderResource.class).map(WorkflowResource.class)
 					.map(MongoProviderDecorator.class)
@@ -103,6 +113,7 @@ public class MongoResourceEngine extends AbstractEngine implements ResourceEngin
 					.map(MongoRequestDecorator.class);
 
 			ds = morphia.createDatastore(mongo, dbName);
+			
 			status = EngineStatus.RUNNING;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

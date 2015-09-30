@@ -21,14 +21,22 @@
 package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.DefaultCreator;
+import com.google.code.morphia.query.Query;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -40,6 +48,7 @@ import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.modules.criteria.KeyCriterium;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -75,6 +84,9 @@ public class MongoStorageEngine extends AbstractEngine implements
     private static final String NAMEFIELD = "searchName";
     private static final String LOCALIDFIELD = "mongoId";
     private static final String RECORDUIDFIELD = "uniqueID";
+    private static final String LASTINGESTIONSESSIONID = "lastIngestionSessionId";
+    private static final String STATUS = "status";
+    
     private static final String REQUESTRECORDS = "requestrecords";
     private static final String COLLECTIONID = "collectionId";
     private static final String REQUESTID = "requestId";
@@ -725,6 +737,7 @@ public class MongoStorageEngine extends AbstractEngine implements
     public void updateMetaDataRecord(MetaDataRecord<String> record)
             throws StorageEngineException {
         MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
+        
         if (rec.getMongoId() == null) {
             ds.save(record);
         } else {
@@ -926,13 +939,89 @@ public class MongoStorageEngine extends AbstractEngine implements
     @Override
     public String[] getByCollection(Collection<String> col) {
         List<String> res = new ArrayList<>();
-        int count =ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID", col.getId())).count();
-        Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID",col.getId()),new BasicDBObject("uniqueID",1),0,count);
+        // no reason to execute 2 queries (one just for counting) since this is just a cursor..
+        //   int count =ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID", col.getId())).count();
+        Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID",col.getId()),new BasicDBObject("uniqueID",1));
         while(obj.hasNext()){
             res.add(obj.next().get("uniqueID").toString());
         }
         return res.toArray(new String[res.size()]);
+        
+        
     }
+    
+	@Override
+	public String[] getByCollectionAndCriteria(Collection<String> collection, KeyCriterium<?, ?>... keyCriteria)
+			throws StorageEngineException {
+		List<String> res = new ArrayList<>();
+		if (keyCriteria==null) {
+			return getByCollection(collection);
+		}
+		List<KeyCriterium<?, ?>> keyCriteriaMongoFilters = new ArrayList<>();
+		List<KeyCriterium<?, ?>> keyCriteriaPostFilters = new ArrayList<>();
+		
+		// check whether there are criteria corresponding to mongo fields
+		for (KeyCriterium<?, ?> keyCriterium: keyCriteria) {
+			if (MongoMetadataRecordDecorator.keysExposedAsMongoFields.containsKey(keyCriterium.getKey())) {
+				keyCriteriaMongoFilters.add(keyCriterium);
+			} else {
+				keyCriteriaPostFilters.add(keyCriterium);
+			}
+		}
+		
+		if (keyCriteriaPostFilters.isEmpty()) {
+			BasicDBObject basicDBObject = new BasicDBObject("collectionID",collection.getId());
+			for (KeyCriterium<?, ?> keyCriterium: keyCriteriaMongoFilters) {
+				if (keyCriterium.isNot()) {
+					basicDBObject.append(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()), new BasicDBObject("$ne", keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue()));
+				} else {
+					basicDBObject.append(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()),keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				}
+			}
+			Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(basicDBObject,new BasicDBObject("uniqueID",1));
+			while(obj.hasNext()){
+	            res.add(obj.next().get("uniqueID").toString());
+	        }
+		} else {
+			@SuppressWarnings("rawtypes")
+			Query<MongoMetadataRecordDecorator> query= ds.find(MongoMetadataRecordDecorator.class);
+			for (KeyCriterium<?, ?> keyCriterium: keyCriteriaMongoFilters) {
+				if (keyCriterium.isNot()) {
+					query.filter(String.format("%s !=", MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey())), keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				} else {
+					query.filter(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()), keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				}
+			}
+			@SuppressWarnings("rawtypes")
+			Iterable<MongoMetadataRecordDecorator> it = query.fetch();
+			for (@SuppressWarnings("rawtypes") MongoMetadataRecordDecorator mongoMetadataRecordDecorator: it) {
+				boolean hit = true;
+				for (KeyCriterium<?, ?> keyCriterium: keyCriteriaPostFilters) {
+					@SuppressWarnings("unchecked")
+					List<?> values = mongoMetadataRecordDecorator.getValues(keyCriterium.getKey(), keyCriterium.getQualifiers());
+					if (keyCriterium.isNot()) {		
+						if (values!=null && !values.isEmpty()) {
+							hit = hit && (!values.contains(keyCriterium.getValue()));
+						}
+					} else {
+						if (values!=null && !values.isEmpty()) {
+							hit = hit && (values.contains(keyCriterium.getValue()));
+						} else {
+							hit = false;
+						}				
+					}
+					if (!hit) {
+						break;
+					}
+				}
+				if (hit) {
+					res.add(mongoMetadataRecordDecorator.getId());
+				}	
+			}
+		}
+		return res.toArray(new String[res.size()]);
+
+	}
 
     /*
      * (non-Javadoc)
@@ -1282,6 +1371,8 @@ public class MongoStorageEngine extends AbstractEngine implements
             return true;
         }
     }
+
+
 
 
 }

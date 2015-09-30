@@ -16,6 +16,7 @@ import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.modules.criteria.KeyCriterium;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -472,4 +473,21 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
     public int getTotalForAllIds() {
         return metadatas.size();
     }
+
+	@Override
+	public Long[] getByCollectionAndCriteria(Collection<Long> collection, KeyCriterium<?, ?>... keyCriteria)
+			throws StorageEngineException {
+		List<Long> result = new ArrayList<Long>();
+        TLongLongIterator iterator = metacollection.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            if (iterator.value() == collection.getId()) {
+                result.add(iterator.key());
+            }
+        }
+
+        Long[] ids = result.toArray(new Long[result.size()]);
+        Arrays.sort(ids);
+        return ids;
+	}
 }

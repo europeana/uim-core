@@ -49,6 +49,7 @@
 							eu.europeana.uim.resource,
 							eu.europeana.uim.storage,
 							eu.europeana.uim.storage.modules,
+							eu.europeana.uim.storage.modules.criteria,
 							eu.europeana.uim.util,
 							eu.europeana.uim.workflow
 						</Export-Package>

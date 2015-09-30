@@ -15,45 +15,6 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>hibernate3-maven-plugin</artifactId>
-                <version>2.2</version>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>hbm2dao</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <components>
-                        <component>
-                            <name>hbm2dao</name>
-                            <!--<implementation>annotationconfiguration</implementation>-->
-                            <outputDirectory>target/source/java</outputDirectory>
-                        </component>
-                        <component>
-                            <name>hbm2ddl</name>
-                            <!--<implementation>annotationconfiguration</implementation>-->
-                            <outputDirectory>target/source/sql</outputDirectory>
-                        </component>
-                    </components>
-                    <componentProperties>
-                        <template>daohome.ftl</template>
-                        <templatepath>src/main/code/template</templatepath>
-                        <configurationfile>src/main/code/hibernate.cfg.xml</configurationfile>
-                         <implementation>annotationconfiguration</implementation>
-                        <ejb3>false</ejb3>
-                        <jdk5>true</jdk5>
-                        <drop>true</drop>
-                        <format>true</format>
-                        <export>false</export>
-                        <outputfilename>schema.sql</outputfilename>
-                    </componentProperties>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.5</version>
                 <executions>
@@ -113,21 +74,6 @@
                     <configuration>
                         <lifecycleMappingMetadata>
                             <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>hibernate3-maven-plugin</artifactId>
-                                        <versionRange>2.2</versionRange>
-                                        <goals>
-                                            <goal>hbm2dao</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <execute>
-                                            <runOnIncremental>false</runOnIncremental>
-                                        </execute>
-                                    </action>
-                                </pluginExecution>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>org.codehaus.mojo</groupId>

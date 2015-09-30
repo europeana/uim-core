@@ -26,6 +26,8 @@
 							eu.europeana.uim.orchestration,
 							eu.europeana.uim.resource,
 							eu.europeana.uim.storage,
+							eu.europeana.uim.storage.modules.criteria,
+							eu.europeana.uim.storage.modules.criteria.KeyCriterium,
 							eu.europeana.uim.store,
 							eu.europeana.uim.store.bean,
 							eu.europeana.uim.workflow,

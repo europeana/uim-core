@@ -122,5 +122,11 @@ public final class EuropeanaModelRegistry {
     public static final TKey<EuropeanaModelRegistry, Boolean> ISHIERARCHY = TKey
             .register(EuropeanaModelRegistry.class, "ishierarchy", Boolean.class);
 
+    
+    /**
+     * A key indicating when a record was updated in the server index
+     */
+    public static final TKey<EuropeanaModelRegistry, String> INITIALINGESTIONSESSION = TKey
+            .register(EuropeanaModelRegistry.class, "initialingestionsession", String.class);
 
 }
