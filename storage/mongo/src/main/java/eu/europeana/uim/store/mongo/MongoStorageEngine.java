@@ -97,7 +97,7 @@ public class MongoStorageEngine extends AbstractEngine implements
     private Registry registry;
     private static THashMap<String, MongoCollectionDecorator<String>> inmemoryCollections = new THashMap<String, MongoCollectionDecorator<String>>();
 
-    private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
+    // private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
     private static THashMap<String, THashSet<String>> inmemoryRequestRecordIDs = new THashMap<String, THashSet<String>>();
 
     Mongo mongo = null;
@@ -744,18 +744,18 @@ public class MongoStorageEngine extends AbstractEngine implements
             ds.merge(record);
         }
 
-        THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
-                .get(rec.getCollectionID());
-
-        if (registeredCollectionrecords == null) {
-            registeredCollectionrecords = new THashSet<String>();
-            inmemoryCollectionRecordIDs.put(rec.getCollectionID(),
-                    registeredCollectionrecords);
-        }
-
-        synchronized (inmemoryCollectionRecordIDs) {
-            registeredCollectionrecords.add(rec.getId());
-        }
+//        THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
+//                .get(rec.getCollectionID());
+//
+//        if (registeredCollectionrecords == null) {
+//            registeredCollectionrecords = new THashSet<String>();
+//            inmemoryCollectionRecordIDs.put(rec.getCollectionID(),
+//                    registeredCollectionrecords);
+//        }
+//
+//        synchronized (inmemoryCollectionRecordIDs) {
+//            registeredCollectionrecords.add(rec.getId());
+//        }
     }
 
     /*
@@ -896,46 +896,7 @@ public class MongoStorageEngine extends AbstractEngine implements
         return res;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * eu.europeana.uim.api.StorageEngine#getByCollection(eu.europeana.uim.store
-     * .Collection)
-     */
 
-    public String[] getByCollectionNew(Collection<String> collection) {
-
-        String[] res = null;
-
-        THashSet<String> idrefs = inmemoryCollectionRecordIDs.get(collection
-                .getId());
-
-        if (idrefs != null) {
-            res = idrefs.toArray(new String[0]);
-        } else {
-            MDRPerCollectionAggregator aggregator = ds
-                    .find(MDRPerCollectionAggregator.class)
-                    .filter("collectionId", collection.getId()).get();
-
-            if (aggregator != null) {
-                HashSet<String> entries = aggregator.getMdrIDs();
-
-                THashSet<String> idrefsnew = new THashSet<String>(entries);
-                synchronized (inmemoryCollectionRecordIDs) {
-                    inmemoryCollectionRecordIDs.put(collection.getId(),
-                            idrefsnew);
-                }
-
-                res = idrefsnew.toArray(new String[0]);
-            } else {
-                res = new String[0];
-            }
-
-        }
-
-        return res;
-    }
     @Override
     public String[] getByCollection(Collection<String> col) {
         List<String> res = new ArrayList<>();
@@ -1180,97 +1141,13 @@ public class MongoStorageEngine extends AbstractEngine implements
     @Override
     public void completed(ExecutionContext<?, String> context) {
         if (context.getDataSet() instanceof Collection) {
-            flushCollectionMDRS(context.getDataSet().getId());
+//            flushCollectionMDRS(context.getDataSet().getId());
             flushRequestMDRS(context.getDataSet().getId());
         }
 
     }
 
-    /**
-     * Persists content stored in inmemoryCollectionRecordIDs
-     *
-     * @param collectionID
-     */
-    public void flushCollectionMDRS(String collectionID) {
 
-        THashSet<String> recids;
-        synchronized (inmemoryCollectionRecordIDs) {
-            recids = inmemoryCollectionRecordIDs.get(collectionID);
-        }
-        if (recids != null) {
-            HashSet<String> tmpset = new HashSet<String>();
-            TObjectHashIterator<String> it = recids.iterator();
-            while (it.hasNext()) {
-                tmpset.add(it.next());
-            }
-            MDRPerCollectionAggregator aggregator = ds
-                    .find(MDRPerCollectionAggregator.class)
-                    .filter("collectionId", collectionID).get();
-            if (aggregator == null) {
-                aggregator = new MDRPerCollectionAggregator();
-                aggregator.setCollectionId(collectionID);
-                aggregator.setMdrIDs(tmpset);
-                ds.save(aggregator);
-            } else {
-                aggregator.setMdrIDs(tmpset);
-                ds.merge(aggregator);
-            }
-        }
-        if (registry == null) {
-            System.out.println("Registry is null here");
-        } else {
-            System.out.println("Got registry reference");
-        }
-        // Make sure that inmemoryCollectionRecordIDs does not exceed the
-        // maximum allowed size. Reset it if it does.
-
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-            purgeInmemoryCollectionRecordIDs();
-        }
-
-
-    }
-
-
-    /**
-     * This synchronized method is called when the amount of the collections that have their
-     * records cached into memory exceeds the upper limit (which is 50)
-     */
-    public synchronized void purgeInmemoryCollectionRecordIDs() {
-        if (registry == null) {
-            System.out.println("Registry is null here");
-        }
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-
-            Set<String> content2bepreserved = new HashSet<String>();
-            Orchestrator<String> orchestrator = (Orchestrator<String>) registry.getOrchestrator();
-            @SuppressWarnings("unchecked")
-            List<ActiveExecution<?, String>> activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
-
-            for (ActiveExecution<?, String> exec : activeExecs) {
-                Collection<String> coll = exec.getDataSetCollection();
-
-                if (coll != null) {
-                    content2bepreserved.add(coll.getMnemonic());
-                }
-            }
-
-            synchronized (inmemoryCollectionRecordIDs) {
-                inmemoryCollectionRecordIDs.forEachEntry(new InmemoryRecordIDITerator(content2bepreserved, inmemoryCollectionRecordIDs));
-            }
-        }
-    }
-
-
-    /**
-     * Brute Forces the purging of inmemoryCollectionRecordIDs data structure
-     */
-    public synchronized void purgeInmemoryCollectionRecordIDsBrute() {
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-            System.out.println("Purging in memory record references");
-            inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
-        }
-    }
 
 
     /**
