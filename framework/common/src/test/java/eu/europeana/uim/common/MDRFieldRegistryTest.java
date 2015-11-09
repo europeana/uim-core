@@ -2,7 +2,7 @@
 package eu.europeana.uim.common;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,8 +15,8 @@ public class MDRFieldRegistryTest {
     /**
      * Clears the {@link TKey}s registry.
      */
-    @BeforeClass
-    public static void setup() {
+    @Before
+    public void setup() {
         TKey.clear();
     }
 

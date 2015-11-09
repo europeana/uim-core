@@ -1,6 +1,8 @@
 /* MaterialType.java - created on Nov 24, 2012, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.tel.qualifier;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *
  *  Taken from Primo at the British Library:
@@ -43,5 +45,23 @@ public enum MaterialType {
     RESEARCH_DATASET,
     TEXT_RESOURCE,
     DATABASE,
+    USER_GENERATED_CONTENT;
+    
+    
+    final String humanReadableLabel;
+    
+    /**
+     * Creates a new instance of this class.
+     */
+    private MaterialType() {
+        humanReadableLabel=StringUtils.capitalize(name().replace('_', ' ').toLowerCase());
+    }
+    
+    /**
+     * @return readabale value
+     */
+    public String toHumanReadableLabel() {
+        return humanReadableLabel;
+    }
     
 }

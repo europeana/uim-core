@@ -1,6 +1,8 @@
 /* BibliographicRecordType.java - created on 29 de Ago de 2011, Copyright (c) 2011 The European Library, all rights reserved */
 package org.theeuropeanlibrary.model.common.qualifier;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Types of content and material
  * 
@@ -63,6 +65,16 @@ public enum ResourceType {
      */
     MIXED_MATERIALS;
 
+    
+    final String humanReadableLabel;
+    
+    /**
+     * Creates a new instance of this class.
+     */
+    private ResourceType() {
+        humanReadableLabel=StringUtils.capitalize(name().replace('_', ' ').toLowerCase());
+    }
+    
     /**
      * @param typeOfRecordCode
      * @return ResourceType
@@ -134,5 +146,21 @@ public enum ResourceType {
             return MULTIMEDIA;
         }
         return null;
+    }
+    
+
+    /**
+     * @return readable value
+     */
+    public String toHumanReadableLabel() {
+        return humanReadableLabel;
+    }
+    
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        System.out.println(THREE_DIMENSIONAL_OBJECT.toHumanReadableLabel());
     }
 }

@@ -87,15 +87,42 @@ public enum SugarControlledVocabulary implements ControlledVocabularyKeyValue {
 
     /** execution id of validation run */
     COLLECTION_EDM_VALIDATION,
-    
+
     /** redistribute metadata profile */
     COLLECTION_METADATA_PROFILE,
-    
+
+    /** redistribute metadata licence */
+    COLLECTION_METADATA_LICENCE,
+
     /** collection status */
     COLLECTION_STATUS,
-    
+
     /** provider consortia name for a provider */
-    PROVIDER_CONSORTIA_NAME;
+    PROVIDER_CONSORTIA_NAME,
+
+    /** SugarControlledVocabulary PARTNERSHIP_AGREEMENT_STATUS */
+    PARTNERSHIP_AGREEMENT_STATUS,
+    
+    /** SugarControlledVocabulary RESTRICTION_BY_DISTRIB_FORMAT */
+    RESTRICTION_BY_DISTRIB_FORMAT,
+    
+    /** SugarControlledVocabulary TEL_OTHER_DISTRIBUTION_FORMATS */
+    TEL_OTHER_DISTRIBUTION_FORMATS,
+    
+    /** SugarControlledVocabulary TEL_SOURCE_DATA_LICENCE */
+    TEL_SOURCE_DATA_LICENCE,
+    
+    /** SugarControlledVocabulary TEL_OTHER_SOURCE_DATA_LICENSE */
+    TEL_OTHER_SOURCE_DATA_LICENSE,
+    
+    /** SugarControlledVocabulary TEL_FIELD_OF_TIME_RESTRICTION */
+    TEL_FIELD_OF_TIME_RESTRICTION,
+    
+    /** SugarControlledVocabulary TEL_DURATION_OF_RESTRICTION */
+    TEL_DURATION_OF_RESTRICTION,
+    
+    /** SugarControlledVocabulary TEL DISTRIBUTION FORMAT LICENCE */
+    TEL_DISTRIBUTION_FORMAT_LICENCE;
 
     /** SugarCRM date format */
     public static DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");

@@ -2,6 +2,7 @@
 package eu.europeana.uim.sugar.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -284,6 +285,7 @@ public class SugarServiceImpl implements SugarService {
 
         boolean update = false;
         RetrievableField[] fields = getSugarMapping().getCollectionRetrievableFields();
+        
         for (RetrievableField field : fields) {
             String value = sugarprovider.get(field.getFieldId());
 

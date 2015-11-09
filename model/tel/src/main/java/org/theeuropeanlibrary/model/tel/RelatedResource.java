@@ -129,4 +129,12 @@ public class RelatedResource {
         } else if (!telIdentifier.equals(other.telIdentifier)) return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "RelatedResource [description=" + description + ", identifiers=" + identifiers +
+               ", telIdentifier=" + telIdentifier + "]";
+    }
+    
+    
 }

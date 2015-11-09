@@ -46,7 +46,15 @@ public class TELMapping implements SugarMapping {
                 TELCollectionFields.TEL_ACTIVE_UIM,
                 TELCollectionFields.HARVESTING_METHOD,
                 TELCollectionFields.METADATA_PROFILE,
-                TELCollectionFields.STATUS
+                TELCollectionFields.STATUS,
+                TELCollectionFields.PARTNERSHIP_AGREEMENT_STATUS,
+                TELCollectionFields.RESTRICTION_BY_DISTRIB_FORMAT,
+                TELCollectionFields.TEL_OTHER_DISTRIBUTION_FORMATS,
+                TELCollectionFields.TEL_SOURCE_DATA_LICENCE,
+                TELCollectionFields.TEL_OTHER_SOURCE_DATA_LICENSE,
+                TELCollectionFields.TEL_FIELD_OF_TIME_RESTRICTION,
+                TELCollectionFields.TEL_DURATION_OF_RESTRICTION,
+                TELCollectionFields.TEL_DISTRIBUTION_FORMAT_LICENCE
         };
     }
 
@@ -91,7 +99,8 @@ public class TELMapping implements SugarMapping {
                 
                 TELCollectionFields.LINKCHECK_EXECUTION,
                 TELCollectionFields.FIELDCHECK_EXECUTION,
-                TELCollectionFields.EDMCHECK_EXECUTION
+                TELCollectionFields.EDMCHECK_EXECUTION,
+                
         };
     }
 }

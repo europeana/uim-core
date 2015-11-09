@@ -33,6 +33,12 @@ public class Subject {
      */
     @FieldId(4)
     protected SpatialEntity geographicSubdivision;
+    /**
+     * Form subdivision that designates a specific kind or genre of material as defined by the
+     * thesaurus being used.
+     */
+    @FieldId(12)
+    protected String        unstructuredSubjectHeading;
 
     /**
      * Creates a new instance of this class.
@@ -179,5 +185,21 @@ public class Subject {
             builder.append(", " + geographicSubdivision);
         }
         return builder.toString();
+    }
+
+    /**
+     * Returns the unstructuredSubjectHeading.
+     * @return the unstructuredSubjectHeading
+     */
+    public final String getUnstructuredSubjectHeading() {
+        return unstructuredSubjectHeading;
+    }
+
+    /**
+     * Sets the unstructuredSubjectHeading
+     * @param unstructuredSubjectHeading the unstructuredSubjectHeading to set
+     */
+    public final void setUnstructuredSubjectHeading(String unstructuredSubjectHeading) {
+        this.unstructuredSubjectHeading = unstructuredSubjectHeading;
     }
 }

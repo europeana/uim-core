@@ -53,31 +53,31 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
      * UIMActiveExecution KEEP_TMP_FILES_AFTER_EXECUTION_KEY if set to true, the directory with the
      * temporary files is not deleted after the execution.
      **/
-    public static String                            KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
+    public static String                              KEEP_TMP_FILES_AFTER_EXECUTION_KEY = "execution.keepTmpFilesAfterExecution";
 
-    private static Logger                           log                                = Logger.getLogger(UIMActiveExecution.class.getName());
+    private static Logger                             log                                = Logger.getLogger(UIMActiveExecution.class.getName());
 
-    private HashMap<String, LinkedList<Task<U, I>>> success                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
-    private HashMap<String, LinkedList<Task<U, I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
-    private HashMap<String, HashSet<Task<U, I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<U, I>>>();
+    private final Map<String, LinkedList<Task<U, I>>> success                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
+    private final Map<String, LinkedList<Task<U, I>>> failure                            = new LinkedHashMap<String, LinkedList<Task<U, I>>>();
+    private final Map<String, HashSet<Task<U, I>>>    assigned                           = new LinkedHashMap<String, HashSet<Task<U, I>>>();
 
-    private HashMap<TKey<?, ?>, Object>             values                             = new HashMap<TKey<?, ?>, Object>();
+    private final Map<TKey<?, ?>, Object>             values                             = new HashMap<TKey<?, ?>, Object>();
 
-    private final StorageEngine<I>                  storageEngine;
-    private final LoggingEngine<I>                  loggingEngine;
-    private final ResourceEngine                    resourceEngine;
+    private final StorageEngine<I>                    storageEngine;
+    private final LoggingEngine<I>                    loggingEngine;
+    private final ResourceEngine                      resourceEngine;
 
-    private final Execution<I>                      execution;
-    private final Workflow<U, I>                    workflow;
-    private final Properties                        properties;
-    private final RevisableProgressMonitor          monitor;
+    private final Execution<I>                        execution;
+    private final Workflow<U, I>                      workflow;
+    private final Properties                          properties;
+    private final RevisableProgressMonitor            monitor;
 
-    private boolean                                 paused;
-    private boolean                                 initialized;
-    private Throwable                               throwable;
+    private boolean                                   paused;
+    private boolean                                   initialized;
+    private Throwable                                 throwable;
 
-    private int                                     scheduled                          = 0;
-    private int                                     completed                          = 0;
+    private int                                       scheduled                          = 0;
+    private int                                       completed                          = 0;
 
     /**
      * Creates a new instance of this class.
@@ -162,7 +162,7 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         }
         return collection;
     }
-    
+
     @Override
     public RevisableProgressMonitor getMonitor() {
         return monitor;
@@ -223,7 +223,6 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         int size = 0;
         WorkflowStart<U, I> start = workflow.getStart();
         size += getProgressSize(start.getIdentifier());
-
         for (IngestionPlugin<U, I> step : workflow.getSteps()) {
             size += getProgressSize(step.getIdentifier());
         }
@@ -235,8 +234,9 @@ public class UIMActiveExecution<U extends UimDataSet<I>, I> implements ActiveExe
         LinkedList<Task<U, I>> list = success.get(name);
         synchronized (list) {
             size += list.size();
-
-            HashSet<Task<U, I>> set = assigned.get(name);
+        }
+        HashSet<Task<U, I>> set = assigned.get(name);
+        synchronized (set) {
             size += set.size();
         }
         return size;

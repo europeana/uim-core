@@ -121,4 +121,9 @@ public class Edition {
         } else if (!statement.equals(other.statement)) return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Edition [number=" + number + ", statement=" + statement + "]";
+    }
 }

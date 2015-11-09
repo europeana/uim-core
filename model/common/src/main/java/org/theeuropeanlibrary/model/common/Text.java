@@ -8,12 +8,24 @@ package org.theeuropeanlibrary.model.common;
  * @author Nuno Freire <nfreire@gmail.com>
  * @since Mar 21, 2011
  */
+/**
+ * 
+ * 
+ * @author Nuno Freire (nfreire@gmail.com)
+ * @since 28/05/2014
+ */
 public class Text {
     /**
      * textual content
      */
     @FieldId(1)
     private String content;
+
+// /**
+// * encoding used for textual content
+// */
+// @FieldId(2)
+// private String encoding;
 
     /**
      * Creates a new instance of this class.
@@ -51,6 +63,21 @@ public class Text {
         this.content = content;
     }
 
+// /**
+// * @return encoding used for textual content
+// */
+// public String getEncoding() {
+// return encoding;
+// }
+//
+// /**
+// * @param encoding
+// * encoding used for textual content
+// */
+// public void setEncoding(String encoding) {
+// this.encoding = encoding;
+// }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -69,5 +96,12 @@ public class Text {
             if (other.content != null) return false;
         } else if (!content.equals(other.content)) return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        if (content == null) return "";
+        if (content.length() > 600) return content.substring(0, 599) + "<TRUNCATED>";
+        return content;
     }
 }

@@ -77,12 +77,12 @@ public class Instant extends Temporal {
      * @param year
      */
     public Instant(int year) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        time = cal.getTime();
         granularity = InstantGranularity.YEAR;
         uncertain = false;
-        normalizeTime();
+        Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
+        cal.set(Calendar.YEAR, year);
+        time = cal.getTime();
     }
 
     /**
@@ -92,12 +92,12 @@ public class Instant extends Temporal {
      * @param granularity
      */
     public Instant(int year, InstantGranularity granularity) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        time = cal.getTime();
         this.granularity = granularity;
         uncertain = false;
-        normalizeTime();
+        Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
+        cal.set(Calendar.YEAR, year);
+        time = cal.getTime();
     }
 
     /**
@@ -107,14 +107,14 @@ public class Instant extends Temporal {
      * @param month
      */
     public Instant(int year, int month) {
+        granularity = InstantGranularity.MONTH;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         time = cal.getTime();
-        granularity = InstantGranularity.MONTH;
-        uncertain = false;
-        normalizeTime();
     }
 
     /**
@@ -125,15 +125,15 @@ public class Instant extends Temporal {
      * @param day
      */
     public Instant(int year, int month, int day) {
+        granularity = InstantGranularity.DAY;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DAY_OF_MONTH, day);
         time = cal.getTime();
-        granularity = InstantGranularity.DAY;
-        uncertain = false;
-        normalizeTime();
     }
 
     /**
@@ -146,7 +146,10 @@ public class Instant extends Temporal {
      * @param minute
      */
     public Instant(int year, int month, int day, int hour, int minute) {
+        granularity = InstantGranularity.MINUTE;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
@@ -154,9 +157,6 @@ public class Instant extends Temporal {
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
         time = cal.getTime();
-        granularity = InstantGranularity.MINUTE;
-        uncertain = false;
-        normalizeTime();
     }
 
     /**
@@ -170,7 +170,10 @@ public class Instant extends Temporal {
      * @param miliseconds
      */
     public Instant(int year, int month, int day, int hour, int minute, int miliseconds) {
+        granularity = InstantGranularity.MILLISECOND;
+        uncertain = false;
         Calendar cal = Calendar.getInstance();
+        normalizeTime(cal, granularity);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.MONTH, month - 1);
@@ -179,9 +182,6 @@ public class Instant extends Temporal {
         cal.set(Calendar.MINUTE, minute);
         cal.set(Calendar.MILLISECOND, miliseconds);
         time = cal.getTime();
-        granularity = InstantGranularity.MILLISECOND;
-        uncertain = false;
-        normalizeTime();
     }
 
     /**
@@ -221,7 +221,12 @@ public class Instant extends Temporal {
      */
     public void setGranularity(InstantGranularity granularity) {
         this.granularity = granularity;
-        normalizeTime();
+        if (time != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(time);
+            normalizeTime(cal, granularity);
+            time = cal.getTime();
+        }
     }
 
     /**
@@ -328,80 +333,75 @@ public class Instant extends Temporal {
      * Normalizes the time value to the start millisecond of its period. This is essential in order
      * to have working hashCode() and equals()
      */
-    private void normalizeTime() {
-        if (time != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(time);
-            switch (granularity) {
-            case MILLENNIUM: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-                cal.set(Calendar.MONTH, Calendar.JANUARY);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case CENTURY: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-                cal.set(Calendar.MONTH, Calendar.JANUARY);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case DECADE: {
-                cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-                cal.set(Calendar.MONTH, Calendar.JANUARY);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case YEAR: {
-                cal.set(Calendar.MONTH, Calendar.JANUARY);
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case MONTH: {
-                cal.set(Calendar.DAY_OF_MONTH, 1);
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case DAY: {
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case MINUTE: {
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case SECOND: {
-                cal.set(Calendar.MILLISECOND, 0);
-                break;
-            }
-            case MILLISECOND:
-            case UNKNOWN: {
-                break;
-            }
-            }
-            time = cal.getTime();
+    private static void normalizeTime(Calendar cal, InstantGranularity granularity) {
+        switch (granularity) {
+        case MILLENNIUM: {
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+            cal.set(Calendar.MONTH, Calendar.JANUARY);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case CENTURY: {
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+            cal.set(Calendar.MONTH, Calendar.JANUARY);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case DECADE: {
+            cal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+            cal.set(Calendar.MONTH, Calendar.JANUARY);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case YEAR: {
+            cal.set(Calendar.MONTH, Calendar.JANUARY);
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case MONTH: {
+            cal.set(Calendar.DAY_OF_MONTH, 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case DAY: {
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case MINUTE: {
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case SECOND: {
+            cal.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case MILLISECOND:
+        case UNKNOWN: {
+            break;
+        }
         }
     }
 

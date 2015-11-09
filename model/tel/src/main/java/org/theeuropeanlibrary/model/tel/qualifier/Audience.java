@@ -113,7 +113,7 @@ public enum Audience {
     public String toHumanReadableLabel() {
         switch (this) {
         case UNKNOW:
-            return "Unkown";
+            return "Unknown";
         case ADOLESCENT:
             return "Adolescent";
         case ADULT_GENERAL:

@@ -70,13 +70,13 @@
 <!--         <dependency> -->
 <!--             <groupId>eu.europeana</groupId> -->
 <!--             <artifactId>europeana-uim-external-repox-api</artifactId> -->
-<!--             <version>${pom.version}</version> -->
+<!--             <version>${project.version}</version> -->
 <!--         </dependency> -->
 
 <!--         <dependency> -->
 <!--             <groupId>eu.europeana</groupId> -->
 <!--             <artifactId>europeana-uim-external-sugar-api</artifactId> -->
-<!--             <version>${pom.version}</version> -->
+<!--             <version>${project.version}</version> -->
 <!--         </dependency> -->
 
         <dependency>
@@ -104,8 +104,8 @@
     <!-- ================================================ -->
     <repositories>
         <repository>
-            <id>artifactory-eanadev</id>
-            <name>europeanalabs.eu-releases</name>
+            <id>artifactory.eanadev.org</id>
+            <name>artifactory.eanadev.org-releases</name>
             <url>http://artifactory.eanadev.org/artifactory/ext-release-local</url>
         </repository>
     </repositories>

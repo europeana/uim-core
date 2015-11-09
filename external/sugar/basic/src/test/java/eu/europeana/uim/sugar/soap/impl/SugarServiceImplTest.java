@@ -4,6 +4,8 @@ package eu.europeana.uim.sugar.soap.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +19,14 @@ import org.junit.Test;
 
 import eu.europeana.uim.store.bean.CollectionBean;
 import eu.europeana.uim.store.bean.ProviderBean;
+import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.client.PropertiesSugarMapping;
 import eu.europeana.uim.sugar.client.SugarClient;
 import eu.europeana.uim.sugar.client.SugarSoapClientImpl;
 import eu.europeana.uim.sugar.impl.SugarServiceImpl;
+import eu.europeana.uim.sugar.model.UpdatableField;
+import eu.europeana.uim.sugar.tel.TELCollectionFields;
 
 /**
  * 
@@ -105,6 +110,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
+    @Ignore
     public void testListCollections() throws SugarException {
         List<Map<String, String>> alllist = service.listCollections(false);
         List<Map<String, String>> active = service.listCollections(true);
@@ -117,6 +123,7 @@ public class SugarServiceImplTest {
      * 
      */
     @Test
+    @Ignore
     public void testListProviders() throws SugarException {
         List<Map<String, String>> alllist = service.listProviders(false);
         List<Map<String, String>> active = service.listProviders(true);
@@ -207,6 +214,38 @@ public class SugarServiceImplTest {
         String oldname = provider.getName();
         String newname = "JUnit Test";
 
+//        UpdatableField[] fields = service.getSugarMapping().getCollectionUpdateableFields();
+//        for (UpdatableField field : fields) {
+//            if(field.getFieldId().equals("tel_other_distribution_formats_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "something elese");
+//            }
+//            
+//            else if(field.getFieldId().equals("partnership_agreement_status_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "Ready");
+//            }
+//            else if(field.getFieldId().equals("restriction_by_distrib_format_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "^TEL_LOD^");
+//            }
+//            else if(field.getFieldId().equals("tel_source_data_licence_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "^BY-SA^");
+//            }
+//            else if(field.getFieldId().equals("tel_other_source_data_license_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "something else source data licence");
+//            }
+//            else if(field.getFieldId().equals("tel_field_of_time_restriction_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "something else field");
+//            }
+//            else if(field.getFieldId().equals("tel_duration_of_restriction_c"))
+//            {
+//                collection.putValue(field.getMappingField(), "something else");
+//            }
+//        }
         collection.setName(newname);
         service.updateCollection(collection);
 
@@ -214,7 +253,14 @@ public class SugarServiceImplTest {
         collection2.setMnemonic(collection.getMnemonic());
 
         service.synchronizeCollection(collection2);
-
+        
+        //Check
+//        Map<String, String> map = collection2.values();
+//        for(Map.Entry<String, String> maps : map.entrySet())
+//        {
+//            System.out.println(maps.getKey() + " : " + maps.getValue());   
+//        }
+        
         assertEquals(collection2.getName(), collection.getName());
         assertEquals(collection2.getName(), newname);
 

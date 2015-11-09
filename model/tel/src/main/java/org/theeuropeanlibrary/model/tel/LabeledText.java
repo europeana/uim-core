@@ -77,4 +77,11 @@ public class LabeledText extends Text {
         } else if (!label.equals(other.label)) return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "LabeledText [label=" + label + ", toString()=" + super.toString() + "]";
+    }
+    
+    
 }

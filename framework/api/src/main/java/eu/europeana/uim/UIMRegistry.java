@@ -124,7 +124,13 @@ public class UIMRegistry implements Registry {
 
         // getFields() only accesses public fields - use getDeclaredFields() instead
         for (Field currentField : plugin.getClass().getDeclaredFields()) {
-            if (Modifier.isStatic(currentField.getModifiers())) continue;
+            if (Modifier.isStatic(currentField.getModifiers())) {
+                continue;
+            }
+            //FIXME: small hack for warnings in pax tests, ignore underscore non-static fields
+            if (currentField.getName().contains("_")) {
+                continue;
+            }
             nonStaticMembers.append(currentField.getName() + " ");
         }
         if (nonStaticMembers.length() > 0)

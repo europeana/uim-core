@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.theeuropeanlibrary.model.common.Link;
 import org.theeuropeanlibrary.model.common.qualifier.LinkStatus;
@@ -59,18 +59,19 @@ public class EuropeanaLinkAdapterTest {
     /**
      * Initialize the test
      */
-    @BeforeClass
-    public static void init() {
+    @Before
+    public void init() {
         // This is where the initialization takes place, it is assumed that the
         //
         mdr = new MetaDataRecordBean<String>();
+        
         EuropeanaLink link = new EuropeanaLink();
-
         link.setAnchorKey(ANCHORKEY);
         link.setCachedPath(CACHEDPATH);
         link.setLastChecked(LASTCECKED);
         link.setLinkStatus(LINKSTATUS);
         link.setUrl(URL);
+        
         mdr.addValue(EuropeanaModelRegistry.EUROPEANALINK, link);
 
         Map<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>> strategies = new HashMap<TKey<?, ?>, QValueAdapterStrategy<?, ?, ?, ?>>();
@@ -85,9 +86,7 @@ public class EuropeanaLinkAdapterTest {
 	 */
     @Test
     public void getFirstQualifiedValueTest() {
-
         QualifiedValue<Link> qval = mdrad.getFirstQualifiedValue(ObjectModelRegistry.LINK);
-
         assertNotNull(qval.getValue());
         assertEquals(ANCHORKEY, qval.getValue().getAnchorKey());
         assertEquals(CACHEDPATH, qval.getValue().getCachedPath());
@@ -102,7 +101,6 @@ public class EuropeanaLinkAdapterTest {
     @Test
     public void getFirstValueTest() {
         Link val = mdrad.getFirstValue(ObjectModelRegistry.LINK);
-
         assertNotNull(val);
         assertEquals(ANCHORKEY, val.getAnchorKey());
         assertEquals(CACHEDPATH, val.getCachedPath());
@@ -117,7 +115,6 @@ public class EuropeanaLinkAdapterTest {
     @Test
     public void putValue() {
         // mdrad.addValue(ObjectModelRegistry.LINK, value, qualifiers)
-
     }
 
     /**

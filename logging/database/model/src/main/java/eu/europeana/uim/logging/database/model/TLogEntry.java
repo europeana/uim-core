@@ -109,6 +109,9 @@ public class TLogEntry implements LogEntry {
         if (messages != null && messages.length > 0) {
             String[] localMessages = new String[messages.length];
             for (int i = 0; i < messages.length; i++) {
+                if (messages[i] == null) {
+                    continue;
+                }
                 if (messages[i].length() < 4000) {
                     localMessages[i] = messages[i];
                 } else {

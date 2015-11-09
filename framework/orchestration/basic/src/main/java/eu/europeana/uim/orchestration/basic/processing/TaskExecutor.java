@@ -125,7 +125,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 }
 
                 synchronized (task.getOnSuccess()) {
-                    task.getOnSuccess().add(task);
+                    task.getOnSuccess().offer(task);
 
                     // within same synch block!!
                     synchronized (task.getAssigned()) {
@@ -143,7 +143,7 @@ public class TaskExecutor extends ThreadPoolExecutor {
                 }
 
                 synchronized (task.getOnFailure()) {
-                    task.getOnFailure().add(task);
+                    task.getOnFailure().offer(task);
                     // within same synch block!!
                     synchronized (task.getAssigned()) {
                         task.getAssigned().remove(task);

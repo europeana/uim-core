@@ -51,7 +51,7 @@ public interface WorkflowStart<U extends UimDataSet<I>, I> extends ExecutionPlug
             throws WorkflowStartFailedException;
 
     /**
-     * Check wheter there is more work to do or not. Finished means, that no new tasks can be
+     * Check wether there is more work to do or not. Finished means, that no new tasks can be
      * created.
      * 
      * @param context

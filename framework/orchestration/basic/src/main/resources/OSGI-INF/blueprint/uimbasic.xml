@@ -7,8 +7,8 @@
     <!-- Property place holder -->
     <cm:property-placeholder persistent-id="eu.europeana.uim.basic">
         <cm:default-properties>
-            <cm:property name="maxInProgress" value="1000" />
-            <cm:property name="maxTotalProgress" value="5000" />
+            <cm:property name="maxInProgress" value="200" />
+            <cm:property name="maxTotalProgress" value="1000" />
         </cm:default-properties>
     </cm:property-placeholder>
 

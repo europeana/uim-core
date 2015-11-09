@@ -42,42 +42,89 @@ import eu.europeana.uim.store.bean.MetaDataRecordBean;
  */
 @SuppressWarnings("hiding")
 public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<I>, I> {
-    private static final Logger                   log                     = Logger.getLogger(BatchWorkflowStart.class.getName());
 
-    /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_HEAD       = "batch.subset.head";
+    private static final Logger                        log                     = Logger.getLogger(BatchWorkflowStart.class.getName());
 
-    /** String BATCH_SUBSET */
-    public static final String                    BATCH_SUBSET_SHUFFLE    = "batch.subset.shuffle";
+    /**
+     * String BATCH_SUBSET
+     */
+    public static final String                         BATCH_SUBSET_HEAD       = "batch.subset.head";
 
-    /** String BATCH_SHUFFLE */
-    public static final String                    BATCH_SHUFFLE           = "batch.shuffle";
+    /**
+     * String BATCH_SUBSET
+     */
+    public static final String                         BATCH_SUBSET_SHUFFLE    = "batch.subset.shuffle";
 
-    /** BatchWorkflowStart COLLECTION_LAST_REQUEST */
-    public static final String                    COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
+    /**
+     * String BATCH_SHUFFLE
+     */
+    public static final String                         BATCH_SHUFFLE           = "batch.shuffle";
 
-    /** BatchWorkflowStart COLLECTION_FROM_REQUEST */
-    public static final String                    COLLECTION_FROM_REQUEST = "collection.from.requestdate";
+    /**
+     * String BATCH_LOAD_CONTENT
+     */
+    public static final String                         BATCH_LOAD_CONTENT      = "batch.load-content";
 
-    private static final SimpleDateFormat         ISO8601DATEFORMAT       = new SimpleDateFormat(
-                                                                                  "yyyy-MM-dd");
-    private static final SimpleDateFormat         SIMPLEDATEFORMAT        = new SimpleDateFormat(
-                                                                                  "yyyy.MM.dd");
+    /**
+     * String BATCH_LOAD_FULLTEXT
+     */
+    public static final String                         BATCH_LOAD_FULLTEXT     = "batch.load-fulltext";
+
+    /**
+     * BatchWorkflowStart COLLECTION_LAST_REQUEST
+     */
+    public static final String                         COLLECTION_LAST_REQUEST = "collection.only.lastrequest";
+
+    /**
+     * BatchWorkflowStart COLLECTION_FROM_REQUEST
+     */
+    public static final String                         COLLECTION_FROM_REQUEST = "collection.from.requestdate";
+
+    /**
+     * parameters to be set for batch loading
+     */
+    private static final List<String>                  PARAMETER               = new ArrayList<String>() {
+                                                                                   {
+                                                                                       add(BATCH_SUBSET_HEAD);
+                                                                                       add(BATCH_SUBSET_SHUFFLE);
+                                                                                       add(BATCH_SHUFFLE);
+                                                                                       add(COLLECTION_LAST_REQUEST);
+                                                                                       add(COLLECTION_FROM_REQUEST);
+                                                                                       add(BATCH_LOAD_CONTENT);
+                                                                                       add(BATCH_LOAD_FULLTEXT);
+                                                                                   }
+                                                                               };
+
+    private static final ThreadLocal<SimpleDateFormat> ISO8601_DATE_FORMAT     = new ThreadLocal<SimpleDateFormat>() {
+                                                                                   @Override
+                                                                                   protected SimpleDateFormat initialValue() {
+                                                                                       return new SimpleDateFormat(
+                                                                                               "yyyy-MM-dd");
+                                                                                   }
+                                                                               };
+
+    private static final ThreadLocal<SimpleDateFormat> SIMPLE_DATE_FORMAT      = new ThreadLocal<SimpleDateFormat>() {
+                                                                                   @Override
+                                                                                   protected SimpleDateFormat initialValue() {
+                                                                                       return new SimpleDateFormat(
+                                                                                               "yyyy.MM.dd");
+                                                                                   }
+                                                                               };
 
     /**
      * Key to retrieve own data from context.
      */
     @SuppressWarnings("rawtypes")
-    private static TKey<BatchWorkflowStart, Data> DATA_KEY                = TKey.register(
-                                                                                  BatchWorkflowStart.class,
-                                                                                  "data",
-                                                                                  Data.class);
+    private static TKey<BatchWorkflowStart, Data>      DATA_KEY                = TKey.register(
+                                                                                       BatchWorkflowStart.class,
+                                                                                       "data",
+                                                                                       Data.class);
 
     /**
      * default batch size
      */
-    //FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
-    public static int                             BATCH_SIZE              = 100;
+    // FIXME: changed batch size of loading, need it for fulltext, but problem with metadata only
+    public static int                                  BATCH_SIZE              = 25;
 
     /**
      * Creates a new instance of this class.
@@ -100,13 +147,13 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
     @Override
     public List<String> getParameters() {
-        return Arrays.asList(BATCH_SUBSET_HEAD, BATCH_SUBSET_SHUFFLE, BATCH_SHUFFLE,
-                COLLECTION_LAST_REQUEST, COLLECTION_FROM_REQUEST);
+        return PARAMETER;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
+    public void initialize(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws WorkflowStartFailedException {
         try {
             StorageEngine<I> storage = context.getStorageEngine();
 
@@ -126,9 +173,9 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
                     String propFrom = context.getProperties().getProperty(COLLECTION_FROM_REQUEST);
                     if (propFrom != null) {
                         try {
-                            thisFrom = ISO8601DATEFORMAT.parse(propFrom);
+                            thisFrom = ISO8601_DATE_FORMAT.get().parse(propFrom);
                         } catch (ParseException e) {
-                            thisFrom = SIMPLEDATEFORMAT.parse(propFrom);
+                            thisFrom = SIMPLE_DATE_FORMAT.get().parse(propFrom);
                         }
                     }
 
@@ -303,6 +350,26 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
 
             data.collection = coll;
             data.initialized = true;
+
+            boolean loadContent = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_LOAD_CONTENT, "false"));
+            if (loadContent) {
+                log.log(Level.WARNING, "Batch workflow load content for ''{0}''!",
+                        coll.getMnemonic());
+                storage.command("load-content:" + coll.getMnemonic());
+            } else {
+// log.log(Level.WARNING, "Batch workflow doesn''t load content for ''{0}''!", coll.getMnemonic());
+            }
+            
+            boolean loadFulltext = Boolean.parseBoolean(context.getProperties().getProperty(
+                    BATCH_LOAD_FULLTEXT, "false"));
+            if (loadFulltext) {
+                log.log(Level.WARNING, "Batch workflow load fulltext for ''{0}''!",
+                        coll.getMnemonic());
+                storage.command("load-fulltext:" + coll.getMnemonic());
+            } else {
+// log.log(Level.WARNING, "Batch workflow doesn''t load content for ''{0}''!", coll.getMnemonic());
+            }
         } finally {
         }
     }
@@ -335,7 +402,8 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     }
 
     @Override
-    public TaskCreator<MetaDataRecord<I>, I> createLoader(final ExecutionContext<MetaDataRecord<I>, I> context)
+    public TaskCreator<MetaDataRecord<I>, I> createLoader(
+            final ExecutionContext<MetaDataRecord<I>, I> context)
             throws WorkflowStartFailedException {
         if (!isFinished(context)) { return new TaskCreator<MetaDataRecord<I>, I>() {
             @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -403,8 +471,22 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
     }
 
     @Override
-    public void completed(ExecutionContext<MetaDataRecord<I>, I> context) throws WorkflowStartFailedException {
-        context.getValue(DATA_KEY).batches.clear();
+    public void completed(ExecutionContext<MetaDataRecord<I>, I> context)
+            throws WorkflowStartFailedException {
+        Data<?> value = context.getValue(DATA_KEY);
+        value.batches.clear();
+
+        StorageEngine<I> storage = context.getStorageEngine();
+        boolean loadContent = Boolean.parseBoolean(context.getProperties().getProperty(
+                BATCH_LOAD_CONTENT, "false"));
+        if (loadContent) {
+            storage.command("unload-content:" + value.collection.getMnemonic());
+        }
+        boolean loadFulltext = Boolean.parseBoolean(context.getProperties().getProperty(
+                BATCH_LOAD_FULLTEXT, "false"));
+        if (loadFulltext) {
+            storage.command("unload-fulltext:" + value.collection.getMnemonic());
+        }
     }
 
     /**
@@ -416,15 +498,24 @@ public class BatchWorkflowStart<I> extends AbstractWorkflowStart<MetaDataRecord<
      * @since Feb 28, 2011
      */
     protected final static class Data<T> implements Serializable {
-        /** total records */
+
+        /**
+         * total records
+         */
         public int                total       = 0;
-        /** initialized yes/no */
+        /**
+         * initialized yes/no
+         */
         public boolean            initialized = false;
 
-        /** batches */
+        /**
+         * batches
+         */
         public BlockingQueue<T[]> batches     = new LinkedBlockingQueue<T[]>();
 
-        /** collection */
+        /**
+         * collection
+         */
         public Collection<?>      collection  = null;
     }
 

@@ -49,14 +49,14 @@
 							<goal>run</goal>
 						</goals>
 						<configuration>
-							<tasks>
+							<target>
 								<copy todir="target/solr/">
 									<fileset dir="src/test/resources/">
 										<include name="**/*.xml" />
 										<include name="**/*.txt" />
 									</fileset>
 								</copy>
-							</tasks>
+							</target>
 						</configuration>
 					</execution>
 				</executions>
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>europeana-uim-common</artifactId>
-			<version>${pom.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

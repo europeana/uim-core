@@ -1,56 +1,70 @@
 package eu.europeana.uim.integration;
 
-import static org.ops4j.pax.exam.CoreOptions.felix;
+import static org.ops4j.pax.exam.CoreOptions.maven;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
-import static org.ops4j.pax.exam.CoreOptions.waitForFrameworkStartup;
-import static org.ops4j.pax.exam.OptionUtils.combine;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.features;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.karafDistributionConfiguration;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.keepRuntimeFolder;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.logLevel;
+import static org.ops4j.pax.exam.karaf.options.KarafDistributionOption.editConfigurationFileExtend;
 
+import java.io.File;
 import java.util.logging.Level;
 
-import org.apache.karaf.testing.AbstractIntegrationTest;
-import org.apache.karaf.testing.Helper;
+import javax.inject.Inject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.karaf.options.LogLevelOption.LogLevel;
+import org.ops4j.pax.exam.options.MavenArtifactUrlReference;
+import org.ops4j.pax.exam.options.MavenUrlReference;
 
 import eu.europeana.uim.Registry;
 import eu.europeana.uim.logging.LoggingEngine;
 
 /**
- * Integration test for UIM commands<br/>
- * Warning: /!\ if you do not want to be driven insane, do check -- twice -- if you do NOT have a
- * running Karaf instance somewhere on your system<br/>
+ * Integration test logging engine using a Hibernate connected sql database.
  * 
- * @author Manuel Bernhardt
  * @author Markus Muhr (markus.muhr@theeuropeanlibrary.org)
  * @since Apr 7, 2014
  */
-@RunWith(JUnit4TestRunner.class)
-public class LoggingDatabaseTest extends AbstractIntegrationTest {
+@RunWith(PaxExam.class)
+public class LoggingDatabaseTest {
+    @Inject
+    private Registry registry;
 
     /**
-     * @return setup configuration
-     * @throws Exception
+     * @return config
      */
     @Configuration
-    public static Option[] configuration() throws Exception {
-        return combine(
-                Helper.getDefaultOptions(
-                        systemProperty("karaf.name").value("junit"),
-                        systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value(
-                                "INFO")),
+    public Option[] config() {
+        MavenArtifactUrlReference karafUrl = maven().groupId("org.apache.karaf").artifactId(
+                "apache-karaf").version("3.0.3").type("tar.gz");
 
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-storage-memory").versionAsInProject(),
-                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-database").versionAsInProject(),
+        MavenUrlReference karafStandardRepo = maven().groupId("org.apache.karaf.features").artifactId(
+                "standard").classifier("features").type("xml").versionAsInProject();
 
-                felix(),
-
-                waitForFrameworkStartup());
+        return new Option[] {
+                // KarafDistributionOption.debugConfiguration("5005", true),
+                karafDistributionConfiguration().frameworkUrl(karafUrl).unpackDirectory(
+                        new File("target/exam")).useDeployFolder(false),
+                logLevel(LogLevel.INFO),
+                keepRuntimeFolder(),
+                features(karafStandardRepo, "scr"),
+                
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.driverClass", "org.hsqldb.jdbcDriver"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.dialect", "HSQL"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.jdbcUrl", "jdbc:hsqldb:mem:embedded"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.user", "sa"),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.password", ""),
+                editConfigurationFileExtend("etc/eu.europeana.uim.logging.cfg", "db.showsql", "false"),
+                
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-common").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-api").versionAsInProject().start(),
+                mavenBundle().groupId("eu.europeana").artifactId("europeana-uim-logging-database").versionAsInProject().start(), };
     }
 
     /**
@@ -60,8 +74,6 @@ public class LoggingDatabaseTest extends AbstractIntegrationTest {
      */
     @Test
     public void testLogging() throws Exception {
-        Registry registry = getOsgiService(Registry.class);
-
         LoggingEngine<?> logging = null;
         while (logging == null) {
             logging = registry.getLoggingEngine();
