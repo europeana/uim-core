@@ -3,6 +3,7 @@ package eu.europeana.uim.storage.modules;
 import java.util.List;
 
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.modules.criteria.KeyCriterium;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
 
@@ -75,6 +76,17 @@ public interface CollectionStorageEngine<I> {
      * @throws StorageEngineException
      */
     I[] getByCollection(Collection<I> collection) throws StorageEngineException;
+    
+    
+    /**
+     * @param collection
+     * @param keyCriteria
+     * @return IDs for matching records for this collection
+     * @throws StorageEngineException
+     */
+    I[]  getByCollectionAndCriteria(Collection<I> collection, KeyCriterium <?, ?> ...keyCriteria) throws StorageEngineException;
+    
+    
 //    I[] getIdsByCollection(Collection<I> collection) throws StorageEngineException;
 
 // /**

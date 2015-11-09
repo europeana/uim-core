@@ -21,18 +21,23 @@
 package eu.europeana.uim.store.mongo.decorators;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+
+import org.theeuropeanlibrary.model.common.qualifier.Status;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.NotSaved;
 import com.google.code.morphia.annotations.PostLoad;
 import com.google.code.morphia.annotations.PrePersist;
-import com.google.code.morphia.annotations.Reference;
 import com.google.code.morphia.annotations.Serialized;
 
 import eu.europeana.uim.common.TKey;
+import eu.europeana.uim.model.europeana.EuropeanaModelRegistry;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.MetaDataRecord;
 import eu.europeana.uim.store.bean.MetaDataRecordBean;
@@ -50,6 +55,14 @@ import eu.europeana.uim.store.mongo.converters.MongoDBEuropeanaMDRConverter;
 @Entity
 public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> implements
         MetaDataRecord<String> {
+	
+	public static final Map<TKey<?,?>, String> keysExposedAsMongoFields = new HashMap<>();
+	
+	static {
+		keysExposedAsMongoFields.put(EuropeanaModelRegistry.STATUS, "status");
+		keysExposedAsMongoFields.put(EuropeanaModelRegistry.INITIALINGESTIONSESSION, "lastIngestionSessionId");
+	}
+	
     /**
      * The emebeddedMdr object wrapped in this Decorator. It is not saved in the database but
      * handled by lifecycle methods given the contents of the stored embeddedbinary object
@@ -82,6 +95,17 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
      */
     @Indexed(unique = true, dropDups = true)
     private String uniqueID;
+    
+    
+    /**
+     * The session if (execution id) of the last ingestion
+     */
+    private String lastIngestionSessionId;
+    
+    /**
+     * The status (also as TKey in fields, but here exposed as a mongo field in order to be querable by mongo)
+     */
+    private Status status;
 
     /**
      * The default constructor (required by Morphia but not used in this implementation)
@@ -114,7 +138,13 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
     @PrePersist
     void prePersist() {
         fields = MongoDBEuropeanaMDRConverter.getInstance().encode(emebeddedMdr);
-        if(this.collectionID == null){
+        String sessionId = emebeddedMdr.getFirstValue(EuropeanaModelRegistry.INITIALINGESTIONSESSION);
+
+        lastIngestionSessionId = sessionId;
+               
+        status =  emebeddedMdr.getFirstValue(EuropeanaModelRegistry.STATUS);
+           
+        if (this.collectionID == null){
         	this.collectionID = collectionDecorator.getId();
         }
     }
@@ -174,6 +204,18 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
 	 */
 	public void setCollectionID(String collectionID) {
 		this.collectionID = collectionID;
+	}
+	
+	
+
+	public String getLastIngestionSessionId() {
+		return lastIngestionSessionId;
+	}
+
+	
+
+	public Status getStatus() {
+		return status;
 	}
 
 	/*
@@ -319,5 +361,31 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
         throw new UnsupportedOperationException("Sorry, not implemented.");
     }
 
+    
+    @Override
+    public String toString() {
+    	String toString = "";
+    	if (emebeddedMdr!=null) {
+    		StringBuilder sb = new StringBuilder();
+            sb.append(String.format("{MetadataRecordBean id:%s col:%s", getId(), emebeddedMdr.getCollection() == null
+                    ? "" : emebeddedMdr.getCollection().getMnemonic()));
+            
+            
+               
+            for (TKey<?, ?> key: emebeddedMdr.getAvailableKeys()) {
+            	sb.append(String.format("\n\n  [%s ", key.getName()));
+                if (emebeddedMdr.getValues(key).size() == 1)
+                    sb.append(String.format("%s]", emebeddedMdr.getValues(key).get(0).toString()));
+                else {
+                    for (Object v : emebeddedMdr.getValues(key))
+                        sb.append(String.format("(%s)", v.toString()));
+                    sb.append("]");
+                }
+            }
+            sb.append("}");
+            toString = sb.toString();
+    	}
+    	return toString;
+    }
 
 }

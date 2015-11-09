@@ -9,6 +9,7 @@ import java.util.Map;
 
 import eu.europeana.uim.EngineStatus;
 import eu.europeana.uim.orchestration.ExecutionContext;
+import eu.europeana.uim.storage.modules.criteria.KeyCriterium;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -205,6 +206,12 @@ public abstract class StorageEngineAdapter<I> implements StorageEngine<I> {
         return (I[])Collections.emptyList().toArray();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public I[] getByCollectionAndCriteria(Collection<I> collection, KeyCriterium<?, ?>... keyCriteria)
+    		throws StorageEngineException {
+    	 return (I[])Collections.emptyList().toArray();
+    }
     @SuppressWarnings("unchecked")
     @Override
     public I[] getByProvider(Provider<I> provider, boolean recursive) {

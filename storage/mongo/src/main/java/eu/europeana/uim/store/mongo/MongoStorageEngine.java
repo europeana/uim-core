@@ -21,14 +21,22 @@
 package eu.europeana.uim.store.mongo;
 
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.mongodb.BasicDBObject;
 import org.bson.types.ObjectId;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.google.code.morphia.mapping.DefaultCreator;
+import com.google.code.morphia.query.Query;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -40,6 +48,7 @@ import eu.europeana.uim.orchestration.ExecutionContext;
 import eu.europeana.uim.orchestration.Orchestrator;
 import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
+import eu.europeana.uim.storage.modules.criteria.KeyCriterium;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Execution;
 import eu.europeana.uim.store.MetaDataRecord;
@@ -75,6 +84,9 @@ public class MongoStorageEngine extends AbstractEngine implements
     private static final String NAMEFIELD = "searchName";
     private static final String LOCALIDFIELD = "mongoId";
     private static final String RECORDUIDFIELD = "uniqueID";
+    private static final String LASTINGESTIONSESSIONID = "lastIngestionSessionId";
+    private static final String STATUS = "status";
+    
     private static final String REQUESTRECORDS = "requestrecords";
     private static final String COLLECTIONID = "collectionId";
     private static final String REQUESTID = "requestId";
@@ -85,7 +97,7 @@ public class MongoStorageEngine extends AbstractEngine implements
     private Registry registry;
     private static THashMap<String, MongoCollectionDecorator<String>> inmemoryCollections = new THashMap<String, MongoCollectionDecorator<String>>();
 
-    private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
+    // private static THashMap<String, THashSet<String>> inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
     private static THashMap<String, THashSet<String>> inmemoryRequestRecordIDs = new THashMap<String, THashSet<String>>();
 
     Mongo mongo = null;
@@ -725,24 +737,25 @@ public class MongoStorageEngine extends AbstractEngine implements
     public void updateMetaDataRecord(MetaDataRecord<String> record)
             throws StorageEngineException {
         MongoMetadataRecordDecorator<String> rec = (MongoMetadataRecordDecorator<String>) record;
+        
         if (rec.getMongoId() == null) {
             ds.save(record);
         } else {
             ds.merge(record);
         }
 
-        THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
-                .get(rec.getCollectionID());
-
-        if (registeredCollectionrecords == null) {
-            registeredCollectionrecords = new THashSet<String>();
-            inmemoryCollectionRecordIDs.put(rec.getCollectionID(),
-                    registeredCollectionrecords);
-        }
-
-        synchronized (inmemoryCollectionRecordIDs) {
-            registeredCollectionrecords.add(rec.getId());
-        }
+//        THashSet<String> registeredCollectionrecords = inmemoryCollectionRecordIDs
+//                .get(rec.getCollectionID());
+//
+//        if (registeredCollectionrecords == null) {
+//            registeredCollectionrecords = new THashSet<String>();
+//            inmemoryCollectionRecordIDs.put(rec.getCollectionID(),
+//                    registeredCollectionrecords);
+//        }
+//
+//        synchronized (inmemoryCollectionRecordIDs) {
+//            registeredCollectionrecords.add(rec.getId());
+//        }
     }
 
     /*
@@ -883,56 +896,93 @@ public class MongoStorageEngine extends AbstractEngine implements
         return res;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * eu.europeana.uim.api.StorageEngine#getByCollection(eu.europeana.uim.store
-     * .Collection)
-     */
 
-    public String[] getByCollectionNew(Collection<String> collection) {
-
-        String[] res = null;
-
-        THashSet<String> idrefs = inmemoryCollectionRecordIDs.get(collection
-                .getId());
-
-        if (idrefs != null) {
-            res = idrefs.toArray(new String[0]);
-        } else {
-            MDRPerCollectionAggregator aggregator = ds
-                    .find(MDRPerCollectionAggregator.class)
-                    .filter("collectionId", collection.getId()).get();
-
-            if (aggregator != null) {
-                HashSet<String> entries = aggregator.getMdrIDs();
-
-                THashSet<String> idrefsnew = new THashSet<String>(entries);
-                synchronized (inmemoryCollectionRecordIDs) {
-                    inmemoryCollectionRecordIDs.put(collection.getId(),
-                            idrefsnew);
-                }
-
-                res = idrefsnew.toArray(new String[0]);
-            } else {
-                res = new String[0];
-            }
-
-        }
-
-        return res;
-    }
     @Override
     public String[] getByCollection(Collection<String> col) {
         List<String> res = new ArrayList<>();
-        int count =ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID", col.getId())).count();
-        Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID",col.getId()),new BasicDBObject("uniqueID",1),0,count);
+        // no reason to execute 2 queries (one just for counting) since this is just a cursor..
+        //   int count =ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID", col.getId())).count();
+        Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(new BasicDBObject("collectionID",col.getId()),new BasicDBObject("uniqueID",1));
         while(obj.hasNext()){
             res.add(obj.next().get("uniqueID").toString());
         }
         return res.toArray(new String[res.size()]);
+        
+        
     }
+    
+	@Override
+	public String[] getByCollectionAndCriteria(Collection<String> collection, KeyCriterium<?, ?>... keyCriteria)
+			throws StorageEngineException {
+		List<String> res = new ArrayList<>();
+		if (keyCriteria==null) {
+			return getByCollection(collection);
+		}
+		List<KeyCriterium<?, ?>> keyCriteriaMongoFilters = new ArrayList<>();
+		List<KeyCriterium<?, ?>> keyCriteriaPostFilters = new ArrayList<>();
+		
+		// check whether there are criteria corresponding to mongo fields
+		for (KeyCriterium<?, ?> keyCriterium: keyCriteria) {
+			if (MongoMetadataRecordDecorator.keysExposedAsMongoFields.containsKey(keyCriterium.getKey())) {
+				keyCriteriaMongoFilters.add(keyCriterium);
+			} else {
+				keyCriteriaPostFilters.add(keyCriterium);
+			}
+		}
+		
+		if (keyCriteriaPostFilters.isEmpty()) {
+			BasicDBObject basicDBObject = new BasicDBObject("collectionID",collection.getId());
+			for (KeyCriterium<?, ?> keyCriterium: keyCriteriaMongoFilters) {
+				if (keyCriterium.isNot()) {
+					basicDBObject.append(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()), new BasicDBObject("$ne", keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue()));
+				} else {
+					basicDBObject.append(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()),keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				}
+			}
+			Iterator<DBObject> obj = ds.getMongo().getDB("UIM").getCollection("MongoMetadataRecordDecorator").find(basicDBObject,new BasicDBObject("uniqueID",1));
+			while(obj.hasNext()){
+	            res.add(obj.next().get("uniqueID").toString());
+	        }
+		} else {
+			@SuppressWarnings("rawtypes")
+			Query<MongoMetadataRecordDecorator> query= ds.find(MongoMetadataRecordDecorator.class);
+			for (KeyCriterium<?, ?> keyCriterium: keyCriteriaMongoFilters) {
+				if (keyCriterium.isNot()) {
+					query.filter(String.format("%s !=", MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey())), keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				} else {
+					query.filter(MongoMetadataRecordDecorator.keysExposedAsMongoFields.get(keyCriterium.getKey()), keyCriterium.getValue().getClass().isEnum()?keyCriterium.getValue().toString():keyCriterium.getValue());
+				}
+			}
+			@SuppressWarnings("rawtypes")
+			Iterable<MongoMetadataRecordDecorator> it = query.fetch();
+			for (@SuppressWarnings("rawtypes") MongoMetadataRecordDecorator mongoMetadataRecordDecorator: it) {
+				boolean hit = true;
+				for (KeyCriterium<?, ?> keyCriterium: keyCriteriaPostFilters) {
+					@SuppressWarnings("unchecked")
+					List<?> values = mongoMetadataRecordDecorator.getValues(keyCriterium.getKey(), keyCriterium.getQualifiers());
+					if (keyCriterium.isNot()) {		
+						if (values!=null && !values.isEmpty()) {
+							hit = hit && (!values.contains(keyCriterium.getValue()));
+						}
+					} else {
+						if (values!=null && !values.isEmpty()) {
+							hit = hit && (values.contains(keyCriterium.getValue()));
+						} else {
+							hit = false;
+						}				
+					}
+					if (!hit) {
+						break;
+					}
+				}
+				if (hit) {
+					res.add(mongoMetadataRecordDecorator.getId());
+				}	
+			}
+		}
+		return res.toArray(new String[res.size()]);
+
+	}
 
     /*
      * (non-Javadoc)
@@ -1091,97 +1141,13 @@ public class MongoStorageEngine extends AbstractEngine implements
     @Override
     public void completed(ExecutionContext<?, String> context) {
         if (context.getDataSet() instanceof Collection) {
-            flushCollectionMDRS(context.getDataSet().getId());
+//            flushCollectionMDRS(context.getDataSet().getId());
             flushRequestMDRS(context.getDataSet().getId());
         }
 
     }
 
-    /**
-     * Persists content stored in inmemoryCollectionRecordIDs
-     *
-     * @param collectionID
-     */
-    public void flushCollectionMDRS(String collectionID) {
 
-        THashSet<String> recids;
-        synchronized (inmemoryCollectionRecordIDs) {
-            recids = inmemoryCollectionRecordIDs.get(collectionID);
-        }
-        if (recids != null) {
-            HashSet<String> tmpset = new HashSet<String>();
-            TObjectHashIterator<String> it = recids.iterator();
-            while (it.hasNext()) {
-                tmpset.add(it.next());
-            }
-            MDRPerCollectionAggregator aggregator = ds
-                    .find(MDRPerCollectionAggregator.class)
-                    .filter("collectionId", collectionID).get();
-            if (aggregator == null) {
-                aggregator = new MDRPerCollectionAggregator();
-                aggregator.setCollectionId(collectionID);
-                aggregator.setMdrIDs(tmpset);
-                ds.save(aggregator);
-            } else {
-                aggregator.setMdrIDs(tmpset);
-                ds.merge(aggregator);
-            }
-        }
-        if (registry == null) {
-            System.out.println("Registry is null here");
-        } else {
-            System.out.println("Got registry reference");
-        }
-        // Make sure that inmemoryCollectionRecordIDs does not exceed the
-        // maximum allowed size. Reset it if it does.
-
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-            purgeInmemoryCollectionRecordIDs();
-        }
-
-
-    }
-
-
-    /**
-     * This synchronized method is called when the amount of the collections that have their
-     * records cached into memory exceeds the upper limit (which is 50)
-     */
-    public synchronized void purgeInmemoryCollectionRecordIDs() {
-        if (registry == null) {
-            System.out.println("Registry is null here");
-        }
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-
-            Set<String> content2bepreserved = new HashSet<String>();
-            Orchestrator<String> orchestrator = (Orchestrator<String>) registry.getOrchestrator();
-            @SuppressWarnings("unchecked")
-            List<ActiveExecution<?, String>> activeExecs = (List<ActiveExecution<?, String>>) orchestrator.getActiveExecutions();
-
-            for (ActiveExecution<?, String> exec : activeExecs) {
-                Collection<String> coll = exec.getDataSetCollection();
-
-                if (coll != null) {
-                    content2bepreserved.add(coll.getMnemonic());
-                }
-            }
-
-            synchronized (inmemoryCollectionRecordIDs) {
-                inmemoryCollectionRecordIDs.forEachEntry(new InmemoryRecordIDITerator(content2bepreserved, inmemoryCollectionRecordIDs));
-            }
-        }
-    }
-
-
-    /**
-     * Brute Forces the purging of inmemoryCollectionRecordIDs data structure
-     */
-    public synchronized void purgeInmemoryCollectionRecordIDsBrute() {
-        if (inmemoryCollectionRecordIDs.size() > MAXINMEMORYALLOWED) {
-            System.out.println("Purging in memory record references");
-            inmemoryCollectionRecordIDs = new THashMap<String, THashSet<String>>();
-        }
-    }
 
 
     /**
@@ -1282,6 +1248,8 @@ public class MongoStorageEngine extends AbstractEngine implements
             return true;
         }
     }
+
+
 
 
 }
