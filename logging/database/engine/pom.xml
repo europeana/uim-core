@@ -44,10 +44,31 @@
 						</Import-Package>
 						<Export-Package>
 						</Export-Package>
+<!-- 						<Embed-Dependency> -->
+<!-- 							europeana-uim-logging-database-model;inline=true, -->
+<!-- 							!europeana-uim-logging-database-model, -->
+<!-- 							*;scope=compile|runtime; -->
+<!-- 						</Embed-Dependency> -->
 						<Embed-Dependency>
-							europeana-uim-logging-database-model;inline=true,
-							!europeana-uim-logging-database-model,
-							*;scope=compile|runtime;
+							spring-tx;inline=false,
+							spring-aop;inline=false,
+							spring-asm;inline=false,
+							spring-beans;inline=false,
+							spring-context;inline=false,
+							spring-core;inline=false,
+							spring-expression;inline=false,
+							spring-jdbc;inline=false,
+							spring-orm;inline=false,
+							!spring-tx,
+							!spring-aop,
+							!spring-asm,
+							!spring-beans,
+							!spring-context,
+							!spring-core,
+							!spring-expression,
+							!spring-jdbc,
+							!spring-orm,
+							*;scope=compile|runtime;inline=true,
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
