@@ -48,7 +48,9 @@
 <!-- 							europeana-uim-logging-database-model;inline=true, -->
 <!-- 							!europeana-uim-logging-database-model, -->
 <!-- 							*;scope=compile|runtime; -->
-								*;scope=compile|runtime;
+<!-- 								*;scope=compile|runtime; -->
+								*;scope=compile|runtime,
+<!-- 								*;inline=eu/europeana/uim/logging/database/model/*.xml -->
 						</Embed-Dependency>
 <!-- 						<Embed-Dependency> -->
 <!-- 							spring-tx;inline=false, -->
