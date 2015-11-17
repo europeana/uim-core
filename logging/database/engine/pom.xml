@@ -46,6 +46,7 @@
 						</Export-Package>
 						<Embed-Dependency>
 							europeana-uim-logging-database-model;inline=true,
+							!europeana-uim-logging-database-model,
 							*;scope=compile|runtime;
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
