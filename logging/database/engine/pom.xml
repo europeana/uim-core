@@ -35,17 +35,17 @@
 							javax.sql.*,
 							javax.naming.*,
 							javax.management.*,
-
+							
 							javax.xml.*,
 							org.xml.sax.*,
 							org.w3c.dom.*,
-
+							
 							!*
 						</Import-Package>
 						<Export-Package>
 						</Export-Package>
 						<Embed-Dependency>
-							*;scope=compile|runtime;inline=false;
+							*;scope=compile|runtime;
 						</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
@@ -128,7 +128,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>3.3.2.GA</version>
-
+			
 			<exclusions>
 				<exclusion>
 					<groupId>xml-apis</groupId>
@@ -139,7 +139,7 @@
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
 			</exclusions>
-
+			
 		</dependency>
 
 		<dependency>
