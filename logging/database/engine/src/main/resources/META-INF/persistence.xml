@@ -6,7 +6,7 @@
     <persistence-unit name="europeana-database-logging">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         
-		<mapping-file>eu/europeana/uim/logging/database/model/Queries.xml</mapping-file>
+		<mapping-file>/eu/europeana/uim/logging/database/model/Queries.xml</mapping-file>
         
         <class>eu.europeana.uim.logging.database.model.TLogEntry</class>
         <class>eu.europeana.uim.logging.database.model.TLogEntryFailed</class>
