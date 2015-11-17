@@ -21,9 +21,6 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-					<Include-Resource>
-					eu/europeana/uim/logging/database/model/Queries.xml
-					</Include-Resource>
 						<Import-Package>
 							eu.europeana.uim,
 							eu.europeana.uim.store,
@@ -38,11 +35,11 @@
 							javax.sql.*,
 							javax.naming.*,
 							javax.management.*,
-							
+
 							javax.xml.*,
 							org.xml.sax.*,
 							org.w3c.dom.*,
-							
+
 							!*
 						</Import-Package>
 						<Export-Package>
@@ -131,7 +128,7 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>3.3.2.GA</version>
-			
+
 			<exclusions>
 				<exclusion>
 					<groupId>xml-apis</groupId>
@@ -142,7 +139,7 @@
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
 			</exclusions>
-			
+
 		</dependency>
 
 		<dependency>
