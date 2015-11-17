@@ -45,11 +45,11 @@
 						<Export-Package>
 						</Export-Package>
 						<Embed-Dependency>
-							europeana-uim-logging-database-model;inline=true,
-							!europeana-uim-logging-database-model,
-							*;scope=compile|runtime;
+<!-- 							europeana-uim-logging-database-model;inline=true, -->
+<!-- 							!europeana-uim-logging-database-model, -->
+<!-- 							*;scope=compile|runtime; -->
 <!-- 								*;scope=compile|runtime; -->
-<!-- 								*;scope=compile|runtime;inline=false; -->
+								*;scope=compile|runtime;inline=false;
 <!-- 								*;inline=eu/europeana/uim/logging/database/model/*.xml -->
 						</Embed-Dependency>
 <!-- 						<Embed-Dependency> -->
