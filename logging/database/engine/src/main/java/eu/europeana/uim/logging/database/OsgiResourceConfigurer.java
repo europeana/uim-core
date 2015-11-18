@@ -31,7 +31,7 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
     private static final Logger log                    = Logger.getLogger(OsgiResourceConfigurer.class.getName());
 
     private String              osgiConfigurationName  = "eu.europeana.uim";
-    private String              fallbackPropertiesName = "";
+    private String              fallbackPropertiesName = null;
 
     /**
      * Creates a new instance of this class.
@@ -88,21 +88,21 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
                 ConfigurationAdmin configAdmin = (ConfigurationAdmin)bundle.getBundleContext().getService(
                         caRef);
                 try {
-                    Configuration[] configurations = configAdmin.listConfigurations(null);
-                    if (configurations == null || configurations.length == 0) {
-                        Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
-
-                        Properties defaultproperties = new Properties();
-                        InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
-                        if (stream != null) {
-                            defaultproperties.load(stream);
-                            Hashtable<String, String> hashtable = new Hashtable<String, String>();
-                            for (Entry<Object, Object> entry : defaultproperties.entrySet()) {
-                                hashtable.put((String)entry.getKey(), (String)entry.getValue());
-                            }
-                            config.update(hashtable);
-                        }
-                    }
+//                    Configuration[] configurations = configAdmin.listConfigurations(null);
+//                    if (configurations == null || configurations.length == 0) {
+//                        Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
+//
+//                        Properties defaultproperties = new Properties();
+//                        InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
+//                        if (stream != null) {
+//                            defaultproperties.load(stream);
+//                            Hashtable<String, String> hashtable = new Hashtable<String, String>();
+//                            for (Entry<Object, Object> entry : defaultproperties.entrySet()) {
+//                                hashtable.put((String)entry.getKey(), (String)entry.getValue());
+//                            }
+//                            config.update(hashtable);
+//                        }
+//                    }
 
                     Configuration config = configAdmin.getConfiguration(osgiConfigurationName);
 
@@ -119,9 +119,10 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
                     }
                 } catch (IOException e) {
                     log.log(Level.SEVERE, "Failed to store config change with config service.", e);
-                } catch (InvalidSyntaxException e) {
-                    throw new RuntimeException("Caused by InvalidSyntaxException", e);
-                }
+                } 
+//                catch (InvalidSyntaxException e) {
+//                    throw new RuntimeException("Caused by InvalidSyntaxException", e);
+//                }
             }
         } else if (fallbackPropertiesName != null && fallbackPropertiesName.length() > 0) {
             try {
