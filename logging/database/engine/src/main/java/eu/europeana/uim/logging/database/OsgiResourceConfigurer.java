@@ -31,7 +31,7 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
     private static final Logger log                    = Logger.getLogger(OsgiResourceConfigurer.class.getName());
 
     private String              osgiConfigurationName  = "eu.europeana.uim";
-    private String              fallbackPropertiesName = null;
+    private String              fallbackPropertiesName = "";
 
     /**
      * Creates a new instance of this class.
@@ -124,20 +124,21 @@ public class OsgiResourceConfigurer extends PropertyPlaceholderConfigurer {
 //                    throw new RuntimeException("Caused by InvalidSyntaxException", e);
 //                }
             }
-        } else if (fallbackPropertiesName != null && fallbackPropertiesName.length() > 0) {
-            try {
-                InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
-                if (stream != null) {
-                    properties.load(stream);
-                } else {
-                    log.log(Level.INFO, "Failed to load properties filw in classpath <" +
-                                        fallbackPropertiesName + ">");
-                }
-            } catch (IOException e) {
-                log.log(Level.INFO, "Failed to load properties fiel in classpath <" +
-                                    fallbackPropertiesName + ">", e);
-            }
-        }
+        } 
+//        else if (fallbackPropertiesName != null && fallbackPropertiesName.length() > 0) {
+//            try {
+//                InputStream stream = getClass().getResourceAsStream(fallbackPropertiesName);
+//                if (stream != null) {
+//                    properties.load(stream);
+//                } else {
+//                    log.log(Level.INFO, "Failed to load properties filw in classpath <" +
+//                                        fallbackPropertiesName + ">");
+//                }
+//            } catch (IOException e) {
+//                log.log(Level.INFO, "Failed to load properties fiel in classpath <" +
+//                                    fallbackPropertiesName + ">", e);
+//            }
+//        }
         return properties;
     }
 }
