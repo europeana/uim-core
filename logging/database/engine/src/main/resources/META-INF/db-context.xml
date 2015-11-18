@@ -16,7 +16,7 @@
 
     <bean class="eu.europeana.uim.logging.database.OsgiResourceConfigurer">
         <property name="osgiConfigurationName" value="eu.europeana.uim.logging" />
-        <property name="fallbackPropertiesName" value="/META-INF/database.properties"/>
+        <property name="fallbackPropertiesName" value=""/>
     </bean>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
