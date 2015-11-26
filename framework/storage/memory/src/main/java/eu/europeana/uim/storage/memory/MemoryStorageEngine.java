@@ -490,4 +490,17 @@ public class MemoryStorageEngine implements StorageEngine<Long> {
         Arrays.sort(ids);
         return ids;
 	}
+	
+	
+	@Override
+	public int countByCollectionAndCriteria(Collection<Long> collection, KeyCriterium<?, ?>... keyCriteria)
+			throws StorageEngineException {
+		return 0;
+	}
+  
+    
+	
+	
+   
+    
 }

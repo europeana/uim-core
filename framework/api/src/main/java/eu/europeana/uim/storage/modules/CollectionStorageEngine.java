@@ -86,6 +86,14 @@ public interface CollectionStorageEngine<I> {
      */
     I[]  getByCollectionAndCriteria(Collection<I> collection, KeyCriterium <?, ?> ...keyCriteria) throws StorageEngineException;
     
+    /**
+     * @param collection
+     * @param keyCriteria
+     * @return
+     * @throws StorageEngineException
+     */
+    int  countByCollectionAndCriteria(Collection<I> collection, KeyCriterium <?, ?> ...keyCriteria) throws StorageEngineException;
+    
     
 //    I[] getIdsByCollection(Collection<I> collection) throws StorageEngineException;
 
