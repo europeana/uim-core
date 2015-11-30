@@ -105,7 +105,7 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
     /**
      * The status (also as TKey in fields, but here exposed as a mongo field in order to be querable by mongo)
      */
-    private Status status;
+    private String status;
 
     /**
      * The default constructor (required by Morphia but not used in this implementation)
@@ -141,8 +141,9 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
         String sessionId = emebeddedMdr.getFirstValue(EuropeanaModelRegistry.INITIALINGESTIONSESSION);
 
         lastIngestionSessionId = sessionId;
-               
-        status =  emebeddedMdr.getFirstValue(EuropeanaModelRegistry.STATUS);
+              
+        Status stat = emebeddedMdr.getFirstValue(EuropeanaModelRegistry.STATUS);
+        status =  stat==null?null:stat.toString();
            
         if (this.collectionID == null){
         	this.collectionID = collectionDecorator.getId();
@@ -215,7 +216,7 @@ public class MongoMetadataRecordDecorator<I> extends MongoAbstractEntity<I> impl
 	
 
 	public Status getStatus() {
-		return status;
+		return status==null?null:Status.valueOf(status);
 	}
 
 	/*
