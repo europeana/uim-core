@@ -234,6 +234,7 @@ public final class ObjectModelUtils {
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.INSTANT, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.PERIOD, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.TIME_TEXTUAL, qualifiers));
+        result.addAll(record.getQualifiedValues(ObjectModelRegistry.TEMPORAL, qualifiers));
         result.addAll(record.getQualifiedValues(ObjectModelRegistry.HISTORICAL_PERIOD, qualifiers));
         Collections.sort(result);
         return result;
