@@ -196,7 +196,7 @@ public class MongoStorageEngineTest extends AbstractStorageEngineTest<String> {
 		assertEquals(request0.getCollection().getId(), record1.getCollection()
 				.getId());
 
-		mongoEngine.flushCollectionMDRS(collection0.getId());
+
 
 		mongoEngine.flushRequestMDRS(request0.getId());
 
