@@ -14,9 +14,11 @@ import eu.europeana.uim.storage.StorageEngine;
 import eu.europeana.uim.storage.StorageEngineException;
 import eu.europeana.uim.store.Collection;
 import eu.europeana.uim.store.Provider;
+import eu.europeana.uim.store.StandardControlledVocabulary;
 import eu.europeana.uim.sugar.SugarControlledVocabulary;
 import eu.europeana.uim.sugar.SugarException;
 import eu.europeana.uim.sugar.SugarService;
+import eu.europeana.uim.sugar.tel.TELCollectionFields;
 import eu.europeana.uim.sugar.tel.TELProviderFields;
 
 /**
@@ -207,26 +209,22 @@ public class SugarServlet extends AbstractSugarServlet {
 
     @Override
     public List<Map<String, String>> listCollections(boolean activeOnly) throws SugarException {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        return getSugarService().listCollections(activeOnly);
     }
 
     @Override
     public List<Map<String, String>> listProviders(boolean activeOnly) throws SugarException {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        return getSugarService().listProviders(activeOnly);
     }
 
     @Override
     public String getCollectionMnemonic(Map<String, String> values) throws SugarException {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        return values.get(TELCollectionFields.MNEMONIC.getFieldId());
     }
 
     @Override
     public String getProviderMnemonic(Map<String, String> values) throws SugarException {
-        // return null;
-        throw new UnsupportedOperationException("Sorry, not implemented.");
+        return values.get(TELProviderFields.MNEMONIC.getFieldId());
     }
 
 }
