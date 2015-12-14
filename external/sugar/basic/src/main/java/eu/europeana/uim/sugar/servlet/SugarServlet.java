@@ -86,6 +86,7 @@ public class SugarServlet extends AbstractSugarServlet {
             // update is also false for inactive element
             if (update) {
                 engine.updateProvider(prov);
+                engine.checkpoint();
                 if (getRepoxService() != null) {
                     try {
                         getRepoxService().updateProvider(prov);
@@ -137,6 +138,7 @@ public class SugarServlet extends AbstractSugarServlet {
             // update is also false for inactive element
             if (update) {
                 engine.updateCollection(coll);
+               engine.checkpoint();
                 if (getRepoxService() != null) {
                     try {
                         getRepoxService().updateCollection(coll);
