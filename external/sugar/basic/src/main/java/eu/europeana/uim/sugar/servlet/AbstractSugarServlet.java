@@ -68,18 +68,16 @@ public abstract class AbstractSugarServlet extends HttpServlet {
                                 builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
                             }
                         }
-
-                        resp.setStatus(200);
-                        resp.getWriter().write(builder.toString());
-                        resp.getWriter().write(" DONE:" + providers.size());
+                        builder.append(" DONE:" + providers.size());
                     } else {
                         boolean update = updateProvider(id, null);
                         log.info("Updated/Synched provider with sugar:" + id);
 
                         builder.append(id + ": " + (update ? "UPD" : "NaN"));
-                        resp.setStatus(200);
-                        resp.getWriter().write(" DONE");
+                        builder.append("\nDONE");
                     }
+                    resp.setStatus(200);
+                    resp.getWriter().write(builder.toString());
                 } else if ("collection".equals(type)) {
                     StringBuilder builder = new StringBuilder();
                     if ("*".equals(id)) {
@@ -96,19 +94,15 @@ public abstract class AbstractSugarServlet extends HttpServlet {
                                 builder.append(mnemonic + ": " + (update ? "UPD" : "NaN"));
                             }
                         }
-
-                        resp.setStatus(200);
-                        resp.getWriter().write(builder.toString());
-                        resp.getWriter().write(" DONE:" + collections.size());
+                        builder.append(" DONE:" + collections.size());
                     } else {
                         boolean update = updateCollection(id, null);
                         log.info("Updated/Synched collection with sugar:" + id);
-
                         builder.append(id + ": " + (update ? "UPD" : "NaN"));
-                        resp.setStatus(200);
-                        resp.getWriter().write(" DONE");
+                        builder.append("\nDONE");
                     }
-
+                    resp.setStatus(200);
+                    resp.getWriter().write(builder.toString());
                 } else {
                     resp.sendError(400,
                             "Illegal arguments, neither collection nor provider id was given.");
@@ -225,6 +219,7 @@ public abstract class AbstractSugarServlet extends HttpServlet {
      */
     public abstract boolean updateCollection(String mnemonic, Map<String, String> collection)
             throws SugarException;
+
 
     /**
      * @param activeOnly
