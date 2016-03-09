@@ -467,7 +467,7 @@
 				<pluginRepository>
 					<id>tel.plugins.snapshot</id>
 					<name>Maven Plugin Repository</name>
-					<url>http://nexus.tel.eanadev.org/nexus/content/groups/public-snapshots/</url>
+					<url>http://nexus.tel.eanadev.ornexus.tel.eanadev.orgg/nexus/content/groups/public-snapshots/</url>
 					<layout>default</layout>
 				</pluginRepository>
 			</pluginRepositories>
@@ -518,7 +518,7 @@
 		<pluginRepository>
 			<id>tel.plugins</id>
 			<name>Maven Plugin Repository</name>
-			<url>http://nexus.tel.ulcc.ac.uk/nexus/content/groups/public</url>
+			<url>http://nexus.tel.eanadev.org/nexus/content/groups/public</url>
 			<layout>default</layout>
 			<snapshots>
 				<enabled>true</enabled>
@@ -529,7 +529,7 @@
 	<repositories>
 		<repository>
 		     <id>tel.releases</id>
-             <url>http://nexus.tel.ulcc.ac.uk/nexus/content/repositories/releases</url>
+             <url>http://nexus.tel.eanadev.org/nexus/content/repositories/releases</url>
 		</repository>
 <!-- 		<repository> -->
 <!-- 			<id>repo1</id> -->
