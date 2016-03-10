@@ -55,6 +55,13 @@ public final class EuropeanaModelRegistry {
     public static final TKey<EuropeanaModelRegistry, Boolean> EDMRECORDREDIRECT = TKey
             .register(EuropeanaModelRegistry.class, "edmrecordredirect",
                     Boolean.class);
+
+    /**
+     * The key for id redirects in String
+     */
+    public static final TKey<EuropeanaModelRegistry, String> EDMRECORDREDIRECTID = TKey
+            .register(EuropeanaModelRegistry.class, "edmrecordredirectid",
+                    String.class);
     /**
      * The key date of dereference
      */
