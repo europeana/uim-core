@@ -528,8 +528,8 @@
 	
 	<repositories>
 		<repository>
-		     <id>tel.releases</id>
-             <url>http://nexus.tel.eanadev.org/nexus/content/repositories/releases</url>
+		     <id>tel.release</id>
+             <url>http://nexus.tel.eanadev.org/nexus/content/groups/public/</url>
 		</repository>
 <!-- 		<repository> -->
 <!-- 			<id>repo1</id> -->
