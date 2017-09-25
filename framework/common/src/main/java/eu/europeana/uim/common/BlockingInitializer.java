@@ -82,6 +82,7 @@ public abstract class BlockingInitializer implements Runnable {
 
     @Override
     public final void run() {
+        System.out.println("----{BlockingInitializer run()---# ");
         try {
             status = STATUS_BOOTING;
             initializeInternal();
